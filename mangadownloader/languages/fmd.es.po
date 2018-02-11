@@ -72,6 +72,29 @@ msgstr "Importar completado."
 msgid "List of unimported manga"
 msgstr "Lista de manga sin importar"
 
+#: frmluamodulesupdater.rs_checking
+#, fuzzy
+msgctxt "frmluamodulesupdater.rs_checking"
+msgid "Checking..."
+msgstr "Revisando..."
+
+#: frmluamodulesupdater.rs_checkupdate
+msgctxt "frmluamodulesupdater.rs_checkupdate"
+msgid "Check update"
+msgstr ""
+
+#: frmluamodulesupdater.rs_finishchecking
+msgid "Finish checking"
+msgstr ""
+
+#: frmluamodulesupdater.rs_finishdownload
+msgid "Finish download"
+msgstr ""
+
+#: frmluamodulesupdater.rs_startdownloading
+msgid "Downloading..."
+msgstr ""
+
 #: frmmain.rs_alldownloads
 msgid "All downloads"
 msgstr "Todas las descargas"
@@ -87,6 +110,7 @@ msgid "Cancel"
 msgstr "Cancelar"
 
 #: frmmain.rs_checking
+msgctxt "frmmain.rs_checking"
 msgid "Checking..."
 msgstr "Revisando..."
 
@@ -535,6 +559,23 @@ msgstr "Ruta al Software (e.g. C:\\MangaDownloader)"
 #: timportfavorites.lbselectsoftware.caption
 msgid "Software:"
 msgstr "Software:"
+
+#: tluamodulesupdaterform.btcheckupdate.caption
+msgctxt "tluamodulesupdaterform.btcheckupdate.caption"
+msgid "Check update"
+msgstr ""
+
+#: tluamodulesupdaterform.vtluamodulesrepos.header.columns[0].text
+msgid "Filename"
+msgstr ""
+
+#: tluamodulesupdaterform.vtluamodulesrepos.header.columns[1].text
+msgid "Last modified"
+msgstr ""
+
+#: tluamodulesupdaterform.vtluamodulesrepos.header.columns[2].text
+msgid "Last message"
+msgstr ""
 
 #: tmainform.btabortupdatelist.hint
 msgid "Abort update list"
@@ -1923,6 +1964,10 @@ msgstr "Ver"
 #: tmainform.tswebsiteadvanced.caption
 msgid "Advanced"
 msgstr "Avanzado"
+
+#: tmainform.tswebsitemodules.caption
+msgid "Modules"
+msgstr ""
 
 #: tmainform.tswebsiteoptions.caption
 msgctxt "tmainform.tswebsiteoptions.caption"

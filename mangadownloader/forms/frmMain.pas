@@ -16,14 +16,14 @@ uses
   {$else}
   FakeActiveX,
   {$endif}
-  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, LCLType,
-  ExtCtrls, ComCtrls, Buttons, Spin, Menus, VirtualTrees, RichMemo, IniFiles,
-  simpleipc, lclproc, types, LCLIntf, DefaultTranslator, EditBtn, PairSplitter,
-  MultiLog, FileChannel, FileUtil, LazUTF8Classes, TAGraph, TASources, TASeries,
-  TATools, AnimatedGif, uBaseUnit, uDownloadsManager, uFavoritesManager,
-  uUpdateThread, uUpdateDBThread, uSilentThread, uMisc, uGetMangaInfosThread,
-  frmDropTarget, frmAccountManager, frmWebsiteOptionCustom, frmWebsiteOptionAdvanced,
-  frmCustomColor, frmLogger, frmTransferFavorites, CheckUpdate, accountmanagerdb, DBDataProcess, MangaFoxWatermark,
+  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, LCLType, ExtCtrls, ComCtrls,
+  Buttons, Spin, Menus, VirtualTrees, RichMemo, IniFiles, simpleipc, lclproc, types, LCLIntf,
+  DefaultTranslator, EditBtn, PairSplitter, MultiLog, FileChannel, FileUtil, LazUTF8Classes,
+  TAGraph, TASources, TASeries, TATools, AnimatedGif, uBaseUnit, uDownloadsManager,
+  uFavoritesManager, uUpdateThread, uUpdateDBThread, uSilentThread, uMisc,
+  uGetMangaInfosThread, frmDropTarget, frmAccountManager, frmWebsiteOptionCustom,
+  frmWebsiteOptionAdvanced, frmCustomColor, frmLogger, frmTransferFavorites,
+  frmLuaModulesUpdater, CheckUpdate, accountmanagerdb, DBDataProcess, MangaFoxWatermark,
   SimpleTranslator, FMDOptions, httpsendthread, SimpleException;
 
 type
@@ -152,6 +152,7 @@ type
     btDownloadSplit: TSpeedButton;
     seOptionRetryFailedTask: TSpinEdit;
     seWebPJpegQuality: TSpinEdit;
+    tsWebsiteModules: TTabSheet;
     ToolBarDownloadLeft: TToolBar;
     tbmiDownloadMoveTop: TToolButton;
     tbmiDownloadMoveUp: TToolButton;
@@ -1274,11 +1275,22 @@ begin
     Show;
     if Screen.PixelsPerInch > 96 then
       AutoAdjustLayout(lapAutoAdjustForDPI, Screen.PixelsPerInch, 96, 0, 0);
-    AddVT(Self.vtMangaList);
-    AddVT(Self.clbChapterList);
-    AddVT(Self.vtDownload);
-    AddVT(Self.vtFavorites);
-    AddVT(Self.vtOptionMangaSiteSelection);
+  end;
+  AddVT(Self.vtMangaList);
+  AddVT(Self.clbChapterList);
+  AddVT(Self.vtDownload);
+  AddVT(Self.vtFavorites);
+  AddVT(Self.vtOptionMangaSiteSelection);
+
+  LuaModulesUpdaterForm := TLuaModulesUpdaterForm.Create(Self);
+  with LuaModulesUpdaterForm do
+  begin
+    Parent := tsWebsiteModules;
+    BorderStyle := bsNone;
+    Align := alClient;
+    Show;
+    if Screen.PixelsPerInch > 96 then
+      AutoAdjustLayout(lapAutoAdjustForDPI, Screen.PixelsPerInch, 96, 0, 0);
   end;
 
   // logger
@@ -1405,7 +1417,7 @@ begin
   SaveOptions;
   SaveFormInformation;
 
-  Logger.Send(Self.ClassName+'.CloseNow, closing other forms');
+  Logger.Send(Self.ClassName+'.CloseNow, closSaveFormInformationing other forms');
   //embed form
   if Assigned(AccountManagerForm) then
     AccountManagerForm.Close;
@@ -1653,7 +1665,10 @@ begin
   if IsDlgCounter then Exit;
   tmCheckFavorites.Enabled := False;
   if OptionAutoCheckLatestVersion then
+  begin
     btCheckLatestVersionClick(btCheckLatestVersion);
+    LuaModulesUpdaterForm.btCheckUpdateClick(LuaModulesUpdaterForm.btCheckUpdate);
+  end;
   FavoriteManager.isAuto := True;
   FavoriteManager.CheckForNewChapter;
 end;
@@ -1823,7 +1838,10 @@ begin
     if cbSelectManga.ItemIndex > -1 then
       OpenDataDB(cbSelectManga.Items[cbSelectManga.ItemIndex]);
     if OptionAutoCheckLatestVersion then
+    begin
       btCheckLatestVersionClick(btCheckLatestVersion);
+      LuaModulesUpdaterForm.btCheckUpdateClick(LuaModulesUpdaterForm.btCheckUpdate);
+    end;
     if OptionAutoCheckFavStartup then
     begin
       FavoriteManager.isAuto := True;
@@ -5603,6 +5621,16 @@ begin
     DLManager.SortDirection := ReadBool('misc', 'SortDownloadDirection', False);
     vtDownload.Header.SortColumn := DLManager.SortColumn;
     vtDownload.Header.SortDirection := TSortDirection(DLManager.SortDirection);
+
+    // lua website modules list
+    with LuaModulesUpdaterForm.vtLuaModulesRepos.Header do
+    begin
+      SortColumn := ReadInteger('websitemodules', 'SortColumn', SortColumn);
+      SortDirection := TSortDirection(ReadInteger('websitemodules', 'SortDirection', Integer(SortDirection)));
+      for i := 0 to Columns.Count - 1 do
+        Columns[i].Width := ReadInteger('websitemodules', 'Column' + IntToStr(i) + 'Width', Columns[i].Width);
+      LuaModulesUpdaterForm.SortList;
+    end;
   end;
 end;
 
@@ -5639,6 +5667,15 @@ begin
 
     WriteInteger('misc', 'SortFavoritesColumn', vtFavorites.Header.SortColumn);
     WriteBool('misc', 'SortFavoritesDirection', FavoriteManager.sortDirection);
+
+    // lua website modules list
+    with LuaModulesUpdaterForm.vtLuaModulesRepos.Header do
+    begin
+      WriteInteger('websitemodules', 'SortColumn', SortColumn);
+      WriteInteger('websitemodules', 'SortDirection', Integer(SortDirection));
+      for i := 0 to Columns.Count - 1 do
+        WriteInteger('websitemodules', 'Column' + IntToStr(i) + 'Width', Columns[i].Width);
+    end;
   end;
 end;
 

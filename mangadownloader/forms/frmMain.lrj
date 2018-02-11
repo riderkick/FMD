@@ -242,6 +242,7 @@
 {"hash":32777246,"name":"tmainform.edwebsitessearch.texthint","sourcebytes":[83,101,97,114,99,104,32,119,101,98,115,105,116,101,46,46,46],"value":"Search website..."},
 {"hash":108725763,"name":"tmainform.tswebsiteoptions.caption","sourcebytes":[79,112,116,105,111,110,115],"value":"Options"},
 {"hash":197676484,"name":"tmainform.tswebsiteadvanced.caption","sourcebytes":[65,100,118,97,110,99,101,100],"value":"Advanced"},
+{"hash":73122451,"name":"tmainform.tswebsitemodules.caption","sourcebytes":[77,111,100,117,108,101,115],"value":"Modules"},
 {"hash":161923523,"name":"tmainform.tsaccounts.caption","sourcebytes":[65,99,99,111,117,110,116,115],"value":"Accounts"},
 {"hash":344211,"name":"tmainform.tsmisc.caption","sourcebytes":[77,105,115,99],"value":"Misc"},
 {"hash":197593650,"name":"tmainform.tscustomcolor.caption","sourcebytes":[67,117,115,116,111,109,32,99,111,108,111,114],"value":"Custom color"},

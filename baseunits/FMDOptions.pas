@@ -90,7 +90,8 @@ var
   README_FILE,
   EXTRAS_FOLDER,
   MANGAFOXTEMPLATE_FOLDER,
-  LUA_WEBSITEMODULE_FOLDER: String;
+  LUA_WEBSITEMODULE_FOLDER,
+  LUA_WEBSITEMODULE_REPOS: String;
 
   // ini files
   revisionfile,
@@ -284,7 +285,6 @@ begin
   FMD_DIRECTORY := CleanAndExpandDirectory(ADir);
   FMD_EXENAME := ExtractFileNameOnly(Application.ExeName);
 
-  LUA_WEBSITEMODULE_FOLDER := FMD_DIRECTORY + 'lua' + PathDelim + 'modules';
   CONFIG_FOLDER := FMD_DIRECTORY + 'config' + PathDelim;
   REVISION_FILE := CONFIG_FOLDER + 'revision.ini';
   UPDATE_FILE := CONFIG_FOLDER + 'updates.ini';
@@ -297,6 +297,9 @@ begin
   EXTRAS_FOLDER := FMD_DIRECTORY + 'extras' + PathDelim;
   MANGAFOXTEMPLATE_FOLDER := EXTRAS_FOLDER + 'mangafoxtemplate' + PathDelim;
   DEFAULT_LOG_FILE := FMD_DIRECTORY + FMD_EXENAME + '.log';
+
+  LUA_WEBSITEMODULE_FOLDER := FMD_DIRECTORY + 'lua' + PathDelim + 'modules' + PathDelim;
+  LUA_WEBSITEMODULE_REPOS := CONFIG_FOLDER + 'luamodules.json';
 end;
 
 procedure SetAppDataDirectory(const ADir: String);
