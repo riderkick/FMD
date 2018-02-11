@@ -5578,8 +5578,23 @@ begin
 end;
 
 procedure TMainForm.LoadFormInformation;
-var
-  i: Integer;
+
+  procedure restorevt(const vt: VirtualTrees.TVirtualStringTree; const name: String);
+  var
+    i: Integer;
+  begin
+    with configfile, vt.Header do
+    begin
+      SortColumn := ReadInteger(name, 'SortColumn', SortColumn);
+      SortDirection := TSortDirection(ReadInteger(name, 'SortDirection', Integer(SortDirection)));
+      for i := 0 to Columns.Count - 1 do
+      begin
+        Columns[i].Width := ReadInteger(name, 'Column' + IntToStr(i) + 'Width', Columns[i].Width);
+        Columns[i].Position := ReadInteger(name, 'Column' + IntToStr(i) + 'Position', Columns[i].Position);
+      end;
+    end;
+  end;
+
 begin
   with configfile do
   begin
@@ -5602,41 +5617,38 @@ begin
       PrevWindowState := wsNormal;
     WindowState := PrevWindowState;
 
-    if vtDownload.Header.Columns.Count > 0 then
-     with vtDownload.Header.Columns do
-      for i := 0 to Count - 1 do
-        Items[i].Width := ReadInteger('form', 'vtDownload' + IntToStr(i) + 'Width', 50);
+    restorevt(vtDownload, 'vtDownload');
+    DLManager.SortColumn := vtDownload.Header.SortColumn;
+    DLManager.SortDirection := Boolean(vtDownload.Header.SortDirection);
 
-    if vtFavorites.Header.Columns.Count > 0 then
-     with vtFavorites.Header.Columns do
-      for i := 0 to Count - 1 do
-        Items[i].Width := ReadInteger('form', 'vtFavorites' + IntToStr(i) + 'Width', 50);
-
-    FavoriteManager.SortColumn := ReadInteger('misc', 'SortFavoritesColumn', 1);
-    FavoriteManager.sortDirection := ReadBool('misc', 'SortFavoritesDirection', False);
-    vtFavorites.Header.SortColumn := FavoriteManager.SortColumn;
-    vtFavorites.Header.SortDirection := TSortDirection(FavoriteManager.sortDirection);
-
-    DLManager.SortColumn := ReadInteger('misc', 'SortDownloadColumn', 0);
-    DLManager.SortDirection := ReadBool('misc', 'SortDownloadDirection', False);
-    vtDownload.Header.SortColumn := DLManager.SortColumn;
-    vtDownload.Header.SortDirection := TSortDirection(DLManager.SortDirection);
+    restorevt(vtFavorites, 'vtFavorites');
+    FavoriteManager.SortColumn := vtFavorites.Header.SortColumn;
+    FavoriteManager.SortDirection := Boolean(vtFavorites.Header.SortDirection);
 
     // lua website modules list
-    with LuaModulesUpdaterForm.vtLuaModulesRepos.Header do
-    begin
-      SortColumn := ReadInteger('websitemodules', 'SortColumn', SortColumn);
-      SortDirection := TSortDirection(ReadInteger('websitemodules', 'SortDirection', Integer(SortDirection)));
-      for i := 0 to Columns.Count - 1 do
-        Columns[i].Width := ReadInteger('websitemodules', 'Column' + IntToStr(i) + 'Width', Columns[i].Width);
-      LuaModulesUpdaterForm.SortList;
-    end;
+    restorevt(LuaModulesUpdaterForm.vtLuaModulesRepos, 'vtLuaModulesRepos');
+    LuaModulesUpdaterForm.SortList;
   end;
 end;
 
 procedure TMainForm.SaveFormInformation;
-var
-  i: Integer;
+
+  procedure savevt(const vt: VirtualTrees.TVirtualStringTree; const name: String);
+  var
+    i: Integer;
+  begin
+    with configfile, vt.Header do
+    begin
+      WriteInteger(name, 'SortColumn', SortColumn);
+      WriteInteger(name, 'SortDirection', Integer(SortDirection));
+      for i := 0 to Columns.Count - 1 do
+      begin
+        WriteInteger(name, 'Column' + IntToStr(i) + 'Width', Columns[i].Width);
+        WriteInteger(name, 'Column' + IntToStr(i) + 'Position', Columns[i].Position);
+      end;
+    end;
+  end;
+
 begin
   with configfile do
   begin
@@ -5652,30 +5664,11 @@ begin
     WriteInteger('form', 'MainFormWidth', Width);
     WriteInteger('form', 'MainFormHeight', Height);
 
-    if vtDownload.Header.Columns.Count > 0 then
-     with vtDownload.Header.Columns do
-      for i := 0 to Count - 1 do
-        WriteInteger('form', 'vtDownload' + IntToStr(i) + 'Width', Items[i].Width);
-
-    if vtFavorites.Header.Columns.Count > 0 then
-     with vtFavorites.Header.Columns do
-      for i := 0 to Count - 1 do
-        WriteInteger('form', 'vtFavorites' + IntToStr(i) + 'Width', Items[i].Width);
-
-    WriteInteger('misc', 'SortDownloadColumn', vtDownload.Header.SortColumn);
-    WriteBool('misc', 'SortDownloadDirection', DLManager.SortDirection);
-
-    WriteInteger('misc', 'SortFavoritesColumn', vtFavorites.Header.SortColumn);
-    WriteBool('misc', 'SortFavoritesDirection', FavoriteManager.sortDirection);
+    savevt(vtDownload, 'vtDownload');
+    savevt(vtFavorites, 'vtFavorites');
 
     // lua website modules list
-    with LuaModulesUpdaterForm.vtLuaModulesRepos.Header do
-    begin
-      WriteInteger('websitemodules', 'SortColumn', SortColumn);
-      WriteInteger('websitemodules', 'SortDirection', Integer(SortDirection));
-      for i := 0 to Columns.Count - 1 do
-        WriteInteger('websitemodules', 'Column' + IntToStr(i) + 'Width', Columns[i].Width);
-    end;
+    savevt(LuaModulesUpdaterForm.vtLuaModulesRepos, 'vtLuaModulesRepos');
   end;
 end;
 
