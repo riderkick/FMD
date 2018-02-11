@@ -5,20 +5,47 @@ Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
 0.9.136.0 (12-02-2018)
+[+] Added website modules updater
+[+] Added RavenScans [SP-SC]
+[+] Added KirishimaFansub [SP-SC]
+[+] Added NoraNoFansub [SP-SC]
+[+] Added YamiTenshiNoFansub [SP-SC]
+[+] Added Mangavy [ID]
+[-] Removed MangaWorksFansub
+[-] Removed MasterPieceScans
+[-] Removed R15TeamScanlation
+[*] TonarinoYoungJump: fixed all
+[*] Hentai2Read: fixed info
+[*] Mangadex: limit maximum connections to 4
+[*] Update Turkish localization
 [*] Various changes and bug fixes
 Full changes: https://github.com/riderkick/FMD/compare/0.9.135.0...0.9.136.0
 
 0.9.135.0 (10-02-2018)
+[+] Added option to convert WebP to PNG/JPEG
+[-] Removed AnimeA
+[-] Removed CentrumMangi_PL
+[-] Removed DM5
+[-] Removed Imanhua
+[-] Removed MangaLib_PL
+[-] Removed MangaAr
+[-] Removed MangaAt
+[*] MangaStream: fixed download
+[*] Update Russian localization
 [*] Various changes and bug fixes
 Full changes: https://github.com/riderkick/FMD/compare/0.9.134.0...0.9.135.0
 
 0.9.134.0 (08-02-2018)
+[+] Added Lhscans [RAW]
+[+] Added Mangakakalot/Manganelo [EN]
+[+] Added Mangawindow [EN]
+[*] MangaStream: fixed domain
+[*] Update Turkish localization
 [*] Various changes and bug fixes
 Full changes: https://github.com/riderkick/FMD/compare/0.9.133.0...0.9.134.0
 
 0.9.133.0 (07-02-2018)
 [+] Added left download toolbar to move selected download(s). Options > View
-[*] View manga info preserve saveto location from download or favorite
 [+] Added Lua support to add website module at runtime
 [+] Added WorldThree [EN-SC]
 [+] Added PsychoPlay [EN-SC]
@@ -27,6 +54,7 @@ Full changes: https://github.com/riderkick/FMD/compare/0.9.133.0...0.9.134.0
 [+] Added Imgur
 [-] Removed MangaSpy
 [-] Removed MangaIce
+[*] View manga info preserve saveto location from download or favorite
 [*] MangaZuki: fixed all
 [*] Comico: fixed all
 [*] MangaGo: fixed all
