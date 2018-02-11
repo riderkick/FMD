@@ -126,11 +126,14 @@ type
     FMainRepos: TLuaModulesRepos;
     FThreads: TFPList;
     FThreadsCS: TRTLCriticalSection;
+    FDownloadedCount: Integer;
+    FProceed: Boolean;
     procedure RemoveThread(const T: TDownloadThread);
     procedure AddThread(const T: TDownloadThread);
   protected
     procedure SyncStartChecking;
     procedure SyncFinishChecking;
+    procedure SyncAskToProceed;
     procedure SyncStartDownload;
     procedure SyncFinishDownload;
     procedure SyncFinal;
@@ -154,6 +157,10 @@ resourcestring
   RS_FinishChecking = 'Finish checking';
   RS_StartDownloading = 'Downloading...';
   RS_FinishDownload = 'Finish download';
+  RS_NewUpdateFoundTitle = 'Modules update found!';
+  RS_NewUpdateFoundLostChanges = 'Modules update found, any local changes will be lost, procced?';
+  RS_ModulesUpdatedTitle = 'Modules updated!';
+  RS_ModulesUpdatedRestart = 'Modules updated, restart now?';
 
 implementation
 
@@ -430,7 +437,10 @@ begin
       begin
         FHTTP.Document.SaveToFile(f);
         if FileExists(f) then
+        begin
           FModule.flag := fDownloaded;
+          FOwner.FDownloadedCount := InterLockedIncrement(FOwner.FDownloadedCount);
+        end;
       end;
     end;
   end
@@ -495,6 +505,12 @@ begin
   finally
     FOwner.vtLuaModulesRepos.EndUpdate;
   end;
+end;
+
+procedure TCheckUpdateThread.SyncAskToProceed;
+begin
+  FProceed := MessageDlg(RS_NewUpdateFoundTitle, RS_NewUpdateFoundLostChanges,
+    mtConfirmation, mbYesNo, 0) = mrYes;
 end;
 
 procedure TCheckUpdateThread.SyncStartDownload;
@@ -709,13 +725,12 @@ begin
         end;
 
     Synchronize(@SyncFinishChecking);
+
     if foundupdate and (not Terminated) then
     begin
-      Sleep(500);
-      if not Terminated then
-      begin
+      Synchronize(@SyncAskToProceed);
+      if FProceed then
         Download;
-      end;
     end;
 
     // cleanup
@@ -746,6 +761,11 @@ begin
   if not Terminated then
     Sleep(1000);
   Synchronize(@SyncFinal);
+
+  if (FDownloadedCount <> 0) and
+    (MessageDlg(RS_ModulesUpdatedTitle, RS_ModulesUpdatedRestart, mtConfirmation,
+    mbYesNo, 0) = mrYes) then
+      RestartFMD;
 end;
 
 constructor TCheckUpdateThread.Create(const AOwner: TLuaModulesUpdaterForm);
@@ -755,6 +775,7 @@ begin
   FOwner := AOwner;
   FHTTP := THTTPSendThread.Create(Self);
   FThreads := TFPList.Create;
+  FDownloadedCount := 0;
 end;
 
 destructor TCheckUpdateThread.Destroy;

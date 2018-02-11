@@ -90,6 +90,22 @@ msgstr ""
 msgid "Finish download"
 msgstr ""
 
+#: frmluamodulesupdater.rs_modulesupdatedrestart
+msgid "Modules updated, restart now?"
+msgstr ""
+
+#: frmluamodulesupdater.rs_modulesupdatedtitle
+msgid "Modules updated!"
+msgstr ""
+
+#: frmluamodulesupdater.rs_newupdatefoundlostchanges
+msgid "Modules update found, any local changes will be lost, procced?"
+msgstr ""
+
+#: frmluamodulesupdater.rs_newupdatefoundtitle
+msgid "Modules update found!"
+msgstr ""
+
 #: frmluamodulesupdater.rs_startdownloading
 msgid "Downloading..."
 msgstr ""
