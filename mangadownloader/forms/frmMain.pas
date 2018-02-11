@@ -1459,6 +1459,9 @@ begin
     Logger.Send(QuotedStrd(Application.Title)+' exit normally [PID:'+IntToStr(GetProcessID)+'] [HANDLE:'+IntToStr(GetCurrentProcess)+']')
   else
     Logger.SendWarning(QuotedStrd(Application.Title)+' doesn''t exit normally [PID:'+IntToStr(GetProcessID)+'] [HANDLE:'+IntToStr(GetCurrentProcess)+']');
+
+  if OptionRestartFMD then
+    DoRestartFMD;
 end;
 
 procedure TMainForm.FormShow(Sender: TObject);

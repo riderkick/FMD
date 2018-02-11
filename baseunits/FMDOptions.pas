@@ -158,6 +158,8 @@ var
 
   OptionRemoveMangaNameFromChapter: Boolean = False;
 
+  OptionRestartFMD: Boolean = False;
+
   //custom color
   //basiclist
   CL_BSNormalText: TColor = clWindowText;
@@ -185,7 +187,12 @@ var
 procedure SetFMDdirectory(const ADir: String);
 procedure SetAppDataDirectory(const ADir: String);
 
+procedure RestartFMD;
+procedure DoRestartFMD;
+
 implementation
+
+uses FMDVars, UTF8Process;
 
 { TIniFileRun }
 
@@ -325,6 +332,30 @@ begin
   FAVORITESDB_FILE := WORK_FOLDER + 'favorites.db';
 
   SetIniFiles;
+end;
+
+procedure RestartFMD;
+begin
+  OptionRestartFMD := True;
+  FormMain.Close;
+end;
+
+procedure DoRestartFMD;
+var
+  p: TProcessUTF8;
+  i: Integer;
+begin
+  p := TProcessUTF8.Create(nil);
+  try
+    p.InheritHandles := False;
+    p.CurrentDirectory := ExtractFilePath(Application.ExeName);
+    p.Executable := Application.ExeName;
+    for i := 1 to ParamCount do
+      p.Parameters.Add(ParamStrUTF8(i));
+    p.Execute;
+  finally
+    p.Free;
+  end;
 end;
 
 function GetCurrentBinVersion: String;
