@@ -27,8 +27,9 @@ function GetInfo();
     mangainfo.summary = x.XPathString('//div[@class="well"]/p')
     v = x.Xpath('//ul[@class="chapters"]/li/*[self::h5 or self::h3]')
     for i = 1, v.Count do
-      mangainfo.chapterLinks.Add(x.XPathString('a/@href', v))
-      mangainfo.chapterNames.Add(x.XPathString('normalize-space(.)', v))
+      v2 = v.Get(i)
+      mangainfo.chapterLinks.Add(x.XPathString('a/@href', v2))
+      mangainfo.chapterNames.Add(x.XPathString('normalize-space(.)', v2))
     end
     InvertStrings(mangainfo.chapterLinks, mangainfo.chapterNames)
     return no_error
