@@ -28,7 +28,7 @@ var
 {$R *.res}
 
 begin
-  for i := 1 to ParamCount-1 do
+  for i := 1 to ParamCount do
   begin
     p := AnsiLowerCase(ParamStr(i));
     if p = '--lua-dofile' then
