@@ -581,11 +581,11 @@ msgstr "Periksa pembaruan"
 
 #: tluamodulesupdaterform.ckautorestart.caption
 msgid "Auto restart"
-msgstr ""
+msgstr "Otomatis memuat ulang"
 
 #: tluamodulesupdaterform.ckshowupdatewarning.caption
 msgid "Show update warning"
-msgstr ""
+msgstr "Tampilkan peringatan pembaruan"
 
 #: tluamodulesupdaterform.vtluamodulesrepos.header.columns[0].text
 msgid "Filename"
