@@ -550,16 +550,18 @@ object MainForm: TMainForm
             Top = 0
             Width = 171
             Anchors = [akTop, akLeft, akRight]
+            AutoComplete = True
+            AutoCompleteText = [cbactEnabled, cbactEndOfLineComplete, cbactSearchAscending]
+            AutoDropDown = True
             ItemHeight = 15
             ItemIndex = 0
             Items.Strings = (
               ''
             )
-            OnChange = cbSelectMangaChange
+            OnEditingDone = cbSelectMangaEditingDone
             ParentShowHint = False
             ShowHint = True
             Sorted = True
-            Style = csDropDownList
             TabOrder = 1
           end
           object btUpdateList: TSpeedButton

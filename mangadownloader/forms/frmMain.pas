@@ -439,7 +439,7 @@ type
     procedure cbOptionDigitChapterChange(Sender: TObject);
     procedure cbOptionDigitVolumeChange(Sender: TObject);
     procedure cbOptionGenerateMangaFolderChange(Sender: TObject);
-    procedure cbSelectMangaChange(Sender: TObject);
+    procedure cbSelectMangaEditingDone(Sender: TObject);
     procedure clbChapterListBeforeCellPaint(Sender: TBaseVirtualTree;
       TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
       CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
@@ -2568,6 +2568,31 @@ begin
   lbOptionMangaCustomRenameHint.Enabled := edOptionMangaCustomRename.Enabled;
 end;
 
+procedure TMainForm.cbSelectMangaEditingDone(Sender: TObject);
+begin
+  if cbSelectManga.ItemIndex < 0 then
+    Exit;
+  if currentWebsite <> cbSelectManga.Items[cbSelectManga.ItemIndex] then
+  begin
+    configfile.WriteInteger('form', 'SelectManga', cbSelectManga.ItemIndex);
+    currentWebsite := cbSelectManga.Items[cbSelectManga.ItemIndex];
+    vtMangaList.Clear;
+    if dataProcess = nil then
+      dataProcess := TDBDataProcess.Create
+    else
+    if dataProcess.Connected then
+      dataProcess.Close;
+    lbMode.Caption := Format(RS_ModeAll, [0]);
+    if DataFileExist(cbSelectManga.Items[cbSelectManga.ItemIndex]) then
+    begin
+      OpenDataDB(cbSelectManga.Items[cbSelectManga.ItemIndex]);
+    end
+    else
+    if cbOptionShowDownloadMangalistDialog.Checked then
+      RunGetList;
+  end;
+end;
+
 procedure TMainForm.btReadOnlineClick(Sender: TObject);
 begin
   OpenURL(mangaInfo.url);
@@ -2645,31 +2670,6 @@ begin
       pmChapterList.Alignment := Menus.paLeft;
     end;
   clbChapterList.SetFocus;
-end;
-
-procedure TMainForm.cbSelectMangaChange(Sender: TObject);
-begin
-  if cbSelectManga.ItemIndex < 0 then
-    Exit;
-  configfile.WriteInteger('form', 'SelectManga', cbSelectManga.ItemIndex);
-  if currentWebsite <> cbSelectManga.Items[cbSelectManga.ItemIndex] then
-  begin
-    currentWebsite := cbSelectManga.Items[cbSelectManga.ItemIndex];
-    vtMangaList.Clear;
-    if dataProcess = nil then
-      dataProcess := TDBDataProcess.Create
-    else
-    if dataProcess.Connected then
-      dataProcess.Close;
-    lbMode.Caption := Format(RS_ModeAll, [0]);
-    if DataFileExist(cbSelectManga.Items[cbSelectManga.ItemIndex]) then
-    begin
-      OpenDataDB(cbSelectManga.Items[cbSelectManga.ItemIndex]);
-    end
-    else
-    if cbOptionShowDownloadMangalistDialog.Checked then
-      RunGetList;
-  end;
 end;
 
 procedure TMainForm.clbChapterListBeforeCellPaint(Sender: TBaseVirtualTree;
@@ -5162,7 +5162,7 @@ begin
       if cbSelectManga.Items.Count > 0 then
       begin
         cbSelectManga.ItemIndex := 0;
-        cbSelectMangaChange(cbSelectManga);
+        cbSelectMangaEditingDone(cbSelectManga);
       end
       else
       begin
