@@ -52,6 +52,7 @@ type
     cbOptionAutoCheckFavDownload: TCheckBox;
     cbOptionAutoCheckFavRemoveCompletedManga: TCheckBox;
     cbOptionAutoOpenFavStartup: TCheckBox;
+    cbOptionDeleteCompletedTasksOnClose: TCheckBox;
     cbOptionEnableLoadCover: TCheckBox;
     cbOptionMinimizeOnStart: TCheckBox;
     cbOptionShowBalloonHint: TCheckBox;
@@ -1323,6 +1324,11 @@ end;
 procedure TMainForm.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 begin
   Logger.Send(Self.ClassName+'.FormClose');
+  if cbOptionDeleteCompletedTasksOnClose.Checked then
+  begin
+    if DLManager.TaskStatusPresent([STATUS_FINISH]) then
+      miDownloadDeleteCompletedClick(miDownloadDeleteCompleted);
+  end;
   if cbOptionShowQuitDialog.Checked and (DoAfterFMD = DO_NOTHING) then
   begin
     if MessageDlg('', RS_DlgQuit, mtConfirmation, [mbYes, mbNo], 0) <> mrYes then
@@ -4889,6 +4895,7 @@ begin
     cbOptionLiveSearch.Checked := ReadBool('general', 'LiveSearch', True);
     cbOptionMinimizeOnStart.Checked := ReadBool('general', 'MinimizeOnStart', False);
     cbOptionMinimizeToTray.Checked := ReadBool('general', 'MinimizeToTray', False);
+    cbOptionDeleteCompletedTasksOnClose.Checked := ReadBool('general', 'DeleteCompletedTasksOnClose', False);
     cbOptionLetFMDDo.ItemIndex := ReadInteger('general', 'LetFMDDo', 0);
     edOptionExternalPath.Text := ReadString('general', 'ExternalProgramPath', '');
     edOptionExternalParams.Text := ReadString('general', 'ExternalProgramParams', DEFAULT_EXPARAM);
@@ -5045,6 +5052,7 @@ begin
         WriteString('languages', 'Selected', AvailableLanguages.Names[cbLanguages.ItemIndex]);
       WriteBool('general', 'MinimizeOnStart', cbOptionMinimizeOnStart.Checked);
       WriteBool('general', 'MinimizeToTray', cbOptionMinimizeToTray.Checked);
+      WriteBool('general', 'DeleteCompletedTasksOnClose', cbOptionDeleteCompletedTasksOnClose.Checked);
       WriteInteger('general', 'LetFMDDo', cbOptionLetFMDDo.ItemIndex);
       WriteString('general', 'ExternalProgramPath', edOptionExternalPath.Text);
       WriteString('general', 'ExternalProgramParams', edOptionExternalParams.Text);
