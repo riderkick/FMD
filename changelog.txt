@@ -5,6 +5,7 @@ Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
 0.9.137.0 (--2018)
+[+] Added ChibiManga [EN-SC]
 [*] Fixed updater can't find 7za.exe, you need to download this release manually
 [*] Update Turkish localization
 [*] Update Indonesian localization

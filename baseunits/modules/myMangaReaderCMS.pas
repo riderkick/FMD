@@ -112,6 +112,7 @@ begin
   AddWebsiteModule('MangaID', 'http://mangaid.co');
   AddWebsiteModule('FallenAngelsScans','http://manga.fascans.com');
   AddWebsiteModule('MangaDesu','http://mangadesu.net');
+  AddWebsiteModule('ChibiManga','http://www.cmreader.info');
 end;
 
 initialization
