@@ -542,7 +542,7 @@ begin
   LANGUAGES_DIR := FMD_DIR + 'languages';
   CONFIG_FILE := CONFIG_DIR + PathDelim + 'config.ini';
   SZA := FMD_DIR + '7za.exe';
-  SZA := FMD_DIR + 'old_7za.exe';
+  OSZA := FMD_DIR + 'old_7za.exe';
 
   InitSimpleExceptionHandler;
   try
