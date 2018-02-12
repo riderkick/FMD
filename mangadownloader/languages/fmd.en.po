@@ -62,7 +62,6 @@ msgid "List of unimported manga"
 msgstr "List of unimported manga"
 
 #: frmluamodulesupdater.rs_checking
-#, fuzzy
 msgctxt "frmluamodulesupdater.rs_checking"
 msgid "Checking..."
 msgstr "Checking..."
@@ -70,35 +69,35 @@ msgstr "Checking..."
 #: frmluamodulesupdater.rs_checkupdate
 msgctxt "frmluamodulesupdater.rs_checkupdate"
 msgid "Check update"
-msgstr ""
+msgstr "Check update"
 
 #: frmluamodulesupdater.rs_finishchecking
 msgid "Finish checking"
-msgstr ""
+msgstr "Finish checking"
 
 #: frmluamodulesupdater.rs_finishdownload
 msgid "Finish download"
-msgstr ""
+msgstr "Finish download"
 
 #: frmluamodulesupdater.rs_modulesupdatedrestart
 msgid "Modules updated, restart now?"
-msgstr ""
+msgstr "Modules updated, restart now?"
 
 #: frmluamodulesupdater.rs_modulesupdatedtitle
 msgid "Modules updated!"
-msgstr ""
+msgstr "Modules updated!"
 
 #: frmluamodulesupdater.rs_newupdatefoundlostchanges
 msgid "Modules update found, any local changes will be lost, procced?"
-msgstr ""
+msgstr "Modules update found, any local changes will be lost, procced?"
 
 #: frmluamodulesupdater.rs_newupdatefoundtitle
 msgid "Modules update found!"
-msgstr ""
+msgstr "Modules update found!"
 
 #: frmluamodulesupdater.rs_startdownloading
 msgid "Downloading..."
-msgstr ""
+msgstr "Downloading..."
 
 #: frmmain.rs_alldownloads
 msgid "All downloads"
@@ -578,19 +577,19 @@ msgstr "Software:"
 #: tluamodulesupdaterform.btcheckupdate.caption
 msgctxt "tluamodulesupdaterform.btcheckupdate.caption"
 msgid "Check update"
-msgstr ""
+msgstr "Check update"
 
 #: tluamodulesupdaterform.vtluamodulesrepos.header.columns[0].text
 msgid "Filename"
-msgstr ""
+msgstr "Filename"
 
 #: tluamodulesupdaterform.vtluamodulesrepos.header.columns[1].text
 msgid "Last modified"
-msgstr ""
+msgstr "Last modified"
 
 #: tluamodulesupdaterform.vtluamodulesrepos.header.columns[2].text
 msgid "Last message"
-msgstr ""
+msgstr "Last message"
 
 #: tmainform.btabortupdatelist.hint
 msgid "Abort update list"
@@ -1982,7 +1981,7 @@ msgstr "Advanced"
 
 #: tmainform.tswebsitemodules.caption
 msgid "Modules"
-msgstr ""
+msgstr "Modules"
 
 #: tmainform.tswebsiteoptions.caption
 msgctxt "TMAINFORM.TSWEBSITEOPTIONS.CAPTION"
