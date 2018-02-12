@@ -1,6 +1,5 @@
 uses
   WPManga,
-  myMangaReaderCMS,
   MangaFox,
   Mangacan,
   PecintaKomik,
