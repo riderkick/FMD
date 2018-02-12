@@ -144,19 +144,33 @@ begin
   Result := 0;
 end;
 
+function xquery_xpathcount(L: Plua_State): Integer; cdecl;
+var
+  u: TUserData;
+begin
+  u := TUserData(luaClassGetObject(L));
+  if lua_gettop(L) = 2 then
+    lua_pushinteger(L, u.XPathCount(lua_tostring(L, 1),
+      TLuaIXQValue(luaGetUserData(L, 2)).FIXQValue))
+  else
+    lua_pushinteger(L, u.XPathCount(lua_tostring(L, 1)));
+  Result := 1;
+end;
+
 const
   constructs: packed array [0..2] of luaL_Reg = (
     (name: 'New'; func: @xquery_create),
     (name: 'Create'; func: @xquery_create),
     (name: nil; func: nil)
     );
-  methods: packed array [0..6] of luaL_Reg = (
+  methods: packed array [0..7] of luaL_Reg = (
     (name: 'ParseHTML'; func: @xquery_parsehtml),
     (name: 'XPath'; func: @xquery_xpath),
     (name: 'XPathString'; func: @xquery_xpathstring),
     (name: 'XpathStringAll'; func: @xquery_xpathstringall),
     (name: 'XpathHREFAll'; func: @xquery_xpathhrefall),
     (name: 'XpathHREFTitleAll'; func: @xquery_xpathhreftitleall),
+    (name: 'XPathCount'; func: @xquery_xpathcount),
     (name: nil; func: nil)
     );
 
