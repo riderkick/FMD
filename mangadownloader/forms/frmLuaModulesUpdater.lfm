@@ -156,6 +156,32 @@ object LuaModulesUpdaterForm: TLuaModulesUpdaterForm
     }
     OnClick = btCheckUpdateTerminateClick
   end
+  object ckShowUpdateWarning: TCheckBox
+    AnchorSideLeft.Control = btCheckUpdateTerminate
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = btCheckUpdate
+    AnchorSideTop.Side = asrCenter
+    Left = 155
+    Height = 19
+    Top = 8
+    Width = 135
+    BorderSpacing.Left = 10
+    Caption = 'Show update warning'
+    Checked = True
+    State = cbChecked
+    TabOrder = 2
+  end
+  object ckAutoRestart: TCheckBox
+    AnchorSideLeft.Control = ckShowUpdateWarning
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = ckShowUpdateWarning
+    Left = 292
+    Height = 19
+    Top = 8
+    Width = 82
+    Caption = 'Auto restart'
+    TabOrder = 3
+  end
   object imStates: TImageList
     left = 200
     top = 128

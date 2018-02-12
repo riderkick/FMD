@@ -588,6 +588,14 @@ msgctxt "tluamodulesupdaterform.btcheckupdate.caption"
 msgid "Check update"
 msgstr ""
 
+#: tluamodulesupdaterform.ckautorestart.caption
+msgid "Auto restart"
+msgstr ""
+
+#: tluamodulesupdaterform.ckshowupdatewarning.caption
+msgid "Show update warning"
+msgstr ""
+
 #: tluamodulesupdaterform.vtluamodulesrepos.header.columns[0].text
 msgid "Filename"
 msgstr ""

@@ -154,6 +154,10 @@ var
   OptionUpdateListNoMangaInfo: Boolean = False;
   OptionUpdateListRemoveDuplicateLocalData: Boolean = False;
 
+  // modules
+  OptionModulesUpdaterShowUpdateWarning: Boolean = True;
+  OptionModulesUpdaterAutoRestart: Boolean = False;
+
   OptionHTTPUseGzip: Boolean = True;
 
   OptionRemoveMangaNameFromChapter: Boolean = False;

@@ -62,6 +62,8 @@ type
 
   TLuaModulesUpdaterForm = class(TForm)
     btCheckUpdate: TBitBtn;
+    ckShowUpdateWarning: TCheckBox;
+    ckAutoRestart: TCheckBox;
     imStates: TImageList;
     btCheckUpdateTerminate: TSpeedButton;
     tmRepaintList: TTimer;
@@ -509,8 +511,9 @@ end;
 
 procedure TCheckUpdateThread.SyncAskToProceed;
 begin
-  FProceed := MessageDlg(RS_NewUpdateFoundTitle, RS_NewUpdateFoundLostChanges,
-    mtConfirmation, mbYesNo, 0) = mrYes;
+  FProceed := (not OptionModulesUpdaterShowUpdateWarning) or
+    (MessageDlg(RS_NewUpdateFoundTitle, RS_NewUpdateFoundLostChanges,
+    mtWarning, mbYesNo, 0) = mrYes);
 end;
 
 procedure TCheckUpdateThread.SyncStartDownload;
@@ -756,9 +759,9 @@ begin
     Sleep(1000);
   Synchronize(@SyncFinal);
 
-  if (FDownloadedCount <> 0) and
+  if (FDownloadedCount <> 0) and (OptionModulesUpdaterAutoRestart or
     (MessageDlg(RS_ModulesUpdatedTitle, RS_ModulesUpdatedRestart, mtConfirmation,
-    mbYesNo, 0) = mrYes) then
+    mbYesNo, 0) = mrYes)) then
       RestartFMD;
 end;
 
