@@ -591,11 +591,11 @@ msgstr "Проверить обновления"
 
 #: tluamodulesupdaterform.ckautorestart.caption
 msgid "Auto restart"
-msgstr ""
+msgstr "Автоматически перезапускать программу"
 
 #: tluamodulesupdaterform.ckshowupdatewarning.caption
 msgid "Show update warning"
-msgstr ""
+msgstr "Показывать предупреждение"
 
 #: tluamodulesupdaterform.vtluamodulesrepos.header.columns[0].text
 msgid "Filename"
