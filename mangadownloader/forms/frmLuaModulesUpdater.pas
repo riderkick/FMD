@@ -95,7 +95,6 @@ type
     Repos: TLuaModulesRepos;
     ThreadCheck: TCheckUpdateThread;
     procedure ListDirty;
-    procedure CheckUpdate;
     procedure LoadLocalRepos;
     procedure ReinitList(const ASort: Boolean = True);
     procedure SortList;
@@ -791,8 +790,8 @@ end;
 
 procedure TLuaModulesUpdaterForm.btCheckUpdateClick(Sender: TObject);
 begin
-  if btCheckUpdate.Caption = RS_CheckUpdate then
-    CheckUpdate;
+  if ThreadCheck = nil then
+    ThreadCheck := TCheckUpdateThread.Create(Self);
 end;
 
 procedure TLuaModulesUpdaterForm.FormCreate(Sender: TObject);
@@ -926,11 +925,6 @@ begin
     finally
       LeaveCriticalsection(FListCS);
     end;
-end;
-
-procedure TLuaModulesUpdaterForm.CheckUpdate;
-begin
-  ThreadCheck := TCheckUpdateThread.Create(Self);
 end;
 
 procedure TLuaModulesUpdaterForm.LoadLocalRepos;
