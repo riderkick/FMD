@@ -77,46 +77,42 @@ end;
 function xquery_xpathstringall(L: Plua_State): Integer; cdecl;
 var
   u: TUserData;
-  t: Integer;
 begin
+  Result := 0;
   u := TUserData(luaClassGetObject(L));
-  t := lua_gettop(L);
-  if t > 1 then
-    if t = 2 then
-    begin
-      if lua_isstring(L, 2) then
-      begin
-        lua_pushstring(L, u.XPathStringAll(lua_tostring(L, 1), lua_tostring(L, 2)));
-        Result := 1;
-      end
-      else
-      if lua_isuserdata(L, 2) then
-      begin
-        u.XPathStringAll(lua_tostring(L, 1), TStrings(luaGetUserData(L, 2)));
-        Result := 0;
-      end;
-    end
-    else
-    if t = 3 then
-    begin
-      if lua_isstring(L, 2) then
-      begin
-        lua_pushstring(L, u.XPathStringAll(lua_tostring(L, 1), lua_tostring(L, 2),
-          TLuaIXQValue(luaGetUserData(L, 3)).FIXQValue));
-        Result := 1;
-      end
-      else
-      if lua_isuserdata(L, 2) then
-      begin
-        u.XPathStringAll(lua_tostring(L, 1), TStrings(luaGetUserData(L, 2)),
-          TLuaIXQValue(luaGetUserData(L, 3)).FIXQValue);
-        Result := 0;
-      end;
-    end
-    else
-    begin
-      lua_pushstring(L, u.XPathStringAll(lua_tostring(L, 1)));
-      Result := 1;
+  case lua_gettop(L) of
+    1: begin
+         lua_pushstring(L, u.XPathStringAll(lua_tostring(L, 1)));
+         Result := 1;
+       end;
+    2: begin
+         if lua_isstring(L, 2) then
+         begin
+           lua_pushstring(L, u.XPathStringAll(lua_tostring(L, 1), lua_tostring(L, 2)));
+           Result := 1;
+         end
+         else
+         if lua_isuserdata(L, 2) then
+         begin
+           u.XPathStringAll(lua_tostring(L, 1), TStrings(luaGetUserData(L, 2)));
+           Result := 0;
+         end;
+       end;
+    3: begin
+         if lua_isstring(L, 2) then
+         begin
+           lua_pushstring(L, u.XPathStringAll(lua_tostring(L, 1), lua_tostring(L, 2),
+             TLuaIXQValue(luaGetUserData(L, 3)).FIXQValue));
+           Result := 1;
+         end
+         else
+         if lua_isuserdata(L, 2) then
+         begin
+           u.XPathStringAll(lua_tostring(L, 1), TStrings(luaGetUserData(L, 2)),
+             TLuaIXQValue(luaGetUserData(L, 3)).FIXQValue);
+           Result := 0;
+         end;
+       end;
     end;
 end;
 
