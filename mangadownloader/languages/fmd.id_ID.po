@@ -1,16 +1,5 @@
 msgid ""
-msgstr ""
-"Content-Type: text/plain; charset=UTF-8\n"
-"Project-Id-Version: \n"
-"POT-Creation-Date: \n"
-"PO-Revision-Date: \n"
-"Last-Translator: \n"
-"Language-Team: Cholif\n"
-"MIME-Version: 1.0\n"
-"Content-Transfer-Encoding: 8bit\n"
-"Language: id_ID\n"
-"X-Generator: Poedit 2.0.1\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+msgstr "Content-Type: text/plain; charset=UTF-8"
 
 #: ehentai.rs_downloadoriginalimage
 msgid "Download original image(require ExHentai account)"
@@ -73,7 +62,6 @@ msgid "List of unimported manga"
 msgstr "Daftar komik yang tidak bisa di-impor"
 
 #: frmluamodulesupdater.rs_checking
-#, fuzzy
 msgctxt "frmluamodulesupdater.rs_checking"
 msgid "Checking..."
 msgstr "Memeriksa..."
@@ -81,35 +69,35 @@ msgstr "Memeriksa..."
 #: frmluamodulesupdater.rs_checkupdate
 msgctxt "frmluamodulesupdater.rs_checkupdate"
 msgid "Check update"
-msgstr ""
+msgstr "Periksa pembaruan"
 
 #: frmluamodulesupdater.rs_finishchecking
 msgid "Finish checking"
-msgstr ""
+msgstr "Selesai memeriksa"
 
 #: frmluamodulesupdater.rs_finishdownload
 msgid "Finish download"
-msgstr ""
+msgstr "Selesai mengunduh"
 
 #: frmluamodulesupdater.rs_modulesupdatedrestart
 msgid "Modules updated, restart now?"
-msgstr ""
+msgstr "Module diperbarui, memulai ulang sekarang?"
 
 #: frmluamodulesupdater.rs_modulesupdatedtitle
 msgid "Modules updated!"
-msgstr ""
+msgstr "Modul diperbarui!"
 
 #: frmluamodulesupdater.rs_newupdatefoundlostchanges
 msgid "Modules update found, any local changes will be lost, procced?"
-msgstr ""
+msgstr "Pembaruan modul ditemukan, ubahan lokal akan hilang, lanjutkan?"
 
 #: frmluamodulesupdater.rs_newupdatefoundtitle
 msgid "Modules update found!"
-msgstr ""
+msgstr "Pembaruan modul ditemukan!"
 
 #: frmluamodulesupdater.rs_startdownloading
 msgid "Downloading..."
-msgstr ""
+msgstr "Mengunduh..."
 
 #: frmmain.rs_alldownloads
 msgid "All downloads"
@@ -264,7 +252,7 @@ msgstr "Judul:"
 #: frmmain.rs_infowebsite
 msgctxt "frmmain.rs_infowebsite"
 msgid "Website:"
-msgstr "Situs web:"
+msgstr "Situs:"
 
 #: frmmain.rs_inprogress
 msgid "In progress"
@@ -319,6 +307,10 @@ msgid ""
 "CBZ\n"
 "PDF\n"
 msgstr ""
+"Tidak ada\n"
+"ZIP\n"
+"CBZ\n"
+"PDF\n"
 
 #: frmmain.rs_optionfmddoitems
 msgid ""
@@ -355,6 +347,9 @@ msgid ""
 "PNG\n"
 "Jpeg\n"
 msgstr ""
+"WebP\n"
+"PNG\n"
+"Jpeg\n"
 
 #: frmmain.rs_webppnglevel
 msgid ""
@@ -363,6 +358,10 @@ msgid ""
 "Default\n"
 "Maximum\n"
 msgstr ""
+"None\n"
+"Fastest\n"
+"Default\n"
+"Maximum\n"
 
 #: frmmain.rs_wronginput
 msgid "Invalid input!"
@@ -387,10 +386,9 @@ msgstr "Komputer akan dimatikan dalam %d detik"
 #: frmtransferfavorites.rs_all
 msgctxt "frmtransferfavorites.rs_all"
 msgid "All"
-msgstr ""
+msgstr "Semua"
 
 #: frmtransferfavorites.rs_invalid
-#, fuzzy
 msgctxt "frmtransferfavorites.rs_invalid"
 msgid "Invalid"
 msgstr "Tidak valid"
@@ -398,7 +396,7 @@ msgstr "Tidak valid"
 #: frmtransferfavorites.rs_valid
 msgctxt "frmtransferfavorites.rs_valid"
 msgid "Valid"
-msgstr ""
+msgstr "Valid"
 
 #: kissmanga.rs_kissmanga_initvector
 msgid "Initialization Vector:"
@@ -452,7 +450,7 @@ msgstr "Segarkan"
 #: taccountmanagerform.vtaccountlist.header.columns[1].text
 msgctxt "taccountmanagerform.vtaccountlist.header.columns[1].text"
 msgid "Website"
-msgstr "Situs web"
+msgstr "Situs"
 
 #: taccountmanagerform.vtaccountlist.header.columns[2].text
 msgctxt "taccountmanagerform.vtaccountlist.header.columns[2].text"
@@ -490,7 +488,7 @@ msgstr "Nama user"
 #: taccountsetform.label1.caption
 msgctxt "taccountsetform.label1.caption"
 msgid "Website"
-msgstr "Situs web"
+msgstr "Situs"
 
 #: taccountsetform.label2.caption
 msgctxt "taccountsetform.label2.caption"
@@ -579,19 +577,19 @@ msgstr "Perangkat lunak:"
 #: tluamodulesupdaterform.btcheckupdate.caption
 msgctxt "tluamodulesupdaterform.btcheckupdate.caption"
 msgid "Check update"
-msgstr ""
+msgstr "Periksa pembaruan"
 
 #: tluamodulesupdaterform.vtluamodulesrepos.header.columns[0].text
 msgid "Filename"
-msgstr ""
+msgstr "Nama"
 
 #: tluamodulesupdaterform.vtluamodulesrepos.header.columns[1].text
 msgid "Last modified"
-msgstr ""
+msgstr "Terakhir diperbarui"
 
 #: tluamodulesupdaterform.vtluamodulesrepos.header.columns[2].text
 msgid "Last message"
-msgstr ""
+msgstr "Pesan terakhir"
 
 #: tmainform.btabortupdatelist.hint
 msgid "Abort update list"
@@ -789,7 +787,7 @@ msgstr "Tampilkan \"Hapus semua unduhan selesai\" di toolbar unduhan"
 
 #: tmainform.cboptionshowdownloadtoolbarleft.caption
 msgid "Show left downloads toolbar"
-msgstr ""
+msgstr "Tampilkan toolbar kiri"
 
 #: tmainform.cboptionshowquitdialog.caption
 msgid "Exit FMD"
@@ -821,11 +819,11 @@ msgstr "Regular Expression"
 
 #: tmainform.cbwebpconvertto.text
 msgid "PNG"
-msgstr ""
+msgstr "PNG"
 
 #: tmainform.cbwebppngcompressionlevel.text
 msgid "Fastest"
-msgstr ""
+msgstr "Paling cepat"
 
 #: tmainform.ckdroptarget.caption
 msgctxt "tmainform.ckdroptarget.caption"
@@ -1253,7 +1251,7 @@ msgstr "Masukkan URL disini"
 #: tmainform.edwebsitessearch.texthint
 msgctxt "tmainform.edwebsitessearch.texthint"
 msgid "Search website..."
-msgstr "Cari situs web..."
+msgstr "Cari situs..."
 
 #: tmainform.gbdialogs.caption
 msgid "Show dialog confirmation for"
@@ -1282,7 +1280,7 @@ msgstr "Mengubah nama"
 
 #: tmainform.gbwebp.caption
 msgid "WebP"
-msgstr ""
+msgstr "WebP"
 
 #: tmainform.lbdefaultdownloadpath.caption
 msgid "Choose the default download path:"
@@ -1539,15 +1537,15 @@ msgstr "Lokasi penyimpanan:"
 
 #: tmainform.lbwebpconvertto.caption
 msgid "Save WebP to"
-msgstr ""
+msgstr "Simpan WebP ke"
 
 #: tmainform.lbwebpjpegquality.caption
 msgid "Jpeg quality"
-msgstr ""
+msgstr "Kualitas Jpeg"
 
 #: tmainform.lbwebppngcompressionlevel.caption
 msgid "PNG Compression level"
-msgstr ""
+msgstr "Level kompresi PNG"
 
 #: tmainform.medturldelete.caption
 msgctxt "TMAINFORM.MEDTURLDELETE.CAPTION"
@@ -1726,7 +1724,7 @@ msgstr "Buka ..."
 
 #: tmainform.mifavoritesrename.caption
 msgid "Rename"
-msgstr ""
+msgstr "Ubah nama"
 
 #: tmainform.mifavoritesstopchecknewchapter.caption
 msgid "Stop check for new chapter"
@@ -1735,7 +1733,7 @@ msgstr "Berhenti periksa bab baru"
 #: tmainform.mifavoritestransferwebsite.caption
 msgctxt "tmainform.mifavoritestransferwebsite.caption"
 msgid "Transfer website"
-msgstr ""
+msgstr "Transfer website"
 
 #: tmainform.mifavoritesviewinfos.caption
 msgctxt "TMAINFORM.MIFAVORITESVIEWINFOS.CAPTION"
@@ -1874,19 +1872,19 @@ msgstr "Hentikan semua"
 
 #: tmainform.tbmidownloadmovebottom.hint
 msgid "Move selected item(s) to bottom"
-msgstr ""
+msgstr "Pindahkan item-item terpilih ke paling bawah"
 
 #: tmainform.tbmidownloadmovedown.hint
 msgid "Move selected item(s) down"
-msgstr ""
+msgstr "Pindahkan item-item terpilih ke bawah"
 
 #: tmainform.tbmidownloadmovetop.hint
 msgid "Move selected item(s) to top"
-msgstr ""
+msgstr "Pindahkan item-item terpilih ke paling atas"
 
 #: tmainform.tbmidownloadmoveup.hint
 msgid "Move selected item(s) up"
-msgstr ""
+msgstr "Pindahkan item-item terpilih ke atas"
 
 #: tmainform.tbwebsitescollapseall.caption
 msgid "Collapse All"
@@ -1983,7 +1981,7 @@ msgstr "Lanjutan"
 
 #: tmainform.tswebsitemodules.caption
 msgid "Modules"
-msgstr ""
+msgstr "Modul"
 
 #: tmainform.tswebsiteoptions.caption
 msgctxt "tmainform.tswebsiteoptions.caption"
@@ -1993,12 +1991,12 @@ msgstr "Pengaturan"
 #: tmainform.tswebsites.caption
 msgctxt "tmainform.tswebsites.caption"
 msgid "Websites"
-msgstr "Situs web"
+msgstr "Situs"
 
 #: tmainform.tswebsiteselection.caption
 msgctxt "tmainform.tswebsiteselection.caption"
 msgid "Websites"
-msgstr "Situs web"
+msgstr "Situs"
 
 #: tmainform.vtdownload.header.columns[0].text
 msgid "Manga"
@@ -2021,7 +2019,7 @@ msgstr "Kecepatan"
 #: tmainform.vtdownload.header.columns[4].text
 msgctxt "tmainform.vtdownload.header.columns[4].text"
 msgid "Website"
-msgstr "Situs web"
+msgstr "Situs"
 
 #: tmainform.vtdownload.header.columns[5].text
 msgctxt "tmainform.vtdownload.header.columns[5].text"
@@ -2049,7 +2047,7 @@ msgstr "Bab saat ini"
 #: tmainform.vtfavorites.header.columns[3].text
 msgctxt "TMAINFORM.VTFAVORITES.HEADER.COLUMNS[3].TEXT"
 msgid "Website"
-msgstr "Situs web"
+msgstr "Situs"
 
 #: tmainform.vtfavorites.header.columns[4].text
 msgctxt "TMAINFORM.VTFAVORITES.HEADER.COLUMNS[4].TEXT"
@@ -2089,37 +2087,34 @@ msgid "&Now"
 msgstr "&Sekarang"
 
 #: ttransferfavoritesform.btcancel.caption
-#, fuzzy
 msgctxt "ttransferfavoritesform.btcancel.caption"
 msgid "Cancel"
 msgstr "Batal"
 
 #: ttransferfavoritesform.btok.caption
-#, fuzzy
 msgctxt "ttransferfavoritesform.btok.caption"
 msgid "OK"
 msgstr "OK"
 
 #: ttransferfavoritesform.caption
 msgid "Transfer Favorites"
-msgstr ""
+msgstr "Transfer kesukaan"
 
 #: ttransferfavoritesform.ckcleardownloadedchapters.caption
 msgid "Clear downloaded chapter list and reload from server"
-msgstr ""
+msgstr "Bersihkan daftr bab terunduh dan muat ulang dari server"
 
 #: ttransferfavoritesform.lbtransferto.caption
 msgctxt "ttransferfavoritesform.lbtransferto.caption"
 msgid "Transfer to"
-msgstr ""
+msgstr "Transfer ke"
 
 #: ttransferfavoritesform.rball.caption
 msgctxt "ttransferfavoritesform.rball.caption"
 msgid "All"
-msgstr ""
+msgstr "Semua"
 
 #: ttransferfavoritesform.rbinvalid.caption
-#, fuzzy
 msgctxt "ttransferfavoritesform.rbinvalid.caption"
 msgid "Invalid"
 msgstr "Tidak valid"
@@ -2127,20 +2122,17 @@ msgstr "Tidak valid"
 #: ttransferfavoritesform.rbvalid.caption
 msgctxt "ttransferfavoritesform.rbvalid.caption"
 msgid "Valid"
-msgstr ""
+msgstr "Valid"
 
 #: ttransferfavoritesform.vtfavs.header.columns[1].text
-#, fuzzy
-#| msgid "Website"
 msgctxt "ttransferfavoritesform.vtfavs.header.columns[1].text"
 msgid "Title"
-msgstr "Situs web"
+msgstr "Judul"
 
 #: ttransferfavoritesform.vtfavs.header.columns[2].text
-#, fuzzy
 msgctxt "ttransferfavoritesform.vtfavs.header.columns[2].text"
 msgid "Website"
-msgstr "Situs web"
+msgstr "Situs"
 
 #: tupdatedialogform.btnlater.caption
 msgid "&Later"
@@ -2207,7 +2199,7 @@ msgstr "User Agent"
 #: twebsiteoptionadvancedform.vtcookies.header.columns[0].text
 msgctxt "twebsiteoptionadvancedform.vtcookies.header.columns[0].text"
 msgid "Website"
-msgstr "Situs web"
+msgstr "Situs"
 
 #: twebsiteoptionadvancedform.vtcookies.header.columns[1].text
 msgctxt "twebsiteoptionadvancedform.vtcookies.header.columns[1].text"
@@ -2217,7 +2209,7 @@ msgstr "Cookies"
 #: twebsiteoptionadvancedform.vtdownloadmaxthreadspertask.header.columns[0].text
 msgctxt "twebsiteoptionadvancedform.vtdownloadmaxthreadspertask.header.columns[0].text"
 msgid "Website"
-msgstr "Situs web"
+msgstr "Situs"
 
 #: twebsiteoptionadvancedform.vtdownloadmaxthreadspertask.header.columns[1].text
 msgctxt "twebsiteoptionadvancedform.vtdownloadmaxthreadspertask.header.columns[1].text"
@@ -2227,7 +2219,7 @@ msgstr "Nilai"
 #: twebsiteoptionadvancedform.vtupdatelistdirectorypagenumber.header.columns[0].text
 msgctxt "twebsiteoptionadvancedform.vtupdatelistdirectorypagenumber.header.columns[0].text"
 msgid "Website"
-msgstr "Situs web"
+msgstr "Situs"
 
 #: twebsiteoptionadvancedform.vtupdatelistdirectorypagenumber.header.columns[1].text
 msgctxt "twebsiteoptionadvancedform.vtupdatelistdirectorypagenumber.header.columns[1].text"
@@ -2237,7 +2229,7 @@ msgstr "Nilai"
 #: twebsiteoptionadvancedform.vtupdatelistnumberofthreads.header.columns[0].text
 msgctxt "twebsiteoptionadvancedform.vtupdatelistnumberofthreads.header.columns[0].text"
 msgid "Website"
-msgstr "Situs web"
+msgstr "Situs"
 
 #: twebsiteoptionadvancedform.vtupdatelistnumberofthreads.header.columns[1].text
 msgctxt "twebsiteoptionadvancedform.vtupdatelistnumberofthreads.header.columns[1].text"
@@ -2247,7 +2239,7 @@ msgstr "Nilai"
 #: twebsiteoptionadvancedform.vtuseragent.header.columns[0].text
 msgctxt "twebsiteoptionadvancedform.vtuseragent.header.columns[0].text"
 msgid "Website"
-msgstr "Situs web"
+msgstr "Situs"
 
 #: twebsiteoptionadvancedform.vtuseragent.header.columns[1].text
 msgctxt "twebsiteoptionadvancedform.vtuseragent.header.columns[1].text"
@@ -2256,7 +2248,7 @@ msgstr "User Agent"
 
 #: twebsiteselectionform.caption
 msgid "Select a website"
-msgstr "Pilih situs web"
+msgstr "Pilih situs"
 
 #: udownloadsmanager.rs_compressing
 msgid "Compressing..."
