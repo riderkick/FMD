@@ -218,13 +218,14 @@ end;
 
 procedure RegisterModule;
 
-  function AddWebsiteModule(AWebsite, ARootURL: String): TModuleContainer;
+  function AddWebsiteModule(AWebsite, ARootURL, ACategory: String): TModuleContainer;
   begin
     Result := AddModule;
     with Result do
     begin
       Website := AWebsite;
       RootURL := ARootURL;
+      Category := ACategory;
       SortedList := True;
       OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
       OnGetNameAndLink := @GetNameAndLink;
@@ -235,13 +236,14 @@ procedure RegisterModule;
   end;
 
 begin
-  AddWebsiteModule('MangaBoom', 'http://www.mangaboom.com');
-  AddWebsiteModule('Authrone', 'http://www.authrone.com');
-  AddWebsiteModule('EyeOnManga', 'http://www.eyeonmanga.com');
-  AddWebsiteModule('ReadHentaiManga', 'http://readhentaimanga.com');
-  AddWebsiteModule('MangaCow', 'http://mngcow.co');
-  AddWebsiteModule('HentaiRead', 'http://hentairead.com');
-  AddWebsiteModule('MangaDeep', 'http://www.mangadeep.com');
+  AddWebsiteModule('MangaBoom', 'http://www.mangaboom.com', 'Thai');
+  AddWebsiteModule('Authrone', 'http://www.authrone.com', 'English');
+  AddWebsiteModule('EyeOnManga', 'http://www.eyeonmanga.com', 'English');
+  AddWebsiteModule('ReadHentaiManga', 'http://readhentaimanga.com', 'H-Sites');
+  AddWebsiteModule('MangaCow', 'http://mngcow.co', 'English-Scanlation');
+  AddWebsiteModule('HentaiRead', 'http://hentairead.com', 'H-Sites');
+  AddWebsiteModule('MangaDeep', 'http://www.mangadeep.com', 'English');
+  AddWebsiteModule('MerakiScans', 'http://merakiscans.com', 'English-Scanlation');
 end;
 
 initialization
