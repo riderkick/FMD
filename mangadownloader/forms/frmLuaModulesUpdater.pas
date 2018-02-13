@@ -210,9 +210,7 @@ begin
   begin
     t.sha := sha;
     t.last_modified := last_modified;
-    if t.last_message <> '' then
-      t.last_message := LineEnding + t.last_message;
-    t.last_message := last_message + t.last_message;
+    t.last_message := last_message;
     t.flag := fUpdate;
   end;
 end;
