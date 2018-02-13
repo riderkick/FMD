@@ -84,6 +84,18 @@ begin
   Result := 1;
 end;
 
+function lua_htmldecode(L: Plua_State): Integer; cdecl;
+begin
+  lua_pushstring(L, HTMLDecode(lua_tostring(L, 1)));
+  Result := 1;
+end;
+
+function lua_urldecode(L: Plua_State): Integer; cdecl;
+begin
+  lua_pushstring(L, URLDecode(lua_tostring(L, 1)));
+  Result := 1;
+end;
+
 procedure luaBaseUnitRegister(L: Plua_State);
 begin
   luaPushFunctionGlobal(L, 'Pos', @lua_pos);
@@ -96,6 +108,8 @@ begin
   luaPushFunctionGlobal(L, 'RemoveURLDelim', @lua_removeurldelim);
   luaPushFunctionGlobal(L, 'RemoveURLDelimLeft', @lua_removeurldelimleft);
   luaPushFunctionGlobal(L, 'RegExprGetMatch', @lua_regexprgetmatch);
+  luaPushFunctionGlobal(L, 'HTMLDecode', @lua_htmldecode);
+  luaPushFunctionGlobal(L, 'URLDecode', @lua_urldecode);
 end;
 
 end.
