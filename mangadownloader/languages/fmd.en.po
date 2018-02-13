@@ -342,11 +342,6 @@ msgid "Today"
 msgstr "Today"
 
 #: frmmain.rs_webpconvertto
-#, fuzzy
-#| msgid ""
-#| "WebP\n"
-#| "PNG\n"
-#| "Jpeg\n"
 msgid ""
 "WebP\n"
 "PNG\n"
@@ -354,7 +349,7 @@ msgid ""
 msgstr ""
 "WebP\n"
 "PNG\n"
-"Jpeg\n"
+"JPEG\n"
 
 #: frmmain.rs_webppnglevel
 msgid ""
@@ -735,7 +730,7 @@ msgstr "Enable this if you have problem with unicode character in path."
 
 #: tmainform.cboptiondeletecompletedtasksonclose.caption
 msgid "Delete completed tasks on close"
-msgstr ""
+msgstr "Delete completed tasks on close"
 
 #: tmainform.cboptiondigitchapter.caption
 msgid "Chapter"
@@ -823,7 +818,6 @@ msgid "Use proxy"
 msgstr "Use proxy"
 
 #: tmainform.cbpngcompressionlevel.text
-#, fuzzy
 msgctxt "tmainform.cbpngcompressionlevel.text"
 msgid "Fastest"
 msgstr "Fastest"
@@ -841,7 +835,6 @@ msgid "Regular Expression"
 msgstr "Regular Expression"
 
 #: tmainform.cbwebpsaveas.text
-#, fuzzy
 msgctxt "tmainform.cbwebpsaveas.text"
 msgid "PNG"
 msgstr "PNG"
@@ -1178,7 +1171,7 @@ msgstr "Always start task from failed chapters"
 
 #: tmainform.ckpngsaveasjpeg.caption
 msgid "Save PNG as JPEG"
-msgstr ""
+msgstr "Save PNG as JPEG"
 
 #: tmainform.edcustomgenres.texthint
 msgid "Input custom genres, separated by comma"
@@ -1288,7 +1281,7 @@ msgstr "Drop Box"
 
 #: tmainform.gbimageconversion.caption
 msgid "Image Conversion"
-msgstr ""
+msgstr "Image Conversion"
 
 #: tmainform.gboptionexternal.caption
 msgid "External program"
@@ -1372,7 +1365,7 @@ msgstr "Title"
 
 #: tmainform.lbjpegquality.caption
 msgid "JPEG quality"
-msgstr ""
+msgstr "JPEG quality"
 
 #: tmainform.lblogfilename.caption
 msgid "Log file:"
@@ -1561,7 +1554,6 @@ msgid "Username"
 msgstr "Username"
 
 #: tmainform.lbpngcompressionlevel.caption
-#, fuzzy
 msgctxt "tmainform.lbpngcompressionlevel.caption"
 msgid "PNG Compression level"
 msgstr "PNG Compression level"
@@ -1572,7 +1564,7 @@ msgstr "Save to:"
 
 #: tmainform.lbwebpsaveas.caption
 msgid "Save WebP as"
-msgstr ""
+msgstr "Save WebP as"
 
 #: tmainform.medturldelete.caption
 msgctxt "TMAINFORM.MEDTURLDELETE.CAPTION"
