@@ -481,7 +481,6 @@ type
 
     procedure cbOptionUseProxyChange(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
-    procedure FormShow(Sender: TObject);
     procedure FormWindowStateChange(Sender: TObject);
     procedure miChapterListAscendingClick(Sender: TObject);
     procedure miFavoritesEnableClick(Sender: TObject);
@@ -933,11 +932,7 @@ implementation
 uses
   frmImportFavorites, frmShutdownCounter, frmSelectDirectory, WebsiteModules,
   FMDVars, RegExpr, sqlite3dyn, Clipbrd, ssl_openssl_lib, LazFileUtils, LazUTF8,
-  webp
-  {$ifdef USE_LUA_MODULE}
-  ,LuaWebsiteModules
-  {$endif}
-  ;
+  webp, LuaWebsiteModules;
 
 var
   // thread for open db
@@ -1310,16 +1305,16 @@ begin
   TransferRateGraphList.DataPoints.NameValueSeparator := '|';
   TransferRateGraph.Visible := False;
 
-  // load configfile
-  isStartup := False;
-  CollectLanguagesFromFiles;
-  LoadMangaOptions;
-  LoadOptions;
-  ApplyOptions;
-
   // minimize on start
-  if cbOptionMinimizeOnStart.Checked then
-    Application.ShowMainForm := False;
+  Application.ShowMainForm := False;
+
+  isStartup := False;
+  with TTimer.Create(nil) do
+  begin
+    OnTimer := @tmStartupTimer;
+    Interval := 16;
+    Enabled := True;
+  end;
 end;
 
 procedure TMainForm.FormClose(Sender: TObject; var CloseAction: TCloseAction);
@@ -1467,20 +1462,6 @@ begin
 
   if OptionRestartFMD then
     DoRestartFMD;
-end;
-
-procedure TMainForm.FormShow(Sender: TObject);
-begin
-  if not isStartup then
-  begin
-    LoadFormInformation;
-    with TTimer.Create(nil) do
-    begin
-      OnTimer := @tmStartupTimer;
-      Interval := 32;
-      Enabled := True;
-    end;
-  end;
 end;
 
 procedure TMainForm.cbOptionUseProxyChange(Sender: TObject);
@@ -1825,38 +1806,43 @@ end;
 
 procedure TMainForm.tmStartupTimer(Sender: TObject);
 begin
-  if not isStartup then
+  isStartup := True;
+
+  //load lua modules
+  ScanLuaWebsiteModulesFile;
+  AddToAboutStatus('Modules', IntToStr(Modules.Count));
+
+  // load configfile
+  LoadFormInformation;
+  CollectLanguagesFromFiles;
+  LoadMangaOptions;
+  LoadOptions;
+  ApplyOptions;
+
+  if not cbOptionMinimizeOnStart.Checked then
+    Self.Show;
+
+  //restore everything after all modules loaded
+  DLManager.Restore;
+  UpdateVtDownload;
+
+  FavoriteManager.Restore;
+  UpdateVtFavorites;
+
+  if cbSelectManga.ItemIndex > -1 then
+    OpenDataDB(cbSelectManga.Items[cbSelectManga.ItemIndex]);
+  if OptionAutoCheckLatestVersion then
   begin
-    isStartup := True;
-
-    {$ifdef USE_LUA_MODULE}
-    //load lua modules
-    ScanLuaWebsiteModulesFile;
-    {$endif}
-
-    AddToAboutStatus('Modules', IntToStr(Modules.Count));
-
-    //restore everything after all modules loaded
-    DLManager.Restore;
-    UpdateVtDownload;
-
-    FavoriteManager.Restore;
-    UpdateVtFavorites;
-
-    if cbSelectManga.ItemIndex > -1 then
-      OpenDataDB(cbSelectManga.Items[cbSelectManga.ItemIndex]);
-    if OptionAutoCheckLatestVersion then
-    begin
-      btCheckLatestVersionClick(btCheckLatestVersion);
-      LuaModulesUpdaterForm.btCheckUpdateClick(LuaModulesUpdaterForm.btCheckUpdate);
-    end;
-    if OptionAutoCheckFavStartup then
-    begin
-      FavoriteManager.isAuto := True;
-      FavoriteManager.CheckForNewChapter;
-    end;
-    DLManager.CheckAndActiveTaskAtStartup;
+    btCheckLatestVersionClick(btCheckLatestVersion);
+    LuaModulesUpdaterForm.btCheckUpdateClick(LuaModulesUpdaterForm.btCheckUpdate);
   end;
+  if OptionAutoCheckFavStartup then
+  begin
+    FavoriteManager.isAuto := True;
+    FavoriteManager.CheckForNewChapter;
+  end;
+  DLManager.CheckAndActiveTaskAtStartup;
+
   if Sender is TTimer then
     TTimer(Sender).Free;
 end;

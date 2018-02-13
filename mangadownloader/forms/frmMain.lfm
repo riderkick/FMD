@@ -12,7 +12,6 @@ object MainForm: TMainForm
   OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
-  OnShow = FormShow
   OnWindowStateChange = FormWindowStateChange
   Position = poScreenCenter
   ShowHint = True
