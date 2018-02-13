@@ -204,6 +204,7 @@ function Init()
     AddWebsiteModule('WorldThree', 'http://www.slide.world-three.org')
     AddWebsiteModule('S2Scans', 'https://reader.s2smanga.com')
     AddWebsiteModule('HotChocolateScans', 'http://hotchocolatescans.com')
+    AddWebsiteModule('LetItGoScans', 'http://reader.letitgo.scans.today')
     
     -- es-sc
     AddWebsiteModule('DangoOnlineNoFansub', 'http://lector.dangolinenofansub.com')
