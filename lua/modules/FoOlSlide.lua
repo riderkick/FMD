@@ -6,6 +6,7 @@ local dirurlslideU = '/Slide/directory/'
 local dirurlonline = '/online/directory/'
 local dirurlhelvetica = '/r/directory/'
 local dirurllector = '/lector/directory/'
+local dirurlfsdir = '/fs/directory/'
 
 function getWithCookie(lurl)
     local needCookie = {
@@ -40,7 +41,8 @@ function getdirurl(website)
         ['SeinagiFansub'] = dirurlonline,
         ['HelveticaScans'] = dirurlhelvetica,
         ['RavensScans'] = dirurllector,
-        ['NoraNoFansub'] = dirurllector
+        ['NoraNoFansub'] = dirurllector,
+        ['HotChocolateScans'] = dirurlfsdir
     }    
     if dirs[website] ~= nil then
         return dirs[website]
@@ -201,6 +203,7 @@ function Init()
     AddWebsiteModule('ChampionScans', 'http://reader.championscans.com')
     AddWebsiteModule('WorldThree', 'http://www.slide.world-three.org')
     AddWebsiteModule('S2Scans', 'https://reader.s2smanga.com')
+    AddWebsiteModule('HotChocolateScans', 'http://hotchocolatescans.com')
     
     -- es-sc
     AddWebsiteModule('DangoOnlineNoFansub', 'http://lector.dangolinenofansub.com')
