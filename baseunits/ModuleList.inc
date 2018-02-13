@@ -1,5 +1,4 @@
 uses
-  WPManga,
   MangaFox,
   Mangacan,
   PecintaKomik,
