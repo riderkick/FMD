@@ -76,7 +76,7 @@ const
     );
   props: packed array[0..2] of luaL_Reg_prop = (
     (name: 'Document'; funcget: @http_document; funcset: nil),
-    (name: 'ThreadTerminated'; funcget: @http_threadterminated; funcset: nil),
+    (name: 'Terminated'; funcget: @http_threadterminated; funcset: nil),
     (name: nil; funcget: nil; funcset: nil)
     );
 
