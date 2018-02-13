@@ -61,8 +61,9 @@ end
 
 function Init()
     local m = NewModule()
+    m.category = 'English-Scanlation'
     m.website = 'EGScans'
-    m.rooturl = 'http://read.egscans.com'
+    m.rooturl = 'http://read.egscans.com'    
     m.lastupdated = 'february, 10 2018'
     m.ongetinfo = 'getinfo'
     m.OnTaskStart = 'taskstart'

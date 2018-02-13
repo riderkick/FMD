@@ -57,6 +57,7 @@ end
 
 function Init()
   m=NewModule()
+  m.category='Indonesian'
   m.website='NeuManga'
   m.rooturl='http://neumanga.tv'
   m.lastupdated='February 12, 2018'

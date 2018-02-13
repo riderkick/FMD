@@ -43,6 +43,7 @@ end
 
 function Init()
   m=NewModule()
+  m.category='English-Scanlation'
   m.website='MangaStream'
   m.rooturl='https://readms.net'
   m.lastupdated='February 8, 2018'

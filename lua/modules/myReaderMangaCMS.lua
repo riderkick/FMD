@@ -51,8 +51,9 @@ function GetPageNumber()
   end
 end
 
-function AddWebsiteModule(name, url)
+function AddWebsiteModule(name, url, cat)
   local m = NewModule()
+  m.category = cat
   m.Website = name
   m.RootURL = url
   m.LastUpdated = 'February 12, 2018'
@@ -63,11 +64,11 @@ function AddWebsiteModule(name, url)
 end
 
 function Init()
-  AddWebsiteModule('Komikid', 'http://www.komikid.com');
-  AddWebsiteModule('MangaDenizi', 'http://www.mangadenizi.com');
-  AddWebsiteModule('MangaDoor', 'http://mangadoor.com');
-  AddWebsiteModule('MangaID', 'http://mangaid.co');
-  AddWebsiteModule('FallenAngelsScans','http://manga.fascans.com');
-  AddWebsiteModule('MangaDesu','http://mangadesu.net');
-  AddWebsiteModule('ChibiManga','http://www.cmreader.info');
+  AddWebsiteModule('Komikid', 'http://www.komikid.com', 'Indonesian');
+  AddWebsiteModule('MangaDenizi', 'http://www.mangadenizi.com', 'Turkish');
+  AddWebsiteModule('MangaDoor', 'http://mangadoor.com', 'Spanish');
+  AddWebsiteModule('MangaID', 'http://mangaid.co', 'Indonesian');
+  AddWebsiteModule('FallenAngelsScans','http://manga.fascans.com', 'English-Scanlation');
+  AddWebsiteModule('MangaDesu','http://mangadesu.net', 'Indonesian');
+  AddWebsiteModule('ChibiManga','http://www.cmreader.info', 'English-Scanlation');
 end
