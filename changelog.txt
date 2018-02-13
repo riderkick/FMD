@@ -4,6 +4,15 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.138.0 (--2018)
+[+] Added option to delete completed task on close
+[+] Added option to convert PNG images to JPEG
+[+] Added NeuManga [ID]
+[+] Added HotChoholateScans [EN-SC]
+[+] Added LetItGoScans [EN-SC]
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.137.0...0.9.138.0
+
 0.9.137.0 (12-02-2018)
 [+] Added ChibiManga [EN-SC]
 [*] Fixed updater can't find 7za.exe, you need to download this release manually
