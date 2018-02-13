@@ -342,11 +342,6 @@ msgid "Today"
 msgstr "Hari ini"
 
 #: frmmain.rs_webpconvertto
-#, fuzzy
-#| msgid ""
-#| "WebP\n"
-#| "PNG\n"
-#| "Jpeg\n"
 msgid ""
 "WebP\n"
 "PNG\n"
@@ -354,7 +349,7 @@ msgid ""
 msgstr ""
 "WebP\n"
 "PNG\n"
-"Jpeg\n"
+"PNG\n"
 
 #: frmmain.rs_webppnglevel
 msgid ""
@@ -735,7 +730,7 @@ msgstr "Aktifkan pilihan ini jika anda mengalami masalah dengan karakter unicode
 
 #: tmainform.cboptiondeletecompletedtasksonclose.caption
 msgid "Delete completed tasks on close"
-msgstr ""
+msgstr "Hapus unduhan yang selesai saat ditutup"
 
 #: tmainform.cboptiondigitchapter.caption
 msgid "Chapter"
@@ -823,7 +818,6 @@ msgid "Use proxy"
 msgstr "Gunakan proxy"
 
 #: tmainform.cbpngcompressionlevel.text
-#, fuzzy
 msgctxt "tmainform.cbpngcompressionlevel.text"
 msgid "Fastest"
 msgstr "Paling cepat"
@@ -841,7 +835,6 @@ msgid "Regular Expression"
 msgstr "Regular Expression"
 
 #: tmainform.cbwebpsaveas.text
-#, fuzzy
 msgctxt "tmainform.cbwebpsaveas.text"
 msgid "PNG"
 msgstr "PNG"
@@ -1178,7 +1171,7 @@ msgstr "Selalu mulai undudah dari bab yang gagal"
 
 #: tmainform.ckpngsaveasjpeg.caption
 msgid "Save PNG as JPEG"
-msgstr ""
+msgstr "Simpan PNG sebagai JPEG"
 
 #: tmainform.edcustomgenres.texthint
 msgid "Input custom genres, separated by comma"
@@ -1288,7 +1281,7 @@ msgstr "Kotak unduh"
 
 #: tmainform.gbimageconversion.caption
 msgid "Image Conversion"
-msgstr ""
+msgstr "Konversi gambar"
 
 #: tmainform.gboptionexternal.caption
 msgid "External program"
@@ -1372,7 +1365,7 @@ msgstr "Judul"
 
 #: tmainform.lbjpegquality.caption
 msgid "JPEG quality"
-msgstr ""
+msgstr "Kualitas JPEG"
 
 #: tmainform.lblogfilename.caption
 msgid "Log file:"
@@ -1561,7 +1554,6 @@ msgid "Username"
 msgstr "Nama user"
 
 #: tmainform.lbpngcompressionlevel.caption
-#, fuzzy
 msgctxt "tmainform.lbpngcompressionlevel.caption"
 msgid "PNG Compression level"
 msgstr "Level kompresi PNG"
@@ -1572,7 +1564,7 @@ msgstr "Lokasi penyimpanan:"
 
 #: tmainform.lbwebpsaveas.caption
 msgid "Save WebP as"
-msgstr ""
+msgstr "Simpan WebP sebagai"
 
 #: tmainform.medturldelete.caption
 msgctxt "TMAINFORM.MEDTURLDELETE.CAPTION"
