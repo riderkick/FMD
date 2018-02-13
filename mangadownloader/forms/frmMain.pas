@@ -1324,11 +1324,6 @@ end;
 procedure TMainForm.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 begin
   Logger.Send(Self.ClassName+'.FormClose');
-  if cbOptionDeleteCompletedTasksOnClose.Checked then
-  begin
-    if DLManager.TaskStatusPresent([STATUS_FINISH]) then
-      miDownloadDeleteCompletedClick(miDownloadDeleteCompleted);
-  end;
   if cbOptionShowQuitDialog.Checked and (DoAfterFMD = DO_NOTHING) then
   begin
     if MessageDlg('', RS_DlgQuit, mtConfirmation, [mbYes, mbNo], 0) <> mrYes then
@@ -1344,6 +1339,9 @@ end;
 
 procedure TMainForm.CloseNow;
 begin
+  if OptionDeleteCompletedTasksOnClose then
+    miDownloadDeleteCompletedClick(miDownloadDeleteCompleted);
+
   isExiting := True;
   {$ifdef windows}
   if Assigned(PrevWndProc) then
@@ -4895,7 +4893,7 @@ begin
     cbOptionLiveSearch.Checked := ReadBool('general', 'LiveSearch', True);
     cbOptionMinimizeOnStart.Checked := ReadBool('general', 'MinimizeOnStart', False);
     cbOptionMinimizeToTray.Checked := ReadBool('general', 'MinimizeToTray', False);
-    cbOptionDeleteCompletedTasksOnClose.Checked := ReadBool('general', 'DeleteCompletedTasksOnClose', False);
+    cbOptionDeleteCompletedTasksOnClose.Checked := ReadBool('general', 'DeleteCompletedTasksOnClose', OptionDeleteCompletedTasksOnClose);
     cbOptionLetFMDDo.ItemIndex := ReadInteger('general', 'LetFMDDo', 0);
     edOptionExternalPath.Text := ReadString('general', 'ExternalProgramPath', '');
     edOptionExternalParams.Text := ReadString('general', 'ExternalProgramParams', DEFAULT_EXPARAM);
@@ -5211,6 +5209,7 @@ begin
     end;
     OptionLetFMDDo := TFMDDo(cbOptionLetFMDDo.ItemIndex);
     OptionEnableLoadCover := cbOptionEnableLoadCover.Checked;
+    OptionDeleteCompletedTasksOnClose := cbOptionDeleteCompletedTasksOnClose.Checked;
 
     //view
     ToolBarDownload.Visible := cbOptionShowDownloadToolbar.Checked;

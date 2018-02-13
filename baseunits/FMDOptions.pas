@@ -108,7 +108,9 @@ var
   // available website
   AvailableWebsite: TStringList;
 
+  // general
   OptionLetFMDDo: TFMDDo = DO_NOTHING;
+  OptionDeleteCompletedTasksOnClose: Boolean = False;
 
   // saveto
   OptionChangeUnicodeCharacter: Boolean = False;

@@ -741,6 +741,10 @@ msgstr "Substituir todos caracteres unidcode com"
 msgid "Enable this if you have problem with unicode character in path."
 msgstr "Habilite isto se você tem problemas com caminhos com caracteres unicode."
 
+#: tmainform.cboptiondeletecompletedtasksonclose.caption
+msgid "Delete completed tasks on close"
+msgstr ""
+
 #: tmainform.cboptiondigitchapter.caption
 msgid "Chapter"
 msgstr "Capítulo"

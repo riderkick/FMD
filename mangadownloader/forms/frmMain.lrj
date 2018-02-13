@@ -156,6 +156,7 @@
 {"hash":93623386,"name":"tmainform.lboptionletfmddo.caption","sourcebytes":[65,102,116,101,114,32,100,111,119,110,108,111,97,100,32,102,105,110,105,115,104,58],"value":"After download finish:"},
 {"hash":160062057,"name":"tmainform.lboptionnewmangatime.caption","sourcebytes":[78,101,119,32,109,97,110,103,97,32,98,97,115,101,100,32,111,110,32,32,105,116,39,115,32,117,112,100,97,116,101,32,116,105,109,101,32,40,100,97,121,115,41],"value":"New manga based on  it's update time (days)"},
 {"hash":69131508,"name":"tmainform.cboptionminimizeonstart.caption","sourcebytes":[77,105,110,105,109,105,122,101,32,111,110,32,115,116,97,114,116],"value":"Minimize on start"},
+{"hash":134851429,"name":"tmainform.cboptiondeletecompletedtasksonclose.caption","sourcebytes":[68,101,108,101,116,101,32,99,111,109,112,108,101,116,101,100,32,116,97,115,107,115,32,111,110,32,99,108,111,115,101],"value":"Delete completed tasks on close"},
 {"hash":380871,"name":"tmainform.tsview.caption","sourcebytes":[86,105,101,119],"value":"View"},
 {"hash":126054082,"name":"tmainform.cboptionshowdownloadtoolbar.caption","sourcebytes":[83,104,111,119,32,100,111,119,110,108,111,97,100,115,32,116,111,111,108,98,97,114],"value":"Show downloads toolbar"},
 {"hash":157437400,"name":"tmainform.gbdroptarget.caption","sourcebytes":[68,114,111,112,32,66,111,120],"value":"Drop Box"},

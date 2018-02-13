@@ -746,6 +746,10 @@ msgstr "Αλλαγή όλων των unicode χαρακτήρων με"
 msgid "Enable this if you have problem with unicode character in path."
 msgstr "Ενεργοποιήστε το αν έχετε πρόβλημα με χαρακτήρες unicode στη διαδρομή."
 
+#: tmainform.cboptiondeletecompletedtasksonclose.caption
+msgid "Delete completed tasks on close"
+msgstr ""
+
 #: tmainform.cboptiondigitchapter.caption
 msgid "Chapter"
 msgstr "Κεφάλαιο"

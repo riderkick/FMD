@@ -752,6 +752,10 @@ msgstr "Tüm Unicode karakterleri şununla değiştir"
 msgid "Enable this if you have problem with unicode character in path."
 msgstr "Yolda Unicode karakter varsa bunu açın."
 
+#: tmainform.cboptiondeletecompletedtasksonclose.caption
+msgid "Delete completed tasks on close"
+msgstr ""
+
 #: tmainform.cboptiondigitchapter.caption
 msgid "Chapter"
 msgstr "Bölüm"

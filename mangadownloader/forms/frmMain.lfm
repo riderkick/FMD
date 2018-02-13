@@ -2697,11 +2697,11 @@ object MainForm: TMainForm
           end
           object gbOptionExternal: TGroupBox
             AnchorSideLeft.Control = cbOptionLiveSearch
-            AnchorSideTop.Control = cbOptionLiveSearch
+            AnchorSideTop.Control = cbOptionDeleteCompletedTasksOnClose
             AnchorSideTop.Side = asrBottom
             Left = 4
             Height = 118
-            Top = 267
+            Top = 290
             Width = 742
             Anchors = [akTop, akLeft, akRight]
             BorderSpacing.Top = 20
@@ -2908,10 +2908,13 @@ object MainForm: TMainForm
             TabOrder = 7
           end
           object cbOptionDeleteCompletedTasksOnClose: TCheckBox
-            Left = 346
+            AnchorSideLeft.Control = tsGeneral
+            AnchorSideTop.Control = cbOptionLiveSearch
+            AnchorSideTop.Side = asrBottom
+            Left = 4
             Height = 19
-            Top = 159
-            Width = 236
+            Top = 251
+            Width = 189
             Caption = 'Delete completed tasks on close'
             TabOrder = 8
           end
