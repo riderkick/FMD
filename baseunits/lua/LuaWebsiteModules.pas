@@ -737,7 +737,7 @@ end;
 const
   methods: packed array [0..5] of luaL_Reg = (
     (name: 'AddOptionCheckBox'; func: @lua_addoptioncheckbox),
-    (name: 'AddOpionEdit'; func: @lua_addoptionedit),
+    (name: 'AddOptionEdit'; func: @lua_addoptionedit),
     (name: 'AddOptionSpinEdit'; func: @lua_addoptionspinedit),
     (name: 'AddOptionCombobox'; func: @lua_addoptioncombobox),
     (name: 'GetOption'; func: @lua_getoption),
