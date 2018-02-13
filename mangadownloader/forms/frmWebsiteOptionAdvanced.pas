@@ -288,7 +288,6 @@ end;
 
 procedure TWebsiteOptionAdvancedForm.GetWebsite(const AVT: VirtualTrees.TVirtualStringTree; const S: TStrings);
 var
-  Data: PNameValue;
   Node: PVirtualNode;
   p: Integer;
 begin
@@ -300,8 +299,7 @@ begin
     Node := AVT.GetFirst();
     while Node <> nil do
     begin
-      Data := AVT.GetNodeData(Node);
-      p := s.IndexOf(Data^.Name);
+      p := s.IndexOf(PNameValue(AVT.GetNodeData(Node))^.Name);
       if p <> - 1 then
         s.Delete(p);
       Node := AVT.GetNext(Node);
