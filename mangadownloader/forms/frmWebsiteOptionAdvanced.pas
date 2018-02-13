@@ -295,7 +295,6 @@ begin
   if AVT = nil then Exit;
   if S = nil then Exit;
   s.Assign(AvailableWebsites);
-  TStringList(s).Sorted := True;
   if s.Count <> 0 then
   begin
     Node := AVT.GetFirst();
