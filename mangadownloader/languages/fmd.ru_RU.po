@@ -352,11 +352,6 @@ msgid "Today"
 msgstr "Cегодня"
 
 #: frmmain.rs_webpconvertto
-#, fuzzy
-#| msgid ""
-#| "WebP\n"
-#| "PNG\n"
-#| "Jpeg\n"
 msgid ""
 "WebP\n"
 "PNG\n"
@@ -364,7 +359,7 @@ msgid ""
 msgstr ""
 "WebP\n"
 "PNG\n"
-"Jpeg\n"
+"JPEG\n"
 
 #: frmmain.rs_webppnglevel
 msgid ""
@@ -745,7 +740,7 @@ msgstr "Включите, если возникли проблемы с Unicode-
 
 #: tmainform.cboptiondeletecompletedtasksonclose.caption
 msgid "Delete completed tasks on close"
-msgstr ""
+msgstr "Удалить завершенные загрузки при выходе"
 
 #: tmainform.cboptiondigitchapter.caption
 msgid "Chapter"
@@ -833,7 +828,6 @@ msgid "Use proxy"
 msgstr "Использовать прокси"
 
 #: tmainform.cbpngcompressionlevel.text
-#, fuzzy
 msgctxt "tmainform.cbpngcompressionlevel.text"
 msgid "Fastest"
 msgstr "Скоростной"
@@ -851,7 +845,6 @@ msgid "Regular Expression"
 msgstr "Регулярное выражение (regexp)"
 
 #: tmainform.cbwebpsaveas.text
-#, fuzzy
 msgctxt "tmainform.cbwebpsaveas.text"
 msgid "PNG"
 msgstr "PNG"
@@ -1188,7 +1181,7 @@ msgstr "Всегда запускать задачу с неудавшихся �
 
 #: tmainform.ckpngsaveasjpeg.caption
 msgid "Save PNG as JPEG"
-msgstr ""
+msgstr "Сохранять PNG как JPEG"
 
 #: tmainform.edcustomgenres.texthint
 msgid "Input custom genres, separated by comma"
@@ -1298,7 +1291,7 @@ msgstr "Дропбокс"
 
 #: tmainform.gbimageconversion.caption
 msgid "Image Conversion"
-msgstr ""
+msgstr "Конвертация изображений"
 
 #: tmainform.gboptionexternal.caption
 msgid "External program"
@@ -1382,7 +1375,7 @@ msgstr "Название"
 
 #: tmainform.lbjpegquality.caption
 msgid "JPEG quality"
-msgstr ""
+msgstr "Качество JPEG"
 
 #: tmainform.lblogfilename.caption
 msgid "Log file:"
@@ -1571,7 +1564,6 @@ msgid "Username"
 msgstr "Имя пользователя"
 
 #: tmainform.lbpngcompressionlevel.caption
-#, fuzzy
 msgctxt "tmainform.lbpngcompressionlevel.caption"
 msgid "PNG Compression level"
 msgstr "Уровень компрессии PNG"
@@ -1582,7 +1574,7 @@ msgstr "Сохранить в:"
 
 #: tmainform.lbwebpsaveas.caption
 msgid "Save WebP as"
-msgstr ""
+msgstr "Сохранять WebP как"
 
 #: tmainform.medturldelete.caption
 msgctxt "TMAINFORM.MEDTURLDELETE.CAPTION"
