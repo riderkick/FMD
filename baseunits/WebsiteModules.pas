@@ -85,6 +85,7 @@ type
     TagPtr: Pointer;
     Website: String;
     RootURL: String;
+    Category: String;
     MaxTaskLimit: Integer;
     MaxConnectionLimit: Integer;
     ActiveTaskCount: Integer;

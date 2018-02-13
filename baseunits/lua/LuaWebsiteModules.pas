@@ -585,6 +585,7 @@ begin
   begin
     luaClassAddStringProperty(L, MetaTable, 'Website', @Module.Website);
     luaClassAddStringProperty(L, MetaTable, 'RootURL', @Module.RootURL);
+    luaClassAddStringProperty(L, MetaTable, 'Category', @Module.Category);
     luaClassAddIntegerProperty(L, MetaTable, 'MaxTaskLimit', @Module.MaxTaskLimit);
     luaClassAddIntegerProperty(L, MetaTable, 'MaxConnectionLimit',
       @Module.MaxConnectionLimit);

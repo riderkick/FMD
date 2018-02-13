@@ -246,18 +246,17 @@
           </Other>
         </CompilerOptions>
       </Item6>
-      <SharedMatrixOptions Count="11">
+      <SharedMatrixOptions Count="10">
         <Item1 ID="285210846225" Targets="#project" Modes="Win32 Debug Leaks,Win64 Debug Leaks,Win64 Debug,Win32 Debug,Win64,Win32" Value="-Fu..\baseunits -Fu..\baseunits\animatedgifs -Fu..\baseunits\SimpleException -Fu..\baseunits\modules -Fu..\baseunits\extras -Fuforms"/>
         <Item2 ID="787838556410" Targets="#project" Modes="Win32 Debug Leaks,Win64 Debug Leaks,Win64 Debug,Win32 Debug,Win32,Win64" Value="-Fi..\baseunits\includes\AnimeA -Fi..\baseunits\includes\AnimeStory -Fi..\baseunits\includes\AnimExtremist -Fi..\baseunits\includes\CentralDeMangas -Fi..\baseunits\includes\EGScans -Fi..\baseunits\includes\EsMangaHere -Fi..\baseunits\includes\Kivmanga -Fi..\baseunits\includes\LectureEnLigne -Fi..\baseunits\includes\MangaAr -Fi..\baseunits\includes\S2scans -Fi..\baseunits\includes\ScanManga -Fi..\baseunits\includes\Starkana -Fi..\baseunits\includes\Turkcraft -Fi..\baseunits\includes\VnSharing -Fi..\baseunits\includes\MeinManga -Fi..\baseunits\includes\MangaREADER_POR -Fi..\baseunits\includes\MangasPROJECT"/>
         <Item3 ID="465017374973" Targets="#project" Modes="Win32,Win64 Debug Leaks,Win32 Debug Leaks,Win64 Debug,Win32 Debug,Win64" Value="-dMANGADOWNLOADER -dDOWNLOADER -dSELFUPDATE -dMULTILOG"/>
         <Item4 ID="729045573668" Targets="#project" Modes="Win32 Debug Leaks,Win64 Debug Leaks,Win32,Win64,Win32 Debug,Win64 Debug" Value="-Fu..\baseunits\lua -Fu..\baseunits\pcre"/>
-        <Item5 ID="200657967120" Targets="#project" Modes="Win32 Debug Leaks,Win64 Debug Leaks,Win64 Debug,Win32 Debug,Win64,Win32" Value="-dUSE_LUA_MODULE"/>
-        <Item6 ID="534084266787" Targets="#project" Modes="Win64 Debug Leaks,Win32 Debug Leaks" Value="-dDEBUGLEAKS -dDEVBUILD -WC"/>
-        <Item7 ID="951904047630" Targets="#project" Value="-uUSE_FLRE_WITH_CACHE -dUSE_SOROKINS_REGEX -uUSE_BBFLRE_UNICODE -dUSE_BBFULL_UNICODE"/>
-        <Item8 ID="140379931701" Targets="#project" Value="-Fi..\3rd\BESEN\src -Fi..\3rd\internettools\data -Fu..\3rd\BESEN\src -Fu..\3rd\internettools\data -Fu..\3rd\internettools\internet -Fu..\3rd\internettools\system -Fu..\3rd\internettools\import\flre\src"/>
-        <Item9 ID="403646715137" Targets="BESENPkg,internettools" Modes="Win32 Debug Leaks,Win64 Debug Leaks,Win64 Debug,Win32 Debug,Win32,Win64" Value="-CX -O3 -Xs -XX -g- -Os"/>
-        <Item10 ID="127282585717" Targets="internettools" Modes="Win32,Win64,Win32 Debug,Win64 Debug,Win64 Debug Leaks,Win32 Debug Leaks" Value="-uUSE_FLRE_WITH_CACHE -dUSE_SOROKINS_REGEX -uUSE_BBFLRE_UNICODE -dUSE_BBFULL_UNICODE"/>
-        <Item11 ID="939088584661" Targets="LazControls,TAChartLazarusPkg" Modes="Win64 Debug,Win32 Debug,Win64,Win32,Win32 Debug Leaks,Win64 Debug Leaks" Value="-CX -O3 -Xs -XX -g- -Os"/>
+        <Item5 ID="534084266787" Targets="#project" Modes="Win64 Debug Leaks,Win32 Debug Leaks" Value="-dDEBUGLEAKS -dDEVBUILD -WC"/>
+        <Item6 ID="951904047630" Targets="#project" Value="-uUSE_FLRE_WITH_CACHE -dUSE_SOROKINS_REGEX -uUSE_BBFLRE_UNICODE -dUSE_BBFULL_UNICODE"/>
+        <Item7 ID="140379931701" Targets="#project" Value="-Fi..\3rd\BESEN\src -Fi..\3rd\internettools\data -Fu..\3rd\BESEN\src -Fu..\3rd\internettools\data -Fu..\3rd\internettools\internet -Fu..\3rd\internettools\system -Fu..\3rd\internettools\import\flre\src"/>
+        <Item8 ID="403646715137" Targets="BESENPkg,internettools" Modes="Win32 Debug Leaks,Win64 Debug Leaks,Win64 Debug,Win32 Debug,Win32,Win64" Value="-CX -O3 -Xs -XX -g- -Os"/>
+        <Item9 ID="127282585717" Targets="internettools" Modes="Win32,Win64,Win32 Debug,Win64 Debug,Win64 Debug Leaks,Win32 Debug Leaks" Value="-uUSE_FLRE_WITH_CACHE -dUSE_SOROKINS_REGEX -uUSE_BBFLRE_UNICODE -dUSE_BBFULL_UNICODE"/>
+        <Item10 ID="939088584661" Targets="LazControls,TAChartLazarusPkg" Modes="Win64 Debug,Win32 Debug,Win64,Win32,Win32 Debug Leaks,Win64 Debug Leaks" Value="-CX -O3 -Xs -XX -g- -Os"/>
       </SharedMatrixOptions>
     </BuildModes>
     <PublishOptions>
