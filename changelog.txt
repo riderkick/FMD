@@ -4,7 +4,7 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
-0.9.138.0 (--2018)
+0.9.138.0 (14-02-2018)
 [+] Added option to delete completed task on close
 [+] Added option to convert PNG images to JPEG
 [+] Added NeuManga [ID]
