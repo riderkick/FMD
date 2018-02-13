@@ -26,7 +26,7 @@ function GetPageNumber()
   http.cookies.values['age_confirmed'] = '1'
   if http.get(MaybeFillHost(module.rooturl,url)) then
     x=TXQuery.Create(http.Document)
-    task.pagenumber=x.xpathcount('(//select[@class="page"])[1]/option')
+    task.pagenumber=x.xpath('(//select[@class="page"])[1]/option').count
     return true
   else
     return false
