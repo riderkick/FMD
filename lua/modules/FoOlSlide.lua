@@ -208,6 +208,7 @@ function Init()
     AddWebsiteModule('HotChocolateScans', 'http://hotchocolatescans.com', cat)
     AddWebsiteModule('LetItGoScans', 'http://reader.letitgo.scans.today', cat)
     AddWebsiteModule('TripleSevenScan', 'http://triplesevenscans.com', cat)
+    AddWebsiteModule('SeaOtterScans', 'https://reader.seaotterscans.com', cat)
     
     -- es-sc
     cat = 'Spanish-Scanlation'
