@@ -290,31 +290,22 @@ procedure TWebsiteOptionAdvancedForm.GetWebsite(const AVT: VirtualTrees.TVirtual
 var
   Data: PNameValue;
   Node: PVirtualNode;
-  i, p: Integer;
+  p: Integer;
 begin
   if AVT = nil then Exit;
   if S = nil then Exit;
-  S.Clear;
-  if AvailableWebsites.Count > 0 then
+  s.Assign(AvailableWebsites);
+  TStringList(s).Sorted := True;
+  if s.Count <> 0 then
   begin
-    S.BeginUpdate;
-    try
-      for i := 0 to AvailableWebsites.Count - 1 do
-        S.Add(AvailableWebsites.Names[i]);
-      if AVT.RootNodeCount > 0 then
-      begin
-        Node := AVT.GetFirst();
-        while Assigned(Node) do
-        begin
-          Data := AVT.GetNodeData(Node);
-          p := S.IndexOf(Data^.Name);
-          if p > -1 then
-            S.Delete(p);
-          Node := AVT.GetNext(Node);
-        end;
-      end;
-    finally
-      S.EndUpdate;
+    Node := AVT.GetFirst();
+    while Node <> nil do
+    begin
+      Data := AVT.GetNodeData(Node);
+      p := s.IndexOf(Data^.Name);
+      if p <> - 1 then
+        s.Delete(p);
+      Node := AVT.GetNext(Node);
     end;
   end;
 end;
