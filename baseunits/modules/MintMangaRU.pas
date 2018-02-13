@@ -170,6 +170,7 @@ procedure RegisterModule;
     with Result do begin
       Website := AWebsite;
       RootURL := ARootURL;
+      Category := 'Russian';
       SortedList := True;
       OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
       OnGetNameAndLink := @GetNameAndLink;
@@ -182,6 +183,7 @@ procedure RegisterModule;
 begin
   AddWebsiteModule('MintMangaRU', 'http://mintmanga.com');
   AddWebsiteModule('ReadMangaRU', 'http://readmanga.me');
+  AddWebsiteModule('SelfMangaRU', 'http://selfmanga.ru');
 end;
 
 initialization
