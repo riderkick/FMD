@@ -174,10 +174,11 @@ function getnameandlink()
     return result
 end
 
-function AddWebsiteModule(name, url)
+function AddWebsiteModule(name, url, category)
     local m = NewModule()
     m.website = name
     m.rooturl = url
+    m.category = category
     m.lastupdated = 'february, 6 2018'
     m.ongetinfo = 'getinfo'
     m.OnTaskStart = 'taskstart'
@@ -189,37 +190,39 @@ function AddWebsiteModule(name, url)
 end
 
 function Init()
-    AddWebsiteModule('PowerManga', 'http://read.powermanga.org')
-    AddWebsiteModule('Shoujosense', 'http://reader.shoujosense.com')
-    AddWebsiteModule('GoManga', 'http://gomanga.co')
-    AddWebsiteModule('OneTimeScans', 'http://otscans.com')
-    AddWebsiteModule('SenseScans', 'http://reader.sensescans.com')
-    AddWebsiteModule('Jaiminisbox', 'https://jaiminisbox.com')
-    AddWebsiteModule('KireiCake', 'https://reader.kireicake.com')
-    AddWebsiteModule('HelveticaScans', 'http://helveticascans.com')
-    AddWebsiteModule('WhiteoutScans', 'http://reader.whiteoutscans.com')
-    AddWebsiteModule('DokiFansubs', 'https://kobato.hologfx.com')
-    AddWebsiteModule('AtelierDuNoir', 'http://atelierdunoir.org')
-    AddWebsiteModule('ChampionScans', 'http://reader.championscans.com')
-    AddWebsiteModule('WorldThree', 'http://www.slide.world-three.org')
-    AddWebsiteModule('S2Scans', 'https://reader.s2smanga.com')
-    AddWebsiteModule('HotChocolateScans', 'http://hotchocolatescans.com')
-    AddWebsiteModule('LetItGoScans', 'http://reader.letitgo.scans.today')
+    local cat = 'English-Scanlation'
+    AddWebsiteModule('PowerManga', 'http://read.powermanga.org', cat)
+    AddWebsiteModule('Shoujosense', 'http://reader.shoujosense.com', cat)
+    AddWebsiteModule('GoManga', 'http://gomanga.co', 'English')
+    AddWebsiteModule('OneTimeScans', 'http://otscans.com', cat)
+    AddWebsiteModule('SenseScans', 'http://reader.sensescans.com', cat)
+    AddWebsiteModule('Jaiminisbox', 'https://jaiminisbox.com', cat)
+    AddWebsiteModule('KireiCake', 'https://reader.kireicake.com', cat)
+    AddWebsiteModule('HelveticaScans', 'http://helveticascans.com', cat)
+    AddWebsiteModule('WhiteoutScans', 'http://reader.whiteoutscans.com', cat)
+    AddWebsiteModule('DokiFansubs', 'https://kobato.hologfx.com', cat)
+    AddWebsiteModule('AtelierDuNoir', 'http://atelierdunoir.org', cat)
+    AddWebsiteModule('ChampionScans', 'http://reader.championscans.com', cat)
+    AddWebsiteModule('WorldThree', 'http://www.slide.world-three.org', cat)
+    AddWebsiteModule('S2Scans', 'https://reader.s2smanga.com', cat)
+    AddWebsiteModule('HotChocolateScans', 'http://hotchocolatescans.com', cat)
+    AddWebsiteModule('LetItGoScans', 'http://reader.letitgo.scans.today', cat)
+    AddWebsiteModule('TripleSevenScan', 'http://triplesevenscans.com', cat)
     
     -- es-sc
-    AddWebsiteModule('DangoOnlineNoFansub', 'http://lector.dangolinenofansub.com')
-    AddWebsiteModule('DejameProbar', 'http://dejameprobar.es')
-    AddWebsiteModule('HoshinoFansub', 'http://manga.animefrontline.com')
-    AddWebsiteModule('MenudoFansub', 'http://www.menudo-fansub.com')
-    AddWebsiteModule('NeoProjectScan', 'http://npscan.mangaea.net')
-    AddWebsiteModule('Pzykosis666HFansub', 'http://pzykosis666hfansub.com')
-    AddWebsiteModule('SantosScan', 'http://santosfansub.com')
-    AddWebsiteModule('SeinagiFansub', 'http://seinagi.org')
-    AddWebsiteModule('SeinagiAdultoFansub', 'http://adulto.seinagi.org')
-    AddWebsiteModule('SolitarioNoFansub', 'http://snf.mangaea.net')
-    AddWebsiteModule('TripleSevenScan', 'http://triplesevenscans.com')
-    AddWebsiteModule('RavensScans', 'http://ravens-scans.com')
-    AddWebsiteModule('KirishimaFansub', 'http://lector.kirishimafansub.com')
-    AddWebsiteModule('NoraNoFansub', 'https://www.noranofansub.com')
-    AddWebsiteModule('YamiTenshiNoFansub', 'http://lector.ytnofan.com')
+    cat = 'Spanish-Scanlation'
+    AddWebsiteModule('DangoOnlineNoFansub', 'http://lector.dangolinenofansub.com', cat)
+    AddWebsiteModule('DejameProbar', 'http://dejameprobar.es', cat)
+    AddWebsiteModule('HoshinoFansub', 'http://manga.animefrontline.com', cat)
+    AddWebsiteModule('MenudoFansub', 'http://www.menudo-fansub.com', cat)
+    AddWebsiteModule('NeoProjectScan', 'http://npscan.mangaea.net', cat)
+    AddWebsiteModule('Pzykosis666HFansub', 'http://pzykosis666hfansub.com', cat)
+    AddWebsiteModule('SantosScan', 'http://santosfansub.com', cat)
+    AddWebsiteModule('SeinagiFansub', 'http://seinagi.org', cat)
+    AddWebsiteModule('SeinagiAdultoFansub', 'http://adulto.seinagi.org', cat)
+    AddWebsiteModule('SolitarioNoFansub', 'http://snf.mangaea.net', cat)
+    AddWebsiteModule('RavensScans', 'http://ravens-scans.com', cat)
+    AddWebsiteModule('KirishimaFansub', 'http://lector.kirishimafansub.com', cat)
+    AddWebsiteModule('NoraNoFansub', 'https://www.noranofansub.com', cat)
+    AddWebsiteModule('YamiTenshiNoFansub', 'http://lector.ytnofan.com', cat)
 end
