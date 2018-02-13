@@ -1327,7 +1327,7 @@ end;
 procedure TMainForm.CloseNow;
 begin
   if OptionDeleteCompletedTasksOnClose then
-    miDownloadDeleteCompletedClick(miDownloadDeleteCompleted);
+    miDownloadDeleteCompletedClick(nil);
 
   isExiting := True;
   {$ifdef windows}
@@ -1408,7 +1408,7 @@ begin
   SaveOptions;
   SaveFormInformation;
 
-  Logger.Send(Self.ClassName+'.CloseNow, closSaveFormInformationing other forms');
+  Logger.Send(Self.ClassName+'.CloseNow, close other forms');
   //embed form
   if Assigned(AccountManagerForm) then
     AccountManagerForm.Close;
@@ -3325,6 +3325,7 @@ begin
       mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
       Exit;
   DLManager.RemoveAllFinishedTasks;
+  if Sender <> nil then
   UpdateVtDownload;
   // the reason we put it in here instead of in DLManager because of the size of
   // download list will change during this method
