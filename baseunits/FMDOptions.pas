@@ -128,9 +128,9 @@ var
 
   OptionPDFQuality: Cardinal = 95;
 
-  OptionWebPConvertTo: Integer = 1;
-  OptionWebPPNGLevel: Integer = 1;
-  OptionWebPJpegQuality: Integer = 80;
+  OptionWebPSaveAs: Integer = 1;
+  OptionPNGCompressionLevel: Integer = 1;
+  OptionJPEGQuality: Integer = 80;
 
   // connections
   OptionMaxParallel: Integer = 1;

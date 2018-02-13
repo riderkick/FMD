@@ -342,10 +342,15 @@ msgid "Today"
 msgstr "Hari ini"
 
 #: frmmain.rs_webpconvertto
+#, fuzzy
+#| msgid ""
+#| "WebP\n"
+#| "PNG\n"
+#| "Jpeg\n"
 msgid ""
 "WebP\n"
 "PNG\n"
-"Jpeg\n"
+"JPEG\n"
 msgstr ""
 "WebP\n"
 "PNG\n"
@@ -817,6 +822,12 @@ msgstr "Menghapus duplikat data lokal saat memperbarui daftar komik"
 msgid "Use proxy"
 msgstr "Gunakan proxy"
 
+#: tmainform.cbpngcompressionlevel.text
+#, fuzzy
+msgctxt "tmainform.cbpngcompressionlevel.text"
+msgid "Fastest"
+msgstr "Paling cepat"
+
 #: tmainform.cbsearchfromallsites.caption
 msgid "Search in all manga sites"
 msgstr "Cari di semua situs komik"
@@ -829,13 +840,11 @@ msgstr "Untuk situs komik yang lain, silahkan pilih di Pengaturan->Situs komik"
 msgid "Regular Expression"
 msgstr "Regular Expression"
 
-#: tmainform.cbwebpconvertto.text
+#: tmainform.cbwebpsaveas.text
+#, fuzzy
+msgctxt "tmainform.cbwebpsaveas.text"
 msgid "PNG"
 msgstr "PNG"
-
-#: tmainform.cbwebppngcompressionlevel.text
-msgid "Fastest"
-msgstr "Paling cepat"
 
 #: tmainform.ckdroptarget.caption
 msgctxt "tmainform.ckdroptarget.caption"
@@ -1167,6 +1176,10 @@ msgctxt "tmainform.ckoptionsalwaysstarttaskfromfailedchapters.caption"
 msgid "Always start task from failed chapters"
 msgstr "Selalu mulai undudah dari bab yang gagal"
 
+#: tmainform.ckpngsaveasjpeg.caption
+msgid "Save PNG as JPEG"
+msgstr ""
+
 #: tmainform.edcustomgenres.texthint
 msgid "Input custom genres, separated by comma"
 msgstr "Masukan genre pilihan, dipisahkan dengan koma"
@@ -1273,6 +1286,10 @@ msgstr "Tampilkan dialog konfirmasi untuk"
 msgid "Drop Box"
 msgstr "Kotak unduh"
 
+#: tmainform.gbimageconversion.caption
+msgid "Image Conversion"
+msgstr ""
+
 #: tmainform.gboptionexternal.caption
 msgid "External program"
 msgstr "Program eksternal"
@@ -1289,10 +1306,6 @@ msgstr "Konfigurasi proxy"
 #: tmainform.gboptionrenaming.caption
 msgid "Renaming"
 msgstr "Mengubah nama"
-
-#: tmainform.gbwebp.caption
-msgid "WebP"
-msgstr "WebP"
 
 #: tmainform.lbdefaultdownloadpath.caption
 msgid "Choose the default download path:"
@@ -1356,6 +1369,10 @@ msgstr "Ringkasan"
 msgctxt "tmainform.lbfiltertitle.caption"
 msgid "Title"
 msgstr "Judul"
+
+#: tmainform.lbjpegquality.caption
+msgid "JPEG quality"
+msgstr ""
 
 #: tmainform.lblogfilename.caption
 msgid "Log file:"
@@ -1543,21 +1560,19 @@ msgctxt "tmainform.lboptionuser.caption"
 msgid "Username"
 msgstr "Nama user"
 
+#: tmainform.lbpngcompressionlevel.caption
+#, fuzzy
+msgctxt "tmainform.lbpngcompressionlevel.caption"
+msgid "PNG Compression level"
+msgstr "Level kompresi PNG"
+
 #: tmainform.lbsaveto.caption
 msgid "Save to:"
 msgstr "Lokasi penyimpanan:"
 
-#: tmainform.lbwebpconvertto.caption
-msgid "Save WebP to"
-msgstr "Simpan WebP ke"
-
-#: tmainform.lbwebpjpegquality.caption
-msgid "Jpeg quality"
-msgstr "Kualitas Jpeg"
-
-#: tmainform.lbwebppngcompressionlevel.caption
-msgid "PNG Compression level"
-msgstr "Level kompresi PNG"
+#: tmainform.lbwebpsaveas.caption
+msgid "Save WebP as"
+msgstr ""
 
 #: tmainform.medturldelete.caption
 msgctxt "TMAINFORM.MEDTURLDELETE.CAPTION"

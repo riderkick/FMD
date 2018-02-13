@@ -664,7 +664,10 @@ function GetURLFromBitly(const URL: String): String;
 
 // convert webp
 function WebPToPNGStream(const AStream: TMemoryStream; const ALevel: Tcompressionlevel = clfastest): Boolean;
-function WebPToJpegStream(const AStream: TMemoryStream; const AQuality: Integer = 80): Boolean;
+function WebPToJPEGStream(const AStream: TMemoryStream; const AQuality: Integer = 80): Boolean;
+
+// convert png
+function PNGToJPEGStream(const AStream: TMemoryStream; const AQuality: Integer = 80): Boolean;
 
 // try to save tmemorystream to file, return the saved filename if success, otherwise return empty string
 function SaveImageStreamToFile(Stream: TMemoryStream; Path, FileName: String; Age: LongInt = 0): String; overload;
@@ -3252,7 +3255,7 @@ begin
   end;
 end;
 
-function WebPToJpegStream(const AStream: TMemoryStream; const AQuality: Integer
+function WebPToJPEGStream(const AStream: TMemoryStream; const AQuality: Integer
   ): Boolean;
 var
   mem: TMemBitmap;
@@ -3277,6 +3280,30 @@ begin
   end;
 end;
 
+function PNGToJPEGStream(const AStream: TMemoryStream; const AQuality: Integer): Boolean;
+var
+  img: TFPCustomImage;
+  writer: TFPWriterJPEG;
+begin
+  Result := False;
+  img := TFPCustomImage.create(0,0);
+  try
+    writer := nil;
+    try
+      img.LoadFromStream(AStream);
+      writer := TFPWriterJPEG.create;
+      writer.CompressionQuality := AQuality;
+      img.SaveToStream(AStream, writer);
+      Result := True;
+    except
+    end;
+    if writer <> nil then
+      writer.Free;
+  finally
+    img.Free;
+  end;
+end;
+
 function SaveImageStreamToFile(Stream: TMemoryStream; Path, FileName: String; Age: LongInt): String;
 var
   p, f: String;
@@ -3288,11 +3315,18 @@ begin
   p := CorrectPathSys(Path);
   if ForceDirectoriesUTF8(p) then begin
     f := GetImageStreamExt(Stream);
+    if f = 'png' then
+    begin
+      if PNGToJPEGStream(Stream, OptionJPEGQuality) then f := 'jpg'
+    end
+    else
     if f = 'webp' then
-      case OptionWebPConvertTo of
-        1: if WebPToPNGStream(Stream, Tcompressionlevel(OptionWebPPNGLevel)) then f := 'png';
-        2: if WebPToJpegStream(Stream, OptionWebPJpegQuality) then f := 'jpg';
+    begin
+      case OptionWebPSaveAs of
+        1: if WebPToPNGStream(Stream, Tcompressionlevel(OptionPNGCompressionLevel)) then f := 'png';
+        2: if WebPToJPEGStream(Stream, OptionJPEGQuality) then f := 'jpg';
       end;
+    end;
 
     if f = '' then Exit;
     f := p + FileName + '.' + f;

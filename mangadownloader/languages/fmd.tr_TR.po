@@ -356,10 +356,15 @@ msgid "Today"
 msgstr "Bugün"
 
 #: frmmain.rs_webpconvertto
+#, fuzzy
+#| msgid ""
+#| "WebP\n"
+#| "PNG\n"
+#| "Jpeg\n"
 msgid ""
 "WebP\n"
 "PNG\n"
-"Jpeg\n"
+"JPEG\n"
 msgstr ""
 "WebP\n"
 "PNG\n"
@@ -841,6 +846,12 @@ msgstr "Manga listesini güncellerken çift yerel veriyi kaldır"
 msgid "Use proxy"
 msgstr "Proxy kullan"
 
+#: tmainform.cbpngcompressionlevel.text
+#, fuzzy
+msgctxt "tmainform.cbpngcompressionlevel.text"
+msgid "Fastest"
+msgstr "En hızlı"
+
 #: tmainform.cbsearchfromallsites.caption
 msgid "Search in all manga sites"
 msgstr "Tüm manga sitelerinde ara"
@@ -853,13 +864,11 @@ msgstr "Daha fazla manga sitesi için, lütfen Ayarlar->Manga siteleri'ne gidin"
 msgid "Regular Expression"
 msgstr "Düzenli İfadeler"
 
-#: tmainform.cbwebpconvertto.text
+#: tmainform.cbwebpsaveas.text
+#, fuzzy
+msgctxt "tmainform.cbwebpsaveas.text"
 msgid "PNG"
 msgstr "PNG"
-
-#: tmainform.cbwebppngcompressionlevel.text
-msgid "Fastest"
-msgstr "En hızlı"
 
 #: tmainform.ckdroptarget.caption
 msgctxt "tmainform.ckdroptarget.caption"
@@ -1190,6 +1199,10 @@ msgstr "Bu çalışmalar genellikle kadınlar arası yakın ilişki barındırı
 msgid "Always start task from failed chapters"
 msgstr "Görevi her zaman başarısız bölümlerden başlat"
 
+#: tmainform.ckpngsaveasjpeg.caption
+msgid "Save PNG as JPEG"
+msgstr ""
+
 #: tmainform.edcustomgenres.texthint
 msgid "Input custom genres, separated by comma"
 msgstr "Kişisel tür ekle, virgülle ayırarak"
@@ -1300,6 +1313,10 @@ msgstr "Şunun için doğrulama diyaloğu göster"
 msgid "Drop Box"
 msgstr "İndirme kutusu"
 
+#: tmainform.gbimageconversion.caption
+msgid "Image Conversion"
+msgstr ""
+
 #: tmainform.gboptionexternal.caption
 msgid "External program"
 msgstr "Harici program"
@@ -1316,10 +1333,6 @@ msgstr "Vekil ayarları"
 #: tmainform.gboptionrenaming.caption
 msgid "Renaming"
 msgstr "Yeniden adlandırma"
-
-#: tmainform.gbwebp.caption
-msgid "WebP"
-msgstr "WebP"
 
 #: tmainform.lbdefaultdownloadpath.caption
 msgid "Choose the default download path:"
@@ -1383,6 +1396,10 @@ msgstr "Özet"
 msgctxt "tmainform.lbfiltertitle.caption"
 msgid "Title"
 msgstr "Başlık"
+
+#: tmainform.lbjpegquality.caption
+msgid "JPEG quality"
+msgstr ""
 
 #: tmainform.lblogfilename.caption
 msgid "Log file:"
@@ -1572,21 +1589,19 @@ msgctxt "tmainform.lboptionuser.caption"
 msgid "Username"
 msgstr "Kullanıcı adı"
 
+#: tmainform.lbpngcompressionlevel.caption
+#, fuzzy
+msgctxt "tmainform.lbpngcompressionlevel.caption"
+msgid "PNG Compression level"
+msgstr "PNG Sıkıştırma seviyesi"
+
 #: tmainform.lbsaveto.caption
 msgid "Save to:"
 msgstr "Şuraya kaydet:"
 
-#: tmainform.lbwebpconvertto.caption
-msgid "Save WebP to"
-msgstr "WebP'yi şöyle kaydet"
-
-#: tmainform.lbwebpjpegquality.caption
-msgid "Jpeg quality"
-msgstr "JPEG kalitesi"
-
-#: tmainform.lbwebppngcompressionlevel.caption
-msgid "PNG Compression level"
-msgstr "PNG Sıkıştırma seviyesi"
+#: tmainform.lbwebpsaveas.caption
+msgid "Save WebP as"
+msgstr ""
 
 #: tmainform.medturldelete.caption
 msgctxt "TMAINFORM.MEDTURLDELETE.CAPTION"

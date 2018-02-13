@@ -16,7 +16,6 @@ object MainForm: TMainForm
   OnWindowStateChange = FormWindowStateChange
   Position = poScreenCenter
   ShowHint = True
-  LCLVersion = '1.9.0.0'
   object sbUpdateList: TStatusBar
     AnchorSideBottom.Control = sbMain
     Left = 0
@@ -3473,13 +3472,13 @@ object MainForm: TMainForm
             end
             object gbOptionRenaming: TGroupBox
               AnchorSideLeft.Control = lbDefaultDownloadPath
-              AnchorSideTop.Control = gbWebP
+              AnchorSideTop.Control = gbImageConversion
               AnchorSideTop.Side = asrBottom
               AnchorSideRight.Control = lbDefaultDownloadPath
               AnchorSideRight.Side = asrBottom
               Left = 4
               Height = 302
-              Top = 250
+              Top = 271
               Width = 728
               Anchors = [akTop, akLeft, akRight]
               AutoSize = True
@@ -3866,74 +3865,77 @@ object MainForm: TMainForm
               TabOrder = 4
               TextHint = 'Default download path'
             end
-            object gbWebP: TGroupBox
+            object gbImageConversion: TGroupBox
               AnchorSideLeft.Control = lbDefaultDownloadPath
               AnchorSideTop.Control = seOptionPDFQuality
               AnchorSideTop.Side = asrBottom
               AnchorSideRight.Control = sbSaveTo
               AnchorSideRight.Side = asrBottom
               Left = 4
-              Height = 101
+              Height = 122
               Top = 145
               Width = 728
               Anchors = [akTop, akLeft, akRight]
               AutoSize = True
-              Caption = 'WebP'
+              Caption = 'Image Conversion'
               ChildSizing.LeftRightSpacing = 4
               ChildSizing.TopBottomSpacing = 4
               ChildSizing.HorizontalSpacing = 6
               ChildSizing.VerticalSpacing = 6
-              ClientHeight = 81
+              ClientHeight = 102
               ClientWidth = 724
               TabOrder = 5
-              object lbWebPConvertTo: TLabel
+              object lbWebPSaveAs: TLabel
+                AnchorSideLeft.Control = gbImageConversion
+                AnchorSideTop.Control = ckPNGSaveAsJPEG
+                AnchorSideTop.Side = asrBottom
                 Left = 4
                 Height = 15
-                Top = 8
+                Top = 29
                 Width = 72
-                Caption = 'Save WebP to'
+                Caption = 'Save WebP as'
                 ParentColor = False
               end
-              object cbWebPConvertTo: TComboBox
-                AnchorSideLeft.Control = lbWebPConvertTo
+              object cbWebPSaveAs: TComboBox
+                AnchorSideLeft.Control = lbWebPSaveAs
                 AnchorSideLeft.Side = asrBottom
-                AnchorSideTop.Control = lbWebPConvertTo
+                AnchorSideTop.Control = lbWebPSaveAs
                 AnchorSideTop.Side = asrCenter
                 Left = 82
                 Height = 23
-                Top = 4
+                Top = 25
                 Width = 76
                 ItemHeight = 15
                 ItemIndex = 1
                 Items.Strings = (
                   'WebP'
                   'PNG'
-                  'Jpeg'
+                  'JPEG'
                 )
                 Style = csDropDownList
                 TabOrder = 0
                 Text = 'PNG'
               end
-              object lbWebPPNGCompressionLevel: TLabel
-                AnchorSideLeft.Control = lbWebPConvertTo
-                AnchorSideTop.Control = cbWebPConvertTo
+              object lbPNGCompressionLevel: TLabel
+                AnchorSideLeft.Control = lbWebPSaveAs
+                AnchorSideTop.Control = cbWebPSaveAs
                 AnchorSideTop.Side = asrBottom
                 Left = 4
                 Height = 15
-                Top = 33
+                Top = 54
                 Width = 124
                 Caption = 'PNG Compression level'
                 ParentColor = False
               end
-              object cbWebPPNGCompressionLevel: TComboBox
-                AnchorSideLeft.Control = lbWebPPNGCompressionLevel
+              object cbPNGCompressionLevel: TComboBox
+                AnchorSideLeft.Control = lbPNGCompressionLevel
                 AnchorSideLeft.Side = asrBottom
-                AnchorSideTop.Control = lbWebPPNGCompressionLevel
+                AnchorSideTop.Control = lbPNGCompressionLevel
                 AnchorSideTop.Side = asrCenter
                 AnchorSideRight.Side = asrBottom
                 Left = 134
                 Height = 23
-                Top = 29
+                Top = 50
                 Width = 100
                 ItemHeight = 15
                 ItemIndex = 1
@@ -3947,30 +3949,40 @@ object MainForm: TMainForm
                 TabOrder = 1
                 Text = 'Fastest'
               end
-              object lbWebPJpegQuality: TLabel
-                AnchorSideLeft.Control = lbWebPConvertTo
-                AnchorSideTop.Control = cbWebPPNGCompressionLevel
+              object lbJPEGQuality: TLabel
+                AnchorSideLeft.Control = lbWebPSaveAs
+                AnchorSideTop.Control = cbPNGCompressionLevel
                 AnchorSideTop.Side = asrBottom
                 Left = 4
                 Height = 15
-                Top = 58
-                Width = 63
-                Caption = 'Jpeg quality'
+                Top = 79
+                Width = 64
+                Caption = 'JPEG quality'
                 ParentColor = False
               end
-              object seWebPJpegQuality: TSpinEdit
-                AnchorSideLeft.Control = lbWebPJpegQuality
+              object seJPEGQuality: TSpinEdit
+                AnchorSideLeft.Control = lbJPEGQuality
                 AnchorSideLeft.Side = asrBottom
-                AnchorSideTop.Control = lbWebPJpegQuality
+                AnchorSideTop.Control = lbJPEGQuality
                 AnchorSideTop.Side = asrCenter
                 AnchorSideRight.Side = asrBottom
-                Left = 73
+                Left = 74
                 Height = 23
-                Top = 54
+                Top = 75
                 Width = 47
                 MinValue = 1
                 TabOrder = 2
                 Value = 80
+              end
+              object ckPNGSaveAsJPEG: TCheckBox
+                AnchorSideLeft.Control = gbImageConversion
+                AnchorSideTop.Control = gbImageConversion
+                Left = 4
+                Height = 19
+                Top = 4
+                Width = 113
+                Caption = 'Save PNG as JPEG'
+                TabOrder = 3
               end
             end
           end

@@ -317,7 +317,7 @@ msgstr ""
 msgid ""
 "WebP\n"
 "PNG\n"
-"Jpeg\n"
+"JPEG\n"
 msgstr ""
 
 #: frmmain.rs_webppnglevel
@@ -782,6 +782,11 @@ msgstr ""
 msgid "Use proxy"
 msgstr ""
 
+#: tmainform.cbpngcompressionlevel.text
+msgctxt "tmainform.cbpngcompressionlevel.text"
+msgid "Fastest"
+msgstr ""
+
 #: tmainform.cbsearchfromallsites.caption
 msgid "Search in all manga sites"
 msgstr ""
@@ -794,12 +799,9 @@ msgstr ""
 msgid "Regular Expression"
 msgstr ""
 
-#: tmainform.cbwebpconvertto.text
+#: tmainform.cbwebpsaveas.text
+msgctxt "tmainform.cbwebpsaveas.text"
 msgid "PNG"
-msgstr ""
-
-#: tmainform.cbwebppngcompressionlevel.text
-msgid "Fastest"
 msgstr ""
 
 #: tmainform.ckdroptarget.caption
@@ -1130,6 +1132,10 @@ msgctxt "tmainform.ckoptionsalwaysstarttaskfromfailedchapters.caption"
 msgid "Always start task from failed chapters"
 msgstr ""
 
+#: tmainform.ckpngsaveasjpeg.caption
+msgid "Save PNG as JPEG"
+msgstr ""
+
 #: tmainform.edcustomgenres.texthint
 msgid "Input custom genres, separated by comma"
 msgstr ""
@@ -1236,6 +1242,10 @@ msgstr ""
 msgid "Drop Box"
 msgstr ""
 
+#: tmainform.gbimageconversion.caption
+msgid "Image Conversion"
+msgstr ""
+
 #: tmainform.gboptionexternal.caption
 msgid "External program"
 msgstr ""
@@ -1251,10 +1261,6 @@ msgstr ""
 
 #: tmainform.gboptionrenaming.caption
 msgid "Renaming"
-msgstr ""
-
-#: tmainform.gbwebp.caption
-msgid "WebP"
 msgstr ""
 
 #: tmainform.lbdefaultdownloadpath.caption
@@ -1309,6 +1315,10 @@ msgstr ""
 #: tmainform.lbfiltertitle.caption
 msgctxt "tmainform.lbfiltertitle.caption"
 msgid "Title"
+msgstr ""
+
+#: tmainform.lbjpegquality.caption
+msgid "JPEG quality"
 msgstr ""
 
 #: tmainform.lblogfilename.caption
@@ -1474,20 +1484,17 @@ msgctxt "tmainform.lboptionuser.caption"
 msgid "Username"
 msgstr ""
 
+#: tmainform.lbpngcompressionlevel.caption
+msgctxt "tmainform.lbpngcompressionlevel.caption"
+msgid "PNG Compression level"
+msgstr ""
+
 #: tmainform.lbsaveto.caption
 msgid "Save to:"
 msgstr ""
 
-#: tmainform.lbwebpconvertto.caption
-msgid "Save WebP to"
-msgstr ""
-
-#: tmainform.lbwebpjpegquality.caption
-msgid "Jpeg quality"
-msgstr ""
-
-#: tmainform.lbwebppngcompressionlevel.caption
-msgid "PNG Compression level"
+#: tmainform.lbwebpsaveas.caption
+msgid "Save WebP as"
 msgstr ""
 
 #: tmainform.medturldelete.caption

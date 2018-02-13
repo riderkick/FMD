@@ -352,10 +352,15 @@ msgid "Today"
 msgstr "Cегодня"
 
 #: frmmain.rs_webpconvertto
+#, fuzzy
+#| msgid ""
+#| "WebP\n"
+#| "PNG\n"
+#| "Jpeg\n"
 msgid ""
 "WebP\n"
 "PNG\n"
-"Jpeg\n"
+"JPEG\n"
 msgstr ""
 "WebP\n"
 "PNG\n"
@@ -827,6 +832,12 @@ msgstr "Удалять повторяющиеся локальные данны�
 msgid "Use proxy"
 msgstr "Использовать прокси"
 
+#: tmainform.cbpngcompressionlevel.text
+#, fuzzy
+msgctxt "tmainform.cbpngcompressionlevel.text"
+msgid "Fastest"
+msgstr "Скоростной"
+
 #: tmainform.cbsearchfromallsites.caption
 msgid "Search in all manga sites"
 msgstr "Поиск по всем сайтам манги"
@@ -839,13 +850,11 @@ msgstr "Для получения дополнительных сайтов с �
 msgid "Regular Expression"
 msgstr "Регулярное выражение (regexp)"
 
-#: tmainform.cbwebpconvertto.text
+#: tmainform.cbwebpsaveas.text
+#, fuzzy
+msgctxt "tmainform.cbwebpsaveas.text"
 msgid "PNG"
 msgstr "PNG"
-
-#: tmainform.cbwebppngcompressionlevel.text
-msgid "Fastest"
-msgstr "Скоростной"
 
 #: tmainform.ckdroptarget.caption
 msgctxt "tmainform.ckdroptarget.caption"
@@ -1177,6 +1186,10 @@ msgctxt "tmainform.ckoptionsalwaysstarttaskfromfailedchapters.caption"
 msgid "Always start task from failed chapters"
 msgstr "Всегда запускать задачу с неудавшихся частей"
 
+#: tmainform.ckpngsaveasjpeg.caption
+msgid "Save PNG as JPEG"
+msgstr ""
+
 #: tmainform.edcustomgenres.texthint
 msgid "Input custom genres, separated by comma"
 msgstr "Ввод пользовательских жанров, разделенных запятой"
@@ -1283,6 +1296,10 @@ msgstr "Показать диалог подтверждения когда"
 msgid "Drop Box"
 msgstr "Дропбокс"
 
+#: tmainform.gbimageconversion.caption
+msgid "Image Conversion"
+msgstr ""
+
 #: tmainform.gboptionexternal.caption
 msgid "External program"
 msgstr "Внешняя программа"
@@ -1299,10 +1316,6 @@ msgstr "Конфигурация прокси-сервера"
 #: tmainform.gboptionrenaming.caption
 msgid "Renaming"
 msgstr "Переименовать"
-
-#: tmainform.gbwebp.caption
-msgid "WebP"
-msgstr "WebP"
 
 #: tmainform.lbdefaultdownloadpath.caption
 msgid "Choose the default download path:"
@@ -1366,6 +1379,10 @@ msgstr "Описание"
 msgctxt "tmainform.lbfiltertitle.caption"
 msgid "Title"
 msgstr "Название"
+
+#: tmainform.lbjpegquality.caption
+msgid "JPEG quality"
+msgstr ""
 
 #: tmainform.lblogfilename.caption
 msgid "Log file:"
@@ -1553,21 +1570,19 @@ msgctxt "tmainform.lboptionuser.caption"
 msgid "Username"
 msgstr "Имя пользователя"
 
+#: tmainform.lbpngcompressionlevel.caption
+#, fuzzy
+msgctxt "tmainform.lbpngcompressionlevel.caption"
+msgid "PNG Compression level"
+msgstr "Уровень компрессии PNG"
+
 #: tmainform.lbsaveto.caption
 msgid "Save to:"
 msgstr "Сохранить в:"
 
-#: tmainform.lbwebpconvertto.caption
-msgid "Save WebP to"
-msgstr "Сохранить WebP как"
-
-#: tmainform.lbwebpjpegquality.caption
-msgid "Jpeg quality"
-msgstr "Качество Jpeg"
-
-#: tmainform.lbwebppngcompressionlevel.caption
-msgid "PNG Compression level"
-msgstr "Уровень компрессии PNG"
+#: tmainform.lbwebpsaveas.caption
+msgid "Save WebP as"
+msgstr ""
 
 #: tmainform.medturldelete.caption
 msgctxt "TMAINFORM.MEDTURLDELETE.CAPTION"
