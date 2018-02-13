@@ -295,12 +295,12 @@ begin
   if AVT = nil then Exit;
   if S = nil then Exit;
   S.Clear;
-  if AvailableWebsite.Count > 0 then
+  if AvailableWebsites.Count > 0 then
   begin
     S.BeginUpdate;
     try
-      for i := 0 to AvailableWebsite.Count - 1 do
-        S.Add(AvailableWebsite.Names[i]);
+      for i := 0 to AvailableWebsites.Count - 1 do
+        S.Add(AvailableWebsites.Names[i]);
       if AVT.RootNodeCount > 0 then
       begin
         Node := AVT.GetFirst();

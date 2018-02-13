@@ -4222,12 +4222,9 @@ object MainForm: TMainForm
                 TreeOptions.AutoOptions = [toAutoDropExpand, toAutoScrollOnExpand, toAutoTristateTracking]
                 TreeOptions.MiscOptions = [toAcceptOLEDrop, toCheckSupport, toFullRepaintOnResize, toInitOnSave, toToggleOnDblClick, toWheelPanning, toEditOnClick]
                 TreeOptions.PaintOptions = [toHideFocusRect, toShowButtons, toShowDropmark, toShowRoot, toShowTreeLines, toThemeAware, toUseBlendedImages]
-                OnChange = vtOptionMangaSiteSelectionChange
-                OnFocusChanged = vtOptionMangaSiteSelectionFocusChanged
                 OnFreeNode = vtOptionMangaSiteSelectionFreeNode
                 OnGetText = vtOptionMangaSiteSelectionGetText
                 OnGetNodeDataSize = vtOptionMangaSiteSelectionGetNodeDataSize
-                OnInitNode = vtOptionMangaSiteSelectionInitNode
               end
               object pnlWebsitesTool: TPanel
                 Left = 2

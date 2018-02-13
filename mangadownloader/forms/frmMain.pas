@@ -651,10 +651,6 @@ type
     procedure tmBackupTimer(Sender: TObject);
     procedure vtMangaListInitNode(Sender: TBaseVirtualTree; ParentNode,
       Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
-    procedure vtOptionMangaSiteSelectionChange(Sender : TBaseVirtualTree;
-      Node : PVirtualNode);
-    procedure vtOptionMangaSiteSelectionFocusChanged(Sender : TBaseVirtualTree;
-      Node : PVirtualNode; Column : TColumnIndex);
     procedure vtOptionMangaSiteSelectionFreeNode(Sender : TBaseVirtualTree;
       Node : PVirtualNode);
     procedure vtOptionMangaSiteSelectionGetNodeDataSize(Sender: TBaseVirtualTree;
@@ -662,8 +658,6 @@ type
     procedure vtOptionMangaSiteSelectionGetText(Sender: TBaseVirtualTree;
       Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType;
       var CellText: String);
-    procedure vtOptionMangaSiteSelectionInitNode(Sender: TBaseVirtualTree;
-      ParentNode, Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
     procedure DisableAddToFavorites(webs: String);
   private
     PrevWindowState: TWindowState;
@@ -672,7 +666,6 @@ type
     procedure FMDInstanceReceiveMsg(Sender: TObject);
     procedure ClearChapterListState;
   public
-    optionMangaSiteSelectionNodes: array of PVirtualNode;
     LastSearchStr: String;
     LastSearchWeb: String;
     LastUserPickedSaveTo: String;
@@ -730,8 +723,6 @@ type
 
     // Load config from mangalist.ini
     procedure LoadMangaOptions;
-
-    function SaveMangaOptions: String;
 
     procedure UpdateVtChapter;
     procedure UpdateVtDownload; inline;
@@ -1443,7 +1434,6 @@ begin
   RemoveVT(vtFavorites);
   RemoveVT(vtOptionMangaSiteSelection);
 
-  SetLength(optionMangaSiteSelectionNodes, 0);
   SetLength(ChapterList, 0);
   FreeAndNil(mangaInfo);
 
@@ -2810,7 +2800,6 @@ var
   data: PSingleItem;
   xNode, lNode: PVirtualNode;
 begin
-  if Length(optionMangaSiteSelectionNodes) < 1 then Exit;
   s := Trim(LowerCase(edWebsitesSearch.Text));
   vtOptionMangaSiteSelection.BeginUpdate;
   try
@@ -4868,11 +4857,6 @@ begin
 end;
 
 procedure TMainForm.LoadOptions;
-var
-  l: TStringList;
-  i, j: Integer;
-  s: String;
-  data: PSingleItem;
 begin
   with configfile do begin
     // general
@@ -4981,56 +4965,22 @@ begin
     edLogFileName.Text := ReadString('logger', 'LogFileName', '');
     if edLogFileName.Text = '' then
       edLogFileName.Text := DEFAULT_LOG_FILE;
-
-    // websites
-    if Length(optionMangaSiteSelectionNodes) > 0 then
-      for i := 0 to Length(optionMangaSiteSelectionNodes) - 1 do
-        optionMangaSiteSelectionNodes[i]^.CheckState := csUncheckedNormal;
-    l := TStringList.Create;
-    try
-      s := ReadString('general', 'MangaListSelect',
-        mangalistfile.ReadString('general', 'DefaultSelect', DEFAULT_LIST));
-      if Pos(SEPERATOR, s) > 0 then
-        GetParams(l, s)    //for old config
-      else
-        ExtractStrings([','], [], PChar(s), l);
-      if (l.Count > 0) and (Length(optionMangaSiteSelectionNodes) > 0) then
-        for i := 0 to l.Count - 1 do
-          for j := 0 to Length(optionMangaSiteSelectionNodes) - 1 do
-          begin
-            data := vtOptionMangaSiteSelection.GetNodeData(
-              optionMangaSiteSelectionNodes[j]);
-            if SameText(l[i], data^.Text) then
-            begin
-              optionMangaSiteSelectionNodes[j]^.CheckState := csCheckedNormal;
-              Break;
-            end;
-          end;
-    finally
-      l.Free;
-    end;
   end;
 end;
 
 procedure TMainForm.SaveOptions(const AShowDialog: Boolean);
-var
-  s: String;
 begin
-  if Length(optionMangaSiteSelectionNodes) > 0 then
+  if (cbSelectManga.Items.Count = 0) and AShowDialog then
   begin
-    s := SaveMangaOptions;
-    if (s = '') and AShowDialog then
-    begin
-      MessageDlg('', RS_DlgMangaListSelect,
-        mtConfirmation, [mbYes], 0);
-      Exit;
-    end;
+    MessageDlg('', RS_DlgMangaListSelect,
+      mtConfirmation, [mbYes], 0);
+    Exit;
   end;
 
   with configfile do
     try
       // general
-      WriteString('general', 'MangaListSelect', s);
+      WriteString('general', 'MangaListSelect', cbSelectManga.Items.CommaText);
       WriteBool('general', 'LiveSearch', cbOptionLiveSearch.Checked);
       WriteBool('general', 'OneInstanceOnly', cbOptionOneInstanceOnly.Checked);
       if cbLanguages.ItemIndex > -1 then
@@ -5136,19 +5086,21 @@ end;
 procedure TMainForm.ApplyOptions;
 var
   i: Integer;
-  isStillHaveCurrentWebsite: Boolean = False;
-  data: PSingleItem;
+  isStillHaveCurrentWebsite: Boolean;
+  node: PVirtualNode;
 begin
   try
     // general
+    // selected websites
     cbSelectManga.Clear;
-    for i := 0 to Length(optionMangaSiteSelectionNodes) - 1 do
+    node := vtOptionMangaSiteSelection.GetFirstChecked();
+    while node<>nil do
     begin
-      data := vtOptionMangaSiteSelection.GetNodeData(optionMangaSiteSelectionNodes[i]);
-      if (optionMangaSiteSelectionNodes[i]^.CheckState = csCheckedNormal) and
-        (Data^.Text <> '') then
-        cbSelectManga.Items.Add(data^.Text);
+      cbSelectManga.Items.Add(PSingleItem(vtOptionMangaSiteSelection.GetNodeData(node))^.Text);
+      node := vtOptionMangaSiteSelection.GetNextChecked(node);
     end;
+
+    isStillHaveCurrentWebsite := False;
     for i := 0 to cbSelectManga.Items.Count - 1 do
     begin
       if cbSelectManga.Items[i] = currentWebsite then
@@ -5301,124 +5253,139 @@ end;
 
 procedure TMainForm.LoadMangaOptions;
 var
-  isDeleteUnusedManga: Boolean;
-  i, j, sel: Integer;
-  lang: TStringList;
-  s, currentLanguage: String;
-  ANode, currentRootNode: PVirtualNode;
+  categories: TStringList;
+  categoriesitem: TStringList;
+  i, j: Integer;
+  s: String;
+  module: TModuleContainer;
+  node: PVirtualNode;
+  nodei: PVirtualNode;
   data: PSingleItem;
-  wName, wLang: TStringList;
 begin
-  DBDownloadURL:=mangalistfile.ReadString('general','DBDownloadURL','');
-  wName := TStringList.Create;
-  wLang := TStringList.Create;
-  lang := TStringList.Create;
+  categories := TStringList.Create;
+  categories.OwnsObjects := True;
+  categories.Sorted := False;
   try
-    mangalistfile.ReadSection('available', lang);
-    TrimStrings(lang);
-    if lang.Count > 0 then
-      for i := 0 to lang.Count - 1 do
+    // read mangalist.ini
+    with TIniFile.Create(MANGALIST_FILE) do
+    try
+      // databases download url
+      DBDownloadURL := ReadString('general', 'DBDownloadURL', DBDownloadURL);
+
+      // read available websites
+      ReadSection('available', categories);
+      for i := 0 to categories.Count - 1 do
       begin
-        s := Trim(mangalistfile.ReadString('available', lang[i], ''));
+        categoriesitem := TStringList.Create;
+        categories.Objects[i] := categoriesitem;
+        categoriesitem.Sorted := False;
+        s := Trim(ReadString('available', categories[i], ''));
         if s <> '' then
-          ExtractStrings([','], [], PChar(s), wName);
-        TrimStrings(wName);
-        while wlang.Count < wName.Count do
-          wLang.Add(lang[i]);
+          categoriesitem.CommaText := s;
       end;
-
-    // load to option list
-    if wName.Count > 0 then
-    begin
-      SetLength(optionMangaSiteSelectionNodes, wName.Count);
-      currentLanguage := '';
-      for i := 0 to wName.Count - 1 do
-        with vtOptionMangaSiteSelection do
-        begin
-          if currentLanguage <> wLang[i] then
-          begin
-            currentLanguage := wLang[i];
-            currentRootNode := AddChild(nil);
-            data := GetNodeData(currentRootNode);
-            data^.Text := currentLanguage;
-            ValidateNode(currentRootNode, False);
-          end;
-          ANode := AddChild(currentRootNode);
-          ANode^.CheckState := csUncheckedNormal;
-          data := GetNodeData(ANode);
-          data^.Text := wName[i];
-          ValidateNode(ANode, False);
-          optionMangaSiteSelectionNodes[i] := ANode;
-        end;
+    finally
+      Free;
     end;
 
-    // load selected manga list
-    lang.Clear;
-    s := configfile.ReadString('general', 'MangaListSelect', DEFAULT_LIST);
-    if Pos(SEPERATOR, s) <> 0 then
-      ExtractParam(lang, s, SEPERATOR, False)
-    else
-      ExtractParam(lang, s, ',', False);
-    cbSelectManga.Items.Assign(lang);
+    // sort all
+    categories.Duplicates := dupIgnore;
+    categories.Sorted := True;
+    for i := 0 to categories.Count - 1 do
+    begin
+      categoriesitem := TStringList(categories.Objects[i]);
+      categoriesitem.Duplicates := dupIgnore;
+      categoriesitem.Sorted := True;
+    end;
 
-    // remove unused manga name
-    i := 0;
-    if (lang.Count > 0) and (Length(optionMangaSiteSelectionNodes) > 0) then
-      while i < lang.Count do
+    // read websitemodules
+    for i := 0 to WebsiteModules.Modules.Count - 1 do
+    begin
+      module := WebsiteModules.Modules[i];
+      if module.Category <> '' then
       begin
-        isDeleteUnusedManga := True;
-        for j := 0 to Length(optionMangaSiteSelectionNodes) - 1 do
+        j := categories.IndexOf(module.Category);
+        if j = -1 then
         begin
-          Data := vtOptionMangaSiteSelection.GetNodeData(
-            optionMangaSiteSelectionNodes[j]);
-          if lang[i] = Data^.Text then
-          begin
-            isDeleteUnusedManga := False;
-            Break;
-          end;
-        end;
-        if isDeleteUnusedManga then
-          lang.Delete(i)
+          categoriesitem := TStringList.Create;
+          categories.AddObject(module.Category, categoriesitem);
+          categoriesitem.Duplicates := dupIgnore;
+          categoriesitem.Sorted := True;
+        end
         else
-          Inc(i);
+          categoriesitem := TStringList(categories.Objects[j]);
+        categoriesitem.Add(module.Website);
       end;
-
-    // load last selected manga
-    if cbSelectManga.Items.Count > 0 then
-    begin
-      sel := configfile.ReadInteger('form', 'SelectManga', 0);
-      if sel < 0 then
-        sel := 0;
-      if sel > cbSelectManga.Items.Count - 1 then
-        sel := cbSelectManga.Items.Count - 1;
-      cbSelectManga.ItemIndex := sel;
-      currentWebsite := cbSelectManga.Items[cbSelectManga.ItemIndex];
     end;
+
+    // add them to vt websites selection and availablewebsites
+    for i := 0 to categories.Count - 1 do
+    begin
+      node := vtOptionMangaSiteSelection.AddChild(nil, nil);
+      vtOptionMangaSiteSelection.ValidateNode(node, False);
+      data := vtOptionMangaSiteSelection.GetNodeData(node);
+      data^.Text := categories[i];
+      categoriesitem := TStringList(categories.Objects[i]);
+      for j := 0 to categoriesitem.Count - 1 do
+      begin
+        s := categoriesitem[j];
+        nodei := vtOptionMangaSiteSelection.AddChild(node, nil);
+        vtOptionMangaSiteSelection.ValidateNode(nodei, False);
+        nodei^.CheckType := ctCheckBox;
+        data := vtOptionMangaSiteSelection.GetNodeData(nodei);
+        data^.Text := s;
+        AvailableWebsites.Add(s);
+      end;
+    end;
+    AvailableWebsites.Duplicates := dupIgnore;
+    AvailableWebsites.Sorted := True;
   finally
-    lang.Free;
-    wName.Free;
-    wLang.Free;
+    categories.Free;
   end;
-end;
 
-function TMainForm.SaveMangaOptions: String;
-var
-  i: Integer;
-  data: PSingleItem;
-begin
-  Result := '';
-  if Length(optionMangaSiteSelectionNodes) > 0 then
-    for i := Low(optionMangaSiteSelectionNodes) to High(optionMangaSiteSelectionNodes) do
+  // load selected websites
+  s := configfile.ReadString('general', 'MangaListSelect', DEFAULT_SELECTED_WEBSITES);
+  if Pos(SEPERATOR, s) <> 0 then
+    ExtractParam(cbSelectManga.Items, s, SEPERATOR, False)
+  else
+    ExtractParam(cbSelectManga.Items, s, ',', False);
+
+  // remove missing websites from selected websites
+  for i := cbSelectManga.Items.Count - 1 downto 0 do
+  begin
+    if not AvailableWebsites.Find(cbSelectManga.Items[i], j) then
+      cbSelectManga.Items.Delete(i);
+  end;
+
+  // set checked vt websites selection
+  for i := 0 to cbSelectManga.Items.Count - 1 do
+  begin
+    node := vtOptionMangaSiteSelection.GetFirst();
+    while node <> nil do
     begin
-      data := vtOptionMangaSiteSelection.GetNodeData(optionMangaSiteSelectionNodes[i]);
-      if optionMangaSiteSelectionNodes[i]^.CheckState = csCheckedNormal then
+      if node^.ChildCount = 0 then
       begin
-        if Result = '' then
-          Result := data^.Text
-        else
-          Result := Result + ',' + data^.Text;
+        data := vtOptionMangaSiteSelection.GetNodeData(node);
+        if cbSelectManga.Items[i] = data^.Text then
+        begin
+          node^.CheckState := csCheckedNormal;
+          Break;
+        end;
       end;
+      node := vtOptionMangaSiteSelection.GetNext(node);
     end;
+  end;
+
+  // load last selected webssite
+  if cbSelectManga.Items.Count > 0 then
+  begin
+    i := configfile.ReadInteger('form', 'SelectManga', 0);
+    if i < 0 then
+      i := 0;
+    if i > cbSelectManga.Items.Count - 1 then
+      i := cbSelectManga.Items.Count - 1;
+    cbSelectManga.ItemIndex := i;
+    currentWebsite := cbSelectManga.Items[cbSelectManga.ItemIndex];
+  end;
 end;
 
 procedure TMainForm.edMangaListSearchChange(Sender: TObject);
@@ -5953,54 +5920,23 @@ begin
   end;
 end;
 
-procedure TMainForm.vtOptionMangaSiteSelectionChange(Sender : TBaseVirtualTree;
-  Node : PVirtualNode);
-begin
-  vtOptionMangaSiteSelection.Refresh;
-end;
-
-procedure TMainForm.vtOptionMangaSiteSelectionFocusChanged(
-  Sender : TBaseVirtualTree; Node : PVirtualNode; Column : TColumnIndex);
-begin
-  vtOptionMangaSiteSelection.Refresh;
-end;
-
 procedure TMainForm.vtOptionMangaSiteSelectionFreeNode(
   Sender : TBaseVirtualTree; Node : PVirtualNode);
-var
-  Data: PSingleItem;
 begin
-  Data := vtOptionMangaSiteSelection.GetNodeData(Node);
-  if Assigned(Data) then
-    Finalize(Data^);
+  Finalize(PSingleItem(Sender.GetNodeData(Node))^);
 end;
 
 procedure TMainForm.vtOptionMangaSiteSelectionGetNodeDataSize(Sender: TBaseVirtualTree;
   var NodeDataSize: Integer);
 begin
-  NodeDataSize := SizeOf(TMangaListItem);
+  NodeDataSize := SizeOf(TSingleItem);
 end;
 
 procedure TMainForm.vtOptionMangaSiteSelectionGetText(Sender: TBaseVirtualTree;
   Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType;
   var CellText: String);
-var
-  Data: PSingleItem;
 begin
-  Data := vtOptionMangaSiteSelection.GetNodeData(Node);
-  if Assigned(Data) then
-    CellText := Data^.Text;
-end;
-
-procedure TMainForm.vtOptionMangaSiteSelectionInitNode(Sender: TBaseVirtualTree;
-  ParentNode, Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
-var
-  Level: Integer;
-begin
-  Level := vtOptionMangaSiteSelection.GetNodeLevel(Node);
-  if Level = 1 then
-    Node^.CheckType := ctCheckBox;
-  vtOptionMangaSiteSelection.ValidateNode(Node, False);
+  CellText := PSingleItem(vtOptionMangaSiteSelection.GetNodeData(Node))^.Text;
 end;
 
 end.

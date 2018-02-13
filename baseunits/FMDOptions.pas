@@ -34,7 +34,6 @@ const
   EXPARAM_CHAPTER = '%CHAPTER%';
   DEFAULT_EXPARAM = '"' + EXPARAM_PATH + EXPARAM_CHAPTER + '"';
 
-  DEFAULT_LIST = 'MangaFox,MangaHere,MangaInn,MangaReader';
   DEFAULT_MANGA_CUSTOMRENAME = '%MANGA%';
   DEFAULT_CHAPTER_CUSTOMRENAME = '%CHAPTER%';
   DEFAULT_FILENAME_CUSTOMRENAME = '%FILENAME%';
@@ -92,21 +91,21 @@ var
   MANGAFOXTEMPLATE_FOLDER,
   LUA_WEBSITEMODULE_FOLDER,
   LUA_WEBSITEMODULE_REPOS: String;
+  DEFAULT_SELECTED_WEBSITES: String = 'MangaFox,MangaHere,MangaInn,MangaReader';
 
   // ini files
   revisionfile,
-  updatesfile,
-  mangalistfile: TIniFile;
+  updatesfile: TIniFile;
   configfile,
   advancedfile: TIniFileRun;
 
   // db data download url
-  DBDownloadURL: String;
+  DBDownloadURL: String = 'https://sourceforge.net/projects/newfmd/files/data/<website>.7z/download';
 
   currentWebsite: String;
 
   // available website
-  AvailableWebsite: TStringList;
+  AvailableWebsites: TStringList;
 
   // general
   OptionLetFMDDo: TFMDDo = DO_NOTHING;
@@ -244,51 +243,13 @@ end;
 
 procedure FreeIniFiles;
 begin
-  FreeNil(mangalistfile);
   FreeNil(configfile);
   FreeNil(advancedfile);
-end;
-
-procedure GetAvailableWebsite;
-var
-  l, w: TStringList;
-  i, j: Integer;
-begin
-  AvailableWebsite.Clear;
-  AvailableWebsite.BeginUpdate;
-  try
-    l := TStringList.Create;
-    try
-      mangalistfile.ReadSection('available', l);
-      if l.Count > 0 then
-      begin
-        w := TStringList.Create;
-        try
-          for i := 0 to l.Count - 1 do
-          begin
-            w.Clear;
-            w.CommaText := mangalistfile.ReadString('available', l[i], '');
-            if w.Count > 0 then
-              for j := 0 to w.Count - 1 do
-                AvailableWebsite.Values[w[j]] := l[i];
-          end;
-        finally
-          w.Free;
-        end;
-      end;
-    finally
-      l.Free;
-    end;
-  finally
-    AvailableWebsite.EndUpdate;
-  end;
 end;
 
 procedure SetIniFiles;
 begin
   FreeIniFiles;
-  mangalistfile := TIniFile.Create(MANGALIST_FILE);
-  GetAvailableWebsite;
   configfile := TIniFileRun.Create(CONFIG_FILE);
   advancedfile := TIniFileRun.Create(CONFIG_ADVANCED);
 end;
@@ -404,8 +365,8 @@ end;
 procedure doInitialization;
 begin
   FMD_VERSION_NUMBER := GetCurrentBinVersion;
-  AvailableWebsite := TStringList.Create;
-  AvailableWebsite.Sorted := True;
+  AvailableWebsites := TStringList.Create;
+  AvailableWebsites.Sorted := False;
   SetFMDdirectory(ExtractFilePath(Application.ExeName));
   SetAppDataDirectory(FMD_DIRECTORY);
 end;
@@ -413,7 +374,7 @@ end;
 procedure doFinalization;
 begin
   FreeIniFiles;
-  AvailableWebsite.Free;
+  AvailableWebsites.Free;
 end;
 
 initialization
