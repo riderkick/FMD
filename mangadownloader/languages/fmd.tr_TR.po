@@ -356,11 +356,6 @@ msgid "Today"
 msgstr "Bugün"
 
 #: frmmain.rs_webpconvertto
-#, fuzzy
-#| msgid ""
-#| "WebP\n"
-#| "PNG\n"
-#| "Jpeg\n"
 msgid ""
 "WebP\n"
 "PNG\n"
@@ -368,7 +363,7 @@ msgid ""
 msgstr ""
 "WebP\n"
 "PNG\n"
-"Jpeg\n"
+"JPEG\n"
 
 #: frmmain.rs_webppnglevel
 msgid ""
@@ -759,7 +754,7 @@ msgstr "Yolda Unicode karakter varsa bunu açın."
 
 #: tmainform.cboptiondeletecompletedtasksonclose.caption
 msgid "Delete completed tasks on close"
-msgstr ""
+msgstr "Tamamlanmış görevleri kapatırken sil"
 
 #: tmainform.cboptiondigitchapter.caption
 msgid "Chapter"
@@ -847,7 +842,6 @@ msgid "Use proxy"
 msgstr "Proxy kullan"
 
 #: tmainform.cbpngcompressionlevel.text
-#, fuzzy
 msgctxt "tmainform.cbpngcompressionlevel.text"
 msgid "Fastest"
 msgstr "En hızlı"
@@ -865,7 +859,6 @@ msgid "Regular Expression"
 msgstr "Düzenli İfadeler"
 
 #: tmainform.cbwebpsaveas.text
-#, fuzzy
 msgctxt "tmainform.cbwebpsaveas.text"
 msgid "PNG"
 msgstr "PNG"
@@ -1201,7 +1194,7 @@ msgstr "Görevi her zaman başarısız bölümlerden başlat"
 
 #: tmainform.ckpngsaveasjpeg.caption
 msgid "Save PNG as JPEG"
-msgstr ""
+msgstr "PNGyi JPEG olarak kaydet."
 
 #: tmainform.edcustomgenres.texthint
 msgid "Input custom genres, separated by comma"
@@ -1315,7 +1308,7 @@ msgstr "İndirme kutusu"
 
 #: tmainform.gbimageconversion.caption
 msgid "Image Conversion"
-msgstr ""
+msgstr "Resim Dönüştürme"
 
 #: tmainform.gboptionexternal.caption
 msgid "External program"
@@ -1399,7 +1392,7 @@ msgstr "Başlık"
 
 #: tmainform.lbjpegquality.caption
 msgid "JPEG quality"
-msgstr ""
+msgstr "JPEG Kalitesi"
 
 #: tmainform.lblogfilename.caption
 msgid "Log file:"
@@ -1590,7 +1583,6 @@ msgid "Username"
 msgstr "Kullanıcı adı"
 
 #: tmainform.lbpngcompressionlevel.caption
-#, fuzzy
 msgctxt "tmainform.lbpngcompressionlevel.caption"
 msgid "PNG Compression level"
 msgstr "PNG Sıkıştırma seviyesi"
@@ -1601,7 +1593,7 @@ msgstr "Şuraya kaydet:"
 
 #: tmainform.lbwebpsaveas.caption
 msgid "Save WebP as"
-msgstr ""
+msgstr "WebPyi şöyle kaydet"
 
 #: tmainform.medturldelete.caption
 msgctxt "TMAINFORM.MEDTURLDELETE.CAPTION"
