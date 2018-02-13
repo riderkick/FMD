@@ -96,6 +96,20 @@ begin
   Result := 1;
 end;
 
+function lua_incstr(L: Plua_State): Integer; cdecl;
+var
+  n: Integer;
+begin
+  n := 1;
+  if (lua_gettop(L) = 2) and lua_isinteger(L, 2) then
+    n := lua_tointeger(L, 2);
+  if lua_isinteger(L, 1) then
+    lua_pushstring(L, IncStr(lua_tointeger(L, 1), n))
+  else
+    lua_pushstring(L, IncStr(lua_tostring(L, 1), n));
+  Result := 1;
+end;
+
 procedure luaBaseUnitRegister(L: Plua_State);
 begin
   luaPushFunctionGlobal(L, 'Pos', @lua_pos);
@@ -110,6 +124,7 @@ begin
   luaPushFunctionGlobal(L, 'RegExprGetMatch', @lua_regexprgetmatch);
   luaPushFunctionGlobal(L, 'HTMLDecode', @lua_htmldecode);
   luaPushFunctionGlobal(L, 'URLDecode', @lua_urldecode);
+  luaPushFunctionGlobal(L, 'IncStr', @lua_incstr);
 end;
 
 end.
