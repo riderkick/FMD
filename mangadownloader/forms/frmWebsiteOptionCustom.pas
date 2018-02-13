@@ -203,8 +203,6 @@ begin
     HorizontalSpacing := hspace;
     VerticalSpacing := vspace;
   end;
-  Modules.LoadWebsiteOption;
-  CreateWebsiteOption;
 end;
 
 procedure TCustomOptionForm.FormDestroy(Sender: TObject);

@@ -9,7 +9,6 @@ uses
   uDownloadsManager, xquery, httpsendthread;
 
 type
-
   TLuaWebsiteModulesContainer = class;
 
   { TLuaWebsiteModule }
@@ -34,8 +33,17 @@ type
     Storage: TStringsStorage;
     LastUpdated: String;
     Container: TLuaWebsiteModulesContainer;
+
+    Options: TStringList;
+
     constructor Create;
     destructor Destroy; override;
+
+    function AddOption(const AName, ACaption: String; const AClass: TClass): Integer;
+    procedure AddOptionCheckBox(const AName, ACaption: String; const ADefault: Boolean);
+    procedure AddOptionEdit(const AName, ACaption: String; const ADefault: String);
+    procedure AddOptionSpinEdit(const AName, ACaption: String; const ADefault: Integer);
+    procedure AddOptionComboBox(const AName, ACaption, AItems: String; const ADefault: Integer);
 
     procedure LuaPushMe(L: Plua_State);
     function LuaDoMe(L: Plua_State): Integer;
@@ -64,6 +72,27 @@ type
     TempModuleList: TLuaWebsiteModules;
     constructor Create;
     destructor Destroy; override;
+  end;
+
+  TOptionItem = class
+    Caption: String;
+  end;
+
+  TOptionItemCheckBox = class(TOptionItem)
+    Value: Boolean;
+  end;
+
+  TOptionItemEdit = class(TOptionItem)
+    Value: String;
+  end;
+
+  TOptionItemSpinEdit = class(TOptionItem)
+    Value: Integer;
+  end;
+
+  TOptionItemComboBox = class(TOptionItem)
+    Items: String;
+    Value: Integer;
   end;
 
 procedure ScanLuaWebsiteModulesFile;
@@ -550,14 +579,82 @@ constructor TLuaWebsiteModule.Create;
 begin
   LuaWebsiteModulesManager.TempModuleList.Add(Self);
   Storage := TStringsStorage.Create;
+  Options := TStringList.Create;
+  Options.OwnsObjects := True;
+  Options.Duplicates := dupIgnore;
+  Options.Sorted := True;
   Module := Modules.AddModule;
   Module.TagPtr := Self;
 end;
 
 destructor TLuaWebsiteModule.Destroy;
 begin
+  Options.Free;
   Storage.Free;
   inherited Destroy;
+end;
+
+function TLuaWebsiteModule.AddOption(const AName, ACaption: String; const AClass: TClass): Integer;
+var
+  o: TOptionItem;
+begin
+  Result := Options.Add(AName);
+  if Result = -1 then Exit;
+  o := TOptionItem(AClass.Create);
+  o.Caption := ACaption;
+  Options.Objects[Result] := o;
+end;
+
+procedure TLuaWebsiteModule.AddOptionCheckBox(const AName, ACaption: String;
+  const ADefault: Boolean);
+var
+  o: TOptionItemCheckBox;
+  i: Integer;
+begin
+  i := AddOption(AName, ACaption, TOptionItemCheckBox);
+  if i = -1 then Exit;
+  o := TOptionItemCheckBox(Options.Objects[i]);
+  o.Value := ADefault;
+  Module.AddOptionCheckBox(@o.Value, Options[i], @o.Caption);
+end;
+
+procedure TLuaWebsiteModule.AddOptionEdit(const AName, ACaption: String; const ADefault: String);
+var
+  o: TOptionItemEdit;
+  i: Integer;
+begin
+  i := AddOption(AName, ACaption, TOptionItemEdit);
+  if i = -1 then Exit;
+  o := TOptionItemEdit(Options.Objects[i]);
+  o.Value := ADefault;
+  Module.AddOptionEdit(@o.Value, Options[i], @o.Caption);
+end;
+
+procedure TLuaWebsiteModule.AddOptionSpinEdit(const AName, ACaption: String;
+  const ADefault: Integer);
+var
+  o: TOptionItemSpinEdit;
+  i: Integer;
+begin
+  i := AddOption(AName, ACaption, TOptionItemSpinEdit);
+  if i = -1 then Exit;
+  o := TOptionItemSpinEdit(Options.Objects[i]);
+  o.Value := ADefault;
+  Module.AddOptionSpinEdit(@o.Value, Options[i], @o.Caption);
+end;
+
+procedure TLuaWebsiteModule.AddOptionComboBox(const AName, ACaption, AItems: String;
+  const ADefault: Integer);
+var
+  o: TOptionItemComboBox;
+  i: Integer;
+begin
+  i := AddOption(AName, ACaption, TOptionItemComboBox);
+  if i = -1 then Exit;
+  o := TOptionItemComboBox(Options.Objects[i]);
+  o.Items := AItems;
+  o.Value := ADefault;
+  Module.AddOptionComboBox(@o.Value, Options[i], @o.Caption, @o.Items);
 end;
 
 procedure TLuaWebsiteModule.LuaPushMe(L: Plua_State);
@@ -577,6 +674,75 @@ begin
   if Result = 0 then
     Result := lua_pcall(L, 0, 0, 0);
 end;
+
+// -----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
+
+function lua_addoptioncheckbox(L: Plua_State): Integer; cdecl;
+begin
+  Result := 0;
+  TLuaWebsiteModule(luaClassGetObject(L)).AddOptionCheckBox(
+    lua_tostring(L, 1), lua_tostring(L, 2), lua_toboolean(L, 3));
+end;
+
+function lua_addoptionedit(L: Plua_State): Integer; cdecl;
+begin
+  Result := 0;
+  TLuaWebsiteModule(luaClassGetObject(L)).AddOptionEdit(
+    lua_tostring(L, 1), lua_tostring(L, 2), lua_tostring(L, 3));
+end;
+
+function lua_addoptionspinedit(L: Plua_State): Integer; cdecl;
+begin
+  Result := 0;
+  TLuaWebsiteModule(luaClassGetObject(L)).AddOptionSpinEdit(
+    lua_tostring(L, 1), lua_tostring(L, 2), lua_tointeger(L, 3));
+end;
+
+function lua_addoptioncombobox(L: Plua_State): Integer; cdecl;
+begin
+  Result := 0;
+  TLuaWebsiteModule(luaClassGetObject(L)).AddOptionComboBox(
+    lua_tostring(L, 1), lua_tostring(L, 2), lua_tostring(L, 3), lua_tointeger(L, 4));
+end;
+
+function lua_getoption(L: Plua_State): Integer; cdecl;
+var
+  m: TLuaWebsiteModule;
+  i: Integer;
+  o: TObject;
+begin
+  m := TLuaWebsiteModule(luaClassGetObject(L));
+  i:=m.Options.IndexOf(lua_tostring(L, 1));
+  if i = -1 then
+    Result := 0
+  else
+  begin
+    o := m.Options.Objects[i];
+    if o is TOptionItemCheckBox then
+      lua_pushboolean(L, TOptionItemCheckBox(o).Value)
+    else
+    if o is TOptionItemEdit then
+      lua_pushstring(L, TOptionItemEdit(o).Value)
+    else
+    if o is TOptionItemSpinEdit then
+      lua_pushinteger(L, TOptionItemSpinEdit(o).Value)
+    else
+    if o is TOptionItemComboBox then
+      lua_pushinteger(L, TOptionItemComboBox(o).Value);
+    Result := 1;
+  end;
+end;
+
+const
+  methods: packed array [0..5] of luaL_Reg = (
+    (name: 'AddOptionCheckBox'; func: @lua_addoptioncheckbox),
+    (name: 'AddOpionEdit'; func: @lua_addoptionedit),
+    (name: 'AddOptionSpinEdit'; func: @lua_addoptionspinedit),
+    (name: 'AddOptionCombobox'; func: @lua_addoptioncombobox),
+    (name: 'GetOption'; func: @lua_getoption),
+    (name: nil; func: nil)
+    );
 
 procedure luaWebsiteModuleAddMetaTable(L: Plua_State; Obj: Pointer;
   MetaTable, UserData: Integer; AutoFree: Boolean = False);
@@ -617,6 +783,9 @@ begin
     luaClassAddStringProperty(L, MetaTable, 'OnAfterImageSaved', @OnAfterImageSaved);
     luaClassAddStringProperty(L, MetaTable, 'OnLogin', @OnLogin);
     luaClassAddStringProperty(L, MetaTable, 'LastUpdated', @LastUpdated);
+
+    luaClassAddFunction(L, MetaTable, UserData, methods);
+
     luaClassAddObject(L, MetaTable, Storage, 'Storage');
   end;
 end;

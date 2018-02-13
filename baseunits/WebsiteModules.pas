@@ -79,7 +79,7 @@ type
     function CloudflareHTTPRequest(const AHTTP: THTTPSendThread; const Method, URL: String; const Response: TObject = nil): Boolean;
     procedure SetTotalDirectory(AValue: Integer);
     procedure AddOption(const AOptionType: TWebsiteOptionType;
-      const ABindValue: Pointer; const AName: String; const ACaption: PString);
+      const ABindValue: Pointer; const AName: String; const ACaption: PString; const AItems: PString = nil);
   public
     Tag: Integer;
     TagPtr: Pointer;
@@ -362,9 +362,7 @@ end;
 procedure TModuleContainer.AddOptionComboBox(const ABindValue: PInteger;
   const AName: String; const ACaption, AItems: PString);
 begin
-  AddOption(woComboBox, ABindValue, AName, ACaption);
-  with OptionList[High(OptionList)] do
-    Items := AItems;
+  AddOption(woComboBox, ABindValue, AName, ACaption, AItems);
 end;
 
 procedure TModuleContainer.PrepareHTTP(const AHTTP: THTTPSendThread);
@@ -373,7 +371,8 @@ begin
 end;
 
 procedure TModuleContainer.AddOption(const AOptionType: TWebsiteOptionType;
-  const ABindValue: Pointer; const AName: String; const ACaption: PString);
+  const ABindValue: Pointer; const AName: String; const ACaption: PString;
+  const AItems: PString);
 begin
   if ABindValue = nil then Exit;
   if AName = '' then Exit;
@@ -384,6 +383,7 @@ begin
     BindValue := ABindValue;
     Name := CleanOptionName(AName);
     Caption := ACaption;
+    Items := AItems;
   end;
 end;
 

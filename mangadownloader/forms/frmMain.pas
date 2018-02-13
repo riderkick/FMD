@@ -1819,6 +1819,9 @@ begin
   FavoriteManager.Restore;
   UpdateVtFavorites;
 
+  Modules.LoadWebsiteOption;
+  frmWebsiteOptionCustom.WebsiteOptionCustomForm.CreateWebsiteOption;
+
   if cbSelectManga.ItemIndex > -1 then
     OpenDataDB(cbSelectManga.Items[cbSelectManga.ItemIndex]);
   if OptionAutoCheckLatestVersion then
