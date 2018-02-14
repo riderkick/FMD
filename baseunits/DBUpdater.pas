@@ -279,7 +279,9 @@ begin
               ShowWindow := swoNone;
               Execute;
               cont := ExitStatus = 0;
-              if not cont then
+              if cont then
+                DeleteFile(currentfilename)
+              else
                 FFailedList.Add(RS_FailedExtract, [FCurrentName, ExitStatus]);
             finally
               Free;
