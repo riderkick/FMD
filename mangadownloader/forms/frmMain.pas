@@ -98,7 +98,6 @@ type
     lbOptionFilenameCustomRename: TLabel;
     lbOptionMangaCustomRenameHint: TLabel;
     lbOptionMangaCustomRename: TLabel;
-    MainMenu1: TMainMenu;
     MenuItem10: TMenuItem;
     MenuItem11: TMenuItem;
     miFavoritesRename: TMenuItem;

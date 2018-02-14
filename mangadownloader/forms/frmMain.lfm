@@ -8,7 +8,6 @@ object MainForm: TMainForm
   ClientHeight = 587
   ClientWidth = 771
   Color = clWindow
-  Menu = MainMenu1
   OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
@@ -7080,9 +7079,5 @@ object MainForm: TMainForm
       001A0000001A00000019000000140000000C0000000500000001000000000000
       0000FFFFFF00FFFFFF00FFFFFF00
     }
-  end
-  object MainMenu1: TMainMenu
-    left = 224
-    top = 323
   end
 end
