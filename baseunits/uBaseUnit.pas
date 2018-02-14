@@ -486,12 +486,12 @@ procedure CheckPath(const S: String);
 
 function LocateMangaSiteID(const URL: String): Integer;
 function GetMangaSiteID(const Name: String): Integer;
-function GetMangaSiteName(const ID: Cardinal): String;
+function GetMangaSiteName(const ID: Integer): String;
 function GetMangaSiteRoot(const Website: String): String; overload;
-function GetMangaSiteRoot(const MangaID: Cardinal): String; overload;
+function GetMangaSiteRoot(const MangaID: Integer): String; overload;
 function GetMangaDatabaseURL(const AWebsite: String): String;
 
-function SitesMemberOf(const website: String; MangaSiteIDs: array of Cardinal): Boolean;
+function SitesMemberOf(const website: String; MangaSiteIDs: array of Integer): Boolean;
 function SitesWithSortedList(const website: String): Boolean;
 function SitesWithoutFavorites(const website: String): Boolean;
 // Return true if the website doesn't contain manga information
@@ -503,7 +503,7 @@ function SitesWithSingleChapter(const website: String): Boolean;
 function FillURLProtocol(const AProtocol, AURL: String): String;
 
 // Fill in website host if it's not present
-function FillMangaSiteHost(const MangaID: Cardinal; URL: String): String; overload;
+function FillMangaSiteHost(const MangaID: Integer; URL: String): String; overload;
 function FillMangaSiteHost(const Website, URL: String): String; overload;
 
 // modify url
@@ -978,9 +978,10 @@ begin
   Result := -1;
 end;
 
-function GetMangaSiteName(const ID: Cardinal): String;
+function GetMangaSiteName(const ID: Integer): String;
 begin
-  if ID > High(WebsiteRoots) then Exit('');
+  if (ID < Low(WebsiteRoots)) or (ID > High(WebsiteRoots)) then
+    Exit('');
   Result := WebsiteRoots[ID, 0];
 end;
 
@@ -994,8 +995,10 @@ begin
   Result := '';
 end;
 
-function GetMangaSiteRoot(const MangaID: Cardinal): String;
+function GetMangaSiteRoot(const MangaID: Integer): String;
 begin
+  if (MangaID < Low(WebsiteRoots)) or (MangaID > High(WebsiteRoots)) then
+    Exit('');
   Result := WebsiteRoots[MangaID, 1];
 end;
 
@@ -1010,7 +1013,7 @@ begin
     Result := Result + AWebsite;
 end;
 
-function SitesMemberOf(const website: String; MangaSiteIDs: array of Cardinal): Boolean;
+function SitesMemberOf(const website: String; MangaSiteIDs: array of Integer): Boolean;
 var
   i: Integer;
 begin
@@ -1093,11 +1096,12 @@ begin
   end;
 end;
 
-function FillMangaSiteHost(const MangaID: Cardinal; URL: String): String;
+function FillMangaSiteHost(const MangaID: Integer; URL: String): String;
 begin
   Result := URL;
-  if MangaID <= High(WebsiteRoots) then
-    Result := FillHost(WebsiteRoots[MangaID, 1], URL);
+  if (MangaID < Low(WebsiteRoots)) or (MangaID > High(WebsiteRoots)) then
+    Exit;
+  Result := FillHost(WebsiteRoots[MangaID, 1], URL);
 end;
 
 function FillMangaSiteHost(const Website, URL: String): String;

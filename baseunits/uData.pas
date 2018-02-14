@@ -820,6 +820,8 @@ begin
     else
     begin
       MangaSiteID := GetMangaSiteID(AWebsite);
+      if MangaSiteID = -1 then
+        Exit(INFORMATION_NOT_FOUND);
       Source := TStringList.Create;
       if MangaSiteID = VNSHARING_ID then
         Result := GetVnSharingDirectoryPageNumber
@@ -897,6 +899,8 @@ begin
   else
   begin
     MangaSiteID := GetMangaSiteID(AWebsite);
+    if MangaSiteID = -1 then
+      Exit(INFORMATION_NOT_FOUND);
     Source := TStringList.Create;
     if MangaSiteID = VNSHARING_ID then
       Result := VnSharingGetNamesAndLinks
@@ -1016,7 +1020,7 @@ begin
   else
   begin
     MangaSiteID := GetMangaSiteID(AWebsite);
-    if MangaSiteID > High(WebsiteRoots) then
+    if MangaSiteID = -1 then
       Exit(INFORMATION_NOT_FOUND);
     mangaInfo.url := FillMangaSiteHost(MangaSiteID, AURL);
     Source := TStringList.Create;
