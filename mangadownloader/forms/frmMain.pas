@@ -1803,10 +1803,10 @@ begin
   AddToAboutStatus('Modules', IntToStr(Modules.Count));
 
   // load configfile
+  LoadOptions;
   LoadFormInformation;
   CollectLanguagesFromFiles;
   LoadMangaOptions;
-  LoadOptions;
   ApplyOptions;
 
   if not cbOptionMinimizeOnStart.Checked then
