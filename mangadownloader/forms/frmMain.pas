@@ -3195,10 +3195,7 @@ begin
     DBUpdaterThread.Start;
   end
   else
-  begin
-    DBUpdaterThread.Items.AddStrings(cbSelectManga.Items);
-    DBUpdaterThread.UpdateStatus;
-  end;
+    DBUpdaterThread.Add(cbSelectManga.Items);
 end;
 
 procedure TMainForm.mnFilterGenreAllCheckClick(Sender: TObject);
@@ -4854,10 +4851,7 @@ begin
     DBUpdaterThread.Start;
   end
   else
-  begin
-    DBUpdaterThread.Items.Add(cbSelectManga.Items[cbSelectManga.ItemIndex]);
-    DBUpdaterThread.UpdateStatus;
-  end;
+    DBUpdaterThread.Add(cbSelectManga.Items[cbSelectManga.ItemIndex]);
 end;
 
 procedure TMainForm.LoadOptions;

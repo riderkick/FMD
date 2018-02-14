@@ -43,6 +43,8 @@ type
     Items: TStringList;
     constructor Create;
     destructor Destroy; override;
+    procedure Add(const S: String); overload;
+    procedure Add(const S: TStrings); overload;
     procedure UpdateStatus;    // should be called from mainthread
   end;
 
@@ -317,6 +319,38 @@ begin
   FHTTP.Free;
   FFailedList.Free;
   inherited Destroy;
+end;
+
+procedure TDBUpdaterThread.Add(const S: String);
+var
+  i: Integer;
+begin
+  // search on not sorted
+  for i := 0 to Items.Count - 1 do
+    if S = Items[i] then
+      Exit;
+  Items.Add(S);
+  UpdateStatus;
+end;
+
+procedure TDBUpdaterThread.Add(const S: TStrings);
+var
+  i, j, jmax: Integer;
+begin
+  // search on not sorted
+  jmax := Items.Count;
+  for i := 0 to S.Count - 1 do
+  begin
+    j := 0;
+    while j < jmax do
+      if S[i] = Items[j] then
+        Break
+      else
+        Inc(j);
+    if j = jmax then
+      Items.Add(S[i]);
+  end;
+  UpdateStatus;
 end;
 
 procedure TDBUpdaterThread.UpdateStatus;
