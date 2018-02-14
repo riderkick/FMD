@@ -81,5 +81,4 @@ uses
   HentaiCafe,
   Hentai2Read,
   HentaiFox,
-  Pururin,
   MyReadingManga;
