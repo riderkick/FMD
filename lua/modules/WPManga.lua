@@ -122,21 +122,23 @@ function getimageurl()
 end
 
 function getdirurl(website)
+  local result = ''
   if (website == 'MangaSpy') or (website == 'MangaIce') then
-    return 'manga_list'
+    result = 'manga_list'
   elseif (website == 'ReadHentaiManga') then
-    return 'hentai-manga-list'
+    result = 'hentai-manga-list'
   elseif (website == 'HentaiRead') then
-    return 'hentai-list'
+    result = 'hentai-list'
   else
-    return 'manga-list'
+    result = 'manga-list'
   end
+  return '/' .. result .. '/all/any/last-added/'
 end
 
 function getdirectorypagenumber()
   if http.GET(AppendURLDelim(module.RootURL) .. getdirurl(module.website)) then
     x = TXQuery.Create(http.Document)
-    page = ReplaceRegExpr('^.*\\/(\\d+)/.*$', x.XPathString('//ul[@class="pgg"]/li[last()]/a/@href'), '$1').tointeger
+    page = tonumber(ReplaceRegExpr('^.*\\/(\\d+)/.*$', x.XPathString('//ul[@class="pgg"]/li[last()]/a/@href'), '$1'))
     if page == nil then
       page = 1
     end
@@ -147,9 +149,9 @@ function getdirectorypagenumber()
 end
 
 function getnameandlink()
-  if http.GET(AppendURLDelim(module.RootURL) .. getdirurl(module.website) .. IncStr(AURL) .. '/') then
+  if http.GET(AppendURLDelim(module.RootURL) .. getdirurl(module.website) .. IncStr(url) .. '/') then
     x = TXQuery.Create(http.Document)
-    if (module.website == 'MangaSpy') or (module.website == 'MangaIce') then
+    if (module.website == 'MangaSpy') or (module.website == 'MangaIce') or (module.website == 'MangaDeep') then
       x.XPathHREFAll('//*[contains(@id,"content")]//*[@class="det"]/a', links, names)
     else
       x.XPathHREFtitleAll('//*[contains(@id,"content")]//a[./img]', links, names);
