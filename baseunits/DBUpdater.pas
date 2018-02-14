@@ -243,7 +243,7 @@ begin
         currentfilename := DATA_FOLDER + FCurrentName + DBDATA_SERVER_EXT;
         if FileExists(currentfilename) then
           DeleteFile(currentfilename);
-        FHTTP.Document.SaveToFile(DATA_FOLDER + FCurrentName + DBDATA_SERVER_EXT);
+        FHTTP.Document.SaveToFile(currentfilename);
 
         cont := True;
         if not FileExists(currentfilename) then
