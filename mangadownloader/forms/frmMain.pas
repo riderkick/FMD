@@ -20,7 +20,7 @@ uses
   Buttons, Spin, Menus, VirtualTrees, RichMemo, IniFiles, simpleipc, lclproc, types, LCLIntf,
   DefaultTranslator, EditBtn, PairSplitter, MultiLog, FileChannel, FileUtil, LazUTF8Classes,
   TAGraph, TASources, TASeries, TATools, AnimatedGif, uBaseUnit, uDownloadsManager,
-  uFavoritesManager, uUpdateThread, uUpdateDBThread, uSilentThread, uMisc,
+  uFavoritesManager, uUpdateThread, uSilentThread, uMisc,
   uGetMangaInfosThread, frmDropTarget, frmAccountManager, frmWebsiteOptionCustom,
   frmWebsiteOptionAdvanced, frmCustomColor, frmLogger, frmTransferFavorites,
   frmLuaModulesUpdater, CheckUpdate, accountmanagerdb, DBDataProcess, MangaFoxWatermark,

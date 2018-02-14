@@ -6,7 +6,7 @@ interface
 
 uses
   frmMain, uDownloadsManager, uFavoritesManager, uUpdateThread, DBDataProcess,
-  uUpdateDBThread, uSilentThread, uBaseUnit, uGetMangaInfosThread, CheckUpdate,
+  uSilentThread, uBaseUnit, uGetMangaInfosThread, CheckUpdate,
   FMDOptions, DBUpdater, FileChannel, simpleipc;
 
 var
@@ -44,9 +44,6 @@ var
 
   // update manga list thread manager
   updateList: TUpdateListManagerThread;
-
-  // updateDB thread
-  updateDB: TUpdateDBThread;
 
   // dbupdater thread
   DBUpdaterThread: TDBUpdaterThread;
