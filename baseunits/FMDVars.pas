@@ -7,7 +7,7 @@ interface
 uses
   frmMain, uDownloadsManager, uFavoritesManager, uUpdateThread, DBDataProcess,
   uUpdateDBThread, uSilentThread, uBaseUnit, uGetMangaInfosThread, CheckUpdate,
-  FMDOptions, FileChannel, simpleipc;
+  FMDOptions, DBUpdater, FileChannel, simpleipc;
 
 var
   FormMain: TMainForm;
@@ -47,6 +47,9 @@ var
 
   // updateDB thread
   updateDB: TUpdateDBThread;
+
+  // dbupdater thread
+  DBUpdaterThread: TDBUpdaterThread;
 
   // silent thread for download all or add to favorite
   SilentThreadManager: TSilentThreadManager;

@@ -16,6 +16,45 @@ msgstr ""
 "X-Poedit-Language: Greek\n"
 "X-Poedit-Country: GREECE\n"
 
+#: dbupdater.rs_buttoncancel
+#, fuzzy
+msgctxt "dbupdater.rs_buttoncancel"
+msgid "Cancel"
+msgstr "Άκυρο"
+
+#: dbupdater.rs_downloading
+msgid "Downloading %s"
+msgstr ""
+
+#: dbupdater.rs_faileddownload
+msgid "%s: %d %s"
+msgstr ""
+
+#: dbupdater.rs_failedextract
+msgid "%s: failed to extract, exitstatus = %d"
+msgstr ""
+
+#: dbupdater.rs_faileditems
+msgid ""
+"Failed to finish:\n"
+"\n"
+"%s\n"
+msgstr ""
+
+#: dbupdater.rs_faileditemstitle
+#, fuzzy
+msgctxt "dbupdater.rs_faileditemstitle"
+msgid "Failed"
+msgstr "Απέτυχε"
+
+#: dbupdater.rs_failedtosave
+msgid "%s: failed to save"
+msgstr ""
+
+#: dbupdater.rs_missingzipexe
+msgid "%s: Missing %s"
+msgstr ""
+
 #: ehentai.rs_downloadoriginalimage
 msgid "Download original image(require ExHentai account)"
 msgstr "Λήψη αρχικής εικόνας (απαιτείται λογαριασμός ExHentai)"
@@ -2369,6 +2408,7 @@ msgid "Downloading"
 msgstr "Λήψη"
 
 #: udownloadsmanager.rs_failed
+msgctxt "udownloadsmanager.rs_failed"
 msgid "Failed"
 msgstr "Απέτυχε"
 

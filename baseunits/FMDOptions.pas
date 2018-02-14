@@ -40,6 +40,7 @@ const
 
   DATA_EXT = '.dat';
   DBDATA_EXT = '.db';
+  DBDATA_SERVER_EXT = '.7z';
   UPDATER_EXE = 'updater.exe';
   ZIP_EXE = '7za.exe';
   RUN_EXE = '.run';
@@ -89,6 +90,7 @@ var
   README_FILE,
   EXTRAS_FOLDER,
   MANGAFOXTEMPLATE_FOLDER,
+  CURRENT_ZIP_EXE,
   LUA_WEBSITEMODULE_FOLDER,
   LUA_WEBSITEMODULE_REPOS: String;
   DEFAULT_SELECTED_WEBSITES: String = 'MangaFox,MangaHere,MangaInn,MangaReader';
@@ -271,6 +273,7 @@ begin
   EXTRAS_FOLDER := FMD_DIRECTORY + 'extras' + PathDelim;
   MANGAFOXTEMPLATE_FOLDER := EXTRAS_FOLDER + 'mangafoxtemplate' + PathDelim;
   DEFAULT_LOG_FILE := FMD_DIRECTORY + FMD_EXENAME + '.log';
+  CURRENT_ZIP_EXE := FMD_DIRECTORY + ZIP_EXE;
 
   LUA_WEBSITEMODULE_FOLDER := FMD_DIRECTORY + 'lua' + PathDelim + 'modules' + PathDelim;
   LUA_WEBSITEMODULE_REPOS := CONFIG_FOLDER + 'luamodules.json';

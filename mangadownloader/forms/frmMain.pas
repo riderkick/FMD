@@ -922,7 +922,7 @@ implementation
 uses
   frmImportFavorites, frmShutdownCounter, frmSelectDirectory, WebsiteModules,
   FMDVars, RegExpr, sqlite3dyn, Clipbrd, ssl_openssl_lib, LazFileUtils, LazUTF8,
-  webp, LuaWebsiteModules;
+  webp, DBUpdater, LuaWebsiteModules;
 
 var
   // thread for open db
@@ -1389,6 +1389,13 @@ begin
     updateList.Terminate;
     updateList.WaitFor;
     Logger.Send(Self.ClassName+'.CloseNow, UpdateListThread terminated');
+  end;
+  if Assigned(DBUpdaterThread) then
+  begin
+    Logger.Send(Self.ClassName+'.CloseNow, terminating DBUpdaterThread');
+    DBUpdaterThread.Terminate;
+    DBUpdaterThread.WaitFor;
+    Logger.Send(Self.ClassName+'.CloseNow, DBUpdaterThread terminated');
   end;
 
   Logger.Send(Self.ClassName+'.CloseNow, disabling all timer');
@@ -3178,27 +3185,20 @@ end;
 // ----- vtDownload popup menu -----
 
 procedure TMainForm.mnDownload1ClickClick(Sender: TObject);
-var
-  i: Integer;
 begin
-  if not isUpdating then
+  if (DBUpdaterThread = nil) and
+    (MessageDlg('', RS_DlgUpdaterWantToUpdateDB, mtInformation, [mbYes, mbNo], 0) =
+    mrYes) then
   begin
-    if (MessageDlg('', RS_DlgUpdaterWantToUpdateDB, mtInformation, [mbYes, mbNo], 0) =
-      mrYes) then
-    begin
-      // if dataProcess.Title.Count > 1 then
-      //begin
-      isUpdating := True;
-      updateList := TUpdateListManagerThread.Create;
-      for i := 0 to cbSelectManga.Items.Count - 1 do
-        updateList.websites.Add(cbSelectManga.Items[i]);
-      updateList.isDownloadFromServer := True;
-      updateList.Start;
-      //end;
-    end;
+    DBUpdaterThread := TDBUpdaterThread.Create;
+    DBUpdaterThread.Items.AddStrings(cbSelectManga.Items);
+    DBUpdaterThread.Start;
   end
   else
-    MessageDlg('', RS_DlgFavoritesCheckIsRunning, mtInformation, [mbYes], 0);
+  begin
+    DBUpdaterThread.Items.AddStrings(cbSelectManga.Items);
+    DBUpdaterThread.UpdateStatus;
+  end;
 end;
 
 procedure TMainForm.mnFilterGenreAllCheckClick(Sender: TObject);
@@ -3269,10 +3269,7 @@ end;
 
 procedure TMainForm.mnUpdateDownFromServerClick(Sender: TObject);
 begin
-  if (not isUpdating) then
-    RunGetList
-  else
-    MessageDlg('', RS_DlgFavoritesCheckIsRunning, mtInformation, [mbYes], 0);
+  RunGetList;
 end;
 
 procedure TMainForm.mnUpdateListClick(Sender: TObject);
@@ -4848,14 +4845,18 @@ end;
 
 procedure TMainForm.RunGetList;
 begin
-  if (MessageDlg('', RS_DlgUpdaterWantToUpdateDB, mtInformation, [mbYes, mbNo], 0) =
-    mrYes) and
-    (not isUpdating) then
+  if (DBUpdaterThread = nil) and
+    (MessageDlg('', RS_DlgUpdaterWantToUpdateDB, mtInformation, [mbYes, mbNo], 0) =
+    mrYes) then
   begin
-    isUpdating := True;
-    updateDB := TUpdateDBThread.Create;
-    updateDB.websiteName := cbSelectManga.Items[cbSelectManga.ItemIndex];
-    updateDB.Start;
+    DBUpdaterThread := TDBUpdaterThread.Create;
+    DBUpdaterThread.Items.Add(cbSelectManga.Items[cbSelectManga.ItemIndex]);
+    DBUpdaterThread.Start;
+  end
+  else
+  begin
+    DBUpdaterThread.Items.Add(cbSelectManga.Items[cbSelectManga.ItemIndex]);
+    DBUpdaterThread.UpdateStatus;
   end;
 end;
 
