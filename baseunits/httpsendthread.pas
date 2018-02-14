@@ -110,6 +110,8 @@ function MaybeEncodeURL(const AValue: String): String;
 procedure SplitURL(const AURL: String; const AHost, APath: PString;
   const AIncludeProtocol: Boolean = True; const AIncludePort: Boolean = True);
 
+function FormatByteSize(const ABytes: Integer; AShowPerSecond: Boolean = False): String;
+
 const
   UserAgentSynapse   = 'Mozilla/4.0 (compatible; Synapse)';
   UserAgentCURL      = 'curl/7.52.1';
@@ -231,6 +233,40 @@ begin
     ipath:='/'+iurl;
   if Assigned(AHost) then AHost^:=ihost;
   if Assigned(APath) then APath^:=ipath;
+end;
+
+function FormatByteSize(const ABytes: Integer; AShowPerSecond: Boolean): String;
+const
+  B = 1;
+  KB = 1024 * B;
+  MB = 1024 * KB;
+  GB = 1024 * MB;
+begin
+  if ABytes > GB then
+    Result := FormatFloat('#.## GB', ABytes / GB)
+  else
+  if ABytes > MB then
+    Result := FormatFloat('#.## MB', ABytes / MB)
+  else
+  if ABytes > KB then
+    Result := FormatFloat('#.## KB', ABytes / KB)
+  else
+  if ABytes = 0 then
+  begin
+    if AShowPerSecond then
+      Result := '0 B'
+    else
+      Result := '0 Bytes';
+  end
+  else
+  begin
+    if AShowPerSecond then
+      Result := FormatFloat('#.## B', ABytes)
+    else
+      Result := FormatFloat('#.## Bytes', ABytes);
+  end;
+  if AShowPerSecond then
+    Result := Result + 'ps';
 end;
 
 function KeyVal(const AKey, AValue: String): TKeyValuePair;
