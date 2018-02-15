@@ -786,8 +786,6 @@ var
 
   {$I includes/VnSharing/directory_page_number.inc}
 
-  {$I includes/CentralDeMangas/directory_page_number.inc}
-
   {$I includes/MangaTown/directory_page_number.inc}
 
   {$I includes/NHentai/directory_page_number.inc}
@@ -825,9 +823,6 @@ begin
       Source := TStringList.Create;
       if MangaSiteID = VNSHARING_ID then
         Result := GetVnSharingDirectoryPageNumber
-      else
-      if MangaSiteID = CENTRALDEMANGAS_ID then
-        Result := GetCentralDeMangasDirectoryPageNumber
       else
       if MangaSiteID = MANGATOWN_ID then
         Result := GetMangaTownDirectoryPageNumber
@@ -867,8 +862,6 @@ var
   {$I includes/AnimeStory/names_and_links.inc}
 
   {$I includes/ScanManga/names_and_links.inc}
-
-  {$I includes/CentralDeMangas/names_and_links.inc}
 
   {$I includes/Turkcraft/names_and_links.inc}
 
@@ -913,9 +906,6 @@ begin
     else
     if MangaSiteID = SCANMANGA_ID then
       Result := ScanMangaGetNamesAndLinks
-    else
-    if MangaSiteID = CENTRALDEMANGAS_ID then
-      Result := CentralDeMangasGetNamesAndLinks
     else
     if MangaSiteID = TURKCRAFT_ID then
       Result := TurkcraftGetNamesAndLinks
@@ -978,8 +968,6 @@ var
 
   {$I includes/Turkcraft/manga_information.inc}
 
-  {$I includes/CentralDeMangas/manga_information.inc}
-
   {$I includes/MangasPROJECT/manga_information.inc}
 
   {$I includes/MangaREADER_POR/manga_information.inc}
@@ -1038,9 +1026,6 @@ begin
     else
     if MangaSiteID = TURKCRAFT_ID then
       Result := GetTurkcraftInfoFromURL
-    else
-    if MangaSiteID = CENTRALDEMANGAS_ID then
-      Result := GetCentralDeMangasInfoFromURL
     else
     if MangaSiteID = MANGASPROJECT_ID then
       Result := GetMangasPROJECTInfoFromURL
