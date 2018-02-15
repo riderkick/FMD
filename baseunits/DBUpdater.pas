@@ -67,8 +67,8 @@ uses FMDVars;
 
 function GetDBURL(const AName: String): String;
 begin
-  if Pos('<website>', AnsiLowerCase(DBDownloadURL)) <> -1 then
-    Result := StringReplace(DBDownloadURL, '<website>', AName, [rfIgnoreCase, rfReplaceAll])
+  if Pos('<website>', AnsiLowerCase(DB_URL)) <> -1 then
+    Result := StringReplace(DB_URL, '<website>', AName, [rfIgnoreCase, rfReplaceAll])
   else
     Result := AName;
 end;

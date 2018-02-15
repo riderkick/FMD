@@ -3228,7 +3228,6 @@ begin
       updateList := TUpdateListManagerThread.Create;
       for i := 0 to cbSelectManga.Items.Count - 1 do
         updateList.websites.Add(cbSelectManga.Items[i]);
-      updateList.isDownloadFromServer := False;
       updateList.Start;
     end;
   end
@@ -3284,7 +3283,6 @@ begin
       updateList := TUpdateListManagerThread.Create;
       updateList.numberOfThreads := 4;
       updateList.websites.Add(cbSelectManga.Items[cbSelectManga.ItemIndex]);
-      updateList.isDownloadFromServer := False;
       updateList.Start;
     end;
   end
@@ -5266,9 +5264,6 @@ begin
     // read mangalist.ini
     with TIniFile.Create(MANGALIST_FILE) do
     try
-      // databases download url
-      DBDownloadURL := ReadString('general', 'DBDownloadURL', DBDownloadURL);
-
       // read available websites
       ReadSection('available', categories);
       for i := 0 to categories.Count - 1 do

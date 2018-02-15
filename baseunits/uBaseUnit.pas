@@ -483,7 +483,6 @@ function GetMangaSiteID(const Name: String): Integer;
 function GetMangaSiteName(const ID: Integer): String;
 function GetMangaSiteRoot(const Website: String): String; overload;
 function GetMangaSiteRoot(const MangaID: Integer): String; overload;
-function GetMangaDatabaseURL(const AWebsite: String): String;
 
 function SitesMemberOf(const website: String; MangaSiteIDs: array of Integer): Boolean;
 function SitesWithSortedList(const website: String): Boolean;
@@ -994,17 +993,6 @@ begin
   if (MangaID < Low(WebsiteRoots)) or (MangaID > High(WebsiteRoots)) then
     Exit('');
   Result := WebsiteRoots[MangaID, 1];
-end;
-
-function GetMangaDatabaseURL(const AWebsite: String): String;
-begin
-  if DBDownloadURL = '' then
-    DBDownloadURL := 'https://bintray.com/artifact/download/riderkick/FMD/db/<website>.7z';
-  Result := DBDownloadURL;
-  if Pos('<website>', LowerCase(Result)) > 0 then
-    Result := StringReplace(Result, '<website>', AWebsite, [rfIgnoreCase, rfReplaceAll])
-  else
-    Result := Result + AWebsite;
 end;
 
 function SitesMemberOf(const website: String; MangaSiteIDs: array of Integer): Boolean;

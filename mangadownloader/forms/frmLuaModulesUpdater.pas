@@ -148,9 +148,6 @@ type
 
 var
   LuaModulesUpdaterForm: TLuaModulesUpdaterForm;
-  LuaModulesURLJSON: String =
-  'https://api.github.com/repos/riderkick/FMD/contents/lua/modules';
-  LuaModulesURLHTML: String = 'https://github.com/riderkick/FMD/file-list/master/lua/modules';
 
 resourcestring
   RS_CheckUpdate = 'Check update';
@@ -690,11 +687,11 @@ var
   trepos: TLuaModulesRepos;
 begin
   Synchronize(@SyncStartChecking);
-  if FHTTP.GET(LuaModulesURLJSON) then
+  if FHTTP.GET(MODULES_URL) then
   begin
     FReposUp := TLuaModulesRepos.Create;
     FReposUp.LoadFromRemote(FHTTP);
-    if FHTTP.GET(LuaModulesURLHTML) then
+    if FHTTP.GET(MODULES_URL2) then
       FReposUp.LoadFromRemoteHTML(FHTTP);
   end;
 
