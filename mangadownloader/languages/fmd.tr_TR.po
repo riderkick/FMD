@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
-"Project-Id-Version: Free Manga Downloader 0.9.136\n"
+"Project-Id-Version: Free Manga Downloader\n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
 "Last-Translator: Tmp341 <tmp341@gmail.com>\n"
@@ -14,27 +14,25 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 
 #: dbupdater.rs_buttoncancel
-#, fuzzy
-#| msgid "Cancel"
 msgctxt "dbupdater.rs_buttoncancel"
 msgid "Abort"
 msgstr "İptal"
 
 #: dbupdater.rs_downloading
 msgid "Downloading %s"
-msgstr ""
+msgstr "%s indiriliyor"
 
 #: dbupdater.rs_extracting
 msgid "Extracting %s"
-msgstr ""
+msgstr "%s çıkartılıyor"
 
 #: dbupdater.rs_faileddownload
 msgid "%s: %d %s"
-msgstr ""
+msgstr "%s: %d %s"
 
 #: dbupdater.rs_failedextract
 msgid "%s: failed to extract, exitstatus = %d"
-msgstr ""
+msgstr "%s: çıkartma başarısız, çıkış durumu = %d"
 
 #: dbupdater.rs_faileditems
 msgid ""
@@ -42,20 +40,22 @@ msgid ""
 "\n"
 "%s\n"
 msgstr ""
+"Bitirme başarısız:\n"
+"\n"
+"%s\n"
 
 #: dbupdater.rs_faileditemstitle
-#, fuzzy
 msgctxt "dbupdater.rs_faileditemstitle"
 msgid "Failed"
 msgstr "Başarısız oldu"
 
 #: dbupdater.rs_failedtosave
 msgid "%s: failed to save"
-msgstr ""
+msgstr "%s: kaydetme başarısız"
 
 #: dbupdater.rs_missingzipexe
 msgid "%s: Missing %s"
-msgstr ""
+msgstr "%s: eksik %s"
 
 #: ehentai.rs_downloadoriginalimage
 msgid "Download original image(require ExHentai account)"
@@ -487,14 +487,13 @@ msgid "Save as PNG"
 msgstr "PNG olarak kaydet"
 
 #: selfupdater.rs_buttoncancel
-#, fuzzy
 msgctxt "selfupdater.rs_buttoncancel"
 msgid "Abort"
 msgstr "Durdur"
 
 #: selfupdater.rs_downloading
 msgid "Downloading new version %s"
-msgstr ""
+msgstr "%s yeni sürümü indiriliyor"
 
 #: selfupdater.rs_faileddownload
 msgid ""
@@ -502,32 +501,34 @@ msgid ""
 "\n"
 "%d %s\n"
 msgstr ""
+"%s yeni sürümü indirmesi başarısız\n"
+"\n"
+"%d %s\n"
 
 #: selfupdater.rs_failedextract
 msgid "Failed to extract %s, exitstatus = %d"
-msgstr ""
+msgstr "%s çıkartma başarısız, çıkış durumu = %d"
 
 #: selfupdater.rs_failedtitle
-#, fuzzy
 msgctxt "selfupdater.rs_failedtitle"
 msgid "Failed"
 msgstr "Başarısız oldu"
 
 #: selfupdater.rs_failedtosave
 msgid "Failed to save %s"
-msgstr ""
+msgstr "%s kaydetme başarısız"
 
 #: selfupdater.rs_finishrestart
 msgid "Download update package finished, restart to proceed?"
-msgstr ""
+msgstr "Güncelleme paketi indirme tamamlandı, devam etmek için yeniden başlansın mı?"
 
 #: selfupdater.rs_finishrestarttitle
 msgid "Download finished"
-msgstr ""
+msgstr "İndirme tamamlandı"
 
 #: selfupdater.rs_missingzipexe
 msgid "Missing %s"
-msgstr ""
+msgstr "%s eksik"
 
 #: taccountmanagerform.btadd.caption
 msgctxt "taccountmanagerform.btadd.caption"
