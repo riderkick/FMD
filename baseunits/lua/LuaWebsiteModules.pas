@@ -706,6 +706,18 @@ begin
     lua_tostring(L, 1), lua_tostring(L, 2), lua_tostring(L, 3), lua_tointeger(L, 4));
 end;
 
+function lua_gettotaldirectory(L: Plua_State): Integer; cdecl;
+begin
+  lua_pushinteger(L, TLuaWebsiteModule(luaClassGetObject(L)).Module.TotalDirectory);
+  Result := 1;
+end;
+
+function lua_settotaldirectory(L: Plua_State): Integer; cdecl;
+begin
+  Result := 0;
+  TLuaWebsiteModule(luaClassGetObject(L)).Module.TotalDirectory := lua_tointeger(L, 1);
+end;
+
 function lua_getoption(L: Plua_State): Integer; cdecl;
 var
   m: TLuaWebsiteModule;
@@ -784,6 +796,8 @@ begin
     luaClassAddStringProperty(L, MetaTable, 'OnAfterImageSaved', @OnAfterImageSaved);
     luaClassAddStringProperty(L, MetaTable, 'OnLogin', @OnLogin);
     luaClassAddStringProperty(L, MetaTable, 'LastUpdated', @LastUpdated);
+
+    luaClassAddProperty(L, MetaTable, UserData, 'TotalDirectory', @lua_gettotaldirectory, @lua_settotaldirectory);
 
     luaClassAddFunction(L, MetaTable, UserData, methods);
 
