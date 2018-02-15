@@ -958,10 +958,11 @@ procedure TTaskThread.Execute;
         sf += Container.PageLinks[i] + LineEnding;
       end;
     if c > 0 then begin
-      Logger.SendWarning(Format('%s, checkforfinish failed=%d/%d "%s" > "%s"',
+      Logger.SendWarning(Format('%s, checkforfinish failed=%d/%d [%s]"%s" > "%s"',
         [Self.ClassName,
         c,
         Container.PageLinks.Count,
+        Container.Website,
         Container.DownloadInfo.Title,
         Container.ChapterLinks[Container.CurrentDownloadChapterPtr]]) + LineEnding + Trim(sf));
       Result := False;
