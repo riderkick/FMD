@@ -1,9 +1,15 @@
 program updater;
 
-uses sysutils, process;
+uses
+  {$ifdef windows}
+  windows,
+  {$else}
+  fileutil,
+  {$endif}
+  sysutils, process;
 
 var
-  exefile, zipexefile, updatepackagefile, maindir, ozipexefile: String;
+  exefile, zipexefile, updatepackagefile, maindir, ozipexefile, oexefile: String;
   counter: Integer;
 
 {$R *.res}
@@ -20,21 +26,25 @@ begin
   updatepackagefile:=ParamStr(3);
   maindir:=ParamStr(4);
   if not (FileExists(zipexefile) or FileExists(updatepackagefile)) then Exit;
+  oexefile:=ExtractFilePath(exefile)+'old_'+ExtractFileName(exefile);
+  if FileExists(oexefile) then DeleteFile(oexefile);
   counter:=0;
-  while true do begin
-    if DeleteFile(exefile) then Break;
-    if FileExists(exefile) then
-    begin
-      Inc(counter);
-      writeln('Waiting to close ',counter,'/',10,' ',exefile);
-      Sleep(1000);
-    end;
+  {$ifdef windows}
+  windows.CopyFile(pchar(exefile),pchar(oexefile),false);
+  {$else}
+  CopyFile(exefile,oexefile);
+  {$endif}
+  while FileExists(exefile) do begin
+    if DeleteFile(exefile) then break;
+    Inc(counter);
+    writeln('Waiting to close ',counter,'/',10,' ',exefile);
+    Sleep(1000);
     if counter=10 then break;
   end;
   if not FileExists(exefile) then
   begin
     with TProcess.Create(nil) do try
-      ozipexefile := ExtractFilePath(zipexefile)+'old_'+ExtractFileName(zipexefile);
+      ozipexefile:=ExtractFilePath(zipexefile)+'old_'+ExtractFileName(zipexefile);
       if FileExists(ozipexefile) then
         DeleteFile(ozipexefile);
       RenameFile(zipexefile,ozipexefile);
@@ -48,6 +58,7 @@ begin
       Execute;
       if ExitStatus=0 then
       begin
+        DeleteFile(oexefile);
         DeleteFile(ozipexefile);
         DeleteFile(updatepackagefile);
         Executable:=exefile;
@@ -56,7 +67,23 @@ begin
         Execute;
       end
       else
-        ReadLn;
+      begin
+        readln;
+        if FileExists(oexefile) then
+        begin
+          if FileExists(exefile) then
+            DeleteFile(oexefile)
+          else
+            RenameFile(oexefile,exefile);
+        end;
+        if FileExists(ozipexefile) then
+        begin
+          if FileExists(zipexefile) then
+            DeleteFile(ozipexefile)
+          else
+            RenameFile(ozipexefile,zipexefile);
+        end;
+      end;
     finally
       Free;
     end;
