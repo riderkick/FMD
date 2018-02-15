@@ -472,6 +472,49 @@ msgstr "Hapus watermark"
 msgid "Save as PNG"
 msgstr "Simpan sebagai PNG"
 
+#: selfupdater.rs_buttoncancel
+#, fuzzy
+msgctxt "selfupdater.rs_buttoncancel"
+msgid "Abort"
+msgstr "Batalkan"
+
+#: selfupdater.rs_downloading
+msgid "Downloading new version %s"
+msgstr ""
+
+#: selfupdater.rs_faileddownload
+msgid ""
+"Failed to download new version %s\n"
+"\n"
+"%d %s\n"
+msgstr ""
+
+#: selfupdater.rs_failedextract
+msgid "Failed to extract %s, exitstatus = %d"
+msgstr ""
+
+#: selfupdater.rs_failedtitle
+#, fuzzy
+msgctxt "selfupdater.rs_failedtitle"
+msgid "Failed"
+msgstr "Gagal"
+
+#: selfupdater.rs_failedtosave
+msgid "Failed to save %s"
+msgstr ""
+
+#: selfupdater.rs_finishrestart
+msgid "Download update package finished, restart to proceed?"
+msgstr ""
+
+#: selfupdater.rs_finishrestarttitle
+msgid "Download finished"
+msgstr ""
+
+#: selfupdater.rs_missingzipexe
+msgid "Missing %s"
+msgstr ""
+
 #: taccountmanagerform.btadd.caption
 msgctxt "taccountmanagerform.btadd.caption"
 msgid "Add"

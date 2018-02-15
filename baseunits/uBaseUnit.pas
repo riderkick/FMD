@@ -183,8 +183,6 @@ const
     ('&gamma;', 'γ')
     );
 
-  UPDATE_URL = 'https://raw.githubusercontent.com/riderkick/FMD/master/';
-
   OPTION_MANGALIST = 0;
   OPTION_RECONNECT = 1;
 

@@ -1768,16 +1768,16 @@ begin
     else
     if DoAfterFMD = DO_UPDATE then
     begin
-      if FileExistsUTF8(FMD_DIRECTORY + UPDATER_EXE) then
-        CopyFile(FMD_DIRECTORY + UPDATER_EXE, FMD_DIRECTORY + 'old_' + UPDATER_EXE);
-      if FileExistsUTF8(FMD_DIRECTORY + 'old_' + UPDATER_EXE) then
-      begin
-        Self.CloseNow;
-        RunExternalProcess(FMD_DIRECTORY + 'old_' + UPDATER_EXE,
-          ['-x', '-r', '3', '-a', UpdateURL, '-l', Application.ExeName,
-           '--lang', SimpleTranslator.LastSelected], True, False);
-        Self.Close;
-      end;
+      //if FileExistsUTF8(FMD_DIRECTORY + UPDATER_EXE) then
+      //  CopyFile(FMD_DIRECTORY + UPDATER_EXE, FMD_DIRECTORY + 'old_' + UPDATER_EXE);
+      //if FileExistsUTF8(FMD_DIRECTORY + 'old_' + UPDATER_EXE) then
+      //begin
+      //  Self.CloseNow;
+      //  RunExternalProcess(FMD_DIRECTORY + 'old_' + UPDATER_EXE,
+      //    ['-x', '-r', '3', '-a', UpdateURL, '-l', Application.ExeName,
+      //     '--lang', SimpleTranslator.LastSelected], True, False);
+      //  Self.Close;
+      //end;
     end;
     DoAfterFMD := DO_NOTHING;
   end;

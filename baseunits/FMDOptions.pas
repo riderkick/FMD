@@ -25,6 +25,10 @@ type
   TFMDDo = (DO_NOTHING, DO_EXIT, DO_POWEROFF, DO_HIBERNATE, DO_UPDATE);
 
 const
+  UPDATE_URL = 'https://raw.githubusercontent.com/riderkick/FMD/master/update';
+  CHANGELOG_URL = 'https://raw.githubusercontent.com/riderkick/FMD/master/changelog.txt';
+  UPDATE_PACKAGE_NAME = 'updatepackage.7z';
+
   FMD_REVISION = '$WCREV$';
   FMD_INSTANCE = '_FreeMangaDownloaderInstance_';
   FMD_TARGETOS  = {$i %FPCTARGETOS%};
@@ -62,7 +66,8 @@ const
   {$ENDIF}
 
 var
-  FMD_VERSION_NUMBER,
+  FMD_VERSION_NUMBER: TProgramVersion;
+  FMD_VERSION_STRING,
   FMD_DIRECTORY,
   FMD_EXENAME,
   APPDATA_DIRECTORY,
@@ -328,46 +333,10 @@ begin
   end;
 end;
 
-function GetCurrentBinVersion: String;
-var
-  AppVerInfo: TStringList;
-  i: Integer;
-begin
-  Result := '';
-  AppVerInfo := TStringList.Create;
-  with TFileVersionInfo.Create(nil) do
-    try
-      try
-        FileName := ParamStrUTF8(0);
-        if FileName = '' then
-          FileName := Application.ExeName;
-        {$IF FPC_FULLVERSION >= 20701}
-        ReadFileInfo;
-        {$ENDIF}
-        if VersionStrings.Count > 0 then
-        begin
-        {$IF FPC_FULLVERSION >= 20701}
-          AppVerInfo.Assign(VersionStrings);
-        {$ELSE}
-          for i := 0 to VersionStrings.Count - 1 do
-            AppVerInfo.Add(VersionCategories.Strings[i] + '=' +
-              VersionStrings.Strings[i]);
-        {$ENDIF}
-          for i := 0 to AppVerInfo.Count - 1 do
-            AppVerInfo.Strings[i] := LowerCase(AppVerInfo.Names[i]) + '=' + AppVerInfo.ValueFromIndex[i];
-          Result := Trim(AppVerInfo.Values['fileversion']);
-        end;
-      except
-      end;
-    finally
-      Free;
-      AppVerInfo.Free;
-    end;
-end;
-
 procedure doInitialization;
 begin
-  FMD_VERSION_NUMBER := GetCurrentBinVersion;
+  GetProgramVersion(FMD_VERSION_NUMBER);
+  FMD_VERSION_STRING := ProgramversionToStr(FMD_VERSION_NUMBER);
   AvailableWebsites := TStringList.Create;
   AvailableWebsites.Sorted := False;
   SetFMDdirectory(ExtractFilePath(Application.ExeName));

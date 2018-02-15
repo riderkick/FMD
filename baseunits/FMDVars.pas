@@ -7,7 +7,7 @@ interface
 uses
   frmMain, uDownloadsManager, uFavoritesManager, uUpdateThread, DBDataProcess,
   uSilentThread, uBaseUnit, uGetMangaInfosThread, CheckUpdate,
-  FMDOptions, DBUpdater, FileChannel, simpleipc;
+  FMDOptions, DBUpdater, SelfUpdater, FileChannel, simpleipc;
 
 var
   FormMain: TMainForm;
@@ -24,7 +24,6 @@ var
   // update fmd through main thread
   DoAfterFMD: TFMDDo;
   IsDlgCounter: Boolean = False;
-  UpdateURL: String;
 
   // file logger
   FileLogger: TFileChannel;
@@ -57,6 +56,9 @@ var
 
   // check update thread
   CheckUpdateThread: TCheckUpdateThread;
+
+  // self updater thread
+  SelfUpdaterThread: TSelfUpdaterThread;
 
 implementation
 

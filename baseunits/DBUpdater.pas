@@ -192,7 +192,9 @@ begin
   if FProgressBar.Position <> FCurrentSize then
     FProgressBar.Position := FCurrentSize;
 
-  s := FormatByteSize(FCurrentSize) + '/' + FormatByteSize(FTotalSize);
+  s := FormatByteSize(FCurrentSize);
+  if FTotalSize <> 0 then
+    s += '/' + FormatByteSize(FTotalSize);
   FStatusBar.Panels[1].Width := FStatusBar.Canvas.TextWidth(s) + 10;
   FStatusBar.Panels[1].Text := s;
 end;
