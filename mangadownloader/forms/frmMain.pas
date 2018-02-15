@@ -1132,12 +1132,12 @@ begin
   LoadAbout;
 
   // remove old updater
-  if FileExistsUTF8(FMD_DIRECTORY + 'old_' + UPDATER_EXE) then
+  if FileExistsUTF8(OLD_CURRENT_UPDATER_EXE) then
   begin
-    if FileExistsUTF8(FMD_DIRECTORY + UPDATER_EXE) then
-      DeleteFileUTF8(FMD_DIRECTORY + 'old_' + UPDATER_EXE)
+    if FileExistsUTF8(CURRENT_UPDATER_EXE) then
+      DeleteFileUTF8(OLD_CURRENT_UPDATER_EXE)
     else
-      RenameFileUTF8(FMD_DIRECTORY + 'old_' + UPDATER_EXE, FMD_DIRECTORY + UPDATER_EXE);
+      RenameFileUTF8(OLD_CURRENT_UPDATER_EXE, CURRENT_UPDATER_EXE);
   end;
 
   // TrayIcon
@@ -1768,16 +1768,8 @@ begin
     else
     if DoAfterFMD = DO_UPDATE then
     begin
-      //if FileExistsUTF8(FMD_DIRECTORY + UPDATER_EXE) then
-      //  CopyFile(FMD_DIRECTORY + UPDATER_EXE, FMD_DIRECTORY + 'old_' + UPDATER_EXE);
-      //if FileExistsUTF8(FMD_DIRECTORY + 'old_' + UPDATER_EXE) then
-      //begin
-      //  Self.CloseNow;
-      //  RunExternalProcess(FMD_DIRECTORY + 'old_' + UPDATER_EXE,
-      //    ['-x', '-r', '3', '-a', UpdateURL, '-l', Application.ExeName,
-      //     '--lang', SimpleTranslator.LastSelected], True, False);
-      //  Self.Close;
-      //end;
+      Self.CloseNow;
+      Self.Close;
     end;
     DoAfterFMD := DO_NOTHING;
   end;
