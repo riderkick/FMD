@@ -12,27 +12,25 @@ msgstr ""
 "X-Generator: Poedit 2.0.2\n"
 
 #: dbupdater.rs_buttoncancel
-#, fuzzy
-#| msgid "Cancel"
 msgctxt "dbupdater.rs_buttoncancel"
 msgid "Abort"
 msgstr "Отмена"
 
 #: dbupdater.rs_downloading
 msgid "Downloading %s"
-msgstr ""
+msgstr "Скачивание %s"
 
 #: dbupdater.rs_extracting
 msgid "Extracting %s"
-msgstr ""
+msgstr "Извлечение %s"
 
 #: dbupdater.rs_faileddownload
 msgid "%s: %d %s"
-msgstr ""
+msgstr "%s: %d %s"
 
 #: dbupdater.rs_failedextract
 msgid "%s: failed to extract, exitstatus = %d"
-msgstr ""
+msgstr "%s: ошибка при извлечении, exitstatus = %d"
 
 #: dbupdater.rs_faileditems
 msgid ""
@@ -40,6 +38,9 @@ msgid ""
 "\n"
 "%s\n"
 msgstr ""
+"Не удалось завершить:\n"
+"\n"
+"%s\n"
 
 #: dbupdater.rs_faileditemstitle
 #, fuzzy
@@ -49,11 +50,11 @@ msgstr "Неудачно"
 
 #: dbupdater.rs_failedtosave
 msgid "%s: failed to save"
-msgstr ""
+msgstr "%s: ошибка при сохранении"
 
 #: dbupdater.rs_missingzipexe
 msgid "%s: Missing %s"
-msgstr ""
+msgstr "%s: отсутствует %s"
 
 #: ehentai.rs_downloadoriginalimage
 msgid "Download original image(require ExHentai account)"
