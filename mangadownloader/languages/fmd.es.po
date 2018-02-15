@@ -14,12 +14,17 @@ msgstr ""
 
 #: dbupdater.rs_buttoncancel
 #, fuzzy
+#| msgid "Cancel"
 msgctxt "dbupdater.rs_buttoncancel"
-msgid "Cancel"
+msgid "Abort"
 msgstr "Cancelar"
 
 #: dbupdater.rs_downloading
 msgid "Downloading %s"
+msgstr ""
+
+#: dbupdater.rs_extracting
+msgid "Extracting %s"
 msgstr ""
 
 #: dbupdater.rs_faileddownload
@@ -1638,6 +1643,7 @@ msgid "Undo"
 msgstr "Deshacer"
 
 #: tmainform.miabortsilentthread.caption
+msgctxt "tmainform.miabortsilentthread.caption"
 msgid "Abort"
 msgstr "Abortar"
 

@@ -4684,8 +4684,8 @@ object MainForm: TMainForm
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = btCheckLatestVersion
         Left = 212
-        Height = 40
-        Top = 447
+        Height = 35
+        Top = 452
         Width = 40
         Anchors = [akTop, akLeft, akBottom]
         BorderSpacing.Left = 4
@@ -4733,8 +4733,8 @@ object MainForm: TMainForm
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = btCheckLatestVersion
         Left = 256
-        Height = 40
-        Top = 447
+        Height = 35
+        Top = 452
         Width = 208
         Anchors = [akTop, akLeft, akBottom]
         BorderSpacing.Left = 4

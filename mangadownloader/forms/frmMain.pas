@@ -1397,6 +1397,13 @@ begin
     DBUpdaterThread.WaitFor;
     Logger.Send(Self.ClassName+'.CloseNow, DBUpdaterThread terminated');
   end;
+  if Assigned(SelfUpdaterThread) then
+  begin
+    Logger.Send(Self.ClassName+'.CloseNow, terminating SelfUpdaterThread');
+    SelfUpdaterThread.Terminate;
+    SelfUpdaterThread.WaitFor;
+    Logger.Send(Self.ClassName+'.CloseNow, SelfUpdaterThread terminated');
+  end;
 
   Logger.Send(Self.ClassName+'.CloseNow, disabling all timer');
   tmBackup.Enabled := False;
@@ -2169,8 +2176,8 @@ begin
         for i := 0 to st.Count - 1 do
           if regx.Exec(st[i]) then
           begin
-            if regx.Match[2] <> FMD_VERSION_NUMBER then begin
-              st[i] := regx.Replace(st[i], '$1\' + FMD_VERSION_NUMBER, True);
+            if regx.Match[2] <> FMD_VERSION_STRING then begin
+              st[i] := regx.Replace(st[i], '$1\' + FMD_VERSION_STRING, True);
               if DeleteFileUTF8(README_FILE) then
                 st.SaveToFile(README_FILE);
             end;
@@ -2596,7 +2603,7 @@ end;
 
 procedure TMainForm.btCheckLatestVersionClick(Sender: TObject);
 begin
-  if Assigned(CheckUpdateThread) then
+  if Assigned(CheckUpdateThread) or Assigned(SelfUpdaterThread) then
     MessageDlg('', RS_DlgUpdaterIsRunning, mtInformation, [mbYes], 0)
   else
     CheckUpdateThread := TCheckUpdateThread.Create;

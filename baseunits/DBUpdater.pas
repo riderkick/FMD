@@ -5,8 +5,8 @@ unit DBUpdater;
 interface
 
 uses
-  Classes, SysUtils, httpsendthread, BaseThread, FMDOptions, process, ComCtrls, Controls,
-  Dialogs, StdCtrls, Buttons, blcksock;
+  Classes, SysUtils, httpsendthread, BaseThread, FMDOptions, process, ComCtrls,
+  Controls, Dialogs, StdCtrls, Buttons, blcksock;
 
 type
 
@@ -23,6 +23,7 @@ type
     FCurrentName: String;
     FFailedList: TStringList;
     FCurrentId: Integer;
+    FStatusText: String;
   protected
     procedure ButtonCancelClick(Sender: TObject);
     procedure HTTPSockOnStatus(Sender: TObject; Reason: THookSocketReason;
@@ -38,6 +39,7 @@ type
     procedure SyncCloseUsed;
     procedure SyncReopenUsed;
     procedure SyncRemoveAttached;
+    procedure UpdateStatusText(const S: String);
     procedure Execute; override;
   public
     Items: TStringList;
@@ -55,8 +57,9 @@ resourcestring
   RS_FailedDownload = '%s: %d %s';
   RS_FailedToSave = '%s: failed to save';
   RS_MissingZipExe = '%s: Missing %s';
+  RS_Extracting = 'Extracting %s';
   RS_FailedExtract = '%s: failed to extract, exitstatus = %d';
-  RS_ButtonCancel = 'Cancel';
+  RS_ButtonCancel = 'Abort';
 
 implementation
 
@@ -82,14 +85,19 @@ procedure TDBUpdaterThread.HTTPSockOnStatus(Sender: TObject;
 begin
   if Terminated then
     Exit;
-  if FHTTP.Headers.IndexOfName('Content-Length') <> -1 then
-    FTotalSize := StrToIntDef(FHTTP.Headers.Values['Content-Length'], 0);
-  case Reason of
-    HR_Connect: FCurrentSize := 0;
-    HR_ReadCount:
-      Inc(FCurrentSize, StrToIntDef(Value, 0));
+  if Reason = HR_ReadCount then
+  begin
+    if FTotalSize = 0 then
+      FTotalSize := StrToIntDef(Trim(FHTTP.Headers.Values['Content-Length']), 0);
+    Inc(FCurrentSize, StrToInt(Value));
+    Synchronize(@SyncUpdateProgress);
+  end
+  else
+  if Reason = HR_Connect then
+  begin
+    FCurrentSize := 0;
+    FTotalSize := 0;
   end;
-  Synchronize(@SyncUpdateProgress);
 end;
 
 procedure TDBUpdaterThread.SyncStart;
@@ -137,11 +145,11 @@ begin
     Caption := RS_ButtonCancel;
     ShowCaption := True;
     Flat := True;
-    Anchors := [akTop,akRight,akBottom];
+    Anchors := [akTop, akRight, akBottom];
     AnchorSideTop.Control := FStatusBar;
     AnchorSideTop.Side := asrTop;
     AnchorSideRight.Control := FStatusBar;
-    AnchorSideRight.Side:= asrRight;
+    AnchorSideRight.Side := asrRight;
     AnchorSideBottom.Control := FStatusBar;
     AnchorSideBottom.Side := asrBottom;
     BorderSpacing.Top := 2;
@@ -168,7 +176,9 @@ begin
   FProgressBar.Position := 0;
   FStatusBar.Panels[1].Text := '';
   FStatusBar.Panels[1].Width := 0;
-  SyncUpdateStatus;
+  FStatusBar.Panels[2].Text := Format('[%d/%d] ' + RS_Downloading,
+    [FCurrentId + 1, Items.Count,
+    FCurrentName + DBDATA_EXT]);
 end;
 
 procedure TDBUpdaterThread.SyncUpdateProgress;
@@ -189,9 +199,7 @@ end;
 
 procedure TDBUpdaterThread.SyncUpdateStatus;
 begin
-  FStatusBar.Panels[2].Text :=
-    Format('[%d/%d] ' + RS_Downloading, [FCurrentId + 1, Items.Count,
-    FCurrentName + DBDATA_EXT]);
+  FStatusBar.Panels[2].Text := FStatusText;
 end;
 
 procedure TDBUpdaterThread.SyncUpdateHint;
@@ -222,6 +230,14 @@ begin
   dataProcess.RemoveFilter;
 end;
 
+procedure TDBUpdaterThread.UpdateStatusText(const S: String);
+begin
+  if FStatusText = S then
+    Exit;
+  FStatusText := S;
+  Synchronize(@SyncUpdateStatus);
+end;
+
 procedure TDBUpdaterThread.Execute;
 var
   currentfilename: String;
@@ -237,38 +253,51 @@ begin
     try
       FCurrentName := Items[FCurrentId];
       Synchronize(@SyncStartDownload);
-      if FHTTP.GET(GetDBURL(FCurrentName)) and (FHTTP.ResultCode < 300) then // should be success
+      if FHTTP.GET(GetDBURL(FCurrentName)) and (FHTTP.ResultCode < 300) then
+        // should be success
       begin
+        cont := True;
         // save to data folder
         currentfilename := DATA_FOLDER + FCurrentName + DBDATA_SERVER_EXT;
         if FileExists(currentfilename) then
           DeleteFile(currentfilename);
-        FHTTP.Document.SaveToFile(currentfilename);
-
-        cont := True;
         if not FileExists(currentfilename) then
+        begin
+          FHTTP.Document.SaveToFile(currentfilename);
+          if not FileExists(currentfilename) then
+          begin
+            FFailedList.Add(Format(RS_FailedToSave, [FCurrentName]));
+            cont := False;
+          end;
+        end
+        else
         begin
           FFailedList.Add(Format(RS_FailedToSave, [FCurrentName]));
           cont := False;
         end;
-        if not FileExists(CURRENT_ZIP_EXE) then
+
+        if cont and (not FileExists(CURRENT_ZIP_EXE)) then
         begin
           FFailedList.Add(Format(RS_MissingZipExe, [FCurrentName, ZIP_EXE]));
           cont := False;
         end;
 
-        // close and reopen current used
-        used := FCurrentName = FormMain.cbSelectManga.Items[FormMain.cbSelectManga.ItemIndex];
-
-        if used then
-          Synchronize(@SyncCloseUsed)
-        else
-        if dataProcess.WebsiteLoaded(FCurrentName) then
-          Synchronize(@SyncRemoveAttached);
-
         if cont then
+        begin
+          // close and reopen current used
+          used := FCurrentName =
+            FormMain.cbSelectManga.Items[FormMain.cbSelectManga.ItemIndex];
+
+          if used then
+            Synchronize(@SyncCloseUsed)
+          else
+          if dataProcess.WebsiteLoaded(FCurrentName) then
+            Synchronize(@SyncRemoveAttached);
           with TProcess.Create(nil) do
             try
+              UpdateStatusText(Format('[%d/%d] ' + RS_Extracting,
+                [FCurrentId + 1, Items.Count,
+                FCurrentName + DBDATA_EXT]));
               Executable := CURRENT_ZIP_EXE;
               CurrentDirectory := FMD_DIRECTORY;
               Parameters.Add('x');                                     // extract
@@ -286,8 +315,9 @@ begin
             finally
               Free;
             end;
-        if cont and used then
-          Synchronize(@SyncReopenUsed);
+          if cont and used then
+            Synchronize(@SyncReopenUsed);
+        end;
       end
       else
         FFailedList.Add(Format(RS_FailedDownload, [FCurrentName, FHTTP.ResultCode,
