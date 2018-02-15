@@ -796,6 +796,7 @@ begin
     luaClassAddStringProperty(L, MetaTable, 'OnAfterImageSaved', @OnAfterImageSaved);
     luaClassAddStringProperty(L, MetaTable, 'OnLogin', @OnLogin);
     luaClassAddStringProperty(L, MetaTable, 'LastUpdated', @LastUpdated);
+    luaClassAddIntegerProperty(L, MetaTable, 'CurrentDirectoryIndex', @Module.CurrentDirectoryIndex);
 
     luaClassAddProperty(L, MetaTable, UserData, 'TotalDirectory', @lua_gettotaldirectory, @lua_settotaldirectory);
 
