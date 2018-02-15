@@ -137,7 +137,12 @@ msgid "Finish download"
 msgstr "İndirmeyi durdur"
 
 #: frmluamodulesupdater.rs_modulesupdatedrestart
-msgid "Modules updated, restart now?"
+#, fuzzy,badformat
+#| msgid "Modules updated, restart now?"
+msgid ""
+"Modules updated, restart now?\n"
+"\n"
+"%s\n"
 msgstr "Modüller güncellendi, yeniden başlasın mı?"
 
 #: frmluamodulesupdater.rs_modulesupdatedtitle
@@ -145,7 +150,12 @@ msgid "Modules updated!"
 msgstr "Modüller güncellendi!"
 
 #: frmluamodulesupdater.rs_newupdatefoundlostchanges
-msgid "Modules update found, any local changes will be lost, procced?"
+#, fuzzy,badformat
+#| msgid "Modules update found, any local changes will be lost, procced?"
+msgid ""
+"Modules update found, any local changes will be lost, procced?\n"
+"\n"
+"%s\n"
 msgstr "Modül güncellemeleri bulundu, herhangi bir yerel değişim kaybolacaktır, devam edilsin mi?"
 
 #: frmluamodulesupdater.rs_newupdatefoundtitle
@@ -155,6 +165,31 @@ msgstr "Modül güncellemeleri bulundu!"
 #: frmluamodulesupdater.rs_startdownloading
 msgid "Downloading..."
 msgstr "İndiriliyor..."
+
+#: frmluamodulesupdater.rs_statusdelete
+msgctxt "frmluamodulesupdater.rs_statusdelete"
+msgid "%s DELETE*"
+msgstr ""
+
+#: frmluamodulesupdater.rs_statusfailed
+msgctxt "frmluamodulesupdater.rs_statusfailed"
+msgid "%s FAILED*"
+msgstr ""
+
+#: frmluamodulesupdater.rs_statusnew
+msgctxt "frmluamodulesupdater.rs_statusnew"
+msgid "%s NEW*"
+msgstr ""
+
+#: frmluamodulesupdater.rs_statusredownloaded
+msgctxt "frmluamodulesupdater.rs_statusredownloaded"
+msgid "%s REDOWNLOAD*"
+msgstr ""
+
+#: frmluamodulesupdater.rs_statusupdate
+msgctxt "frmluamodulesupdater.rs_statusupdate"
+msgid "%s UPDATE*"
+msgstr ""
 
 #: frmmain.rs_alldownloads
 msgid "All downloads"

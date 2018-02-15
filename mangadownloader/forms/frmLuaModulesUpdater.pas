@@ -27,6 +27,7 @@ type
     last_modified: TDateTime;
     last_message: String;
     flag: TLuaModuleRepoFlag;
+    oflag: TLuaModuleRepoFlag;
     function Clone: TLuaModuleRepo;
     function SyncTo(const t: TLuaModuleRepo): Boolean;
   end;
@@ -129,6 +130,7 @@ type
     FThreadsCS: TRTLCriticalSection;
     FDownloadedCount: Integer;
     FProceed: Boolean;
+    FStatusList: TStringList;
     procedure RemoveThread(const T: TDownloadThread);
     procedure AddThread(const T: TDownloadThread);
   protected
@@ -144,6 +146,7 @@ type
   public
     constructor Create(const AOwner: TLuaModulesUpdaterForm);
     destructor Destroy; override;
+    procedure AddStatus(const S: String);
   end;
 
 var
@@ -156,9 +159,14 @@ resourcestring
   RS_StartDownloading = 'Downloading...';
   RS_FinishDownload = 'Finish download';
   RS_NewUpdateFoundTitle = 'Modules update found!';
-  RS_NewUpdateFoundLostChanges = 'Modules update found, any local changes will be lost, procced?';
+  RS_NewUpdateFoundLostChanges = 'Modules update found, any local changes will be lost, procced?'#13#10#13#10'%s';
   RS_ModulesUpdatedTitle = 'Modules updated!';
-  RS_ModulesUpdatedRestart = 'Modules updated, restart now?';
+  RS_ModulesUpdatedRestart = 'Modules updated, restart now?'#13#10#13#10'%s';
+  RS_StatusNew = '%s NEW*';
+  RS_StatusUpdate = '%s UPDATE*';
+  RS_StatusRedownloaded = '%s REDOWNLOAD*';
+  RS_StatusFailed = '%s FAILED*';
+  RS_StatusDelete = '%s DELETE*';
 
 implementation
 
@@ -196,6 +204,7 @@ begin
   Result.last_modified := last_modified;
   Result.last_message := last_message;
   Result.flag := flag;
+  Result.oflag := oflag;
 end;
 
 function TLuaModuleRepo.SyncTo(const t: TLuaModuleRepo): Boolean;
@@ -208,6 +217,7 @@ begin
     t.sha := sha;
     t.last_modified := last_modified;
     t.last_message := last_message;
+    t.oflag := t.flag;
     t.flag := fUpdate;
   end;
 end;
@@ -420,6 +430,7 @@ var
   f: String;
   c: Boolean;
 begin
+  FModule.oflag := FModule.flag;
   FModule.flag := fDownloading;
   FOwner.FOwner.ListDirty;
   if FHTTP.GET(FModule.download_url) then
@@ -435,6 +446,11 @@ begin
         FHTTP.Document.SaveToFile(f);
         if FileExists(f) then
         begin
+          case FModule.oflag of
+            fNew: FOwner.AddStatus(Format(RS_StatusNew, [FModule.name]));
+            fUpdate: FOwner.AddStatus(Format(RS_StatusUpdate, [FModule.name]));
+            fFailedDownload: FOwner.AddStatus(Format(RS_StatusRedownloaded, [FModule.name]));
+          end;
           FModule.flag := fDownloaded;
           FOwner.FDownloadedCount := InterLockedIncrement(FOwner.FDownloadedCount);
         end;
@@ -442,7 +458,10 @@ begin
     end;
   end
   else
+  begin
+    FOwner.AddStatus(Format(RS_StatusFailed, [FModule.name]));
     FModule.flag := fFailedDownload;
+  end;
   FOwner.FOwner.ListDirty;
 end;
 
@@ -506,9 +525,9 @@ end;
 
 procedure TCheckUpdateThread.SyncAskToProceed;
 begin
-  FProceed := (not OptionModulesUpdaterShowUpdateWarning) or
-    (MessageDlg(RS_NewUpdateFoundTitle, RS_NewUpdateFoundLostChanges,
-    mtWarning, mbYesNo, 0) = mrYes);
+  FProceed := MessageDlg(RS_NewUpdateFoundTitle,
+    Format(RS_NewUpdateFoundLostChanges, [Trim(FStatusList.Text)]),
+    mtWarning, mbYesNo, 0) = mrYes;
 end;
 
 procedure TCheckUpdateThread.SyncStartDownload;
@@ -628,8 +647,8 @@ var
   f: String;
 begin
   Synchronize(@SyncStartDownload);
-  sleep(2000);
 
+  FStatusList.Clear;
   i := 0;
   imax := FRepos.Items.Count;
   while i < imax do
@@ -714,13 +733,25 @@ begin
         m.flag := fFailedDownload;
         foundupdate := True;
       end;
+      case m.flag of
+        fNew: FStatusList.Add(Format(RS_StatusNew, [m.name]));
+        fUpdate: FStatusList.Add(Format(RS_StatusUpdate, [m.name]));
+        fDelete: FStatusList.Add(Format(RS_StatusDelete, [m.name]));
+        fFailedDownload: FStatusList.Add(Format(RS_StatusFailed, [m.name]));
+      end;
     end;
 
     Synchronize(@SyncFinishChecking);
 
     if foundupdate and (not Terminated) then
     begin
-      Synchronize(@SyncAskToProceed);
+      if OptionModulesUpdaterShowUpdateWarning then
+        Synchronize(@SyncAskToProceed)
+      else
+      begin
+        FProceed := True;
+        Sleep(1500); // delay to show the update status
+      end;
       if FProceed then
         Download;
     end;
@@ -754,10 +785,12 @@ begin
     Sleep(1000);
   Synchronize(@SyncFinal);
 
-  if (FDownloadedCount <> 0) and (OptionModulesUpdaterAutoRestart or
-    (MessageDlg(RS_ModulesUpdatedTitle, RS_ModulesUpdatedRestart, mtConfirmation,
-    mbYesNo, 0) = mrYes)) then
-      RestartFMD;
+  if not Terminated then
+    if (FDownloadedCount <> 0) and (OptionModulesUpdaterAutoRestart or
+      (MessageDlg(RS_ModulesUpdatedTitle,
+      Format(RS_ModulesUpdatedRestart, [Trim(FStatusList.Text)]),
+      mtConfirmation, mbYesNo, 0) = mrYes)) then
+        RestartFMD;
 end;
 
 constructor TCheckUpdateThread.Create(const AOwner: TLuaModulesUpdaterForm);
@@ -768,6 +801,7 @@ begin
   FHTTP := THTTPSendThread.Create(Self);
   FThreads := TFPList.Create;
   FDownloadedCount := 0;
+  FStatusList := TStringList.Create;
 end;
 
 destructor TCheckUpdateThread.Destroy;
@@ -776,10 +810,21 @@ begin
     FRepos.Free;
   if Assigned(FReposUp) then
     FReposUp.Free;
+  FStatusList.Free;
   FThreads.Free;
   FHTTP.Free;
   DoneCriticalsection(FThreadsCS);
   inherited Destroy;
+end;
+
+procedure TCheckUpdateThread.AddStatus(const S: String);
+begin
+  EnterCriticalsection(FThreadsCS);
+  try
+    FStatusList.Add(S);
+  finally
+    LeaveCriticalsection(FThreadsCS);
+  end;
 end;
 
 {$R *.lfm}
