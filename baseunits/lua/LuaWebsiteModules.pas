@@ -767,7 +767,6 @@ begin
     luaClassAddIntegerProperty(L, MetaTable, 'MaxTaskLimit', @Module.MaxTaskLimit);
     luaClassAddIntegerProperty(L, MetaTable, 'MaxConnectionLimit',
       @Module.MaxConnectionLimit);
-    luaClassAddIntegerProperty(L, MetaTable, 'TotalDirectory', @Module.TotalDirectory);
     luaClassAddIntegerProperty(L, MetaTable, 'ActiveTaskCount', @Module.ActiveTaskCount);
     luaClassAddIntegerProperty(L, MetaTable, 'ActiveConnectionCount',
       @Module.ActiveConnectionCount);
