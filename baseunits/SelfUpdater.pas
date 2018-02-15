@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, httpsendthread, BaseThread, FMDOptions, process, ComCtrls, Controls,
-  Dialogs, StdCtrls, Buttons, blcksock;
+  Dialogs, StdCtrls, Buttons, Forms, blcksock;
 
 type
 
@@ -197,13 +197,38 @@ end;
 
 procedure TSelfUpdaterThread.SyncFinishRestart;
 begin
-  if MessageDlg(RS_FinishRestartTitle, RS_FinishRestart, mtConfirmation, mbYesNo, 0) = mrYes then
+  if MessageDlg(RS_FinishRestartTitle, RS_FinishRestart, mtConfirmation,
+    mbYesNo, 0) = mrYes then
     ProceedUpdate;
 end;
 
 procedure TSelfUpdaterThread.ProceedUpdate;
 begin
-
+  if DownloadSuccess then
+  begin
+    if FileExists(OLD_CURRENT_UPDATER_EXE) then
+      DeleteFile(OLD_CURRENT_UPDATER_EXE);
+    if FileExists(CURRENT_UPDATER_EXE) then
+      RenameFile(CURRENT_UPDATER_EXE, OLD_CURRENT_UPDATER_EXE);
+    if not FileExists(OLD_CURRENT_UPDATER_EXE) then
+      Exit;
+    with TProcess.Create(nil) do
+      try
+        InheritHandles := False;
+        CurrentDirectory := FMD_DIRECTORY;
+        Executable := OLD_CURRENT_UPDATER_EXE;
+        Parameters.Add(Application.ExeName);
+        Parameters.Add(CURRENT_ZIP_EXE);
+        Parameters.Add(Self.Filename);
+        Parameters.Add(FMD_DIRECTORY);
+        Execute;
+      finally
+        Free;
+      end;
+    DoAfterFMD := DO_UPDATE;
+    FormMain.tmExitCommand.Interval := 32;
+    FormMain.tmExitCommand.Enabled := True;
+  end;
 end;
 
 procedure TSelfUpdaterThread.UpdateStatusText(const S: String);
@@ -240,7 +265,7 @@ begin
         begin
           FFailedMessage := Format(RS_FailedToSave, [Filename]);
           DownloadSuccess := False;
-        end
+        end;
       end
       else
       begin
@@ -253,27 +278,6 @@ begin
         FFailedMessage := Format(RS_MissingZipExe, [CURRENT_ZIP_EXE]);
         DownloadSuccess := False;
       end;
-
-      //if DownloadSuccess then
-      //  with TProcess.Create(nil) do
-      //    try
-      //      Executable := CURRENT_ZIP_EXE;
-      //      CurrentDirectory := FMD_DIRECTORY;
-      //      Parameters.Add('x');
-      //      Parameters.Add(Filename);
-      //      Parameters.Add('-o' + AnsiQuotedStr(FMD_DIRECTORY, '"'));
-      //      Parameters.Add('-aoa');
-      //      Options := Options + [poWaitOnExit];
-      //      ShowWindow := swoNone;
-      //      Execute;
-      //      DownloadSuccess := ExitStatus = 0;
-      //      if DownloadSuccess then
-      //        DeleteFile(Filename)
-      //      else
-      //        FFailedMessage := Format(RS_FailedExtract, [Filename, ExitStatus]);
-      //    finally
-      //      Free;
-      //    end;
     end
     else
       FFailedMessage := Format(RS_FailedDownload, [NewVersionString,

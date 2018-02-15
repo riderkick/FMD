@@ -70,9 +70,6 @@ begin
           NewVersionString := FNewVersionString;
           Start;
         end;
-        //UpdateURL := FUpdateURL;
-        //DoAfterFMD := DO_UPDATE;
-        //MainForm.tmExitCommand.Enabled := True;
       end
       else
         MainForm.btCheckLatestVersion.Caption := RS_BtnCheckUpdates;
