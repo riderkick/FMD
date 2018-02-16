@@ -2,27 +2,25 @@ msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8"
 
 #: dbupdater.rs_buttoncancel
-#, fuzzy
-#| msgid "Cancel"
 msgctxt "dbupdater.rs_buttoncancel"
 msgid "Abort"
-msgstr "Batal"
+msgstr "Hentikan"
 
 #: dbupdater.rs_downloading
 msgid "Downloading %s"
-msgstr ""
+msgstr "Mengunduh %d"
 
 #: dbupdater.rs_extracting
 msgid "Extracting %s"
-msgstr ""
+msgstr "Mengekstrak %s"
 
 #: dbupdater.rs_faileddownload
 msgid "%s: %d %s"
-msgstr ""
+msgstr "%s: %d %s"
 
 #: dbupdater.rs_failedextract
 msgid "%s: failed to extract, exitstatus = %d"
-msgstr ""
+msgstr "%s: gagal mengekstrak, kode = %d"
 
 #: dbupdater.rs_faileditems
 msgid ""
@@ -30,20 +28,22 @@ msgid ""
 "\n"
 "%s\n"
 msgstr ""
+"Gagal menyelesaikan:\n"
+"\n"
+"%s\n"
 
 #: dbupdater.rs_faileditemstitle
-#, fuzzy
 msgctxt "dbupdater.rs_faileditemstitle"
 msgid "Failed"
 msgstr "Gagal"
 
 #: dbupdater.rs_failedtosave
 msgid "%s: failed to save"
-msgstr ""
+msgstr "%s: gagal menyimpan"
 
 #: dbupdater.rs_missingzipexe
 msgid "%s: Missing %s"
-msgstr ""
+msgstr "%s: Tidak ditemukan %s"
 
 #: ehentai.rs_downloadoriginalimage
 msgid "Download original image(require ExHentai account)"
@@ -124,26 +124,28 @@ msgid "Finish download"
 msgstr "Selesai mengunduh"
 
 #: frmluamodulesupdater.rs_modulesupdatedrestart
-#, fuzzy,badformat
-#| msgid "Modules updated, restart now?"
 msgid ""
 "Modules updated, restart now?\n"
 "\n"
 "%s\n"
-msgstr "Module diperbarui, memulai ulang sekarang?"
+msgstr ""
+"Modul sudah diperbarui, muat ulang sekarang?\n"
+"\n"
+"%s\n"
 
 #: frmluamodulesupdater.rs_modulesupdatedtitle
 msgid "Modules updated!"
 msgstr "Modul diperbarui!"
 
 #: frmluamodulesupdater.rs_newupdatefoundlostchanges
-#, fuzzy,badformat
-#| msgid "Modules update found, any local changes will be lost, procced?"
 msgid ""
 "Modules update found, any local changes will be lost, procced?\n"
 "\n"
 "%s\n"
-msgstr "Pembaruan modul ditemukan, ubahan lokal akan hilang, lanjutkan?"
+msgstr ""
+"Pembaruan modul ditemukan, perubahan lokal akan ditimpa, lanjutkan?\n"
+"\n"
+"%s\n"
 
 #: frmluamodulesupdater.rs_newupdatefoundtitle
 msgid "Modules update found!"
@@ -156,27 +158,27 @@ msgstr "Mengunduh..."
 #: frmluamodulesupdater.rs_statusdelete
 msgctxt "frmluamodulesupdater.rs_statusdelete"
 msgid "%s DELETE*"
-msgstr ""
+msgstr "%s DIHAPUS*"
 
 #: frmluamodulesupdater.rs_statusfailed
 msgctxt "frmluamodulesupdater.rs_statusfailed"
 msgid "%s FAILED*"
-msgstr ""
+msgstr "%s GAGAL"
 
 #: frmluamodulesupdater.rs_statusnew
 msgctxt "frmluamodulesupdater.rs_statusnew"
 msgid "%s NEW*"
-msgstr ""
+msgstr "%s BARU"
 
 #: frmluamodulesupdater.rs_statusredownloaded
 msgctxt "frmluamodulesupdater.rs_statusredownloaded"
 msgid "%s REDOWNLOAD*"
-msgstr ""
+msgstr "%s DOWNLOADULANG"
 
 #: frmluamodulesupdater.rs_statusupdate
 msgctxt "frmluamodulesupdater.rs_statusupdate"
 msgid "%s UPDATE*"
-msgstr ""
+msgstr "%s PEMBARUAN*"
 
 #: frmmain.rs_alldownloads
 msgid "All downloads"
@@ -508,14 +510,13 @@ msgid "Save as PNG"
 msgstr "Simpan sebagai PNG"
 
 #: selfupdater.rs_buttoncancel
-#, fuzzy
 msgctxt "selfupdater.rs_buttoncancel"
 msgid "Abort"
-msgstr "Batalkan"
+msgstr "Hentikan"
 
 #: selfupdater.rs_downloading
 msgid "Downloading new version %s"
-msgstr ""
+msgstr "Mengunduh versi baru %s"
 
 #: selfupdater.rs_faileddownload
 msgid ""
@@ -523,32 +524,34 @@ msgid ""
 "\n"
 "%d %s\n"
 msgstr ""
+"Gagal mengunduh versi baru %s\n"
+"\n"
+"%d %s\n"
 
 #: selfupdater.rs_failedextract
 msgid "Failed to extract %s, exitstatus = %d"
-msgstr ""
+msgstr "Gagal mengekstrak %s, kode = %d"
 
 #: selfupdater.rs_failedtitle
-#, fuzzy
 msgctxt "selfupdater.rs_failedtitle"
 msgid "Failed"
 msgstr "Gagal"
 
 #: selfupdater.rs_failedtosave
 msgid "Failed to save %s"
-msgstr ""
+msgstr "Gagal menyimpan %s"
 
 #: selfupdater.rs_finishrestart
 msgid "Download update package finished, restart to proceed?"
-msgstr ""
+msgstr "Pembaruan selesai diunduh, memuat ulang sekarang?"
 
 #: selfupdater.rs_finishrestarttitle
 msgid "Download finished"
-msgstr ""
+msgstr "Unduhan selesai"
 
 #: selfupdater.rs_missingzipexe
 msgid "Missing %s"
-msgstr ""
+msgstr "Tidak ditemukan %s"
 
 #: taccountmanagerform.btadd.caption
 msgctxt "taccountmanagerform.btadd.caption"
@@ -723,7 +726,7 @@ msgstr "Pesan terakhir"
 
 #: tmainform.btabortupdatelist.hint
 msgid "Abort update list"
-msgstr "Batalkan pembaruan daftar komik"
+msgstr "Hentikan pembaruan daftar komik"
 
 #: tmainform.btaddtofavorites.caption
 msgctxt "tmainform.btaddtofavorites.caption"
@@ -1721,7 +1724,7 @@ msgstr "Urungkan"
 #: tmainform.miabortsilentthread.caption
 msgctxt "tmainform.miabortsilentthread.caption"
 msgid "Abort"
-msgstr "Batalkan"
+msgstr "Hentikan"
 
 #: tmainform.michapterlistascending.caption
 msgid "Ascending"
@@ -2222,7 +2225,7 @@ msgstr "Pilih direktori"
 
 #: tshutdowncounterform.btabort.caption
 msgid "&Abort"
-msgstr "&Batalkan"
+msgstr "&Hentikan"
 
 #: tshutdowncounterform.btnow.caption
 msgid "&Now"
