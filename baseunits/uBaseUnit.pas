@@ -227,28 +227,24 @@ const
   // common regex to split host/url
   REGEX_HOST = '(?ig)^(\w+://)?([^/]*\.\w+)?(\:\d+)?(/?.*)$';
 
-  TURKCRAFT_ID           = 0;
-  ANIMEEXTREMIST_ID      = 1;
-  ANIMESTORY_ID          = 2;
-  SCANMANGA_ID           = 3;
-  MANGASPROJECT_ID       = 4;
-  MANGAREADER_POR_ID     = 5;
-  MANGATOWN_ID           = 6;
-  MANGAOKU_ID            = 7;
-  NHENTAI_ID             = 8;
-  MANGAHOST_ID           = 9;
-  MANGAKU_ID             = 10;
-  DYNASTYSCANS_ID        = 11;
+  ANIMEEXTREMIST_ID      = 0;
+  ANIMESTORY_ID          = 1;
+  SCANMANGA_ID           = 2;
+  MANGASPROJECT_ID       = 3;
+  MANGAREADER_POR_ID     = 4;
+  MANGATOWN_ID           = 5;
+  NHENTAI_ID             = 6;
+  MANGAHOST_ID           = 7;
+  MANGAKU_ID             = 8;
+  DYNASTYSCANS_ID        = 9;
 
-  WebsiteRoots: array [0..11] of array [0..1] of String = (
-    ('Turkcraft', 'http://turkcraft.com'),
+  WebsiteRoots: array [0..9] of array [0..1] of String = (
     ('AnimExtremist', 'http://www.animextremist.com'),
     ('AnimeStory', 'http://www.anime-story.com'),
     ('ScanManga', 'http://www.scan-manga.com'),
     ('MangasPROJECT', 'http://mangaproject.xpg.uol.com.br'),
     ('MangaREADER_POR', 'http://www.mangareader.com.br'),
     ('MangaTown', 'http://www.mangatown.com'),
-    ('MangaOku', 'http://www.mangaoku.net'),
     ('NHentai', 'http://nhentai.net'),
     ('MangaHost', 'http://br.mangahost.com'),
     ('MangaKu', 'http://mangaku.web.id'),
@@ -1052,9 +1048,7 @@ begin
     Exit;
   end;
   Result := SitesMemberOf(website, [
-    MANGASPROJECT_ID,
-    TURKCRAFT_ID,
-    MANGAOKU_ID
+    MANGASPROJECT_ID
     ]);
 end;
 

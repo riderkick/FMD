@@ -855,15 +855,11 @@ var
 
   {$I includes/ScanManga/names_and_links.inc}
 
-  {$I includes/Turkcraft/names_and_links.inc}
-
   {$I includes/MangasPROJECT/names_and_links.inc}
 
   {$I includes/MangaREADER_POR/names_and_links.inc}
 
   {$I includes/MangaTown/names_and_links.inc}
-
-  {$I includes/MangaOku/names_and_links.inc}
 
   {$I includes/NHentai/names_and_links.inc}
 
@@ -896,9 +892,6 @@ begin
     if MangaSiteID = SCANMANGA_ID then
       Result := ScanMangaGetNamesAndLinks
     else
-    if MangaSiteID = TURKCRAFT_ID then
-      Result := TurkcraftGetNamesAndLinks
-    else
     if MangaSiteID = MANGASPROJECT_ID then
       Result := MangasPROJECTGetNamesAndLinks
     else
@@ -907,9 +900,6 @@ begin
     else
    if MangaSiteID = MANGATOWN_ID then
       Result := MangaTownGetNamesAndLinks
-    else
-    if MangaSiteID = MANGAOKU_ID then
-      Result := MangaOkuGetNamesAndLinks
     else
     if MangaSiteID = NHENTAI_ID then
       Result := NHentaiNamesAndLinks
@@ -955,15 +945,11 @@ var
 
   {$I includes/ScanManga/manga_information.inc}
 
-  {$I includes/Turkcraft/manga_information.inc}
-
   {$I includes/MangasPROJECT/manga_information.inc}
 
   {$I includes/MangaREADER_POR/manga_information.inc}
 
   {$I includes/MangaTown/manga_information.inc}
-
-  {$I includes/MangaOku/manga_information.inc}
 
   {$I includes/NHentai/manga_information.inc}
 
@@ -1008,9 +994,6 @@ begin
     if MangaSiteID = SCANMANGA_ID then
       Result := GetScanMangaInfoFromURL
     else
-    if MangaSiteID = TURKCRAFT_ID then
-      Result := GetTurkcraftInfoFromURL
-    else
     if MangaSiteID = MANGASPROJECT_ID then
       Result := GetMangasPROJECTInfoFromURL
     else
@@ -1019,9 +1002,6 @@ begin
     else
     if MangaSiteID = MANGATOWN_ID then
       Result := GetMangaTownInfoFromURL
-    else
-    if MangaSiteID = MANGAOKU_ID then
-      Result := GetMangaOkuInfoFromURL
     else
     if MangaSiteID = NHENTAI_ID then
       Result := GetNHentaiInfoFromURL

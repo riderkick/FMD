@@ -412,11 +412,7 @@ var
 
   {$I includes/AnimExtremist/chapter_page_number.inc}
 
-  {$I includes/Turkcraft/chapter_page_number.inc}
-
   {$I includes/MangaTown/chapter_page_number.inc}
-
-  {$I includes/MangaOku/chapter_page_number.inc}
 
   {$I includes/NHentai/chapter_page_number.inc}
 
@@ -440,14 +436,8 @@ begin
     if Task.Container.MangaSiteID = ANIMESTORY_ID then
       Result := GetAnimeStoryPageNumber
     else
-    if Task.Container.MangaSiteID = TURKCRAFT_ID then
-      Result := GetTurkcraftPageNumber
-    else
     if Task.Container.MangaSiteID = MANGATOWN_ID then
       Result := GetMangaTownPageNumber
-    else
-    if Task.Container.MangaSiteID = MANGAOKU_ID then
-      Result := GetMangaOkuPageNumber
     else
     if Task.Container.MangaSiteID = NHENTAI_ID then
       Result := GetNHentaiPageNumber
@@ -479,11 +469,7 @@ var
 
   {$I includes/ScanManga/image_url.inc}
 
-  {$I includes/Turkcraft/image_url.inc}
-
   {$I includes/MangaTown/image_url.inc}
-
-  {$I includes/MangaOku/image_url.inc}
 
   {$I includes/NHentai/image_url.inc}
 
@@ -505,9 +491,6 @@ begin
     if Task.Container.MangaSiteID = SCANMANGA_ID then
       Result := GetScanMangaImageURL
     else
-    if Task.Container.MangaSiteID = TURKCRAFT_ID then
-      Result := GetTurkcraftImageURL
-    else
     if Task.Container.MangaSiteID = MANGASPROJECT_ID then
       Result := GetMangasPROJECTImageURL
     else
@@ -516,9 +499,6 @@ begin
     else
     if Task.Container.MangaSiteID = MANGATOWN_ID then
       Result := GetMangaTownImageURL
-    else
-    if Task.Container.MangaSiteID = MANGAOKU_ID then
-      Result := GetMangaOkuImageURL
     else
     if Task.Container.MangaSiteID = NHENTAI_ID then
       Result := GetNHentaiImageURL
