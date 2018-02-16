@@ -1,5 +1,5 @@
-apiurl='https://api.manga.sh/api/v1/'
-cdnurl='https://cdn.manga.sh/'
+local apiurl='https://api.manga.sh/api/v1/'
+local cdnurl='https://cdn.manga.sh/'
 
 function getinfo()
   local lid=RegExprGetMatch('/(\\d+)',url,1)
@@ -64,7 +64,7 @@ end
 
 function Init()
   m=NewModule()
-  m.website='Manga.sh'
+  m.website='MangaSh'
   m.rooturl='https://manga.sh'
   m.lastupdated='February 14, 2018'
   m.ongetinfo='getinfo'
