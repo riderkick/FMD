@@ -481,8 +481,6 @@ var
 
   {$I includes/Turkcraft/image_url.inc}
 
-  {$I includes/VnSharing/image_url.inc}
-
   {$I includes/MangaTown/image_url.inc}
 
   {$I includes/MangaOku/image_url.inc}
@@ -498,9 +496,6 @@ begin
     Result := Modules.GetImageURL(Self, URL, Task.Container.ModuleId)
   else
   begin
-    if Task.Container.MangaSiteID = VNSHARING_ID then
-      Result := GetVnSharingImageURL
-    else
     if Task.Container.MangaSiteID = ANIMEEXTREMIST_ID then
       Result := GetAnimeExtremistImageURL
     else

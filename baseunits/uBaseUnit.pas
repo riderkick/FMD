@@ -227,22 +227,20 @@ const
   // common regex to split host/url
   REGEX_HOST = '(?ig)^(\w+://)?([^/]*\.\w+)?(\:\d+)?(/?.*)$';
 
-  VNSHARING_ID           = 0;
-  TURKCRAFT_ID           = 1;
-  ANIMEEXTREMIST_ID      = 2;
-  ANIMESTORY_ID          = 3;
-  SCANMANGA_ID           = 4;
-  MANGASPROJECT_ID       = 5;
-  MANGAREADER_POR_ID     = 6;
-  MANGATOWN_ID           = 7;
-  MANGAOKU_ID            = 8;
-  NHENTAI_ID             = 9;
-  MANGAHOST_ID           = 10;
-  MANGAKU_ID             = 11;
-  DYNASTYSCANS_ID        = 12;
+  TURKCRAFT_ID           = 0;
+  ANIMEEXTREMIST_ID      = 1;
+  ANIMESTORY_ID          = 2;
+  SCANMANGA_ID           = 3;
+  MANGASPROJECT_ID       = 4;
+  MANGAREADER_POR_ID     = 5;
+  MANGATOWN_ID           = 6;
+  MANGAOKU_ID            = 7;
+  NHENTAI_ID             = 8;
+  MANGAHOST_ID           = 9;
+  MANGAKU_ID             = 10;
+  DYNASTYSCANS_ID        = 11;
 
-  WebsiteRoots: array [0..12] of array [0..1] of String = (
-    ('VnSharing', 'http://truyen.vnsharing.net'),
+  WebsiteRoots: array [0..11] of array [0..1] of String = (
     ('Turkcraft', 'http://turkcraft.com'),
     ('AnimExtremist', 'http://www.animextremist.com'),
     ('AnimeStory', 'http://www.anime-story.com'),
@@ -259,8 +257,6 @@ const
 
   ALPHA_LIST    = '#abcdefghijklmnopqrstuvwxyz';
   ALPHA_LIST_UP = '#ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
-  VNSHARING_BROWSER = '/DanhSach';
 
   TURKCRAFT_BROWSER = '/';
 

@@ -784,8 +784,6 @@ var
   Parser: THTMLParser;
   MangaSiteID: Integer;
 
-  {$I includes/VnSharing/directory_page_number.inc}
-
   {$I includes/MangaTown/directory_page_number.inc}
 
   {$I includes/NHentai/directory_page_number.inc}
@@ -821,9 +819,6 @@ begin
       if MangaSiteID = -1 then
         Exit(INFORMATION_NOT_FOUND);
       Source := TStringList.Create;
-      if MangaSiteID = VNSHARING_ID then
-        Result := GetVnSharingDirectoryPageNumber
-      else
       if MangaSiteID = MANGATOWN_ID then
         Result := GetMangaTownDirectoryPageNumber
       else
@@ -856,8 +851,6 @@ var
   MangaSiteID: Integer;
 
   {$I includes/AnimExtremist/names_and_links.inc}
-
-  {$I includes/VnSharing/names_and_links.inc}
 
   {$I includes/AnimeStory/names_and_links.inc}
 
@@ -895,9 +888,6 @@ begin
     if MangaSiteID = -1 then
       Exit(INFORMATION_NOT_FOUND);
     Source := TStringList.Create;
-    if MangaSiteID = VNSHARING_ID then
-      Result := VnSharingGetNamesAndLinks
-    else
     if MangaSiteID = ANIMEEXTREMIST_ID then
       Result := AnimeExtremistGetNamesAndLinks
     else
@@ -960,8 +950,6 @@ var
 
   {$I includes/AnimExtremist/manga_information.inc}
 
-  {$I includes/VnSharing/manga_information.inc}
-
   {$I includes/AnimeStory/manga_information.inc}
 
   {$I includes/ScanManga/manga_information.inc}
@@ -1012,9 +1000,6 @@ begin
       Exit(INFORMATION_NOT_FOUND);
     mangaInfo.url := FillMangaSiteHost(MangaSiteID, AURL);
     Source := TStringList.Create;
-    if MangaSiteID = VNSHARING_ID then
-      Result := GetVnSharingInfoFromURL
-    else
     if MangaSiteID = ANIMEEXTREMIST_ID then
       Result := GetAnimeExtremistInfoFromURL
     else
