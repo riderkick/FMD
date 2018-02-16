@@ -20,7 +20,7 @@ uses
   {$endif}
   SysUtils, Classes, Graphics, lazutf8classes, LazFileUtils, LConvEncoding, LazUtils,
   strutils, dateutils, variants, base64, fpjson, jsonparser, jsonscanner,
-  FastHTMLParser, fgl, RegExpr, synautil, httpsend, blcksock, ssl_openssl,
+  fgl, RegExpr, synautil, httpsend, blcksock, ssl_openssl,
   synacode, MultiLog, FPimage, GZIPUtils, uMisc, httpsendthread, FMDOptions,
   simplehtmltreeparser, xquery, xquery_json, ImgInfos, NaturalSortUnit,
   MemBitmap, FPWritePNG, zstream;
