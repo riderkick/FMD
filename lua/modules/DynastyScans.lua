@@ -38,7 +38,6 @@ function getdirectorypagenumber()
 end
 
 function getnameandlink()
-  print(diruris[tonumber(url)+1])
   if http.get(module.rooturl..diruris[tonumber(url)+1]) then
     TXQuery.Create(http.document).xpathhrefall('//dd/a',links,names)
     return no_error
