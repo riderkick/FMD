@@ -348,8 +348,5 @@ object TransferFavoritesForm: TTransferFavoritesForm
       001A0000001A0000001A0000001A0000001A0000001A0000001A0000001A0000
       00170000000C00000002FFFFFF00
     }
-    BitmapAdv = {
-      4C6900000000
-    }
   end
 end
