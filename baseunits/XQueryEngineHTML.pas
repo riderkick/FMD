@@ -71,11 +71,15 @@ type
   TTreeNode = simplehtmltreeparser.TTreeNode;
 
 function XPathString(const Expression, HTMLString: String): String; overload;
-function XPathString(const Expression: String; const HTMLStream: TStream): String; overload;
-function XPathCount(const Expression: String; const HTMLStream: TStream): Integer;
-procedure XPathStringAll(const Expression: String; const HTMLStream: TStream; const TheStrings: TStrings);
-procedure XPathHREFAll(const Expression: String; const HTMLStream: TStream; const ALinks, ATexts: TStrings);
-procedure XPathHREFtitleAll(const Expression: String; const HTMLStream: TStream; const ALinks, ATitles: TStrings);
+function XPathString(const Expression: String; const HTMLStream: TStream): String; overload; inline;
+function XPathCount(const Expression: String; const HTMLString: String): Integer; overload;
+function XPathCount(const Expression: String; const HTMLStream: TStream): Integer; overload; inline;
+procedure XPathStringAll(const Expression: String; const HTMLString: String; const TheStrings: TStrings); overload;
+procedure XPathStringAll(const Expression: String; const HTMLStream: TStream; const TheStrings: TStrings); overload; inline;
+procedure XPathHREFAll(const Expression: String; const HTMLString: String; const ALinks, ATexts: TStrings); overload;
+procedure XPathHREFAll(const Expression: String; const HTMLStream: TStream; const ALinks, ATexts: TStrings); overload; inline;
+procedure XPathHREFtitleAll(const Expression: String; const HTMLString: String; const ALinks, ATitles: TStrings); overload;
+procedure XPathHREFtitleAll(const Expression: String; const HTMLStream: TStream; const ALinks, ATitles: TStrings); overload; inline;
 
 implementation
 
@@ -128,12 +132,28 @@ begin
   Result := XPathString(Expression, StreamToString(HTMLStream));
 end;
 
-function XPathCount(const Expression: String; const HTMLStream: TStream): Integer;
+function XPathCount(const Expression: String; const HTMLString: String): Integer;
 begin
   Result := 0;
-  with TXQueryEngineHTML.Create(HTMLStream) do
+  with TXQueryEngineHTML.Create(HTMLString) do
     try
       Result := XPathCount(Expression);
+    finally
+      Free;
+    end;
+end;
+
+function XPathCount(const Expression: String; const HTMLStream: TStream): Integer;
+begin
+  Result := XPathCount(Expression, StreamToString(HTMLStream));
+end;
+
+procedure XPathStringAll(const Expression: String; const HTMLString: String;
+  const TheStrings: TStrings);
+begin
+  with TXQueryEngineHTML.Create(HTMLString) do
+    try
+      XPathStringAll(Expression, TheStrings);
     finally
       Free;
     end;
@@ -142,9 +162,15 @@ end;
 procedure XPathStringAll(const Expression: String; const HTMLStream: TStream;
   const TheStrings: TStrings);
 begin
-  with TXQueryEngineHTML.Create(HTMLStream) do
+  XPathStringAll(Expression, StreamToString(HTMLStream), TheStrings);
+end;
+
+procedure XPathHREFAll(const Expression: String; const HTMLString: String;
+  const ALinks, ATexts: TStrings);
+begin
+  with TXQueryEngineHTML.Create(HTMLString) do
     try
-      XPathStringAll(Expression, TheStrings);
+      XPathHREFAll(Expression, ALinks, ATexts);
     finally
       Free;
     end;
@@ -153,9 +179,15 @@ end;
 procedure XPathHREFAll(const Expression: String; const HTMLStream: TStream;
   const ALinks, ATexts: TStrings);
 begin
-  with TXQueryEngineHTML.Create(HTMLStream) do
+  XPathHREFAll(Expression, StreamToString(HTMLStream), ALinks, ATexts);
+end;
+
+procedure XPathHREFtitleAll(const Expression: String; const HTMLString: String;
+  const ALinks, ATitles: TStrings);
+begin
+  with TXQueryEngineHTML.Create(HTMLString) do
     try
-      XPathHREFAll(Expression, ALinks, ATexts);
+      XPathHREFtitleAll(Expression, ALinks, ATitles);
     finally
       Free;
     end;
@@ -164,12 +196,7 @@ end;
 procedure XPathHREFtitleAll(const Expression: String;
   const HTMLStream: TStream; const ALinks, ATitles: TStrings);
 begin
-  with TXQueryEngineHTML.Create(HTMLStream) do
-    try
-      XPathHREFtitleAll(Expression, ALinks, ATitles);
-    finally
-      Free;
-    end;
+  XPathHREFtitleAll(Expression, StreamToString(HTMLStream), ALinks, ATitles);
 end;
 
 { TXQueryEngineHTML }
