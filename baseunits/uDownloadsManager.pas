@@ -15,10 +15,9 @@ unit uDownloadsManager;
 interface
 
 uses
-  LazFileUtils, FastHTMLParser, HTMLUtil, SynaCode, RegExpr, IniFiles, Classes,
-  SysUtils, ExtCtrls, typinfo, fgl, blcksock, MultiLog, uBaseUnit, uPacker,
-  uMisc, DownloadedChaptersDB, FMDOptions, httpsendthread, DownloadsDB,
-  BaseThread, dateutils, strutils;
+  LazFileUtils, RegExpr, IniFiles, Classes, SysUtils, ExtCtrls, typinfo, fgl,
+  blcksock, MultiLog, uBaseUnit, uPacker, uMisc, DownloadedChaptersDB, FMDOptions,
+  httpsendthread, DownloadsDB, BaseThread, dateutils, strutils;
 
 type
   TDownloadStatusType = (
@@ -42,7 +41,6 @@ type
 
   TDownloadThread = class(TBaseThread)
   private
-    parse: TStringList;
     FTask: TTaskThread;
     procedure SetTask(AValue: TTaskThread);
   public
@@ -53,16 +51,10 @@ type
     // Download image
     function DownloadImage: Boolean;
 
-    procedure OnTag({%H-}NoCaseTag, ActualTag: String);
-    procedure OnText(Text: String);
-
     procedure SockOnStatus(Sender: TObject; Reason: THookSocketReason;
       const Value: String);
     function GetPage(var output: TObject; URL: String;
       const Reconnect: Integer = 0): Boolean; inline;
-
-    function SaveImage(const mangaSiteID: Integer; URL: String;
-      const Path, Name: String; const Reconnect: Integer = 0): Boolean; overload;
 
     procedure Execute; override;
   public
@@ -148,7 +140,6 @@ type
     WorkCounter,
     DownCounter,
     PageNumber: Integer;
-    MangaSiteID: Integer;
     ModuleId: Integer;
     //Status: TDownloadStatusType;
     ThreadState: Boolean;
@@ -296,16 +287,6 @@ begin
       WebsiteModules.Modules[ModuleId].PrepareHTTP(FHTTP);
 end;
 
-procedure TDownloadThread.OnTag(NoCaseTag, ActualTag: String);
-begin
-  parse.Add(ActualTag);
-end;
-
-procedure TDownloadThread.OnText(Text: String);
-begin
-  parse.Add(Text);
-end;
-
 procedure TDownloadThread.SockOnStatus(Sender: TObject;
   Reason: THookSocketReason; const Value: String);
 begin
@@ -340,12 +321,6 @@ begin
   if FHTTP.Sock.Tag <> 100 then
     FHTTP.Clear;
   Result := uBaseUnit.GetPage(FHTTP, output, URL, Reconnect);
-end;
-
-function TDownloadThread.SaveImage(const mangaSiteID: Integer; URL: String;
-  const Path, Name: String; const Reconnect: Integer): Boolean;
-begin
-  Result := uBaseUnit.SaveImage(FHTTP, mangaSiteID, URL, Path, Name, Reconnect);
 end;
 
 procedure TDownloadThread.Execute;
@@ -405,107 +380,22 @@ begin
 end;
 
 function TDownloadThread.GetPageNumberFromURL(const URL: String): Boolean;
-var
-  Parser: THTMLParser;
-
-  {$I includes/AnimeStory/chapter_page_number.inc}
-
-  {$I includes/AnimExtremist/chapter_page_number.inc}
-
-  {$I includes/MangaTown/chapter_page_number.inc}
-
-  {$I includes/NHentai/chapter_page_number.inc}
-
-  {$I includes/MangaHost/chapter_page_number.inc}
-
-  {$I includes/MangaKu/chapter_page_number.inc}
-
-  {$I includes/Dynasty-Scans/chapter_page_number.inc}
-
 begin
   Result := False;
   Task.Container.PageNumber := 0;
 
   if Modules.ModuleAvailable(Task.Container.ModuleId, MMGetPageNumber) then
-    Result := Modules.GetPageNumber(Self, URL, Task.Container.ModuleId)
-  else
-  begin
-    if Task.Container.MangaSiteID = ANIMEEXTREMIST_ID then
-      Result := GetAnimeExtremistPageNumber
-    else
-    if Task.Container.MangaSiteID = ANIMESTORY_ID then
-      Result := GetAnimeStoryPageNumber
-    else
-    if Task.Container.MangaSiteID = MANGATOWN_ID then
-      Result := GetMangaTownPageNumber
-    else
-    if Task.Container.MangaSiteID = NHENTAI_ID then
-      Result := GetNHentaiPageNumber
-    else
-    if Task.Container.MangaSiteID = MANGAHOST_ID then
-      Result := GetMangaHostPageNumber
-    else
-    if Task.Container.MangaSiteID = MANGAKU_ID then
-      Result := GetMangaKuPageNumber
-    else
-    if Task.Container.MangaSiteID = DYNASTYSCANS_ID then
-      Result := GetDynastyScansPageNumber;
-  end;
+    Result := Modules.GetPageNumber(Self, URL, Task.Container.ModuleId);
   if Task.Container.PageLinks.Count > 0 then
     TrimStrings(Task.Container.PageLinks);
 end;
 
 function TDownloadThread.GetLinkPageFromURL(const URL: String): Boolean;
-var
-  Parser: THTMLParser;
-
-  {$I includes/AnimeStory/image_url.inc}
-
-  {$I includes/AnimExtremist/image_url.inc}
-
-  {$I includes/MangaREADER_POR/image_url.inc}
-
-  {$I includes/MangasPROJECT/image_url.inc}
-
-  {$I includes/ScanManga/image_url.inc}
-
-  {$I includes/MangaTown/image_url.inc}
-
-  {$I includes/NHentai/image_url.inc}
-
-  {$I includes/MangaHost/image_url.inc}
-
 begin
   Result := False;
   if Task.Container.PageLinks[WorkId] <> 'W' then Exit;
   if Modules.ModuleAvailable(Task.Container.ModuleId, MMGetImageURL) then
-    Result := Modules.GetImageURL(Self, URL, Task.Container.ModuleId)
-  else
-  begin
-    if Task.Container.MangaSiteID = ANIMEEXTREMIST_ID then
-      Result := GetAnimeExtremistImageURL
-    else
-    if Task.Container.MangaSiteID = ANIMESTORY_ID then
-      Result := GetAnimeStoryImageURL
-    else
-    if Task.Container.MangaSiteID = SCANMANGA_ID then
-      Result := GetScanMangaImageURL
-    else
-    if Task.Container.MangaSiteID = MANGASPROJECT_ID then
-      Result := GetMangasPROJECTImageURL
-    else
-    if Task.Container.MangaSiteID = MANGAREADER_POR_ID then
-      Result := GetMangaREADER_PORImageURL
-    else
-    if Task.Container.MangaSiteID = MANGATOWN_ID then
-      Result := GetMangaTownImageURL
-    else
-    if Task.Container.MangaSiteID = NHENTAI_ID then
-      Result := GetNHentaiImageURL
-    else
-    if Task.Container.MangaSiteID = MANGAHOST_ID then
-      Result := GetMangaHostImageURL;
-  end;
+    Result := Modules.GetImageURL(Self, URL, Task.Container.ModuleId);
 end;
 
 // ----- TTaskThread -----
@@ -1207,7 +1097,6 @@ begin
   if FWebsite = AValue then Exit;
   FWebsite := AValue;
   DownloadInfo.Website := AValue;
-  MangaSiteID := GetMangaSiteID(AValue);
   ModuleId := Modules.LocateModule(AValue);
 end;
 
@@ -1246,7 +1135,6 @@ begin
   FileNames := TStringList.Create;
   FWebsite := '';
   ModuleId := -1;
-  MangaSiteID := High(WebsiteRoots) + 1;
   ReadCount := 0;
   WorkCounter := 0;
   CurrentPageNumber := 0;

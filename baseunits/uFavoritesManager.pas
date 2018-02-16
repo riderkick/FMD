@@ -250,7 +250,7 @@ begin
       // get new manga info
       FMangaInformation.isGetByUpdater := False;
       FMangaInformation.mangaInfo.title := FavoriteInfo.Title;
-      FMangaInformation.GetInfoFromURL(FavoriteInfo.Website, FavoriteInfo.Link, DefaultRetryCount);
+      FMangaInformation.GetInfoFromURL(FavoriteInfo.Website, FavoriteInfo.Link);
       if not Terminated then
       begin
         NewMangaInfo := FMangaInformation.mangaInfo;

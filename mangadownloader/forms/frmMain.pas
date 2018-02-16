@@ -4639,12 +4639,6 @@ begin
             m := Modules.LocateModuleByHost(host);
             if m > -1 then
               webs := Modules.Module[m].Website;
-            if webs = '' then
-            begin
-              for j := Low(WebsiteRoots) to High(WebsiteRoots) do
-                if Pos(host, LowerCase(WebsiteRoots[j, 1])) <> 0 then
-                  webs := WebsiteRoots[j, 0];
-            end;
             if webs <> '' then
             begin
               if not ((MetaDataType = MD_AddToFavorites) and SitesWithoutFavorites(webs)) then
@@ -4731,9 +4725,7 @@ begin
   // set the UI
   i := Modules.LocateModule(AWebsite);
   if i <> -1 then
-    edURL.Text := FillHost(Modules.Module[i].RootURL, ALink)
-  else
-    edURL.Text := FillMangaSiteHost(AWebsite, ALink);
+    edURL.Text := FillHost(Modules.Module[i].RootURL, ALink);
   pcMain.ActivePage := tsInformation;
   imCover.Picture.Assign(nil);
   rmInformation.Clear;
@@ -5475,13 +5467,7 @@ begin
     host := LowerCase(host);
     i := Modules.LocateModuleByHost(host);
     if i <> -1 then
-      website := Modules.Module[i].Website
-    else
-    begin
-      i := LocateMangaSiteID(host);
-      if i <> -1 then
-        website := WebsiteRoots[i, 0];
-    end;
+      website := Modules.Module[i].Website;
   end;
 
   if (website = '') or (link = '') then

@@ -11,7 +11,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, LazFileUtils, FMDOptions, MultiLog, sqlite3conn,
-  sqlite3backup, sqlite3dyn, sqldb, DB, dateutils, RegExpr;
+  sqlite3backup, sqlite3dyn, sqldb, DB, RegExpr;
 
 type
 
@@ -131,7 +131,6 @@ const
     '"jdn" INTEGER';
 
 function DBDataFilePath(const AWebsite: String): String;
-procedure ConvertDataProccessToDB(AWebsite: String; DeleteOriginal: Boolean = False);
 function DataFileExist(const AWebsite: String): Boolean;
 procedure CopyDBDataProcess(const AWebsite, NWebsite: String);
 function DeleteDBDataProcess(const AWebsite: String): Boolean;
@@ -140,7 +139,7 @@ procedure OverwriteDBDataProcess(const AWebsite, NWebsite: String);
 implementation
 
 uses
-  uBaseUnit, uData;
+  uBaseUnit;
 
 function NaturalCompareCallback({%H-}user: pointer; len1: longint;
   data1: pointer; len2: longint; data2: pointer): longint; cdecl;
@@ -192,53 +191,6 @@ end;
 function DBDataFilePath(const AWebsite: String): String;
 begin
   Result := DATA_FOLDER + AWebsite + DBDATA_EXT;
-end;
-
-procedure ConvertDataProccessToDB(AWebsite: String; DeleteOriginal: Boolean);
-var
-  filepath: String;
-  rawdata: TDataProcess;
-  dbdata: TDBDataProcess;
-  rcount: Integer;
-  i: Integer;
-begin
-  filepath := DATA_FOLDER + AWebsite;
-  if FileExistsUTF8(filepath + DATA_EXT) then
-  begin
-    rawdata := TDataProcess.Create;
-    dbdata := TDBDataProcess.Create;
-    try
-      if FileExistsUTF8(filepath + DBDATA_EXT) then
-        DeleteFileUTF8(filepath + DBDATA_EXT);
-      rawdata.LoadFromFile(AWebsite);
-      dbdata.CreateDatabase(AWebsite);
-      if rawdata.Data.Count > 0 then
-        with rawdata do
-        begin
-          rcount := 0;
-          for i := 0 to Data.Count - 1 do
-          begin
-            dbdata.AddData(Title[i], Link[i], Authors[i], Artists[i], Genres[i],
-              Status[i], StringBreaks(Summary[i]),
-              StrToIntDef(Param[i, DATA_PARAM_NUMCHAPTER], 1),
-              {%H-}integer(JDN[i]) - 3);
-            Inc(rcount);
-            if rcount >= 5000 then
-            begin
-              rcount := 0;
-              dbdata.Commit;
-            end;
-          end;
-          dbdata.Commit;
-        end;
-      dbdata.Sort;
-    finally
-      rawdata.Free;
-      dbdata.Free;
-    end;
-    if DeleteOriginal then
-      DeleteFileUTF8(filepath + DATA_EXT);
-  end;
 end;
 
 function DataFileExist(const AWebsite: String): Boolean;
@@ -682,8 +634,6 @@ begin
   if FWebsite = '' then
     Exit;
   filepath := DATA_FOLDER + FWebsite + DBDATA_EXT;
-  if not FileExistsUTF8(filepath) then
-    ConvertDataProccessToDB(AWebsite, True);
   if not FileExistsUTF8(filepath) then
     Exit;
   try

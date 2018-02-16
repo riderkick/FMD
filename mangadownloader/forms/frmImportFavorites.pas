@@ -101,12 +101,6 @@ begin
           m := Modules.LocateModuleByHost(host);
           if m > -1 then
             webs := Modules.Module[m].Website;
-          if webs = '' then
-          begin
-            for j := Low(WebsiteRoots) to High(WebsiteRoots) do
-              if Pos(host, LowerCase(WebsiteRoots[j, 1])) <> 0 then
-                webs := WebsiteRoots[j, 0];
-          end;
         end;
 
         if webs <> '' then

@@ -404,7 +404,7 @@ begin
   try
     Info.ModuleId := Self.ModuleId;
     Info.mangaInfo.title := title;
-    if Info.GetInfoFromURL(website, URL, DefaultRetryCount) = NO_ERROR then
+    if Info.GetInfoFromURL(website, URL) = NO_ERROR then
       if not Terminated then
         Synchronize(MainThreadAfterChecking);
   except

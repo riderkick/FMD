@@ -16,8 +16,8 @@ unit uGetMangaInfosThread;
 interface
 
 uses
-  SysUtils, Graphics, Dialogs, uBaseUnit, uData, FMDOptions,
-  BaseThread, VirtualTrees;
+  SysUtils, Graphics, Dialogs, uBaseUnit, uData, FMDOptions, BaseThread,
+  VirtualTrees;
 
 type
 
@@ -99,7 +99,7 @@ procedure TGetMangaInfosThread.Execute;
         Modules.IncActiveConnectionCount(FInfo.ModuleId);
       end;
 
-      infob := FInfo.GetInfoFromURL(Website, Link, 0);
+      infob := FInfo.GetInfoFromURL(Website, Link);
 
       if Terminated or isExiting then Exit;
       if infob <> NO_ERROR then Exit;
