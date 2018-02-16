@@ -8,9 +8,12 @@ uses
  {$IFDEF UNIX} {$IFDEF UseCThreads}
   cthreads,
  {$ENDIF} {$ENDIF}
+ {$ifdef windows}
+  windows,
+ {$endif}
   Interfaces, // this includes the LCL widgetset
   Forms, LazFileUtils, IniFiles, simpleipc, sqlite3dyn, FMDOptions, uBaseUnit, FMDVars, webp,
-  LuaWebsiteModules, SimpleException, Classes, windows, sysutils, frmMain, MultiLog,
+  LuaWebsiteModules, SimpleException, Classes, sysutils, frmMain, MultiLog,
   FileChannel, ssl_openssl_lib;
 
 var
@@ -25,9 +28,23 @@ var
   i: Integer;
   p: String;
 
+  {$ifdef windows}
+  evpathlen: Integer;
+  evpath: String;
+  {$endif}
+
 {$R *.res}
 
 begin
+  {$ifdef windows}
+  // set environment variables
+  evpathlen:=windows.GetEnvironmentVariable('PATH',nil,0);
+  setlength(evpath,evpathlen-1);
+  windows.GetEnvironmentVariable('PATH',pchar(evpath),evpathlen);
+  evpath:=FMD_DIRECTORY+';'+evpath;
+  windows.SetEnvironmentVariable('PATH',pchar(evpath));
+  {$endif}
+
   for i := 1 to ParamCount do
   begin
     p := AnsiLowerCase(ParamStr(i));
