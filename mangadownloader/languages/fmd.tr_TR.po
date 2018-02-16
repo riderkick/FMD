@@ -137,26 +137,28 @@ msgid "Finish download"
 msgstr "İndirmeyi durdur"
 
 #: frmluamodulesupdater.rs_modulesupdatedrestart
-#, fuzzy,badformat
-#| msgid "Modules updated, restart now?"
 msgid ""
 "Modules updated, restart now?\n"
 "\n"
 "%s\n"
-msgstr "Modüller güncellendi, yeniden başlasın mı?"
+msgstr ""
+"Modüller güncellendi, yeniden başlasın mı?\n"
+"\n"
+"%s\n"
 
 #: frmluamodulesupdater.rs_modulesupdatedtitle
 msgid "Modules updated!"
 msgstr "Modüller güncellendi!"
 
 #: frmluamodulesupdater.rs_newupdatefoundlostchanges
-#, fuzzy,badformat
-#| msgid "Modules update found, any local changes will be lost, procced?"
 msgid ""
 "Modules update found, any local changes will be lost, procced?\n"
 "\n"
 "%s\n"
-msgstr "Modül güncellemeleri bulundu, herhangi bir yerel değişim kaybolacaktır, devam edilsin mi?"
+msgstr ""
+"Modül güncellemeleri bulundu, herhangi bir yerel değişim kaybolacaktır, devam edilsin mi?\n"
+"\n"
+"%s\n"
 
 #: frmluamodulesupdater.rs_newupdatefoundtitle
 msgid "Modules update found!"
@@ -169,27 +171,27 @@ msgstr "İndiriliyor..."
 #: frmluamodulesupdater.rs_statusdelete
 msgctxt "frmluamodulesupdater.rs_statusdelete"
 msgid "%s DELETE*"
-msgstr ""
+msgstr "%s SİL*"
 
 #: frmluamodulesupdater.rs_statusfailed
 msgctxt "frmluamodulesupdater.rs_statusfailed"
 msgid "%s FAILED*"
-msgstr ""
+msgstr "%s BAŞARISIZ*"
 
 #: frmluamodulesupdater.rs_statusnew
 msgctxt "frmluamodulesupdater.rs_statusnew"
 msgid "%s NEW*"
-msgstr ""
+msgstr "%s YENİ*"
 
 #: frmluamodulesupdater.rs_statusredownloaded
 msgctxt "frmluamodulesupdater.rs_statusredownloaded"
 msgid "%s REDOWNLOAD*"
-msgstr ""
+msgstr "%s TEKRAR İNDİR*"
 
 #: frmluamodulesupdater.rs_statusupdate
 msgctxt "frmluamodulesupdater.rs_statusupdate"
 msgid "%s UPDATE*"
-msgstr ""
+msgstr "%s GÜNCELLE*"
 
 #: frmmain.rs_alldownloads
 msgid "All downloads"
@@ -240,7 +242,7 @@ msgstr "Tamamlanmış indirmeleri silmek istediğine emin misin?"
 
 #: frmmain.rs_dlgremoveitem
 msgid "Are you sure you want to delete this item(s)?"
-msgstr "Bu kalemleri silmek istediğine emin misin?"
+msgstr "Bu içerikleri silmek istediğine emin misin?"
 
 #: frmmain.rs_dlgremovetask
 msgid "Are you sure you want to delete the task(s)?"
