@@ -161,11 +161,11 @@ end;
 
 procedure TDBUpdaterThread.SyncFinal;
 begin
+  DBUpdaterThread := nil;
   FHTTP.Sock.OnStatus := nil;
   FreeAndNil(FStatusBar);
   FreeAndNil(FProgressBar);
   FreeAndNil(FButtonCancel);
-  DBUpdaterThread := nil;
 end;
 
 procedure TDBUpdaterThread.SyncStartDownload;
@@ -349,9 +349,9 @@ begin
   if (not Terminated) and (FFailedList.Count <> 0) then
     Synchronize(@SyncShowFailed);
   Synchronize(@SyncFinal);
-  Items.Free;
   FHTTP.Free;
   FFailedList.Free;
+  FreeAndNil(Items);
   inherited Destroy;
 end;
 
@@ -359,6 +359,7 @@ procedure TDBUpdaterThread.Add(const S: String);
 var
   i: Integer;
 begin
+  if Items = nil then Exit;
   // search on not sorted
   for i := 0 to Items.Count - 1 do
     if S = Items[i] then
@@ -371,6 +372,7 @@ procedure TDBUpdaterThread.Add(const S: TStrings);
 var
   i, j, jmax: Integer;
 begin
+  if Items = nil then Exit;
   // search on not sorted
   jmax := Items.Count;
   for i := 0 to S.Count - 1 do
