@@ -4,6 +4,16 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.141.0 (16-02-2018)
+[+] Added ManhwaCo [EN-SC]
+[+] Added HentaiHere [H]
+[*] Fixed update list issue
+[*] Update Indonesian localization
+[*] Update Russian localization
+[*] Update Turkish localization
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.141.0...0.9.142.0
+
 0.9.141.0 (15-02-2018)
 [+] Added new updater only to extract update package
 [*] Download new version in the background
@@ -12,6 +22,8 @@ Changelog:
 Full changes: https://github.com/riderkick/FMD/compare/0.9.140.0...0.9.141.0
 
 0.9.140.0 (14-02-2018)
+[+] Added SeaOtterScans [EN-SC]
+[+] Added MangaSh
 [*] Various changes and bug fixes
 Full changes: https://github.com/riderkick/FMD/compare/0.9.139.0...0.9.140.0
 
