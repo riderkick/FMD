@@ -967,7 +967,7 @@ end;
 function GetMangaSiteID(const Name: String; var MangaSiteID: Integer): Boolean;
 begin
   MangaSiteID := GetMangaSiteID(Name);
-  Result := (MangaSiteID <= Low(WebsiteRoots)) and (MangaSiteID >= High(WebsiteRoots));
+  Result := (MangaSiteID >= Low(WebsiteRoots)) and (MangaSiteID <= High(WebsiteRoots));
 end;
 
 function GetMangaSiteName(const ID: Integer): String;
