@@ -2,27 +2,25 @@ msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8"
 
 #: dbupdater.rs_buttoncancel
-#, fuzzy
-#| msgid "Cancel"
 msgctxt "dbupdater.rs_buttoncancel"
 msgid "Abort"
-msgstr "Cancel"
+msgstr "Abort"
 
 #: dbupdater.rs_downloading
 msgid "Downloading %s"
-msgstr ""
+msgstr "Downloading %s"
 
 #: dbupdater.rs_extracting
 msgid "Extracting %s"
-msgstr ""
+msgstr "Extracting %s"
 
 #: dbupdater.rs_faileddownload
 msgid "%s: %d %s"
-msgstr ""
+msgstr "%s: %d %s"
 
 #: dbupdater.rs_failedextract
 msgid "%s: failed to extract, exitstatus = %d"
-msgstr ""
+msgstr "%s: failed to extract, exitstatus = %d"\
 
 #: dbupdater.rs_faileditems
 msgid ""
@@ -30,20 +28,22 @@ msgid ""
 "\n"
 "%s\n"
 msgstr ""
+"Failed to finish:\n"
+"\n"
+"%s\n"
 
 #: dbupdater.rs_faileditemstitle
-#, fuzzy
 msgctxt "dbupdater.rs_faileditemstitle"
 msgid "Failed"
 msgstr "Failed"
 
 #: dbupdater.rs_failedtosave
 msgid "%s: failed to save"
-msgstr ""
+msgstr "%s: failed to save"
 
 #: dbupdater.rs_missingzipexe
 msgid "%s: Missing %s"
-msgstr ""
+msgstr "%s: Missing %s"
 
 #: ehentai.rs_downloadoriginalimage
 msgid "Download original image(require ExHentai account)"
@@ -124,26 +124,28 @@ msgid "Finish download"
 msgstr "Finish download"
 
 #: frmluamodulesupdater.rs_modulesupdatedrestart
-#, fuzzy,badformat
-#| msgid "Modules updated, restart now?"
 msgid ""
 "Modules updated, restart now?\n"
 "\n"
 "%s\n"
-msgstr "Modules updated, restart now?"
+msgstr ""
+"Modules updated, restart now?\n"
+"\n"
+"%s\n"
 
 #: frmluamodulesupdater.rs_modulesupdatedtitle
 msgid "Modules updated!"
 msgstr "Modules updated!"
 
 #: frmluamodulesupdater.rs_newupdatefoundlostchanges
-#, fuzzy,badformat
-#| msgid "Modules update found, any local changes will be lost, procced?"
 msgid ""
 "Modules update found, any local changes will be lost, procced?\n"
 "\n"
 "%s\n"
-msgstr "Modules update found, any local changes will be lost, procced?"
+msgstr ""
+"Modules update found, any local changes will be lost, procced?\n"
+"\n"
+"%s\n"
 
 #: frmluamodulesupdater.rs_newupdatefoundtitle
 msgid "Modules update found!"
@@ -156,27 +158,27 @@ msgstr "Downloading..."
 #: frmluamodulesupdater.rs_statusdelete
 msgctxt "frmluamodulesupdater.rs_statusdelete"
 msgid "%s DELETE*"
-msgstr ""
+msgstr "%s DELETE*"
 
 #: frmluamodulesupdater.rs_statusfailed
 msgctxt "frmluamodulesupdater.rs_statusfailed"
 msgid "%s FAILED*"
-msgstr ""
+msgstr "%s FAILED*"
 
 #: frmluamodulesupdater.rs_statusnew
 msgctxt "frmluamodulesupdater.rs_statusnew"
 msgid "%s NEW*"
-msgstr ""
+msgstr "%s NEW*"
 
 #: frmluamodulesupdater.rs_statusredownloaded
 msgctxt "frmluamodulesupdater.rs_statusredownloaded"
 msgid "%s REDOWNLOAD*"
-msgstr ""
+msgstr "%s REDOWNLOAD*"
 
 #: frmluamodulesupdater.rs_statusupdate
 msgctxt "frmluamodulesupdater.rs_statusupdate"
 msgid "%s UPDATE*"
-msgstr ""
+msgstr "%s UPDATE*"
 
 #: frmmain.rs_alldownloads
 msgid "All downloads"
@@ -508,14 +510,13 @@ msgid "Save as PNG"
 msgstr "Save as PNG"
 
 #: selfupdater.rs_buttoncancel
-#, fuzzy
 msgctxt "selfupdater.rs_buttoncancel"
 msgid "Abort"
 msgstr "Abort"
 
 #: selfupdater.rs_downloading
 msgid "Downloading new version %s"
-msgstr ""
+msgstr "Downloading new version %s"
 
 #: selfupdater.rs_faileddownload
 msgid ""
@@ -523,32 +524,34 @@ msgid ""
 "\n"
 "%d %s\n"
 msgstr ""
+"Failed to download new version %s\n"
+"\n"
+"%d %s\n"
 
 #: selfupdater.rs_failedextract
 msgid "Failed to extract %s, exitstatus = %d"
-msgstr ""
+msgstr "Failed to extract %s, exitstatus = %d"
 
 #: selfupdater.rs_failedtitle
-#, fuzzy
 msgctxt "selfupdater.rs_failedtitle"
 msgid "Failed"
 msgstr "Failed"
 
 #: selfupdater.rs_failedtosave
 msgid "Failed to save %s"
-msgstr ""
+msgstr "Failed to save %s"
 
 #: selfupdater.rs_finishrestart
 msgid "Download update package finished, restart to proceed?"
-msgstr ""
+msgstr "Download update package finished, restart to proceed?"
 
 #: selfupdater.rs_finishrestarttitle
 msgid "Download finished"
-msgstr ""
+msgstr "Download finished"
 
 #: selfupdater.rs_missingzipexe
 msgid "Missing %s"
-msgstr ""
+msgstr "Missing %s"
 
 #: taccountmanagerform.btadd.caption
 msgctxt "taccountmanagerform.btadd.caption"
