@@ -793,7 +793,7 @@ var
   {$I includes/Dynasty-Scans/directory_page_number.inc}
 
 begin
-  APage := 0;
+  APage := 1;
 
   //load User-Agent from advancedfile
   AdvanceLoadHTTPConfig(FHTTP, AWebsite);
@@ -805,42 +805,41 @@ begin
   begin
     APage := p;
     BROWSER_INVERT := True;
-  end
+    Exit(NO_ERROR);
+  end;
+
+  BROWSER_INVERT := False;
+  if ModuleId < 0 then
+    ModuleId := Modules.LocateModule(AWebsite);
+  if Modules.ModuleAvailable(ModuleId, MMGetDirectoryPageNumber) then
+    Result := Modules.GetDirectoryPageNumber(Self, APage, TUpdateListThread(Thread).workPtr, ModuleId)
   else
+  if GetMangaSiteID(AWebsite, MangaSiteID) then
   begin
-    BROWSER_INVERT := False;
-    if ModuleId < 0 then
-      ModuleId := Modules.LocateModule(AWebsite);
-    if Modules.ModuleAvailable(ModuleId, MMGetDirectoryPageNumber) then
-      Result := Modules.GetDirectoryPageNumber(Self, APage, TUpdateListThread(Thread).workPtr, ModuleId)
+    Source := TStringList.Create;
+    if MangaSiteID = MANGATOWN_ID then
+      Result := GetMangaTownDirectoryPageNumber
+    else
+    if MangaSiteID = NHENTAI_ID then
+      Result := GetNHentaiDirectoryPageNumber
+    else
+    if MangaSiteID = MANGAHOST_ID then
+      Result := GetMangaHostDirectoryPageNumber
+    else
+    if MangaSiteID = DYNASTYSCANS_ID then
+      Result := GetDynastyScansDirectoryPageNumber
     else
     begin
-      MangaSiteID := GetMangaSiteID(AWebsite);
-      if MangaSiteID = -1 then
-        Exit(INFORMATION_NOT_FOUND);
-      Source := TStringList.Create;
-      if MangaSiteID = MANGATOWN_ID then
-        Result := GetMangaTownDirectoryPageNumber
-      else
-      if MangaSiteID = NHENTAI_ID then
-        Result := GetNHentaiDirectoryPageNumber
-      else
-      if MangaSiteID = MANGAHOST_ID then
-        Result := GetMangaHostDirectoryPageNumber
-      else
-      if MangaSiteID = DYNASTYSCANS_ID then
-        Result := GetDynastyScansDirectoryPageNumber
-      else
-      begin
-        Result := NO_ERROR;
-        APage := 1;
-        Source.Free;
-      end;
-    end;
-
-    if APage < 1 then
+      Result := NO_ERROR;
       APage := 1;
-  end;
+      Source.Free;
+    end;
+  end
+  else
+    Exit(INFORMATION_NOT_FOUND);
+
+  if APage < 1 then
+    APage := 1;
 end;
 
 function TMangaInformation.GetNameAndLink(const ANames, ALinks: TStringList;
@@ -881,12 +880,12 @@ begin
   if ModuleId < 0 then
     ModuleId := Modules.LocateModule(AWebsite);
   if Modules.ModuleAvailable(ModuleId, MMGetNameAndLink) then
-    Result := Modules.GetNameAndLink(Self, ANames, ALinks, AURL, ModuleId)
-  else
   begin
-    MangaSiteID := GetMangaSiteID(AWebsite);
-    if MangaSiteID = -1 then
-      Exit(INFORMATION_NOT_FOUND);
+    Result := Modules.GetNameAndLink(Self, ANames, ALinks, AURL, ModuleId)
+  end
+  else
+  if GetMangaSiteID(AWebsite, MangaSiteID) then
+  begin
     Source := TStringList.Create;
     if MangaSiteID = ANIMEEXTREMIST_ID then
       Result := AnimeExtremistGetNamesAndLinks
@@ -928,7 +927,9 @@ begin
       Result := INFORMATION_NOT_FOUND;
       Source.Free;
     end;
-  end;
+  end
+  else
+    Exit(INFORMATION_NOT_FOUND);
 
   //remove host from AURL
   if ALinks.Count > 0 then
@@ -994,10 +995,8 @@ begin
     Result := Modules.GetInfo(Self, AURL, ModuleId);
   end
   else
+  if GetMangaSiteID(AWebsite, MangaSiteID) then
   begin
-    MangaSiteID := GetMangaSiteID(AWebsite);
-    if MangaSiteID = -1 then
-      Exit(INFORMATION_NOT_FOUND);
     mangaInfo.url := FillMangaSiteHost(MangaSiteID, AURL);
     Source := TStringList.Create;
     if MangaSiteID = ANIMEEXTREMIST_ID then
@@ -1041,7 +1040,9 @@ begin
       Result := INFORMATION_NOT_FOUND;
       Exit;
     end;
-  end;
+  end
+  else
+    Exit(INFORMATION_NOT_FOUND);
 
   with mangaInfo do begin
     if link = '' then

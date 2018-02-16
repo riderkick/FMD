@@ -476,6 +476,7 @@ procedure CheckPath(const S: String);
 
 function LocateMangaSiteID(const URL: String): Integer;
 function GetMangaSiteID(const Name: String): Integer;
+function GetMangaSiteID(const Name: String; var MangaSiteID: Integer): Boolean; overload; inline;
 function GetMangaSiteName(const ID: Integer): String;
 function GetMangaSiteRoot(const Website: String): String; overload;
 function GetMangaSiteRoot(const MangaID: Integer): String; overload;
@@ -965,6 +966,12 @@ begin
     if SameText(Name, WebsiteRoots[i, 0]) then
       Exit(i);
   Result := -1;
+end;
+
+function GetMangaSiteID(const Name: String; var MangaSiteID: Integer): Boolean;
+begin
+  MangaSiteID := GetMangaSiteID(Name);
+  Result := (MangaSiteID <= Low(WebsiteRoots)) and (MangaSiteID >= High(WebsiteRoots));
 end;
 
 function GetMangaSiteName(const ID: Integer): String;
