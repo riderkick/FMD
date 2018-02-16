@@ -659,6 +659,7 @@ begin
       f := LUA_WEBSITEMODULE_FOLDER + m.name;
       if FileExists(f) then
         DeleteFile(f);
+      AddStatus(Format(RS_StatusDelete, [m.name]));
       m.flag := fDeleted;
       Inc(i);
     end
