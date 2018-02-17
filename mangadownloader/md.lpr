@@ -36,33 +36,6 @@ var
 {$R *.res}
 
 begin
-  {$ifdef windows}
-  // set environment variables
-  evpathlen:=windows.GetEnvironmentVariable('PATH',nil,0);
-  setlength(evpath,evpathlen-1);
-  windows.GetEnvironmentVariable('PATH',pchar(evpath),evpathlen);
-  evpath:=FMD_DIRECTORY+';'+evpath;
-  windows.SetEnvironmentVariable('PATH',pchar(evpath));
-  {$endif}
-
-  for i := 1 to ParamCount do
-  begin
-    p := AnsiLowerCase(ParamStr(i));
-    if p = '--lua-dofile' then
-       LuaWebsiteModules.AlwaysLoadLuaFromFile := True;
-  end;
-
-  Application.Scaled := True;
-  with TIniFile.Create(CONFIG_FILE) do
-    try
-      CheckInstance := ReadBool('general', 'OneInstanceOnly', True);
-      EnableLogging := ReadBool('logger', 'Enabled', False);
-      if EnableLogging then
-        LogFileName := ExpandFileNameUTF8(ReadString('logger', 'LogFileName', DEFAULT_LOG_FILE), FMD_DIRECTORY);
-    finally
-      Free;
-    end;
-
   if CheckInstance then
   begin
     with TSimpleIPCClient.Create(nil) do
@@ -81,7 +54,35 @@ begin
 
   if AllowedToRun then
   begin
+    {$ifdef windows}
+    // set environment variables
+    evpathlen:=windows.GetEnvironmentVariable('PATH',nil,0);
+    setlength(evpath,evpathlen-1);
+    windows.GetEnvironmentVariable('PATH',pchar(evpath),evpathlen);
+    evpath:=FMD_DIRECTORY+';'+evpath;
+    windows.SetEnvironmentVariable('PATH',pchar(evpath));
+    {$endif}
+
+    for i := 1 to ParamCount do
+    begin
+      p := AnsiLowerCase(ParamStr(i));
+      if p = '--lua-dofile' then
+         LuaWebsiteModules.AlwaysLoadLuaFromFile := True;
+    end;
+
+    Application.Scaled := True;
+    with TIniFile.Create(CONFIG_FILE) do
+      try
+        CheckInstance := ReadBool('general', 'OneInstanceOnly', True);
+        EnableLogging := ReadBool('logger', 'Enabled', False);
+        if EnableLogging then
+          LogFileName := ExpandFileNameUTF8(ReadString('logger', 'LogFileName', DEFAULT_LOG_FILE), FMD_DIRECTORY);
+      finally
+        Free;
+      end;
+
     Logger.ThreadSafe := True;
+
     {$IFDEF DEBUGLEAKS}
     trcfile := FMD_DIRECTORY + FMD_EXENAME + '.trc';
     if FileExistsUTF8(trcfile) then
