@@ -5031,8 +5031,8 @@ begin
         edOptionFilenameCustomRename.Text := DEFAULT_FILENAME_CUSTOMRENAME;
       WriteString('saveto', 'FilenameCustomRename', edOptionFilenameCustomRename.Text);
       WriteInteger('saveto', 'ConvertWebP', cbWebPSaveAs.ItemIndex);
-      WriteInteger('saveto', 'WebPPNGLevel', cbPNGCompressionLevel.ItemIndex);
-      WriteInteger('saveto', 'WebPJpegQuality', seJPEGQuality.Value);
+      WriteInteger('saveto', 'PNGCompressionLevel', cbPNGCompressionLevel.ItemIndex);
+      WriteInteger('saveto', 'JPEGQuality', seJPEGQuality.Value);
 
       // update
       WriteBool('update', 'AutoCheckLatestVersion', cbOptionAutoCheckLatestVersion.Checked);
