@@ -430,7 +430,7 @@ msgid ""
 msgstr ""
 "WebP\n"
 "PNG\n"
-"PNG\n"
+"JPEG\n"
 
 #: frmmain.rs_webppnglevel
 msgid ""
