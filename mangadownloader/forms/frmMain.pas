@@ -4916,6 +4916,7 @@ begin
     edOptionFilenameCustomRename.Text := ReadString('saveto', 'FilenameCustomRename', DEFAULT_FILENAME_CUSTOMRENAME);
     if Trim(edOptionFilenameCustomRename.Text) = '' then
       edOptionFilenameCustomRename.Text := DEFAULT_FILENAME_CUSTOMRENAME;
+    ckPNGSaveAsJPEG.Checked := ReadBool('saveto', 'PNGSaveAsJPEG', OptionPNGSaveAsJPEG);
     cbWebPSaveAs.ItemIndex := ReadInteger('saveto', 'ConvertWebP', OptionWebPSaveAs);
     cbPNGCompressionLevel.ItemIndex := ReadInteger('saveto', 'PNGCompressionLevel', OptionPNGCompressionLevel);
     seJPEGQuality.Value := ReadInteger('saveto', 'JPEGQuality', OptionJPEGQuality);
@@ -5030,6 +5031,7 @@ begin
       if Trim(edOptionFilenameCustomRename.Text) = '' then
         edOptionFilenameCustomRename.Text := DEFAULT_FILENAME_CUSTOMRENAME;
       WriteString('saveto', 'FilenameCustomRename', edOptionFilenameCustomRename.Text);
+      WriteBool('saveto', 'PNGSaveAsJPEG', ckPNGSaveAsJPEG.Checked);
       WriteInteger('saveto', 'ConvertWebP', cbWebPSaveAs.ItemIndex);
       WriteInteger('saveto', 'PNGCompressionLevel', cbPNGCompressionLevel.ItemIndex);
       WriteInteger('saveto', 'JPEGQuality', seJPEGQuality.Value);
@@ -5176,6 +5178,7 @@ begin
     OptionConvertDigitVolumeLength := seOptionDigitVolume.Value;
     OptionConvertDigitChapter := cbOptionDigitChapter.Checked;
     OptionConvertDigitChapterLength := seOptionDigitChapter.Value;
+    OptionPNGSaveAsJPEG := ckPNGSaveAsJPEG.Checked;
     OptionWebPSaveAs := cbWebPSaveAs.ItemIndex;
     OptionPNGCompressionLevel := cbPNGCompressionLevel.ItemIndex;
     OptionJPEGQuality := seJPEGQuality.Value;

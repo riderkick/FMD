@@ -3063,7 +3063,8 @@ begin
     f := GetImageStreamExt(Stream);
     if f = 'png' then
     begin
-      if PNGToJPEGStream(Stream, OptionJPEGQuality) then f := 'jpg'
+      if OptionPNGSaveAsJPEG then
+        if PNGToJPEGStream(Stream, OptionJPEGQuality) then f := 'jpg'
     end
     else
     if f = 'webp' then

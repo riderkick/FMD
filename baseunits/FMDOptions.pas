@@ -139,6 +139,7 @@ var
 
   OptionPDFQuality: Cardinal = 95;
 
+  OptionPNGSaveAsJPEG: Boolean = False;
   OptionWebPSaveAs: Integer = 1;
   OptionPNGCompressionLevel: Integer = 1;
   OptionJPEGQuality: Integer = 80;
