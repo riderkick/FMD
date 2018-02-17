@@ -618,7 +618,9 @@ begin
 
         if ModuleId <> -1 then
           Modules.BeforeUpdateList(ModuleId);
-        if Terminated then Break;
+        if Terminated then
+          if not (OptionUpdateListNoMangaInfo and not(SortedList)) then
+            Break;
 
         FStatus := RS_UpdatingList + Format(' [%d/%d] %s',
           [websitePtr, websites.Count, website]) + ' | ' + RS_IndexingNewTitle + '...';
