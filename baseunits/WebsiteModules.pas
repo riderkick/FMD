@@ -10,8 +10,8 @@ unit WebsiteModules;
 interface
 
 uses
-  Classes, SysUtils, uData, uDownloadsManager, FMDOptions, httpsendthread, LazLogger,
-  Cloudflare, RegExpr;
+  Classes, SysUtils, fgl, uData, uDownloadsManager, FMDOptions, httpsendthread,
+  LazLogger, Cloudflare, RegExpr;
 
 const
   MODULE_NOT_FOUND = -1;
@@ -126,14 +126,22 @@ type
       const ACaption, AItems: PString);
     property CloudflareEnabled: Boolean read FCloudflareEnabled write SetCloudflareEnabled;
     procedure PrepareHTTP(const AHTTP: THTTPSendThread);
+
+    procedure IncActiveTaskCount; inline;
+    procedure DecActiveTaskCount; inline;
+    procedure IncActiveConnectionCount; inline;
+    procedure DecActiveConnectionCount; inline;
   end;
+
+  TModuleContainers = specialize TFPGList<TModuleContainer>;
 
   { TWebsiteModules }
 
   TWebsiteModules = class
   private
     FCSModules: TRTLCriticalSection;
-    FModuleList: TFPList;
+    FModuleList: TModuleContainers;
+    function ModuleExist(const ModuleId: Integer): Boolean; inline;
     function GetModule(const ModuleId: Integer): TModuleContainer;
     function GetCount: Integer;
     function GetMaxTaskLimit(const ModuleId: Integer): Integer;
@@ -147,6 +155,7 @@ type
 
     function AddModule: TModuleContainer;
     function LocateModule(const AWebsite: String): Integer;
+    function LocateModule(const AWebsite: String; var M: TModuleContainer): Integer;
     function LocateModuleByHost(const AHost: String): Integer;
     function ModuleAvailable(const ModuleId: Integer;
       const ModuleMethod: TModuleMethod): Boolean; overload;
@@ -158,6 +167,7 @@ type
     function ModuleAvailable(const AWebsite: String): Boolean; overload;
     function ModuleAvailable(const AWebsite: String;
       var OutIndex: Integer): Boolean; overload;
+    function ModuleAvailable(const AWebsite: String; var M: TModuleContainer): Boolean; overload;
 
     function BeforeUpdateList(const ModuleId: Integer): Boolean;
     function AfterUpdateList(const ModuleId: Integer): Boolean;
@@ -370,6 +380,26 @@ begin
   CheckCloudflareEnabled(AHTTP);
 end;
 
+procedure TModuleContainer.IncActiveTaskCount;
+begin
+  ActiveTaskCount := InterLockedIncrement(ActiveTaskCount);
+end;
+
+procedure TModuleContainer.DecActiveTaskCount;
+begin
+  ActiveTaskCount := InterLockedDecrement(ActiveTaskCount);
+end;
+
+procedure TModuleContainer.IncActiveConnectionCount;
+begin
+  ActiveConnectionCount := InterLockedIncrement(ActiveConnectionCount);
+end;
+
+procedure TModuleContainer.DecActiveConnectionCount;
+begin
+  ActiveConnectionCount := InterLockedDecrement(ActiveConnectionCount);
+end;
+
 procedure TModuleContainer.AddOption(const AOptionType: TWebsiteOptionType;
   const ABindValue: Pointer; const AName: String; const ACaption: PString;
   const AItems: PString);
@@ -392,7 +422,7 @@ end;
 constructor TWebsiteModules.Create;
 begin
   InitCriticalSection(FCSModules);
-  FModuleList := TFPList.Create;
+  FModuleList := TModuleContainers.Create;
 end;
 
 destructor TWebsiteModules.Destroy;
@@ -401,7 +431,7 @@ var
 begin
   if FModuleList.Count > 0 then
     for i := FModuleList.Count - 1 downto 0 do
-      TModuleContainer(FModuleList[i]).Free;
+      FModuleList[i].Free;
   FModuleList.Free;
   DoneCriticalsection(FCSModules);
   inherited Destroy;
@@ -425,11 +455,19 @@ begin
   Result := -1;
   if FModuleList.Count > 0 then
     for i := FModuleList.Count - 1 downto 0 do
-      if SameText(TModuleContainer(FModuleList[i]).Website, AWebsite) then
+      if SameText(FModuleList[i].Website, AWebsite) then
       begin
         Result := i;
         Break;
       end;
+end;
+
+function TWebsiteModules.LocateModule(const AWebsite: String;
+  var M: TModuleContainer): Integer;
+begin
+  Result := LocateModule(AWebsite);
+  if Result <> -1 then
+  M := FModuleList[Result];
 end;
 
 function TWebsiteModules.LocateModuleByHost(const AHost: String): Integer;
@@ -439,7 +477,7 @@ function TWebsiteModules.LocateModuleByHost(const AHost: String): Integer;
     i: Integer;
   begin
     for i := FModuleList.Count - 1 downto 0 do
-      if Pos(s, LowerCase(TModuleContainer(FModuleList[i]).RootURL)) <> 0 then
+      if Pos(s, LowerCase(FModuleList[i].RootURL)) <> 0 then
         Exit(i);
     Result := -1;
   end;
@@ -458,12 +496,17 @@ begin
   end;
 end;
 
+function TWebsiteModules.ModuleExist(const ModuleId: Integer): Boolean;
+begin
+  Result := (ModuleId > 0) and (ModuleId < FModuleList.Count);
+end;
+
 function TWebsiteModules.ModuleAvailable(const ModuleId: Integer;
   const ModuleMethod: TModuleMethod): Boolean;
 begin
   Result := False;
-  if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit;
-  with TModuleContainer(FModuleList[ModuleId]) do
+  if ModuleExist(ModuleId) then
+  with FModuleList[ModuleId] do
     case ModuleMethod of
       MMGetDirectoryPageNumber: Result := Assigned(OnGetDirectoryPageNumber);
       MMGetNameAndLink: Result := Assigned(OnGetNameAndLink);
@@ -505,22 +548,29 @@ begin
   Result := OutIndex > -1;
 end;
 
+function TWebsiteModules.ModuleAvailable(const AWebsite: String;
+  var M: TModuleContainer): Boolean;
+begin
+  M := GetModule(LocateModule(AWebsite));
+  Result := M <> nil;
+end;
+
 function TWebsiteModules.BeforeUpdateList(const ModuleId: Integer): Boolean;
 begin
   Result := False;
-  if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit;
-  with TModuleContainer(FModuleList[ModuleId]) do
+  if ModuleExist(ModuleId) then
+  with FModuleList[ModuleId] do
     if Assigned(OnBeforeUpdateList) then
-      Result := OnBeforeUpdateList(TModuleContainer(FModuleList[ModuleId]));
+      Result := OnBeforeUpdateList(FModuleList[ModuleId]);
 end;
 
 function TWebsiteModules.AfterUpdateList(const ModuleId: Integer): Boolean;
 begin
   Result := False;
-  if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit;
+  if ModuleExist(ModuleId) then
   with TModuleContainer(FModuleList[ModuleId]) do
     if Assigned(OnAfterUpdateList) then
-      Result := OnAfterUpdateList(TModuleContainer(FModuleList[ModuleId]));
+      Result := OnAfterUpdateList(FModuleList[ModuleId]);
 end;
 
 function TWebsiteModules.GetDirectoryPageNumber(
@@ -529,10 +579,10 @@ function TWebsiteModules.GetDirectoryPageNumber(
 begin
   Page := 1;
   Result := MODULE_NOT_FOUND;
-  if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit;
-  with TModuleContainer(FModuleList[ModuleId]) do
+  if ModuleExist(ModuleId) then
+  with FModuleList[ModuleId] do
     if Assigned(OnGetDirectoryPageNumber) then
-      Result := OnGetDirectoryPageNumber(MangaInfo, Page, WorkPtr,TModuleContainer(FModuleList[ModuleId]));
+      Result := OnGetDirectoryPageNumber(MangaInfo, Page, WorkPtr, FModuleList[ModuleId]);
 end;
 
 function TWebsiteModules.GetDirectoryPageNumber(
@@ -547,10 +597,10 @@ function TWebsiteModules.GetNameAndLink(const MangaInfo: TMangaInformation;
   ): Integer;
 begin
   Result := MODULE_NOT_FOUND;
-  if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit;
-  with TModuleContainer(FModuleList[ModuleId]) do
+  if ModuleExist(ModuleId) then
+  with FModuleList[ModuleId] do
   if Assigned(OnGetNameAndLink) then
-    Result := OnGetNameAndLink(MangaInfo, ANames, ALinks, AURL, TModuleContainer(FModuleList[ModuleId]));
+    Result := OnGetNameAndLink(MangaInfo, ANames, ALinks, AURL, FModuleList[ModuleId]);
 end;
 
 function TWebsiteModules.GetNameAndLink(const MangaInfo: TMangaInformation;
@@ -563,10 +613,10 @@ function TWebsiteModules.GetInfo(const MangaInfo: TMangaInformation;
   const AURL: String; const ModuleId: Integer): Integer;
 begin
   Result := MODULE_NOT_FOUND;
-  if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit;
-  with TModuleContainer(FModuleList[ModuleId]) do
+  if ModuleExist(ModuleId) then
+  with FModuleList[ModuleId] do
     if Assigned(OnGetInfo) then
-      Result := OnGetInfo(MangaInfo, AURL, TModuleContainer(FModuleList[ModuleId]));
+      Result := OnGetInfo(MangaInfo, AURL, FModuleList[ModuleId]);
 end;
 
 function TWebsiteModules.GetInfo(const MangaInfo: TMangaInformation;
@@ -579,10 +629,11 @@ function TWebsiteModules.TaskStart(const Task: TTaskContainer;
   const ModuleId: Integer): Boolean;
 begin
   Result := False;
-  if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit;
-  if Assigned(TModuleContainer(FModuleList[ModuleId]).OnTaskStart) then
-    Result := TModuleContainer(FModuleList[ModuleId]).OnTaskStart(
-      Task, TModuleContainer(FModuleList[ModuleId]));
+  if ModuleExist(ModuleId) then
+  with FModuleList[ModuleId] do
+    if Assigned(OnTaskStart) then
+      Result := FModuleList[ModuleId].OnTaskStart(
+        Task, FModuleList[ModuleId]);
 end;
 
 function TWebsiteModules.TaskStart(const Task: TTaskContainer;
@@ -595,10 +646,11 @@ function TWebsiteModules.GetPageNumber(const DownloadThread: TDownloadThread;
   const AURL: String; const ModuleId: Integer): Boolean;
 begin
   Result := False;
-  if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit;
-  with TModuleContainer(FModuleList[ModuleId]) do
+  if ModuleExist(ModuleId) then
+  if ModuleExist(ModuleId) then
+  with FModuleList[ModuleId] do
     if Assigned(OnGetPageNumber) then
-      Result := OnGetPageNumber(DownloadThread, AURL, TModuleContainer(FModuleList[ModuleId]));
+      Result := OnGetPageNumber(DownloadThread, AURL, FModuleList[ModuleId]);
 end;
 
 function TWebsiteModules.GetPageNumber(const DownloadThread: TDownloadThread;
@@ -611,10 +663,10 @@ function TWebsiteModules.GetImageURL(const DownloadThread: TDownloadThread;
   const AURL: String; const ModuleId: Integer): Boolean;
 begin
   Result := False;
-  if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit;
-  with TModuleContainer(FModuleList[ModuleId]) do
+  if ModuleExist(ModuleId) then
+  with FModuleList[ModuleId] do
     if Assigned(OnGetImageURL) then
-      Result := OnGetImageURL(DownloadThread, AURL, TModuleContainer(FModuleList[ModuleId]));
+      Result := OnGetImageURL(DownloadThread, AURL, FModuleList[ModuleId]);
 end;
 
 function TWebsiteModules.GetImageURL(const DownloadThread: TDownloadThread;
@@ -628,10 +680,10 @@ function TWebsiteModules.BeforeDownloadImage(
   const ModuleId: Integer): Boolean;
 begin
   Result := False;
-  if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit;
-  with TModuleContainer(FModuleList[ModuleId]) do
+  if ModuleExist(ModuleId) then
+  with FModuleList[ModuleId] do
     if Assigned(OnBeforeDownloadImage) then
-      Result := OnBeforeDownloadImage(DownloadThread, AURL, TModuleContainer(FModuleList[ModuleId]));
+      Result := OnBeforeDownloadImage(DownloadThread, AURL, FModuleList[ModuleId]);
 end;
 
 function TWebsiteModules.BeforeDownloadImage(
@@ -644,10 +696,10 @@ function TWebsiteModules.DownloadImage(const DownloadThread: TDownloadThread;
   const AURL: String; const ModuleId: Integer): Boolean;
 begin
   Result := False;
-  if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit;
-  with TModuleContainer(FModuleList[ModuleId]) do
+  if ModuleExist(ModuleId) then
+  with FModuleList[ModuleId] do
     if Assigned(OnDownloadImage) then
-      Result := OnDownloadImage(DownloadThread, AURL, TModuleContainer(FModuleList[ModuleId]));
+      Result := OnDownloadImage(DownloadThread, AURL, FModuleList[ModuleId]);
 end;
 
 function TWebsiteModules.DownloadImage(const DownloadThread: TDownloadThread;
@@ -660,10 +712,10 @@ function TWebsiteModules.SaveImage(const AHTTP: THTTPSendThread;
   const APath, AName: String; const ModuleId: Integer): String;
 begin
   Result := '';
-  if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit;
-  with TModuleContainer(FModuleList[ModuleId]) do
+  if ModuleExist(ModuleId) then
+  with FModuleList[ModuleId] do
     if Assigned(OnSaveImage) then
-      Result := OnSaveImage(AHTTP, APath, AName, TModuleContainer(FModuleList[ModuleId]));
+      Result := OnSaveImage(AHTTP, APath, AName, FModuleList[ModuleId]);
 end;
 
 function TWebsiteModules.SaveImage(const AHTTP: THTTPSendThread;
@@ -676,10 +728,10 @@ function TWebsiteModules.AfterImageSaved(const AFilename: String;
   const ModuleId: Integer): Boolean;
 begin
   Result := False;
-  if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit;
-  if Assigned(TModuleContainer(FModuleList[ModuleId]).OnAfterImageSaved) then
-    Result := TModuleContainer(FModuleList[ModuleId]).OnAfterImageSaved(AFilename,
-      TModuleContainer(FModuleList[ModuleId]));
+  if ModuleExist(ModuleId) then
+  with FModuleList[ModuleId] do
+    if Assigned(OnAfterImageSaved) then
+      Result := OnAfterImageSaved(AFilename, FModuleList[ModuleId]);
 end;
 
 function TWebsiteModules.AfterImageSaved(const AFilename, AWebsite: String
@@ -692,10 +744,10 @@ function TWebsiteModules.Login(const AHTTP: THTTPSendThread;
   const ModuleId: Integer): Boolean;
 begin
   Result := False;
-  if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit;
-  with TModuleContainer(FModuleList[ModuleId]) do
+  if ModuleExist(ModuleId) then
+  with FModuleList[ModuleId] do
     if Assigned(OnLogin) then
-      Result := OnLogin(AHTTP, TModuleContainer(FModuleList[ModuleId]));
+      Result := OnLogin(AHTTP, FModuleList[ModuleId]);
 end;
 
 function TWebsiteModules.Login(const AHTTP: THTTPSendThread;
@@ -716,50 +768,42 @@ end;
 
 procedure TWebsiteModules.IncActiveTaskCount(ModuleId: Integer);
 begin
-  if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit;
-  with TModuleContainer(FModuleList[ModuleId]) do
-    if MaxTaskLimit > 0 then
-      ActiveTaskCount := InterLockedIncrement(ActiveTaskCount);
+  if ModuleExist(ModuleId) then
+  FModuleList[ModuleId].IncActiveTaskCount;
 end;
 
 procedure TWebsiteModules.DecActiveTaskCount(ModuleId: Integer);
 begin
-  if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit;
-  with TModuleContainer(FModuleList[ModuleId]) do
-    if ActiveTaskCount > 0 then
-      ActiveTaskCount := InterLockedDecrement(ActiveTaskCount);
+  if ModuleExist(ModuleId) then
+  FModuleList[ModuleId].DecActiveTaskCount;
 end;
 
 function TWebsiteModules.CanCreateTask(ModuleId: Integer): Boolean;
 begin
   Result := True;
-  if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit;
-  with TModuleContainer(FModuleList[ModuleId]) do
+  if ModuleExist(ModuleId) then
+  with FModuleList[ModuleId] do
     if MaxTaskLimit > 0 then
       Result := ActiveTaskCount < MaxTaskLimit;
 end;
 
 procedure TWebsiteModules.IncActiveConnectionCount(ModuleId: Integer);
 begin
-  if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit;
-  with TModuleContainer(FModuleList[ModuleId]) do
-    if MaxConnectionLimit > 0 then
-      ActiveConnectionCount := InterLockedIncrement(ActiveConnectionCount);
+  if ModuleExist(ModuleId) then
+  FModuleList[ModuleId].IncActiveConnectionCount;
 end;
 
 procedure TWebsiteModules.DecActiveConnectionCount(ModuleId: Integer);
 begin
-  if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit;
-  with TModuleContainer(FModuleList[ModuleId]) do
-    if ActiveConnectionCount > 0 then
-      ActiveConnectionCount := InterLockedDecrement(ActiveConnectionCount);
+  if ModuleExist(ModuleId) then
+  FModuleList[ModuleId].DecActiveConnectionCount;
 end;
 
 function TWebsiteModules.CanCreateConnection(ModuleId: Integer): Boolean;
 begin
   Result := True;
-  if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit;
-  with TModuleContainer(FModuleList[ModuleId]) do
+  if ModuleExist(ModuleId) then
+  with FModuleList[ModuleId] do
     if MaxConnectionLimit > 0 then
       Result := ActiveConnectionCount < MaxConnectionLimit;
 end;
@@ -770,7 +814,7 @@ var
 begin
   if FModuleList.Count = 0 then Exit;
   for i := 0 to FModuleList.Count - 1 do
-    with TModuleContainer(FModuleList[i]) do
+    with FModuleList[i] do
       if Length(OptionList) > 0 then
         for j := Low(OptionList) to High(OptionList) do
           with OptionList[j], configfile do
@@ -789,7 +833,7 @@ var
 begin
   if FModuleList.Count = 0 then Exit;
   for i := 0 to FModuleList.Count - 1 do
-    with TModuleContainer(FModuleList[i]) do
+    with FModuleList[i] do
       if Length(OptionList) > 0 then
         for j := Low(OptionList) to High(OptionList) do
           with OptionList[j], configfile do
@@ -806,7 +850,7 @@ end;
 function TWebsiteModules.GetModule(const ModuleId: Integer): TModuleContainer;
 begin
   if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit(nil);
-  Result := TModuleContainer(FModuleList[ModuleId]);
+  Result := FModuleList[ModuleId];
 end;
 
 function TWebsiteModules.GetCount: Integer;
@@ -816,32 +860,32 @@ end;
 
 function TWebsiteModules.GetMaxTaskLimit(const ModuleId: Integer): Integer;
 begin
-  if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit(0);
-  Result := TModuleContainer(FModuleList[ModuleId]).MaxTaskLimit;
+  if not ModuleExist(ModuleId) then Exit(0);
+  Result := FModuleList[ModuleId].MaxTaskLimit;
 end;
 
 function TWebsiteModules.GetMaxConnectionLimit(const ModuleId: Integer): Integer;
 begin
-  if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit(0);
-  Result := TModuleContainer(FModuleList[ModuleId]).MaxConnectionLimit;
+  if not ModuleExist(ModuleId) then Exit(0);
+  Result := FModuleList[ModuleId].MaxConnectionLimit;
 end;
 
 function TWebsiteModules.GetActiveTaskCount(const ModuleId: Integer): Integer;
 begin
-  if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit(0);
-  Result := TModuleContainer(FModuleList[ModuleId]).ActiveTaskCount;
+  if not ModuleExist(ModuleId) then Exit(0);
+  Result := FModuleList[ModuleId].ActiveTaskCount;
 end;
 
 function TWebsiteModules.GetActiveConnectionLimit(const ModuleId: Integer): Integer;
 begin
-  if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit(0);
-  Result := TModuleContainer(FModuleList[ModuleId]).ActiveConnectionCount;
+  if not ModuleExist(ModuleId) then Exit(0);
+  Result := FModuleList[ModuleId].ActiveConnectionCount;
 end;
 
 function TWebsiteModules.GetWebsite(const ModuleId: Integer): String;
 begin
-  if (ModuleId < 0) or (ModuleId >= FModuleList.Count) then Exit('');
-  Result := TModuleContainer(FModuleList[ModuleId]).Website;
+  if not ModuleExist(ModuleId) then Exit('');
+  Result := FModuleList[ModuleId].Website;
 end;
 
 procedure doInitialize;
