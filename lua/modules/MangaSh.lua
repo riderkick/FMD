@@ -45,7 +45,7 @@ function getinfo()
       return net_problem
     end
   else
-    return net_error
+    return net_problem
   end
 end
 

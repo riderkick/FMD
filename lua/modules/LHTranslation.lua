@@ -11,7 +11,7 @@ function GetInfo()
     InvertStrings(mangainfo.chapterLinks, mangainfo.chapterNames)
     return no_error
   else
-    return net_error
+    return net_problem
   end
 end
 
@@ -38,7 +38,7 @@ function GetNameAndLink()
     end
     return no_error
   else
-    return net_error
+    return net_problem
   end
 end
 

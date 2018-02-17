@@ -10,7 +10,7 @@ function getinfo()
     mangainfo.chapternames.add(mangainfo.title)
     return no_error
   else
-    return net_error
+    return net_problem
   end
 end
 
@@ -29,7 +29,7 @@ function getdirectorypagenumber()
     page=tonumber(TXQuery.Create(http.document).xpathstring('//a[@class="last"]/@href/substring-after(.,"=")'))
     return no_error
   else
-    return net_error
+    return net_problem
   end
 end
 

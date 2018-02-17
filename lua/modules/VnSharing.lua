@@ -13,7 +13,7 @@
     InvertStrings(mangainfo.chapterlinks,mangainfo.chapternames)    
     return no_error
   else
-    return net_error
+    return net_problem
   end
 end
 

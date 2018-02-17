@@ -53,7 +53,7 @@ end
 
 function getinfo()
     local lurl = MaybeFillHost(module.rooturl, url)
-    local result = net_error
+    local result = net_problem
     if getWithCookie(lurl) then
         x = TXQuery.Create(http.document)
         mangainfo.coverlink = x.xpathstring('//div[@class="thumbnail"]/img/@src')
@@ -135,7 +135,7 @@ function getimageurl()
 end
 
 function getdirectorypagenumber()
-    local result = net_error
+    local result = net_problem
     page = 1
     if getWithCookie(module.rooturl .. getdirurl(module.website)) then
         result = no_error
@@ -152,7 +152,7 @@ function getdirectorypagenumber()
 end
 
 function getnameandlink()
-    local result = net_error
+    local result = net_problem
     local s = module.rooturl .. getdirurl(module.website)
     if url ~= '0' then
         s = s .. (tonumber(url) + 1) .. '/'

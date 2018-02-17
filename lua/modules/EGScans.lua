@@ -1,6 +1,6 @@
 function getinfo()
     local lurl = MaybeFillHost(module.rooturl, url)
-    local result = net_error
+    local result = net_problem
     if http.get(lurl) then
         local x = TXQuery.Create(http.document)
         if mangainfo.title == '' then
@@ -45,7 +45,7 @@ function getdirectorypagenumber()
 end
 
 function getnameandlink()
-    local result = net_error
+    local result = net_problem
     if http.get(module.rooturl) then
         local x = TXQuery.create(http.document)
         local v = x.xpath('//select[@name="manga"]/option[@value!="0"]')
