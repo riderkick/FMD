@@ -81,6 +81,7 @@ begin
 
   if AllowedToRun then
   begin
+    Logger.ThreadSafe := True;
     {$IFDEF DEBUGLEAKS}
     trcfile := FMD_DIRECTORY + FMD_EXENAME + '.trc';
     if FileExistsUTF8(trcfile) then
