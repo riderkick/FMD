@@ -3185,16 +3185,15 @@ end;
 
 procedure TMainForm.mnDownload1ClickClick(Sender: TObject);
 begin
-  if (DBUpdaterThread = nil) and
-    (MessageDlg('', RS_DlgUpdaterWantToUpdateDB, mtInformation, [mbYes, mbNo], 0) =
-    mrYes) then
+  if DBUpdaterThread <> nil then
+    DBUpdaterThread.Add(cbSelectManga.Items)
+  else
+  if MessageDlg('', RS_DlgUpdaterWantToUpdateDB, mtInformation, [mbYes, mbNo], 0) = mrYes then
   begin
     DBUpdaterThread := TDBUpdaterThread.Create;
     DBUpdaterThread.Items.AddStrings(cbSelectManga.Items);
     DBUpdaterThread.Start;
-  end
-  else
-    DBUpdaterThread.Add(cbSelectManga.Items);
+  end;
 end;
 
 procedure TMainForm.mnFilterGenreAllCheckClick(Sender: TObject);
@@ -4831,16 +4830,15 @@ end;
 
 procedure TMainForm.RunGetList;
 begin
-  if (DBUpdaterThread = nil) and
-    (MessageDlg('', RS_DlgUpdaterWantToUpdateDB, mtInformation, [mbYes, mbNo], 0) =
-    mrYes) then
+  if DBUpdaterThread <> nil then
+    DBUpdaterThread.Add(cbSelectManga.Items[cbSelectManga.ItemIndex])
+  else
+  if MessageDlg('', RS_DlgUpdaterWantToUpdateDB, mtInformation, [mbYes, mbNo], 0) = mrYes then
   begin
     DBUpdaterThread := TDBUpdaterThread.Create;
     DBUpdaterThread.Items.Add(cbSelectManga.Items[cbSelectManga.ItemIndex]);
     DBUpdaterThread.Start;
-  end
-  else
-    DBUpdaterThread.Add(cbSelectManga.Items[cbSelectManga.ItemIndex]);
+  end;
 end;
 
 procedure TMainForm.LoadOptions;
