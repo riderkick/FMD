@@ -28,7 +28,6 @@ procedure luaClassRegisterAll(L: Plua_State);
 procedure luaClassRegister(C: TClass; AddMetaTable: TluaClassAddMetaTable;
   AddLib: TLuaClassRegisterLib = nil);
 
-function luaNewUserData(L: Plua_State; Obj: Pointer): Integer;
 procedure luaClassNewUserData(L: Plua_State; var MetaTable, UserData: Integer;
   Obj: Pointer; AutoFree: Boolean = False);
 
@@ -261,16 +260,10 @@ begin
   classlist.Add(C, AddMetaTable, AddLib);
 end;
 
-function luaNewUserData(L: Plua_State; Obj: Pointer): Integer;
-begin
-  PPointer(lua_newuserdata(L, SizeOf(PPointer)))^ := Obj;
-  Result := lua_gettop(L);
-end;
-
 procedure luaClassNewUserData(L: Plua_State; var MetaTable, UserData: Integer;
   Obj: Pointer; AutoFree: Boolean);
 begin
-  UserData := luaNewUserData(L, Obj);
+  UserData := luaPushUserData(L, Obj);
   lua_newtable(L);
   MetaTable := lua_gettop(L);
   luaClassAddFunction(L, MetaTable, UserData, 'self', @__self);
