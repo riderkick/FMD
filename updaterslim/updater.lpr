@@ -95,7 +95,7 @@ begin
         else
         begin
           cleanupfailed;
-          writeln('Extract failed or can'' overwrite some file.');
+          writeln;
           writeln('Press enter to retry.');
           readln;
         end;
@@ -106,6 +106,7 @@ begin
     else
     begin
       cleanupfailed;
+      writeln;
       writeln('Can''t delete file ',exefile);
       writeln('Press enter to retry.');
       readln;
