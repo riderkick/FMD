@@ -1296,13 +1296,17 @@ begin
   TransferRateGraph.Visible := False;
 
   // minimize on start
-  Application.ShowMainForm := False;
+  if configfile.ReadBool('general', 'MinimizeOnStart', False) then
+    Application.ShowMainForm := False;
 
-  isStartup := False;
+  LoadFormInformation;
+  CollectLanguagesFromFiles;
+  ApplyLanguage;
+
   with TTimer.Create(nil) do
   begin
     OnTimer := @tmStartupTimer;
-    Interval := 16;
+    Interval := 100;
     Enabled := True;
   end;
 end;
@@ -1801,21 +1805,14 @@ end;
 
 procedure TMainForm.tmStartupTimer(Sender: TObject);
 begin
-  isStartup := True;
-
   //load lua modules
   ScanLuaWebsiteModulesFile;
   AddToAboutStatus('Modules', IntToStr(Modules.Count));
 
   // load configfile
-  CollectLanguagesFromFiles;
   LoadMangaOptions;
   LoadOptions;
   ApplyOptions;
-  LoadFormInformation;
-
-  if not cbOptionMinimizeOnStart.Checked then
-    Self.Show;
 
   //restore everything after all modules loaded
   DLManager.Restore;
@@ -5235,8 +5232,6 @@ begin
     on E: Exception do
       ExceptionHandle(Self, E);
   end;
-  if isStartup then
-    DLManager.CheckAndActiveTask;
 end;
 
 procedure TMainForm.LoadMangaOptions;
@@ -5556,21 +5551,25 @@ begin
     psDownloads.Position := ReadInteger('form', 'DownloadsSplitter', psDownloads.Position);
     psInfo.Position := ReadInteger('form', 'MangaInfoSplitter', psInfo.Position);
 
-    if cbOptionAutoCheckFavStartup.Checked and cbOptionAutoOpenFavStartup.Checked then
+    if ReadBool('update', 'AutoCheckFavStartup', True) and ReadBool('update', 'AutoOpenFavStartup', False) then
       pcMain.ActivePage := tsFavorites
     else
       pcMain.PageIndex := ReadInteger('form', 'pcMainPageIndex', 0);
 
-    Left := ReadInteger('form', 'MainFormLeft', MainForm.Left);
-    Top := ReadInteger('form', 'MainFormTop', MainForm.Top);
-    Width := ReadInteger('form', 'MainFormWidth', 640);
-    Height := ReadInteger('form', 'MainFormHeight', 480);
+    Left := ReadInteger('form', 'MainFormLeft', Left);
+    Top := ReadInteger('form', 'MainFormTop', Top);
+    Width := ReadInteger('form', 'MainFormWidth', Width);
+    Height := ReadInteger('form', 'MainFormHeight', Height);
 
     if ReadBool('form', 'MainFormMaximized', False) then
       PrevWindowState := wsMaximized
     else
       PrevWindowState := wsNormal;
     WindowState := PrevWindowState;
+
+    ToolBarDownload.Visible := ReadBool('view', 'ShowDownloadsToolbar', True);
+    ToolBarDownloadLeft.Visible := ReadBool('view', 'ShowDownloadsToolbarLeft', True);
+    tbDownloadDeleteCompleted.Visible := ReadBool('view', 'ShowDownloadsToolbarDeleteAll', False);
 
     restorevt(vtDownload, 'vtDownload');
     DLManager.SortColumn := vtDownload.Header.SortColumn;

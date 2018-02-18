@@ -12,7 +12,6 @@ uses
 var
   FormMain: TMainForm;
 
-  isStartup,
   isRunDownloadFilter,
   isUpdating,
   isPendingExitCounter,
