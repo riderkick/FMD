@@ -29,6 +29,12 @@ begin
   TUserData(luaClassGetObject(L)).LoadFromFile(lua_tostring(L, 1));
 end;
 
+function strings_loadfromstream(L: Plua_State): Integer; cdecl;
+begin
+  Result := 0;
+  TUserData(luaClassGetObject(L)).LoadFromStream(TStream(lua_touserdata(L, 1)));
+end;
+
 function strings_settext(L: Plua_State): Integer; cdecl;
 begin
   Result := 0;
@@ -128,8 +134,9 @@ const
     (name: 'Create'; func: @strings_create),
     (name: nil; func: nil)
     );
-  methods: packed array [0..10] of luaL_Reg = (
+  methods: packed array [0..11] of luaL_Reg = (
     (name: 'LoadFromFile'; func: @strings_loadfromfile),
+    (name: 'LoadFromStream'; func: @strings_loadfromstream),
     (name: 'SetText'; func: @strings_settext),
     (name: 'GetText'; func: @strings_gettext),
     (name: 'Add'; func: @strings_add),
