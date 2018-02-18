@@ -63,6 +63,8 @@ procedure luaClassAddBooleanProperty(L: Plua_State; MetaTable: Integer;
   Name: PAnsiChar; P: Pointer); overload;
 procedure luaClassAddObject(L: Plua_State; MetaTable: Integer; Obj: TObject;
   Name: String; AddMetaTable: TluaClassAddMetaTable = nil);
+procedure luaClassAddUserData(L: Plua_State; MetaTable: Integer; Obj: TObject;
+  Name: String);
 
 implementation
 
@@ -263,7 +265,7 @@ end;
 procedure luaClassNewUserData(L: Plua_State; var MetaTable, UserData: Integer;
   Obj: Pointer; AutoFree: Boolean);
 begin
-  UserData := luaPushUserData(L, Obj);
+  luaPushUserData(L, Obj, UserData);
   lua_newtable(L);
   MetaTable := lua_gettop(L);
   luaClassAddFunction(L, MetaTable, UserData, 'self', @__self);
@@ -509,6 +511,14 @@ begin
   luaClassNewUserData(L, m, u, Obj, False);
   AddMetaTable(L, Obj, m, u);
   lua_setmetatable(L, u);
+  lua_rawset(L, MetaTable);
+end;
+
+procedure luaClassAddUserData(L: Plua_State; MetaTable: Integer; Obj: TObject;
+  Name: String);
+begin
+  lua_pushstring(L, PAnsiChar(AnsiLowerCase(Name)));
+  luaPushUserData(L, Obj);
   lua_rawset(L, MetaTable);
 end;
 
