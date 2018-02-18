@@ -26,7 +26,7 @@ begin
       luaXQueryPush(L, TXQueryEngineHTML.Create(lua_tostring(L, 1)), '', True)
     else
     if lua_isuserdata(L, 1) then
-      luaXQueryPush(L, TXQueryEngineHTML.Create(TStream(lua_touserdata(L, 1))),
+      luaXQueryPush(L, TXQueryEngineHTML.Create(TStream(luaGetUserData(L, 1))),
         '', True);
   end
   else
