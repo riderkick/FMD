@@ -5892,6 +5892,7 @@ begin
     numchapter := dataProcess.ValueInt[Node^.Index, DATA_PARAM_NUMCHAPTER];
     jdn := dataProcess.ValueInt[Node^.Index, DATA_PARAM_JDN];
     website := dataProcess.WebsiteName[Node^.Index];
+    summary := dataProcess.Value[Node^.Index, DATA_PARAM_SUMMARY];
     titleformat := title + ' (' + IntToStr(numchapter) + ')';
     if dataProcess.FilterAllSites then
       titleformat += ' [' + website + ']';
