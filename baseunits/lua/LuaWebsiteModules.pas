@@ -5,8 +5,8 @@ unit LuaWebsiteModules;
 interface
 
 uses
-  Classes, SysUtils, fgl, lua53, LuaStringsStorage, WebsiteModules, uData,
-  uDownloadsManager, xquery, httpsendthread;
+  Classes, SysUtils, fgl, lua53, LuaStringsStorage, LuaUpdateListManager,
+  WebsiteModules, uData, uDownloadsManager, xquery, httpsendthread, FMDVars;
 
 type
   TLuaWebsiteModulesContainer = class;
@@ -117,6 +117,7 @@ begin
     l := LuaNewBaseState;
     try
       LuaPushMe(l);
+      luaPushObject(l, updateList, 'updatelist');
 
       if LuaDoMe(l) <> 0 then
         raise Exception.Create('');
@@ -139,6 +140,7 @@ begin
     l := LuaNewBaseState;
     try
       LuaPushMe(l);
+      luaPushObject(l, updateList, 'updatelist');
 
       if LuaDoMe(l) <> 0 then
         raise Exception.Create('');
@@ -166,6 +168,7 @@ begin
       luaPushIntegerGlobal(l, 'workptr', WorkPtr);
       luaPushObject(l, MangaInfo.mangaInfo, 'mangainfo');
       luaPushObject(l, MangaInfo.FHTTP, 'http');
+      luaPushObject(l, updateList, 'updatelist');
 
       if LuaDoMe(l) <> 0 then
         raise Exception.Create('');
@@ -199,6 +202,7 @@ begin
       luaPushStringGlobal(L, 'url', AURL);
       luaPushObject(l, ANames, 'names');
       luaPushObject(l, ALinks, 'links');
+      luaPushObject(l, updateList, 'updatelist');
 
       if LuaDoMe(l) <> 0 then
         raise Exception.Create('');
