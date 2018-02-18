@@ -4,6 +4,10 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.146.0 (18-02-2018)
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.145.0...0.9.146.0
+
 0.9.145.0 (17-02-2018)
 [*] Various changes and bug fixes
 Full changes: https://github.com/riderkick/FMD/compare/0.9.144.0...0.9.145.0
