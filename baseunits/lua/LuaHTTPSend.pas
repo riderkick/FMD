@@ -58,12 +58,6 @@ begin
   Result := 1;
 end;
 
-function http_document(L: Plua_State): Integer; cdecl;
-begin
-  lua_pushlightuserdata(L, TUserData(luaClassGetObject(L)).Document);
-  Result := 1;
-end;
-
 function http_setproxy(L: Plua_State): Integer; cdecl;
 begin
   Result := 0;
@@ -82,8 +76,7 @@ const
     (name: 'SetProxy'; func: @http_setproxy),
     (name: nil; func: nil)
     );
-  props: packed array[0..2] of luaL_Reg_prop = (
-    (name: 'Document'; funcget: @http_document; funcset: nil),
+  props: packed array[0..1] of luaL_Reg_prop = (
     (name: 'Terminated'; funcget: @http_threadterminated; funcset: nil),
     (name: nil; funcget: nil; funcset: nil)
     );
@@ -98,6 +91,7 @@ begin
     luaClassAddObject(L, MetaTable, Cookies, 'Cookies');
     luaClassAddStringProperty(L, MetaTable, 'MimeType', @TUserData(Obj).MimeType);
     luaClassAddStringProperty(L, MetaTable, 'UserAgent', @TUserData(Obj).UserAgent);
+    luaClassAddUserData(L, MetaTable, TUserData(Obj).Document, 'Document');
   end;
 end;
 
