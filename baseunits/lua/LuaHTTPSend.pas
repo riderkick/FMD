@@ -58,38 +58,33 @@ begin
   Result := 1;
 end;
 
-function http_getmimetype(L: Plua_State): Integer; cdecl;
-begin
-  lua_pushstring(L, TUserData(luaClassGetObject(L)).MimeType);
-  Result := 1;
-end;
-
-function http_setmimetype(L: Plua_State): Integer; cdecl;
-begin
-  TUserData(luaClassGetObject(L)).MimeType := lua_tostring(L, 1);
-  Result := 0;
-end;
-
 function http_document(L: Plua_State): Integer; cdecl;
 begin
   lua_pushlightuserdata(L, TUserData(luaClassGetObject(L)).Document);
   Result := 1;
 end;
 
+function http_setproxy(L: Plua_State): Integer; cdecl;
+begin
+  Result := 0;
+  TUserData(luaClassGetObject(L)).SetProxy(lua_tostring(L, 1), lua_tostring(L, 2),
+    lua_tostring(L, 3), lua_tostring(L, 4), lua_tostring(L, 5));
+end;
+
 const
-  methods: packed array [0..6] of luaL_Reg = (
+  methods: packed array [0..7] of luaL_Reg = (
     (name: 'GET'; func: @http_get),
     (name: 'POST'; func: @http_post),
     (name: 'HEAD'; func: @http_head),
     (name: 'XHR'; func: @http_xhr),
     (name: 'Reset'; func: @http_reset),
     (name: 'GetCookies'; func: @http_getcookies),
+    (name: 'SetProxy'; func: @http_setproxy),
     (name: nil; func: nil)
     );
-  props: packed array[0..3] of luaL_Reg_prop = (
+  props: packed array[0..2] of luaL_Reg_prop = (
     (name: 'Document'; funcget: @http_document; funcset: nil),
     (name: 'Terminated'; funcget: @http_threadterminated; funcset: nil),
-    (name: 'MimeType'; funcget: @http_getmimetype; funcset: @http_setmimetype),
     (name: nil; funcget: nil; funcset: nil)
     );
 
@@ -101,6 +96,8 @@ begin
     luaClassAddProperty(L, MetaTable, UserData, props);
     luaClassAddObject(L, MetaTable, Headers, 'Headers');
     luaClassAddObject(L, MetaTable, Cookies, 'Cookies');
+    luaClassAddStringProperty(L, MetaTable, 'MimeType', @TUserData(Obj).MimeType);
+    luaClassAddStringProperty(L, MetaTable, 'UserAgent', @TUserData(Obj).UserAgent);
   end;
 end;
 
