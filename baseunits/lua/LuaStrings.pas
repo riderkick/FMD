@@ -15,7 +15,7 @@ procedure luaStringsAddMetaTable(L: Plua_State; Obj: Pointer;
 
 implementation
 
-uses LuaClass;
+uses LuaClass, LuaUtils;
 
 type
   TUserData = TStrings;
@@ -35,7 +35,7 @@ end;
 function strings_loadfromstream(L: Plua_State): Integer; cdecl;
 begin
   Result := 0;
-  TUserData(luaClassGetObject(L)).LoadFromStream(TStream(lua_touserdata(L, 1)));
+  TUserData(luaClassGetObject(L)).LoadFromStream(TStream(luaGetUserData(L, 1)));
 end;
 
 function strings_settext(L: Plua_State): Integer; cdecl;
