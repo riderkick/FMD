@@ -5,11 +5,11 @@ unit LuaBase;
 interface
 
 uses
-  Classes, SysUtils, Lua53;
+  Classes, SysUtils, Lua53, LuaClass;
 
 procedure LuaBaseRegister(L: Plua_State);
 procedure luaPushObject(L: Plua_State; Obj: TObject; Name: String;
-  AutoFree: Boolean = False); inline;
+  AddMetaTable: TluaClassAddMetaTable = nil; AutoFree: Boolean = False); inline;
 
 function LuaDoFile(AFilename: String; AFuncName: String = ''): Plua_State;
 function LuaNewBaseState: Plua_State;
@@ -22,7 +22,7 @@ function LuaLoadFromStream(L: Plua_State; AStream: TMemoryStream; AName: PAnsiCh
 implementation
 
 uses
-  LuaClass, luaStrings, LuaBaseUnit, LuaRegExpr, LuaSynaUtil, LuaSynaCode, MultiLog;
+  luaStrings, LuaBaseUnit, LuaRegExpr, LuaSynaUtil, LuaSynaCode, MultiLog;
 
 function luabase_print(L: Plua_State): Integer; cdecl;
 var
@@ -45,9 +45,10 @@ begin
   luaClassRegisterAll(L);
 end;
 
-procedure luaPushObject(L: Plua_State; Obj: TObject; Name: String; AutoFree: Boolean);
+procedure luaPushObject(L: Plua_State; Obj: TObject; Name: String;
+  AddMetaTable: TluaClassAddMetaTable; AutoFree: Boolean);
 begin
-  luaClassPushObject(L, Obj, Name, AutoFree);
+  luaClassPushObject(L, Obj, Name, AutoFree, AddMetaTable);
 end;
 
 function LuaDoFile(AFilename: String; AFuncName: String): Plua_State;

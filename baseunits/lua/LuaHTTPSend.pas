@@ -7,6 +7,9 @@ interface
 uses
   Classes, SysUtils, lua53;
 
+procedure luaHTTPSendThreadAddMetaTable(L: Plua_State; Obj: Pointer; MetaTable,
+  UserData: Integer; AutoFree: Boolean = False);
+
 implementation
 
 uses
@@ -81,7 +84,8 @@ const
     (name: nil; funcget: nil; funcset: nil)
     );
 
-procedure luaHTTPSendThreadAddMetaTable(L: Plua_State; Obj: Pointer; MetaTable, UserData: Integer; AutoFree: Boolean = False);
+procedure luaHTTPSendThreadAddMetaTable(L: Plua_State; Obj: Pointer; MetaTable,
+  UserData: Integer; AutoFree: Boolean = False);
 begin
   with TUserData(Obj) do
   begin

@@ -7,6 +7,9 @@ interface
 uses
   Classes, SysUtils, lua53;
 
+procedure luaDownloadTaskMetaTable(L: Plua_State; Obj: Pointer;
+  MetaTable, UserData: Integer; AutoFree: Boolean = False);
+
 implementation
 
 uses

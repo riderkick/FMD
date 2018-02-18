@@ -33,6 +33,9 @@ type
 procedure luaStringsStoragePush(L: Plua_State; Obj: TStringsStorage;
   Name: PAnsiChar = nil; AutoFree: Boolean = False); inline;
 
+procedure luaStringsStorageAddMetaTable(L: Plua_State; Obj: Pointer;
+  MetaTable, UserData: Integer; AutoFree: Boolean = False);
+
 implementation
 
 uses LuaClass;

@@ -5,8 +5,7 @@ unit LuaWebsiteModules;
 interface
 
 uses
-  Classes, SysUtils, fgl, lua53, LuaStringsStorage, LuaUpdateListManager,
-  WebsiteModules, uData, uDownloadsManager, xquery, httpsendthread, FMDVars;
+  Classes, SysUtils, fgl, lua53, LuaStringsStorage, WebsiteModules;
 
 type
   TLuaWebsiteModulesContainer = class;
@@ -97,6 +96,9 @@ type
 
 procedure ScanLuaWebsiteModulesFile;
 
+procedure luaWebsiteModuleAddMetaTable(L: Plua_State; Obj: Pointer;
+  MetaTable, UserData: Integer; AutoFree: Boolean = False);
+
 var
   LuaWebsiteModulesManager: TLuaWebsiteModulesManager;
   AlwaysLoadLuaFromFile: Boolean = {$ifdef DEVBUILD}True{$else}False{$endif};
@@ -105,7 +107,8 @@ implementation
 
 uses
   FMDOptions, FileUtil, MultiLog, LuaClass, LuaBase, LuaMangaInfo, LuaHTTPSend,
-  LuaXQuery, LuaUtils, LuaDownloadTask;
+  LuaXQuery, LuaUtils, LuaDownloadTask, LuaUpdateListManager, luaStrings, uData,
+  uDownloadsManager, xquery, httpsendthread, FMDVars;
 
 function DoBeforeUpdateList(const Module: TModuleContainer): Boolean;
 var
@@ -117,7 +120,7 @@ begin
     l := LuaNewBaseState;
     try
       LuaPushMe(l);
-      luaPushObject(l, updateList, 'updatelist');
+      luaPushObject(l, updateList, 'updatelist', @luaUpdateListManagerAddMetaTable);
 
       if LuaDoMe(l) <> 0 then
         raise Exception.Create('');
@@ -140,7 +143,7 @@ begin
     l := LuaNewBaseState;
     try
       LuaPushMe(l);
-      luaPushObject(l, updateList, 'updatelist');
+      luaPushObject(l, updateList, 'updatelist', @luaUpdateListManagerAddMetaTable);
 
       if LuaDoMe(l) <> 0 then
         raise Exception.Create('');
@@ -166,9 +169,9 @@ begin
       LuaPushMe(l);
       luaPushIntegerGlobal(l, 'page', Page);
       luaPushIntegerGlobal(l, 'workptr', WorkPtr);
-      luaPushObject(l, MangaInfo.mangaInfo, 'mangainfo');
-      luaPushObject(l, MangaInfo.FHTTP, 'http');
-      luaPushObject(l, updateList, 'updatelist');
+      luaPushObject(l, MangaInfo.mangaInfo, 'mangainfo', @luaMangaInfoAddMetaTable);
+      luaPushObject(l, MangaInfo.FHTTP, 'http', @luaHTTPSendThreadAddMetaTable);
+      luaPushObject(l, updateList, 'updatelist', @luaUpdateListManagerAddMetaTable);
 
       if LuaDoMe(l) <> 0 then
         raise Exception.Create('');
@@ -197,12 +200,12 @@ begin
     l := LuaNewBaseState;
     try
       LuaPushMe(l);
-      luaPushObject(l, MangaInfo.mangaInfo, 'mangainfo');
-      luaPushObject(l, MangaInfo.FHTTP, 'http');
+      luaPushObject(l, MangaInfo.mangaInfo, 'mangainfo', @luaMangaInfoAddMetaTable);
+      luaPushObject(l, MangaInfo.FHTTP, 'http', @luaHTTPSendThreadAddMetaTable);
       luaPushStringGlobal(L, 'url', AURL);
-      luaPushObject(l, ANames, 'names');
-      luaPushObject(l, ALinks, 'links');
-      luaPushObject(l, updateList, 'updatelist');
+      luaPushObject(l, ANames, 'names', @luaStringsAddMetaTable);
+      luaPushObject(l, ALinks, 'links', @luaStringsAddMetaTable);
+      luaPushObject(l, updateList, 'updatelist', @luaUpdateListManagerAddMetaTable);
 
       if LuaDoMe(l) <> 0 then
         raise Exception.Create('');
@@ -227,8 +230,8 @@ begin
     try
       LuaPushMe(l);
       luaPushStringGlobal(l, 'url', AURL);
-      luaPushObject(l, MangaInfo.mangaInfo, 'mangainfo');
-      luaPushObject(l, MangaInfo.FHTTP, 'http');
+      luaPushObject(l, MangaInfo.mangaInfo, 'mangainfo', @luaMangaInfoAddMetaTable);
+      luaPushObject(l, MangaInfo.FHTTP, 'http', @luaHTTPSendThreadAddMetaTable);
 
       if LuaDoMe(l) <> 0 then
         raise Exception.Create('');
@@ -250,7 +253,7 @@ begin
     l := LuaNewBaseState;
     try
       LuaPushMe(l);
-      luaPushObject(l, Task, 'task');
+      luaPushObject(l, Task, 'task', @luaDownloadTaskMetaTable);
 
       if LuaDoMe(l) <> 0 then
         raise Exception.Create('');
@@ -274,8 +277,8 @@ begin
     l := LuaNewBaseState;
     try
       LuaPushMe(l);
-      luaPushObject(L, DownloadThread.Task.Container, 'task');
-      luaPushObject(l, DownloadThread.FHTTP, 'http');
+      luaPushObject(L, DownloadThread.Task.Container, 'task', @luaDownloadTaskMetaTable);
+      luaPushObject(l, DownloadThread.FHTTP, 'http', @luaHTTPSendThreadAddMetaTable);
       luaPushStringGlobal(l, 'url', AURL);
 
       if LuaDoMe(l) <> 0 then
@@ -300,8 +303,8 @@ begin
     l := LuaNewBaseState;
     try
       LuaPushMe(l);
-      luaPushObject(L, DownloadThread.Task.Container, 'task');
-      luaPushObject(l, DownloadThread.FHTTP, 'http');
+      luaPushObject(L, DownloadThread.Task.Container, 'task', @luaDownloadTaskMetaTable);
+      luaPushObject(l, DownloadThread.FHTTP, 'http', @luaHTTPSendThreadAddMetaTable);
       luaPushIntegerGlobal(l, 'workid', DownloadThread.WorkId);
       luaPushStringGlobal(l, 'url', AURL);
 
@@ -327,8 +330,8 @@ begin
     l := LuaNewBaseState;
     try
       LuaPushMe(l);
-      luaPushObject(L, DownloadThread.Task.Container, 'task');
-      luaPushObject(l, DownloadThread.FHTTP, 'http');
+      luaPushObject(L, DownloadThread.Task.Container, 'task', @luaDownloadTaskMetaTable);
+      luaPushObject(l, DownloadThread.FHTTP, 'http', @luaHTTPSendThreadAddMetaTable);
       luaPushStringGlobal(l, 'url', AURL);
 
       if LuaDoMe(l) <> 0 then
@@ -353,8 +356,8 @@ begin
     l := LuaNewBaseState;
     try
       LuaPushMe(l);
-      luaPushObject(L, DownloadThread.Task.Container, 'task');
-      luaPushObject(l, DownloadThread.FHTTP, 'http');
+      luaPushObject(L, DownloadThread.Task.Container, 'task', @luaDownloadTaskMetaTable);
+      luaPushObject(l, DownloadThread.FHTTP, 'http', @luaHTTPSendThreadAddMetaTable);
       luaPushStringGlobal(l, 'url', AURL);
 
       if LuaDoMe(l) <> 0 then
@@ -379,7 +382,7 @@ begin
     l := LuaNewBaseState;
     try
       LuaPushMe(l);
-      luaPushObject(l, AHTTP, 'http');
+      luaPushObject(l, AHTTP, 'http', @luaHTTPSendThreadAddMetaTable);
       luaPushStringGlobal(l, 'path', APath);
       luaPushStringGlobal(l, 'name', AName);
 
@@ -427,7 +430,7 @@ begin
     l := LuaNewBaseState;
     try
       LuaPushMe(l);
-      luaPushObject(l, AHTTP, 'http');
+      luaPushObject(l, AHTTP, 'http', @luaHTTPSendThreadAddMetaTable);
 
       if LuaDoMe(l) <> 0 then
         raise Exception.Create('');
@@ -663,7 +666,7 @@ end;
 
 procedure TLuaWebsiteModule.LuaPushMe(L: Plua_State);
 begin
-  luaPushObject(L, Self, 'module');
+  luaPushObject(L, Self, 'module', @luaWebsiteModuleAddMetaTable);
   luaPushIntegerGlobal(L, 'no_error', NO_ERROR);
   luaPushIntegerGlobal(L, 'net_problem', NET_PROBLEM);
   luaPushIntegerGlobal(L, 'information_not_found', INFORMATION_NOT_FOUND);
@@ -805,7 +808,7 @@ begin
 
     luaClassAddFunction(L, MetaTable, UserData, methods);
 
-    luaClassAddObject(L, MetaTable, Storage, 'Storage');
+    luaClassAddObject(L, MetaTable, Storage, 'Storage', @luaStringsStorageAddMetaTable);
   end;
 end;
 

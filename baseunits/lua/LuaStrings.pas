@@ -10,6 +10,9 @@ uses
 procedure luaStringsPush(L: Plua_State; Obj: TStrings; Name: String = '';
   AutoFree: Boolean = False); inline;
 
+procedure luaStringsAddMetaTable(L: Plua_State; Obj: Pointer;
+  MetaTable, UserData: Integer; AutoFree: Boolean = False);
+
 implementation
 
 uses LuaClass;
