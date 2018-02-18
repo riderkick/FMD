@@ -25,7 +25,8 @@ procedure luaPushStringGlobal(L: Plua_State; Name: PAnsiChar; S: String);
 procedure luaPushIntegerGlobal(L: Plua_State; Name: PAnsiChar; I: Integer);
 procedure luaPushBooleanGlobal(L: Plua_State; Name: PAnsiChar; B: Boolean);
 
-function luaPushUserData(L: Plua_State; U: Pointer): Integer; inline;
+procedure luaPushUserData(L: Plua_State; U: Pointer); overload; inline;
+procedure luaPushUserData(L: Plua_State; U: Pointer; var UIndex: Integer); overload; inline;
 function luaGetUserData(L: Plua_State; idx: Integer): Pointer; inline;
 
 function LuaToString(L: Plua_State; Idx: Integer): String;
@@ -113,10 +114,15 @@ begin
   lua_setglobal(L, Name);
 end;
 
-function luaPushUserData(L: Plua_State; U: Pointer): Integer;
+procedure luaPushUserData(L: Plua_State; U: Pointer);
 begin
   PPointer(lua_newuserdata(L, SizeOf(PPointer)))^ := U;
-  Result := lua_gettop(L);
+end;
+
+procedure luaPushUserData(L: Plua_State; U: Pointer; var UIndex: Integer);
+begin
+  luaPushUserData(L, U);
+  UIndex := lua_gettop(L);
 end;
 
 function luaGetUserData(L: Plua_State; idx: Integer): Pointer;
