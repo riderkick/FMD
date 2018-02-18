@@ -58,6 +58,18 @@ begin
   Result := 1;
 end;
 
+function http_getmimetype(L: Plua_State): Integer; cdecl;
+begin
+  lua_pushstring(L, TUserData(luaClassGetObject(L)).MimeType);
+  Result := 1;
+end;
+
+function http_setmimetype(L: Plua_State): Integer; cdecl;
+begin
+  TUserData(luaClassGetObject(L)).MimeType := lua_tostring(L, 1);
+  Result := 0;
+end;
+
 function http_document(L: Plua_State): Integer; cdecl;
 begin
   lua_pushlightuserdata(L, TUserData(luaClassGetObject(L)).Document);
@@ -74,9 +86,10 @@ const
     (name: 'GetCookies'; func: @http_getcookies),
     (name: nil; func: nil)
     );
-  props: packed array[0..2] of luaL_Reg_prop = (
+  props: packed array[0..3] of luaL_Reg_prop = (
     (name: 'Document'; funcget: @http_document; funcset: nil),
     (name: 'Terminated'; funcget: @http_threadterminated; funcset: nil),
+    (name: 'MimeType'; funcget: @http_getmimetype; funcset: @http_setmimetype),
     (name: nil; funcget: nil; funcset: nil)
     );
 
