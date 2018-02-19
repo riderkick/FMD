@@ -164,6 +164,7 @@ begin
   begin
     Website := 'KuManga';
     RootURL := 'http://www.kumanga.com';
+    Category := 'Spanish';
     OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;

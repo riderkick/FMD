@@ -121,6 +121,7 @@ begin
   begin
     Website := 'SekaiManga';
     RootURL := 'http://www.sekaimanga.net';
+    Category := 'Spanish';
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;
     OnGetPageNumber := @GetPageNumber;

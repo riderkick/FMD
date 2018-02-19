@@ -169,6 +169,7 @@ begin
   with AddModule do begin
     Website := 'Tumangaonline';
     RootURL := 'https://www.tumangaonline.com';
+    Category := 'Spanish';
     MaxTaskLimit := 1;
     MaxConnectionLimit := 1;
     OnGetDirectoryPageNumber := @GetDirectoryPageNumber;

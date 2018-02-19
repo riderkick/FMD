@@ -140,6 +140,7 @@ begin
   begin
     Website := 'LeoManga';
     RootURL := 'http://leomanga.com';
+    Category := 'Spanish';
     OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;

@@ -147,6 +147,7 @@ begin
   begin
     Website := 'SubManga';
     RootURL := 'http://submanga.com';
+    Category := 'Spanish';
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;
     OnGetPageNumber := @GetPageNumber;
