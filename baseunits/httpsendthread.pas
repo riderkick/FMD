@@ -445,6 +445,8 @@ end;
 
 destructor THTTPSendThread.Destroy;
 begin
+  If Assigned(FOwner) then
+    FOwner.OnCustomTerminate := nil;
   EnterCriticalsection(CS_ALLHTTPSendThread);
   try
     ALLHTTPSendThread.Remove(Self);
