@@ -113,6 +113,7 @@ begin
   begin
     Website := 'WieManga';
     RootURL := 'https://www.wiemanga.com';
+    Category := 'German';
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;
     OnGetPageNumber := @GetPageNumber;

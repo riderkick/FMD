@@ -123,6 +123,7 @@ begin
   begin
     Website := 'MangaTube';
     RootURL := 'https://manga-tube.me';
+    Category := 'German';
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;
     OnGetPageNumber := @GetPageNumber;
