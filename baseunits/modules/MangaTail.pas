@@ -116,6 +116,7 @@ procedure RegisterModule;
     begin
       Website := AWebsite;
       RootURL := ARootURL;
+      Category := 'English';
       OnGetNameAndLink := @GetNameAndLink;
       OnGetInfo := @GetInfo;
       OnGetPageNumber := @GetPageNumber;

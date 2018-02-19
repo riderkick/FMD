@@ -95,6 +95,7 @@ begin
   begin
     Website := 'MangaCool';
     RootURL := 'http://mangacool.se';
+    Category := 'English';
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;
     OnGetPageNumber := @GetPageNumber;

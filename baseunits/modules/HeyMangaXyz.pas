@@ -136,6 +136,7 @@ begin
   begin
     Website := 'HeyManga';
     RootURL := 'https://www.heymanga.me';
+    Category := 'English';
     OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;

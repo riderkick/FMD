@@ -136,6 +136,7 @@ begin
   begin
     Website := 'MangaHere';
     RootURL := 'http://www.mangahere.cc';
+    Category := 'English';
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;
     OnGetPageNumber := @GetPageNumber;

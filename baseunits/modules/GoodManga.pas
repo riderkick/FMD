@@ -121,6 +121,7 @@ begin
   begin
     Website := 'GoodManga';
     RootURL := 'http://www.goodmanga.net';
+    Category := 'English';
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;
     OnGetPageNumber := @GetPageNumber;

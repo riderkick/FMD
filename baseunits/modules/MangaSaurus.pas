@@ -190,6 +190,7 @@ begin
   begin
     Website := 'MangaSaurus';
     RootURL := 'http://mangasaurus.com';
+    Category := 'English';
     OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;

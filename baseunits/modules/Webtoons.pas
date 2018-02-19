@@ -143,6 +143,7 @@ begin
   begin
     Website := 'Webtoons';
     RootURL := 'http://www.webtoons.com';
+    Category := 'English';
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;
     OnGetPageNumber := @GetPageNumber;

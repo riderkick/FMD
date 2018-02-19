@@ -202,6 +202,7 @@ begin
   begin
     Website := 'MangaRock';
     RootURL := 'https://mangarock.com';
+    Category := 'English';
     OnGetInfo := @GetInfo;
     OnGetPageNumber := @GetPageNumber;
     OnDownloadImage := @DownloadImage;

@@ -178,6 +178,7 @@ begin
   begin
     Website := 'SenManga';
     RootURL := 'http://www.senmanga.com';
+    Category := 'English';
     MaxTaskLimit := 1;
     MaxConnectionLimit := 4;
     OnGetDirectoryPageNumber := @GetDirectoryPageNumber;

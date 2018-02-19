@@ -118,6 +118,7 @@ begin
   begin
     Website := 'MangaFox';
     RootURL := 'http://fanfox.net';
+    Category := 'English';
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;
     OnGetPageNumber := @GetPageNumber;

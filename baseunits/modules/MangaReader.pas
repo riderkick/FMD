@@ -202,6 +202,7 @@ procedure RegisterModule;
     begin
       Website := AWebsite;
       RootURL := ARootURL;
+      Category := 'English';
       OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
       OnGetNameAndLink := @GetNameAndLink;
       OnGetInfo := @GetInfo;

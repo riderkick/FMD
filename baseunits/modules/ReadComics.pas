@@ -107,6 +107,7 @@ begin
   begin
     Website := 'ReadComics';
     RootURL := 'http://readcomics.tv';
+    Category := 'English';
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;
     OnGetPageNumber := @GetPageNumber;

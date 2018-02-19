@@ -130,6 +130,7 @@ begin
   begin
     Website := 'MangaBackup';
     RootURL := 'http://mangabackup.com';
+    Category := 'English';
     SortedList := True;
     OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
     OnGetNameAndLink := @GetNameAndLink;

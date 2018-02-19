@@ -109,6 +109,7 @@ begin
   begin
     Website := 'Taadd';
     RootURL := 'http://www.taadd.com';
+    Category := 'English';
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;
     OnGetPageNumber := @GetPageNumber;

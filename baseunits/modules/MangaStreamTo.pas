@@ -118,6 +118,7 @@ begin
   begin
     Website := 'MangaStreamTo';
     RootURL := 'http://www.mangastream.to';
+    Category := 'English';
     InformationAvailable := False;
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;

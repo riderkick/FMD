@@ -139,6 +139,7 @@ begin
   with AddModule do begin
     Website := 'Mangadex';
     RootURL := 'https://mangadex.com';
+    Category := 'English';
     MaxTaskLimit := 4;
     MaxConnectionLimit := 4;
     TotalDirectory := Length(ALPHA_LIST_UP);

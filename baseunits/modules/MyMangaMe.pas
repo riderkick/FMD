@@ -146,6 +146,7 @@ begin
   begin
     Website := 'MyMangaMe';
     RootURL := 'http://mymanga.me';
+    Category := 'English';
     OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;

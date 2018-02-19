@@ -106,6 +106,7 @@ begin
   begin
     Website := 'MangaInn';
     RootURL := 'http://www.mangainn.net';
+    Category := 'English';
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;
     OnGetPageNumber := @GetPageNumber;

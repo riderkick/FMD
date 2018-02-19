@@ -143,6 +143,7 @@ begin
   begin
     Website := 'MangaPark';
     RootURL := 'http://mangapark.me';
+    Category := 'English';
     SortedList := True;
     OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
     OnGetNameAndLink := @GetNameAndLink;

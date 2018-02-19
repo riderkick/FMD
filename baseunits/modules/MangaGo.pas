@@ -343,6 +343,7 @@ begin
   begin
     Website := 'MangaGo';
     RootURL := 'http://www.mangago.me';
+    Category := 'English';
     OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;

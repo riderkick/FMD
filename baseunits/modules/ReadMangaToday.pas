@@ -94,6 +94,7 @@ begin
   begin
     Website := 'ReadMangaToday';
     RootURL := 'https://www.readmng.com';
+    Category := 'English';
     OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;

@@ -159,6 +159,7 @@ begin
   begin
     Website := 'MangaHome';
     RootURL := 'http://www.mangahome.com';
+    Category := 'English';
     OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;

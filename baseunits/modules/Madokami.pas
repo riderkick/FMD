@@ -281,6 +281,7 @@ begin
   begin
     Website := modulename;
     RootURL := urlroot;
+    Category := 'English';
     AccountSupport := True;
     //MaxTaskLimit := 1;
     //MaxConnectionLimit := 4;

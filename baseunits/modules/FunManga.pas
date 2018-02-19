@@ -118,6 +118,7 @@ begin
   begin
     Website := 'FunManga';
     RootURL := 'http://www.funmanga.com';
+    Category := 'English';
     OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;

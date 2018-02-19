@@ -80,6 +80,7 @@ begin
   begin
     Website := 'EatManga';
     RootURL := 'http://eatmanga.me';
+    Category := 'English';
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;
     OnGetPageNumber := @GetPageNumber;

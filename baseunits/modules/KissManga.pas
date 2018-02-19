@@ -291,6 +291,7 @@ procedure RegisterModule;
     begin
       Website := AWebsite;
       RootURL := ARootURL;
+      Category := 'English';
       SortedList := True;
       OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
       OnGetNameAndLink := @GetNameAndLink;
