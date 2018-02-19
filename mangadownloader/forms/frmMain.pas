@@ -441,6 +441,8 @@ type
     procedure cbOptionDigitVolumeChange(Sender: TObject);
     procedure cbOptionGenerateMangaFolderChange(Sender: TObject);
     procedure cbSelectMangaEditingDone(Sender: TObject);
+    procedure cbSelectMangaMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
     procedure clbChapterListBeforeCellPaint(Sender: TBaseVirtualTree;
       TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
       CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
@@ -2577,6 +2579,13 @@ begin
     if cbOptionShowDownloadMangalistDialog.Checked then
       RunGetList;
   end;
+end;
+
+procedure TMainForm.cbSelectMangaMouseDown(Sender: TObject;
+  Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+begin
+  if Button = mbMiddle then
+    cbSelectMangaEditingDone(Sender);
 end;
 
 procedure TMainForm.btReadOnlineClick(Sender: TObject);
