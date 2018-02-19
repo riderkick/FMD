@@ -105,6 +105,7 @@ begin
   begin
     Website := 'Japscan';
     RootURL := 'http://www.japscan.com';
+    Category := 'French';
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;
     OnGetPageNumber := @GetPageNumber;
