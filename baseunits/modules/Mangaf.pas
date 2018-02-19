@@ -106,6 +106,7 @@ begin
   begin
     Website := 'Mangaf';
     RootURL := 'http://mangaf.co';
+    Category := 'Arabic';
     TotalDirectory := 3;
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;

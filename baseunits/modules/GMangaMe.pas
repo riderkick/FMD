@@ -100,6 +100,7 @@ begin
   begin
     Website := 'GManga';
     RootURL := 'http://gmanga.me';
+    Category := 'Arabic';
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;
     OnGetPageNumber := @GetPageNumber;

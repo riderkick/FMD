@@ -93,6 +93,7 @@ begin
   begin
     Website := 'MangaAe';
     RootURL := 'https://www.manga.ae';
+    Category := 'Arabic';
     OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;
