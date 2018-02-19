@@ -69,8 +69,8 @@ end;
 function GetInfo(const MangaInfo: TMangaInformation; const AURL: String;
   const Module: TModuleContainer): Integer;
 var
-  v: IXQValue;
-  s, mangaid, purl: String;
+  v, w: IXQValue;
+  s, mangaid, purl, num: String;
   p, i: Integer;
 begin
   Result := NET_PROBLEM;
@@ -117,12 +117,16 @@ begin
               end;
               for v in XPath('json(*).data()') do
               begin
-                chapterLinks.Add(apiurlimagenes + XPathString('"?idManga="||tomo/idManga||"&idScanlation="||subidas/idScan||"&numeroCapitulo="||numCapitulo||"&visto=true"', v));
+                mangaid := XPathString('tomo/idManga', v);
+                num := XPathString('numCapitulo', v);
                 s := v.getProperty('nombre').toString;
                 if s = 'null' then s := '';
                 if s <> '' then s := ' ' + s;
                 s := v.getProperty('numCapitulo').toString + s;
-                chapterName.Add(s);
+                for w in XPath('jn:members(subidas)', v) do begin
+                  chapterLinks.Add(apiurlimagenes + '?idManga=' + mangaid + '&idScanlation=' + XPathString('./idScan', w) + '&numeroCapitulo=' + num + '&visto=true');
+                  chapterName.Add(s + ' [' + XPathString('./scanlation/nombre', w) + ']');
+                end;
               end;
             end;
             InvertStrings([chapterLinks, chapterName]);
