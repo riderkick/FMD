@@ -376,7 +376,6 @@ var
   i: Integer;
   m: TLuaModuleRepo;
   f: TFileStream;
-  s: TJSONStringType;
 begin
   a := TJSONArray.Create;
   try
@@ -398,8 +397,7 @@ begin
       DeleteFile(AFilename);
     f := TFileStream.Create(AFilename, fmCreate);
     try
-      s := a.FormatJSON();
-      f.WriteBuffer(s[1], Length(s));
+      a.DumpJSON(f);
     finally
       f.Free;
     end;
