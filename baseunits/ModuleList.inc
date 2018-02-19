@@ -57,7 +57,6 @@ uses
   MangaAe,
   Mangadex,
   MangaTube,
-  WieManga,
   Mangaf,
   MangaRock,
   PsychoPlay,
