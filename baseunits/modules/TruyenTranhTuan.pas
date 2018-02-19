@@ -97,6 +97,7 @@ begin
   begin
     Website := 'TruyenTranhTuan';
     RootURL := 'http://truyentranhtuan.com';
+    Category := 'Vietnamese';
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;
     OnGetPageNumber := @GetPageNumber;

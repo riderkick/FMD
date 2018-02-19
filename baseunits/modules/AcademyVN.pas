@@ -120,6 +120,7 @@ begin
   begin
     Website := 'AcademyVN';
     RootURL := 'http://truyen.academyvn.com';
+    Category := 'Vietnamese';
     OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;

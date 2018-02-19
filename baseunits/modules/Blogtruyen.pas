@@ -130,6 +130,7 @@ begin
   begin
     Website := 'BlogTruyen';
     RootURL := 'http://blogtruyen.com';
+    Category := 'Vietnamese';
     OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;
