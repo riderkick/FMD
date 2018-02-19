@@ -137,6 +137,7 @@ begin
   begin
     Website := 'GameofScanlation';
     RootURL := 'https://gameofscanlation.moe';
+    Category := 'English-Scanlation';
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;
     OnGetPageNumber := @GetPageNumber;

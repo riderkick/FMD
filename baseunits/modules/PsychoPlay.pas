@@ -114,6 +114,7 @@ begin
   begin
     Website := 'PsychoPlay';
     RootURL := 'https://psychoplay.co';
+    Category := 'English-Scanlation';
     OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;
