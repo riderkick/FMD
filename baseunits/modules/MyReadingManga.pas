@@ -92,6 +92,7 @@ begin
   begin
     Website := 'MyReadingManga';
     RootURL := 'https://myreadingmanga.info';
+    Category := 'H-Sites';
     SortedList := True;
     OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
     OnGetNameAndLink := @GetNameAndLink;

@@ -164,6 +164,7 @@ begin
   begin
     Website := 'Hentai2Read';
     RootURL := 'http://hentai2read.com';
+    Category := 'H-Sites';
     SortedList := True;
     OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
     OnGetNameAndLink := @GetNameAndLink;

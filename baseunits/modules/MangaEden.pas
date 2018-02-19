@@ -191,12 +191,13 @@ end;
 
 procedure RegisterModule;
 
-  function AddWebsiteModule(const AWebsite, ARootURL: String): TModuleContainer;
+  function AddWebsiteModule(const AWebsite, ARootURL, ACategory: String): TModuleContainer;
   begin
     Result := AddModule;
     with Result do begin
       Website := AWebsite;
       RootURL := ARootURL;
+      Category := ACategory;
       OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
       OnGetNameAndLink := @GetNameAndLink;
       OnGetInfo := @GetInfo;
@@ -206,10 +207,10 @@ procedure RegisterModule;
   end;
 
 begin
-  MMangaEden := AddWebsiteModule('MangaEden', 'http://www.mangaeden.com');
-  MMangaEdenIT := AddWebsiteModule('MangaEden_IT', 'http://www.mangaeden.com');
-  MPervEden := AddWebsiteModule('PervEden', 'http://www.perveden.com');
-  MPervEdenIT := AddWebsiteModule('PervEden_IT', 'http://www.perveden.com');
+  MMangaEden := AddWebsiteModule('MangaEden', 'http://www.mangaeden.com', 'English');
+  MMangaEdenIT := AddWebsiteModule('MangaEden_IT', 'http://www.mangaeden.com', 'Italian');
+  MPervEden := AddWebsiteModule('PervEden', 'http://www.perveden.com', 'H-Sites');
+  MPervEdenIT := AddWebsiteModule('PervEden_IT', 'http://www.perveden.com', 'H-Sites');
 end;
 
 initialization

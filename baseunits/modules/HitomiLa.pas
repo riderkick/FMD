@@ -140,6 +140,7 @@ begin
   begin
     Website := 'HitomiLa';
     RootURL := 'https://hitomi.la';
+    Category := 'H-Sites';
     SortedList := True;
     FavoriteAvailable := False;
     OnGetDirectoryPageNumber := @GetDirectoryPageNumber;

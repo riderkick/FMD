@@ -158,6 +158,7 @@ begin
   begin
     Website := 'Hakihome';
     RootURL := 'http://hakihome.com';
+    Category := 'H-Sites';
     OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;

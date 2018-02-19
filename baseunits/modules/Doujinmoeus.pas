@@ -159,6 +159,7 @@ begin
   begin
     Website := 'Doujin-Moe';
     RootURL := 'http://www.doujin-moe.us';
+    Category := 'H-Sites';
     SortedList := True;
     FavoriteAvailable := False;
     OnGetDirectoryPageNumber := @GetDirectoryPageNumber;

@@ -133,6 +133,7 @@ begin
   begin
     Website := 'HentaiCafe';
     RootURL := 'https://hentai.cafe';
+    Category := 'H-Sites';
     SortedList := True;
     FavoriteAvailable := False;
     OnGetDirectoryPageNumber := @GetDirectoryPageNumber;

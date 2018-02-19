@@ -112,6 +112,7 @@ begin
   begin
     Website := 'Luscious';
     RootURL := 'https://luscious.net';
+    Category := 'H-Sites';
     SortedList := True;
     OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
     OnGetNameAndLink := @GetNameAndLink;

@@ -113,6 +113,7 @@ begin
   begin
     Website := 'Tsumino';
     RootURL := 'http://www.tsumino.com';
+    Category := 'H-Sites';
     OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;

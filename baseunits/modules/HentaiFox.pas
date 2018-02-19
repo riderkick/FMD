@@ -93,6 +93,7 @@ begin
   begin
     Website := 'HentaiFox';
     RootURL := 'https://hentaifox.com';
+    Category := 'H-Sites';
     SortedList := True;
     OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
     OnGetNameAndLink := @GetNameAndLink;

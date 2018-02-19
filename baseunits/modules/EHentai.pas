@@ -407,6 +407,7 @@ procedure RegisterModule;
     with Result do begin
       Website := AWebsite;
       RootURL := ARootURL;
+      Category := 'H-Sites';
       MaxTaskLimit := 1;
       MaxConnectionLimit := 2;
       SortedList := True;
