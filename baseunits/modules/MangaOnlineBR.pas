@@ -106,6 +106,7 @@ begin
   begin
     Website := 'MangaOnlineBR';
     RootURL := 'http://mangaonline.com.br';
+    Category := 'Portugues';
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;
     OnGetPageNumber := @GetPageNumber;

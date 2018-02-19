@@ -88,6 +88,7 @@ begin
   begin
     Website := 'UnionMangas';
     RootURL := 'http://unionmangas.net';
+    Category := 'Portugues';
     OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;
