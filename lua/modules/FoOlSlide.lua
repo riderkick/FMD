@@ -40,7 +40,8 @@ function getdirurl(website)
     ['HelveticaScans'] = dirurlhelvetica,
     ['RavensScans'] = dirurllector,
     ['NoraNoFansub'] = dirurllector,
-    ['HotChocolateScans'] = dirurlfsdir
+    ['HotChocolateScans'] = dirurlfsdir,
+    ['AntisenseScans'] = dirurlonline
   }  
   if dirs[website] ~= nil then
     return dirs[website]
@@ -207,6 +208,9 @@ function Init()
   AddWebsiteModule('LetItGoScans', 'http://reader.letitgo.scans.today', cat)
   AddWebsiteModule('TripleSevenScan', 'http://triplesevenscans.com', cat)
   AddWebsiteModule('SeaOtterScans', 'https://reader.seaotterscans.com', cat)
+  AddWebsiteModule('AntisenseScans', 'http://antisensescans.com', cat)
+  AddWebsiteModule('TheCatScans', 'https://reader.thecatscans.com', cat)
+  AddWebsiteModule('DeathTollScans', 'https://reader.deathtollscans.net', cat)
   
   -- es-sc
   cat = 'Spanish-Scanlation'
