@@ -136,13 +136,14 @@ end;
 
 procedure RegisterModule;
 
-  function AddWebsiteModule(AWebsite, ARootURL: String): TModuleContainer;
+  function AddWebsiteModule(AWebsite, ARootURL, ACategory: String): TModuleContainer;
   begin
     Result := AddModule;
     with Result do
     begin
       Website := AWebsite;
       RootURL := ARootURL;
+      Category := ACategory;
       OnGetNameAndLink := @GetNameAndLink;
       OnGetInfo := @GetInfo;
       OnGetPageNumber := @GetPageNumber;
@@ -151,12 +152,12 @@ procedure RegisterModule;
   end;
 
 begin
-  AddWebsiteModule('NineManga', 'http://www.ninemanga.com');
-  AddWebsiteModule('NineMangaES', 'http://es.ninemanga.com');
-  AddWebsiteModule('NineMangaRU', 'http://ru.ninemanga.com');
-  AddWebsiteModule('NineMangaDE', 'http://de.ninemanga.com');
-  AddWebsiteModule('NineMangaIT', 'http://it.ninemanga.com');
-  AddWebsiteModule('NineMangaBR', 'http://br.ninemanga.com');
+  AddWebsiteModule('NineManga', 'http://www.ninemanga.com', 'English');
+  AddWebsiteModule('NineMangaES', 'http://es.ninemanga.com', 'Spanish');
+  AddWebsiteModule('NineMangaRU', 'http://ru.ninemanga.com', 'Russian');
+  AddWebsiteModule('NineMangaDE', 'http://de.ninemanga.com', 'German');
+  AddWebsiteModule('NineMangaIT', 'http://it.ninemanga.com', 'Italian');
+  AddWebsiteModule('NineMangaBR', 'http://br.ninemanga.com', 'Portugues');
 end;
 
 initialization
