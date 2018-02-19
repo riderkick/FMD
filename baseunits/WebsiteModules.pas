@@ -498,7 +498,7 @@ end;
 
 function TWebsiteModules.ModuleExist(const ModuleId: Integer): Boolean;
 begin
-  Result := (ModuleId > 0) and (ModuleId < FModuleList.Count);
+  Result := (ModuleId >= 0) and (ModuleId < FModuleList.Count);
 end;
 
 function TWebsiteModules.ModuleAvailable(const ModuleId: Integer;
