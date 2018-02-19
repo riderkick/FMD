@@ -146,6 +146,7 @@ begin
   begin
     Website := 'SundayWebEvery';
     RootURL := 'https://www.sunday-webry.com';
+    Category := 'Raw';
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;
     OnGetPageNumber := @GetPageNumber;

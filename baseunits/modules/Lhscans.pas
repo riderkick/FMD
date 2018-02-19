@@ -81,6 +81,7 @@ begin
   begin
     Website := 'Lhscans';
     RootURL := 'http://lhscans.com';
+    Category := 'Raw';
     TotalDirectory := 1;
     OnGetInfo := @GetInfo;
     OnGetPageNumber := @GetPageNumber;

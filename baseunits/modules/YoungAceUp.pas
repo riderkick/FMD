@@ -101,6 +101,7 @@ begin
   begin
     Website := 'YoungAceUp';
     RootURL := 'https://web-ace.jp/youngaceup';
+    Category := 'Raw';
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;
     OnGetPageNumber := @GetPageNumber;

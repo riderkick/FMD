@@ -127,6 +127,7 @@ begin
   begin
     Website := 'NewType';
     RootURL := 'https://comic.webnewtype.com';
+    Category := 'Raw';
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;
     OnGetPageNumber := @GetPageNumber;

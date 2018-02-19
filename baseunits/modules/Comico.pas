@@ -155,6 +155,7 @@ begin
   begin
     Website := 'Comico';
     RootURL := 'http://www.comico.jp';
+    Category := 'Raw';
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;
     OnGetPageNumber := @GetPageNumber;

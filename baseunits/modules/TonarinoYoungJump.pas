@@ -174,6 +174,7 @@ begin
   begin
     Website := 'TonarinoYoungJump';
     RootURL := 'https://tonarinoyj.jp';
+    Category := 'Raw';
     TotalDirectory := Length(dirurls);
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;
