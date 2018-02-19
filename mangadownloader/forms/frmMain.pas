@@ -5570,6 +5570,13 @@ begin
     Width := ReadInteger('form', 'MainFormWidth', Width);
     Height := ReadInteger('form', 'MainFormHeight', Height);
 
+    if Screen.PixelsPerInch > 96 then begin
+      Width := ScaleScreenTo96(Width);
+      Height := ScaleScreenTo96(Height);
+      psDownloads.Position := ScaleScreenTo96(psDownloads.Position);
+      psInfo.Position := ScaleScreenTo96(psInfo.Position);
+    end;
+
     if ReadBool('form', 'MainFormMaximized', False) then
       PrevWindowState := wsMaximized
     else
