@@ -112,6 +112,7 @@ begin
   begin
     Website := 'MangaHubRU';
     RootURL := 'https://mangahub.ru';
+    Category := 'Russian';
     SortedList := True;
     OnGetInfo := @GetInfo;
     OnGetPageNumber := @GetPageNumber;
