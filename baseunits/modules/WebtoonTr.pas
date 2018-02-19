@@ -117,6 +117,7 @@ begin
   begin
     Website := 'WebtoonTr';
     RootURL := 'http://webtoontr.com';
+    Category := 'Turkish';
     OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;
