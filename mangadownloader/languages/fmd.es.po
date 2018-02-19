@@ -1,39 +1,37 @@
 msgid ""
 msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
-"Project-Id-Version: FMD Español 2.0.2\n"
+"Project-Id-Version: FMD Español 2.0.5\n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
 "Language-Team: Mariolr\n"
 "MIME-Version: 1.0\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.3\n"
+"X-Generator: Poedit 2.0.6\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "Last-Translator: Mariolr\n"
 "Language: es_419\n"
 
 #: dbupdater.rs_buttoncancel
-#, fuzzy
-#| msgid "Cancel"
 msgctxt "dbupdater.rs_buttoncancel"
 msgid "Abort"
-msgstr "Cancelar"
+msgstr "Abortar"
 
 #: dbupdater.rs_downloading
 msgid "Downloading %s"
-msgstr ""
+msgstr "Descargando %s"
 
 #: dbupdater.rs_extracting
 msgid "Extracting %s"
-msgstr ""
+msgstr "Extrayendo %s"
 
 #: dbupdater.rs_faileddownload
 msgid "%s: %d %s"
-msgstr ""
+msgstr "%s: %d %s"
 
 #: dbupdater.rs_failedextract
 msgid "%s: failed to extract, exitstatus = %d"
-msgstr ""
+msgstr "%s: falló en extraer, exitstatus = %d"
 
 #: dbupdater.rs_faileditems
 msgid ""
@@ -41,20 +39,22 @@ msgid ""
 "\n"
 "%s\n"
 msgstr ""
+"Falló en terminar:\n"
+"\n"
+"%s\n"
 
 #: dbupdater.rs_faileditemstitle
-#, fuzzy
 msgctxt "dbupdater.rs_faileditemstitle"
 msgid "Failed"
 msgstr "Fallido"
 
 #: dbupdater.rs_failedtosave
 msgid "%s: failed to save"
-msgstr ""
+msgstr "%s: falló en guardar"
 
 #: dbupdater.rs_missingzipexe
 msgid "%s: Missing %s"
-msgstr ""
+msgstr "%s: Perdido %s"
 
 #: ehentai.rs_downloadoriginalimage
 msgid "Download original image(require ExHentai account)"
@@ -117,7 +117,6 @@ msgid "List of unimported manga"
 msgstr "Lista de manga sin importar"
 
 #: frmluamodulesupdater.rs_checking
-#, fuzzy
 msgctxt "frmluamodulesupdater.rs_checking"
 msgid "Checking..."
 msgstr "Revisando..."
@@ -125,15 +124,15 @@ msgstr "Revisando..."
 #: frmluamodulesupdater.rs_checkupdate
 msgctxt "frmluamodulesupdater.rs_checkupdate"
 msgid "Check update"
-msgstr ""
+msgstr "Revisar actualización"
 
 #: frmluamodulesupdater.rs_finishchecking
 msgid "Finish checking"
-msgstr ""
+msgstr "Revisión finalizada"
 
 #: frmluamodulesupdater.rs_finishdownload
 msgid "Finish download"
-msgstr ""
+msgstr "Descarga terminada"
 
 #: frmluamodulesupdater.rs_modulesupdatedrestart
 msgid ""
@@ -141,10 +140,13 @@ msgid ""
 "\n"
 "%s\n"
 msgstr ""
+"Módulos Actualizados, Reiniciar Ahora?\n"
+"\n"
+"%s\n"
 
 #: frmluamodulesupdater.rs_modulesupdatedtitle
 msgid "Modules updated!"
-msgstr ""
+msgstr "Módulos Actualizados!"
 
 #: frmluamodulesupdater.rs_newupdatefoundlostchanges
 msgid ""
@@ -152,14 +154,17 @@ msgid ""
 "\n"
 "%s\n"
 msgstr ""
+"Actualización de Módulos Encontrada, Cualquier Cambio Local Será Perdido, Proceder?\n"
+"\n"
+"%s\n"
 
 #: frmluamodulesupdater.rs_newupdatefoundtitle
 msgid "Modules update found!"
-msgstr ""
+msgstr "Actualización de Módulos Encontrada!"
 
 #: frmluamodulesupdater.rs_startdownloading
 msgid "Downloading..."
-msgstr ""
+msgstr "Descargando..."
 
 #: frmluamodulesupdater.rs_statusdelete
 msgctxt "frmluamodulesupdater.rs_statusdelete"
@@ -394,6 +399,10 @@ msgid ""
 "CBZ\n"
 "PDF\n"
 msgstr ""
+"Ninguno\n"
+"ZIP\n"
+"CBZ\n"
+"PDF\n"
 
 #: frmmain.rs_optionfmddoitems
 msgid ""
@@ -430,6 +439,9 @@ msgid ""
 "PNG\n"
 "JPEG\n"
 msgstr ""
+"WebP\n"
+"PNG\n"
+"JPEG\n"
 
 #: frmmain.rs_webppnglevel
 msgid ""
@@ -438,6 +450,10 @@ msgid ""
 "Default\n"
 "Maximum\n"
 msgstr ""
+"Ninguno\n"
+"El Más Rápido\n"
+"Por Defecto\n"
+"Máximo\n"
 
 #: frmmain.rs_wronginput
 msgid "Invalid input!"
@@ -462,18 +478,17 @@ msgstr "Sistema se Apagará en %d segundos."
 #: frmtransferfavorites.rs_all
 msgctxt "frmtransferfavorites.rs_all"
 msgid "All"
-msgstr ""
+msgstr "Todo"
 
 #: frmtransferfavorites.rs_invalid
-#, fuzzy
 msgctxt "frmtransferfavorites.rs_invalid"
 msgid "Invalid"
-msgstr "Inválido"
+msgstr "No Valido"
 
 #: frmtransferfavorites.rs_valid
 msgctxt "frmtransferfavorites.rs_valid"
 msgid "Valid"
-msgstr ""
+msgstr "Valido"
 
 #: kissmanga.rs_kissmanga_initvector
 msgid "Initialization Vector:"
@@ -506,14 +521,13 @@ msgid "Save as PNG"
 msgstr "Guardar como PNG"
 
 #: selfupdater.rs_buttoncancel
-#, fuzzy
 msgctxt "selfupdater.rs_buttoncancel"
 msgid "Abort"
 msgstr "Abortar"
 
 #: selfupdater.rs_downloading
 msgid "Downloading new version %s"
-msgstr ""
+msgstr "Descargando Nueva Versión %s"
 
 #: selfupdater.rs_faileddownload
 msgid ""
@@ -521,32 +535,34 @@ msgid ""
 "\n"
 "%d %s\n"
 msgstr ""
+"Ha Fallado En Descargar Nueva Versión %s\n"
+"\n"
+"%d %s\n"
 
 #: selfupdater.rs_failedextract
 msgid "Failed to extract %s, exitstatus = %d"
-msgstr ""
+msgstr "Ha Fallado en Extraer %s, exitstatus = %d"
 
 #: selfupdater.rs_failedtitle
-#, fuzzy
 msgctxt "selfupdater.rs_failedtitle"
 msgid "Failed"
 msgstr "Fallido"
 
 #: selfupdater.rs_failedtosave
 msgid "Failed to save %s"
-msgstr ""
+msgstr "Falló en Guardar %s"
 
 #: selfupdater.rs_finishrestart
 msgid "Download update package finished, restart to proceed?"
-msgstr ""
+msgstr "La Descarga del Paquete ha Terminado, Proceder en Reiniciar?"
 
 #: selfupdater.rs_finishrestarttitle
 msgid "Download finished"
-msgstr ""
+msgstr "Descarga Finalizada"
 
 #: selfupdater.rs_missingzipexe
 msgid "Missing %s"
-msgstr ""
+msgstr "Perdido %s"
 
 #: taccountmanagerform.btadd.caption
 msgctxt "taccountmanagerform.btadd.caption"
@@ -697,27 +713,27 @@ msgstr "Software:"
 #: tluamodulesupdaterform.btcheckupdate.caption
 msgctxt "tluamodulesupdaterform.btcheckupdate.caption"
 msgid "Check update"
-msgstr ""
+msgstr "Revisar actualización"
 
 #: tluamodulesupdaterform.ckautorestart.caption
 msgid "Auto restart"
-msgstr ""
+msgstr "Auto Reinicio"
 
 #: tluamodulesupdaterform.ckshowupdatewarning.caption
 msgid "Show update warning"
-msgstr ""
+msgstr "Mostrar Advertencia de Actualización"
 
 #: tluamodulesupdaterform.vtluamodulesrepos.header.columns[0].text
 msgid "Filename"
-msgstr ""
+msgstr "Nombre del Archivo"
 
 #: tluamodulesupdaterform.vtluamodulesrepos.header.columns[1].text
 msgid "Last modified"
-msgstr ""
+msgstr "Última Modificación"
 
 #: tluamodulesupdaterform.vtluamodulesrepos.header.columns[2].text
 msgid "Last message"
-msgstr ""
+msgstr "Último Mensaje"
 
 #: tmainform.btabortupdatelist.hint
 msgid "Abort update list"
@@ -850,7 +866,7 @@ msgstr "Habilitar Esto si Tienes Algún Problema con Caracteres Unicode en la Ru
 
 #: tmainform.cboptiondeletecompletedtasksonclose.caption
 msgid "Delete completed tasks on close"
-msgstr ""
+msgstr "Eliminar Las Tareas Completadas Al Cerrar"
 
 #: tmainform.cboptiondigitchapter.caption
 msgid "Chapter"
@@ -919,7 +935,7 @@ msgstr "Mostrar \"Eliminar Todas las Tareas Completadas\" en la Barra de Herrami
 
 #: tmainform.cboptionshowdownloadtoolbarleft.caption
 msgid "Show left downloads toolbar"
-msgstr ""
+msgstr "Mostar Barra de Herramientas de Descargas Izquierda"
 
 #: tmainform.cboptionshowquitdialog.caption
 msgid "Exit FMD"
@@ -940,7 +956,7 @@ msgstr "Usar Proxy"
 #: tmainform.cbpngcompressionlevel.text
 msgctxt "tmainform.cbpngcompressionlevel.text"
 msgid "Fastest"
-msgstr ""
+msgstr "El Más Rápido"
 
 #: tmainform.cbsearchfromallsites.caption
 msgid "Search in all manga sites"
@@ -957,7 +973,7 @@ msgstr "Regular Expresión"
 #: tmainform.cbwebpsaveas.text
 msgctxt "tmainform.cbwebpsaveas.text"
 msgid "PNG"
-msgstr ""
+msgstr "PNG"
 
 #: tmainform.ckdroptarget.caption
 msgctxt "tmainform.ckdroptarget.caption"
@@ -1287,11 +1303,11 @@ msgstr "Este trabajo involucra generalmente relaciones íntimas entre mujeres."
 #: tmainform.ckoptionsalwaysstarttaskfromfailedchapters.caption
 msgctxt "tmainform.ckoptionsalwaysstarttaskfromfailedchapters.caption"
 msgid "Always start task from failed chapters"
-msgstr ""
+msgstr "Siempre Empezar Tareas desde Capítulos Fallídos"
 
 #: tmainform.ckpngsaveasjpeg.caption
 msgid "Save PNG as JPEG"
-msgstr ""
+msgstr "Guardar PNG como JPEG"
 
 #: tmainform.edcustomgenres.texthint
 msgid "Input custom genres, separated by comma"
@@ -1401,7 +1417,7 @@ msgstr "Drop Box"
 
 #: tmainform.gbimageconversion.caption
 msgid "Image Conversion"
-msgstr ""
+msgstr "Conversión de Imagen"
 
 #: tmainform.gboptionexternal.caption
 msgid "External program"
@@ -1485,7 +1501,7 @@ msgstr "Título"
 
 #: tmainform.lbjpegquality.caption
 msgid "JPEG quality"
-msgstr ""
+msgstr "Calidad JPEG"
 
 #: tmainform.lblogfilename.caption
 msgid "Log file:"
@@ -1666,7 +1682,7 @@ msgstr "Renombrar Dígitos"
 
 #: tmainform.lboptionretryfailedtask.caption
 msgid "Number of retry times if task failed"
-msgstr ""
+msgstr "Número de Reintentos si la Tarea ha Fallado"
 
 #: tmainform.lboptionuser.caption
 msgctxt "tmainform.lboptionuser.caption"
@@ -1676,7 +1692,7 @@ msgstr "Usuario"
 #: tmainform.lbpngcompressionlevel.caption
 msgctxt "tmainform.lbpngcompressionlevel.caption"
 msgid "PNG Compression level"
-msgstr ""
+msgstr "Nivel de Compresión PNG"
 
 #: tmainform.lbsaveto.caption
 msgid "Save to:"
@@ -1684,7 +1700,7 @@ msgstr "Guardar en:"
 
 #: tmainform.lbwebpsaveas.caption
 msgid "Save WebP as"
-msgstr ""
+msgstr "Guardar WebP como"
 
 #: tmainform.medturldelete.caption
 msgctxt "TMAINFORM.MEDTURLDELETE.CAPTION"
@@ -1864,7 +1880,7 @@ msgstr "Abrir ..."
 
 #: tmainform.mifavoritesrename.caption
 msgid "Rename"
-msgstr ""
+msgstr "Renombrar"
 
 #: tmainform.mifavoritesstopchecknewchapter.caption
 msgid "Stop check for new chapter"
@@ -1873,7 +1889,7 @@ msgstr "Detener Revisar si hay  Nuevo Capitulo"
 #: tmainform.mifavoritestransferwebsite.caption
 msgctxt "tmainform.mifavoritestransferwebsite.caption"
 msgid "Transfer website"
-msgstr ""
+msgstr "Transferir Sitio Web"
 
 #: tmainform.mifavoritesviewinfos.caption
 msgctxt "TMAINFORM.MIFAVORITESVIEWINFOS.CAPTION"
@@ -2012,19 +2028,19 @@ msgstr "Detener Todo"
 
 #: tmainform.tbmidownloadmovebottom.hint
 msgid "Move selected item(s) to bottom"
-msgstr ""
+msgstr "Mover Ítem(s) Seleccionado(s) al Final"
 
 #: tmainform.tbmidownloadmovedown.hint
 msgid "Move selected item(s) down"
-msgstr ""
+msgstr "Mover Ítem(s) Seleccionado(s) Abajo"
 
 #: tmainform.tbmidownloadmovetop.hint
 msgid "Move selected item(s) to top"
-msgstr ""
+msgstr "Mover Ítem(s) Seleccionado(s) al Inicio"
 
 #: tmainform.tbmidownloadmoveup.hint
 msgid "Move selected item(s) up"
-msgstr ""
+msgstr "Mover Ítem(s) Seleccionado(s) Arriba"
 
 #: tmainform.tbwebsitescollapseall.caption
 msgid "Collapse All"
@@ -2121,7 +2137,7 @@ msgstr "Avanzado"
 
 #: tmainform.tswebsitemodules.caption
 msgid "Modules"
-msgstr ""
+msgstr "Módulos"
 
 #: tmainform.tswebsiteoptions.caption
 msgctxt "tmainform.tswebsiteoptions.caption"
@@ -2227,55 +2243,49 @@ msgid "&Now"
 msgstr "&Ahora"
 
 #: ttransferfavoritesform.btcancel.caption
-#, fuzzy
 msgctxt "ttransferfavoritesform.btcancel.caption"
 msgid "Cancel"
 msgstr "Cancelar"
 
 #: ttransferfavoritesform.btok.caption
-#, fuzzy
 msgctxt "ttransferfavoritesform.btok.caption"
 msgid "OK"
 msgstr "OK"
 
 #: ttransferfavoritesform.caption
 msgid "Transfer Favorites"
-msgstr ""
+msgstr "Transferir Favoritos"
 
 #: ttransferfavoritesform.ckcleardownloadedchapters.caption
 msgid "Clear downloaded chapter list and reload from server"
-msgstr ""
+msgstr "Limpiar Lista de Capítulos Descargados y Volver a Cargar desde Servidor"
 
 #: ttransferfavoritesform.lbtransferto.caption
 msgctxt "ttransferfavoritesform.lbtransferto.caption"
 msgid "Transfer to"
-msgstr ""
+msgstr "Transferir a"
 
 #: ttransferfavoritesform.rball.caption
 msgctxt "ttransferfavoritesform.rball.caption"
 msgid "All"
-msgstr ""
+msgstr "Todo"
 
 #: ttransferfavoritesform.rbinvalid.caption
-#, fuzzy
 msgctxt "ttransferfavoritesform.rbinvalid.caption"
 msgid "Invalid"
-msgstr "Inválido"
+msgstr "No Valido"
 
 #: ttransferfavoritesform.rbvalid.caption
 msgctxt "ttransferfavoritesform.rbvalid.caption"
 msgid "Valid"
-msgstr ""
+msgstr "Valido"
 
 #: ttransferfavoritesform.vtfavs.header.columns[1].text
-#, fuzzy
-#| msgid "Website"
 msgctxt "ttransferfavoritesform.vtfavs.header.columns[1].text"
 msgid "Title"
-msgstr "Sitio Web"
+msgstr "Título"
 
 #: ttransferfavoritesform.vtfavs.header.columns[2].text
-#, fuzzy
 msgctxt "ttransferfavoritesform.vtfavs.header.columns[2].text"
 msgid "Website"
 msgstr "Sitio Web"
@@ -2563,4 +2573,3 @@ msgstr "Sincronizando Datos"
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr "Actualizando Lista"
-
