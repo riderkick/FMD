@@ -83,6 +83,7 @@ begin
   begin
     Website := 'Mangacan';
     RootURL := 'http://www.mangacanblog.com';
+    Category := 'Indonesian';
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;
     OnGetPageNumber := @GetPageNumber;

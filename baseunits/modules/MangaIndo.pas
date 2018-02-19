@@ -73,6 +73,7 @@ begin
   begin
     Website := 'MangaIndo';
     RootURL := 'http://mangaindo.web.id';
+    Category := 'Indonesian';
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;
     OnGetPageNumber := @GetPageNumber;

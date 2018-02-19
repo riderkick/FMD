@@ -130,6 +130,7 @@ begin
   begin
     Website := 'PecintaKomik';
     RootURL := 'http://www.pecintakomik.com';
+    Category := 'Indonesian';
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;
     OnGetPageNumber := @GetPageNumber;
