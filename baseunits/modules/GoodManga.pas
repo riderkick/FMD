@@ -116,17 +116,24 @@ begin
 end;
 
 procedure RegisterModule;
-begin
-  with AddModule do
+
+  procedure AddWebsiteModule(AWebsite, ARootURL: String);
   begin
-    Website := 'GoodManga';
-    RootURL := 'http://www.goodmanga.net';
-    Category := 'English';
-    OnGetNameAndLink := @GetNameAndLink;
-    OnGetInfo := @GetInfo;
-    OnGetPageNumber := @GetPageNumber;
-    OnGetImageURL := @GetImageURL;
+    with AddModule do
+    begin
+      Website := AWebsite;
+      RootURL := ARootURL;
+      Category := 'English';
+      OnGetNameAndLink := @GetNameAndLink;
+      OnGetInfo := @GetInfo;
+      OnGetPageNumber := @GetPageNumber;
+      OnGetImageURL := @GetImageURL;
+    end;
   end;
+
+begin
+  AddWebsiteModule('GoodManga', 'http://www.goodmanga.net');
+  AddWebsiteModule('MangaBB', 'http://mangabb.co');
 end;
 
 initialization
