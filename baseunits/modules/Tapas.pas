@@ -139,6 +139,7 @@ begin
   begin
     Website := 'Tapas';
     RootURL := 'https://tapas.io';
+    Category := 'Webcomics';
     OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;
