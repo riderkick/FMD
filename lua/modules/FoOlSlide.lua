@@ -231,4 +231,5 @@ function Init()
   AddWebsiteModule('XAnimeSeduccion', 'http://xanime-seduccion.com', cat)
   AddWebsiteModule('JokerFansub', 'http://reader.jokerfansub.com', cat)
   AddWebsiteModule('PatyScans', 'http://lector.patyscans.com', cat)
+  AddWebsiteModule('IdkScans', 'http://reader.idkscans.com', cat)
 end
