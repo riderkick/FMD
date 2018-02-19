@@ -9,21 +9,16 @@ local dirurllector = '/lector/directory/'
 local dirurlfsdir = '/fs/directory/'
 
 function getWithCookie(lurl)
-  local needCookie = {
-    ['SeinagiAdultoFansub'] = true,
-    ['TripleSevenScan'] = true,
-    ['DokiFansubs'] = true,
-    ['RavensScans'] = true,
-    ['YamiTenshiNoFansub'] = true,
-    ['S2Scans'] = true,
-    ['Pzykosis666HFansub'] = true,
-    ['SantosScan'] = true,
-    ['XAnimeSeduccion'] = true
-  }
-  if needCookie[module.website] and Pos(dirurl, lurl) then
-    return http.post(lurl, 'adult=true')
+  if http.get(lurl) then
+    local x = TXQuery.Create(http.document)
+    local s = x.xpathstring('//form//input[(@type="hidden") and (@name="adult")]/@value')
+    if s:lower() == 'true' then
+      http.reset()
+      return http.post(lurl, 'adult=true')
+    end
+    return true
   else
-    return http.get(lurl)
+    return false
   end
 end
 
