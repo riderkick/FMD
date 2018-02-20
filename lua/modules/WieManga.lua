@@ -56,9 +56,8 @@ end
 function GetNameAndLink()
   local s = '0-9'
   if module.CurrentDirectoryIndex ~= 0 then
-    s = ALPHA_LIST_UP:sub(module.CurrentDirectoryIndex,module.CurrentDirectoryIndex)
+    s = ALPHA_LIST_UP:sub(module.CurrentDirectoryIndex+1,module.CurrentDirectoryIndex+1)
   end
-  print(s)
   if http.get(module.rooturl..'/category/' .. s .. '_'.. IncStr(url) .. '.html') then
     x=TXQuery.Create(http.Document)
     v=x.xpath('//*[@class="booklist"]//span[@class="pagetor"]//text()')
@@ -68,7 +67,6 @@ function GetNameAndLink()
       local tmp = tonumber(v1.toString)
       if (tmp ~= nil) and (tmp > i) then i = tmp end
     end
-    print(i)
     updatelist.CurrentDirectoryPageNumber = i
     x.XPathHREFtitleAll('//*[@class="booklist"]/table//dl/dd/a[1]', links, names)
     return no_error
