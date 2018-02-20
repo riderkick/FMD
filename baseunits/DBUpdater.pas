@@ -63,7 +63,7 @@ resourcestring
 
 implementation
 
-uses FMDVars;
+uses FMDVars, SourceForge;
 
 function GetDBURL(const AName: String): String;
 begin
@@ -242,7 +242,7 @@ end;
 
 procedure TDBUpdaterThread.Execute;
 var
-  currentfilename: String;
+  currentfilename, lurl: String;
   cont: Boolean;
   used: Boolean;
 begin
@@ -255,8 +255,12 @@ begin
     try
       FCurrentName := Items[FCurrentId];
       Synchronize(@SyncStartDownload);
-      if FHTTP.GET(GetDBURL(FCurrentName)) and (FHTTP.ResultCode < 300) then
-        // should be success
+      lurl := GetDBURL(FCurrentName);
+      if Pos('sourceforge.net', AnsiLowerCase(lurl)) <> 0 then
+        cont := SourceForge.Download(FHTTP, lurl)
+      else
+        cont := FHTTP.GET(GetDBURL(FCurrentName)) and (FHTTP.ResultCode < 300);
+      if cont then
       begin
         cont := True;
         // save to data folder
@@ -338,7 +342,6 @@ begin
   FreeOnTerminate := True;
   FFailedList := TStringList.Create;
   FHTTP := THTTPSendThread.Create(Self);
-  FHTTP.UserAgent := UserAgentCURL;
   FHTTP.Sock.OnStatus := @HTTPSockOnStatus;
   Items := TStringList.Create;
   Synchronize(@SyncStart);

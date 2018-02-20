@@ -503,9 +503,19 @@ begin
       Headers.Assign(HTTPHeader);
     end;
 
-    // redirection, only 301, 302, 303
+    { redirection
+      300 Multiple Choices
+      301 Moved Permanently
+      302 Found (aka Object Moved aka Moved Temporarily)
+      303 See Other
+      304 Not Modified
+      305 Use Proxy
+      306 Switch Proxy
+      307 Temporary Redirect
+      who have location 301, 302, 303, 307?
+    }
     if FFollowRedirection then
-      while (ResultCode > 300) and (ResultCode < 304) do begin
+      while (ResultCode-300) in [1, 2, 3, 7] do begin
         if CheckTerminate then Exit;
         // break too many redirect
         if redirectcounter >= FMaxRedirect then Exit
