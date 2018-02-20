@@ -5255,28 +5255,9 @@ var
   data: PSingleItem;
 begin
   categories := TStringList.Create;
-  categories.OwnsObjects := True;
-  categories.Sorted := False;
   try
-    // read mangalist.ini
-    with TIniFile.Create(MANGALIST_FILE) do
-    try
-      // read available websites
-      ReadSection('available', categories);
-      for i := 0 to categories.Count - 1 do
-      begin
-        categoriesitem := TStringList.Create;
-        categories.Objects[i] := categoriesitem;
-        categoriesitem.Sorted := False;
-        s := Trim(ReadString('available', categories[i], ''));
-        if s <> '' then
-          categoriesitem.CommaText := s;
-      end;
-    finally
-      Free;
-    end;
-
     // sort all
+    categories.OwnsObjects := True;
     categories.Duplicates := dupIgnore;
     categories.Sorted := True;
     for i := 0 to categories.Count - 1 do

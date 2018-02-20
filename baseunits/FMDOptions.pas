@@ -84,7 +84,6 @@ var
   CONFIG_ADVANCED,
   REVISION_FILE,
   UPDATE_FILE,
-  MANGALIST_FILE,
   BASE_FILE,
   ACCOUNTS_FILE,
   WEBSITE_CONFIG_FILE,
@@ -98,7 +97,6 @@ var
   MANGAFOXTEMPLATE_FOLDER,
   LUA_WEBSITEMODULE_FOLDER,
   LUA_WEBSITEMODULE_REPOS: String;
-  DEFAULT_SELECTED_WEBSITES: String = 'MangaFox,MangaHere,MangaInn,MangaReader';
 
   // ini files
   revisionfile,
@@ -107,6 +105,7 @@ var
   advancedfile: TIniFileRun;
 
   // base url, should be in base.ini
+  DEFAULT_SELECTED_WEBSITES: String = 'MangaFox,MangaHere,MangaInn,MangaReader';
   DB_URL: String = 'https://sourceforge.net/projects/newfmd/files/data/<website>.7z/download';
   UPDATE_URL: String = 'https://raw.githubusercontent.com/riderkick/FMD/master/update';
   CHANGELOG_URL: String = 'https://raw.githubusercontent.com/riderkick/FMD/master/changelog.txt';
@@ -272,6 +271,7 @@ begin
   if not FileExistsUTF8(BASE_FILE) then Exit;
   with TIniFile.Create(BASE_FILE) do
     try
+      DEFAULT_SELECTED_WEBSITES:=ReadString('base','DEFAULT_SELECTED_WEBSITES',DEFAULT_SELECTED_WEBSITES);
       DB_URL:=ReadString('base','DB_URL',DB_URL);
       UPDATE_URL:=ReadString('base','UPDATE_URL',UPDATE_URL);
       CHANGELOG_URL:=ReadString('base','CHANGELOG_URL',CHANGELOG_URL);
@@ -291,7 +291,6 @@ begin
   CONFIG_FOLDER := FMD_DIRECTORY + 'config' + PathDelim;
   REVISION_FILE := CONFIG_FOLDER + 'revision.ini';
   UPDATE_FILE := CONFIG_FOLDER + 'updates.ini';
-  MANGALIST_FILE := CONFIG_FOLDER + 'mangalist.ini';
   BASE_FILE := CONFIG_FOLDER + 'base.ini';
 
   IMAGE_FOLDER := FMD_DIRECTORY + 'images' + PathDelim;
