@@ -66,11 +66,31 @@ type
     Items: PString;
   end;
 
+  TProxyType = (ptDefault, ptDirect, ptHTTP, ptSOCKS4, ptSOCKS5);
+
+  { TWebsiteModuleSettings }
+
+  TWebsiteModuleSettings = class
+  public
+    MaxTaskLimit: Integer;
+    MaxConnectionLimit: Integer;
+    UpdateListNumberOfThreads: Integer;
+    UpdateListDirectoryPageNumber: Integer;
+    UserAgent: String;
+    Cookies: String;
+    ProxyType: TProxyType;
+    ProxyHost: String;
+    ProxyPort: String;
+    ProxyUsername: String;
+    ProxyPassword: String;
+  end;
+
   { TModuleContainer }
 
   TModuleContainer = class
   private
     FID: Integer;
+    FSettings: TWebsiteModuleSettings;
     FTotalDirectory: Integer;
     FCloudflareCF: TCFProps;
     FCloudflareEnabled: Boolean;
@@ -86,8 +106,6 @@ type
     Website: String;
     RootURL: String;
     Category: String;
-    MaxTaskLimit: Integer;
-    MaxConnectionLimit: Integer;
     ActiveTaskCount: Integer;
     ActiveConnectionCount: Integer;
     AccountSupport: Boolean;
@@ -131,6 +149,8 @@ type
     procedure DecActiveTaskCount; inline;
     procedure IncActiveConnectionCount; inline;
     procedure DecActiveConnectionCount; inline;
+
+    property Settings: TWebsiteModuleSettings read FSettings write FSettings;
   end;
 
   TModuleContainers = specialize TFPGList<TModuleContainer>;
@@ -265,8 +285,6 @@ implementation
 var
   CS_Connection: TRTLCriticalSection;
 
-{ TModuleContainer }
-
 function CleanOptionName(const S: String): String;
 const
   Alpha = ['A'..'Z', 'a'..'z', '_'];
@@ -286,6 +304,8 @@ begin
     else
       Inc(i);
 end;
+
+{ TModuleContainer }
 
 procedure TModuleContainer.SetCloudflareEnabled(AValue: Boolean);
 begin
@@ -327,9 +347,8 @@ end;
 
 constructor TModuleContainer.Create;
 begin
+  FSettings := TWebsiteModuleSettings.Create;
   FID := -1;
-  MaxTaskLimit := 0;
-  MaxConnectionLimit := 0;
   ActiveTaskCount := 0;
   ActiveConnectionCount := 0;
   AccountSupport := False;
@@ -348,6 +367,7 @@ begin
   SetLength(OptionList,0);
   if Assigned(FCloudflareCF) then
     FCloudflareCF.Free;
+  FSettings.Free;
   inherited Destroy;
 end;
 
@@ -783,8 +803,8 @@ begin
   Result := True;
   if ModuleExist(ModuleId) then
   with FModuleList[ModuleId] do
-    if MaxTaskLimit > 0 then
-      Result := ActiveTaskCount < MaxTaskLimit;
+    if Settings.MaxTaskLimit > 0 then
+      Result := ActiveTaskCount < Settings.MaxTaskLimit;
 end;
 
 procedure TWebsiteModules.IncActiveConnectionCount(ModuleId: Integer);
@@ -804,8 +824,8 @@ begin
   Result := True;
   if ModuleExist(ModuleId) then
   with FModuleList[ModuleId] do
-    if MaxConnectionLimit > 0 then
-      Result := ActiveConnectionCount < MaxConnectionLimit;
+    if Settings.MaxConnectionLimit > 0 then
+      Result := ActiveConnectionCount < Settings.MaxConnectionLimit;
 end;
 
 procedure TWebsiteModules.LoadWebsiteOption;
@@ -861,13 +881,13 @@ end;
 function TWebsiteModules.GetMaxTaskLimit(const ModuleId: Integer): Integer;
 begin
   if not ModuleExist(ModuleId) then Exit(0);
-  Result := FModuleList[ModuleId].MaxTaskLimit;
+  Result := FModuleList[ModuleId].Settings.MaxTaskLimit;
 end;
 
 function TWebsiteModules.GetMaxConnectionLimit(const ModuleId: Integer): Integer;
 begin
   if not ModuleExist(ModuleId) then Exit(0);
-  Result := FModuleList[ModuleId].MaxConnectionLimit;
+  Result := FModuleList[ModuleId].Settings.MaxConnectionLimit;
 end;
 
 function TWebsiteModules.GetActiveTaskCount(const ModuleId: Integer): Integer;

@@ -140,8 +140,8 @@ begin
     Website := 'Mangadex';
     RootURL := 'https://mangadex.com';
     Category := 'English';
-    MaxTaskLimit := 4;
-    MaxConnectionLimit := 4;
+    Settings.MaxTaskLimit := 4;
+    Settings.MaxConnectionLimit := 4;
     TotalDirectory := Length(ALPHA_LIST_UP);
     OnGetInfo := @GetInfo;
     OnGetPageNumber := @GetPageNumber;

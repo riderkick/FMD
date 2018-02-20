@@ -175,8 +175,8 @@ begin
     Website := 'RawSenManga';
     RootURL := 'http://raw.senmanga.com';
     Category := 'Raw';
-    MaxTaskLimit := 1;
-    MaxConnectionLimit := 4;
+    Settings.MaxTaskLimit := 1;
+    Settings.MaxConnectionLimit := 4;
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;
     OnGetPageNumber := @GetPageNumber;

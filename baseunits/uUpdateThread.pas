@@ -396,8 +396,8 @@ begin
       end
       else
       begin
-        if Module.MaxConnectionLimit > 0 then
-          numberOfThreads := Module.MaxConnectionLimit
+        if Module.Settings.MaxConnectionLimit > 0 then
+          numberOfThreads := Module.Settings.MaxConnectionLimit
         else
           numberOfThreads := OptionMaxThreads;
         if numberOfThreads > OptionMaxThreads then
@@ -415,7 +415,7 @@ begin
         Exit;
       end;
 
-      if Module.MaxConnectionLimit > 0 then
+      if Module.Settings.MaxConnectionLimit > 0 then
         while (not Terminated) and (Module.ActiveConnectionCount >= numberOfThreads) do
           Sleep(SOCKHEARTBEATRATE)
       else
