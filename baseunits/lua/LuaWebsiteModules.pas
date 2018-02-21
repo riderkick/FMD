@@ -45,7 +45,7 @@ type
     procedure AddOptionComboBox(const AName, ACaption, AItems: String; const ADefault: Integer);
 
     procedure LuaPushMe(L: Plua_State);
-    function LuaDoMe(L: Plua_State): Integer;
+    procedure LuaDoMe(L: Plua_State);
   end;
 
   TLuaWebsiteModules = specialize TFPGList<TLuaWebsiteModule>;
@@ -122,12 +122,12 @@ begin
       LuaPushMe(l);
       luaPushObject(l, updateList, 'updatelist', @luaUpdateListManagerAddMetaTable);
 
-      if LuaDoMe(l) <> 0 then
-        raise Exception.Create('');
-      if LuaCallFunction(l, OnBeforeUpdateList) then
-        Result := lua_toboolean(l, -1);
+      LuaDoMe(l);
+      LuaCallFunction(l, OnBeforeUpdateList);
+      Result := lua_toboolean(l, -1);
     except
-      Logger.SendError(lua_tostring(l, -1));
+      on E: Exception do
+        Logger.SendError(E.Message + ': ' + lua_tostring(l, -1));
     end;
     lua_close(l);
   end;
@@ -145,12 +145,12 @@ begin
       LuaPushMe(l);
       luaPushObject(l, updateList, 'updatelist', @luaUpdateListManagerAddMetaTable);
 
-      if LuaDoMe(l) <> 0 then
-        raise Exception.Create('');
-      if LuaCallFunction(l, OnAfterUpdateList) then
-        Result := lua_toboolean(l, -1);
+      LuaDoMe(l);
+      LuaCallFunction(l, OnAfterUpdateList);
+      Result := lua_toboolean(l, -1);
     except
-      Logger.SendError(lua_tostring(l, -1));
+      on E: Exception do
+        Logger.SendError(E.Message + ': ' + lua_tostring(l, -1));
     end;
     lua_close(l);
   end;
@@ -161,7 +161,7 @@ function DoGetDirectoryPageNumber(const MangaInfo: TMangaInformation;
 var
   l: Plua_State;
 begin
-  Result := NO_ERROR;
+  Result := INFORMATION_NOT_FOUND;
   with TLuaWebsiteModule(Module.TagPtr) do
   begin
     l := LuaNewBaseState;
@@ -173,16 +173,14 @@ begin
       luaPushObject(l, MangaInfo.FHTTP, 'http', @luaHTTPSendThreadAddMetaTable);
       luaPushObject(l, updateList, 'updatelist', @luaUpdateListManagerAddMetaTable);
 
-      if LuaDoMe(l) <> 0 then
-        raise Exception.Create('');
-      if LuaCallFunction(l, OnGetDirectoryPageNumber) then
-      begin
-        Result := lua_tointeger(l, -1);
-        if lua_getglobal(l, 'page') <> 0 then
-          Page := lua_tointeger(l, -1);
-      end;
+      LuaDoMe(l);
+      LuaCallFunction(l, OnGetDirectoryPageNumber);
+      Result := lua_tointeger(l, -1);
+      if lua_getglobal(l, 'page') <> 0 then
+        Page := lua_tointeger(l, -1);
     except
-      Logger.SendError(lua_tostring(l, -1));
+      on E: Exception do
+        Logger.SendError(E.Message + ': ' + lua_tostring(l, -1));
     end;
     lua_close(l);
   end;
@@ -194,7 +192,7 @@ function DoGetNameAndLink(const MangaInfo: TMangaInformation;
 var
   l: Plua_State;
 begin
-  Result := NO_ERROR;
+  Result := INFORMATION_NOT_FOUND;
   with TLuaWebsiteModule(Module.TagPtr) do
   begin
     l := LuaNewBaseState;
@@ -207,12 +205,12 @@ begin
       luaPushObject(l, ALinks, 'links', @luaStringsAddMetaTable);
       luaPushObject(l, updateList, 'updatelist', @luaUpdateListManagerAddMetaTable);
 
-      if LuaDoMe(l) <> 0 then
-        raise Exception.Create('');
-      if LuaCallFunction(l, OnGetNameAndLink) then
-        Result := lua_tointeger(L, -1);
+      LuaDoMe(l);
+      LuaCallFunction(l, OnGetNameAndLink);
+      Result := lua_tointeger(L, -1);
     except
-      Logger.SendError(lua_tostring(l, -1));
+      on E: Exception do
+        Logger.SendError(E.Message + ': ' + lua_tostring(l, -1));
     end;
     lua_close(l);
   end;
@@ -223,7 +221,7 @@ function DoGetInfo(const MangaInfo: TMangaInformation; const AURL: String;
 var
   l: Plua_State;
 begin
-  Result := NO_ERROR;
+  Result := INFORMATION_NOT_FOUND;
   with TLuaWebsiteModule(Module.TagPtr) do
   begin
     l := LuaNewBaseState;
@@ -233,11 +231,11 @@ begin
       luaPushObject(l, MangaInfo.mangaInfo, 'mangainfo', @luaMangaInfoAddMetaTable);
       luaPushObject(l, MangaInfo.FHTTP, 'http', @luaHTTPSendThreadAddMetaTable);
 
-      if LuaDoMe(l) <> 0 then
-        raise Exception.Create('');
+      LuaDoMe(l);
       LuaCallFunction(l, OnGetInfo);
     except
-      Logger.SendError(lua_tostring(L, -1));
+      on E: Exception do
+        Logger.SendError(E.Message + ': ' + lua_tostring(l, -1));
     end;
     lua_close(l);
   end;
@@ -255,12 +253,12 @@ begin
       LuaPushMe(l);
       luaPushObject(l, Task, 'task', @luaDownloadTaskMetaTable);
 
-      if LuaDoMe(l) <> 0 then
-        raise Exception.Create('');
-      if LuaCallFunction(l, OnTaskStart) then
-        Result := lua_toboolean(l, -1);
+      LuaDoMe(l);
+      LuaCallFunction(l, OnTaskStart);
+      Result := lua_toboolean(l, -1);
     except
-      Logger.SendError(lua_tostring(l, -1));
+      on E: Exception do
+        Logger.SendError(E.Message + ': ' + lua_tostring(l, -1));
     end;
     lua_close(l);
   end;
@@ -281,12 +279,12 @@ begin
       luaPushObject(l, DownloadThread.FHTTP, 'http', @luaHTTPSendThreadAddMetaTable);
       luaPushStringGlobal(l, 'url', AURL);
 
-      if LuaDoMe(l) <> 0 then
-        raise Exception.Create('');
-      if LuaCallFunction(l, OnGetPageNumber) then
-        Result := lua_toboolean(l, -1);
+      LuaDoMe(l);
+      LuaCallFunction(l, OnGetPageNumber);
+      Result := lua_toboolean(l, -1);
     except
-      Logger.SendError(lua_tostring(l, -1));
+      on E: Exception do
+        Logger.SendError(E.Message + ': ' + lua_tostring(l, -1));
     end;
     lua_close(l);
   end;
@@ -308,12 +306,12 @@ begin
       luaPushIntegerGlobal(l, 'workid', DownloadThread.WorkId);
       luaPushStringGlobal(l, 'url', AURL);
 
-      if LuaDoMe(l) <> 0 then
-        raise Exception.Create('');
-      if LuaCallFunction(l, OnGetImageURL) then
-        Result := lua_toboolean(l, -1);
+      LuaDoMe(l);
+      LuaCallFunction(l, OnGetImageURL);
+      Result := lua_toboolean(l, -1);
     except
-      Logger.SendError(lua_tostring(l, -1));
+      on E: Exception do
+        Logger.SendError(E.Message + ': ' + lua_tostring(l, -1));
     end;
     lua_close(l);
   end;
@@ -334,12 +332,12 @@ begin
       luaPushObject(l, DownloadThread.FHTTP, 'http', @luaHTTPSendThreadAddMetaTable);
       luaPushStringGlobal(l, 'url', AURL);
 
-      if LuaDoMe(l) <> 0 then
-        raise Exception.Create('');
-      if LuaCallFunction(l, OnBeforeDownloadImage) then
-        Result := lua_toboolean(l, -1);
+      LuaDoMe(l);
+      LuaCallFunction(l, OnBeforeDownloadImage);
+      Result := lua_toboolean(l, -1);
     except
-      Logger.SendError(lua_tostring(l, -1));
+      on E: Exception do
+        Logger.SendError(E.Message + ': ' + lua_tostring(l, -1));
     end;
     lua_close(l);
   end;
@@ -360,12 +358,12 @@ begin
       luaPushObject(l, DownloadThread.FHTTP, 'http', @luaHTTPSendThreadAddMetaTable);
       luaPushStringGlobal(l, 'url', AURL);
 
-      if LuaDoMe(l) <> 0 then
-        raise Exception.Create('');
-      if LuaCallFunction(l, OnDownloadImage) then
-        Result := lua_toboolean(l, -1);
+      LuaDoMe(l);
+      LuaCallFunction(l, OnDownloadImage);
+      Result := lua_toboolean(l, -1);
     except
-      Logger.SendError(lua_tostring(l, -1));
+      on E: Exception do
+        Logger.SendError(E.Message + ': ' + lua_tostring(l, -1));
     end;
     lua_close(l);
   end;
@@ -386,12 +384,12 @@ begin
       luaPushStringGlobal(l, 'path', APath);
       luaPushStringGlobal(l, 'name', AName);
 
-      if LuaDoMe(l) <> 0 then
-        raise Exception.Create('');
-      if LuaCallFunction(l, OnSaveImage) then
-        Result := lua_tostring(l, -1);
+      LuaDoMe(l);
+      LuaCallFunction(l, OnSaveImage);
+      Result := lua_tostring(l, -1);
     except
-      Logger.SendError(lua_tostring(l, -1));
+      on E: Exception do
+        Logger.SendError(E.Message + ': ' + lua_tostring(l, -1));
     end;
     lua_close(l);
   end;
@@ -409,12 +407,12 @@ begin
       LuaPushMe(l);
       luaPushStringGlobal(l, 'filename', AFilename);
 
-      if LuaDoMe(l) <> 0 then
-        raise Exception.Create('');
-      if LuaCallFunction(l, OnAfterImageSaved) then
-        Result := lua_toboolean(l, -1);
+      LuaDoMe(l);
+      LuaCallFunction(l, OnAfterImageSaved);
+      Result := lua_toboolean(l, -1);
     except
-      Logger.SendError(lua_tostring(l, -1));
+      on E: Exception do
+        Logger.SendError(E.Message + ': ' + lua_tostring(l, -1));
     end;
     lua_close(l);
   end;
@@ -432,12 +430,12 @@ begin
       LuaPushMe(l);
       luaPushObject(l, AHTTP, 'http', @luaHTTPSendThreadAddMetaTable);
 
-      if LuaDoMe(l) <> 0 then
-        raise Exception.Create('');
-      if LuaCallFunction(l, OnTaskStart) then
-        Result := lua_toboolean(l, -1);
+      LuaDoMe(l);
+      LuaCallFunction(l, OnTaskStart);
+      Result := lua_toboolean(l, -1);
     except
-      Logger.SendError(lua_tostring(l, -1));
+      on E: Exception do
+        Logger.SendError(E.Message + ': ' + lua_tostring(l, -1));
     end;
     lua_close(l);
   end;
@@ -459,12 +457,14 @@ begin
       m := LuaDumpFileToStream(l, AFilename);
       if m <> nil then
       begin
-        if lua_pcall(l, 0, 0, 0) <> 0 then
-          raise Exception.Create('');
+        i := lua_pcall(l, 0, 0, 0);
+        if i <> 0 then
+          raise Exception.Create(LuaGetReturnString(i));
         LuaCallFunction(l, 'Init');
       end;
     except
-      Logger.SendError('Error load lua website module. ' + lua_tostring(L, -1));
+      on E: Exception do
+        Logger.SendError(E.Message + ': ' + lua_tostring(L, -1));
     end;
   finally
     lua_close(l);
@@ -672,14 +672,18 @@ begin
   luaPushIntegerGlobal(L, 'information_not_found', INFORMATION_NOT_FOUND);
 end;
 
-function TLuaWebsiteModule.LuaDoMe(L: Plua_State): Integer;
+procedure TLuaWebsiteModule.LuaDoMe(L: Plua_State);
+var
+  r: Integer;
 begin
   if AlwaysLoadLuaFromFile then
-    Result := luaL_loadfile(L, PChar(Container.FileName))
+    r := luaL_loadfile(L, PChar(Container.FileName))
   else
-    Result := LuaLoadFromStream(L, Container.ByteCode, PChar(Container.FileName));
-  if Result = 0 then
-    Result := lua_pcall(L, 0, 0, 0);
+    r := LuaLoadFromStream(L, Container.ByteCode, PChar(Container.FileName));
+  if r = 0 then
+    r := lua_pcall(L, 0, 0, 0);
+  if r <> 0 then
+    raise Exception.Create(LuaGetReturnString(r));
 end;
 
 // -----------------------------------------------------------------------------

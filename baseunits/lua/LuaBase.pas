@@ -13,7 +13,8 @@ procedure luaPushObject(L: Plua_State; Obj: TObject; Name: String;
 
 function LuaDoFile(AFilename: String; AFuncName: String = ''): Plua_State;
 function LuaNewBaseState: Plua_State;
-function LuaCallFunction(L: Plua_State; AFuncName: String): Boolean;
+procedure LuaCallFunction(L: Plua_State; AFuncName: String);
+function LuaGetReturnString(const ReturnCode: Integer): String;
 
 function LuaDumpFileToStream(L: Plua_State; AFilename: String;
   AStripDebug: Boolean = False): TMemoryStream;
@@ -80,14 +81,31 @@ begin
   end;
 end;
 
-function LuaCallFunction(L: Plua_State; AFuncName: String): Boolean;
+procedure LuaCallFunction(L: Plua_State; AFuncName: String);
+var
+  r: Integer;
 begin
-  Result := False;
   if lua_getglobal(L, PChar(AFuncName)) = 0 then
     raise Exception.Create('No function name ' + QuotedStr(AFuncName));
-  if lua_pcall(L, 0, -1, 0) <> 0 then
-    raise Exception.Create('');
-  Result := True;
+  r := lua_pcall(L, 0, LUA_MULTRET, 0);
+  if r <> 0 then
+    raise Exception.Create(LuaGetReturnString(r));
+end;
+
+function LuaGetReturnString(const ReturnCode: Integer): String;
+begin
+  case ReturnCode of
+    LUA_OK: Result := 'LUA_OK';
+    LUA_YIELD_: Result := 'LUA_YIELD_';
+    LUA_ERRRUN: Result := 'LUA_ERRRUN';
+    LUA_ERRSYNTAX: Result := 'LUA_ERRSYNTAX';
+    LUA_ERRMEM: Result := 'LUA_ERRMEM';
+    LUA_ERRGCMM: Result := 'LUA_ERRGCMM';
+    LUA_ERRERR: Result := 'LUA_ERRERR';
+    LUA_ERRFILE: Result := 'LUA_ERRFILE';
+    else
+      Result := IntToStr(ReturnCode);
+  end;
 end;
 
 function _luawriter(L: Plua_State; const p: Pointer; sz: size_t; ud: Pointer): Integer; cdecl;
