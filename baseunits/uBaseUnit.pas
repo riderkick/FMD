@@ -23,7 +23,7 @@ uses
   fgl, RegExpr, synautil, httpsend, blcksock, ssl_openssl,
   synacode, MultiLog, FPimage, GZIPUtils, uMisc, httpsendthread, FMDOptions,
   simplehtmltreeparser, xquery, xquery_json, ImgInfos, NaturalSortUnit,
-  MemBitmap, FPWritePNG, zstream;
+  MemBitmap, FPWritePNG, zstream, FPReadPNG;
 
 const
   LineEnding2 = LineEnding + LineEnding;
@@ -3030,13 +3030,15 @@ function PNGToJPEGStream(const AStream: TMemoryStream; const AQuality: Integer):
 var
   img: TFPCustomImage;
   writer: TFPWriterJPEG;
+  reader: TFPReaderPNG;
 begin
   Result := False;
-  img := TFPCustomImage.create(0,0);
+  img := TFPMemoryImage.create(0,0);
+  reader := TFPReaderPNG.create;
   try
     writer := nil;
     try
-      img.LoadFromStream(AStream);
+      img.LoadFromStream(AStream, reader);
       writer := TFPWriterJPEG.create;
       writer.CompressionQuality := AQuality;
       img.SaveToStream(AStream, writer);
@@ -3046,6 +3048,7 @@ begin
     if writer <> nil then
       writer.Free;
   finally
+    reader.Free;
     img.Free;
   end;
 end;
