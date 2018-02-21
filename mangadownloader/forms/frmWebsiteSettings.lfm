@@ -114,18 +114,14 @@ object WebsiteSettingsForm: TWebsiteSettingsForm
       Width = 417
       ClientWidth = 417
       ClientHeight = 432
-      object prSettings: TTIPropertyGrid
+      object pnProps: TPanel
         Left = 0
         Height = 432
         Top = 0
         Width = 417
         Align = alClient
-        CheckboxForBoolean = True
-        DefaultValueFont.Color = clWindowText
-        Filter = [tkInteger, tkChar, tkEnumeration, tkFloat, tkSet, tkMethod, tkSString, tkLString, tkAString, tkWString, tkVariant, tkArray, tkRecord, tkInterface, tkClass, tkObject, tkWChar, tkBool, tkInt64, tkQWord, tkDynArray, tkInterfaceRaw, tkProcVar, tkUString, tkUChar, tkHelper, tkFile, tkClassRef, tkPointer]
-        Indent = 16
-        NameFont.Color = clWindowText
-        ValueFont.Color = clMaroon
+        BevelOuter = bvNone
+        TabOrder = 0
       end
     end
   end
