@@ -13,8 +13,6 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: dbupdater.rs_buttoncancel
-#, fuzzy
-#| msgid "Cancel"
 msgctxt "dbupdater.rs_buttoncancel"
 msgid "Abort"
 msgstr "Abbrechen"
@@ -43,7 +41,6 @@ msgid ""
 msgstr ""
 
 #: dbupdater.rs_faileditemstitle
-#, fuzzy
 msgctxt "dbupdater.rs_faileditemstitle"
 msgid "Failed"
 msgstr "Gescheitert"
@@ -118,7 +115,6 @@ msgid "List of unimported manga"
 msgstr "Liste von nicht importierten Manga"
 
 #: frmluamodulesupdater.rs_checking
-#, fuzzy
 msgctxt "frmluamodulesupdater.rs_checking"
 msgid "Checking..."
 msgstr "Prüfe..."
@@ -467,7 +463,6 @@ msgid "All"
 msgstr ""
 
 #: frmtransferfavorites.rs_invalid
-#, fuzzy
 msgctxt "frmtransferfavorites.rs_invalid"
 msgid "Invalid"
 msgstr "Ungültig"
@@ -508,7 +503,6 @@ msgid "Save as PNG"
 msgstr "Speichern als PNG"
 
 #: selfupdater.rs_buttoncancel
-#, fuzzy
 msgctxt "selfupdater.rs_buttoncancel"
 msgid "Abort"
 msgstr "Abbrechen"
@@ -529,7 +523,6 @@ msgid "Failed to extract %s, exitstatus = %d"
 msgstr ""
 
 #: selfupdater.rs_failedtitle
-#, fuzzy
 msgctxt "selfupdater.rs_failedtitle"
 msgid "Failed"
 msgstr "Gescheitert"
@@ -546,7 +539,8 @@ msgstr ""
 msgid "Download finished"
 msgstr ""
 
-#: selfupdater.rs_missingzipexe
+#: selfupdater.rs_missingfile
+msgctxt "selfupdater.rs_missingfile"
 msgid "Missing %s"
 msgstr ""
 
@@ -1635,10 +1629,8 @@ msgstr ""
 "Manga Ordnername muss mindest %MANGA% haben.\n"
 
 #: tmainform.lboptionmaxparallel.caption
-#, fuzzy
-#| msgid "Number of downloaded tasks at the same time (Max: 8)"
 msgid "Number of downloaded tasks at the same time"
-msgstr "Anzahl von Downloads zur selben Zeit (Max: 8)"
+msgstr "Anzahl von Downloads zur selben Zeit"
 
 #: tmainform.lboptionmaxretry.caption
 #| msgid "Number of retry times if tasks have download problems (0 = always retry)"
@@ -1646,10 +1638,8 @@ msgid "Number of retry times if tasks have download problems (-1 = always retry)
 msgstr "Anzahl der erneuten Versuche, falls der Download Probleme hat (-1 =immer wiederholen)"
 
 #: tmainform.lboptionmaxthread.caption
-#, fuzzy
-#| msgid "Number of downloaded files per task at the same time (Max: 32)"
 msgid "Number of downloaded files per task at the same time"
-msgstr "Anzahl der Download-Dateien je Aufgabe zur selben Zeit (Max: 32)"
+msgstr "Anzahl der Download-Dateien je Aufgabe zur selben Zeit"
 
 #: tmainform.lboptionnewmangatime.caption
 msgid "New manga based on  it's update time (days)"
@@ -2233,7 +2223,6 @@ msgid "&Add to queue"
 msgstr "&zur Warteschlage hinzufügen"
 
 #: tselectdirectoryform.btok.caption
-#, fuzzy
 msgctxt "tselectdirectoryform.btok.caption"
 msgid "OK"
 msgstr "OK"
@@ -2251,13 +2240,11 @@ msgid "&Now"
 msgstr "&Jetzt"
 
 #: ttransferfavoritesform.btcancel.caption
-#, fuzzy
 msgctxt "ttransferfavoritesform.btcancel.caption"
 msgid "Cancel"
 msgstr "Abbrechen"
 
 #: ttransferfavoritesform.btok.caption
-#, fuzzy
 msgctxt "ttransferfavoritesform.btok.caption"
 msgid "OK"
 msgstr "OK"
@@ -2281,7 +2268,6 @@ msgid "All"
 msgstr ""
 
 #: ttransferfavoritesform.rbinvalid.caption
-#, fuzzy
 msgctxt "ttransferfavoritesform.rbinvalid.caption"
 msgid "Invalid"
 msgstr "Ungültig"
@@ -2292,14 +2278,11 @@ msgid "Valid"
 msgstr ""
 
 #: ttransferfavoritesform.vtfavs.header.columns[1].text
-#, fuzzy
-#| msgid "Website"
 msgctxt "ttransferfavoritesform.vtfavs.header.columns[1].text"
 msgid "Title"
-msgstr "Webseite"
+msgstr "Title"
 
 #: ttransferfavoritesform.vtfavs.header.columns[2].text
-#, fuzzy
 msgctxt "ttransferfavoritesform.vtfavs.header.columns[2].text"
 msgid "Website"
 msgstr "Webseite"

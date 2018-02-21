@@ -560,7 +560,8 @@ msgstr "La Descarga del Paquete ha Terminado, Proceder en Reiniciar?"
 msgid "Download finished"
 msgstr "Descarga Finalizada"
 
-#: selfupdater.rs_missingzipexe
+#: selfupdater.rs_missingfile
+msgctxt "selfupdater.rs_missingfile"
 msgid "Missing %s"
 msgstr "Perdido %s"
 
@@ -2573,3 +2574,4 @@ msgstr "Sincronizando Datos"
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr "Actualizando Lista"
+

@@ -20,7 +20,7 @@ msgstr "%s: %d %s"
 
 #: dbupdater.rs_failedextract
 msgid "%s: failed to extract, exitstatus = %d"
-msgstr "%s: failed to extract, exitstatus = %d"\
+msgstr "%s: failed to extract, exitstatus = %d\""
 
 #: dbupdater.rs_faileditems
 msgid ""
@@ -549,7 +549,8 @@ msgstr "Download update package finished, restart to proceed?"
 msgid "Download finished"
 msgstr "Download finished"
 
-#: selfupdater.rs_missingzipexe
+#: selfupdater.rs_missingfile
+msgctxt "selfupdater.rs_missingfile"
 msgid "Missing %s"
 msgstr "Missing %s"
 

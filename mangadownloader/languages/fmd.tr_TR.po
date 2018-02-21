@@ -563,7 +563,8 @@ msgstr "Güncelleme paketi indirme tamamlandı, devam etmek için yeniden başla
 msgid "Download finished"
 msgstr "İndirme tamamlandı"
 
-#: selfupdater.rs_missingzipexe
+#: selfupdater.rs_missingfile
+msgctxt "selfupdater.rs_missingfile"
 msgid "Missing %s"
 msgstr "%s eksik"
 

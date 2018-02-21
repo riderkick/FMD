@@ -502,7 +502,8 @@ msgstr ""
 msgid "Download finished"
 msgstr ""
 
-#: selfupdater.rs_missingzipexe
+#: selfupdater.rs_missingfile
+msgctxt "selfupdater.rs_missingfile"
 msgid "Missing %s"
 msgstr ""
 

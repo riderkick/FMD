@@ -549,7 +549,8 @@ msgstr "Pembaruan selesai diunduh, memuat ulang sekarang?"
 msgid "Download finished"
 msgstr "Unduhan selesai"
 
-#: selfupdater.rs_missingzipexe
+#: selfupdater.rs_missingfile
+msgctxt "selfupdater.rs_missingfile"
 msgid "Missing %s"
 msgstr "Tidak ditemukan %s"
 

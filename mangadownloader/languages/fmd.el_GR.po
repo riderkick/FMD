@@ -17,8 +17,6 @@ msgstr ""
 "X-Poedit-Country: GREECE\n"
 
 #: dbupdater.rs_buttoncancel
-#, fuzzy
-#| msgid "Cancel"
 msgctxt "dbupdater.rs_buttoncancel"
 msgid "Abort"
 msgstr "Άκυρο"
@@ -47,7 +45,6 @@ msgid ""
 msgstr ""
 
 #: dbupdater.rs_faileditemstitle
-#, fuzzy
 msgctxt "dbupdater.rs_faileditemstitle"
 msgid "Failed"
 msgstr "Απέτυχε"
@@ -122,7 +119,6 @@ msgid "List of unimported manga"
 msgstr "Λίστα μη εισηγμένων manga"
 
 #: frmluamodulesupdater.rs_checking
-#, fuzzy
 msgctxt "frmluamodulesupdater.rs_checking"
 msgid "Checking..."
 msgstr "Έλεγχος..."
@@ -471,7 +467,6 @@ msgid "All"
 msgstr ""
 
 #: frmtransferfavorites.rs_invalid
-#, fuzzy
 msgctxt "frmtransferfavorites.rs_invalid"
 msgid "Invalid"
 msgstr "Μη έγκυρο"
@@ -512,7 +507,6 @@ msgid "Save as PNG"
 msgstr "Αποθήκευση ως PNG"
 
 #: selfupdater.rs_buttoncancel
-#, fuzzy
 msgctxt "selfupdater.rs_buttoncancel"
 msgid "Abort"
 msgstr "Ματαίωση"
@@ -533,7 +527,6 @@ msgid "Failed to extract %s, exitstatus = %d"
 msgstr ""
 
 #: selfupdater.rs_failedtitle
-#, fuzzy
 msgctxt "selfupdater.rs_failedtitle"
 msgid "Failed"
 msgstr "Απέτυχε"
@@ -550,7 +543,8 @@ msgstr ""
 msgid "Download finished"
 msgstr ""
 
-#: selfupdater.rs_missingzipexe
+#: selfupdater.rs_missingfile
+msgctxt "selfupdater.rs_missingfile"
 msgid "Missing %s"
 msgstr ""
 
@@ -1690,10 +1684,8 @@ msgstr ""
 "Το όνομα φακέλου Manga πρέπει να έχει τουλάχιστον %MANGA%.\n"
 
 #: tmainform.lboptionmaxparallel.caption
-#, fuzzy
-#| msgid "Number of downloaded tasks at the same time (Max: 8)"
 msgid "Number of downloaded tasks at the same time"
-msgstr "Αριθμός ταυτόχρονων εργασιών λήψης (Μέγ.: 8)"
+msgstr "Αριθμός ταυτόχρονων εργασιών λήψης"
 
 #: tmainform.lboptionmaxretry.caption
 #| msgid "Number of retry times if tasks have download problems (0 = always retry)"
@@ -1701,10 +1693,8 @@ msgid "Number of retry times if tasks have download problems (-1 = always retry)
 msgstr "Αριθμός επαναλήψεων αν οι εργασίες έχουν προβλήματα λήψης (-1 = συνεχής επανάληψη)"
 
 #: tmainform.lboptionmaxthread.caption
-#, fuzzy
-#| msgid "Number of downloaded files per task at the same time (Max: 32)"
 msgid "Number of downloaded files per task at the same time"
-msgstr "Αριθμός ταυτόχρονα ληφθέντων αρχείων ανά εργασία (Μέγ: 32)"
+msgstr "Αριθμός ταυτόχρονα ληφθέντων αρχείων ανά εργασία"
 
 #: tmainform.lboptionnewmangatime.caption
 msgid "New manga based on  it's update time (days)"
@@ -2288,7 +2278,6 @@ msgid "&Add to queue"
 msgstr "&Προσθήκη στην ουρά"
 
 #: tselectdirectoryform.btok.caption
-#, fuzzy
 msgctxt "tselectdirectoryform.btok.caption"
 msgid "OK"
 msgstr "Εντάξει"
@@ -2306,13 +2295,11 @@ msgid "&Now"
 msgstr "&Τώρα"
 
 #: ttransferfavoritesform.btcancel.caption
-#, fuzzy
 msgctxt "ttransferfavoritesform.btcancel.caption"
 msgid "Cancel"
 msgstr "Άκυρο"
 
 #: ttransferfavoritesform.btok.caption
-#, fuzzy
 msgctxt "ttransferfavoritesform.btok.caption"
 msgid "OK"
 msgstr "Εντάξει"
@@ -2336,7 +2323,6 @@ msgid "All"
 msgstr ""
 
 #: ttransferfavoritesform.rbinvalid.caption
-#, fuzzy
 msgctxt "ttransferfavoritesform.rbinvalid.caption"
 msgid "Invalid"
 msgstr "Μη έγκυρο"
@@ -2347,14 +2333,11 @@ msgid "Valid"
 msgstr ""
 
 #: ttransferfavoritesform.vtfavs.header.columns[1].text
-#, fuzzy
-#| msgid "Website"
 msgctxt "ttransferfavoritesform.vtfavs.header.columns[1].text"
 msgid "Title"
 msgstr "Ιστότοπος"
 
 #: ttransferfavoritesform.vtfavs.header.columns[2].text
-#, fuzzy
 msgctxt "ttransferfavoritesform.vtfavs.header.columns[2].text"
 msgid "Website"
 msgstr "Ιστότοπος"

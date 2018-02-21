@@ -13,7 +13,6 @@ msgstr ""
 "Plural-Forms: \n"
 
 #: dbupdater.rs_buttoncancel
-#, fuzzy
 #| msgid "Cancel"
 msgctxt "dbupdater.rs_buttoncancel"
 msgid "Abort"
@@ -43,7 +42,6 @@ msgid ""
 msgstr ""
 
 #: dbupdater.rs_faileditemstitle
-#, fuzzy
 msgctxt "dbupdater.rs_faileditemstitle"
 msgid "Failed"
 msgstr "Falhou"
@@ -118,7 +116,6 @@ msgid "List of unimported manga"
 msgstr "Lista de mangás não importados"
 
 #: frmluamodulesupdater.rs_checking
-#, fuzzy
 msgctxt "frmluamodulesupdater.rs_checking"
 msgid "Checking..."
 msgstr "Checando..."
@@ -507,7 +504,6 @@ msgid "Save as PNG"
 msgstr "Salvar como PNG"
 
 #: selfupdater.rs_buttoncancel
-#, fuzzy
 msgctxt "selfupdater.rs_buttoncancel"
 msgid "Abort"
 msgstr "Abortar"
@@ -528,7 +524,6 @@ msgid "Failed to extract %s, exitstatus = %d"
 msgstr ""
 
 #: selfupdater.rs_failedtitle
-#, fuzzy
 msgctxt "selfupdater.rs_failedtitle"
 msgid "Failed"
 msgstr "Falhou"
@@ -545,7 +540,8 @@ msgstr ""
 msgid "Download finished"
 msgstr ""
 
-#: selfupdater.rs_missingzipexe
+#: selfupdater.rs_missingfile
+msgctxt "selfupdater.rs_missingfile"
 msgid "Missing %s"
 msgstr ""
 
@@ -2248,13 +2244,11 @@ msgid "&Now"
 msgstr "&Agora"
 
 #: ttransferfavoritesform.btcancel.caption
-#, fuzzy
 msgctxt "ttransferfavoritesform.btcancel.caption"
 msgid "Cancel"
 msgstr "Cancelar"
 
 #: ttransferfavoritesform.btok.caption
-#, fuzzy
 msgctxt "ttransferfavoritesform.btok.caption"
 msgid "OK"
 msgstr "OK"
@@ -2288,14 +2282,12 @@ msgid "Valid"
 msgstr "Válido"
 
 #: ttransferfavoritesform.vtfavs.header.columns[1].text
-#, fuzzy
 #| msgid "Website"
 msgctxt "ttransferfavoritesform.vtfavs.header.columns[1].text"
 msgid "Title"
 msgstr "Título"
 
 #: ttransferfavoritesform.vtfavs.header.columns[2].text
-#, fuzzy
 msgctxt "ttransferfavoritesform.vtfavs.header.columns[2].text"
 msgid "Website"
 msgstr "Website"

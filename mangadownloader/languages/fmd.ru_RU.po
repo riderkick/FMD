@@ -43,7 +43,6 @@ msgstr ""
 "%s\n"
 
 #: dbupdater.rs_faileditemstitle
-#, fuzzy
 msgctxt "dbupdater.rs_faileditemstitle"
 msgid "Failed"
 msgstr "Неудачно"
@@ -521,7 +520,6 @@ msgid "Save as PNG"
 msgstr "Сохранить как PNG"
 
 #: selfupdater.rs_buttoncancel
-#, fuzzy
 msgctxt "selfupdater.rs_buttoncancel"
 msgid "Abort"
 msgstr "Отменить"
@@ -542,7 +540,6 @@ msgid "Failed to extract %s, exitstatus = %d"
 msgstr ""
 
 #: selfupdater.rs_failedtitle
-#, fuzzy
 msgctxt "selfupdater.rs_failedtitle"
 msgid "Failed"
 msgstr "Неудачно"
@@ -559,7 +556,8 @@ msgstr ""
 msgid "Download finished"
 msgstr ""
 
-#: selfupdater.rs_missingzipexe
+#: selfupdater.rs_missingfile
+msgctxt "selfupdater.rs_missingfile"
 msgid "Missing %s"
 msgstr ""
 
