@@ -75,6 +75,6 @@ function Init()
   -- es-sc
   cat = 'Spanish-Scanlation'
   AddWebsiteModule('MangaDoor', 'http://mangadoor.com', 'Spanish');
-  AddWebsiteModule('DarkSkyScan', 'http://scan.darkskyprojects.org', cat);
+  AddWebsiteModule('DarkSkyScan', 'http://darkskyprojects.org', cat);
   
 end
