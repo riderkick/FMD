@@ -1507,7 +1507,8 @@ begin
     if tcount < OptionMaxParallel then
       for i := 0 to Items.Count - 1 do
         with Items[i] do
-          if (tcount < OptionMaxParallel) and
+          if (ModuleId<>-1) and
+            (tcount < OptionMaxParallel) and
             (Status = STATUS_WAIT) and
             Modules.CanCreateTask(ModuleId) then
           begin
@@ -1563,8 +1564,16 @@ begin
         if (tcount < OptionMaxParallel) and
           Modules.CanCreateTask(ModuleId) then
         begin
-          Inc(tcount);
-          ActiveTask(i);
+          if ModuleId<>-1 then
+          begin
+            Inc(tcount);
+            ActiveTask(i);
+          end
+          else
+          begin
+            Status := STATUS_STOP;
+            DownloadInfo.Status := Format('[%d/%d] %s',[CurrentDownloadChapterPtr+1,ChapterLinks.Count,RS_Stopped]);
+          end;
         end
         else
         begin
