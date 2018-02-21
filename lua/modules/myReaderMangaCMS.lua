@@ -76,5 +76,5 @@ function Init()
   cat = 'Spanish-Scanlation'
   AddWebsiteModule('MangaDoor', 'http://mangadoor.com', 'Spanish');
   AddWebsiteModule('DarkSkyScan', 'http://darkskyprojects.org', cat);
-  
+  AddWebsiteModule('NozominoFansub', 'https://nozominofansub.com/', cat);
 end
