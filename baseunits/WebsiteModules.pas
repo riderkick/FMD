@@ -106,15 +106,19 @@ type
   TWebsiteModuleAccount = class
   private
     FCookies: String;
+    FEnabled: Boolean;
     FPassword: String;
     FStatus: TAccountStatus;
     FUsername: String;
   published
+    property Enabled: Boolean read FEnabled write FEnabled;
     property Username: String read FUsername write FUsername;
     property Password: String read FPassword write FPassword;
     property Cookies: String read FCookies write FCookies;
     property Status: TAccountStatus read FStatus write FStatus;
   end;
+
+  PModuleContainer = ^TModuleContainer;
 
   { TModuleContainer }
 
