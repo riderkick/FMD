@@ -422,6 +422,7 @@
         <Filename Value="forms\frmWebsiteSettings.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="WebsiteSettingsForm"/>
+        <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
       </Unit17>
     </Units>

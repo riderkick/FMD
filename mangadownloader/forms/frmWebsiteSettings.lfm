@@ -101,9 +101,8 @@ object WebsiteSettingsForm: TWebsiteSettingsForm
         TabOrder = 0
         TreeOptions.PaintOptions = [toHideFocusRect, toShowButtons, toShowDropmark, toThemeAware, toUseBlendedImages]
         TreeOptions.SelectionOptions = [toFullRowSelect]
-        OnClick = vtWebsiteClick
         OnCompareNodes = vtWebsiteCompareNodes
-        OnFreeNode = vtWebsiteFreeNode
+        OnFocusChanged = vtWebsiteFocusChanged
         OnGetText = vtWebsiteGetText
       end
     end
