@@ -549,7 +549,7 @@ begin
       FOwner.vtLuaModulesRepos.BeginUpdate;
       FOwner.Repos := FMainRepos;
       FOwner.ReinitList;
-      FMainRepos.SaveToFile(LUA_WEBSITEMODULE_REPOS);
+      FMainRepos.SaveToFile(LUA_WEBSITEMODULE_FILE);
     finally
       FOwner.vtLuaModulesRepos.EndUpdate;
     end;
@@ -971,7 +971,7 @@ end;
 
 procedure TLuaModulesUpdaterForm.LoadLocalRepos;
 begin
-  Repos.LoadFromFile(LUA_WEBSITEMODULE_REPOS);
+  Repos.LoadFromFile(LUA_WEBSITEMODULE_FILE);
   ReinitList(False);
 end;
 

@@ -1823,7 +1823,7 @@ begin
   FavoriteManager.Restore;
   UpdateVtFavorites;
 
-  Modules.LoadWebsiteOption;
+  Modules.LoadFromFile;
   frmWebsiteOptionCustom.WebsiteOptionCustomForm.CreateWebsiteOption;
 
   if cbSelectManga.ItemIndex > -1 then
@@ -5073,7 +5073,7 @@ begin
       UpdateFile;
     end;
   advancedfile.UpdateFile;
-  Modules.SaveWebsiteOption;
+  Modules.SaveToFile;
 end;
 
 procedure TMainForm.ApplyOptions;

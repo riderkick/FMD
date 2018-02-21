@@ -11,7 +11,7 @@ interface
 
 uses
   Classes, SysUtils, fgl, uData, uDownloadsManager, FMDOptions, httpsendthread,
-  LazLogger, Cloudflare, RegExpr;
+  LazLogger, Cloudflare, RegExpr, fpjson, jsonparser, jsonscanner, fpjsonrtti;
 
 const
   MODULE_NOT_FOUND = -1;
@@ -71,18 +71,32 @@ type
   { TWebsiteModuleSettings }
 
   TWebsiteModuleSettings = class
-  public
-    MaxTaskLimit: Integer;
-    MaxConnectionLimit: Integer;
-    UpdateListNumberOfThreads: Integer;
-    UpdateListDirectoryPageNumber: Integer;
-    UserAgent: String;
-    Cookies: String;
-    ProxyType: TProxyType;
-    ProxyHost: String;
-    ProxyPort: String;
-    ProxyUsername: String;
-    ProxyPassword: String;
+  private
+    FCookies: String;
+    FMaxConnectionLimit: Integer;
+    FMaxTaskLimit: Integer;
+    FMaxThreadPerTaskLimit: Integer;
+    FProxyHost: String;
+    FProxyPassword: String;
+    FProxyPort: String;
+    FProxyType: TProxyType;
+    FProxyUsername: String;
+    FUpdateListDirectoryPageNumber: Integer;
+    FUpdateListNumberOfThread: Integer;
+    FUserAgent: String;
+  published
+    property MaxTaskLimit: Integer read FMaxTaskLimit write FMaxTaskLimit;
+    property MaxThreadPerTaskLimit: Integer read FMaxThreadPerTaskLimit write FMaxThreadPerTaskLimit;
+    property MaxConnectionLimit: Integer read FMaxConnectionLimit write FMaxConnectionLimit;
+    property UpdateListNumberOfThread: Integer read FUpdateListNumberOfThread write FUpdateListNumberOfThread;
+    property UpdateListDirectoryPageNumber: Integer read FUpdateListDirectoryPageNumber write FUpdateListDirectoryPageNumber;
+    property UserAgent: String read FUserAgent write FUserAgent;
+    property Cookies: String read FCookies write FCookies;
+    property ProxyType: TProxyType read FProxyType write FProxyType;
+    property ProxyHost: String read FProxyHost write FProxyHost;
+    property ProxyPort: String read FProxyPort write FProxyPort;
+    property ProxyUsername: String read FProxyUsername write FProxyUsername;
+    property ProxyPassword: String read FProxyPassword write FProxyPassword;
   end;
 
   { TModuleContainer }
@@ -262,8 +276,8 @@ type
     procedure DecActiveConnectionCount(ModuleId: Integer);
     function CanCreateConnection(ModuleId: Integer): Boolean;
 
-    procedure LoadWebsiteOption;
-    procedure SaveWebsiteOption;
+    procedure LoadFromFile;
+    procedure SaveToFile;
   end;
 
 var
@@ -828,43 +842,113 @@ begin
       Result := ActiveConnectionCount < Settings.MaxConnectionLimit;
 end;
 
-procedure TWebsiteModules.LoadWebsiteOption;
+procedure TWebsiteModules.LoadFromFile;
 var
-  i, j: Integer;
+  i, j, k: Integer;
+  jd: TJSONDeStreamer;
+  ja: TJSONArray;
+  fs: TFileStream;
+  jp: TJSONParser;
+  jo, jo2: TJSONObject;
 begin
-  if FModuleList.Count = 0 then Exit;
-  for i := 0 to FModuleList.Count - 1 do
-    with FModuleList[i] do
-      if Length(OptionList) > 0 then
-        for j := Low(OptionList) to High(OptionList) do
-          with OptionList[j], configfile do
-          begin
-            case OptionType of
-              woCheckBox: PBoolean(BindValue)^ := ReadBool(Website, Name, PBoolean(BindValue)^);
-              woEdit: PString(BindValue)^ := ReadString(Website, Name, PString(BindValue)^);
-              woSpinEdit, woComboBox: PInteger(BindValue)^ := ReadInteger(Website, Name, PInteger(BindValue)^);
+  if FModuleList.Count=0 then Exit;
+  if not FileExists(MODULES_FILE) then Exit;
+
+  ja:=nil;
+  try
+    fs:=TFileStream.Create(MODULES_FILE,fmOpenRead or fmShareDenyWrite);
+    try
+      jp:=TJSONParser.Create(fs,[joUTF8]);
+      ja:=TJSONArray(jp.Parse);
+    finally
+      jp.Free;
+    end;
+  finally
+    fs.Free;
+  end;
+
+  if (ja<>nil) and (ja.Count<>0) then
+    try
+      jd:=TJSONDeStreamer.Create(nil);
+      for i:=FModuleList.Count-1 downto 0 do
+        with FModuleList[i] do
+        begin
+          jo:=nil;
+          for j:=ja.Count-1 downto 0 do
+            if ja.Objects[j].Get('Website','')=Website then
+            begin
+              jo:=ja.Objects[j];
+              Break;
             end;
+          if jo<>nil then
+          begin
+            jo2:=jo.Get('Settings',TJSONObject(nil));
+            if jo2<>nil then
+              jd.JSONToObject(jo2,Settings);
+            if Length(OptionList)<>0 then
+            begin
+              jo2:=jo.Get('Options',TJSONObject(nil));
+              if jo2<>nil then
+                for k:=Low(OptionList) to High(OptionList) do
+                  with OptionList[k],jo2 do
+                    case OptionType of
+                      woCheckBox:PBoolean(BindValue)^:=Get(Name,PBoolean(BindValue)^);
+                      woEdit:PString(BindValue)^:=Get(Name,PString(BindValue)^);
+                      woSpinEdit,woComboBox:PInteger(BindValue)^:=Get(Name,PInteger(BindValue)^);
+                    end;
+            end;
+            ja.Delete(j);
           end;
+        end;
+    finally
+      jd.Free;
+      ja.Free;
+    end;
 end;
 
-procedure TWebsiteModules.SaveWebsiteOption;
+procedure TWebsiteModules.SaveToFile;
 var
   i, j: Integer;
+  js: TJSONStreamer;
+  ja: TJSONArray;
+  fs: TFileStream;
+  jo: TJSONObject;
+  jo2: TJSONObject;
 begin
-  if FModuleList.Count = 0 then Exit;
-  for i := 0 to FModuleList.Count - 1 do
-    with FModuleList[i] do
-      if Length(OptionList) > 0 then
-        for j := Low(OptionList) to High(OptionList) do
-          with OptionList[j], configfile do
-          begin
-            case OptionType of
-              woCheckBox: WriteBool(Website, Name, PBoolean(BindValue)^);
-              woEdit: WriteString(Website, Name, PString(BindValue)^);
-              woSpinEdit, woComboBox: WriteInteger(Website, Name, PInteger(BindValue)^);
-            end;
-          end;
-  configfile.UpdateFile;
+  if FModuleList.Count=0 then Exit;
+  ja:=TJSONArray.Create;
+  js:=TJSONStreamer.Create(nil);
+  try
+    for i:=0 to FModuleList.Count-1 do
+      with FModuleList[i] do
+      begin
+        jo:=TJSONObject.Create;
+        ja.Add(jo);
+        jo.Add('Website',Website);
+        jo.Add('Settings',js.ObjectToJSON(Settings));
+        if Length(OptionList) <> 0 then
+        begin
+          jo2:=TJSONObject.Create;
+          jo.Add('Options',jo2);
+          for j:=Low(OptionList) to High(OptionList) do
+            with OptionList[j],jo2 do
+              case OptionType of
+                woCheckBox:Add(Name,PBoolean(BindValue)^);
+                woEdit:Add(Name,PString(BindValue)^);
+                woSpinEdit,woComboBox:Add(Name,PInteger(BindValue)^);
+              end;
+        end;
+      end;
+    fs:=TFileStream.Create(MODULES_FILE,fmCreate);
+    try
+      ja.DumpJSON(fs);
+    finally
+      fs.Free;
+    end;
+  finally
+    ja.Free;
+    js.Free;
+  end;
 end;
 
 function TWebsiteModules.GetModule(const ModuleId: Integer): TModuleContainer;

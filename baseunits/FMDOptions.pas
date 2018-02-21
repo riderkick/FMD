@@ -86,7 +86,7 @@ var
   UPDATE_FILE,
   BASE_FILE,
   ACCOUNTS_FILE,
-  WEBSITE_CONFIG_FILE,
+  MODULES_FILE,
   DATA_FOLDER,
   IMAGE_FOLDER,
   LANGUAGE_FILE,
@@ -96,7 +96,7 @@ var
   EXTRAS_FOLDER,
   MANGAFOXTEMPLATE_FOLDER,
   LUA_WEBSITEMODULE_FOLDER,
-  LUA_WEBSITEMODULE_REPOS: String;
+  LUA_WEBSITEMODULE_FILE: String;
 
   // ini files
   revisionfile,
@@ -304,8 +304,6 @@ begin
   OLD_CURRENT_UPDATER_EXE := FMD_DIRECTORY + OLD_UPDATER_EXE;
   CURRENT_ZIP_EXE := FMD_DIRECTORY + ZIP_EXE;
 
-  LUA_WEBSITEMODULE_FOLDER := FMD_DIRECTORY + 'lua' + PathDelim + 'modules' + PathDelim;
-  LUA_WEBSITEMODULE_REPOS := CONFIG_FOLDER + 'luamodules.json';
 
   ReadBaseFile;
 end;
@@ -320,7 +318,8 @@ begin
   CONFIG_FILE := CONFIG_FOLDER + 'config.ini';
   CONFIG_ADVANCED := CONFIG_FOLDER + 'advanced.ini';
   ACCOUNTS_FILE := CONFIG_FOLDER + 'accounts.db';
-  WEBSITE_CONFIG_FILE := CONFIG_FOLDER + 'websiteconfig.ini';
+  MODULES_FILE := CONFIG_FOLDER + 'modules.json';
+  LUA_WEBSITEMODULE_FILE := CONFIG_FOLDER + 'luamodules.json';
 
   DATA_FOLDER := APPDATA_DIRECTORY + 'data' + PathDelim;
 
@@ -331,6 +330,8 @@ begin
   DOWNLOADEDCHAPTERSDB_FILE := WORK_FOLDER + 'downloadedchapters.db';
   FAVORITES_FILE := WORK_FOLDER + 'favorites.ini';
   FAVORITESDB_FILE := WORK_FOLDER + 'favorites.db';
+
+  LUA_WEBSITEMODULE_FOLDER := FMD_DIRECTORY + 'lua' + PathDelim + 'modules' + PathDelim;
 
   SetIniFiles;
 end;

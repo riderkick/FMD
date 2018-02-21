@@ -65,7 +65,6 @@ type
 
   TCustomOptionForm = class(TForm)
     procedure FormCreate(Sender: TObject);
-    procedure FormDestroy(Sender: TObject);
   private
     { private declarations }
     function AddOptionItem(const AOptionItemType: TWebsiteOptionType;
@@ -203,11 +202,6 @@ begin
     HorizontalSpacing := hspace;
     VerticalSpacing := vspace;
   end;
-end;
-
-procedure TCustomOptionForm.FormDestroy(Sender: TObject);
-begin
-  Modules.SaveWebsiteOption;
 end;
 
 function TCustomOptionForm.AddOptionItem(const AOptionItemType: TWebsiteOptionType;
