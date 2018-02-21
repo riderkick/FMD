@@ -18,7 +18,7 @@ const
 var
   kissmangaiv: String ='a5e8e2e9c2721be0a84ad660c472c1f3';
   kissmangakey: String ='mshsdf832nsdbash20asdmnasdbasd612basd';
-  kissmangausegoogledcp: Boolean = True;
+  kissmangausegoogledcp: Boolean = False;
 
 resourcestring
   RS_KissManga_Key = 'Key:';
