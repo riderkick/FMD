@@ -44,7 +44,6 @@ uses
   MangaGo,
   GoodManga,
   MangaZuki,
-  MangaShiro,
   ReadMangaToday,
   MangaOnlineBR,
   Tapas,
