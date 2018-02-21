@@ -51,7 +51,7 @@ resourcestring
   RS_FailedTitle = 'Failed';
   RS_FailedDownload = 'Failed to download new version %s'#13#10#13#10'%d %s';
   RS_FailedToSave = 'Failed to save %s';
-  RS_MissingZipExe = 'Missing %s';
+  RS_MissingFile = 'Missing %s';
   RS_FailedExtract = 'Failed to extract %s, exitstatus = %d';
   RS_ButtonCancel = 'Abort';
   RS_FinishRestartTitle = 'Download finished';
@@ -204,14 +204,13 @@ end;
 
 procedure TSelfUpdaterThread.ProceedUpdate;
 begin
-  if DownloadSuccess then
+  if not DownloadSuccess then Exit;
+  if FileExists(OLD_CURRENT_UPDATER_EXE) then
+    DeleteFile(OLD_CURRENT_UPDATER_EXE);
+  if FileExists(CURRENT_UPDATER_EXE) then
+    RenameFile(CURRENT_UPDATER_EXE, OLD_CURRENT_UPDATER_EXE);
+  if FileExists(OLD_CURRENT_UPDATER_EXE) then
   begin
-    if FileExists(OLD_CURRENT_UPDATER_EXE) then
-      DeleteFile(OLD_CURRENT_UPDATER_EXE);
-    if FileExists(CURRENT_UPDATER_EXE) then
-      RenameFile(CURRENT_UPDATER_EXE, OLD_CURRENT_UPDATER_EXE);
-    if not FileExists(OLD_CURRENT_UPDATER_EXE) then
-      Exit;
     with TProcess.Create(nil) do
       try
         InheritHandles := False;
@@ -228,7 +227,9 @@ begin
     DoAfterFMD := DO_UPDATE;
     FormMain.tmExitCommand.Interval := 32;
     FormMain.tmExitCommand.Enabled := True;
-  end;
+  end
+  else
+    FFailedMessage := Format(RS_MissingFile, [OLD_CURRENT_UPDATER_EXE]);
 end;
 
 procedure TSelfUpdaterThread.UpdateStatusText(const S: String);
@@ -278,7 +279,7 @@ begin
 
       if DownloadSuccess and (not FileExists(CURRENT_ZIP_EXE)) then
       begin
-        FFailedMessage := Format(RS_MissingZipExe, [CURRENT_ZIP_EXE]);
+        FFailedMessage := Format(RS_MissingFile, [CURRENT_ZIP_EXE]);
         DownloadSuccess := False;
       end;
     end
