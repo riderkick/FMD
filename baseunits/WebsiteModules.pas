@@ -99,15 +99,35 @@ type
     property ProxyPassword: String read FProxyPassword write FProxyPassword;
   end;
 
+  TAccountStatus = (asUnknown, asChecking, asValid, asInvalid);
+
+  { TWebsiteModuleAccount }
+
+  TWebsiteModuleAccount = class
+  private
+    FCookies: String;
+    FPassword: String;
+    FStatus: TAccountStatus;
+    FUsername: String;
+  published
+    property Username: String read FUsername write FUsername;
+    property Password: String read FPassword write FPassword;
+    property Cookies: String read FCookies write FCookies;
+    property Status: TAccountStatus read FStatus write FStatus;
+  end;
+
   { TModuleContainer }
 
   TModuleContainer = class
   private
+    FAccount: TWebsiteModuleAccount;
+    FAccountSupport: Boolean;
     FID: Integer;
     FSettings: TWebsiteModuleSettings;
     FTotalDirectory: Integer;
     FCloudflareCF: TCFProps;
     FCloudflareEnabled: Boolean;
+    procedure SetAccountSupport(AValue: Boolean);
     procedure SetCloudflareEnabled(AValue: Boolean);
     procedure CheckCloudflareEnabled(const AHTTP: THTTPSendThread);
     function CloudflareHTTPRequest(const AHTTP: THTTPSendThread; const Method, URL: String; const Response: TObject = nil): Boolean;
@@ -122,7 +142,6 @@ type
     Category: String;
     ActiveTaskCount: Integer;
     ActiveConnectionCount: Integer;
-    AccountSupport: Boolean;
     SortedList: Boolean;
     InformationAvailable: Boolean;
     FavoriteAvailable: Boolean;
@@ -165,6 +184,8 @@ type
     procedure DecActiveConnectionCount; inline;
 
     property Settings: TWebsiteModuleSettings read FSettings write FSettings;
+    property AccountSupport: Boolean read FAccountSupport write SetAccountSupport;
+    property Account: TWebsiteModuleAccount read FAccount write FAccount;
   end;
 
   TModuleContainers = specialize TFPGList<TModuleContainer>;
@@ -334,6 +355,20 @@ begin
   end;
 end;
 
+procedure TModuleContainer.SetAccountSupport(AValue: Boolean);
+begin
+  if FAccountSupport = AValue then Exit;
+  FAccountSupport := AValue;
+  if FAccountSupport then
+  begin
+    if FAccount = nil then
+      FAccount := TWebsiteModuleAccount.Create;
+  end
+  else
+  if FAccount<>nil then
+    FAccount.Free;
+end;
+
 procedure TModuleContainer.CheckCloudflareEnabled(const AHTTP: THTTPSendThread);
 begin
   if FCloudflareEnabled then
@@ -381,6 +416,8 @@ begin
   SetLength(OptionList,0);
   if Assigned(FCloudflareCF) then
     FCloudflareCF.Free;
+  if Assigned(FAccount) then
+    FAccount.Free;
   FSettings.Free;
   inherited Destroy;
 end;
@@ -897,6 +934,12 @@ begin
                       woSpinEdit,woComboBox:PInteger(BindValue)^:=Get(Name,PInteger(BindValue)^);
                     end;
             end;
+            if Account<>nil then
+            begin
+              jo2:=jo.Get('Account',TJSONObject(nil));
+              if jo2<>nil then
+                jd.JSONToObject(jo2,Account);
+            end;
             ja.Delete(j);
           end;
         end;
@@ -938,6 +981,8 @@ begin
                 woSpinEdit,woComboBox:Add(Name,PInteger(BindValue)^);
               end;
         end;
+        if Account<>nil then
+          jo.Add('Account',js.ObjectToJSON(Account));
       end;
     fs:=TFileStream.Create(MODULES_FILE,fmCreate);
     try
