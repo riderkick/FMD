@@ -2458,6 +2458,14 @@ msgstr "Παράγοντας χρήστη"
 msgid "Select a website"
 msgstr "Επιλέξτε έναν ιστότοπο"
 
+#: twebsitesettingsform.caption
+msgid "WebsiteSettingsForm"
+msgstr ""
+
+#: twebsitesettingsform.edsearch.texthint
+msgid "Website name"
+msgstr ""
+
 #: udownloadsmanager.rs_compressing
 msgid "Compressing..."
 msgstr "Συμπίεση..."

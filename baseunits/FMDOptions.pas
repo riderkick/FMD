@@ -81,7 +81,6 @@ var
   FAVORITESDB_FILE,
   CONFIG_FOLDER,
   CONFIG_FILE,
-  CONFIG_ADVANCED,
   REVISION_FILE,
   UPDATE_FILE,
   BASE_FILE,
@@ -101,8 +100,7 @@ var
   // ini files
   revisionfile,
   updatesfile: TIniFile;
-  configfile,
-  advancedfile: TIniFileRun;
+  configfile: TIniFileRun;
 
   // base url, should be in base.ini
   DEFAULT_SELECTED_WEBSITES: String = 'MangaFox,MangaHere,MangaInn,MangaReader';
@@ -256,14 +254,12 @@ end;
 procedure FreeIniFiles;
 begin
   FreeNil(configfile);
-  FreeNil(advancedfile);
 end;
 
 procedure SetIniFiles;
 begin
   FreeIniFiles;
   configfile := TIniFileRun.Create(CONFIG_FILE);
-  advancedfile := TIniFileRun.Create(CONFIG_ADVANCED);
 end;
 
 procedure ReadBaseFile;
@@ -316,7 +312,6 @@ begin
 
   CONFIG_FOLDER := APPDATA_DIRECTORY + 'config' + PathDelim;
   CONFIG_FILE := CONFIG_FOLDER + 'config.ini';
-  CONFIG_ADVANCED := CONFIG_FOLDER + 'advanced.ini';
   ACCOUNTS_FILE := CONFIG_FOLDER + 'accounts.db';
   MODULES_FILE := CONFIG_FOLDER + 'modules.json';
   LUA_WEBSITEMODULE_FILE := CONFIG_FOLDER + 'luamodules.json';

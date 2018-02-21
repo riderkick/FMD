@@ -2407,6 +2407,14 @@ msgstr "Agente de Usuario"
 msgid "Select a website"
 msgstr "Seleccionar un Sitio Web"
 
+#: twebsitesettingsform.caption
+msgid "WebsiteSettingsForm"
+msgstr ""
+
+#: twebsitesettingsform.edsearch.texthint
+msgid "Website name"
+msgstr ""
+
 #: udownloadsmanager.rs_compressing
 msgid "Compressing..."
 msgstr "Comprimiendo..."

@@ -70,7 +70,7 @@ type
 
   { TWebsiteModuleSettings }
 
-  TWebsiteModuleSettings = class
+  TWebsiteModuleSettings = class(TPersistent)
   private
     FCookies: String;
     FMaxConnectionLimit: Integer;

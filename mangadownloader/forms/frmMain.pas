@@ -22,7 +22,7 @@ uses
   TAGraph, TASources, TASeries, TATools, AnimatedGif, uBaseUnit, uDownloadsManager,
   uFavoritesManager, uUpdateThread, uSilentThread, uMisc,
   uGetMangaInfosThread, frmDropTarget, frmAccountManager, frmWebsiteOptionCustom,
-  frmWebsiteOptionAdvanced, frmCustomColor, frmLogger, frmTransferFavorites,
+  frmCustomColor, frmLogger, frmTransferFavorites,
   frmLuaModulesUpdater, CheckUpdate, accountmanagerdb, DBDataProcess, MangaFoxWatermark,
   SimpleTranslator, FMDOptions, httpsendthread, SimpleException;
 
@@ -679,6 +679,10 @@ type
     gifWaiting: TAnimatedGif;
     gifWaitingRect: TRect;
 
+
+    // embed form
+    procedure EmbedForm(const AForm: TForm; const AParent: TWinControl);
+
     // generate >> nodes
     procedure GeneratetvDownloadFilterNodes;
 
@@ -920,9 +924,9 @@ implementation
 {$R *.lfm}
 
 uses
-  frmImportFavorites, frmShutdownCounter, frmSelectDirectory, WebsiteModules,
-  FMDVars, RegExpr, sqlite3dyn, Clipbrd, ssl_openssl_lib, LazFileUtils, LazUTF8,
-  webp, DBUpdater, LuaWebsiteModules;
+  frmImportFavorites, frmShutdownCounter, frmSelectDirectory,
+  frmWebsiteSettings, WebsiteModules, FMDVars, RegExpr, sqlite3dyn, Clipbrd,
+  ssl_openssl_lib, LazFileUtils, LazUTF8, webp, DBUpdater, LuaWebsiteModules;
 
 var
   // thread for open db
@@ -1208,65 +1212,26 @@ begin
   end;
 
   // embed form
+  CustomColorForm := TCustomColorForm.Create(Self);
+  EmbedForm(CustomColorForm, tsCustomColor);
+
   AccountManagerForm := TAccountManagerForm.Create(Self);
-  with AccountManagerForm do begin
-    Parent := tsAccounts;
-    Align := alClient;
-    ChildSizing.LeftRightSpacing := 0;
-    ChildSizing.TopBottomSpacing := 0;
-    Show;
-    if Screen.PixelsPerInch > 96 then
-      AutoAdjustLayout(lapAutoAdjustForDPI, Screen.PixelsPerInch, 96, 0, 0);
-  end;
+  EmbedForm(AccountManagerForm, tsAccounts);
 
   WebsiteOptionCustomForm := TCustomOptionForm.Create(Self);
-  with WebsiteOptionCustomForm do
-  begin
-    Parent := sbWebsiteOptions;
-    BorderStyle := bsNone;
-    Align := alClient;
-    Show;
-    if Screen.PixelsPerInch > 96 then
-      AutoAdjustLayout(lapAutoAdjustForDPI, Screen.PixelsPerInch, 96, 0, 0);
-  end;
+  EmbedForm(WebsiteOptionCustomForm, sbWebsiteOptions);
 
-  WebsiteOptionAdvancedForm := TWebsiteOptionAdvancedForm.Create(Self);
-  with WebsiteOptionAdvancedForm do
-  begin
-    Parent := tsWebsiteAdvanced;
-    BorderStyle := bsNone;
-    Align := alClient;
-    Show;
-    if Screen.PixelsPerInch > 96 then
-      AutoAdjustLayout(lapAutoAdjustForDPI, Screen.PixelsPerInch, 96, 0, 0);
-  end;
+  WebsiteSettingsForm := TWebsiteSettingsForm.Create(Self);
+  EmbedForm(WebsiteSettingsForm, tsWebsiteAdvanced);
 
-  CustomColorForm := TCustomColorForm.Create(Self);
-  with CustomColorForm do
-  begin
-    Parent := tsCustomColor;
-    BorderStyle := bsNone;
-    Align := alClient;
-    Show;
-    if Screen.PixelsPerInch > 96 then
-      AutoAdjustLayout(lapAutoAdjustForDPI, Screen.PixelsPerInch, 96, 0, 0);
-  end;
+  LuaModulesUpdaterForm := TLuaModulesUpdaterForm.Create(Self);
+  EmbedForm(LuaModulesUpdaterForm, tsWebsiteModules);
+
   AddVT(Self.vtMangaList);
   AddVT(Self.clbChapterList);
   AddVT(Self.vtDownload);
   AddVT(Self.vtFavorites);
   AddVT(Self.vtOptionMangaSiteSelection);
-
-  LuaModulesUpdaterForm := TLuaModulesUpdaterForm.Create(Self);
-  with LuaModulesUpdaterForm do
-  begin
-    Parent := tsWebsiteModules;
-    BorderStyle := bsNone;
-    Align := alClient;
-    Show;
-    if Screen.PixelsPerInch > 96 then
-      AutoAdjustLayout(lapAutoAdjustForDPI, Screen.PixelsPerInch, 96, 0, 0);
-  end;
 
   // logger
   FormLogger := TFormLogger.Create(Self);
@@ -1797,7 +1762,11 @@ begin
   ScanLuaWebsiteModulesFile;
   AddToAboutStatus('Modules', IntToStr(Modules.Count));
 
-  // load configfile
+  Modules.LoadFromFile;
+  WebsiteOptionCustomForm.CreateWebsiteOption;
+  WebsiteSettingsForm.LoadWebsiteSettings;
+
+  //load configfile
   LoadMangaOptions;
   LoadOptions;
   ApplyOptions;
@@ -1808,9 +1777,6 @@ begin
 
   FavoriteManager.Restore;
   UpdateVtFavorites;
-
-  Modules.LoadFromFile;
-  frmWebsiteOptionCustom.WebsiteOptionCustomForm.CreateWebsiteOption;
 
   if cbSelectManga.ItemIndex > -1 then
     OpenDataDB(cbSelectManga.Items[cbSelectManga.ItemIndex]);
@@ -1828,6 +1794,8 @@ begin
 
   if Sender is TTimer then
     TTimer(Sender).Free;
+
+  isStartup := False;
 end;
 
 procedure TMainForm.medURLCutClick(Sender: TObject);
@@ -2497,6 +2465,19 @@ begin
   if Length(ChapterList) > 0 then
     for i := Low(ChapterList) to High(ChapterList) do
       ChapterList[i].Downloaded := False;
+end;
+
+procedure TMainForm.EmbedForm(const AForm: TForm; const AParent: TWinControl);
+begin
+  with AForm do
+  begin
+    Parent := AParent;
+    BorderStyle := bsNone;
+    Align := alClient;
+    Show;
+    if Screen.PixelsPerInch > 96 then
+      AutoAdjustLayout(lapAutoAdjustForDPI, Screen.PixelsPerInch, 96, 0, 0);
+  end;
 end;
 
 procedure TMainForm.btVisitMyBlogClick(Sender: TObject);
@@ -5273,6 +5254,7 @@ begin
     end;
 
     // add them to vt websites selection and availablewebsites
+    vtOptionMangaSiteSelection.BeginUpdate;
     for i := 0 to categories.Count - 1 do
     begin
       node := vtOptionMangaSiteSelection.AddChild(nil, nil);
@@ -5291,6 +5273,7 @@ begin
         AvailableWebsites.Add(s);
       end;
     end;
+    vtOptionMangaSiteSelection.EndUpdate;
     AvailableWebsites.Duplicates := dupIgnore;
     AvailableWebsites.Sorted := True;
   finally
@@ -5716,7 +5699,8 @@ begin
       tvDownloadFilterRefresh(True);
 
       // refresh custom option
-      WebsiteOptionCustomForm.CreateWebsiteOption;
+      if not isStartup then
+        WebsiteOptionCustomForm.CreateWebsiteOption;
     end;
   end;
 end;

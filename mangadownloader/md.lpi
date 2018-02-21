@@ -271,36 +271,42 @@
         <FormatVersion Value="1"/>
       </local>
     </RunParams>
-    <RequiredPackages Count="9">
+    <RequiredPackages Count="11">
       <Item1>
-        <PackageName Value="LCL"/>
+        <PackageName Value="RunTimeTypeInfoControls"/>
       </Item1>
       <Item2>
-        <PackageName Value="TAChartLazarusPkg"/>
+        <PackageName Value="LazControls"/>
       </Item2>
       <Item3>
-        <PackageName Value="richmemopackage"/>
+        <PackageName Value="LCL"/>
       </Item3>
       <Item4>
-        <PackageName Value="virtualtreeview_package"/>
+        <PackageName Value="TAChartLazarusPkg"/>
       </Item4>
       <Item5>
-        <PackageName Value="multiloglaz"/>
+        <PackageName Value="richmemopackage"/>
       </Item5>
       <Item6>
-        <PackageName Value="laz_synapse"/>
+        <PackageName Value="virtualtreeview_package"/>
       </Item6>
       <Item7>
-        <PackageName Value="dcpcrypt"/>
+        <PackageName Value="multiloglaz"/>
       </Item7>
       <Item8>
-        <PackageName Value="BESENPkg"/>
-        <DefaultFilename Value="..\3rd\BESENPkg.lpk" Prefer="True"/>
+        <PackageName Value="laz_synapse"/>
       </Item8>
       <Item9>
+        <PackageName Value="dcpcrypt"/>
+      </Item9>
+      <Item10>
+        <PackageName Value="BESENPkg"/>
+        <DefaultFilename Value="..\3rd\BESENPkg.lpk" Prefer="True"/>
+      </Item10>
+      <Item11>
         <PackageName Value="internettools"/>
         <DefaultFilename Value="..\3rd\internettools\internettools.lpk" Prefer="True"/>
-      </Item9>
+      </Item11>
     </RequiredPackages>
     <Units Count="18">
       <Unit0>
@@ -364,60 +370,59 @@
         <ResourceBaseClass Value="Form"/>
       </Unit8>
       <Unit9>
-        <Filename Value="forms\frmWebsiteOptionAdvanced.pas"/>
-        <IsPartOfProject Value="True"/>
-        <ComponentName Value="WebsiteOptionAdvancedForm"/>
-        <HasResources Value="True"/>
-        <ResourceBaseClass Value="Form"/>
-      </Unit9>
-      <Unit10>
         <Filename Value="forms\frmWebsiteSelection.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="WebsiteSelectionForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-      </Unit10>
-      <Unit11>
+      </Unit9>
+      <Unit10>
         <Filename Value="forms\frmCustomColor.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="CustomColorForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-      </Unit11>
-      <Unit12>
+      </Unit10>
+      <Unit11>
         <Filename Value="forms\frmLogger.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="FormLogger"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-      </Unit12>
-      <Unit13>
+      </Unit11>
+      <Unit12>
         <Filename Value="forms\frmSelectDirectory.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="SelectDirectoryForm"/>
         <ResourceBaseClass Value="Form"/>
-      </Unit13>
-      <Unit14>
+      </Unit12>
+      <Unit13>
         <Filename Value="forms\frmTransferFavorites.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="TransferFavoritesForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-      </Unit14>
-      <Unit15>
+      </Unit13>
+      <Unit14>
         <Filename Value="forms\frmLuaModulesUpdater.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="LuaModulesUpdaterForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
+      </Unit14>
+      <Unit15>
+        <Filename Value="..\baseunits\DBUpdater.pas"/>
+        <IsPartOfProject Value="True"/>
       </Unit15>
       <Unit16>
-        <Filename Value="..\baseunits\DBUpdater.pas"/>
+        <Filename Value="..\baseunits\SelfUpdater.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit16>
       <Unit17>
-        <Filename Value="..\baseunits\SelfUpdater.pas"/>
+        <Filename Value="forms\frmWebsiteSettings.pas"/>
         <IsPartOfProject Value="True"/>
+        <ComponentName Value="WebsiteSettingsForm"/>
+        <ResourceBaseClass Value="Form"/>
       </Unit17>
     </Units>
   </ProjectOptions>

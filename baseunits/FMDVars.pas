@@ -16,6 +16,7 @@ var
   isUpdating,
   isPendingExitCounter,
   isNormalExit: Boolean;
+  isStartup: Boolean = True;
 
   //Instance
   FMDInstance: TSimpleIPCServer;
