@@ -200,6 +200,7 @@ type
     function GetModule(const ModuleId: Integer): TModuleContainer;
     function GetCount: Integer;
     function GetMaxTaskLimit(const ModuleId: Integer): Integer;
+    function GetMaxThreadPerTaskLimit(const ModuleId: Integer): Integer;
     function GetMaxConnectionLimit(const ModuleId: Integer): Integer;
     function GetActiveTaskCount(const ModuleId: Integer): Integer;
     function GetActiveConnectionLimit(const ModuleId: Integer): Integer;
@@ -287,6 +288,7 @@ type
     property Website[const ModuleId: Integer]: String read GetWebsite;
 
     property MaxTaskLimit[const ModuleId: Integer]: Integer read GetMaxTaskLimit;
+    property MaxThreadPerTaskLimit[const ModuleId: Integer]: Integer read GetMaxThreadPerTaskLimit;
     property MaxConnectionLimit[const ModuleId: Integer]: Integer read GetMaxConnectionLimit;
     property ActiveTaskCount[const ModuleId: Integer]: Integer read GetActiveTaskCount;
     property ActiveConnectionCount[const ModuleId: Integer]: Integer read GetActiveConnectionLimit;
@@ -447,8 +449,26 @@ begin
 end;
 
 procedure TModuleContainer.PrepareHTTP(const AHTTP: THTTPSendThread);
+var
+  s: String;
 begin
   CheckCloudflareEnabled(AHTTP);
+  with Settings do
+  begin
+    if UserAgent<>'' then
+      AHTTP.UserAgent:=UserAgent;
+    if Cookies<>'' then
+      AHTTP.Cookies.Text:=Cookies;
+    s:='';
+    case Settings.ProxyType of
+      ptDirect:AHTTP.SetNoProxy;
+      ptHTTP:s:='HTTP';
+      ptSOCKS4:s:='SOCKS4';
+      ptSOCKS5:s:='SOCKS5';
+    end;
+    if s<>'' then
+      AHTTP.SetProxy(s,ProxyHost,ProxyPort,ProxyUsername,ProxyPassword);
+  end;
 end;
 
 procedure TModuleContainer.IncActiveTaskCount;
@@ -1011,6 +1031,13 @@ function TWebsiteModules.GetMaxTaskLimit(const ModuleId: Integer): Integer;
 begin
   if not ModuleExist(ModuleId) then Exit(0);
   Result := FModuleList[ModuleId].Settings.MaxTaskLimit;
+end;
+
+function TWebsiteModules.GetMaxThreadPerTaskLimit(const ModuleId: Integer
+  ): Integer;
+begin
+  if not ModuleExist(ModuleId) then Exit(0);
+  Result := FModuleList[ModuleId].Settings.MaxThreadPerTaskLimit;
 end;
 
 function TWebsiteModules.GetMaxConnectionLimit(const ModuleId: Integer): Integer;

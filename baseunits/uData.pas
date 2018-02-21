@@ -108,20 +108,13 @@ begin
 end;
 
 function TMangaInformation.GetDirectoryPage(var APage: Integer; const AWebsite: String): Byte;
-var
-  p: Integer;
 begin
   APage := 1;
 
-  //load User-Agent from advancedfile
-  AdvanceLoadHTTPConfig(FHTTP, AWebsite);
-
   //load pagenumber_config if available
-  p := advancedfile.ReadInteger('UpdateListDirectoryPageNumber', AWebsite, -1);
-
-  if p > 0 then
+  if Modules[ModuleId].Settings.UpdateListDirectoryPageNumber > 0 then
   begin
-    APage := p;
+    APage := Modules[ModuleId].Settings.UpdateListDirectoryPageNumber;
     BROWSER_INVERT := True;
     Exit(NO_ERROR);
   end;
@@ -141,9 +134,6 @@ end;
 function TMangaInformation.GetNameAndLink(const ANames, ALinks: TStringList;
   const AWebsite, AURL: String): Byte;
 begin
-  //load User-Agent from advancedfile
-  AdvanceLoadHTTPConfig(FHTTP, AWebsite);
-
   if ModuleId < 0 then
     ModuleId := Modules.LocateModule(AWebsite);
   if Modules.ModuleAvailable(ModuleId, MMGetNameAndLink) then
@@ -167,9 +157,6 @@ var
 begin
   if Trim(AURL) = '' then
     Exit(INFORMATION_NOT_FOUND);
-
-  //load User-Agent from advancedfile
-  AdvanceLoadHTTPConfig(FHTTP, AWebsite);
 
   GetBaseMangaInfo(mangaInfo, bmangaInfo);
 

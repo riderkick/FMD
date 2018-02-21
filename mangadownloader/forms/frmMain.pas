@@ -819,8 +819,6 @@ type
     jdn: Integer;
   end;
 
-  procedure AdvanceLoadHTTPConfig(const HTTP: THTTPSendThread; Website: String);
-
 var
   MainForm: TMainForm;
 
@@ -963,18 +961,6 @@ begin
   if ParentControl.ControlCount > 0 then
     for i := 0 to ParentControl.ControlCount - 1 do
       ParentControl.Controls[i].Cursor := Cur;
-end;
-
-procedure AdvanceLoadHTTPConfig(const HTTP: THTTPSendThread; Website: String);
-var
-  s: String;
-begin
-  if HTTP = nil then Exit;
-  if Website = '' then Exit;
-  s:=Trim(advancedfile.ReadString('UserAgent',Website,''));
-  if s<>'' then HTTP.UserAgent:=s;
-  s:=Trim(advancedfile.ReadString('Cookies',Website,''));
-  if s<>'' then HTTP.Cookies.Text:=s;
 end;
 
 { TSearchDBThread }
@@ -5072,7 +5058,6 @@ begin
     finally
       UpdateFile;
     end;
-  advancedfile.UpdateFile;
   Modules.SaveToFile;
 end;
 

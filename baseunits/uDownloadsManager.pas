@@ -704,29 +704,16 @@ procedure TTaskThread.CheckOut;
 var
   currentMaxThread: Integer;
   s: String;
-  mt: Integer;
 begin
   if Terminated then Exit;
 
   try
-  //load advanced config if any
-  mt := advancedfile.ReadInteger('DownloadMaxThreadsPerTask',
-    Container.DownloadInfo.Website, -1);
-  if (mt > 0) then
-  begin
-    if mt > MAX_CONNECTIONPERHOSTLIMIT then
-      mt := MAX_CONNECTIONPERHOSTLIMIT;
-    currentMaxThread := mt;
-  end
+  if Modules.MaxThreadPerTaskLimit[Container.ModuleId] > 0 then
+    currentMaxThread := Modules.MaxThreadPerTaskLimit[Container.ModuleId]
   else
-  begin
-    if Modules.MaxConnectionLimit[Container.ModuleId] > 0 then
-      currentMaxThread := Modules.MaxConnectionLimit[Container.ModuleId]
-    else
-      currentMaxThread := OptionMaxThreads;
-    if currentMaxThread > OptionMaxThreads then
-      currentMaxThread := OptionMaxThreads;
-  end;
+    currentMaxThread := OptionMaxThreads;
+  if currentMaxThread > OptionMaxThreads then
+    currentMaxThread := OptionMaxThreads;
 
   if Container.PageLinks.Count > 0 then
   begin
@@ -760,8 +747,6 @@ begin
       with TDownloadThread(Threads.Last) do begin
         Task := Self;
         WorkId := Container.WorkCounter;
-        //load User-Agent from advancedfile
-        AdvanceLoadHTTPConfig(FHTTP, Container.DownloadInfo.Website);
         Start;
         Container.WorkCounter := InterLockedIncrement(Container.WorkCounter);
       end;

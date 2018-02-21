@@ -377,7 +377,7 @@ procedure TUpdateListManagerThread.GetInfo(const limit: Integer;
   end;
 
 var
-  mt, plimit: Integer;
+  plimit: Integer;
   s: String;
   t: TUpdateListThread;
 begin
@@ -387,22 +387,12 @@ begin
       if Terminated then Break;
       if ulTotalPtr <> FCurrentGetInfoLimit then
         ulTotalPtr := FCurrentGetInfoLimit;
-      mt := advancedfile.ReadInteger('UpdateListNumberOfThreads', website, -1);
-      if mt > 0 then
-      begin
-        if mt > MAX_CONNECTIONPERHOSTLIMIT then //32 is max | be carefull, there's still memory leak problems
-          mt := MAX_CONNECTIONPERHOSTLIMIT;
-        numberOfThreads := mt;
-      end
+      if Module.Settings.UpdateListNumberOfThread > 0 then
+        numberOfThreads := Module.Settings.UpdateListNumberOfThread
       else
-      begin
-        if Module.Settings.MaxConnectionLimit > 0 then
-          numberOfThreads := Module.Settings.MaxConnectionLimit
-        else
-          numberOfThreads := OptionMaxThreads;
-        if numberOfThreads > OptionMaxThreads then
-          numberOfThreads := OptionMaxThreads;
-      end;
+        numberOfThreads := OptionMaxThreads;
+      if numberOfThreads > OptionMaxThreads then
+        numberOfThreads := OptionMaxThreads;
       if numberOfThreads < 1 then
         numberOfThreads := 1;  //default
 
