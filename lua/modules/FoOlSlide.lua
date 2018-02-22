@@ -219,6 +219,7 @@ function Init()
   AddWebsiteModule('Riceballicious', 'http://riceballicious.info', cat)
   AddWebsiteModule('PhoenixSerenade', 'https://reader.serenade.moe', cat)
   AddWebsiteModule('VortexScans', 'https://reader.vortex-scans.com', cat)
+  AddWebsiteModule('RoseliaScanlations', 'http://reader.roseliascans.com', cat)
   
   -- es-sc
   cat = 'Spanish-Scanlation'
