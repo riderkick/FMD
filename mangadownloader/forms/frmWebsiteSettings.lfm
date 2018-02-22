@@ -114,14 +114,16 @@ object WebsiteSettingsForm: TWebsiteSettingsForm
       Width = 417
       ClientWidth = 417
       ClientHeight = 432
-      object pnProps: TPanel
+      object sbProps: TScrollBox
         Left = 0
         Height = 432
         Top = 0
         Width = 417
+        HorzScrollBar.Page = 1
+        HorzScrollBar.Visible = False
+        VertScrollBar.Page = 1
         Align = alClient
-        BevelOuter = bvNone
-        TabOrder = 0
+        BorderStyle = bsNone
         ChildSizing.LeftRightSpacing = 5
         ChildSizing.TopBottomSpacing = 5
         ChildSizing.HorizontalSpacing = 20
@@ -129,6 +131,7 @@ object WebsiteSettingsForm: TWebsiteSettingsForm
         ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
         ChildSizing.Layout = cclLeftToRightThenTopToBottom
         ChildSizing.ControlsPerLine = 2
+        TabOrder = 0
       end
     end
   end

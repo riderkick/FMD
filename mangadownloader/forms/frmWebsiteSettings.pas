@@ -16,14 +16,14 @@ type
   TSettingsView = class
   private
     FSettings: TWebsiteModuleSettings;
-    FOwner: TPanel;
+    FOwner: TWinControl;
     FControls: TFPObjectList;
     procedure SetData(settings: TWebsiteModuleSettings);
     function GetData: TWebsiteModuleSettings;
     procedure CreateControls;
     procedure UpdateView;
   public
-    constructor Create(owner: TPanel);
+    constructor Create(owner: TWinControl);
     destructor Destroy; override;
     property Data: TWebsiteModuleSettings read GetData write SetData;
   end;
@@ -32,7 +32,7 @@ type
 
   TWebsiteSettingsForm = class(TForm)
     edSearch: TEditButton;
-    pnProps: TPanel;
+    sbProps: TScrollBox;
     spMain: TPairSplitter;
     spList: TPairSplitterSide;
     spProps: TPairSplitterSide;
@@ -68,7 +68,7 @@ uses frmCustomColor, typinfo;
 procedure TWebsiteSettingsForm.FormCreate(Sender: TObject);
 begin
   AddVT(vtWebsite);
-  settingsView := TSettingsView.Create(pnProps);
+  settingsView := TSettingsView.Create(sbProps);
 end;
 
 procedure TWebsiteSettingsForm.edSearchChange(Sender: TObject);
@@ -139,7 +139,7 @@ end;
 
 { TSettingsView }
 
-constructor TSettingsView.Create(owner: TPanel);
+constructor TSettingsView.Create(owner: TWinControl);
 begin
   FOwner := owner;
   FControls := TFPObjectList.Create(True);
@@ -169,7 +169,7 @@ procedure TSettingsView.CreateControls;
 
 const LEFT_OFFSET = 250;
 
-  function AddLabel(text: String; prev: TControl): TLabel;
+  function AddLabel(text: String): TLabel;
   begin
     Result := TLabel.Create(FOwner);
     Result.Parent := FOwner;
@@ -179,18 +179,19 @@ const LEFT_OFFSET = 250;
 
   function AddEdit(name, text: String; prev: TControl): TTIEdit;
   begin
-    AddLabel(text, prev);
+    AddLabel(text);
     Result := TTIEdit.Create(FOwner);
     Result.Parent := FOwner;
     Result.Link.TIObject := FSettings;
     Result.Link.TIPropertyName := name;
     Result.Width := 300;
+    Result.Enabled := False;
     FControls.Add(Result);
   end;
 
   function AddSpinEdit(name, text: String;  min, max: Integer; prev: TControl): TTISpinEdit;
   begin
-    AddLabel(text, prev);
+    AddLabel(text);
     Result := TTISpinEdit.Create(FOwner);
     Result.MinValue := min;
     Result.MaxValue := max;
@@ -198,17 +199,20 @@ const LEFT_OFFSET = 250;
     Result.Link.TIObject := FSettings;
     Result.Link.TIPropertyName := name;
     Result.Width := 100;
+    Result.Enabled := False;
     FControls.Add(Result);
   end;
 
   function AddComboBox(name, text: String; prev: TControl): TTIComboBox;
   begin
-    AddLabel(text, prev);
+    AddLabel(text);
     Result := TTIComboBox.Create(FOwner);
     Result.Parent := FOwner;
     Result.Link.TIObject := FSettings;
     Result.Link.TIPropertyName := name;
     Result.Width := 200;
+    result.Style := csDropDownList;
+    Result.Enabled := False;
     FControls.Add(Result);
   end;
 
@@ -222,19 +226,16 @@ begin
   typeData := GetTypeData(TWebsiteModuleSettings.ClassInfo);
   GetMem(propList, typeData^.PropCount * SizeOf(Pointer));
   cnt := GetPropList(TWebsiteModuleSettings.ClassInfo, propList);
-  for i := 0 to cnt-1 do begin
-    case propList^[i]^.PropType^.Kind of
-      tkInteger: begin
-        prev := AddSpinEdit(propList^[i]^.Name, propList^[i]^.Name, 1, High(Integer), prev);
+  for i := 0 to cnt-1 do
+    with propList^[i]^ do
+      case PropType^.Kind of
+      tkInteger:
+        prev := AddSpinEdit(Name, Name, 1, High(Integer), prev);
+      tkAString:
+        prev := AddEdit(Name, Name, prev);
+      tkEnumeration:
+        prev := AddComboBox(Name, Name, prev);
       end;
-      tkAString: begin
-        prev := AddEdit(propList^[i]^.Name, propList^[i]^.Name, prev);
-      end;
-      tkEnumeration: begin
-        prev := AddComboBox(propList^[i]^.Name, propList^[i]^.Name, prev);
-      end;
-    end;
-  end;
   FreeMem(propList);
 end;
 
@@ -242,13 +243,16 @@ procedure TSettingsView.UpdateView;
 var
   i: Integer;
 begin
-  for i := 0 to FControls.Count-1 do
+  for i := 0 to FControls.Count-1 do begin
     if FControls[i] is TTIEdit then
       TTIEdit(FControls[i]).Link.TIObject := FSettings
     else if FControls[i] is TTISpinEdit then
       TTISpinEdit(FControls[i]).Link.TIObject := FSettings
     else if FControls[i] is TTIComboBox then
       TTIComboBox(FControls[i]).Link.TIObject := FSettings;
+    if Assigned(FSettings) then
+      TControl(FControls[i]).Enabled := True;
+  end;
 end;
 
 end.
