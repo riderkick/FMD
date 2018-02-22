@@ -7,6 +7,7 @@ local dirurlonline = '/online/directory/'
 local dirurlhelvetica = '/r/directory/'
 local dirurllector = '/lector/directory/'
 local dirurlfsdir = '/fs/directory/'
+local dirurlreaderlist = '/fs/reader/list/'
 
 function getWithCookie(lurl)
   if http.get(lurl) then
@@ -42,7 +43,8 @@ function getdirurl(website)
     ['NoraNoFansub'] = dirurllector,
     ['HotChocolateScans'] = dirurlfsdir,
     ['AntisenseScans'] = dirurlonline,
-    ['MangaichiScan'] = dirurlfsdir
+    ['MangaichiScan'] = dirurlfsdir,
+    ['Riceballicious'] = dirurlreaderlist
   }  
   if dirs[website] ~= nil then
     return dirs[website]
@@ -214,6 +216,7 @@ function Init()
   AddWebsiteModule('DeathTollScans', 'https://reader.deathtollscans.net', cat)
   AddWebsiteModule('MangaichiScan', 'http://mangaichiscans.mokkori.fr', cat)
   AddWebsiteModule('ForgottenScans', 'http://reader.fos-scans.com', cat)
+  AddWebsiteModule('Riceballicious', 'http://riceballicious.info', cat)
   
   -- es-sc
   cat = 'Spanish-Scanlation'
