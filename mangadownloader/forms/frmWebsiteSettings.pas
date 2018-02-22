@@ -22,6 +22,7 @@ type
     function GetData: TWebsiteModuleSettings;
     procedure CreateControls;
     procedure UpdateView;
+    procedure OnEditorButtonClick(Sender: TObject);
   public
     constructor Create(owner: TWinControl);
     destructor Destroy; override;
@@ -59,7 +60,7 @@ var
 
 implementation
 
-uses frmCustomColor, typinfo;
+uses frmCustomColor, typinfo, StringsPropEditDlg;
 
 {$R *.lfm}
 
@@ -165,6 +166,32 @@ begin
   Result := FSettings;
 end;
 
+procedure TSettingsView.OnEditorButtonClick(Sender: TObject);
+
+  function FindEditor: TTIEdit;
+  var
+    i: Integer;
+  begin
+    for i := 0 to FControls.Count - 2 do
+      if Sender = FControls[i] then begin
+        Result := TTIEdit(FControls[i+1]);
+        Exit;
+      end;
+  end;
+
+var
+  editor: TTIEdit;
+  form: TStringsPropEditorFrm;
+begin
+  if not Assigned(FSettings) then Exit;
+  form := TStringsPropEditorFrm.Create(FOwner);
+  editor := FindEditor;
+  form.Memo.Text := editor.Link.GetAsText;
+  if form.ShowModal = mrOK then
+    editor.Link.SetAsText(form.Memo.Text);
+  form.Free;
+end;
+
 procedure TSettingsView.CreateControls;
 
   procedure SetAnchor(control, lbl, prev: TControl);
@@ -179,8 +206,6 @@ procedure TSettingsView.CreateControls;
       control.AnchorSide[akTop].Control := lbl;
       control.AnchorSide[akTop].Side := asrCenter;
     end;
-    control.AnchorSide[akRight].Control := FOwner;
-    control.AnchorSide[akRight].Side := asrRight;
     control.BorderSpacing.Right := 10;
     control.BorderSpacing.Left := 50;
   end;
@@ -209,11 +234,20 @@ procedure TSettingsView.CreateControls;
     btn: TButton;
   begin
     lbl := AddLabel(text, prev);
-    {btn := TButton.Create(FOwner);
+
+    btn := TButton.Create(FOwner);
     btn.Parent := FOwner;
     btn.Caption := '...';
     btn.AutoSize := True;
-    btn.Enabled := False;}
+    btn.Enabled := False;
+    btn.OnClick := @OnEditorButtonClick;
+    SetAnchor(btn, lbl, prev);
+    btn.Anchors := [akTop, akRight];
+    btn.AnchorSide[akRight].Control := FOwner;
+    btn.AnchorSide[akRight].Side := asrRight;
+    btn.BorderSpacing.Left := 0;
+    FControls.Add(btn);
+
     Result := TTIEdit.Create(FOwner);
     Result.Parent := FOwner;
     Result.Link.TIObject := FSettings;
@@ -221,6 +255,8 @@ procedure TSettingsView.CreateControls;
     Result.Width := 300;
     Result.Enabled := False;
     SetAnchor(Result, lbl, prev);
+    Result.AnchorSide[akRight].Control := btn;
+    Result.AnchorSide[akRight].Side := asrLeft;
     FControls.Add(Result);
   end;
 
