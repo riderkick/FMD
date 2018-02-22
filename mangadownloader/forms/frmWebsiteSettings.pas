@@ -59,7 +59,7 @@ var
 
 implementation
 
-uses frmCustomColor;
+uses frmCustomColor, typinfo;
 
 {$R *.lfm}
 
@@ -174,98 +174,68 @@ const LEFT_OFFSET = 250;
     Result := TLabel.Create(FOwner);
     Result.Parent := FOwner;
     Result.Caption := text;
-    Result.AnchorSide[akLeft].Control := FOwner;
-    Result.AnchorSide[akLeft].Side := asrLeft;
-    Result.BorderSpacing.Left := 5;
-    if prev <> nil then begin
-      Result.AnchorSide[akTop].Control := prev;
-      Result.AnchorSide[akTop].Side := asrBottom;
-      Result.BorderSpacing.Top := 10;
-    end
-    else
-      Result.Top := 5;
     FControls.Add(Result);
   end;
 
-  procedure SetAnchor(control, lbl, prev: TControl);
-  begin
-    control.Left := LEFT_OFFSET;
-    control.Anchors := [akTop, akLeft, akRight];
-    if prev <> nil then begin
-      control.AnchorSide[akTop].Control := prev;
-      control.AnchorSide[akTop].Side := asrBottom;
-      control.BorderSpacing.Top := 10;
-    end
-    else begin
-      control.AnchorSide[akTop].Control := lbl;
-      control.AnchorSide[akTop].Side := asrCenter;
-    end;
-    control.AnchorSide[akRight].Control := FOwner;
-    control.AnchorSide[akRight].Side := asrRight;
-  end;
-
   function AddEdit(name, text: String; prev: TControl): TTIEdit;
-  var
-    lbl: TLabel;
   begin
-    lbl := AddLabel(text, prev);
+    AddLabel(text, prev);
     Result := TTIEdit.Create(FOwner);
     Result.Parent := FOwner;
     Result.Link.TIObject := FSettings;
     Result.Link.TIPropertyName := name;
-    SetAnchor(Result, lbl, prev);
+    Result.Width := 300;
     FControls.Add(Result);
   end;
 
   function AddSpinEdit(name, text: String;  min, max: Integer; prev: TControl): TTISpinEdit;
-  var
-    lbl: TLabel;
   begin
-    lbl := AddLabel(text, prev);
+    AddLabel(text, prev);
     Result := TTISpinEdit.Create(FOwner);
     Result.MinValue := min;
     Result.MaxValue := max;
     Result.Parent := FOwner;
     Result.Link.TIObject := FSettings;
     Result.Link.TIPropertyName := name;
-    SetAnchor(Result, lbl, prev);
-    Result.Anchors := [akTop, akLeft];
     Result.Width := 100;
     FControls.Add(Result);
   end;
 
   function AddComboBox(name, text: String; prev: TControl): TTIComboBox;
-  var
-    lbl: TLabel;
   begin
-    lbl := AddLabel(text, prev);
+    AddLabel(text, prev);
     Result := TTIComboBox.Create(FOwner);
     Result.Parent := FOwner;
     Result.Link.TIObject := FSettings;
     Result.Link.TIPropertyName := name;
-    SetAnchor(Result, lbl, prev);
-    Result.Anchors := [akTop, akLeft];
     Result.Width := 200;
     FControls.Add(Result);
   end;
 
 var
-  prev: TControl;
+  prev: TControl = nil;
+  propList: PPropList;
+  typeData: PTypeData;
+  cnt, i: Integer;
 
 begin
-  // TODO: resources
-  prev := AddSpinEdit('MaxTaskLimit', 'Max task limit:', 1, 8, nil);
-  prev := AddSpinEdit('MaxThreadPerTaskLimit', 'Max thread per task limit:', 1, 32, prev);
-  prev := AddSpinEdit('MaxConnectionLimit', 'Max connection limit:', 1, 32, prev);
-  prev := AddSpinEdit('UpdateListNumberOfThread', 'Update list number of thread:', 1, 32, prev);
-  prev := AddSpinEdit('UpdateListDirectoryPageNumber', 'Update list directory page number:', 1, 100000000, prev);
-  prev := AddEdit('UserAgent', 'User agent:', prev);
-  prev := AddEdit('Cookies', 'Cookies:', prev);
-  prev := AddComboBox('ProxyType', 'Proxy type:', prev);
-  prev := AddEdit('ProxyHost', 'Proxy host:', prev);
-  prev := AddEdit('ProxyPort', 'Proxy port:', prev);
-  prev := AddEdit('ProxyUsername', 'Proxy username:', prev);
-  prev := AddEdit('ProxyPassword', 'Proxy password:', prev);
+  typeData := GetTypeData(TWebsiteModuleSettings.ClassInfo);
+  GetMem(propList, typeData^.PropCount * SizeOf(Pointer));
+  cnt := GetPropList(TWebsiteModuleSettings.ClassInfo, propList);
+  for i := 0 to cnt-1 do begin
+    case propList^[i]^.PropType^.Kind of
+      tkInteger: begin
+        prev := AddSpinEdit(propList^[i]^.Name, propList^[i]^.Name, 1, High(Integer), prev);
+      end;
+      tkAString: begin
+        prev := AddEdit(propList^[i]^.Name, propList^[i]^.Name, prev);
+      end;
+      tkEnumeration: begin
+        prev := AddComboBox(propList^[i]^.Name, propList^[i]^.Name, prev);
+      end;
+    end;
+  end;
+  FreeMem(propList);
 end;
 
 procedure TSettingsView.UpdateView;

@@ -122,6 +122,13 @@ object WebsiteSettingsForm: TWebsiteSettingsForm
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 0
+        ChildSizing.LeftRightSpacing = 5
+        ChildSizing.TopBottomSpacing = 5
+        ChildSizing.HorizontalSpacing = 20
+        ChildSizing.VerticalSpacing = 7
+        ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+        ChildSizing.Layout = cclLeftToRightThenTopToBottom
+        ChildSizing.ControlsPerLine = 2
       end
     end
   end
