@@ -233,6 +233,7 @@ begin
 
       LuaDoMe(l);
       LuaCallFunction(l, OnGetInfo);
+      Result := lua_tointeger(L, -1);
     except
       on E: Exception do
         Logger.SendError(E.Message + ': ' + lua_tostring(l, -1));
