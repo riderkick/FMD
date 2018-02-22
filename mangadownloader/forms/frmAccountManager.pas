@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, Buttons,
-  ExtCtrls, VirtualTrees, accountmanagerdb, WebsiteModules,
+  ExtCtrls, VirtualTrees, WebsiteModules,
   FMDOptions, HTTPSendThread, BaseThread, frmAccountSet, SimpleException;
 
 type

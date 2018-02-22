@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
-  XQueryEngineHTML, accountmanagerdb, httpsendthread, synacode;
+  XQueryEngineHTML, httpsendthread, synacode;
 
 implementation
 
@@ -27,15 +27,15 @@ var
   s: String;
 begin
   Result := False;
-  if Account.Enabled[MMangaTraders.Website] = False then Exit;
+  if Module.Account.Enabled = False then Exit;
   if TryEnterCriticalsection(MangaTradersLockLogin) > 0 then
     try
       MangaTradersOnLogin := True;
-      Account.Status[MMangaTraders.Website] := asChecking;
+      Module.Account.Status := asChecking;
       SendLog('MangaTraders: post login');
       s :=
-        'EmailAddress=' + EncodeURLElement(Account.Username[MMangaTraders.Website]) +
-        '&Password=' + EncodeURLElement(Account.Password[MMangaTraders.Website]) +
+        'EmailAddress=' + EncodeURLElement(Module.Account.Username) +
+        '&Password=' + EncodeURLElement(Module.Account.Password) +
         '&RememberMe=1';
       AHTTP.Headers.Clear;
       if AHTTP.POST(MMangaTraders.RootURL + '/auth/process.login.php', s) then
@@ -44,15 +44,15 @@ begin
         SendLog('MangaTraders: login result = ' + s);
         if LowerCase(s) = 'ok' then
         begin
-          Account.Status[MMangaTraders.Website] := asValid;
-          Account.Cookies[MMangaTraders.Website] := AHTTP.Cookies.Text;
+          Module.Account.Status := asValid;
+          Module.Account.Cookies := AHTTP.Cookies.Text;
         end
         else
-          Account.Status[MMangaTraders.Website] := asInvalid;
+          Module.Account.Status := asInvalid;
       end
       else
-        Account.Status[MMangaTraders.Website] := asUnknown;
-      Result := Account.Status[MMangaTraders.Website] = asValid;
+        Module.Account.Status := asUnknown;
+      Result := Module.Account.Status = asValid;
     finally
       MangaTradersOnLogin := False;
       LeaveCriticalsection(MangaTradersLockLogin);
@@ -60,9 +60,9 @@ begin
   else
   begin
     while MangaTradersOnLogin do Sleep(1000);
-    Result := Account.Status[MMangaTraders.Website] = asValid;
+    Result := Module.Account.Status = asValid;
     if Result then
-      AHTTP.Cookies.Text := Account.Cookies[MMangaTraders.Website];
+      AHTTP.Cookies.Text := Module.Account.Cookies;
   end;
 end;
 
@@ -71,11 +71,11 @@ var
   accstat: TAccountStatus;
 begin
   Result := False;
-  if Account.Enabled[MMangaTraders.Website] then
+  if Module.Account.Enabled then
   begin
-    accstat := Account.Status[MMangaTraders.Website];
+    accstat := Module.Account.Status;
     if accstat = asValid then
-      AHTTP.Cookies.AddText(Account.Cookies[MMangaTraders.Website])
+      AHTTP.Cookies.AddText(Module.Account.Cookies)
     else
     if accstat in [asChecking, asUnknown] then
       Result := MangaTradersLogin(AHTTP, Module);

@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
-  accountmanagerdb, XQueryEngineHTML, httpsendthread, synacode, RegExpr, fpjson;
+  XQueryEngineHTML, httpsendthread, synacode, RegExpr, fpjson;
 
 implementation
 
@@ -38,27 +38,26 @@ var
 function Login(const AHTTP: THTTPSendThread; const Module: TModuleContainer): Boolean;
 begin
   Result := False;
-  if Account.Enabled[modulename] = False then Exit;
-  if Account.Username[modulename] = '' then Exit;
+  if Module.Account.Enabled = False then Exit;
+  if Module.Account.Username = '' then Exit;
   if TryEnterCriticalsection(locklogin) > 0 then
     try
-      Account.Status[modulename] := asChecking;
+      Module.Account.Status := asChecking;
       AHTTP.Reset;
       AHTTP.Cookies.Clear;
-      madokamiauth := 'Authorization: Basic ' + Base64Encode(Account.Username[modulename] + ':' + Account.Password[modulename]);
+      madokamiauth := 'Authorization: Basic ' + Base64Encode(Module.Account.Username);
       AHTTP.Headers.Add(madokamiauth);
       if AHTTP.GET(urlroot) then begin
         //Result := AHTTP.Cookies.Values['laravel_session'] <> '';
         Result := (AHTTP.ResultCode < 400) and (AHTTP.Headers.Values['WWW-Authenticate'] = '');
         if Result then begin
-          Account.Cookies[modulename] := AHTTP.GetCookies;
-          Account.Status[modulename] := asValid;
+          Module.Account.Cookies := AHTTP.GetCookies;
+          Module.Account.Status := asValid;
         end
         else begin
-          Account.Cookies[modulename] := '';
-          Account.Status[modulename] := asInvalid;
+          Module.Account.Cookies := '';
+          Module.Account.Status := asInvalid;
         end;
-        Account.Save;
       end;
     finally
       LeaveCriticalsection(locklogin);
@@ -67,7 +66,7 @@ begin
     EnterCriticalsection(locklogin);
     try
       if Result then
-        AHTTP.Cookies.Text := Account.Cookies[modulename];
+        AHTTP.Cookies.Text := Module.Account.Cookies;
     finally
       LeaveCriticalsection(locklogin);
     end;
@@ -75,13 +74,13 @@ begin
   AHTTP.Reset;
 end;
 
-procedure SetAuth(const AHTTP: THTTPSendThread);
+procedure SetAuth(const AHTTP: THTTPSendThread; const Module: TModuleContainer);
 begin
-  AHTTP.Cookies.Text := Account.Cookies[modulename];
+  AHTTP.Cookies.Text := Module.Account.Cookies;
   if AHTTP.Cookies.Count <> 0 then
   begin
     if madokamiauth = '' then
-      madokamiauth := 'Authorization: Basic ' + Base64Encode(Account.Username[modulename] + ':' + Account.Password[modulename]);
+      madokamiauth := 'Authorization: Basic ' + Base64Encode(Module.Account.Username);
     AHTTP.Headers.Add(madokamiauth);
   end;
 end;
@@ -89,7 +88,7 @@ end;
 function GETWithLogin(const AHTTP: THTTPSendThread; AURL: String; const Module: TModuleContainer): Boolean;
 begin
   Result := False;
-  SetAuth(AHTTP);
+  SetAuth(AHTTP, Module);
   AHTTP.FollowRedirection := False;
   Result := AHTTP.GET(AURL);
   if ((AHTTP.ResultCode > 400) and (AHTTP.Headers.Values['WWW-Authenticate'] = ' Basic')) or
@@ -116,7 +115,7 @@ var
   i: Integer;
 begin
   Result := True;
-  accountexist := Account.Username[modulename] <> '';
+  accountexist := Module.Account.Username <> '';
   if not accountexist then Exit;
   ClearMadokamiUlist;
   SetLength(madokamiulist, Length(madokamilist));

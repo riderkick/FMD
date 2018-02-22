@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
-  accountmanagerdb, XQueryEngineHTML, httpsendthread, synautil, synacode,
+  XQueryEngineHTML, httpsendthread, synautil, synacode,
   RegExpr, LazFileUtils;
 
 implementation
@@ -46,38 +46,37 @@ var
 begin
   Result := False;
   if AHTTP = nil then Exit;
-  if Account.Enabled[accname] = False then Exit;
+  if Module.Account.Enabled = False then Exit;
 
   if TryEnterCriticalsection(locklogin) > 0 then
     with AHTTP do begin
       onlogin := True;
-      Account.Status[accname] := asChecking;
+      Module.Account.Status := asChecking;
       Reset;
       Cookies.Clear;
       s := 'returntype=8&CookieDate=1&b=d&bt=pone' +
-        '&UserName=' + EncodeURLElement(Account.Username[accname]) +
-        '&PassWord=' + EncodeURLElement(Account.Password[accname]) +
+        '&UserName=' + EncodeURLElement(Module.Account.Username) +
+        '&PassWord=' + EncodeURLElement(Module.Account.Password) +
         '&ipb_login_submit=Login%21';
       if POST(exhentaiurllogin, s) then begin
         if ResultCode = 200 then begin
           Result := Cookies.Values['ipb_pass_hash'] <> '';
           if Result then begin
-            Account.Cookies[accname] := GetCookies;
-            Account.Status[accname] := asValid;
+            Module.Account.Cookies := GetCookies;
+            Module.Account.Status := asValid;
           end
-          else Account.Status[accname] := asInvalid;
-          Account.Save;
+          else Module.Account.Status := asInvalid;
         end;
       end;
       onlogin := False;
-      if Account.Status[accname] = asChecking then
-        Account.Status[accname] := asUnknown;
+      if Module.Account.Status = asChecking then
+        Module.Account.Status := asUnknown;
       LeaveCriticalsection(locklogin);
     end
   else
   begin
     while onlogin do Sleep(1000);
-    if Result then AHTTP.Cookies.Text := Account.Cookies[accname];
+    if Result then AHTTP.Cookies.Text := Module.Account.Cookies;
   end;
 end;
 
@@ -86,7 +85,7 @@ var
   ACookies: String;
 begin
   Result := False;
-  if Account.Enabled[accname] then begin
+  if Module.Account.Enabled then begin
     AHTTP.FollowRedirection := False;
     // force no warning
     AHTTP.Cookies.Values['nw'] := '1';
@@ -94,7 +93,7 @@ begin
       ACookies := AHTTP.Cookies.Text
     else
       ACookies := '';
-    AHTTP.Cookies.AddText(Account.Cookies[accname]);
+    AHTTP.Cookies.AddText(Module.Account.Cookies);
     Result := AHTTP.GET(AURL);
     if Result and (AHTTP.ResultCode > 300) then begin
       Result := ExHentaiLogin(AHTTP, Module);
@@ -319,7 +318,7 @@ var
       s := StreamToString(DownloadThread.FHTTP.Document);
       query.ParseHTML(DownloadThread.FHTTP.Document);
       iurl := '';
-      if (settingsimagesize > High(settingsimagesizestr)) and (Account.Status[accname] = asValid) then
+      if (settingsimagesize > High(settingsimagesizestr)) and (Module.Account.Status = asValid) then
         iurl := query.XPathString('//a/@href[contains(.,"/fullimg.php")]');
       if iurl = '' then
         iurl := query.XPathString('//*[@id="img"]/@src');

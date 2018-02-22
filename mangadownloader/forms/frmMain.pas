@@ -23,7 +23,7 @@ uses
   uFavoritesManager, uUpdateThread, uSilentThread, uMisc,
   uGetMangaInfosThread, frmDropTarget, frmAccountManager, frmWebsiteOptionCustom,
   frmCustomColor, frmLogger, frmTransferFavorites,
-  frmLuaModulesUpdater, CheckUpdate, accountmanagerdb, DBDataProcess, MangaFoxWatermark,
+  frmLuaModulesUpdater, CheckUpdate, DBDataProcess, MangaFoxWatermark,
   SimpleTranslator, FMDOptions, httpsendthread, SimpleException;
 
 type
@@ -1135,9 +1135,6 @@ begin
   // TrayIcon
   TrayIcon.Icon.Assign(Application.Icon);
   PrevWindowState := wsNormal;
-
-  // account
-  accountmanagerdb.InitAccountManager(ACCOUNTS_FILE);
 
   // main dataprocess
   dataProcess := TDBDataProcess.Create;
