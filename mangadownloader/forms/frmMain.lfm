@@ -37,10 +37,10 @@ object MainForm: TMainForm
     Height = 526
     Top = 8
     Width = 769
-    ActivePage = tsOption
+    ActivePage = tsDownload
     Align = alClient
     ParentFont = False
-    TabIndex = 3
+    TabIndex = 0
     TabOrder = 0
     OnChange = pcMainChange
     object tsDownload: TTabSheet
@@ -545,13 +545,13 @@ object MainForm: TMainForm
             Anchors = [akTop, akLeft, akRight]
             AutoComplete = True
             AutoCompleteText = [cbactEnabled, cbactEndOfLineComplete, cbactSearchAscending]
-            AutoDropDown = True
             ItemHeight = 15
             ItemIndex = 0
             Items.Strings = (
               ''
             )
             OnEditingDone = cbSelectMangaEditingDone
+            OnKeyDown = cbSelectMangaKeyDown
             OnMouseDown = cbSelectMangaMouseDown
             ParentShowHint = False
             ShowHint = True
@@ -2639,11 +2639,11 @@ object MainForm: TMainForm
         Height = 400
         Top = 4
         Width = 761
-        ActivePage = tsWebsites
+        ActivePage = tsGeneral
         Align = alTop
         Anchors = [akTop, akLeft, akRight, akBottom]
         ParentFont = False
-        TabIndex = 6
+        TabIndex = 0
         TabOrder = 0
         object tsGeneral: TTabSheet
           Caption = 'General'

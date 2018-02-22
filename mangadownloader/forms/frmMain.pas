@@ -441,6 +441,8 @@ type
     procedure cbOptionDigitVolumeChange(Sender: TObject);
     procedure cbOptionGenerateMangaFolderChange(Sender: TObject);
     procedure cbSelectMangaEditingDone(Sender: TObject);
+    procedure cbSelectMangaKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
     procedure cbSelectMangaMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure clbChapterListBeforeCellPaint(Sender: TBaseVirtualTree;
@@ -2544,6 +2546,12 @@ begin
     if cbOptionShowDownloadMangalistDialog.Checked then
       RunGetList;
   end;
+end;
+
+procedure TMainForm.cbSelectMangaKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  cbSelectManga.DroppedDown:=True;
 end;
 
 procedure TMainForm.cbSelectMangaMouseDown(Sender: TObject;
