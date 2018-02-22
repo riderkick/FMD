@@ -561,16 +561,6 @@ msgctxt "selfupdater.rs_missingfile"
 msgid "Missing %s"
 msgstr ""
 
-#: taccountmanagerform.btadd.caption
-msgctxt "taccountmanagerform.btadd.caption"
-msgid "Add"
-msgstr "Добавить"
-
-#: taccountmanagerform.btdelete.caption
-msgctxt "taccountmanagerform.btdelete.caption"
-msgid "Delete"
-msgstr "Удалить"
-
 #: taccountmanagerform.btedit.caption
 msgctxt "taccountmanagerform.btedit.caption"
 msgid "Edit"
@@ -579,6 +569,10 @@ msgstr "Изменить"
 #: taccountmanagerform.btrefresh.caption
 msgid "Refresh"
 msgstr "Обновить"
+
+#: taccountmanagerform.caption
+msgid "AccountManagerForm"
+msgstr ""
 
 #: taccountmanagerform.vtaccountlist.header.columns[1].text
 msgctxt "TACCOUNTMANAGERFORM.VTACCOUNTLIST.HEADER.COLUMNS[1].TEXT"
@@ -604,6 +598,10 @@ msgstr "Отмена"
 msgid "Ok"
 msgstr "OK"
 
+#: taccountsetform.caption
+msgid "Account"
+msgstr ""
+
 #: taccountsetform.ckshowpassword.caption
 msgid "Show password"
 msgstr "Показать пароль"
@@ -617,11 +615,6 @@ msgstr "Пароль"
 msgctxt "TACCOUNTSETFORM.EDUSERNAME.TEXTHINT"
 msgid "Username"
 msgstr "Имя пользователя"
-
-#: taccountsetform.label1.caption
-msgctxt "TACCOUNTSETFORM.LABEL1.CAPTION"
-msgid "Website"
-msgstr "Сайт"
 
 #: taccountsetform.label2.caption
 msgctxt "TACCOUNTSETFORM.LABEL2.CAPTION"

@@ -554,16 +554,6 @@ msgctxt "selfupdater.rs_missingfile"
 msgid "Missing %s"
 msgstr "Tidak ditemukan %s"
 
-#: taccountmanagerform.btadd.caption
-msgctxt "taccountmanagerform.btadd.caption"
-msgid "Add"
-msgstr "Tambah"
-
-#: taccountmanagerform.btdelete.caption
-msgctxt "taccountmanagerform.btdelete.caption"
-msgid "Delete"
-msgstr "Hapus"
-
 #: taccountmanagerform.btedit.caption
 msgctxt "taccountmanagerform.btedit.caption"
 msgid "Edit"
@@ -572,6 +562,10 @@ msgstr "Ubah"
 #: taccountmanagerform.btrefresh.caption
 msgid "Refresh"
 msgstr "Segarkan"
+
+#: taccountmanagerform.caption
+msgid "AccountManagerForm"
+msgstr ""
 
 #: taccountmanagerform.vtaccountlist.header.columns[1].text
 msgctxt "taccountmanagerform.vtaccountlist.header.columns[1].text"
@@ -597,6 +591,10 @@ msgstr "Batal"
 msgid "Ok"
 msgstr "Ok"
 
+#: taccountsetform.caption
+msgid "Account"
+msgstr ""
+
 #: taccountsetform.ckshowpassword.caption
 msgid "Show password"
 msgstr "Tampilkan kata kunci"
@@ -610,11 +608,6 @@ msgstr "Kata kunci"
 msgctxt "taccountsetform.edusername.texthint"
 msgid "Username"
 msgstr "Nama user"
-
-#: taccountsetform.label1.caption
-msgctxt "taccountsetform.label1.caption"
-msgid "Website"
-msgstr "Situs"
 
 #: taccountsetform.label2.caption
 msgctxt "taccountsetform.label2.caption"

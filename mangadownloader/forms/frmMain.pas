@@ -1765,6 +1765,7 @@ begin
   Modules.LoadFromFile;
   WebsiteOptionCustomForm.CreateWebsiteOption;
   WebsiteSettingsForm.LoadWebsiteSettings;
+  AccountManagerForm.LoadAccounts;
 
   //load configfile
   LoadMangaOptions;
@@ -5547,6 +5548,10 @@ begin
     // lua website modules list
     restorevt(LuaModulesUpdaterForm.vtLuaModulesRepos, 'vtLuaModulesRepos');
     LuaModulesUpdaterForm.SortList;
+
+    // account
+    restorevt(AccountManagerForm.vtAccountList, 'vtAccountList');
+    AccountManagerForm.SortList;
   end;
 end;
 
@@ -5588,6 +5593,9 @@ begin
 
     // lua website modules list
     savevt(LuaModulesUpdaterForm.vtLuaModulesRepos, 'vtLuaModulesRepos');
+
+    // account
+    savevt(AccountManagerForm.vtAccountList, 'vtAccountList');
   end;
 end;
 
