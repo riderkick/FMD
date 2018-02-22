@@ -153,6 +153,7 @@ type
     btDownloadSplit: TSpeedButton;
     seOptionRetryFailedTask: TSpinEdit;
     seJPEGQuality: TSpinEdit;
+    tsAccounts: TTabSheet;
     tsWebsiteModules: TTabSheet;
     ToolBarDownloadLeft: TToolBar;
     tbmiDownloadMoveTop: TToolButton;
@@ -170,7 +171,6 @@ type
     tsWebsiteAdvanced: TTabSheet;
     tsWebsiteSelection: TTabSheet;
     tsWebsiteOptions: TTabSheet;
-    tsAccounts: TTabSheet;
     tsAboutText: TTabSheet;
     tsChangelogText: TTabSheet;
     TransferRateToolset: TChartToolset;

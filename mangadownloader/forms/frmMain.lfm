@@ -37,10 +37,10 @@ object MainForm: TMainForm
     Height = 526
     Top = 8
     Width = 769
-    ActivePage = tsDownload
+    ActivePage = tsOption
     Align = alClient
     ParentFont = False
-    TabIndex = 0
+    TabIndex = 3
     TabOrder = 0
     OnChange = pcMainChange
     object tsDownload: TTabSheet
@@ -2639,11 +2639,11 @@ object MainForm: TMainForm
         Height = 400
         Top = 4
         Width = 761
-        ActivePage = tsGeneral
+        ActivePage = tsWebsites
         Align = alTop
         Anchors = [akTop, akLeft, akRight, akBottom]
         ParentFont = False
-        TabIndex = 0
+        TabIndex = 6
         TabOrder = 0
         object tsGeneral: TTabSheet
           Caption = 'General'
@@ -4334,6 +4334,9 @@ object MainForm: TMainForm
                 end
               end
             end
+            object tsAccounts: TTabSheet
+              Caption = 'Accounts'
+            end
             object tsWebsiteOptions: TTabSheet
               Caption = 'Options'
               ClientHeight = 328
@@ -4366,22 +4369,17 @@ object MainForm: TMainForm
             end
           end
         end
-        object tsAccounts: TTabSheet
-          Caption = 'Accounts'
-          ChildSizing.LeftRightSpacing = 4
-          ChildSizing.TopBottomSpacing = 8
-        end
         object tsMisc: TTabSheet
           Caption = 'Misc'
           ChildSizing.LeftRightSpacing = 4
           ChildSizing.TopBottomSpacing = 8
           ChildSizing.HorizontalSpacing = 4
           ChildSizing.VerticalSpacing = 4
-          ClientHeight = 392
+          ClientHeight = 372
           ClientWidth = 753
           object pcMisc: TPageControl
             Left = 4
-            Height = 376
+            Height = 356
             Top = 8
             Width = 745
             ActivePage = tsCustomColor
