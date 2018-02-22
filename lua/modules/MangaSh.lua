@@ -17,7 +17,8 @@ function getinfo()
     mangainfo.genres=x.xpathstring('string-join((TypeName,TypeDemonym,SeriesTags/TagName),", ")', v)
     mangainfo.summary=HTMLDecode(x.xpathstring('Description', v))
     if http.get(apiurl..'series_chapters?query=SeriesId.Id:'..lid..'&order=desc&sortby=TimeUploaded&limit=0&offset=0') then
-      x.parsehtml(http.document)
+      --x.parsehtml(http.document)
+      x=TXQuery.Create(http.document)
       local s='json(.)("response")()'
       local lname=''
       local showalllang=module.getoption('showalllang')
