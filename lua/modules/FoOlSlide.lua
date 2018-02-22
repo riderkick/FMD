@@ -44,7 +44,8 @@ function getdirurl(website)
     ['HotChocolateScans'] = dirurlfsdir,
     ['AntisenseScans'] = dirurlonline,
     ['MangaichiScan'] = dirurlfsdir,
-    ['Riceballicious'] = dirurlreaderlist
+    ['Riceballicious'] = dirurlreaderlist,
+    ['Yuri-ism'] = dirurlslide
   }  
   if dirs[website] ~= nil then
     return dirs[website]
@@ -221,6 +222,7 @@ function Init()
   AddWebsiteModule('VortexScans', 'https://reader.vortex-scans.com', cat)
   AddWebsiteModule('RoseliaScanlations', 'http://reader.roseliascans.com', cat)
   AddWebsiteModule('SaikoScans', 'http://saikoscans.ml', cat)
+  AddWebsiteModule('Yuri-ism', 'https://www.yuri-ism.net', cat)
   
   -- es-sc
   cat = 'Spanish-Scanlation'
