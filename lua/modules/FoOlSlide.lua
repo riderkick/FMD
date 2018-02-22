@@ -213,6 +213,7 @@ function Init()
   AddWebsiteModule('TheCatScans', 'https://reader.thecatscans.com', cat)
   AddWebsiteModule('DeathTollScans', 'https://reader.deathtollscans.net', cat)
   AddWebsiteModule('MangaichiScan', 'http://mangaichiscans.mokkori.fr', cat)
+  AddWebsiteModule('ForgottenScans', 'http://reader.fos-scans.com', cat)
   
   -- es-sc
   cat = 'Spanish-Scanlation'
