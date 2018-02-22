@@ -64,6 +64,7 @@ function AddWebsiteModule(name, url, cat)
 end
 
 function Init()
+  AddWebsiteModule('MangaForest', 'http://mangaforest.com', 'English')
   AddWebsiteModule('MangaDoor', 'http://mangadoor.com', 'Spanish');
   AddWebsiteModule('MangaDenizi', 'http://www.mangadenizi.com', 'Turkish');
   
@@ -78,5 +79,5 @@ function Init()
 
   c='Spanish-Scanlation'
   AddWebsiteModule('DarkSkyScan', 'http://darkskyprojects.org', c);
-  AddWebsiteModule('NozominoFansub', 'https://nozominofansub.com/', c);
+  AddWebsiteModule('NozominoFansub', 'https://nozominofansub.com', c);
 end
