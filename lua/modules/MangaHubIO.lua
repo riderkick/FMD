@@ -40,7 +40,7 @@ end
 
 function getpagenumber()
   task.pagelinks.clear()
-  local chapter = url:match('/chapter%-(%d+)')
+  local chapter = url:match('/chapter%-(.+)$'):gsub('/$', '')
   local slug = url:match('/chapter/(.+)/')
   local q = '{"query":"{chapter(x:'..getx()..',slug:\\"'..slug..'\\",number:'..chapter..'){id,title,mangaID,number,slug,date,pages,manga{id,title,slug,mainSlug,isWebtoon,isYaoi}}}"}'
   http.mimetype = 'application/json'
