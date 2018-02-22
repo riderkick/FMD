@@ -5,9 +5,9 @@ unit frmWebsiteSettings;
 interface
 
 uses
-  Classes, SysUtils, FileUtil, WebsiteModules, RTTIGrids, Forms, Controls,
-  Graphics, Dialogs, StdCtrls, ExtCtrls, PairSplitter, EditBtn, VirtualTrees,
-  contnrs, RTTICtrls;
+  Classes, SysUtils, FileUtil, WebsiteModules, WebsiteModulesSettings,
+  RTTIGrids, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
+  PairSplitter, EditBtn, VirtualTrees, contnrs, RTTICtrls;
 
 type
 
