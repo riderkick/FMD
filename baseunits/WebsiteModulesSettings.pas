@@ -12,7 +12,7 @@ type
 
   { TProxySettings }
 
-  TProxySettings = class
+  TProxySettings = class(TPersistent)
   private
     FProxyHost: String;
     FProxyPassword: String;
@@ -29,7 +29,7 @@ type
 
   { THTTPSettings }
 
-  THTTPSettings = class
+  THTTPSettings = class(TPersistent)
   private
     FCookies: String;
     FProxy: TProxySettings;
