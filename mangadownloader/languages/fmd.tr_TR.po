@@ -579,7 +579,7 @@ msgstr "Yenile"
 
 #: taccountmanagerform.caption
 msgid "AccountManagerForm"
-msgstr ""
+msgstr "HesapYöneticisiFormu"
 
 #: taccountmanagerform.vtaccountlist.header.columns[1].text
 #| msgid "Username"
@@ -610,7 +610,7 @@ msgstr "Tamam"
 
 #: taccountsetform.caption
 msgid "Account"
-msgstr ""
+msgstr "Hesap"
 
 #: taccountsetform.ckshowpassword.caption
 msgid "Show password"
@@ -2420,11 +2420,11 @@ msgstr "Bir websitesi seç"
 
 #: twebsitesettingsform.caption
 msgid "WebsiteSettingsForm"
-msgstr ""
+msgstr "WebsiteAyarlarıFormu"
 
 #: twebsitesettingsform.edsearch.texthint
 msgid "Website name"
-msgstr ""
+msgstr "Website Adı"
 
 #: udownloadsmanager.rs_compressing
 msgid "Compressing..."
