@@ -405,7 +405,7 @@ begin
         Exit;
       end;
 
-      if Module.Settings.MaxConnectionLimit > 0 then
+      if Module.GetMaxConnectionLimit > 0 then
         while (not Terminated) and (Module.ActiveConnectionCount >= numberOfThreads) do
           Sleep(SOCKHEARTBEATRATE)
       else

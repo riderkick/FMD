@@ -152,6 +152,9 @@ type
     DynamicPageLink: Boolean;
     TotalDirectoryPage: array of Integer;
     CurrentDirectoryIndex: Integer;
+    MaxTaskLimit: Integer;
+    MaxThreadPerTaskLimit: Integer;
+    MaxConnectionLimit: Integer;
     OptionList: array of TWebsiteOptionItem;
     OnBeforeUpdateList: TOnBeforeUpdateList;
     OnAfterUpdateList: TOnAfterUpdateList;
@@ -186,6 +189,10 @@ type
     procedure DecActiveTaskCount; inline;
     procedure IncActiveConnectionCount; inline;
     procedure DecActiveConnectionCount; inline;
+
+    function GetMaxConnectionLimit: Integer;
+    function GetMaxTaskLimit: Integer;
+    function GetMaxThreadPerTaskLimit: Integer;
 
     property Settings: TWebsiteModuleSettings read FSettings write FSettings;
     property AccountSupport: Boolean read FAccountSupport write SetAccountSupport;
@@ -493,6 +500,30 @@ end;
 procedure TModuleContainer.DecActiveConnectionCount;
 begin
   ActiveConnectionCount := InterLockedDecrement(ActiveConnectionCount);
+end;
+
+function TModuleContainer.GetMaxConnectionLimit: Integer;
+begin
+  if Settings.MaxConnectionLimit=0 then
+    Result:=MaxConnectionLimit
+  else
+    Result:=Settings.MaxConnectionLimit;
+end;
+
+function TModuleContainer.GetMaxTaskLimit: Integer;
+begin
+  if Settings.MaxTaskLimit=0 then
+    Result:=MaxTaskLimit
+  else
+    Result:=Settings.MaxTaskLimit;
+end;
+
+function TModuleContainer.GetMaxThreadPerTaskLimit: Integer;
+begin
+  if Settings.MaxThreadPerTaskLimit=0 then
+    Result:=MaxThreadPerTaskLimit
+  else
+    Result:=Settings.MaxThreadPerTaskLimit;
 end;
 
 procedure TModuleContainer.AddOption(const AOptionType: TWebsiteOptionType;
@@ -878,8 +909,8 @@ begin
   Result := True;
   if ModuleExist(ModuleId) then
   with FModuleList[ModuleId] do
-    if Settings.MaxTaskLimit > 0 then
-      Result := ActiveTaskCount < Settings.MaxTaskLimit;
+    if GetMaxTaskLimit > 0 then
+      Result := ActiveTaskCount < GetMaxTaskLimit;
 end;
 
 procedure TWebsiteModules.IncActiveConnectionCount(ModuleId: Integer);
@@ -899,8 +930,8 @@ begin
   Result := True;
   if ModuleExist(ModuleId) then
   with FModuleList[ModuleId] do
-    if Settings.MaxConnectionLimit > 0 then
-      Result := ActiveConnectionCount < Settings.MaxConnectionLimit;
+    if GetMaxConnectionLimit > 0 then
+      Result := ActiveConnectionCount < GetMaxConnectionLimit;
 end;
 
 procedure TWebsiteModules.LoadFromFile;
@@ -1034,7 +1065,7 @@ end;
 function TWebsiteModules.GetMaxTaskLimit(const ModuleId: Integer): Integer;
 begin
   if not ModuleExist(ModuleId) then Exit(0);
-  Result := FModuleList[ModuleId].Settings.MaxTaskLimit;
+  Result := FModuleList[ModuleId].GetMaxTaskLimit;
 end;
 
 function TWebsiteModules.GetMaxThreadPerTaskLimit(const ModuleId: Integer
@@ -1047,7 +1078,7 @@ end;
 function TWebsiteModules.GetMaxConnectionLimit(const ModuleId: Integer): Integer;
 begin
   if not ModuleExist(ModuleId) then Exit(0);
-  Result := FModuleList[ModuleId].Settings.MaxConnectionLimit;
+  Result := FModuleList[ModuleId].GetMaxConnectionLimit;
 end;
 
 function TWebsiteModules.GetActiveTaskCount(const ModuleId: Integer): Integer;

@@ -174,8 +174,8 @@ begin
     Website := 'Tumangaonline';
     RootURL := 'https://www.tumangaonline.com';
     Category := 'Spanish';
-    Settings.MaxTaskLimit := 1;
-    Settings.MaxConnectionLimit := 1;
+    MaxTaskLimit := 1;
+    MaxConnectionLimit := 1;
     OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;
