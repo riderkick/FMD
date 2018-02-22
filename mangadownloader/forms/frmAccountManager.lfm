@@ -163,6 +163,7 @@ object AccountManagerForm: TAccountManagerForm
     OnBeforeCellPaint = vtAccountListBeforeCellPaint
     OnChecked = vtAccountListChecked
     OnCompareNodes = vtAccountListCompareNodes
+    OnDblClick = vtAccountListDblClick
     OnGetText = vtAccountListGetText
     OnPaintText = vtAccountListPaintText
     OnHeaderClick = vtAccountListHeaderClick

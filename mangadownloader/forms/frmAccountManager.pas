@@ -29,6 +29,7 @@ type
       );
     procedure vtAccountListCompareNodes(Sender: TBaseVirtualTree; Node1,
       Node2: PVirtualNode; Column: TColumnIndex; var Result: Integer);
+    procedure vtAccountListDblClick(Sender: TObject);
     procedure vtAccountListGetText(Sender: TBaseVirtualTree;
       Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType;
       var CellText: String);
@@ -328,6 +329,12 @@ begin
        else
          Result:=ifthen(m1.Account.Status>m2.Account.Status,1,-1);
   end;
+end;
+
+procedure TAccountManagerForm.vtAccountListDblClick(Sender: TObject);
+begin
+  if vtAccountList.SelectedCount=0 then Exit;
+  btEditClick(btEdit);
 end;
 
 end.
