@@ -124,13 +124,6 @@ object WebsiteSettingsForm: TWebsiteSettingsForm
         VertScrollBar.Page = 1
         Align = alClient
         BorderStyle = bsNone
-        ChildSizing.LeftRightSpacing = 5
-        ChildSizing.TopBottomSpacing = 5
-        ChildSizing.HorizontalSpacing = 20
-        ChildSizing.VerticalSpacing = 7
-        ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
-        ChildSizing.Layout = cclLeftToRightThenTopToBottom
-        ChildSizing.ControlsPerLine = 2
         TabOrder = 0
       end
     end
