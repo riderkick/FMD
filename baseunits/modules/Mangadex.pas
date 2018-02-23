@@ -23,9 +23,35 @@ resourcestring
 
 function GetInfo(const MangaInfo: TMangaInformation; const AURL: String;
   const Module: TModuleContainer): Integer;
+
+  procedure AddChapters(x: TXQueryEngineHTML);
+  var
+    s, lang, group: String;
+    v: IXQValue;
+  begin
+    if showalllang then
+      s := '//div[contains(@class, "tab-content")]//table/tbody/tr/td[1]/a'
+    else
+      s := '//div[contains(@class, "tab-content")]//table/tbody/tr[td[2]/img/@title="English"]/td[1]/a';
+    for v in x.XPath(s) do begin
+      MangaInfo.mangaInfo.chapterLinks.Add(v.toNode().getAttribute('href'));
+      s := v.toString();
+      if showalllang then begin
+        lang := x.XPathString('parent::td/parent::tr/td[2]/img/@title', v);
+        if lang <> '' then s := s + ' [' + lang + ']';
+      end;
+      if showscangroup then begin
+        group := x.XPathString('parent::td/parent::tr/td[3]/a', v);
+        if group <> '' then s := s + ' [' + group + ']';
+      end;
+      MangaInfo.mangaInfo.chapterName.Add(s);
+    end;
+  end;
+
 var
-  v: IXQValue;
-  s, lang, group: String;
+  x: TXQueryEngineHTML;
+  s: String;
+  pages, i: Integer;
 begin
   Result := NET_PROBLEM;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
@@ -35,38 +61,37 @@ begin
     Cookies.Values['mangadex_h_toggle'] := '1';
     if GET(url) then begin
       Result := NO_ERROR;
-      with TXQueryEngineHTML.Create(Document) do
-        try
-          if title = '' then title := XPathString('//h3[@class="panel-title"]/text()');
-          if Pos('emailprotected', title) > 0 then
-            title := Trim(ReplaceString(XPathString('//title'), '(Manga) - MangaDex', ''));
-          coverLink := MaybeFillHost(Module.RootURL, XPathString('//img[@alt="Manga image"]/@src'));
-          authors := XPathString('//th[contains(., "Author")]/following-sibling::td/a');
-          artists := XPathString('//th[contains(., "Artist")]/following-sibling::td/a');
-          genres := XPathStringAll('//th[contains(., "Genres")]/following-sibling::td/span');
-          summary := XPathString('//th[contains(., "Description")]/following-sibling::td');
-          status := MangaInfoStatusIfPos(XPathString('//th[contains(., "Status")]/following-sibling::td'));
-          if showalllang then
-            s := '//div[contains(@class, "tab-content")]//table/tbody/tr/td[1]/a'
-          else
-            s := '//div[contains(@class, "tab-content")]//table/tbody/tr[td[2]/img/@title="English"]/td[1]/a';
-          for v in XPath(s) do begin
-            chapterLinks.Add(v.toNode().getAttribute('href'));
-            s := v.toString();
-            if showalllang then begin
-              lang := XPathString('parent::td/parent::tr/td[2]/img/@title', v);
-              if lang <> '' then s := s + ' [' + lang + ']';
-            end;
-            if showscangroup then begin
-              group := XPathString('parent::td/parent::tr/td[3]/a', v);
-              if group <> '' then s := s + ' [' + group + ']';
-            end;
-            chapterName.Add(s);
+      x := TXQueryEngineHTML.Create(Document);
+      try
+        if title = '' then title := x.XPathString('//h3[@class="panel-title"]/text()');
+        if Pos('emailprotected', title) > 0 then
+          title := Trim(ReplaceString(x.XPathString('//title'), '(Manga) - MangaDex', ''));
+        coverLink := MaybeFillHost(Module.RootURL, x.XPathString('//img[@alt="Manga image"]/@src'));
+        authors := x.XPathString('//th[contains(., "Author")]/following-sibling::td/a');
+        artists := x.XPathString('//th[contains(., "Artist")]/following-sibling::td/a');
+        genres := x.XPathStringAll('//th[contains(., "Genres")]/following-sibling::td/span');
+        summary := x.XPathString('//th[contains(., "Description")]/following-sibling::td');
+        status := MangaInfoStatusIfPos(x.XPathString('//th[contains(., "Status")]/following-sibling::td'));
+        s := x.XPathString('//ul[@class="pagination"]/li[last()]/a/@href');
+        s := RegExprGetMatch('\/(\d+)$', Trim(s), 1);
+        pages := StrToIntDef(s, 0) div PerPage;
+        AddChapters(x);
+      finally
+        x.Free;
+      end;
+
+      for i := 1 to pages do
+        if GET(url + '/' + IntToStr(i * PerPage)) then begin
+          if MangaInfo.Thread.IsTerminated then Break;
+          x := TXQueryEngineHTML.Create(Document);
+          try
+            AddChapters(x);
+          finally
+            x.Free;
           end;
-          InvertStrings([chapterLinks, chapterName]);
-        finally
-          Free;
         end;
+
+      InvertStrings([chapterLinks, chapterName]);
     end;
   end;
 end;
