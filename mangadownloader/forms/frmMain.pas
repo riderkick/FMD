@@ -2551,7 +2551,8 @@ end;
 procedure TMainForm.cbSelectMangaKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
-  cbSelectManga.DroppedDown:=True;
+  if not (Key in [VK_RETURN, VK_TAB]) then
+    cbSelectManga.DroppedDown:=True;
 end;
 
 procedure TMainForm.cbSelectMangaMouseDown(Sender: TObject;
