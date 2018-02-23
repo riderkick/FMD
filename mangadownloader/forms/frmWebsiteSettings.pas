@@ -19,14 +19,14 @@ type
     FOwner: TWinControl;
     FControls: TFPObjectList;
     procedure SetData(settings: TWebsiteModuleSettings);
-    function GetData: TWebsiteModuleSettings;
     procedure CreateControls;
+    procedure CreateControls(ci: Pointer; owner: TWinControl; controls: TFPObjectList); overload;
     procedure UpdateView;
     procedure OnEditorButtonClick(Sender: TObject);
   public
     constructor Create(owner: TWinControl);
     destructor Destroy; override;
-    property Data: TWebsiteModuleSettings read GetData write SetData;
+    property Data: TWebsiteModuleSettings read FSettings write SetData;
   end;
 
   { TWebsiteSettingsForm }
@@ -161,22 +161,23 @@ begin
   UpdateView;
 end;
 
-function TSettingsView.GetData: TWebsiteModuleSettings;
-begin
-  Result := FSettings;
-end;
-
 procedure TSettingsView.OnEditorButtonClick(Sender: TObject);
 
-  function FindEditor: TTIEdit;
+  function FindEditor(controls: TFPObjectList): TTIEdit;
   var
     i: Integer;
   begin
-    for i := 0 to FControls.Count - 2 do
-      if Sender = FControls[i] then begin
-        Result := TTIEdit(FControls[i+1]);
+    Result := nil;
+    for i := 0 to controls.Count - 1 do begin
+      if controls[i] is TFPObjectList then begin
+        Result := FindEditor(TFPObjectList(controls[i]));
+        if Assigned(Result) then Exit;
+      end;
+      if Sender = controls[i] then begin
+        Result := TTIEdit(controls[i+1]);
         Exit;
       end;
+    end;
   end;
 
 var
@@ -185,14 +186,14 @@ var
 begin
   if not Assigned(FSettings) then Exit;
   form := TStringsPropEditorFrm.Create(FOwner);
-  editor := FindEditor;
+  editor := FindEditor(FControls);
   form.Memo.Text := editor.Link.GetAsText;
   if form.ShowModal = mrOK then
     editor.Link.SetAsText(form.Memo.Text);
   form.Free;
 end;
 
-procedure TSettingsView.CreateControls;
+procedure TSettingsView.CreateControls(ci: Pointer; owner: TWinControl; controls: TFPObjectList);
 
   procedure SetAnchor(control, lbl, prev: TControl);
   begin
@@ -200,7 +201,7 @@ procedure TSettingsView.CreateControls;
     if prev <> nil then begin
       control.AnchorSide[akTop].Control := prev;
       control.AnchorSide[akTop].Side := asrBottom;
-      control.BorderSpacing.Top := 10;
+      control.BorderSpacing.Top := 5;
     end
     else begin
       control.AnchorSide[akTop].Control := lbl;
@@ -212,10 +213,10 @@ procedure TSettingsView.CreateControls;
 
   function AddLabel(text: String; prev: TControl): TLabel;
   begin
-    Result := TLabel.Create(FOwner);
-    Result.Parent := FOwner;
+    Result := TLabel.Create(owner);
+    Result.Parent := owner;
     Result.Caption := text;
-    Result.AnchorSide[akLeft].Control := FOwner;
+    Result.AnchorSide[akLeft].Control := owner;
     Result.AnchorSide[akLeft].Side := asrLeft;
     Result.BorderSpacing.Left := 5;
     if prev <> nil then begin
@@ -225,7 +226,7 @@ procedure TSettingsView.CreateControls;
     end
     else
       Result.Top := 5;
-    FControls.Add(Result);
+    controls.Add(Result);
   end;
 
   function AddEdit(name, text: String; prev: TControl): TTIEdit;
@@ -234,92 +235,114 @@ procedure TSettingsView.CreateControls;
     btn: TButton;
   begin
     lbl := AddLabel(text, prev);
-
-    btn := TButton.Create(FOwner);
-    btn.Parent := FOwner;
+    btn := TButton.Create(owner);
+    btn.Parent := owner;
     btn.Caption := '...';
     btn.AutoSize := True;
     btn.Enabled := False;
     btn.OnClick := @OnEditorButtonClick;
     SetAnchor(btn, lbl, prev);
     btn.Anchors := [akTop, akRight];
-    btn.AnchorSide[akRight].Control := FOwner;
+    btn.AnchorSide[akRight].Control := owner;
     btn.AnchorSide[akRight].Side := asrRight;
     btn.BorderSpacing.Left := 0;
-    FControls.Add(btn);
+    controls.Add(btn);
 
-    Result := TTIEdit.Create(FOwner);
-    Result.Parent := FOwner;
-    Result.Link.TIObject := FSettings;
+    Result := TTIEdit.Create(owner);
+    Result.Parent := owner;
+    Result.Link.TIObject := nil;
     Result.Link.TIPropertyName := name;
     Result.Width := 300;
     Result.Enabled := False;
     SetAnchor(Result, lbl, prev);
     Result.AnchorSide[akRight].Control := btn;
     Result.AnchorSide[akRight].Side := asrLeft;
-    FControls.Add(Result);
+    controls.Add(Result);
   end;
 
   function AddSpinEdit(name, text: String;  min, max: Integer; prev: TControl): TTISpinEdit;
   var lbl: TLabel;
   begin
     lbl := AddLabel(text, prev);
-    Result := TTISpinEdit.Create(FOwner);
+    Result := TTISpinEdit.Create(owner);
     Result.MinValue := min;
     Result.MaxValue := max;
-    Result.Parent := FOwner;
-    Result.Link.TIObject := FSettings;
+    Result.Parent := owner;
+    Result.Link.TIObject := nil;
     Result.Link.TIPropertyName := name;
     Result.Width := 100;
     Result.Enabled := False;
     SetAnchor(Result, lbl, prev);
     Result.Anchors := [akTop, akLeft];
-    FControls.Add(Result);
+    controls.Add(Result);
   end;
 
   function AddComboBox(name, text: String; prev: TControl): TTIComboBox;
   var lbl: TLabel;
   begin
     lbl := AddLabel(text, prev);
-    Result := TTIComboBox.Create(FOwner);
-    Result.Parent := FOwner;
-    Result.Link.TIObject := FSettings;
+    Result := TTIComboBox.Create(owner);
+    Result.Parent := owner;
+    Result.Link.TIObject := nil;
     Result.Link.TIPropertyName := name;
     Result.Width := 200;
     result.Style := csDropDownList;
     Result.Enabled := False;
     SetAnchor(Result, lbl, prev);
     Result.Anchors := [akTop, akLeft];
-    FControls.Add(Result);
+    controls.Add(Result);
   end;
 
   function AddCheckBox(name, text: String; prev: TControl): TTICheckBox;
   var lbl: TLabel;
   begin
     lbl := AddLabel(text, prev);
-    Result := TTICheckBox.Create(FOwner);
-    Result.Parent := FOwner;
-    Result.Link.TIObject := FSettings;
+    Result := TTICheckBox.Create(owner);
+    Result.Parent := owner;
+    Result.Link.TIObject := nil;
     Result.Link.TIPropertyName := name;
     Result.Caption := '';
     Result.Enabled := False;
     SetAnchor(Result, lbl, prev);
     Result.Anchors := [akTop, akLeft];
-    FControls.Add(Result);
+    controls.Add(Result);
+  end;
+
+  function AddGroupBox(name: String; prev: TControl): TGroupBox;
+  begin
+    Result := TGroupBox.Create(owner);
+    Result.Parent := owner;
+    Result.Caption := name;
+    Result.AutoSize:=true;
+    Result.Anchors := [akTop, akLeft, akRight];
+    Result.AnchorSide[akLeft].Control := owner;
+    Result.AnchorSide[akLeft].Side := asrLeft;
+    Result.BorderSpacing.Left := 5;
+    Result.AnchorSide[akTop].Control := prev;
+    Result.AnchorSide[akTop].Side := asrBottom;
+    Result.BorderSpacing.Top := 5;
+    Result.AnchorSide[akRight].Control := owner;
+    Result.AnchorSide[akRight].Side := asrRight;
+    Result.BorderSpacing.Right := 10;
+    result.BorderSpacing.Bottom := 10;
+    controls.Add(Result);
   end;
 
 var
-  prev: TControl = nil;
+  prev: TControl;
   propList: PPropList;
   typeData: PTypeData;
   cnt, i: Integer;
-  maxLabelWidth: Integer = -1;
+  maxLabelWidth: Integer;
   maxLabel: TLabel;
+  tmp: TFPObjectList;
+  subci: Pointer;
 
 begin
-  typeData := GetTypeData(TWebsiteModuleSettings.ClassInfo);
+  typeData := GetTypeData(ci);
   GetMem(propList, typeData^.PropCount * SizeOf(Pointer));
-  cnt := GetPropList(TWebsiteModuleSettings.ClassInfo, propList);
+  cnt := GetPropList(ci, propList);
+  prev := nil;
   for i := 0 to cnt-1 do
     with propList^[i]^ do
       case PropType^.Kind of
@@ -331,41 +354,83 @@ begin
         prev := AddComboBox(Name, Name, prev);
       tkBool:
         prev := AddCheckBox(Name, Name, prev);
+      tkClass: begin
+        prev := AddGroupBox(Name, prev);
+        tmp := TFPObjectList.Create(True);
+        subci := GetClass(propList^[i]^.PropType^.Name).ClassInfo;
+        CreateControls(subci, TWinControl(prev), tmp);
+        controls.Add(tmp);
+        end;
       end;
+
   FreeMem(propList);
 
-  for i := 0 to FControls.Count - 1 do
-    if (FControls[i] is TLabel) then
-      with TLabel(FControls[i]) do
+  maxLabelWidth := -1;
+  for i := 0 to controls.Count - 1 do
+    if (controls[i] is TLabel) then
+      with TLabel(controls[i]) do
         if maxLabelWidth < Canvas.TextWidth(Caption) then begin
           maxLabelWidth := Canvas.TextWidth(Caption);
-          maxLabel := TLabel(FControls[i]);
+          maxLabel := TLabel(controls[i]);
         end;
 
-  for i := 0 to FControls.Count - 1 do
-    if not (FControls[i] is TLabel) and not (FControls[i] is TButton) then
-      with TControl(FControls[i]) do begin
+  for i := 0 to controls.Count - 1 do
+    if not (controls[i] is TLabel) and
+       not (controls[i] is TButton) and
+       not (controls[i] is TGroupBox) and
+       not (controls[i] is TFPObjectList)
+    then
+      with TControl(controls[i]) do begin
         AnchorSide[akLeft].Control := maxLabel;
         AnchorSide[akLeft].Side := asrRight;
       end;
 end;
 
-procedure TSettingsView.UpdateView;
+procedure TSettingsView.CreateControls;
 var
+  list: TFPObjectList;
   i: Integer;
 begin
-  for i := 0 to FControls.Count-1 do begin
-    if FControls[i] is TTIEdit then
-      TTIEdit(FControls[i]).Link.TIObject := FSettings
-    else if FControls[i] is TTISpinEdit then
-      TTISpinEdit(FControls[i]).Link.TIObject := FSettings
-    else if FControls[i] is TTIComboBox then
-      TTIComboBox(FControls[i]).Link.TIObject := FSettings
-    else if FControls[i] is TTICheckBox then
-      TTICheckBox(FControls[i]).Link.TIObject := FSettings;
-    if Assigned(FSettings) then
-      TControl(FControls[i]).Enabled := True;
+  list := TFPObjectList.Create(False);
+  CreateControls(TWebsiteModuleSettings.ClassInfo, FOwner, list);
+  for i := 0 to list.Count - 1 do
+    FControls.Add(list[i]);
+  list.Free;
+end;
+
+procedure TSettingsView.UpdateView;
+
+  procedure _UpdateView(controls: TFPObjectList; settings: TPersistent);
+  var
+    i: Integer;
+    name: String;
+    val: TPersistent;
+  begin
+    for i := 0 to controls.Count-1 do begin
+      if controls[i] is TTIEdit then
+        TTIEdit(controls[i]).Link.TIObject := settings
+      else if controls[i] is TTISpinEdit then
+        TTISpinEdit(controls[i]).Link.TIObject := settings
+      else if controls[i] is TTIComboBox then
+        TTIComboBox(controls[i]).Link.TIObject := settings
+      else if controls[i] is TTICheckBox then
+        TTICheckBox(controls[i]).Link.TIObject := settings
+      else if controls[i] is TGroupBox then
+        name := TControl(controls[i]).Caption
+      else if controls[i] is TFPObjectList then begin
+        val := nil;
+        if Assigned(settings) then
+          val := TPersistent(GetObjectProp(settings, name));
+        _UpdateView(TFPObjectList(controls[i]), val);
+      end;
+
+      if Assigned(settings) and not (controls[i] is TFPObjectList) then
+        TControl(controls[i]).Enabled := True;
+    end;
   end;
+
+begin
+  _UpdateView(FControls, FSettings);
 end;
 
 end.

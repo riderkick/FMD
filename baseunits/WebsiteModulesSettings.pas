@@ -93,5 +93,10 @@ begin
   inherited Destroy;
 end;
 
+initialization
+  RegisterClass(TWebsiteModuleSettings);
+  RegisterClass(THTTPSettings);
+  RegisterClass(TProxySettings);
+
 end.
 
