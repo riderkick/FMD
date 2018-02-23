@@ -324,7 +324,6 @@ procedure TSettingsView.CreateControls(ci: Pointer; owner: TWinControl; controls
     Result.AnchorSide[akRight].Control := owner;
     Result.AnchorSide[akRight].Side := asrRight;
     Result.BorderSpacing.Right := 10;
-    result.BorderSpacing.Bottom := 10;
     controls.Add(Result);
   end;
 
@@ -337,6 +336,7 @@ var
   maxLabel: TLabel;
   tmp: TFPObjectList;
   subci: Pointer;
+  last: TObject;
 
 begin
   typeData := GetTypeData(ci);
@@ -347,7 +347,7 @@ begin
     with propList^[i]^ do
       case PropType^.Kind of
       tkInteger:
-        prev := AddSpinEdit(Name, Name, 1, High(Integer), prev);
+        prev := AddSpinEdit(Name, Name, 0, High(Integer), prev);
       tkAString:
         prev := AddEdit(Name, Name, prev);
       tkEnumeration:
@@ -384,18 +384,16 @@ begin
         AnchorSide[akLeft].Control := maxLabel;
         AnchorSide[akLeft].Side := asrRight;
       end;
+
+  last := controls[controls.Count - 1];
+  if last is TFPObjectList then
+    last := controls[controls.Count - 2];
+  TControl(last).BorderSpacing.Bottom := 10;
 end;
 
 procedure TSettingsView.CreateControls;
-var
-  list: TFPObjectList;
-  i: Integer;
 begin
-  list := TFPObjectList.Create(False);
-  CreateControls(TWebsiteModuleSettings.ClassInfo, FOwner, list);
-  for i := 0 to list.Count - 1 do
-    FControls.Add(list[i]);
-  list.Free;
+  CreateControls(TWebsiteModuleSettings.ClassInfo, FOwner, FControls);
 end;
 
 procedure TSettingsView.UpdateView;
