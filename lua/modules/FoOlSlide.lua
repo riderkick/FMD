@@ -223,6 +223,7 @@ function Init()
   AddWebsiteModule('RoseliaScanlations', 'http://reader.roseliascans.com', cat)
   AddWebsiteModule('SaikoScans', 'http://saikoscans.ml', cat)
   AddWebsiteModule('Yuri-ism', 'https://www.yuri-ism.net', cat)
+  AddWebsiteModule('SilentSkyScans', 'http://reader.silentsky-scans.net', cat)
   
   -- es-sc
   cat = 'Spanish-Scanlation'
