@@ -40,9 +40,19 @@ function GetPageNumber()
 end
 
 function GetNameAndLink()
-  if http.get(module.rooturl..'/index/KhamPha/newest/'..IncStr(url)) then
-    x=TXQuery.Create(http.Document)
-    x.xpathhrefall('//ul[@id="browse_result_wrap"]/li[@class="browse_result_item"]/a[@class="title"]', links, names)
+  if http.get(module.rooturl .. '/index/KhamPha/newest/' .. IncStr(url)) then
+    local x = TXQuery.Create(http.Document)
+    local v = x.xpath('//ul[@id="browse_result_wrap"]/li[@class="browse_result_item"]/a[@class="title"]', links, names)
+    for i = 1, v.count do
+      local v1 = v.get(i)
+      links.add(v1.getattribute('href'))
+      names.add(v1.toString)
+    end
+    if v.count > 0 then
+      local page = tonumber(x.XPathString('(//div[@class="pagination_wrap"]/a)[last()-1]'))
+      if page == nil then page = 1 end
+      updatelist.CurrentDirectoryPageNumber = page
+    end
     return no_error
   else
     return net_problem
@@ -59,5 +69,4 @@ function Init()
   m.ongetinfo='GetInfo'
   m.ongetpagenumber='GetPageNumber'
   m.ongetnameandlink='GetNameAndLink'
-  m.OnGetDirectoryPageNumber = 'getdirectorypagenumber'
 end 
