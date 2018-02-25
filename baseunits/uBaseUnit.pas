@@ -23,7 +23,7 @@ uses
   fgl, RegExpr, synautil, httpsend, blcksock, ssl_openssl,
   synacode, MultiLog, FPimage, GZIPUtils, uMisc, httpsendthread, FMDOptions,
   simplehtmltreeparser, xquery, xquery_json, ImgInfos, NaturalSortUnit,
-  MemBitmap, FPWritePNG, zstream, FPReadPNG;
+  MemBitmap, FPWritePNG, zstream, FPReadPNG, VirtualTrees;
 
 const
   LineEnding2 = LineEnding + LineEnding;
@@ -398,6 +398,9 @@ type
     property Data: TStringList read fdata;
   end;
 
+// VT extras
+procedure SearchOnVT(Tree: TVirtualStringTree; Key: String; Column: Integer = 0);
+
 // Remove Unicode
 function ReplaceUnicodeChar(const S, ReplaceStr: String): String;
 // Check a directory to see if it's empty (return TRUE) or not
@@ -736,6 +739,50 @@ begin
 end;
 
 {$ENDIF}
+
+procedure SearchOnVT(Tree: TVirtualStringTree; Key: String; Column: Integer);
+var
+  s: String;
+  node, xnode: PVirtualNode;
+  v: Boolean;
+begin
+  if Tree.TotalCount = 0 then
+    Exit;
+  s := AnsiUpperCase(Key);
+  Tree.BeginUpdate;
+  try
+    node := Tree.GetFirst();
+    if s <> '' then
+    begin
+      while node <> nil do
+      begin
+        v := Pos(s, AnsiUpperCase(Tree.Text[node, Column])) <> 0;
+        Tree.IsVisible[node] := v;
+        if v then
+        begin
+          xnode := node^.Parent;
+          while xnode <> nil do
+          begin
+            if not (vsVisible in xnode^.States) then
+              Tree.IsVisible[xnode] := v;
+            xnode := xnode^.Parent;
+          end;
+        end;
+        node := Tree.GetNext(node);
+      end;
+    end
+    else
+    begin
+      while node <> nil do
+      begin
+        Tree.IsVisible[node] := True;
+        node := Tree.GetNext(node);
+      end;
+    end;
+  finally
+    Tree.EndUpdate;
+  end;
+end;
 
 function ReplaceUnicodeChar(const S, ReplaceStr: String): String;
 var
