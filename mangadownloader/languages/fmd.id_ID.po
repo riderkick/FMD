@@ -565,7 +565,7 @@ msgstr "Segarkan"
 
 #: taccountmanagerform.caption
 msgid "AccountManagerForm"
-msgstr ""
+msgstr "AccountManagerForm"
 
 #: taccountmanagerform.vtaccountlist.header.columns[1].text
 msgctxt "taccountmanagerform.vtaccountlist.header.columns[1].text"
@@ -593,7 +593,7 @@ msgstr "Ok"
 
 #: taccountsetform.caption
 msgid "Account"
-msgstr ""
+msgstr "Akun"
 
 #: taccountsetform.ckshowpassword.caption
 msgid "Show password"
@@ -2391,15 +2391,15 @@ msgstr "Pilih situs"
 
 #: twebsitesettingsform.caption
 msgid "WebsiteSettingsForm"
-msgstr ""
+msgstr "WebsiteSettingsForm"
 
 #: twebsitesettingsform.edsearch.texthint
 msgid "Website name"
-msgstr ""
+msgstr "Nama situs"
 
 #: twebsitesettingsform.edsearchproperty.texthint
 msgid "Setting name"
-msgstr ""
+msgstr "Nama pengaturan"
 
 #: udownloadsmanager.rs_compressing
 msgid "Compressing..."
