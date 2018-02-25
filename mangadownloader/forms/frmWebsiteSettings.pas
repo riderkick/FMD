@@ -57,7 +57,9 @@ begin
     AutoFullExpand := True;
     CleanEnumName := True;
     Header.Columns[0].Width := 300;
-    TreeOptions.PaintOptions := TreeOptions.PaintOptions + [toThemeAware, toUseExplorerTheme];
+    {$if VTMajorVersion < 5}
+    TreeOptions.PaintOptions := TreeOptions.PaintOptions + [toThemeAware, toUseExplorerTheme, toHotTrack];
+    {$endif}
   end;
 end;
 
