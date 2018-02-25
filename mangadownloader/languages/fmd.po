@@ -2314,6 +2314,10 @@ msgstr ""
 msgid "Website name"
 msgstr ""
 
+#: twebsitesettingsform.edsearchproperty.texthint
+msgid "Setting name"
+msgstr ""
+
 #: udownloadsmanager.rs_compressing
 msgid "Compressing..."
 msgstr ""

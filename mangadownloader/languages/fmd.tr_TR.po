@@ -2426,6 +2426,10 @@ msgstr "WebsiteAyarlarıFormu"
 msgid "Website name"
 msgstr "Website Adı"
 
+#: twebsitesettingsform.edsearchproperty.texthint
+msgid "Setting name"
+msgstr ""
+
 #: udownloadsmanager.rs_compressing
 msgid "Compressing..."
 msgstr "Sıkıştırılıyor..."
