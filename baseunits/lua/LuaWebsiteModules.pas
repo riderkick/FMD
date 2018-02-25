@@ -671,6 +671,12 @@ begin
   luaPushIntegerGlobal(L, 'no_error', NO_ERROR);
   luaPushIntegerGlobal(L, 'net_problem', NET_PROBLEM);
   luaPushIntegerGlobal(L, 'information_not_found', INFORMATION_NOT_FOUND);
+
+  // account status
+  luaPushIntegerGlobal(L, 'asUnknown', Integer(asUnknown));
+  luaPushIntegerGlobal(L, 'asChecking', Integer(asChecking));
+  luaPushIntegerGlobal(L, 'asValid', Integer(asValid));
+  luaPushIntegerGlobal(L, 'asInvalid', Integer(asInvalid));
 end;
 
 procedure TLuaWebsiteModule.LuaDoMe(L: Plua_State);
@@ -768,6 +774,19 @@ const
     (name: nil; func: nil)
     );
 
+procedure luaWebsiteModuleAccountAddMetaTable(L: Plua_State; Obj: Pointer;
+  MetaTable, UserData: Integer; AutoFree: Boolean = False);
+begin
+  with TWebsiteModuleAccount(Obj) do
+  begin
+    luaClassAddBooleanProperty(L, MetaTable, 'Enabled', @Enabled);
+    luaClassAddStringProperty(L, MetaTable, 'Username', @Username);
+    luaClassAddStringProperty(L, MetaTable, 'Password', @Password);
+    luaClassAddStringProperty(L, MetaTable, 'Cookies', @Cookies);
+    luaClassAddIntegerProperty(L, MetaTable, 'Status', @Status);
+  end;
+end;
+
 procedure luaWebsiteModuleAddMetaTable(L: Plua_State; Obj: Pointer;
   MetaTable, UserData: Integer; AutoFree: Boolean = False);
 begin
@@ -815,6 +834,9 @@ begin
     luaClassAddFunction(L, MetaTable, UserData, methods);
 
     luaClassAddObject(L, MetaTable, Storage, 'Storage', @luaStringsStorageAddMetaTable);
+
+    if Module.Account<>nil then
+      luaClassAddObject(L, MetaTable, Module.Account, 'Account', @luaWebsiteModuleAccountAddMetaTable);
   end;
 end;
 
