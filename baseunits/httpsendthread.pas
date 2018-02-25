@@ -114,7 +114,7 @@ function FormatByteSize(const ABytes: Integer; AShowPerSecond: Boolean = False):
 
 const
   UserAgentSynapse   = 'Mozilla/4.0 (compatible; Synapse)';
-  UserAgentCURL      = 'curl/7.52.1';
+  UserAgentCURL      = 'curl/7.58.0';
   UserAgentGooglebot = 'Mozilla/5.0 (compatible; Googlebot/2.1;  http://www.google.com/bot.html)';
   UserAgentMSIE      = 'Mozilla/5.0 (Windows NT 10.0; Win64; Trident/7.0; rv:11.0) like Gecko';
   UserAgentFirefox   = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:58.0) Gecko/20100101 Firefox/58.0';

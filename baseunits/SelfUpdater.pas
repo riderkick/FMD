@@ -59,7 +59,7 @@ resourcestring
 
 implementation
 
-uses FMDVars, SourceForge;
+uses FMDVars;
 
 { TSelfUpdaterThread }
 
@@ -248,11 +248,7 @@ begin
   try
     FStatusText := Format(RS_Downloading, [UpdateURL]);
     Synchronize(@SyncStartDownload);
-    if Pos('sourceforge.net', AnsiLowerCase(UpdateURL)) <> 0 then
-        DownloadSuccess := SourceForge.Download(FHTTP, UpdateURL)
-      else
-        DownloadSuccess := FHTTP.GET(UpdateURL) and (FHTTP.ResultCode < 300);
-    if DownloadSuccess then
+    if FHTTP.GET(UpdateURL) and (FHTTP.ResultCode < 300) then
     begin
       Filename := FMD_DIRECTORY + UPDATE_PACKAGE_NAME;
       if FileExists(Filename) then
