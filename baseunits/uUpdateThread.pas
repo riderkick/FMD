@@ -387,11 +387,9 @@ begin
       if Terminated then Break;
       if ulTotalPtr <> FCurrentGetInfoLimit then
         ulTotalPtr := FCurrentGetInfoLimit;
-      if Module.Settings.UpdateListNumberOfThread > 0 then
+      if Module.Settings.Enabled and (Module.Settings.UpdateListNumberOfThread > 0) then
         numberOfThreads := Module.Settings.UpdateListNumberOfThread
       else
-        numberOfThreads := OptionMaxThreads;
-      if numberOfThreads > OptionMaxThreads then
         numberOfThreads := OptionMaxThreads;
       if numberOfThreads < 1 then
         numberOfThreads := 1;  //default
