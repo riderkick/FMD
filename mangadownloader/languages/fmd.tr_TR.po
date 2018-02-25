@@ -2428,7 +2428,7 @@ msgstr "Website Adı"
 
 #: twebsitesettingsform.edsearchproperty.texthint
 msgid "Setting name"
-msgstr ""
+msgstr "Ayar ismi"
 
 #: udownloadsmanager.rs_compressing
 msgid "Compressing..."
