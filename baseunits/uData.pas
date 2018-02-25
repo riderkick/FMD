@@ -112,7 +112,7 @@ begin
   APage := 1;
 
   //load pagenumber_config if available
-  if Modules[ModuleId].Settings.UpdateListDirectoryPageNumber > 0 then
+  if  Modules[ModuleId].Settings.Enabled and (Modules[ModuleId].Settings.UpdateListDirectoryPageNumber > 0) then
   begin
     APage := Modules[ModuleId].Settings.UpdateListDirectoryPageNumber;
     BROWSER_INVERT := True;
