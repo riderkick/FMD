@@ -432,6 +432,7 @@ var
   s: String;
 begin
   CheckCloudflareEnabled(AHTTP);
+  if not Settings.Enabled then Exit;
   with Settings.HTTP do
   begin
     if UserAgent<>'' then
@@ -475,26 +476,26 @@ end;
 
 function TModuleContainer.GetMaxConnectionLimit: Integer;
 begin
-  if Settings.MaxConnectionLimit=0 then
-    Result:=MaxConnectionLimit
+  if (Settings.Enabled) and (Settings.MaxConnectionLimit <> 0)  then
+    Result:=Settings.MaxConnectionLimit
   else
-    Result:=Settings.MaxConnectionLimit;
+    Result:=MaxConnectionLimit;
 end;
 
 function TModuleContainer.GetMaxTaskLimit: Integer;
 begin
-  if Settings.MaxTaskLimit=0 then
-    Result:=MaxTaskLimit
+  if (Settings.Enabled) and (Settings.MaxTaskLimit <> 0)  then
+    Result:=Settings.MaxTaskLimit
   else
-    Result:=Settings.MaxTaskLimit;
+    Result:=MaxTaskLimit;
 end;
 
 function TModuleContainer.GetMaxThreadPerTaskLimit: Integer;
 begin
-  if Settings.MaxThreadPerTaskLimit=0 then
-    Result:=MaxThreadPerTaskLimit
+  if (Settings.Enabled) and (Settings.MaxThreadPerTaskLimit <> 0)  then
+    Result:=Settings.MaxThreadPerTaskLimit
   else
-    Result:=Settings.MaxThreadPerTaskLimit;
+    Result:=MaxThreadPerTaskLimit;
 end;
 
 procedure TModuleContainer.AddOption(const AOptionType: TWebsiteOptionType;
