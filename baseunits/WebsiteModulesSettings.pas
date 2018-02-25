@@ -12,7 +12,7 @@ type
 
   { TProxySettings }
 
-  TProxySettings = class(TPersistent)
+  TProxySettings = class
   private
     FProxyHost: String;
     FProxyPassword: String;
@@ -29,7 +29,7 @@ type
 
   { THTTPSettings }
 
-  THTTPSettings = class(TPersistent)
+  THTTPSettings = class
   private
     FCookies: String;
     FProxy: TProxySettings;
@@ -45,8 +45,9 @@ type
 
   { TWebsiteModuleSettings }
 
-  TWebsiteModuleSettings = class(TPersistent)
+  TWebsiteModuleSettings = class
   private
+    FEnabled: Boolean;
     FHTTP: THTTPSettings;
     FMaxConnectionLimit: Integer;
     FMaxTaskLimit: Integer;
@@ -57,6 +58,7 @@ type
     constructor Create;
     destructor Destroy; override;
   published
+    property Enabled: Boolean read FEnabled write FEnabled default False;
     property MaxTaskLimit: Integer read FMaxTaskLimit write FMaxTaskLimit default 0;
     property MaxThreadPerTaskLimit: Integer read FMaxThreadPerTaskLimit write FMaxThreadPerTaskLimit default 0;
     property MaxConnectionLimit: Integer read FMaxConnectionLimit write FMaxConnectionLimit default 0;
@@ -92,11 +94,6 @@ begin
   HTTP.Free;
   inherited Destroy;
 end;
-
-initialization
-  RegisterClass(TWebsiteModuleSettings);
-  RegisterClass(THTTPSettings);
-  RegisterClass(TProxySettings);
 
 end.
 
