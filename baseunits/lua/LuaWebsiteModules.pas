@@ -744,8 +744,9 @@ var
 begin
   m := TLuaWebsiteModule(luaClassGetObject(L));
   i:=m.Options.IndexOf(lua_tostring(L, 1));
+  Result := 1;
   if i = -1 then
-    Result := 0
+    lua_pushnil(L)
   else
   begin
     o := m.Options.Objects[i];
@@ -759,8 +760,9 @@ begin
       lua_pushinteger(L, TOptionItemSpinEdit(o).Value)
     else
     if o is TOptionItemComboBox then
-      lua_pushinteger(L, TOptionItemComboBox(o).Value);
-    Result := 1;
+      lua_pushinteger(L, TOptionItemComboBox(o).Value)
+    else
+      lua_pushnil(L);
   end;
 end;
 
