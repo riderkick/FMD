@@ -4746,7 +4746,10 @@ begin
   // start the thread
   GetInfosThread := TGetMangaInfosThread.Create;
   GetInfosThread.MangaListNode := AMangaListNode;
-  GetInfosThread.Title := ATitle;
+  if (ASender = miDownloadViewMangaInfo) or (ASender = miFavoritesViewInfos) then
+    GetInfosThread.Title := ''      // retrieve the original title so custom rename can remove them
+  else
+    GetInfosThread.Title := ATitle;
   GetInfosThread.Website := AWebsite;
   GetInfosThread.Link := ALink;
   GetInfosThread.Start;

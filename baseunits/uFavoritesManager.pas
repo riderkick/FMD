@@ -249,7 +249,7 @@ begin
     try
       // get new manga info
       FMangaInformation.isGetByUpdater := False;
-      FMangaInformation.mangaInfo.title := FavoriteInfo.Title;
+      //FMangaInformation.mangaInfo.title := FavoriteInfo.Title; // retrieve the original title so custom rename can remove them
       FMangaInformation.GetInfoFromURL(FavoriteInfo.Website, FavoriteInfo.Link);
       if not Terminated then
       begin
