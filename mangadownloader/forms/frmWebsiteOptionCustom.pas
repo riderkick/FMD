@@ -84,6 +84,7 @@ type
 
 var
   WebsiteOptionCustomForm: TCustomOptionForm;
+  downer: TComponent;
   dparent: TWinControl;
   tbspace: Cardinal = 6;
   lrspace: Cardinal = 6;
@@ -194,6 +195,7 @@ end;
 
 procedure TCustomOptionForm.FormCreate(Sender: TObject);
 begin
+  downer := self;
   dparent := Self;
   with dparent.ChildSizing do
   begin
@@ -269,11 +271,11 @@ begin
         begin
           compparent := TGroupBox(Components[i]);
           with compparent do
-            if ComponentCount > 0 then
+            if ControlCount > 0 then
             begin
-              compsibling := TControl(Components[ComponentCount - 1]);
-              for j := ComponentCount - 1 downto 0 do
-                if SameText(Components[j].Name, lcomp) then
+              compsibling := TControl(Controls[ControlCount - 1]);
+              for j := ControlCount - 1 downto 0 do
+                if SameText(Controls[j].Name, lcomp) then
                   Exit;
             end;
         end;
@@ -294,7 +296,7 @@ begin
     if compparent = nil then
       if lgroup <> '' then
       begin
-        compparent := TGroupBox.Create(dparent);
+        compparent := TGroupBox.Create(downer);
         SetControlProp(compparent, compparentsibling, dparent, lgroup, lgroupcaption);
         with compparent.ChildSizing do
         begin
@@ -315,18 +317,18 @@ begin
     case AOptionItemType of
       woCheckBox:
       begin
-        Result := TCheckBoxBindValue.Create(compparent);
+        Result := TCheckBoxBindValue.Create(downer);
         SetControlProp(Result, compsibling, compparent, lcomp, lcompcaption);
       end;
 
       woEdit, woComboBox:
       begin
-        lb := TLabel.Create(compparent);
+        lb := TLabel.Create(downer);
         SetControlProp(lb, compsibling, compparent, lcomp + 'Lbl', lcompcaption);
         compsibling := lb;
         case AOptionItemType of
-          woEdit    : Result := TEditBindValue.Create(compparent);
-          woComboBox: Result := TComboBoxBindValue.Create(compparent);
+          woEdit    : Result := TEditBindValue.Create(downer);
+          woComboBox: Result := TComboBoxBindValue.Create(downer);
         end;
         SetControlProp(Result, compsibling, compparent, lcomp, '');
         with Result do
@@ -339,10 +341,10 @@ begin
 
       woSpinEdit:
       begin
-        Result := TSpinEditBindValue.Create(compparent);
+        Result := TSpinEditBindValue.Create(downer);
         SetControlProp(Result, compsibling, compparent, lcomp, lcompcaption);
         Result.Width := Result.Width + (Result.Width div 4);
-        lb := TLabel.Create(compparent);
+        lb := TLabel.Create(downer);
         SetControlProp(lb, Result, compparent, lcomp + 'Lbl', lcompcaption);
         with lb do
         begin
@@ -361,6 +363,7 @@ function TCustomOptionForm.AddCheckbox(const ABindValue: PBoolean;
   ): TWinControl;
 begin
   Result := AddOptionItem(woCheckBox, AName, ACaption, AGroup, AGroupCaption);
+  if Result = nil then Exit;
   TCheckBoxBindValue(Result).BindValue := ABindValue;
 end;
 
@@ -369,6 +372,7 @@ function TCustomOptionForm.AddEdit(const ABindValue: PString;
   ): TWinControl;
 begin
   Result := AddOptionItem(woEdit, AName, ACaption, AGroup, AGroupCaption);
+  if Result = nil then Exit;
   TEditBindValue(Result).BindValue := ABindValue;
 end;
 
@@ -377,6 +381,7 @@ function TCustomOptionForm.AddSpinEdit(const ABindValue: PInteger;
   ): TWinControl;
 begin
   Result := AddOptionItem(woSpinEdit, AName, ACaption, AGroup, AGroupCaption);
+  if Result = nil then Exit;
   TSpinEditBindValue(Result).BindValue := ABindValue;
 end;
 
@@ -384,6 +389,7 @@ function TCustomOptionForm.AddComboBox(const ABindValue: PInteger; AName, ACapti
   AGroup, AGroupCaption, AItems: String): TWinControl;
 begin
   Result := AddOptionItem(woComboBox, AName, ACaption, AGroup, AGroupCaption);
+  if Result = nil then Exit;
   with TComboBoxBindValue(Result) do
   begin
     Items.Text := AItems;
@@ -394,18 +400,10 @@ end;
 procedure TCustomOptionForm.CreateWebsiteOption;
 var
   i, j: Integer;
-  c: TComponent;
   cap: String;
 begin
-  while dparent.ComponentCount > 0 do
-    for i := 0 to dparent.ComponentCount - 1 do
-    begin
-      c := dparent.Components[dparent.ComponentCount - 1];
-      dparent.RemoveComponent(c);
-      c.Free;
-    end;
-
   if Modules = nil then Exit;
+  dparent.DestroyComponents;
   if Modules.Count > 0 then
     for i := 0 to Modules.Count - 1 do
       with Modules.Module[i] do
