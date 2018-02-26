@@ -54,7 +54,6 @@ uses
   TruyenTranhTuan,
   BlogTruyen,
   MangaAe,
-  Mangadex,
   MangaTube,
   Mangaf,
   MangaRock,
