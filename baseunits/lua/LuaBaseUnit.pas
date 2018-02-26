@@ -110,6 +110,17 @@ begin
   Result := 1;
 end;
 
+function lua_streamtostring(L: Plua_State): Integer; cdecl;
+begin
+  if lua_isuserdata(L, 1) then
+  begin
+    lua_pushstring(L, StreamToString(TStream(luaGetUserData(L,1))));
+    Result := 1;
+  end
+  else
+    Result := 0;
+end;
+
 procedure luaBaseUnitRegister(L: Plua_State);
 begin
   luaPushFunctionGlobal(L, 'Pos', @lua_pos);
@@ -125,6 +136,7 @@ begin
   luaPushFunctionGlobal(L, 'HTMLDecode', @lua_htmldecode);
   luaPushFunctionGlobal(L, 'URLDecode', @lua_urldecode);
   luaPushFunctionGlobal(L, 'IncStr', @lua_incstr);
+  luaPushFunctionGlobal(L, 'StreamToString', @lua_streamtostring);
 end;
 
 end.
