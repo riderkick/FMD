@@ -48,6 +48,8 @@ type
 
   THTTPRequestEvent = function(const AHTTP: THTTPSendThread; const Method, URL: String; const Response: TObject = nil): Boolean of object;
 
+  THTTPMethodRedirectEvent = procedure(const AHTTP: THTTPSendThread; const URL: String) of object;
+
   { THTTPSendThread }
 
   THTTPSendThread = class(THTTPSend)
@@ -94,6 +96,7 @@ type
     BeforeHTTPMethod: THTTPMethodEvent;
     AfterHTTPMethod: THTTPMethodEvent;
     OnHTTPRequest: THTTPRequestEvent;
+    OnRedirected: THTTPMethodRedirectEvent;
     property LastURL: String read FURL;
   end;
 
@@ -530,6 +533,9 @@ begin
             SplitURL(FURL,@h,@p);
           FURL:=h+s;
         end;
+
+        if OnRedirected<>nil then
+          OnRedirected(Self, FURL);
 
         Clear;
         Headers.Assign(HTTPHeader);
