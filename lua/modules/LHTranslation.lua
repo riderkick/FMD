@@ -19,8 +19,7 @@ function GetPageNumber()
   if http.GET(MaybeFillHost(module.rooturl, url)) then
     x=TXQuery.Create(http.document)
     if http.get(x.xpathstring('//div[@class="commentmetadata"][1]/p/a/@href')) then
-      --x.parsehtml(http.document)
-      x=TXQuery.Create(http.document)
+      x.parsehtml(http.document)
       x.xpathstringall('//img[@class="chapter-img"]/@src',task.pagelinks)
       return true
     end    

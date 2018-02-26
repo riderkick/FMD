@@ -36,8 +36,7 @@ function getinfo()
         s = Trim(x.XPathString('//*[@class="pgg"]//*[./a[@class="sel"]]/following-sibling::*[./a]/a/@href'))
         if s == '' then break end
         if http.GET(MaybeFillHost(module.rooturl, s)) then
-          x=TXQuery.Create(http.document)
-          --x.ParseHTML(http.document)
+          x.ParseHTML(http.Document)
         else
           break
         end
@@ -74,8 +73,7 @@ function getpagenumber()
     
     -- single page
     if task.PageLinks.Count == 0 then
-      --x.ParseHTML(http.Document)
-      x=TXQuery.Create(http.document)
+      x.ParseHTML(http.Document)
       task.PageNumber = x.XPath('(//select[@class="cbo_wpm_pag"])[1]/option').Count
       if task.PageNumber == 0 then
         task.PageNumber = x.XPath('(//select[@name="page"])[1]/option').Count
