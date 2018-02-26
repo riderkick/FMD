@@ -1757,19 +1757,26 @@ end;
 
 procedure TMainForm.tmStartupTimer(Sender: TObject);
 begin
-  //load lua modules
-  ScanLuaWebsiteModulesFile;
-  AddToAboutStatus('Modules', IntToStr(Modules.Count));
+  try
+    if Sender is TTimer then
+      TTimer(Sender).Free;
 
-  Modules.LoadFromFile;
-  WebsiteOptionCustomForm.CreateWebsiteOption;
-  WebsiteSettingsForm.LoadWebsiteSettings;
-  AccountManagerForm.LoadAccounts;
+    //load lua modules
+    ScanLuaWebsiteModulesFile;
+    AddToAboutStatus('Modules', IntToStr(Modules.Count));
 
-  //load configfile
-  LoadMangaOptions;
-  LoadOptions;
-  ApplyOptions;
+    Modules.LoadFromFile;
+    WebsiteOptionCustomForm.CreateWebsiteOption;
+    WebsiteSettingsForm.LoadWebsiteSettings;
+    AccountManagerForm.LoadAccounts;
+
+    //load configfile
+    LoadMangaOptions;
+    LoadOptions;
+    ApplyOptions;
+  finally
+    isStartup := False;
+  end;
 
   //restore everything after all modules loaded
   DLManager.Restore;
@@ -1791,11 +1798,6 @@ begin
     FavoriteManager.CheckForNewChapter;
   end;
   DLManager.CheckAndActiveTaskAtStartup;
-
-  if Sender is TTimer then
-    TTimer(Sender).Free;
-
-  isStartup := False;
 end;
 
 procedure TMainForm.medURLCutClick(Sender: TObject);
