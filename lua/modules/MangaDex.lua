@@ -99,6 +99,9 @@ function Init()
   m.ongetpagenumber='getpagenumber'
   m.ongetdirectorypagenumber='getdirectorypagenumber'
   m.ongetnameandlink='getnameandlink'
+  
+  m.maxtasklimit=1
+  m.maxconnectionlimit=2
 
   m.addoptioncheckbox('showalllang', 'Show all language', false)
   m.addoptioncheckbox('showscangroup', 'Show scanlation group', false)
