@@ -265,19 +265,17 @@ begin
       for i := ComponentCount - 1 downto 0 do
       begin
         if SameText(Components[i].Name, lcomp) then
-          Exit
+        begin
+          Result := TWinControl(Components[i]);
+          Exit;
+        end
         else
         if (Components[i] is TGroupBox) and SameText(Components[i].Name, lgroup) then
         begin
           compparent := TGroupBox(Components[i]);
           with compparent do
             if ControlCount > 0 then
-            begin
               compsibling := TControl(Controls[ControlCount - 1]);
-              for j := ControlCount - 1 downto 0 do
-                if SameText(Controls[j].Name, lcomp) then
-                  Exit;
-            end;
         end;
       end;
 
@@ -363,8 +361,8 @@ function TCustomOptionForm.AddCheckbox(const ABindValue: PBoolean;
   ): TWinControl;
 begin
   Result := AddOptionItem(woCheckBox, AName, ACaption, AGroup, AGroupCaption);
-  if Result = nil then Exit;
-  TCheckBoxBindValue(Result).BindValue := ABindValue;
+  if (Result <> nil) and (Result is TCheckBoxBindValue) then
+    TCheckBoxBindValue(Result).BindValue := ABindValue;
 end;
 
 function TCustomOptionForm.AddEdit(const ABindValue: PString;
@@ -372,8 +370,8 @@ function TCustomOptionForm.AddEdit(const ABindValue: PString;
   ): TWinControl;
 begin
   Result := AddOptionItem(woEdit, AName, ACaption, AGroup, AGroupCaption);
-  if Result = nil then Exit;
-  TEditBindValue(Result).BindValue := ABindValue;
+  if (Result <> nil) and (Result is TEditBindValue) then
+    TEditBindValue(Result).BindValue := ABindValue;
 end;
 
 function TCustomOptionForm.AddSpinEdit(const ABindValue: PInteger;
@@ -381,20 +379,20 @@ function TCustomOptionForm.AddSpinEdit(const ABindValue: PInteger;
   ): TWinControl;
 begin
   Result := AddOptionItem(woSpinEdit, AName, ACaption, AGroup, AGroupCaption);
-  if Result = nil then Exit;
-  TSpinEditBindValue(Result).BindValue := ABindValue;
+  if (Result <> nil) and (Result is TSpinEditBindValue) then
+    TSpinEditBindValue(Result).BindValue := ABindValue;
 end;
 
 function TCustomOptionForm.AddComboBox(const ABindValue: PInteger; AName, ACaption,
   AGroup, AGroupCaption, AItems: String): TWinControl;
 begin
   Result := AddOptionItem(woComboBox, AName, ACaption, AGroup, AGroupCaption);
-  if Result = nil then Exit;
-  with TComboBoxBindValue(Result) do
-  begin
-    Items.Text := AItems;
-    TComboBoxBindValue(Result).BindValue := ABindValue;
-  end;
+  if (Result <> nil) and (Result is TComboBoxBindValue) then
+    with TComboBoxBindValue(Result) do
+    begin
+      Items.Text := AItems;
+      TComboBoxBindValue(Result).BindValue := ABindValue;
+    end;
 end;
 
 procedure TCustomOptionForm.CreateWebsiteOption;
