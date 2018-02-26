@@ -9,7 +9,7 @@
       <SearchPaths>
         <IncludeFiles Value="BESEN\src"/>
         <OtherUnitFiles Value="BESEN\src"/>
-        <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
+        <UnitOutputDirectory Value="BESEN\lib\$(TargetCPU)-$(TargetOS)"/>
       </SearchPaths>
       <CodeGeneration>
         <SmartLinkUnit Value="True"/>

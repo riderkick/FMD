@@ -64,17 +64,20 @@ function AddWebsiteModule(name, url, cat)
 end
 
 function Init()
-  local cat = 'English-Scanlation'
-  AddWebsiteModule('Komikid', 'http://www.komikid.com', 'Indonesian');
-  AddWebsiteModule('MangaDenizi', 'http://www.mangadenizi.com', 'Turkish');
-  AddWebsiteModule('MangaID', 'http://mangaid.co', 'Indonesian');
-  AddWebsiteModule('FallenAngelsScans','http://manga.fascans.com', 'English-Scanlation');
-  AddWebsiteModule('MangaDesu','http://mangadesu.net', 'Indonesian');
-  AddWebsiteModule('ChibiManga','http://www.cmreader.info', 'English-Scanlation');
-  
-  -- es-sc
-  cat = 'Spanish-Scanlation'
+  AddWebsiteModule('MangaForest', 'http://mangaforest.com', 'English')
   AddWebsiteModule('MangaDoor', 'http://mangadoor.com', 'Spanish');
-  AddWebsiteModule('DarkSkyScan', 'http://darkskyprojects.org', cat);
-  AddWebsiteModule('NozominoFansub', 'https://nozominofansub.com/', cat);
+  AddWebsiteModule('MangaDenizi', 'http://www.mangadenizi.com', 'Turkish');
+  
+  local c='Indonesian'
+  AddWebsiteModule('Komikid', 'http://www.komikid.com', c);
+  AddWebsiteModule('MangaDesu','http://mangadesu.net', c);
+  AddWebsiteModule('MangaID', 'http://mangaid.co', c);  
+
+  c='English-Scanlation'
+  AddWebsiteModule('FallenAngelsScans','http://manga.fascans.com', c);
+  AddWebsiteModule('ChibiManga','http://www.cmreader.info', c);
+
+  c='Spanish-Scanlation'
+  AddWebsiteModule('DarkSkyScan', 'http://darkskyprojects.org', c);
+  AddWebsiteModule('NozominoFansub', 'https://nozominofansub.com', c);
 end

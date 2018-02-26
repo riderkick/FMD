@@ -43,7 +43,7 @@ resourcestring
 implementation
 
 uses
-  frmMain, uSilentThread;
+  frmMain, uSilentThread, FMDVars;
 
 {$R *.lfm}
 
@@ -101,17 +101,11 @@ begin
           m := Modules.LocateModuleByHost(host);
           if m > -1 then
             webs := Modules.Module[m].Website;
-          if webs = '' then
-          begin
-            for j := Low(WebsiteRoots) to High(WebsiteRoots) do
-              if Pos(host, LowerCase(WebsiteRoots[j, 1])) <> 0 then
-                webs := WebsiteRoots[j, 0];
-          end;
         end;
 
         if webs <> '' then
         begin
-          MainForm.SilentThreadManager.Add(
+          SilentThreadManager.Add(
             MD_AddToFavorites,
             webs,
             mangaList[i],
@@ -151,7 +145,7 @@ end;
 
 procedure TImportFavorites.FMDHandle;
 begin
-  MainForm.FavoriteManager.MergeWith(CleanAndExpandDirectory(edPath.Text) + 'works/favorites.ini');
+  FavoriteManager.MergeWith(CleanAndExpandDirectory(edPath.Text) + 'works/favorites.ini');
 
   MessageDlg('', RS_ImportCompleted,
                  mtConfirmation, [mbYes], 0)

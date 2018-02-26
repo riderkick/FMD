@@ -22,24 +22,28 @@ type
 
   TSQliteData = class
   private
+    FAutoVacuum: Boolean;
     FConn: TSQLite3ConnectionH;
+    FFieldsParams: String;
     FOnError: TExceptionEvent;
     FTrans: TSQLTransaction;
     FQuery: TSQLQuery;
     FFilename: String;
     FTableName: String;
     FCreateParams: String;
+    FSelectParams: String;
     FRecordCount: Integer;
     procedure DoOnError(E: Exception);
     function GetAutoApplyUpdates: Boolean;
     procedure SetAutoApplyUpdates(AValue: Boolean);
+    procedure SetAutoVacuum(AValue: Boolean);
     procedure SetCreateParams(AValue: String);
+    procedure SetFieldsParams(AValue: String);
     procedure SetOnError(AValue: TExceptionEvent);
+    procedure SetSelectParams(AValue: String);
   protected
+    function OpenDB: Boolean; virtual;
     function CreateDB: Boolean; virtual;
-    function CreateDBTable: Boolean; virtual;
-    function InternalOpenDB: Boolean; virtual;
-    function OpenDBTable: Boolean; virtual;
     function ConvertNewTableIF: Boolean; virtual;
     procedure DoConvertNewTable;
     procedure GetRecordCount; virtual;
@@ -49,26 +53,60 @@ type
   public
     constructor Create;
     destructor Destroy; override;
-    function Open: Boolean;
-    procedure Close;
-    procedure Refresh(RecheckDataCount: Boolean = False);
-    procedure Save;
-    function Connected: Boolean;
+    function Open(const AOpenTable: Boolean = True; const AGetRecordCount: Boolean = True): Boolean; virtual;
+    function OpenTable(const AGetRecordCount: Boolean = True): Boolean; virtual;
+    procedure Close; virtual;
+    procedure CloseTable; virtual;
+    procedure Refresh(RecheckDataCount: Boolean = False); virtual;
+    procedure Commit; virtual;
+    procedure CommitRetaining; virtual;
+    procedure Save; virtual;
+    function Connected: Boolean; inline;
     property Connection: TSQLite3ConnectionH read FConn;
+    property Transaction: TSQLTransaction read FTrans;
     property Table: TSQLQuery read FQuery;
     property Filename: String read FFilename write FFilename;
     property TableName: String read FTableName write FTableName;
     property CreateParams: String read FCreateParams write SetCreateParams;
+    property SelectParams: String read FSelectParams write SetSelectParams;
+    property FieldsParams: String read FFieldsParams write SetFieldsParams;
     property RecordCount: Integer read FRecordCount;
     property AutoApplyUpdates: Boolean read GetAutoApplyUpdates write SetAutoApplyUpdates;
+    property AutoVacuum: Boolean read FAutoVacuum write SetAutoVacuum;
     property OnError: TExceptionEvent read FOnError write SetOnError;
   end;
 
+function QuotedStr(const S: Integer): String; overload; inline;
+function QuotedStr(const S: Boolean): String; overload; inline;
+function QuotedStr(const S: TDateTime): String; overload; inline;
+function QuotedStrD(const S: String): String; overload; inline;
+function QuotedStrD(const S: Integer): String; overload; inline;
+
 implementation
 
-function QuotedStrd(const S: String): String;
+function QuotedStr(const S: Integer): String;
+begin
+  Result := AnsiQuotedStr(IntToStr(S), '''');
+end;
+
+function QuotedStr(const S: Boolean): String;
+begin
+  Result := AnsiQuotedStr(BoolToStr(S, '1', '0'), '''');
+end;
+
+function QuotedStr(const S: TDateTime): String;
+begin
+  Result := AnsiQuotedStr(FormatDateTime('yyyy-mm-dd hh:mm:ss', S), '''');
+end;
+
+function QuotedStrD(const S: String): String;
 begin
   Result := AnsiQuotedStr(S, '"');
+end;
+
+function QuotedStrD(const S: Integer): String;
+begin
+  Result := AnsiQuotedStr(IntToStr(S), '"');
 end;
 
 { TSQliteData }
@@ -92,11 +130,22 @@ begin
     FQuery.Options := FQuery.Options - [sqoAutoApplyUpdates];
 end;
 
+procedure TSQliteData.SetAutoVacuum(AValue: Boolean);
+begin
+  if FAutoVacuum = AValue then Exit;
+  FAutoVacuum := AValue;
+end;
+
 procedure TSQliteData.SetCreateParams(AValue: String);
 begin
   if FCreateParams = AValue then Exit;
-  FCreateParams := Trim(AValue);
-  FCreateParams := TrimSet(FCreateParams, ['(', ')', ';']);
+  FCreateParams := TrimSet(Trim(AValue), ['(', ')', ';']);
+end;
+
+procedure TSQliteData.SetFieldsParams(AValue: String);
+begin
+  if FFieldsParams = AValue then Exit;
+  FFieldsParams := AValue;
 end;
 
 procedure TSQliteData.SetOnError(AValue: TExceptionEvent);
@@ -105,33 +154,13 @@ begin
   FOnError := AValue;
 end;
 
-function TSQliteData.CreateDB: Boolean;
+procedure TSQliteData.SetSelectParams(AValue: String);
 begin
-  Result := False;
-  if FFilename = '' then Exit;
-  if FileExistsUTF8(ffilename) then DeleteFileUTF8(FFilename);
-  CreateDBTable;
+  if FSelectParams = AValue then Exit;
+  FSelectParams := AValue;
 end;
 
-function TSQliteData.CreateDBTable: Boolean;
-begin
-  Result := False;
-  if FTableName = '' then Exit;
-  if FCreateParams = '' then Exit;
-  if InternalOpenDB = False then Exit;
-  try
-    FConn.ExecuteDirect('DROP TABLE IF EXISTS ' + QuotedStrd(FTableName));
-    FConn.ExecuteDirect('CREATE TABLE ' + QuotedStrd(FTableName) + #13#10 +
-      '(' + FCreateParams + ')');
-    FTrans.Commit;
-    Result := OpenDBTable;
-  except
-    on E: Exception do
-      DoOnError(E);
-  end;
-end;
-
-function TSQliteData.InternalOpenDB: Boolean;
+function TSQliteData.OpenDB: Boolean;
 begin
   Result := False;
   if FFilename = '' then Exit;
@@ -139,27 +168,24 @@ begin
     FConn.DatabaseName := FFilename;
     FConn.Connected := True;
     FTrans.Active := True;
-    Result := FConn.Connected;
-  finally
-    Result := FConn.Connected;
+  except
   end;
+  Result := FConn.Connected;
 end;
 
-function TSQliteData.OpenDBTable: Boolean;
+function TSQliteData.CreateDB: Boolean;
 begin
   Result := False;
-  if InternalOpenDB = False then Exit;
+  if (FTableName = '') or (FCreateParams = '') then Exit;
+  if not FConn.Connected then
+    if not OpenDB then Exit;
   try
-    if FQuery.Active then FQuery.Close;
-    FQuery.SQL.Text := 'SELECT * FROM ' + QuotedStrd(FTableName);
-    FQuery.Open;
-    GetRecordCount;
+    FConn.ExecuteDirect('DROP TABLE IF EXISTS ' + QuotedStrD(FTableName));
+    FConn.ExecuteDirect('CREATE TABLE ' + QuotedStrD(FTableName) + ' (' + FCreateParams + ')');
+    FTrans.Commit;
+    Result := True;
   except
-    on E: Exception do
-      DoOnError(E);
   end;
-  Result := FQuery.Active;
-  if Result then DoConvertNewTable;
 end;
 
 function TSQliteData.ConvertNewTableIF: Boolean;
@@ -178,13 +204,11 @@ begin
     if FQuery.Active then FQuery.Close;
     with FConn do
     begin
-      ExecuteDirect('DROP TABLE IF EXISTS ' + QuotedStrd('temp' + FTableName));
-      ExecuteDirect('CREATE TABLE ' + QuotedStrd('temp' + FTableName) + #13#10 + FCreateParams);
-      ExecuteDirect('INSERT INTO ' + QuotedStrd('temp' + FTableName) + ' SELECT * FROM ' +
-        QuotedStrd(FTableName));
-      ExecuteDirect('DROP TABLE ' + QuotedStrd(FTableName));
-      ExecuteDirect('ALTER TABLE ' + QuotedStrd('temp' + FTableName) + ' RENAME TO ' +
-        QuotedStrd(FTableName));
+      ExecuteDirect('DROP TABLE IF EXISTS ' + QuotedStrD('temp' + FTableName));
+      ExecuteDirect('CREATE TABLE ' + QuotedStrD('temp' + FTableName) + ' (' + FCreateParams + ')');
+      ExecuteDirect('INSERT INTO ' + QuotedStrD('temp' + FTableName) + ' (' + FieldsParams + ') SELECT ' + FieldsParams + ' FROM "' + FTableName + '"');
+      ExecuteDirect('DROP TABLE ' + QuotedStrD(FTableName));
+      ExecuteDirect('ALTER TABLE ' + QuotedStrD('temp' + FTableName) + ' RENAME TO ' + QuotedStrD(FTableName));
     end;
     FTrans.Commit;
     if qactive <> FQuery.Active then
@@ -196,7 +220,8 @@ end;
 
 procedure TSQliteData.GetRecordCount;
 begin
-  if FQuery.Active then begin
+  if FQuery.Active then
+  begin
     FQuery.Last;
     FRecordCount := FQuery.RecordCount;
     FQuery.Refresh;
@@ -219,7 +244,7 @@ procedure TSQliteData.Vacuum;
 var
   qactive: Boolean;
 begin
-  if FConn.Connected = False then Exit;
+  if not FConn.Connected then Exit;
   try
     qactive := FQuery.Active;
     if FQuery.Active then FQuery.Close;
@@ -247,6 +272,7 @@ begin
   FQuery.DataBase := FTrans.DataBase;
   FQuery.Transaction := FTrans;
   AutoApplyUpdates := True;
+  FAutoVacuum := True;
   FRecordCount := 0;
   FFilename := '';
   FTableName := 'maintable';
@@ -262,15 +288,40 @@ begin
   inherited Destroy;
 end;
 
-function TSQliteData.Open: Boolean;
+function TSQliteData.Open(const AOpenTable: Boolean;
+  const AGetRecordCount: Boolean): Boolean;
 begin
   Result := False;
-  if FFilename = '' then Exit;
-  if FCreateParams = '' then Exit;
-  if not FileExistsUTF8(FFilename) then
-    Result := CreateDBTable
+  if (FFilename = '') or (FCreateParams = '') then Exit;
+  if FileExistsUTF8(FFilename) then
+    Result := OpenDB
   else
-    Result := OpenDBTable;
+    Result := CreateDB;
+  if Result and AOpenTable then
+    Result := OpenTable(AGetRecordCount);
+end;
+
+function TSQliteData.OpenTable(const AGetRecordCount: Boolean): Boolean;
+begin
+  Result := False;
+  if not FConn.Connected then Exit;
+  try
+    if FQuery.Active then FQuery.Close;
+    if FSelectParams <> '' then
+      FQuery.SQL.Text := FSelectParams
+    else
+      FQuery.SQL.Text := 'SELECT * FROM ' + QuotedStrD(FTableName);
+    FQuery.Open;
+    if AGetRecordCount then
+      GetRecordCount
+    else
+      FRecordCount := FQuery.RecordCount;
+  except
+    on E: Exception do
+      DoOnError(E);
+  end;
+  Result := FQuery.Active;
+  if Result then DoConvertNewTable;
 end;
 
 procedure TSQliteData.Close;
@@ -278,10 +329,23 @@ begin
   if not FConn.Connected then Exit;
   try
     Save;
-    Vacuum;
-    FQuery.Close;
+    if FAutoVacuum then
+      Vacuum;
+    CloseTable;
     FTrans.Active := False;
     FConn.Close;
+  except
+    on E: Exception do
+      DoOnError(E);
+  end;
+end;
+
+procedure TSQliteData.CloseTable;
+begin
+  if not FConn.Connected then Exit;
+  if not FQuery.Active then Exit;
+  try
+    FQuery.Close;
     FRecordCount := 0;
   except
     on E: Exception do
@@ -297,14 +361,36 @@ begin
   else
     FQuery.Open;
   if RecheckDataCount then
-    GetRecordCount;
+    GetRecordCount
+  else
+    FRecordCount := FQuery.RecordCount;
+end;
+
+procedure TSQliteData.Commit;
+begin
+  if not FConn.Connected then Exit;
+  try
+    Transaction.Commit;
+  except
+    Transaction.Rollback;
+  end;
+end;
+
+procedure TSQliteData.CommitRetaining;
+begin
+  if not FConn.Connected then Exit;
+  try
+    Transaction.CommitRetaining;
+  except
+    Transaction.RollbackRetaining;
+  end;
 end;
 
 procedure TSQliteData.Save;
 var
   qactive: Boolean;
 begin
-  if FConn.Connected = False then Exit;
+  if not FConn.Connected then Exit;
   try
     qactive := FQuery.Active;
     if FQuery.Active then

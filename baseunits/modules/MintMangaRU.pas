@@ -15,7 +15,7 @@ const
   perpage = 70;
 
 function GetDirectoryPageNumber(const MangaInfo: TMangaInformation;
-  var Page: Integer; const Module: TModuleContainer): Integer;
+  var Page: Integer; const WorkPtr: Integer; const Module: TModuleContainer): Integer;
 var
   s: String;
 begin
@@ -154,6 +154,14 @@ begin
   end;
 end;
 
+function BeforeDownloadImage(const DownloadThread: TDownloadThread;
+  var AURL: String; const Module: TModuleContainer): Boolean;
+begin
+  Result := True;
+  if DownloadThread = nil then Exit;
+  DownloadThread.FHTTP.Headers.Values['Referer'] := ' ' + Module.RootURL;
+end;
+
 procedure RegisterModule;
 
   function AddWebsiteModule(AWebsite, ARootURL: String): TModuleContainer;
@@ -162,17 +170,20 @@ procedure RegisterModule;
     with Result do begin
       Website := AWebsite;
       RootURL := ARootURL;
+      Category := 'Russian';
       SortedList := True;
       OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
       OnGetNameAndLink := @GetNameAndLink;
       OnGetInfo := @GetInfo;
       OnGetPageNumber := @GetPageNumber;
+      OnBeforeDownloadImage := @BeforeDownloadImage;
     end;
   end;
 
 begin
   AddWebsiteModule('MintMangaRU', 'http://mintmanga.com');
   AddWebsiteModule('ReadMangaRU', 'http://readmanga.me');
+  AddWebsiteModule('SelfMangaRU', 'http://selfmanga.ru');
 end;
 
 initialization

@@ -82,7 +82,18 @@ begin
         summary := XPathString('//div[@class="well"]/p');
         v := XPath('//table[4]/tbody/tr/td/a');
         if v.Count = 0 then v := XPath('//table[3]/tbody/tr/td/a');
-        if v.Count > 0 then
+        if v.Count = 0 then begin
+          s := XPathString('//*[@slug]/@slug');
+          if s <> '' then begin
+            MangaInfo.FHTTP.Reset;
+            MangaInfo.FHTTP.Headers.Add('X-Requested-With: XMLHttpRequest');
+            if MangaInfo.FHTTP.GET(Module.RootURL+'/cek/fetch_pages_manga.php?manga_cek='+s) then begin
+              ParseHTML(MangaInfo.FHTTP.Document);
+              v := XPath('//tr/td[1]/a');
+            end;
+          end;
+        end;
+        if v.Count <> 0 then
         begin
           for i := 1 to v.Count do begin
             chapterLinks.Add(v.get(i).toNode.getAttribute('href'));
@@ -215,6 +226,7 @@ procedure RegisterModule;
     begin
       Website := AWebsite;
       RootURL := ARootURL;
+      Category := 'Turkish';
       OnGetNameAndLink := @GetNameAndLink;
       OnGetInfo := @GetInfo;
       OnGetPageNumber := @GetPageNumber;

@@ -14,7 +14,7 @@ const
   dirurl = '/manga/all';
 
 function GetDirectoryPageNumber(const MangaInfo: TMangaInformation;
-  var Page: Integer; const Module: TModuleContainer): Integer;
+  var Page: Integer; const WorkPtr: Integer; const Module: TModuleContainer): Integer;
 begin
   Result := NET_PROBLEM;
   Page := 1;
@@ -120,6 +120,7 @@ begin
   begin
     Website := 'AcademyVN';
     RootURL := 'http://truyen.academyvn.com';
+    Category := 'Vietnamese';
     OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;

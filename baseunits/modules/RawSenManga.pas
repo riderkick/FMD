@@ -6,9 +6,12 @@ interface
 
 uses
   Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
-  XQueryEngineHTML, httpsendthread, RegExpr, synautil;
+  XQueryEngineHTML, httpsendthread, RegExpr, synautil, URIParser;
 
 implementation
+
+var
+  cookie: String;
 
 function GetNameAndLink(const MangaInfo: TMangaInformation;
   const ANames, ALinks: TStringList; const AURL: String;
@@ -18,14 +21,11 @@ var
 begin
   Result := NET_PROBLEM;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
-  if MangaInfo.FHTTP.GET(Module.RootURL + '/Manga/?order=text-version') then begin
+  if MangaInfo.FHTTP.GET(Module.RootURL + '/directory/text_version') then begin
     Result := NO_ERROR;
     with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
       try
-        for v in XPath('//table//tr/td[2]/a') do begin
-          ALinks.Add(v.toNode.getAttribute('href'));
-          ANames.Add(v.toString);
-        end;
+        XPathHREFAll('//table//tr/td[2]/a', ALinks, ANames);
       finally
         Free;
       end;
@@ -35,9 +35,7 @@ end;
 function GetInfo(const MangaInfo: TMangaInformation;
   const AURL: String; const Module: TModuleContainer): Integer;
 var
-  v: IXQValue;
-  i: Integer;
-  s, cl, m: String;
+  cl, m: String;
   cu: Boolean;
 begin
   Result := NET_PROBLEM;
@@ -64,38 +62,15 @@ begin
       Result := NO_ERROR;
       with TXQueryEngineHTML.Create(Document) do
         try
-          coverLink := XPathString('//img[@class="series-cover"]/@src');
+          coverLink := XPathString('//div[@class="thumbnail"]/img/@src');
           if coverLink <> '' then coverLink := MaybeFillHost(Module.RootURL, coverLink);
-          if title = '' then title := XPathString('//h1[@itemprop="name"]');
-          v := XPath('//div[@class="series_desc"]/*');
-          if v.Count > 0 then begin
-            i := 0;
-            while i < v.Count - 2 do begin
-              s := v.get(i).toString;
-              if Pos('Categorize in:', s) = 1 then genres := v.get(i + 1).toString else
-              if Pos('Author:', s) = 1 then authors := v.get(i + 1).toString else
-              if Pos('Artist:', s) = 1 then artists := Trim(SeparateRight(v.get(i).toString, ':')) else
-              if Pos('Status:', s) = 1 then if Pos('ongoing', LowerCase(v.get(i).toString)) > 0 then
-                  status := '1' else status := '0';
-              Inc(i);
-            end;
-          end;
-          summary := XPathString('//div[@class="series_desc"]//div[@itemprop="description"]');
-          if not cu then
-            for v in XPath('//*[@id="content"]/*[@id="post"]//tr[@class="even" or @class="odd"]/td[2]/a') do
-            begin
-              chapterLinks.Add(v.toNode.getAttribute('href'));
-              chapterName.Add(v.toString);
-            end
-          else if cl <> '' then
-            if GET(FillHost(Module.RootURL, cl)) then
-            begin
-              ParseHTML(Document);
-              for v in XPath('//select[@name="chapter"]/option') do begin
-                chapterLinks.Add(m + v.toNode.getAttribute('value'));
-                chapterName.Add(v.toString);
-              end;
-            end;
+          if title = '' then title := XPathString('//h1[@class="title"]');
+          genres := XPathStringAll('//ul[@class="series-info"]/li[contains(., "Categories")]/a');
+          authors := XPathStringAll('//ul[@class="series-info"]/li[contains(., "Author")]/a');
+          artists := XPathStringAll('//ul[@class="series-info"]/li[contains(., "Artist")]/a');
+          status := MangaInfoStatusIfPos(XPathString('//ul[@class="series-info"]/li[contains(., "Status")]/a'));
+          summary := XPathString('//*[@itemprop="description"]');
+          XPathHREFAll('//div[@class="title" and contains(., "Chapters")]/following-sibling::div/div/a', chapterLinks, chapterName);
           InvertStrings([chapterLinks, chapterName]);
         finally
           Free;
@@ -108,6 +83,7 @@ function GetPageNumber(const DownloadThread: TDownloadThread;
   const AURL: String; const Module: TModuleContainer): Boolean;
 var
   s: String;
+  uri: TURI;
 begin
   Result := False;
   if DownloadThread = nil then Exit;
@@ -128,18 +104,23 @@ begin
     PageNumber := 0;
     if GET(FillHost(Module.RootURL, s + '/1')) then begin
       Result := True;
+      cookie := Cookies.Text;
       with TXQueryEngineHTML.Create(Document) do
         try
           PageNumber := XPath('//select[@name="page"]/option').Count;
           if PageNumber > 0 then begin
             s := MaybeFillHost(Module.RootURL, XPathString('//img[@id="picture"]/@src'));
-            if ((Pos('/raw-viewer.php?', LowerCase(s)) > 0) and (LowerCase(RightStr(s, 7)) = '&page=1')) or
-              ((Pos('/viewer/', AnsiLowerCase(s)) > 0) and (RightStr(s, 2) = '/1')) then
-            begin
-              SetLength(s, Length(s) - 1);
-              while PageLinks.Count < PageNumber do
-                PageLinks.Add(s + IncStr(PageLinks.Count));
-            end;
+            uri := ParseURI(s);
+            if (Pos('/raw-viewer.php', LowerCase(uri.Path)) > 0) and (Pos('page=1', LowerCase(uri.Params)) > 0) then
+              while PageLinks.Count < PageNumber do begin
+                uri.Params := ReplaceString(uri.Params, 'page=1', 'page=' + IncStr(PageLinks.Count));
+                PageLinks.Add(EncodeURI(uri));
+              end
+            else if (Pos('/viewer/', LowerCase(uri.Path)) > 0) and (uri.Document = '1') then
+              while PageLinks.Count < PageNumber do begin
+                uri.Document := IncStr(PageLinks.Count);
+                PageLinks.Add(EncodeURI(uri));
+              end;
           end;
         finally
           Free;
@@ -152,11 +133,14 @@ function GetImageURL(const DownloadThread: TDownloadThread;
   const AURL: String; const Module: TModuleContainer): Boolean;
 var
   s: String;
+  uri: TURI;
 begin
   Result := False;
   if DownloadThread = nil then Exit;
   with DownloadThread.Task.Container, DownloadThread.FHTTP do begin
-    if GET(FillHost(Module.RootURL, AURL) + '/' + IncStr(DownloadThread.WorkId)) then begin
+    uri := ParseURI(FillHost(Module.RootURL, AURL));
+    uri.Document := IncStr(DownloadThread.WorkId);
+    if GET(EncodeURI(uri)) then begin
       Result := True;
       with TXQueryEngineHTML.Create(Document) do
         try
@@ -171,7 +155,7 @@ begin
 end;
 
 function BeforeDownloadImage(const DownloadThread: TDownloadThread;
-  const AURL: String; const Module: TModuleContainer): Boolean;
+  var AURL: String; const Module: TModuleContainer): Boolean;
 begin
   Result := False;
   if DownloadThread = nil then Exit;
@@ -179,6 +163,7 @@ begin
     if CurrentDownloadChapterPtr < ChapterLinks.Count then begin
       DownloadThread.FHTTP.Headers.Values['Referer'] :=
         ' ' + FillHost(Module.RootURL, ChapterLinks[CurrentDownloadChapterPtr]);
+      DownloadThread.FHTTP.Cookies.Text := cookie;
       Result := True;
     end;
 end;
@@ -189,6 +174,7 @@ begin
   begin
     Website := 'RawSenManga';
     RootURL := 'http://raw.senmanga.com';
+    Category := 'Raw';
     MaxTaskLimit := 1;
     MaxConnectionLimit := 4;
     OnGetNameAndLink := @GetNameAndLink;

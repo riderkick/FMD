@@ -6,171 +6,74 @@ interface
 
 uses
   Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
-  httpsendthread, HTMLUtil, synautil;
+  XQueryEngineHTML, httpsendthread;
 
 implementation
-
-const
-  dirURL = '/daftar-komik-manga-bahasa-indonesia.html';
-
-function GetDirectoryPageNumber(const MangaInfo: TMangaInformation;
-  var Page: Integer; const Module: TModuleContainer): Integer;
-begin
-  Result := NO_ERROR;
-  Page := 1;
-end;
 
 function GetNameAndLink(const MangaInfo: TMangaInformation;
   const ANames, ALinks: TStringList; const AURL: String;
   const Module: TModuleContainer): Integer;
-var
-  Parse: TStringList;
-
-  procedure ScanParse;
-  var
-    i: Integer;
-  begin
-    for i := 0 to Parse.Count - 1 do
-      if (GetTagName(Parse[i]) = 'a') and (Pos('baca-komik-', Parse[i]) <> 0) then
-      begin
-        ALinks.Add(GetVal(Parse[i], 'href'));
-        ANames.Add(CommonStringFilter(Parse[i + 1]));
-      end;
-  end;
-
 begin
   Result := NET_PROBLEM;
-  if MangaInfo = nil then Exit;
-  Parse := TStringList.Create;
-  try
-    if MangaInfo.GetPage(TObject(Parse), Module.RootURL + dirURL, 3) then
-    begin
-      Result := INFORMATION_NOT_FOUND;
-      ParseHTML(Parse.Text, Parse);
-      if Parse.Count > 0 then
-      begin
-        Result := NO_ERROR;
-        ScanParse;
+  if MangaInfo = nil then Exit(UNKNOWN_ERROR);
+  if MangaInfo.FHTTP.GET(Module.RootURL + '/daftar-komik-manga-bahasa-indonesia.html') then
+  begin
+    Result := NO_ERROR;
+    with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
+      try
+        XPathHREFAll('//*[@class="series_col"]//li/a', ALinks, ANames);
+      finally
+        Free;
       end;
-    end;
-  finally
-    Parse.Free;
   end;
 end;
 
 function GetInfo(const MangaInfo: TMangaInformation;
   const AURL: String; const Module: TModuleContainer): Integer;
-var
-  Parse: TStringList;
-  info: TMangaInfo;
-
-  procedure ScanChapters(const StartIndex: Integer);
-  var
-    i: Integer;
-    s: String = '';
-  begin
-    for i := StartIndex to Parse.Count - 1 do
-    begin
-      if GetTagName(Parse[i]) = '/table' then
-        Break
-      else
-      if GetTagName(parse[i]) = 'a' then
-      begin
-        s := GetVal(Parse[i], 'href');
-        if (Length(s) > 7) and (RightStr(s, 7) = '-1.html') then
-          s := SeparateLeft(s, '-1.html') + '.html';
-        info.chapterLinks.Add(s);
-        info.chapterName.Add(CommonStringFilter(Parse[i + 1]));
-      end;
-    end;
-
-    //invert chapters
-    if info.chapterLinks.Count > 0 then
-      InvertStrings([info.chapterLinks, info.chapterName]);
-  end;
-
-  procedure ScanParse;
-  var
-    i: Integer;
-  begin
-    for i := 0 to Parse.Count - 1 do
-    begin
-      //title
-      if info.title = '' then
-        if Pos(' Indonesia|Baca ', Parse[i]) <> 0 then
-          info.title := CommonStringFilter(SeparateLeft(Parse[i], ' Indonesia|Baca '));
-
-      //chapters
-      if (GetTagName(Parse[i]) = 'table') and
-        (GetVal(Parse[i], 'class') = 'updates') then
-      begin
-        ScanChapters(i);
-        Break;
-      end;
-    end;
-  end;
-
 begin
   Result := NET_PROBLEM;
-  if MangaInfo = nil then Exit;
-  info := MangaInfo.mangaInfo;
-  info.website := Module.Website;
-  info.url := FillHost(Module.RootURL, AURL);
-  Parse := TStringList.Create;
-  try
-    if MangaInfo.FHTTP.GET(info.url, TObject(Parse)) then
-    begin
-      Result := INFORMATION_NOT_FOUND;
-      ParseHTML(Parse.Text, Parse);
-      if Parse.Count > 0 then
-      begin
-        Result := NO_ERROR;
-        ScanParse;
-      end;
+  if MangaInfo = nil then Exit(UNKNOWN_ERROR);
+  with MangaInfo.mangaInfo, MangaInfo.FHTTP do
+  begin
+    url := RemoveURLDelim(FillHost(Module.RootURL, AURL));
+    if GET(url) then begin
+      Result := NO_ERROR;
+      with TXQueryEngineHTML.Create(Document) do
+        try
+          if title = '' then title := XPathString('//h1/substring-before(.," Indonesia|Baca")');
+          XPathHREFAll('//table[@class="updates"]//td/a', chapterLinks, chapterName);
+          if chapterLinks.Count <> 0 then
+            chapterLinks.Text := StringReplace(chapterLinks.Text, '-1.htm', '.htm', [rfIgnoreCase, rfReplaceAll]);
+          InvertStrings([chapterLinks,chapterName]);
+        finally
+          Free;
+        end;
     end;
-  finally
-    Parse.Free;
   end;
 end;
 
 function GetPageNumber(const DownloadThread: TDownloadThread;
   const AURL: String; const Module: TModuleContainer): Boolean;
 var
-  Parse: TStringList;
-  Container: TTaskContainer;
-
-  procedure ScanParse;
-  var
-    i: Integer;
-  begin
-    for i := 0 to Parse.Count - 1 do
-      if (GetTagName(Parse[i]) = 'img') and
-        (GetVal(Parse[i], 'class') = 'picture') then
-        Container.PageLinks.Add(MaybeFillHost(Module.RootURL, GetVal(Parse[i], 'src')));
-  end;
-
+  v: IXQValue;
 begin
   Result := False;
   if DownloadThread = nil then Exit;
-  Container := DownloadThread.Task.Container;
-  Container.PageLinks.Clear;
-  Container.PageContainerLinks.Clear;
-  Container.PageNumber := 0;
-  Parse := TStringList.Create;
-  try
-    if DownloadThread.GetPage(TObject(Parse),
-      FillHost(Module.RootURL, AURL),
-      Container.Manager.retryConnect) then
+  with DownloadThread.Task.Container, DownloadThread.FHTTP do
+  begin
+    PageLinks.Clear;
+    PageNumber := 0;
+    if GET(RemoveURLDelim(FillHost(Module.RootURL, AURL))) then
     begin
-      ParseHTML(Parse.Text, Parse);
-      if Parse.Count > 0 then
-      begin
-        Result := True;
-        ScanParse;
+      Result := True;
+      with TXQueryEngineHTML.Create(Document) do
+      try
+        for v in XPath('//*[@id="imgholder"]//img/@src') do
+          PageLinks.Add(MaybeFillHost(Module.RootURL, v.toString));
+      finally
+        Free;
       end;
     end;
-  finally
-    Parse.Free;
   end;
 end;
 
@@ -179,10 +82,8 @@ begin
   with AddModule do
   begin
     Website := 'Mangacan';
-    RootURL := 'http://mangacanblog.com';
-    SortedList := False;
-    InformationAvailable := False;
-    OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
+    RootURL := 'http://www.mangacanblog.com';
+    Category := 'Indonesian';
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;
     OnGetPageNumber := @GetPageNumber;

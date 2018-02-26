@@ -5,7 +5,7 @@ unit DownloadedChaptersDB;
 interface
 
 uses
-  Classes, SysUtils, SQLiteData, LazFileUtils;
+  Classes, SysUtils, SQLiteData, uBaseUnit, LazFileUtils;
 
 type
 
@@ -53,10 +53,6 @@ begin
 end;
 
 procedure TDownloadedChaptersDB.SetChapters(const AWebsiteLink: String; AValue: String);
-var
-  dc, ds: TStringList;
-  c, s: String;
-  i: Integer;
 begin
   if AWebsiteLink = '' then Exit;
   if AValue = '' then Exit;
@@ -66,45 +62,19 @@ begin
     try
       if Locate('websitelink', LowerCase(AWebsiteLink), []) then
       begin
-        c := CleanStr(AValue);
-        s := Fields[1].AsString;
-        if c = s then Exit;
-        dc := TStringList.Create;
-        ds := TStringList.Create;
-        try
-          dc.AddText(c);
-          ds.Sorted := True;
-          ds.Duplicates := dupIgnore;
-          ds.AddText(s);
-          for i := 0 to dc.Count - 1 do
-          begin
-            dc[i] := Trim(dc[i]);
-            if dc[i] <> '' then
-              ds.Add(dc[i]);
-          end;
-          Edit;
-          try
-            Fields[1].AsString := ds.Text;
-            Post;
-          except
-            CancelUpdates;
-          end;
-        finally
-          dc.Free;
-          ds.Free;
-        end;
+        Edit;
+        Fields[1].AsString := MergeCaseInsensitive([Fields[1].AsString, AValue]);
       end
       else
       begin
         Append;
-        try
-          Fields[0].AsString := LowerCase(AWebsiteLink);
-          Fields[1].AsString := CleanStr(AValue);
-          Post;
-          IncRecordCount;
-        except
-          CancelUpdates;
-        end;
+        Fields[0].AsString := LowerCase(AWebsiteLink);
+        Fields[1].AsString := AValue;
+      end;
+      try
+        Post;
+      except
+        CancelUpdates;
       end;
     finally
       LeaveCriticalsection(locklocate);
@@ -118,8 +88,10 @@ begin
   AutoApplyUpdates := True;
   TableName := 'downloadedchapters';
   CreateParams :=
-    'websitelink VARCHAR(3000) NOT NULL PRIMARY KEY,' +
-    'chapters TEXT';
+    '"websitelink" VARCHAR(3000) NOT NULL PRIMARY KEY,' +
+    '"chapters" TEXT';
+  FieldsParams := '"websitelink","chapters"';
+  SelectParams := 'SELECT ' + FieldsParams + ' FROM ' + QuotedStrD(TableName);
 end;
 
 destructor TDownloadedChaptersDB.Destroy;
@@ -156,7 +128,7 @@ begin
       i := 0;
     while i < dc.Count - 2 do
     begin
-      Chapters[dc[i]] := StringReplace(dc[i + 1], '!%~', LineEnding, [rfReplaceAll]);
+      Chapters[dc[i]] := GetParams(dc[i + 1]);
       Inc(i, 2);
     end;
     Result := True;

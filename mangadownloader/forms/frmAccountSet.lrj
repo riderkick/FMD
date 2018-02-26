@@ -1,5 +1,5 @@
 {"version":1,"strings":[
-{"hash":230269173,"name":"taccountsetform.label1.caption","sourcebytes":[87,101,98,115,105,116,101],"value":"Website"},
+{"hash":127560724,"name":"taccountsetform.caption","sourcebytes":[65,99,99,111,117,110,116],"value":"Account"},
 {"hash":164185077,"name":"taccountsetform.label2.caption","sourcebytes":[85,115,101,114,110,97,109,101],"value":"Username"},
 {"hash":145417188,"name":"taccountsetform.label3.caption","sourcebytes":[80,97,115,115,119,111,114,100],"value":"Password"},
 {"hash":164185077,"name":"taccountsetform.edusername.texthint","sourcebytes":[85,115,101,114,110,97,109,101],"value":"Username"},

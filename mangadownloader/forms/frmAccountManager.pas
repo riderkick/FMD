@@ -6,80 +6,69 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, Buttons,
-  ExtCtrls, VirtualTrees, accountmanagerdb, WebsiteModules,
-  FMDOptions, HTTPSendThread, frmAccountSet, SimpleException;
+  ExtCtrls, VirtualTrees, WebsiteModules,
+  FMDOptions, HTTPSendThread, BaseThread, frmAccountSet, SimpleException;
 
 type
 
   { TAccountManagerForm }
 
   TAccountManagerForm = class(TForm)
-    btDelete: TBitBtn;
     btRefresh: TBitBtn;
     btEdit: TBitBtn;
-    btAdd: TBitBtn;
     pnBtContainer: TPanel;
     vtAccountList: TVirtualStringTree;
-    procedure btAddClick(Sender: TObject);
-    procedure btDeleteClick(Sender: TObject);
     procedure btEditClick(Sender: TObject);
     procedure btRefreshClick(Sender: TObject);
-    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
-    procedure FormShow(Sender: TObject);
     procedure vtAccountListBeforeCellPaint(Sender: TBaseVirtualTree;
       TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
       CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
-    procedure vtAccountListChange(Sender: TBaseVirtualTree; Node: PVirtualNode);
     procedure vtAccountListChecked(Sender: TBaseVirtualTree; Node: PVirtualNode
       );
-    procedure vtAccountListFocusChanged(Sender: TBaseVirtualTree;
-      Node: PVirtualNode; Column: TColumnIndex);
+    procedure vtAccountListCompareNodes(Sender: TBaseVirtualTree; Node1,
+      Node2: PVirtualNode; Column: TColumnIndex; var Result: Integer);
+    procedure vtAccountListDblClick(Sender: TObject);
     procedure vtAccountListGetText(Sender: TBaseVirtualTree;
       Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType;
       var CellText: String);
-    procedure vtAccountListInitNode(Sender: TBaseVirtualTree; ParentNode,
-      Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
+    {$if VTMajorVersion < 5}
+    procedure vtAccountListHeaderClick(Sender: TVTHeader; Column: TColumnIndex;
+      Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+    {$else}
+    procedure vtAccountListHeaderClick(Sender: TVTHeader; HitInfo: TVTHeaderHitInfo);
+    {$endif}
     procedure vtAccountListPaintText(Sender: TBaseVirtualTree;
       const TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
       TextType: TVSTTextType);
   private
-    { private declarations }
+
   public
-    { public declarations }
-    procedure RefreshList;
-    procedure SaveForm;
-    procedure LoadForm;
-    procedure RefreshWebsiteAvailable;
+    procedure LoadAccounts;
+    procedure SortList;
   end;
 
   TAccountCheck = class;
 
   { TAccountCheckThread }
 
-  TAccountCheckThread = class(THTTPThread)
+  TAccountCheckThread = class(TBaseThread)
   private
-    fwebsite: String;
-    fhttp: THTTPSendThread;
+    fmodule: TModuleContainer;
     fthreadlist: TAccountCheck;
+    fhttp: THTTPSendThread;
     procedure SyncStatus;
   protected
     procedure Execute; override;
   public
-    constructor Create(const AWebsite: String; ThreadList: TAccountCheck);
+    constructor Create(const AModule: TModuleContainer; AThreadList: TAccountCheck);
     destructor Destroy; override;
   end;
 
-  TAccountCheck = class
-  private
-    fthreads: TFPList;
-    fthreadslock: TRTLCriticalSection;
+  TAccountCheck = class(TThreadList)
   public
-    constructor Create;
     destructor Destroy; override;
-    procedure AddThread(const t: TAccountCheckThread);
-    procedure DeleteThread(const t: TAccountCheckThread);
     procedure StopAll;
   end;
 
@@ -98,83 +87,51 @@ resourcestring
 
 implementation
 
-uses frmMain;
+uses frmCustomColor, math;
 
 var
-  Websites, WebsitesAvailable: TStringlist;
   AccountThreadList: TAccountCheck;
 
 {$R *.lfm}
 
 { TAccountCheck }
 
-constructor TAccountCheck.Create;
-begin
-  fthreads := TFPList.Create;
-  InitCriticalSection(fthreadslock);
-end;
-
 destructor TAccountCheck.Destroy;
 begin
-  if fthreads.Count > 0 then
-    StopAll;
-  while fthreads.Count > 0 do Sleep(250);
-  fthreads.Free;
-  DoneCriticalsection(fthreadslock);
+  StopAll;
+  while LockList.Count <> 0 do
+  begin
+    UnlockList;
+    Sleep(250);
+  end;
   inherited Destroy;
-end;
-
-procedure TAccountCheck.AddThread(const t: TAccountCheckThread);
-begin
-  EnterCriticalsection(fthreadslock);
-  try
-    fthreads.Add(t);
-  finally
-    LeaveCriticalsection(fthreadslock);
-  end;
-end;
-
-procedure TAccountCheck.DeleteThread(const t: TAccountCheckThread);
-begin
-  EnterCriticalsection(fthreadslock);
-  try
-    fthreads.Remove(t);
-  finally
-    LeaveCriticalsection(fthreadslock);
-  end;
 end;
 
 procedure TAccountCheck.StopAll;
 var
   i: Integer;
 begin
-  EnterCriticalsection(fthreadslock);
-  try
-    if fthreads.Count > 0 then
-      for i := 0 to fthreads.Count - 1 do
-        TAccountCheckThread(fthreads[i]).Terminate;
-  finally
-    LeaveCriticalsection(fthreadslock);
-  end;
+  with LockList do
+    try
+      for i := 0 to Count - 1 do
+        TAccountCheckThread(Items[i]).Terminate;
+    finally
+      UnlockList;
+    end;
 end;
 
 { TAccountCheckThread }
 
 procedure TAccountCheckThread.SyncStatus;
 begin
-  if Assigned(AccountManagerForm) then
-    AccountManagerForm.vtAccountList.Repaint;
+  AccountManagerForm.vtAccountList.Repaint;
 end;
 
 procedure TAccountCheckThread.Execute;
-var
-  p: Integer;
 begin
-  if fwebsite = '' then Exit;
   try
-    p := Modules.LocateModule(fwebsite);
-    if p > -1 then
-      Modules.Login(fhttp, p);
+    if fmodule.OnLogin<>nil then
+      fmodule.OnLogin(fhttp,fmodule);
     Synchronize(@SyncStatus);
   except
     on E: Exception do
@@ -182,114 +139,105 @@ begin
   end;
 end;
 
-constructor TAccountCheckThread.Create(const AWebsite: String;
-  ThreadList: TAccountCheck);
+constructor TAccountCheckThread.Create(const AModule: TModuleContainer;
+  AThreadList: TAccountCheck);
 begin
   inherited Create(False);
-  if AWebsite <> '' then fwebsite := AWebsite
-  else fwebsite :=  '';
-  fhttp := THTTPSendThread.Create(Self);
-  if Assigned(ThreadList) then begin
-    fthreadlist := ThreadList;
-    fthreadlist.AddThread(Self);
-  end
-  else fthreadlist := nil;
+  FreeOnTerminate:=True;
+  fmodule:=AModule;
+  fthreadlist:=AThreadList;
+  fthreadlist.Add(Self);
+  fhttp:=THTTPSendThread.Create(Self);
 end;
 
 destructor TAccountCheckThread.Destroy;
 begin
-  if Assigned(fthreadlist) then fthreadlist.DeleteThread(Self);
-  if Assigned(fhttp) then fhttp.Free;
+  if fthreadlist<>nil then
+    fthreadlist.Remove(Self);
+  fhttp.Free;
   inherited Destroy;
 end;
 
 { TAccountManagerForm }
 
-procedure TAccountManagerForm.vtAccountListInitNode(Sender: TBaseVirtualTree;
-  ParentNode, Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
-begin
-  if Assigned(Node) then
-    Node^.CheckType := ctCheckBox;
-end;
-
 procedure TAccountManagerForm.vtAccountListPaintText(Sender: TBaseVirtualTree;
   const TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
   TextType: TVSTTextType);
 begin
-  if node = nil then Exit;
   if Node^.CheckState = csUncheckedNormal then
     TargetCanvas.Font.Color := clGrayText;
 end;
 
-procedure TAccountManagerForm.RefreshList;
-begin
-  vtAccountList.RootNodeCount := Account.Count;
-end;
-
-procedure TAccountManagerForm.SaveForm;
+procedure TAccountManagerForm.LoadAccounts;
 var
   i: Integer;
+  node: PVirtualNode;
 begin
-  with configfile, vtAccountList.Header.Columns do begin
-    if Count > 0 then
-      for i := 0 to Count - 1 do
-        WriteInteger('form', 'vtAccountList' + IntToStr(i) + 'Width', Items[i].Width);
-  end;
+  vtAccountList.BeginUpdate;
+  vtAccountList.Clear;
+  vtAccountList.NodeDataSize:=SizeOf(TModuleContainer);
+  for i:=0 to Modules.Count-1 do
+    with Modules[i] do
+      if Account<>nil then
+      begin
+        node:=vtAccountList.AddChild(nil, Modules[i]);
+        node^.CheckType:=ctCheckBox;
+        if Account.Enabled then
+          node^.CheckState:=csCheckedNormal
+        else
+          node^.CheckState:=csUncheckedNormal;
+      end;
+  vtAccountList.EndUpdate;
 end;
 
-procedure TAccountManagerForm.LoadForm;
-var
-  i: Integer;
+procedure TAccountManagerForm.SortList;
 begin
-   with configfile, vtAccountList.Header.Columns do begin
-     if Count > 0 then
-       for i := 0 to Count - 1 do
-         Items[i].Width := ReadInteger('form', 'vtAccountList' + IntToStr(i) + 'Width', 50);
-  end;
-end;
-
-procedure TAccountManagerForm.RefreshWebsiteAvailable;
-var
-  i, p: Integer;
-begin
-  WebsitesAvailable.Clear;
-  if Websites.Count = 0 then Exit;
-  WebsitesAvailable.Assign(Websites);
-  WebsitesAvailable.Sorted := True;
-  if Account.Count > 0 then
-    for i := 0 to Account.Count - 1 do begin
-      if WebsitesAvailable.Find(Account.ValueStr[i, 1], p) then
-        WebsitesAvailable.Delete(p);
-    end;
-  btAdd.Enabled := WebsitesAvailable.Count > 0;
+  with vtAccountList do
+    Sort(nil, Header.SortColumn, Header.SortDirection, False);
 end;
 
 procedure TAccountManagerForm.vtAccountListGetText(Sender: TBaseVirtualTree;
   Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType;
   var CellText: String);
+var
+  m: TModuleContainer;
 begin
-  if Assigned(Node) then begin
-    case Column of
-      0: if Account.ValueBool[Node^.Index, 0] then
-          Node^.CheckState := csCheckedNormal
-        else
-          Node^.CheckState := csUncheckedNormal;
-      1: CellText := Account.ValueStr[Node^.Index, 1];
-      2: CellText := Account.ValueStr[Node^.Index, 2];
-      3: case Account.ValueInt[Node^.Index, 5] of
-           Integer(asUnknown) : CellText := RS_Unknown;
-           Integer(asChecking): CellText := RS_Checking;
-           Integer(asValid)   : CellText := RS_Valid;
-           Integer(asInvalid) : CellText := RS_Invalid;
-         end;
-    end;
+  m:=PModuleContainer(Sender.GetNodeData(Node))^;
+  case Column of
+    1:CellText:=m.Website;
+    2:CellText:=m.Account.Username;
+    3: case m.Account.Status of
+         asUnknown:CellText:=RS_Unknown;
+         asChecking:CellText:=RS_Checking;
+         asValid:CellText:=RS_Valid;
+         asInvalid:CellText:=RS_Invalid;
+       end;
   end;
 end;
 
-procedure TAccountManagerForm.FormShow(Sender: TObject);
+{$if VTMajorVersion < 5}
+procedure TAccountManagerForm.vtAccountListHeaderClick(Sender: TVTHeader;
+  Column: TColumnIndex; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+{$else}
+procedure TAccountManagerForm.vtAccountListHeaderClick(Sender: TVTHeader;
+  HitInfo: TVTHeaderHitInfo);
+var
+  Column: TColumnIndex;
+  Button: TMouseButton;
+{$endif}
 begin
-  RefreshList;
-  RefreshWebsiteAvailable;
+  {$if VTMajorVersion >= 5}
+  Column := HitInfo.Column;
+  Button := HitInfo.Button;
+  {$endif}
+  if Sender.SortColumn <> Column then
+    Sender.SortColumn := Column
+  else
+  if Sender.SortDirection = sdAscending then
+    Sender.SortDirection := sdDescending
+  else
+    Sender.SortDirection := sdAscending;
+  SortList;
 end;
 
 procedure TAccountManagerForm.vtAccountListBeforeCellPaint(
@@ -297,156 +245,96 @@ procedure TAccountManagerForm.vtAccountListBeforeCellPaint(
   Column: TColumnIndex; CellPaintMode: TVTCellPaintMode; CellRect: TRect;
   var ContentRect: TRect);
 begin
-  if Node = nil then Exit;
-  if Account.ValueInt[Node^.Index, 5] = Integer(asInvalid) then begin
-    TargetCanvas.Brush.Color := CL_HLRedMarks;
+  if PModuleContainer(Sender.GetNodeData(Node))^.Account.Status = asInvalid then
+  begin
+    TargetCanvas.Brush.Color:=CL_HLRedMarks;
     TargetCanvas.FillRect(CellRect);
   end;
 end;
 
-procedure TAccountManagerForm.vtAccountListChange(Sender: TBaseVirtualTree;
-  Node: PVirtualNode);
-begin
-  if Sender.SelectedCount > 0 then begin
-    btEdit.Enabled := True;
-    btDelete.Enabled := True;
-    btRefresh.Enabled := True;
-  end
-  else begin
-    btEdit.Enabled := False;
-    btDelete.Enabled := False;
-    btRefresh.Enabled := False;
-  end;
-end;
-
-procedure TAccountManagerForm.FormClose(Sender: TObject;
-  var CloseAction: TCloseAction);
-begin
-  SaveForm;
-  AccountThreadList.StopAll;
-end;
-
 procedure TAccountManagerForm.FormCreate(Sender: TObject);
-var
-  i: Integer;
 begin
-  Websites := TStringList.Create;
-  WebsitesAvailable := TStringList.Create;
-  AccountThreadList := TAccountCheck.Create;
-  if Modules.Count > 0 then begin
-    for i := 0 to Modules.Count - 1 do
-      if Modules.Module[i].AccountSupport then
-        Websites.Add(Modules.Module[i].Website);
-    Websites.Sorted := True;
-  end;
-  LoadForm;
+  AddVT(vtAccountList);
+  AccountThreadList:=TAccountCheck.Create;
 end;
 
 procedure TAccountManagerForm.FormDestroy(Sender: TObject);
 begin
-  if Assigned(Websites) then Websites.Free;
-  if Assigned(WebsitesAvailable) then WebsitesAvailable.Free;
-  if Assigned(AccountThreadList) then AccountThreadList.Free;
-end;
-
-procedure TAccountManagerForm.btDeleteClick(Sender: TObject);
-var
-  node: PVirtualNode;
-begin
-  if vtAccountList.SelectedCount > 0 then
-    if MessageDlg(RS_AccountDeleteConfirmation, mtConfirmation, mbYesNo, 0, mbNo) = mrYes then
-    begin
-      node := vtAccountList.GetFirstSelected;
-      if Assigned(node) then begin
-        Account.DeleteAccount(node^.Index);
-        RefreshList;
-        RefreshWebsiteAvailable;
-        vtAccountList.Repaint;
-        vtAccountListChange(vtAccountList, nil);
-      end;
-    end;
+  if AccountThreadList<>nil then
+    AccountThreadList.Free;
+  RemoveVT(vtAccountList);
 end;
 
 procedure TAccountManagerForm.btEditClick(Sender: TObject);
 var
-  node: PVirtualNode;
-  u, p: String;
+  m: TModuleContainer;
 begin
-  if vtAccountList.SelectedCount > 0 then begin
-    node := vtAccountList.GetFirstSelected;
-    if Assigned(node) then begin
-      with TAccountSetForm.Create(Self) do
-      try
-        cbWebsiteName.Items.Add(Account.ValueStr[node^.Index, 1]);
-        cbWebsiteName.ItemIndex := 0;
-        cbWebsiteName.Enabled := False;
-        u := Account.ValueStr[node^.Index, 2];
-        p := Account.ValueStr[node^.Index, 3];
-        edUsername.Text := u;
-        edPassword.Text := p;
+  if vtAccountList.SelectedCount=0 then Exit;
+  m:=PModuleContainer(vtAccountList.GetNodeData(vtAccountList.GetFirstSelected))^;
+  with TAccountSetForm.Create(Self) do
+    try
+      Caption:=m.Website;
+      with m.Account do
+      begin
+        edUsername.Text:=Username;
+        edPassword.Text:=Password;
         if ShowModal = mrOK then
-          if (edUsername.Text <> u) or (edPassword.Text <> p) then begin
-            Account.Username[cbWebsiteName.Text] := edUsername.Text;
-            Account.Password[cbWebsiteName.Text] := edPassword.Text;
+        begin
+          if (edUsername.Text <> Username) or (edPassword.Text <> Password) then
+          begin
+            Username:=edUsername.Text;
+            Password:=edPassword.Text;
             btRefreshClick(btRefresh);
           end;
-      finally
-        Free;
+        end;
       end;
+    finally
+      Free;
     end;
-  end;
 end;
 
 procedure TAccountManagerForm.btRefreshClick(Sender: TObject);
 var
-  node: PVirtualNode;
-  web: String;
+  m: TModuleContainer;
 begin
   if vtAccountList.SelectedCount = 0 then Exit;
-  node := vtAccountList.GetFirstSelected;
-  if node = nil then Exit;
-  if Account.ValueInt[node^.Index, 5] = Integer(asChecking) then Exit;
-  web := Account.ValueStr[node^.Index, 1];
-  if web <> '' then begin
-    TAccountCheckThread.Create(web, AccountThreadList);
-    vtAccountList.Repaint;
-  end;
-end;
-
-procedure TAccountManagerForm.btAddClick(Sender: TObject);
-begin
-  if Websites.Count = 0 then Exit;
-  with TAccountSetForm.Create(Self) do
-  try
-    cbWebsiteName.Items.Assign(WebsitesAvailable);
-    if cbWebsiteName.Items.Count > 0 then
-      cbWebsiteName.ItemIndex := 0;
-    ckShowPassword.Visible:=True;
-    if ShowModal = mrOK then
-      if Account.AddAccount(cbWebsiteName.Text, edUsername.Text, edPassword.Text) then
-      begin
-        Account.Save;
-        RefreshList;
-        RefreshWebsiteAvailable;
-        vtAccountList.Selected[vtAccountList.GetLast] := True;
-        btRefreshClick(btRefresh);
-      end;
-  finally
-    Free;
-  end;
+  m:=PModuleContainer(vtAccountList.GetNodeData(vtAccountList.GetFirstSelected()))^;
+  if m.Account.Status=asChecking then Exit;
+  TAccountCheckThread.Create(m,AccountThreadList);
 end;
 
 procedure TAccountManagerForm.vtAccountListChecked(Sender: TBaseVirtualTree;
   Node: PVirtualNode);
 begin
-  if Assigned(Node) then
-    Account.ValueBool[Node^.Index, 0] := Node^.CheckState = csCheckedNormal;
+  PModuleContainer(Sender.GetNodeData(Node))^.Account.Enabled:=Node^.CheckState=csCheckedNormal;
 end;
 
-procedure TAccountManagerForm.vtAccountListFocusChanged(
-  Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex);
+procedure TAccountManagerForm.vtAccountListCompareNodes(
+  Sender: TBaseVirtualTree; Node1, Node2: PVirtualNode; Column: TColumnIndex;
+  var Result: Integer);
+var
+  m1, m2: TModuleContainer;
 begin
-  Sender.ScrollIntoView(Node, False, False);
+  m1:=PModuleContainer(Sender.GetNodeData(Node1))^;
+  m2:=PModuleContainer(Sender.GetNodeData(Node2))^;
+  case Column of
+    0: if m1.Account.Enabled=m2.Account.Enabled then
+         Result:=AnsiCompareStr(m1.Website,m2.Website)
+       else
+         Result:=ifthen(m1.Account.Enabled>m2.Account.Enabled,1,-1);
+    1:Result:=AnsiCompareStr(m1.Website,m2.Website);
+    2:Result:=AnsiCompareStr(m1.Account.Username,m2.Account.Username);
+    3: if m1.Account.Status=m2.Account.Status then
+         Result:=AnsiCompareStr(m1.Website,m2.Website)
+       else
+         Result:=ifthen(m1.Account.Status>m2.Account.Status,1,-1);
+  end;
+end;
+
+procedure TAccountManagerForm.vtAccountListDblClick(Sender: TObject);
+begin
+  if vtAccountList.SelectedCount=0 then Exit;
+  btEditClick(btEdit);
 end;
 
 end.

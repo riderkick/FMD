@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
-  XQueryEngineHTML, httpsendthread, synautil;
+  XQueryEngineHTML, httpsendthread, synautil, strutils;
 
 implementation
 
@@ -14,7 +14,7 @@ const
   dirurl = '/search?orderby=add';
 
 function GetDirectoryPageNumber(const MangaInfo: TMangaInformation;
-  var Page: Integer; const Module: TModuleContainer): Integer;
+  var Page: Integer; const WorkPtr: Integer; const Module: TModuleContainer): Integer;
 begin
   Result := NET_PROBLEM;
   Page := 1;
@@ -76,7 +76,9 @@ begin
       with TXQueryEngineHTML.Create(Document) do
         try
           coverLink := MaybeFillHost(Module.RootURL, XPathString('//*[@class="cover"]/img/@src'));
-          if title = '' then title := XPathString('//*[@class="content"]//h1');
+          if title = '' then title := Trim(XPathString('//*[@class="content"]//h1'));
+          if AnsiEndsStr(' Manga', title) then title := LeftStr(title, Length(title) - 6)
+          else if AnsiEndsStr(' Manhwa', title) then title := LeftStr(title, Length(title) - 7);
           authors := XPathStringAll('//table[@class="attr"]//tr/th[.="Author(s)"]/following-sibling::td/a');
           artists := XPathStringAll('//table[@class="attr"]//tr/th[.="Artist(s)"]/following-sibling::td/a');
           genres := XPathStringAll('//table[@class="attr"]//tr/th[.="Genre(s)"]/following-sibling::td/a');
@@ -141,6 +143,7 @@ begin
   begin
     Website := 'MangaPark';
     RootURL := 'http://mangapark.me';
+    Category := 'English';
     SortedList := True;
     OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
     OnGetNameAndLink := @GetNameAndLink;

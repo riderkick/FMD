@@ -5,30 +5,42 @@ unit Cloudflare;
 interface
 
 uses
-  Classes, SysUtils, uBaseUnit, XQueryEngineHTML, httpsendthread, BESEN, BESENValue,
-  RegExpr;
+  Classes, SysUtils, uBaseUnit, XQueryEngineHTML, httpsendthread, synautil,
+  BESEN, BESENValue, RegExpr, dateutils;
 
-function GETCF(const AHTTP: THTTPSendThread; const AURL: String; var Cookie: String;
-  var CS: TRTLCriticalSection): Boolean; overload;
-function GETCF(const AHTTP: THTTPSendThread; const AURL: String; var Cookie: String): Boolean; overload;
-function GETCF(const AHTTP: THTTPSendThread; const AURL: String): Boolean; overload;
+type
+
+  { TCFProps }
+
+  TCFProps = class
+  public
+    cf_clearance: string;
+    Expires: TDateTime;
+    CS: TRTLCriticalSection;
+    constructor Create;
+    destructor Destroy; override;
+    procedure Reset;
+    procedure AddCookiesTo(const ACookies: TStringList);
+  end;
+
+function CFRequest(const AHTTP: THTTPSendThread; const Method, AURL: String; const Response: TObject; const CFProps: TCFProps): Boolean;
 
 implementation
 
 const
-  MIN_WAIT_TIME = 5000;
+  MIN_WAIT_TIME = 4000;
 
 function AntiBotActive(const AHTTP: THTTPSendThread): Boolean;
+var
+  s: String;
 begin
   Result := False;
   if AHTTP = nil then Exit;
   if AHTTP.ResultCode < 500 then Exit;
-  with TXQueryEngineHTML.Create(AHTTP.Document) do
-    try
-      Result := XPathString('//input[@name="jschl_vc"]/@value') <> '';
-    finally
-      Free;
-    end;
+  if Pos('text/html', AHTTP.Headers.Values['Content-Type']) = 0 then Exit;
+  s := StreamToString(AHTTP.Document);
+  Result := Pos('name="jschl_vc"',s) <> 0;
+  s := '';
 end;
 
 function JSGetAnsweredURL(const Source, URL: String; var OMethod, OURL: String;
@@ -97,97 +109,128 @@ begin
   Result := True;
 end;
 
-function CFJS(const AHTTP: THTTPSendThread; AURL: String; var Cookie: String): Boolean;
+function CFJS(const AHTTP: THTTPSendThread; AURL: String; var Acf_clearance: String; var AExpires: TDateTime): Boolean;
 var
   m, u, h: String;
   st, sc, counter, maxretry: Integer;
 begin
   Result := False;
   if AHTTP = nil then Exit;
-  if Cookie <> '' then AHTTP.Cookies.Text := Cookie;
   counter := 0;
   maxretry := AHTTP.RetryCount;
   AHTTP.RetryCount := 0;
-  while counter < maxretry do begin
+  while True do
+  begin
     Inc(counter);
     m := 'GET';
     u := '';
     h := AppendURLDelim(GetHostURL(AURL));
     st := MIN_WAIT_TIME;
     if JSGetAnsweredURL(StreamToString(AHTTP.Document), h, m, u, st) then
-      if (m <> '') and (u <> '') then begin
+      if (m <> '') and (u <> '') then
+      begin
         AHTTP.Reset;
         AHTTP.Headers.Values['Referer'] := ' ' + AURL;
         if st < MIN_WAIT_TIME then st := MIN_WAIT_TIME;
         sc := 0;
         while sc < st do begin
-          if AHTTP.ThreadTerminated then
-            Break;
-          Inc(sc, 500);
-          Sleep(500);
+          if AHTTP.ThreadTerminated then Break;
+          Inc(sc, 250);
+          Sleep(250);
         end;
         AHTTP.FollowRedirection := False;
         if AHTTP.HTTPRequest(m, FillHost(h, u)) then
-          Result := AHTTP.Cookies.Values['cf_clearance'] <> '';
+        begin
+          Acf_clearance := AHTTP.Cookies.Values['cf_clearance'];
+          Result := Acf_clearance <> '';
+          if Result then
+            AExpires := AHTTP.CookiesExpires;
+        end;
         AHTTP.FollowRedirection := True;
-        if Result then Cookie := AHTTP.GetCookies;
       end;
-    if Result then Break
-    else if counter < maxretry then begin
-      AHTTP.Reset;
-      Result := AHTTP.GET(AURL);
-      if not AntiBotActive(AHTTP) then Break;
+    if AHTTP.RetryCount <> 0 then
+    begin
+      maxretry := AHTTP.RetryCount;
+      AHTTP.RetryCount := 0;
     end;
+    if Result then Break;
+    if AHTTP.ThreadTerminated then Break;
+    if (maxretry > -1) and (maxretry <= counter) then Break;
+    AHTTP.Reset;
+    AHTTP.HTTPRequest('GET', AURL);
   end;
   AHTTP.RetryCount := maxretry;
 end;
 
-function GETCF(const AHTTP: THTTPSendThread; const AURL: String; var Cookie: String;
-  var CS: TRTLCriticalSection): Boolean;
+function CFRequest(const AHTTP: THTTPSendThread; const Method, AURL: String; const Response: TObject; const CFProps: TCFProps): Boolean;
 begin
   Result := False;
   if AHTTP = nil then Exit;
-  AHTTP.Cookies.Text := Cookie;
+  if (CFProps.Expires <> 0.0) and (Now > CFProps.Expires) then
+    CFProps.Reset;
+  CFProps.AddCookiesTo(AHTTP.Cookies);
   AHTTP.AllowServerErrorResponse := True;
-  Result := AHTTP.GET(AURL);
+  Result := AHTTP.HTTPRequest(Method, AURL);
   if AntiBotActive(AHTTP) then begin
-    if TryEnterCriticalsection(CS) > 0 then
+    if TryEnterCriticalsection(CFProps.CS) > 0 then
       try
-        Result := CFJS(AHTTP, AURL, Cookie);
+        CFProps.Reset;
+        //AHTTP.Cookies.Clear;
+        Result := CFJS(AHTTP, AURL, CFProps.cf_clearance, CFProps.Expires);
+        // reduce the expires by 5 minutes, usually it is 24 hours or 16 hours
+        // in case of the different between local and server time
+        if Result then
+          CFProps.Expires := IncMinute(CFProps.Expires, -5);
       finally
-        LeaveCriticalsection(CS);
+        LeaveCriticalsection(CFProps.CS);
       end
     else
       try
-        EnterCriticalsection(CS);
-        AHTTP.Cookies.Text := Cookie;
+        EnterCriticalsection(CFProps.CS);
+        CFProps.AddCookiesTo(AHTTP.Cookies);
       finally
-        LeaveCriticalsection(CS);
+        LeaveCriticalsection(CFProps.CS);
       end;
     if not AHTTP.ThreadTerminated then
-      Result := AHTTP.GET(AURL);
+      Result := AHTTP.HTTPRequest(Method, AURL);
   end;
+  if Assigned(Response) then
+    if Response is TStringList then
+      TStringList(Response).LoadFromStream(AHTTP.Document)
+    else
+    if Response is TStream then
+      AHTTP.Document.SaveToStream(TStream(Response));
 end;
 
-function GETCF(const AHTTP: THTTPSendThread; const AURL: String; var Cookie: String): Boolean;
+{ TCFProps }
+
+constructor TCFProps.Create;
 begin
-  Result := False;
-  if AHTTP = nil then Exit;
-  AHTTP.Cookies.Text := Cookie;
-  AHTTP.AllowServerErrorResponse := True;
-  Result := AHTTP.GET(AURL);
-  if AntiBotActive(AHTTP) then begin
-    Result := CFJS(AHTTP, AURL, Cookie);
-    Result := AHTTP.GET(AURL);
-  end;
+  InitCriticalSection(CS);
+  Reset;
 end;
 
-function GETCF(const AHTTP: THTTPSendThread; const AURL: String): Boolean;
-var
-  Cookie: String;
+destructor TCFProps.Destroy;
 begin
-  Cookie := '';
-  Result := GETCF(AHTTP, AURL, Cookie);
+  DoneCriticalsection(CS);
+  inherited Destroy;
+end;
+
+procedure TCFProps.Reset;
+begin
+  if TryEnterCriticalsection(CS) <> 0 then
+    try
+      cf_clearance := '';
+      Expires := 0.0;
+    finally
+      LeaveCriticalsection(CS);
+    end;
+end;
+
+procedure TCFProps.AddCookiesTo(const ACookies: TStringList);
+begin
+  if cf_clearance <> '' then
+    ACookies.Values['cf_clearance'] := cf_clearance;
 end;
 
 end.

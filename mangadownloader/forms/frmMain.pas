@@ -16,15 +16,15 @@ uses
   {$else}
   FakeActiveX,
   {$endif}
-  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, LCLType, ExtCtrls,
-  ComCtrls, Buttons, Spin, Menus, VirtualTrees, RichMemo, IniFiles, simpleipc, lclproc,
-  types, LCLIntf, DefaultTranslator, EditBtn, MultiLog, FileChannel, FileUtil,
-  LazUTF8Classes, TAGraph, TASources, TASeries, TATools, AnimatedGif, uBaseUnit,
-  uDownloadsManager, uFavoritesManager, uUpdateThread, uUpdateDBThread, uSilentThread,
-  uMisc, uGetMangaInfosThread, frmDropTarget, frmAccountManager, frmWebsiteOptionCustom,
-  frmWebsiteOptionAdvanced, frmCustomColor, frmLogger, CheckUpdate, accountmanagerdb,
-  DBDataProcess, MangaFoxWatermark, SimpleTranslator, FMDOptions, httpsendthread,
-  SimpleException;
+  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, LCLType, ExtCtrls, ComCtrls,
+  Buttons, Spin, Menus, VirtualTrees, RichMemo, IniFiles, simpleipc, lclproc, types, LCLIntf,
+  DefaultTranslator, EditBtn, PairSplitter, MultiLog, FileChannel, FileUtil, LazUTF8Classes,
+  TAGraph, TASources, TASeries, TATools, AnimatedGif, uBaseUnit, uDownloadsManager,
+  uFavoritesManager, uUpdateThread, uSilentThread, uMisc,
+  uGetMangaInfosThread, frmDropTarget, frmAccountManager, frmWebsiteOptionCustom,
+  frmCustomColor, frmLogger, frmTransferFavorites,
+  frmLuaModulesUpdater, CheckUpdate, DBDataProcess, MangaFoxWatermark,
+  SimpleTranslator, FMDOptions, httpsendthread, SimpleException;
 
 type
 
@@ -51,11 +51,17 @@ type
     cbOptionAutoCheckFavInterval: TCheckBox;
     cbOptionAutoCheckFavDownload: TCheckBox;
     cbOptionAutoCheckFavRemoveCompletedManga: TCheckBox;
+    cbOptionAutoOpenFavStartup: TCheckBox;
+    cbOptionDeleteCompletedTasksOnClose: TCheckBox;
     cbOptionEnableLoadCover: TCheckBox;
+    cbOptionMinimizeOnStart: TCheckBox;
+    cbOptionShowBalloonHint: TCheckBox;
     cbOptionGenerateChapterFolder: TCheckBox;
     cbOptionRemoveMangaNameFromChapter: TCheckBox;
     cbOptionShowDownloadMangalistDialog: TCheckBox;
     cbOptionShowDownloadToolbar: TCheckBox;
+    cbOptionShowDownloadToolbarLeft: TCheckBox;
+    cbOptionShowDownloadToolbarDeleteAll: TCheckBox;
     cbOptionUpdateListNoMangaInfo: TCheckBox;
     cbOptionDigitVolume: TCheckBox;
     cbOptionDigitChapter: TCheckBox;
@@ -64,7 +70,11 @@ type
     cbUseRegExpr: TCheckBox;
     cbOptionProxyType: TComboBox;
     cbOptionOneInstanceOnly: TCheckBox;
+    ckPNGSaveAsJPEG: TCheckBox;
+    ckOptionsAlwaysStartTaskFromFailedChapters: TCheckBox;
     ckEnableLogging: TCheckBox;
+    cbWebPSaveAs: TComboBox;
+    cbPNGCompressionLevel: TComboBox;
     edDownloadsSearch: TEditButton;
     edFavoritesSearch: TEditButton;
     edFilterMangaInfoChapters: TEditButton;
@@ -77,12 +87,25 @@ type
     edSaveTo: TEditButton;
     edURL: TEditButton;
     edWebsitesSearch: TEditButton;
+    gbImageConversion: TGroupBox;
+    IconDLLeft: TImageList;
+    lbPNGCompressionLevel: TLabel;
+    lbJPEGQuality: TLabel;
+    lbWebPSaveAs: TLabel;
     lbLogFileName: TLabel;
+    lbOptionRetryFailedTask: TLabel;
     lbOptionFilenameCustomRenameHint: TLabel;
     lbOptionFilenameCustomRename: TLabel;
     lbOptionMangaCustomRenameHint: TLabel;
     lbOptionMangaCustomRename: TLabel;
     MenuItem10: TMenuItem;
+    MenuItem11: TMenuItem;
+    miFavoritesRename: TMenuItem;
+    miFavoritesTransferWebsite: TMenuItem;
+    miFavoritesEnable: TMenuItem;
+    miFavoritesDisable: TMenuItem;
+    miChapterListDescending: TMenuItem;
+    miChapterListAscending: TMenuItem;
     miMangaListDelete: TMenuItem;
     miDownloadDeleteTaskDataFavorite: TMenuItem;
     miTrayExit: TMenuItem;
@@ -106,6 +129,15 @@ type
     miChapterListHideDownloaded: TMenuItem;
     miAbortSilentThread: TMenuItem;
     mmChangelog: TMemo;
+    pnDownloadList: TPanel;
+    pnAboutComp: TPanel;
+    pcInfo: TPageControl;
+    psInfo: TPairSplitter;
+    pssInfoList: TPairSplitterSide;
+    pssInfo: TPairSplitterSide;
+    psDownloads: TPairSplitter;
+    pssDownloadsFilter: TPairSplitterSide;
+    pssDownloads: TPairSplitterSide;
     pcMisc: TPageControl;
     pcWebsiteOptions: TPageControl;
     Panel1: TPanel;
@@ -119,6 +151,17 @@ type
     sbSaveTo: TScrollBox;
     sbWebsiteOptions: TScrollBox;
     btDownloadSplit: TSpeedButton;
+    seOptionRetryFailedTask: TSpinEdit;
+    seJPEGQuality: TSpinEdit;
+    tsAccounts: TTabSheet;
+    tsWebsiteModules: TTabSheet;
+    ToolBarDownloadLeft: TToolBar;
+    tbmiDownloadMoveTop: TToolButton;
+    tbmiDownloadMoveUp: TToolButton;
+    tbmiDownloadMoveDown: TToolButton;
+    tbmiDownloadMoveBottom: TToolButton;
+    tsInfoManga: TTabSheet;
+    tsinfoFilterAdv: TTabSheet;
     tsCustomColor: TTabSheet;
     tsLog: TTabSheet;
     tmAnimateMangaInfo: TTimer;
@@ -128,7 +171,6 @@ type
     tsWebsiteAdvanced: TTabSheet;
     tsWebsiteSelection: TTabSheet;
     tsWebsiteOptions: TTabSheet;
-    tsAccounts: TTabSheet;
     tsAboutText: TTabSheet;
     tsChangelogText: TTabSheet;
     TransferRateToolset: TChartToolset;
@@ -306,10 +348,9 @@ type
     miDownloadResume: TMenuItem;
     miDownloadDelete: TMenuItem;
     miChapterListUncheckAll: TMenuItem;
-    pcLeft: TPageControl;
     pbWait: TPaintBox;
     pmChapterList: TPopupMenu;
-    pnOptions: TPageControl;
+    pcOptions: TPageControl;
     pnChapterList: TPanel;
     pnFilter: TPanel;
     pnGenres: TPanel;
@@ -352,11 +393,9 @@ type
     ToolBarDownload: TToolBar;
     tbDownloadResumeAll: TToolButton;
     tbDownloadStopAll: TToolButton;
-    ToolButton1: TToolButton;
+    tbSeparator1: TToolButton;
     tbDownloadDeleteCompleted: TToolButton;
     tvDownloadFilter: TTreeView;
-    tsDownloadFilter: TTabSheet;
-    tsMangaList: TTabSheet;
     tsMisc: TTabSheet;
     tsUpdate: TTabSheet;
     tsAbout: TTabSheet;
@@ -368,7 +407,6 @@ type
     tsSaveTo: TTabSheet;
     tsConnections: TTabSheet;
     tsOption: TTabSheet;
-    tsFilter: TTabSheet;
     tsInformation: TTabSheet;
     tsDownload: TTabSheet;
     clbChapterList: TVirtualStringTree;
@@ -397,11 +435,16 @@ type
     procedure btVisitMyBlogClick(Sender: TObject);
     procedure cbAddAsStoppedChange(Sender: TObject);
     procedure cbOptionAutoCheckFavIntervalChange(Sender: TObject);
+    procedure cbOptionAutoCheckFavStartupChange(Sender: TObject);
     procedure cbOptionChangeUnicodeCharacterChange(Sender: TObject);
     procedure cbOptionDigitChapterChange(Sender: TObject);
     procedure cbOptionDigitVolumeChange(Sender: TObject);
     procedure cbOptionGenerateMangaFolderChange(Sender: TObject);
-    procedure cbSelectMangaChange(Sender: TObject);
+    procedure cbSelectMangaEditingDone(Sender: TObject);
+    procedure cbSelectMangaKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure cbSelectMangaMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
     procedure clbChapterListBeforeCellPaint(Sender: TBaseVirtualTree;
       TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
       CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
@@ -424,6 +467,7 @@ type
     procedure edOptionExternalPathButtonClick(Sender: TObject);
     procedure edSaveToButtonClick(Sender: TObject);
     procedure edURLButtonClick(Sender: TObject);
+    procedure edURLKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure edURLKeyPress(Sender: TObject; var Key: Char);
     procedure edWebsitesSearchButtonClick(Sender: TObject);
     procedure edWebsitesSearchChange(Sender: TObject);
@@ -440,8 +484,15 @@ type
 
     procedure cbOptionUseProxyChange(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
-    procedure FormShow(Sender: TObject);
     procedure FormWindowStateChange(Sender: TObject);
+    procedure miChapterListAscendingClick(Sender: TObject);
+    procedure miFavoritesEnableClick(Sender: TObject);
+    procedure miFavoritesRenameClick(Sender: TObject);
+    procedure miFavoritesTransferWebsiteClick(Sender: TObject);
+    procedure tbmiDownloadMoveBottomClick(Sender: TObject);
+    procedure tbmiDownloadMoveDownClick(Sender: TObject);
+    procedure tbmiDownloadMoveTopClick(Sender: TObject);
+    procedure tbmiDownloadMoveUpClick(Sender: TObject);
     procedure tmAnimateMangaInfoTimer(Sender: TObject);
     procedure tmCheckFavoritesTimer(Sender: TObject);
     procedure tmExitCommandTimer(Sender: TObject);
@@ -459,7 +510,6 @@ type
     procedure miAbortSilentThreadClick(Sender: TObject);
     procedure miChapterListFilterClick(Sender: TObject);
     procedure miChapterListHideDownloadedClick(Sender: TObject);
-    procedure miDownloadDisableClick(Sender: TObject);
     procedure miDownloadEnableClick(Sender: TObject);
     procedure miDownloadViewMangaInfoClick(Sender: TObject);
     procedure miChapterListHighlightClick(Sender: TObject);
@@ -546,8 +596,12 @@ type
       var Ghosted: Boolean; var ImageIndex: Integer);
     procedure vtDownloadGetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
       Column: TColumnIndex; TextType: TVSTTextType; var CellText: String);
+    {$if VTMajorVersion < 5}
     procedure vtDownloadHeaderClick(Sender: TVTHeader; Column: TColumnIndex;
       Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+    {$else}
+    procedure vtDownloadHeaderClick(Sender: TVTHeader; HitInfo: TVTHeaderHitInfo);
+    {$endif}
     procedure vtDownloadKeyAction(Sender: TBaseVirtualTree; var CharCode: Word;
       var Shift: TShiftState; var DoDefault: Boolean);
     procedure vtDownloadKeyDown(Sender : TObject; var Key : Word;
@@ -574,26 +628,32 @@ type
       var Ghosted: Boolean; var ImageIndex: Integer);
     procedure vtFavoritesGetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
       Column: TColumnIndex; TextType: TVSTTextType; var CellText: String);
+    {$if VTMajorVersion < 5}
     procedure vtFavoritesHeaderClick(Sender: TVTHeader; Column: TColumnIndex;
       Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+    {$else}
+    procedure vtFavoritesHeaderClick(Sender: TVTHeader; HitInfo: TVTHeaderHitInfo);
+    {$endif}
+    procedure vtFavoritesPaintText(Sender: TBaseVirtualTree;
+      const TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
+      TextType: TVSTTextType);
     procedure vtMangaListChange(Sender: TBaseVirtualTree; Node: PVirtualNode);
     procedure vtMangaListColumnDblClick(Sender: TBaseVirtualTree;
       Column: TColumnIndex; Shift: TShiftState);
     procedure vtMangaListBeforeCellPaint(Sender: TBaseVirtualTree;
       TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
       CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
-    procedure vtMangaListGetCursor(Sender: TBaseVirtualTree;
-      var ACursor: TCursor);
+    procedure vtMangaListFreeNode(Sender: TBaseVirtualTree; Node: PVirtualNode);
     procedure vtMangaListGetHint(Sender: TBaseVirtualTree; Node: PVirtualNode;
       Column: TColumnIndex; var LineBreakStyle: TVTTooltipLineBreakStyle;
       var HintText: String);
+    procedure vtMangaListGetNodeDataSize(Sender: TBaseVirtualTree;
+      var NodeDataSize: Integer);
     procedure vtMangaListGetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
       Column: TColumnIndex; TextType: TVSTTextType; var CellText: String);
     procedure tmBackupTimer(Sender: TObject);
-    procedure vtOptionMangaSiteSelectionChange(Sender : TBaseVirtualTree;
-      Node : PVirtualNode);
-    procedure vtOptionMangaSiteSelectionFocusChanged(Sender : TBaseVirtualTree;
-      Node : PVirtualNode; Column : TColumnIndex);
+    procedure vtMangaListInitNode(Sender: TBaseVirtualTree; ParentNode,
+      Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
     procedure vtOptionMangaSiteSelectionFreeNode(Sender : TBaseVirtualTree;
       Node : PVirtualNode);
     procedure vtOptionMangaSiteSelectionGetNodeDataSize(Sender: TBaseVirtualTree;
@@ -601,8 +661,6 @@ type
     procedure vtOptionMangaSiteSelectionGetText(Sender: TBaseVirtualTree;
       Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType;
       var CellText: String);
-    procedure vtOptionMangaSiteSelectionInitNode(Sender: TBaseVirtualTree;
-      ParentNode, Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
     procedure DisableAddToFavorites(webs: String);
   private
     PrevWindowState: TWindowState;
@@ -611,35 +669,28 @@ type
     procedure FMDInstanceReceiveMsg(Sender: TObject);
     procedure ClearChapterListState;
   public
-    ulTotalPtr, ulWorkPtr: Integer;
-    optionMangaSiteSelectionNodes: array of PVirtualNode;
-    LastSearchStr, LastSearchWeb: String;
-    isStartup, isExiting, isRunDownloadFilter, isUpdating, isPendingExitCounter,
-    isNormalExit: Boolean;
-    FavoriteManager: TFavoriteManager;
-    dataProcess: TDBDataProcess;
-    mangaInfo: TMangaInfo;
+    LastSearchStr: String;
+    LastSearchWeb: String;
+    LastUserPickedSaveTo: String;
+    LastViewMangaInfoSender: TObject;
+
+    // state of chapterlist in mangainfo
     ChapterList: array of TChapterStateItem;
-    DLManager: TDownloadManager;
-    updateDB: TUpdateDBThread;
-    updateList: TUpdateListManagerThread;
-    SilentThreadManager: TSilentThreadManager;
+
     // animation gif
     gifWaiting: TAnimatedGif;
     gifWaitingRect: TRect;
 
-    // doing stuff like get manga info, compress, ...
-    GetInfosThread: TGetMangaInfosThread;
-    isGetMangaInfos: Boolean;
 
-    // check update
-    CheckUpdateThread: TCheckUpdateThread;
+    // embed form
+    procedure EmbedForm(const AForm: TForm; const AParent: TWinControl);
 
     // generate >> nodes
     procedure GeneratetvDownloadFilterNodes;
 
     // load about information
     procedure LoadAbout;
+    procedure AddToAboutStatus(const ACaption, AValue: String);
 
     procedure CloseNow;
 
@@ -660,27 +711,25 @@ type
     procedure AddTextToInfo(const ATitle, AValue: String);
 
     // fill edSaveTo with default path
-    procedure FilledSaveTo;
+    procedure FillSaveTo;
 
     // View manga information
-    procedure ViewMangaInfo(const AURL, AWebsite, ATitle: String;
-      const AMangaListPos: Integer = -1);
+    procedure ViewMangaInfo(const ALink, AWebsite, ATitle, ASaveTo: String;
+      const ASender: TObject; const AMangaListNode: PVirtualNode = nil);
 
     // Show manga information
-    procedure ShowInformation(const title, website, link: String);
+    procedure ShowInformation;
 
     // get manga list from server
     procedure RunGetList;
 
     // Load config from config.ini
     procedure LoadOptions;
-    procedure SaveOptions;
+    procedure SaveOptions(const AShowDialog: Boolean = False);
     procedure ApplyOptions;
 
     // Load config from mangalist.ini
     procedure LoadMangaOptions;
-
-    function SaveMangaOptions: String;
 
     procedure UpdateVtChapter;
     procedure UpdateVtDownload; inline;
@@ -693,7 +742,7 @@ type
 
     // drop target
     procedure ShowDropTarget(const AShow: Boolean);
-    procedure SaveDropTargetFormInformation(const isClose: Boolean = False);
+    procedure SaveDropTargetFormInformation;
 
     // load language from file
     procedure CollectLanguagesFromFiles;
@@ -760,18 +809,24 @@ type
     procedure NewSearch(const ASearchStr: String);
   end;
 
-  procedure AdvanceLoadHTTPConfig(const HTTP: THTTPSendThread; Website: String);
+  PMangaInfoData = ^TMangaInfoData;
+
+  TMangaInfoData = record
+    website,
+    link,
+    title,
+    titleformat,
+    authors,
+    artists,
+    genres,
+    status,
+    summary: String;
+    numchapter,
+    jdn: Integer;
+  end;
 
 var
-  //Instance
-  FMDInstance: TSimpleIPCServer;
-
   MainForm: TMainForm;
-
-  // update fmd through main thread
-  DoAfterFMD: TFMDDo;
-  IsDlgCounter: Boolean = False;
-  FUpdateURL: String;
 
 const
   CL_HLBlueMarks        = $FDC594;
@@ -810,6 +865,9 @@ resourcestring
   RS_FilterStatusItems = 'Completed'#13#10'Ongoing'#13#10'<none>';
   RS_OptionFMDDoItems = 'Nothing'#13#10'Exit'#13#10'Shutdown'#13#10'Hibernate';
   RS_DropTargetModeItems = 'Download all'#13#10'Add to favorites';
+  RS_OptionCompress = 'None'#13#10'ZIP'#13#10'CBZ'#13#10'PDF';
+  RS_WebPConvertTo = 'WebP'#13#10'PNG'#13#10'JPEG';
+  RS_WebPPNGLevel = 'None'#13#10'Fastest'#13#10'Default'#13#10'Maximum';
 
   RS_HintFavoriteProblem = 'There is a problem with this data!'#13#10
                          + 'Removing and re-adding this data may fix the problem.';
@@ -868,8 +926,9 @@ implementation
 {$R *.lfm}
 
 uses
-  frmImportFavorites, frmShutdownCounter, WebsiteModules, RegExpr, Clipbrd,
-  LazFileUtils, LazUTF8;
+  frmImportFavorites, frmShutdownCounter, frmSelectDirectory,
+  frmWebsiteSettings, WebsiteModules, FMDVars, RegExpr, sqlite3dyn, Clipbrd,
+  ssl_openssl_lib, LazFileUtils, LazUTF8, webp, DBUpdater, LuaWebsiteModules;
 
 var
   // thread for open db
@@ -880,9 +939,6 @@ var
 
   // ...
   UpdateStatusTextStyle: TTextStyle;
-
-  // file logger
-  FileLogger: TFileChannel;
 
 {$ifdef windows}
   PrevWndProc: windows.WNDPROC;
@@ -913,18 +969,6 @@ begin
       ParentControl.Controls[i].Cursor := Cur;
 end;
 
-procedure AdvanceLoadHTTPConfig(const HTTP: THTTPSendThread; Website: String);
-var
-  s: String;
-begin
-  if HTTP = nil then Exit;
-  if Website = '' then Exit;
-  s:=Trim(advancedfile.ReadString('UserAgent',Website,''));
-  if s<>'' then HTTP.UserAgent:=s;
-  s:=Trim(advancedfile.ReadString('Cookies',Website,''));
-  if s<>'' then HTTP.Cookies.Text:=s;
-end;
-
 { TSearchDBThread }
 
 procedure TSearchDBThread.SyncBeforeSearch;
@@ -933,7 +977,7 @@ begin
   begin
     vtMangaList.Cursor := crHourGlass;
     lbMode.Caption := RS_ModeSearching;
-    vtMangaList.BeginUpdate;
+    vtMangaList.RootNodeCount := 0;
   end;
 end;
 
@@ -942,7 +986,6 @@ begin
   with MainForm do
   begin
     vtMangaList.RootNodeCount := dataProcess.RecordCount;
-    vtMangaList.EndUpdate;
     UpdateVtMangaListFilterStatus;
     LastSearchWeb := dataProcess.Website;
     LastSearchStr := UpCase(FSearchStr);
@@ -952,13 +995,13 @@ end;
 
 procedure TSearchDBThread.Execute;
 begin
-  if MainForm.dataProcess <> nil then
+  if dataProcess <> nil then
   begin
     Synchronize(@SyncBeforeSearch);
     while FNewSearch do
     begin
       FNewSearch := False;
-      MainForm.dataProcess.Search(FSearchStr);
+      dataProcess.Search(FSearchStr);
     end;
     if not Terminated then
       Synchronize(@SyncAfterSearch);
@@ -1006,7 +1049,7 @@ procedure TOpenDBThread.SyncOpenStart;
 begin
   with MainForm do
   begin
-    ChangeAllCursor(tsMangaList, crHourGlass);
+    ChangeAllCursor(pssInfoList, crHourGlass);
     SetControlEnabled(False);
     lbMode.Caption := RS_Loading;
     vtMangaList.Clear;
@@ -1024,26 +1067,24 @@ begin
     else
       lbMode.Caption := Format(RS_ModeAll, [dataProcess.RecordCount]);
     SetControlEnabled(True);
-    vtMangaList.BeginUpdate;
     vtMangaList.RootNodeCount := dataProcess.RecordCount;
-    vtMangaList.EndUpdate;
-    ChangeAllCursor(tsMangaList, crDefault);
+    ChangeAllCursor(pssInfoList, crDefault);
   end;
 end;
 
 procedure TOpenDBThread.Execute;
 begin
-  if (FWebsite <> '') and (MainForm.dataProcess <> nil) then
+  if (FWebsite <> '') and (dataProcess <> nil) then
   begin
     Synchronize(@SyncOpenStart);
-    if MainForm.dataProcess <> nil then
+    if dataProcess <> nil then
     begin
-      MainForm.dataProcess.Open(FWebsite);
-      if MainForm.edMangaListSearch.Text <> '' then
-        MainForm.dataProcess.Search(MainForm.edMangaListSearch.Text);
+      dataProcess.Open(FWebsite);
+      if FormMain.edMangaListSearch.Text <> '' then
+        dataProcess.Search(MainForm.edMangaListSearch.Text);
     end;
     if not Terminated then
-    Synchronize(@SyncOpenFinish);
+      Synchronize(@SyncOpenFinish);
   end;
 end;
 
@@ -1065,17 +1106,14 @@ end;
 procedure TMainForm.FormCreate(Sender: TObject);
 begin
   Randomize;
+  FormMain := Self;
   {$ifdef windows}
   PrevWndProc := windows.WNDPROC(windows.GetWindowLongPtr(Self.Handle, GWL_WNDPROC));
   windows.SetWindowLongPtr(Self.Handle, GWL_WNDPROC, PtrInt(@WndCallback));
   {$endif}
-  Logger.Enabled := False;
-  InitSimpleExceptionHandler;
   btAbortUpdateList.Parent := sbUpdateList;
   isRunDownloadFilter := False;
   isUpdating := False;
-  isExiting := False;
-  isGetMangaInfos := False;
   isPendingExitCounter:=False;
   isNormalExit:=False;
   DoAfterFMD := DO_NOTHING;
@@ -1088,31 +1126,27 @@ begin
   LoadAbout;
 
   // remove old updater
-  if FileExistsUTF8(FMD_DIRECTORY + 'old_updater.exe') then
+  if FileExistsUTF8(OLD_CURRENT_UPDATER_EXE) then
   begin
-    if FileExistsUTF8(FMD_DIRECTORY + 'updater.exe') then
-      DeleteFileUTF8(FMD_DIRECTORY + 'old_updater.exe')
+    if FileExistsUTF8(CURRENT_UPDATER_EXE) then
+      DeleteFileUTF8(OLD_CURRENT_UPDATER_EXE)
     else
-      RenameFileUTF8(FMD_DIRECTORY + 'old_updater.exe', FMD_DIRECTORY + 'updater.exe');
+      RenameFileUTF8(OLD_CURRENT_UPDATER_EXE, CURRENT_UPDATER_EXE);
   end;
 
   // TrayIcon
   TrayIcon.Icon.Assign(Application.Icon);
   PrevWindowState := wsNormal;
 
-  // account
-  accountmanagerdb.InitAccountManager(ACCOUNTS_FILE);
-
   // main dataprocess
   dataProcess := TDBDataProcess.Create;
 
   // downloadmanager
   DLManager := TDownloadManager.Create;
-  DLManager.Restore;
 
   // favorites
   FavoriteManager := TFavoriteManager.Create;
-  FavoriteManager.DLManager := Self.DLManager;
+  FavoriteManager.DLManager := DLManager;
   FavoriteManager.OnUpdateFavorite := @UpdateVtFavorites;
   FavoriteManager.OnUpdateDownload := @UpdateVtDownload;
 
@@ -1131,12 +1165,6 @@ begin
 
   if cbFilterStatus.Items.Count > 2 then
     cbFilterStatus.ItemIndex := 2;
-
-  // show download list
-  UpdateVtDownload;
-
-  // show favorite list
-  UpdateVtFavorites;
 
   InitCheckboxes;
 
@@ -1183,52 +1211,26 @@ begin
   end;
 
   // embed form
+  CustomColorForm := TCustomColorForm.Create(Self);
+  EmbedForm(CustomColorForm, tsCustomColor);
+
   AccountManagerForm := TAccountManagerForm.Create(Self);
-  with AccountManagerForm do begin
-    Parent := tsAccounts;
-    Align := alClient;
-    ChildSizing.LeftRightSpacing := 0;
-    ChildSizing.TopBottomSpacing := 0;
-    Show;
-  end;
+  EmbedForm(AccountManagerForm, tsAccounts);
 
   WebsiteOptionCustomForm := TCustomOptionForm.Create(Self);
-  with WebsiteOptionCustomForm do
-  begin
-    Parent := sbWebsiteOptions;
-    BorderStyle := bsNone;
-    Align := alClient;
-    Show;
-  end;
+  EmbedForm(WebsiteOptionCustomForm, sbWebsiteOptions);
 
-  WebsiteOptionAdvancedForm := TWebsiteOptionAdvancedForm.Create(Self);
-  with WebsiteOptionAdvancedForm do
-  begin
-    Parent := tsWebsiteAdvanced;
-    BorderStyle := bsNone;
-    Align := alClient;
-    Show;
-  end;
+  WebsiteSettingsForm := TWebsiteSettingsForm.Create(Self);
+  EmbedForm(WebsiteSettingsForm, tsWebsiteAdvanced);
 
-  CustomColorForm := TCustomColorForm.Create(Self);
-  with CustomColorForm do
-  begin
-    Parent := tsCustomColor;
-    BorderStyle := bsNone;
-    Align := alClient;
-    Show;
-    AddVT(Self.vtMangaList);
-    AddVT(Self.clbChapterList);
-    AddVT(Self.vtDownload);
-    AddVT(Self.vtFavorites);
-    AddVT(Self.vtOptionMangaSiteSelection);
-    AddVT(AccountManagerForm.vtAccountList);
-    AddVT(WebsiteOptionAdvancedForm.vtCookies);
-    AddVT(WebsiteOptionAdvancedForm.vtUserAgent);
-    AddVT(WebsiteOptionAdvancedForm.vtDownloadMaxThreadsPerTask);
-    AddVT(WebsiteOptionAdvancedForm.vtUpdateListDirectoryPageNumber);
-    AddVT(WebsiteOptionAdvancedForm.vtUpdateListNumberOfThreads);
-  end;
+  LuaModulesUpdaterForm := TLuaModulesUpdaterForm.Create(Self);
+  EmbedForm(LuaModulesUpdaterForm, tsWebsiteModules);
+
+  AddVT(Self.vtMangaList);
+  AddVT(Self.clbChapterList);
+  AddVT(Self.vtDownload);
+  AddVT(Self.vtFavorites);
+  AddVT(Self.vtOptionMangaSiteSelection);
 
   // logger
   FormLogger := TFormLogger.Create(Self);
@@ -1236,17 +1238,29 @@ begin
   // load mangafox template
   MangaFoxWatermark.SetTemplateDirectory(MANGAFOXTEMPLATE_FOLDER);
 
-  // load configfile
-  isStartup := False;
-  CollectLanguagesFromFiles;
-  LoadMangaOptions;
-  LoadOptions;
-  ApplyOptions;
-
   // hint
   ShowHint := True;
   Application.HintPause := 500;
   Application.HintHidePause := 3000;
+
+  // transfer rate graph
+  TransferRateGraphList.DataPoints.NameValueSeparator := '|';
+  TransferRateGraph.Visible := False;
+
+  // minimize on start
+  if configfile.ReadBool('general', 'MinimizeOnStart', False) then
+    Application.ShowMainForm := False;
+
+  LoadFormInformation;
+  CollectLanguagesFromFiles;
+  ApplyLanguage;
+
+  with TTimer.Create(nil) do
+  begin
+    OnTimer := @tmStartupTimer;
+    Interval := 100;
+    Enabled := True;
+  end;
 end;
 
 procedure TMainForm.FormClose(Sender: TObject; var CloseAction: TCloseAction);
@@ -1267,14 +1281,32 @@ end;
 
 procedure TMainForm.CloseNow;
 begin
+  if OptionDeleteCompletedTasksOnClose then
+    miDownloadDeleteCompletedClick(nil);
+
+  isExiting := True;
   {$ifdef windows}
   if Assigned(PrevWndProc) then
     windows.SetWindowLongPtr(Self.Handle, GWL_WNDPROC, PtrInt(PrevWndProc));
   {$endif}
-  Logger.Send(Self.ClassName+'.CloseNow, terminating all threads and waitfor');
-  FavoriteManager.StopChekForNewChapter(True);
-  SilentThreadManager.StopAll(True);
-  DLManager.StopAllDownloadTasksForExit;
+  if FavoriteManager.isRunning then
+  begin
+    Logger.Send(Self.ClassName+'.CloseNow, terminating check favorites threads');
+    FavoriteManager.StopChekForNewChapter(True);
+    Logger.Send(Self.ClassName+'.CloseNow, check favorites threads terminated');
+  end;
+  if SilentThreadManager.Count > 0 then
+  begin
+    Logger.Send(Self.ClassName+'.CloseNow, terminating silentthreads');
+    SilentThreadManager.StopAll(True);
+    Logger.Send(Self.ClassName+'.CloseNow, silentthreads terminated');
+  end;
+  if DLManager.ItemsActiveTask.Count > 0 then
+  begin
+    Logger.Send(Self.ClassName+'.CloseNow, terminating downloads threads');
+    DLManager.StopAllDownloadTasksForExit;
+    Logger.Send(Self.ClassName+'.CloseNow, downlads threads terminated');
+  end;
   //Terminating all threads and wait for it
   if Assigned(CheckUpdateThread) then
   begin
@@ -1297,12 +1329,14 @@ begin
     OpenDBThread.WaitFor;
     Logger.Send(Self.ClassName+'.CloseNow, OpenDBThread terminated');
   end;
-  if isGetMangaInfos then
+  if Assigned(GetInfosThread) then
   begin
     Logger.Send(Self.ClassName+'.CloseNow, terminating GetInfosThread');
-    GetInfosThread.IsFlushed := True;
-    GetInfosThread.Terminate;
-    GetInfosThread.WaitFor;
+    try
+      GetInfosThread.Terminate;
+      GetInfosThread.WaitFor;
+    except
+    end;
     Logger.Send(Self.ClassName+'.CloseNow, GetInfosThread terminated');
   end;
   if isUpdating then
@@ -1312,6 +1346,20 @@ begin
     updateList.WaitFor;
     Logger.Send(Self.ClassName+'.CloseNow, UpdateListThread terminated');
   end;
+  if Assigned(DBUpdaterThread) then
+  begin
+    Logger.Send(Self.ClassName+'.CloseNow, terminating DBUpdaterThread');
+    DBUpdaterThread.Terminate;
+    DBUpdaterThread.WaitFor;
+    Logger.Send(Self.ClassName+'.CloseNow, DBUpdaterThread terminated');
+  end;
+  if Assigned(SelfUpdaterThread) then
+  begin
+    Logger.Send(Self.ClassName+'.CloseNow, terminating SelfUpdaterThread');
+    SelfUpdaterThread.Terminate;
+    SelfUpdaterThread.WaitFor;
+    Logger.Send(Self.ClassName+'.CloseNow, SelfUpdaterThread terminated');
+  end;
 
   Logger.Send(Self.ClassName+'.CloseNow, disabling all timer');
   tmBackup.Enabled := False;
@@ -1320,15 +1368,16 @@ begin
   tmAnimateMangaInfo.Enabled := False;
   tmExitCommand.Enabled := False;
 
-  Logger.Send(Self.ClassName+'.CloseNow, backup all data to file');
   //Backup data
+  Logger.Send(Self.ClassName+'.CloseNow, backup downloads');
   DLManager.Backup;
-  isExiting := True;
+  Logger.Send(Self.ClassName+'.CloseNow, backup favorites');
   FavoriteManager.Backup;
+  Logger.Send(Self.ClassName+'.CloseNow, backup all data to file');
   SaveOptions;
   SaveFormInformation;
 
-  Logger.Send(Self.ClassName+'.CloseNow, closing other forms');
+  Logger.Send(Self.ClassName+'.CloseNow, close other forms');
   //embed form
   if Assigned(AccountManagerForm) then
     AccountManagerForm.Close;
@@ -1348,7 +1397,12 @@ end;
 procedure TMainForm.FormDestroy(Sender: TObject);
 begin
   Logger.Send(Self.ClassName+'.FormDestroy, freeing all objects');
-  SetLength(optionMangaSiteSelectionNodes, 0);
+  RemoveVT(vtMangaList);
+  RemoveVT(clbChapterList);
+  RemoveVT(vtDownload);
+  RemoveVT(vtFavorites);
+  RemoveVT(vtOptionMangaSiteSelection);
+
   SetLength(ChapterList, 0);
   FreeAndNil(mangaInfo);
 
@@ -1364,20 +1418,9 @@ begin
     Logger.Send(QuotedStrd(Application.Title)+' exit normally [PID:'+IntToStr(GetProcessID)+'] [HANDLE:'+IntToStr(GetCurrentProcess)+']')
   else
     Logger.SendWarning(QuotedStrd(Application.Title)+' doesn''t exit normally [PID:'+IntToStr(GetProcessID)+'] [HANDLE:'+IntToStr(GetCurrentProcess)+']');
-end;
 
-procedure TMainForm.FormShow(Sender: TObject);
-begin
-  if not isStartup then
-  begin
-    LoadFormInformation;
-    with TTimer.Create(nil) do
-    begin
-      OnTimer := @tmStartupTimer;
-      Interval := 1000;
-      Enabled := True;
-    end;
-  end;
+  if OptionRestartFMD then
+    DoRestartFMD;
 end;
 
 procedure TMainForm.cbOptionUseProxyChange(Sender: TObject);
@@ -1401,6 +1444,165 @@ begin
     PrevWindowState := WindowState;
 end;
 
+procedure TMainForm.miChapterListAscendingClick(Sender: TObject);
+var
+  i, j, f: Integer;
+  t: TChapterStateItem;
+  Node, FNode: PVirtualNode;
+  c: array of TCheckState;
+begin
+  if not (Sender is TMenuItem) then Exit;
+  if TMenuItem(Sender).Checked then Exit;
+  TMenuItem(Sender).Checked := True;
+  configfile.WriteBool('general', 'SortChapterListAscending', miChapterListAscending.Checked);
+  if Length(ChapterList) <> 0 then
+  begin
+    // invert chapterlist
+    for i := Low(ChapterList) to (High(ChapterList) div 2) do
+    begin
+      j := High(ChapterList) - i;
+      t := ChapterList[i];
+      ChapterList[i] := ChapterList[j];
+      ChapterList[j] := t;
+    end;
+    // rearrange checked state and focused
+    if (clbChapterList.CheckedCount <> 0 ) or (clbChapterList.SelectedCount <> 0) then
+    begin
+      FNode := nil;
+      if Assigned(clbChapterList.FocusedNode) then
+        f := clbChapterList.FocusedNode^.Index
+      else
+        f := -1;
+      SetLength(c, clbChapterList.RootNodeCount);
+      Node := clbChapterList.GetFirst();
+      while Assigned(Node) do
+      begin
+        c[Node^.Index] := Node^.CheckState;
+        Node := clbChapterList.GetNext(Node);
+      end;
+      i := Low(c);
+      Node := clbChapterList.GetLast();
+      while Assigned(Node) do
+      begin
+        if i = f then
+          FNode := Node;
+        Node^.CheckState := c[i];
+        Inc(i);
+        Node := clbChapterList.GetPrevious(Node);
+      end;
+      SetLength(c, 0);
+      if Assigned(FNode) then
+        clbChapterList.FocusedNode := FNode
+    end;
+    clbChapterList.ClearSelection;
+    clbChapterList.Repaint;
+  end;
+end;
+
+procedure TMainForm.miFavoritesEnableClick(Sender: TObject);
+var
+  Node: PVirtualNode;
+begin
+  if vtFavorites.SelectedCount = 0 then Exit;
+  Node := vtFavorites.GetFirstSelected();
+  while Assigned(Node) do
+  begin
+    if Sender = miFavoritesDisable then
+      FavoriteManager.StopChekForNewChapter(False, Node^.Index);
+    FavoriteManager[Node^.Index].Enabled := (Sender = miFavoritesEnable);
+    Node := vtFavorites.GetNextSelected(Node);
+  end;
+  UpdateVtFavorites;
+end;
+
+procedure TMainForm.miFavoritesRenameClick(Sender: TObject);
+var
+  node: PVirtualNode;
+  t: TFavoriteContainer;
+  tt: String;
+begin
+  node := vtFavorites.GetFirstSelected();
+  if Assigned(node) then
+  begin
+    t := FavoriteManager.Items[node^.Index];
+    tt := t.FavoriteInfo.Title;
+    if InputQuery('', RS_InfoTitle, tt) then
+    begin
+      t.FavoriteInfo.Title := tt;
+      t.SaveToDB();
+    end;
+  end;
+end;
+
+procedure TMainForm.miFavoritesTransferWebsiteClick(Sender: TObject);
+var
+  Node: PVirtualNode;
+  sm: Integer;
+  Data: PFavContainer;
+begin
+  with TTransferFavoritesForm.Create(nil) do
+  try
+    FavoriteManager.isRunning := True;
+    sm := mrNone;
+    try
+      Node := vtFavorites.GetFirstSelected();
+      while Assigned(Node) do
+      begin
+        AddFav(FavoriteManager.Items[Node^.Index]);
+        Node := vtFavorites.GetNextSelected(Node);
+      end;
+      sm := ShowModal;
+    finally
+      FavoriteManager.isRunning := False;
+    end;
+    if sm = mrOK then
+    begin
+      UpdateVtFavorites;
+      if ckClearDownloadedChapters.Checked then
+      begin
+        Node := vtFavs.GetFirst();
+        while Assigned(Node) do
+        begin
+          Data := vtFavs.GetNodeData(Node);
+          if Data^.NewLink <> '' then
+            FavoriteManager.CheckForNewChapter(FavoriteManager.Items.IndexOf(Data^.Fav));
+          Node := vtFavs.GetNext(Node);
+        end;
+      end;
+    end;
+  finally
+    Free;
+  end;
+end;
+
+procedure TMainForm.tbmiDownloadMoveTopClick(Sender: TObject);
+begin
+  if vtDownload.SelectedCount = 0 then Exit;
+  vtDownloadMoveItems(0, dmAbove);
+end;
+
+procedure TMainForm.tbmiDownloadMoveUpClick(Sender: TObject);
+var
+  p: Cardinal;
+begin
+  if vtDownload.SelectedCount = 0 then Exit;
+  p := vtDownload.GetFirstSelected()^.Index;
+  if p > 0 then
+    vtDownloadMoveItems(p - 1, dmAbove);
+end;
+
+procedure TMainForm.tbmiDownloadMoveDownClick(Sender: TObject);
+begin
+  if vtDownload.SelectedCount = 0 then Exit;
+  vtDownloadMoveItems(vtDownload.GetFirstSelected()^.Index, dmBelow);
+end;
+
+procedure TMainForm.tbmiDownloadMoveBottomClick(Sender: TObject);
+begin
+  if vtDownload.SelectedCount = 0 then Exit;
+    vtDownloadMoveItems(vtDownload.RootNodeCount - 1, dmBelow);
+end;
+
 procedure TMainForm.tmAnimateMangaInfoTimer(Sender: TObject);
 begin
   gifWaiting.Update(pbWait.Canvas, gifWaitingRect);
@@ -1409,8 +1611,12 @@ end;
 procedure TMainForm.tmCheckFavoritesTimer(Sender: TObject);
 begin
   if IsDlgCounter then Exit;
+  tmCheckFavorites.Enabled := False;
   if OptionAutoCheckLatestVersion then
+  begin
     btCheckLatestVersionClick(btCheckLatestVersion);
+    LuaModulesUpdaterForm.btCheckUpdateClick(LuaModulesUpdaterForm.btCheckUpdate);
+  end;
   FavoriteManager.isAuto := True;
   FavoriteManager.CheckForNewChapter;
 end;
@@ -1518,16 +1724,8 @@ begin
     else
     if DoAfterFMD = DO_UPDATE then
     begin
-      if FileExistsUTF8(FMD_DIRECTORY + UPDATER_EXE) then
-        CopyFile(FMD_DIRECTORY + UPDATER_EXE, FMD_DIRECTORY + 'old_' + UPDATER_EXE);
-      if FileExistsUTF8(FMD_DIRECTORY + 'old_' + UPDATER_EXE) then
-      begin
-        Self.CloseNow;
-        RunExternalProcess(FMD_DIRECTORY + 'old_' + UPDATER_EXE,
-          ['-x', '-r', '3', '-a', FUpdateURL, '-l', Application.ExeName,
-           '--lang', SimpleTranslator.LastSelected], True, False);
-        Self.Close;
-      end;
+      Self.CloseNow;
+      Self.Close;
     end;
     DoAfterFMD := DO_NOTHING;
   end;
@@ -1537,9 +1735,11 @@ procedure TMainForm.tmRefreshDownloadsInfoStartTimer(Sender: TObject);
 begin
   if Assigned(DLManager) then
   begin
-    TransferRateGraphInit(round(TransferRateGraph.Width/4));
+    TransferRateGraphInit(round(TransferRateGraph.Width/4)+1);
     TransferRateGraph.Visible := True;
-  end;
+  end
+  else
+    tmRefreshDownloadsInfo.Enabled := False;
 end;
 
 procedure TMainForm.tmRefreshDownloadsInfoStopTimer(Sender: TObject);
@@ -1557,22 +1757,47 @@ end;
 
 procedure TMainForm.tmStartupTimer(Sender: TObject);
 begin
-  if not isStartup then
-  begin
-    isStartup := True;
-    if cbSelectManga.ItemIndex > -1 then
-      OpenDataDB(cbSelectManga.Items[cbSelectManga.ItemIndex]);
-    if OptionAutoCheckLatestVersion then
-      btCheckLatestVersionClick(btCheckLatestVersion);
-    if OptionAutoCheckFavStartup then
-    begin
-      MainForm.FavoriteManager.isAuto := True;
-      MainForm.FavoriteManager.CheckForNewChapter;
-    end;
-    DLManager.CheckAndActiveTaskAtStartup;
+  try
+    if Sender is TTimer then
+      TTimer(Sender).Free;
+
+    //load lua modules
+    ScanLuaWebsiteModulesFile;
+    AddToAboutStatus('Modules', IntToStr(Modules.Count));
+
+    Modules.LoadFromFile;
+    WebsiteOptionCustomForm.CreateWebsiteOption;
+    WebsiteSettingsForm.LoadWebsiteSettings;
+    AccountManagerForm.LoadAccounts;
+
+    //load configfile
+    LoadMangaOptions;
+    LoadOptions;
+    ApplyOptions;
+  finally
+    isStartup := False;
   end;
-  if Sender is TTimer then
-    TTimer(Sender).Free;
+
+  //restore everything after all modules loaded
+  DLManager.Restore;
+  UpdateVtDownload;
+
+  FavoriteManager.Restore;
+  UpdateVtFavorites;
+
+  if cbSelectManga.ItemIndex > -1 then
+    OpenDataDB(cbSelectManga.Items[cbSelectManga.ItemIndex]);
+  if OptionAutoCheckLatestVersion then
+  begin
+    btCheckLatestVersionClick(btCheckLatestVersion);
+    LuaModulesUpdaterForm.btCheckUpdateClick(LuaModulesUpdaterForm.btCheckUpdate);
+  end;
+  if OptionAutoCheckFavStartup then
+  begin
+    FavoriteManager.isAuto := True;
+    FavoriteManager.CheckForNewChapter;
+  end;
+  DLManager.CheckAndActiveTaskAtStartup;
 end;
 
 procedure TMainForm.medURLCutClick(Sender: TObject);
@@ -1592,7 +1817,8 @@ end;
 
 procedure TMainForm.medURLPasteandgoClick(Sender: TObject);
 begin
-  edURL.Text := Clipboard.AsText;
+  edURL.Clear;
+  edURL.PasteFromClipboard;
   edURLButtonClick(edURL);
 end;
 
@@ -1647,21 +1873,6 @@ begin
   FilterChapterList(edFilterMangaInfoChapters.Text, miChapterListHideDownloaded.Checked);
 end;
 
-procedure TMainForm.miDownloadDisableClick(Sender: TObject);
-var
-  Node: PVirtualNode;
-begin
-  if vtDownload.SelectedCount = 0 then Exit;
-  Node := vtDownload.GetFirstSelected();
-  while Assigned(Node) do
-  begin
-    DLManager.DisableTask(Node^.Index);
-    Node := vtDownload.GetNextSelected(Node);
-  end;
-  UpdateVtDownload;
-  DLManager.CheckAndActiveTask();
-end;
-
 procedure TMainForm.miDownloadEnableClick(Sender: TObject);
 var
   Node: PVirtualNode;
@@ -1670,7 +1881,10 @@ begin
   Node := vtDownload.GetFirstSelected();
   while Assigned(Node) do
   begin
-    DLManager.EnableTask(Node^.Index);
+    if Sender = miDownloadEnable then
+      DLManager.EnableTask(Node^.Index)
+    else
+      DLManager.DisableTask(Node^.Index);
     Node := vtDownload.GetNextSelected(Node);
   end;
   UpdateVtDownload;
@@ -1680,7 +1894,7 @@ procedure TMainForm.miDownloadViewMangaInfoClick(Sender: TObject);
 begin
   if Assigned(vtDownload.FocusedNode) then
     with DLManager.Items[vtDownload.FocusedNode^.Index].DownloadInfo do
-      ViewMangaInfo(Link, Website, Title);
+      ViewMangaInfo(Link, Website, Title, SaveTo, miDownloadViewMangaInfo);
 end;
 
 procedure TMainForm.miChapterListHighlightClick(Sender: TObject);
@@ -1703,7 +1917,7 @@ procedure TMainForm.miDownloadDeleteTaskClick(Sender: TObject);
 var
   xNode: PVirtualNode;
   i: Integer;
-  f: String;
+  f, d: String;
 begin
   if vtDownload.SelectedCount = 0 then Exit;
   if DLManager.Count = 0 then Exit;
@@ -1711,16 +1925,39 @@ begin
     if MessageDlg('', RS_DlgRemoveTask,
       mtConfirmation, [mbYes, mbNo], 0) <> mrYes then
       Exit;
-  EnterCriticalSection(DLManager.CS_Task);
+  vtDownload.BeginUpdate;
   try
+    EnterCriticalSection(DLManager.CS_Task);
+    // stop selected nodes
     xNode := vtDownload.GetPreviousSelected(nil);
-    while Assigned(xNode) do begin
-      DLManager.StopTask(xNode^.Index, False, True);
-      with DLManager.Items[xNode^.Index] do begin
+    while Assigned(xNode) do
+    begin
+      with DLManager.Items[xNode^.Index] do
+        if ThreadState then
+        begin
+          Task.IsForDelete := True;
+          Task.Terminate;
+        end;
+      xNode := vtDownload.GetPreviousSelected(xNode);
+    end;
+    // cleaning the data
+    xNode := vtDownload.GetPreviousSelected(nil);
+    while Assigned(xNode) do
+    begin
+      Exclude(xNode^.States, vsSelected);
+      with DLManager.Items[xNode^.Index] do
+      begin
+        if ThreadState then
+          Task.WaitFor;
         if (Sender = miDownloadDeleteTaskData) or (Sender = miDownloadDeleteTaskDataFavorite)
-          and (ChapterName.Count > 0) then begin
+          and (ChapterName.Count > 0) then
+        begin
+          d := CorrectPathSys(DownloadInfo.SaveTo);
           for i := 0 to ChapterName.Count - 1 do begin
-            f := CorrectPathSys(DownloadInfo.SaveTo + ChapterName[i]);
+            f := CorrectPathSys(d + ChapterName[i]);
+            if DirectoryExistsUTF8(f) then
+              DeleteDirectory(f, False);
+            f := RemovePathDelim(f);
             if FileExistsUTF8(f + '.zip') then
               DeleteFileUTF8(f + '.zip')
             else if FileExistsUTF8(f + '.cbz') then
@@ -1730,7 +1967,7 @@ begin
             else if DirectoryExistsUTF8(f) then
               DeleteDirectory(f, False);
           end;
-          RemoveDirUTF8(DownloadInfo.SaveTo);
+          RemoveDirUTF8(d);
         end;
         if (Sender = miDownloadDeleteTaskDataFavorite) and
           (FavoriteManager.Items.Count <> 0) and
@@ -1742,31 +1979,31 @@ begin
               if SameText(DLManager[xNode^.Index].DownloadInfo.Link, FavoriteManager[i].FavoriteInfo.Link)
                 and SameText(DLManager[xNode^.Index].DownloadInfo.Website, FavoriteManager[i].FavoriteInfo.Website) then
                 begin
-                  FavoriteManager.Items[i].Free;
-                  FavoriteManager.Items.Delete(i);
-                  UpdateVtFavorites;
+                  FavoriteManager.FreeAndDelete(i);
                   Break;
                 end;
             end;
           finally
             FavoriteManager.LockRelease;
           end;
-        DLManager.Items[xNode^.Index].Free;
-        DLManager.Items.Delete(xNode^.Index);
+        DLManager.FreeAndDelete(xNode^.Index);
       end;
       xNode := vtDownload.GetPreviousSelected(xNode);
     end;
   finally
     LeaveCriticalSection(DLManager.CS_Task);
   end;
-  vtDownload.ClearSelection;
-  DLManager.CheckAndActiveTask;
+  vtDownload.RootNodeCount := DLManager.Items.Count;
+  vtDownload.EndUpdate;
+  UpdateVtFavorites;
   UpdateVtDownload;
+  DLManager.CheckAndActiveTask();
+  Exit;
 end;
 
 procedure TMainForm.miDownloadMergeCompletedClick(Sender: TObject);
 var
-  i, j: Cardinal;
+  i, j: Integer;
   ic, jc: TTaskContainer;
   // merge all finished tasks that have same manga name, website and directory
 begin
@@ -1843,25 +2080,21 @@ procedure TMainForm.miFavoritesStopCheckNewChapterClick(Sender: TObject);
 var
   xNode: PVirtualNode;
 begin
-  if vtFavorites.SelectedCount > 0 then
+  if vtFavorites.SelectedCount = 0 then Exit;
+  xNode := vtFavorites.GetFirstSelected;
+  while Assigned(xNode) do
   begin
-    xNode := vtFavorites.GetFirstSelected;
-    repeat
-      if Assigned(xNode) then
-      begin
-        FavoriteManager.StopChekForNewChapter(False, xNode^.Index);
-        xNode := vtFavorites.GetNextSelected(xNode);
-      end;
-    until xNode = nil;
-    vtFavorites.Repaint;
+    FavoriteManager.StopChekForNewChapter(False, xNode^.Index);
+    xNode := vtFavorites.GetNextSelected(xNode);
   end;
+  UpdateVtFavorites;
 end;
 
 procedure TMainForm.miFavoritesViewInfosClick(Sender: TObject);
 begin
   if Assigned(vtFavorites.FocusedNode) then
     with FavoriteManager.Items[vtFavorites.FocusedNode^.Index].FavoriteInfo do
-      ViewMangaInfo(Link, Website, Title);
+      ViewMangaInfo(Link, Website, Title, SaveTo, miFavoritesViewInfos);
 end;
 
 procedure TMainForm.miHighlightNewMangaClick(Sender: TObject);
@@ -1890,8 +2123,8 @@ begin
         for i := 0 to st.Count - 1 do
           if regx.Exec(st[i]) then
           begin
-            if regx.Match[2] <> FMD_VERSION_NUMBER then begin
-              st[i] := regx.Replace(st[i], '$1\' + FMD_VERSION_NUMBER, True);
+            if regx.Match[2] <> FMD_VERSION_STRING then begin
+              st[i] := regx.Replace(st[i], '$1\' + FMD_VERSION_STRING, True);
               if DeleteFileUTF8(README_FILE) then
                 st.SaveToFile(README_FILE);
             end;
@@ -1909,7 +2142,38 @@ begin
     end;
   end;
   // load changelog.txt
-  if FileExistsUTF8(CHANGELOG_FILE) then  mmChangelog.Lines.LoadFromFile(CHANGELOG_FILE);
+  if FileExistsUTF8(CHANGELOG_FILE) then mmChangelog.Lines.LoadFromFile(CHANGELOG_FILE);
+
+  // compiler info
+  AddToAboutStatus('FPC Version', GetFPCVersion);
+  AddToAboutStatus('LCL Version', GetLCLVersion);
+  AddToAboutStatus('WidgetSet', GetWidgetSetName);
+  AddToAboutStatus('Target CPU-OS', GetTargetCPU_OS);
+  AddToAboutStatus('Build Time', GetBuildTime);
+  if SQLiteLibraryHandle = 0 then InitializeSqlite();
+  if SQLiteLibraryHandle <> 0 then try AddToAboutStatus('SQLite Version', sqlite3_version()); except end;
+  if SSLLibHandle = 0 then InitSSLInterface;
+  if SSLLibHandle <> 0 then try AddToAboutStatus('OpenSSL Version', SSLeayversion(0)); except end;
+  if WebPLibHandle = 0 then InitWebPModule;
+  if WebPLibHandle <> 0 then try AddToAboutStatus('WebP Version', WebPGetVersion); except end;
+end;
+
+procedure TMainForm.AddToAboutStatus(const ACaption, AValue: String);
+
+  function addaboutcomplbl(const ACaption: String): TLabel;
+  begin
+    Result := TLabel.Create(Self);
+    Result.Parent := pnAboutComp;
+    Result.Caption := ACaption;
+  end;
+
+begin
+  addaboutcomplbl(ACaption + ':');
+  with addaboutcomplbl(AValue) do
+  begin
+    Font.Style := [fsBold];
+    BorderSpacing.Right := 16;
+  end;
 end;
 
 procedure TMainForm.GeneratetvDownloadFilterNodes;
@@ -1960,7 +2224,7 @@ var
   links,names:TStrings;
   node:PVirtualNode;
   s:String;
-  c,p,r,i,j,k,l:Integer;
+  c,p,r,i,j,k,l, newdl:Integer;
 begin
   if clbChapterList.CheckedCount = 0 then
     Exit;
@@ -1972,14 +2236,14 @@ begin
     begin
       if (vsVisible in node^.States) then
       begin
-        links.Add(mangaInfo.chapterLinks[node^.Index]);
+        links.Add(ChapterList[node^.Index].Link);
         s:=CustomRename(OptionChapterCustomRename,
           mangaInfo.website,
           mangaInfo.title,
           mangaInfo.authors,
           mangaInfo.artists,
-          mangaInfo.chapterName[node^.Index],
-          Format('%.4d',[node^.Index+1]),
+          ChapterList[node^.Index].Title,
+          Format('%.4d',[ChapterList[node^.Index].Index]),
           OptionChangeUnicodeCharacter,
           OptionChangeUnicodeCharacterStr);
         names.Add(s);
@@ -1992,7 +2256,10 @@ begin
     if links.Count<>0 then
     begin
       s:=edSaveTo.Text;
-      if OptionGenerateMangaFolder then
+      if OptionGenerateMangaFolder and
+        not((LastViewMangaInfoSender = miDownloadViewMangaInfo) or
+            (LastViewMangaInfoSender = miFavoritesViewInfos)) // ignore custom saveto options
+        then
         s:=AppendPathDelim(s)+CustomRename(
           OptionMangaCustomRename,
           mangaInfo.website,
@@ -2029,7 +2296,8 @@ begin
           l:=links.Count-k
         else
           l:=p;
-        with DLManager[DLManager.AddTask] do
+        newdl := DLManager.AddTask;
+        with DLManager[newdl] do
         begin
           for j:=1 to l do
           begin
@@ -2049,11 +2317,12 @@ begin
           end;
           Website:=mangaInfo.website;
           DownloadInfo.Website:=mangaInfo.website;
-          DownloadInfo.Link:=mangaInfo.url;
+          DownloadInfo.Link:=mangaInfo.link;
           DownloadInfo.Title:=mangaInfo.title;
           DownloadInfo.DateTime:=Now;
           DownloadInfo.SaveTo:=s;
           CurrentDownloadChapterPtr:=0;
+          SaveToDB(newdl);
         end;
       end;
       DLManager.DownloadedChapters.Chapters[mangaInfo.website+mangaInfo.link]:=links.Text;
@@ -2070,8 +2339,7 @@ end;
 
 procedure TMainForm.btAddToFavoritesClick(Sender: TObject);
 var
-  s, s2: String;
-  i: Integer;
+  s: String;
 begin
   if mangaInfo.title <> '' then
   begin
@@ -2089,14 +2357,8 @@ begin
           OptionChangeUnicodeCharacter,
           OptionChangeUnicodeCharacterStr);
 
-    // downloaded chapters
-    s2 := '';
-    if mangaInfo.numChapter > 0 then
-      for i := 0 to mangaInfo.numChapter - 1 do
-        s2 := s2 + mangaInfo.chapterLinks.Strings[i] + SEPERATOR;
-
-    FavoriteManager.Add(mangaInfo.title, IntToStr(mangaInfo.numChapter), s2,
-      mangaInfo.website, CleanAndExpandDirectory(s), mangaInfo.link);
+    FavoriteManager.Add(mangaInfo.title, IntToStr(mangaInfo.numChapter), mangaInfo.chapterLinks.Text,
+      mangaInfo.website, s, mangaInfo.link);
     vtFavorites.NodeDataSize := SizeOf(TFavoriteInfo);
     UpdateVtFavorites;
     btAddToFavorites.Enabled := False;
@@ -2124,7 +2386,10 @@ procedure TMainForm.appPropertiesMainShowHint(var HintStr: String;
   var CanShow: Boolean; var HintInfo: THintInfo);
 begin
   if HintInfo.HintControl = vtMangaList then
+  begin
     HintInfo.HintMaxWidth := 500;
+    HintInfo.HideTimeout := 300000;
+  end;
   if HintInfo.HintControl = sbUpdateList then
     if isUpdating then
       HintStr := Trim(updateList.websites.Text)
@@ -2204,6 +2469,19 @@ begin
       ChapterList[i].Downloaded := False;
 end;
 
+procedure TMainForm.EmbedForm(const AForm: TForm; const AParent: TWinControl);
+begin
+  with AForm do
+  begin
+    Parent := AParent;
+    BorderStyle := bsNone;
+    Align := alClient;
+    Show;
+    if Screen.PixelsPerInch > 96 then
+      AutoAdjustLayout(lapAutoAdjustForDPI, Screen.PixelsPerInch, 96, 0, 0);
+  end;
+end;
+
 procedure TMainForm.btVisitMyBlogClick(Sender: TObject);
 begin
   OpenURL('http://akarink.wordpress.com/');
@@ -2218,6 +2496,11 @@ procedure TMainForm.cbOptionAutoCheckFavIntervalChange(Sender: TObject);
 begin
   seOptionAutoCheckFavIntervalMinutes.Enabled := cbOptionAutoCheckFavInterval.Checked;
   lbOptionAutoCheckFavIntervalMinutes.Enabled := cbOptionAutoCheckFavInterval.Checked;
+end;
+
+procedure TMainForm.cbOptionAutoCheckFavStartupChange(Sender: TObject);
+begin
+  cbOptionAutoOpenFavStartup.Enabled := cbOptionAutoCheckFavStartup.Checked;
 end;
 
 procedure TMainForm.cbOptionChangeUnicodeCharacterChange(Sender: TObject);
@@ -2242,6 +2525,45 @@ begin
   lbOptionMangaCustomRenameHint.Enabled := edOptionMangaCustomRename.Enabled;
 end;
 
+procedure TMainForm.cbSelectMangaEditingDone(Sender: TObject);
+begin
+  if cbSelectManga.ItemIndex < 0 then
+    Exit;
+  if currentWebsite <> cbSelectManga.Items[cbSelectManga.ItemIndex] then
+  begin
+    configfile.WriteInteger('form', 'SelectManga', cbSelectManga.ItemIndex);
+    currentWebsite := cbSelectManga.Items[cbSelectManga.ItemIndex];
+    vtMangaList.Clear;
+    if dataProcess = nil then
+      dataProcess := TDBDataProcess.Create
+    else
+    if dataProcess.Connected then
+      dataProcess.Close;
+    lbMode.Caption := Format(RS_ModeAll, [0]);
+    if DataFileExist(cbSelectManga.Items[cbSelectManga.ItemIndex]) then
+    begin
+      OpenDataDB(cbSelectManga.Items[cbSelectManga.ItemIndex]);
+    end
+    else
+    if cbOptionShowDownloadMangalistDialog.Checked then
+      RunGetList;
+  end;
+end;
+
+procedure TMainForm.cbSelectMangaKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if not (Key in [VK_RETURN, VK_TAB]) then
+    cbSelectManga.DroppedDown:=True;
+end;
+
+procedure TMainForm.cbSelectMangaMouseDown(Sender: TObject;
+  Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+begin
+  if Button = mbMiddle then
+    cbSelectMangaEditingDone(Sender);
+end;
+
 procedure TMainForm.btReadOnlineClick(Sender: TObject);
 begin
   OpenURL(mangaInfo.url);
@@ -2255,7 +2577,7 @@ end;
 
 procedure TMainForm.btCheckLatestVersionClick(Sender: TObject);
 begin
-  if Assigned(CheckUpdateThread) then
+  if Assigned(CheckUpdateThread) or Assigned(SelfUpdaterThread) then
     MessageDlg('', RS_DlgUpdaterIsRunning, mtInformation, [mbYes], 0)
   else
     CheckUpdateThread := TCheckUpdateThread.Create;
@@ -2321,31 +2643,6 @@ begin
   clbChapterList.SetFocus;
 end;
 
-procedure TMainForm.cbSelectMangaChange(Sender: TObject);
-begin
-  if cbSelectManga.ItemIndex < 0 then
-    Exit;
-  configfile.WriteInteger('form', 'SelectManga', cbSelectManga.ItemIndex);
-  if currentWebsite <> cbSelectManga.Items[cbSelectManga.ItemIndex] then
-  begin
-    currentWebsite := cbSelectManga.Items[cbSelectManga.ItemIndex];
-    vtMangaList.Clear;
-    if dataProcess = nil then
-      dataProcess := TDBDataProcess.Create
-    else
-    if dataProcess.Connected then
-      dataProcess.Close;
-    lbMode.Caption := Format(RS_ModeAll, [0]);
-    if DataFileExist(cbSelectManga.Items[cbSelectManga.ItemIndex]) then
-    begin
-      OpenDataDB(cbSelectManga.Items[cbSelectManga.ItemIndex]);
-    end
-    else
-    if cbOptionShowDownloadMangalistDialog.Checked then
-      RunGetList;
-  end;
-end;
-
 procedure TMainForm.clbChapterListBeforeCellPaint(Sender: TBaseVirtualTree;
   TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
   CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
@@ -2367,7 +2664,7 @@ begin
   if Length(ChapterList)=1 then
     CellText:=ChapterList[Node^.Index].Title
   else
-    CellText:=Format('%.4d - %s',[Node^.Index+1,ChapterList[Node^.Index].Title]);
+    CellText:=Format('%.4d - %s',[ChapterList[Node^.Index].Index, ChapterList[Node^.Index].Title]);
 end;
 
 procedure TMainForm.clbChapterListInitNode(Sender: TBaseVirtualTree;
@@ -2467,7 +2764,7 @@ procedure TMainForm.edLogFileNameButtonClick(Sender: TObject);
 begin
   with TOpenDialog.Create(nil) do
     try
-      InitialDir := ExtractFileDir(edLogFileName.Text);
+      InitialDir := ExtractFileDir(ExpandFileName(edLogFileName.Text));
       if Execute then
         edLogFileName.Text := FileName;
     finally
@@ -2493,7 +2790,6 @@ var
   data: PSingleItem;
   xNode, lNode: PVirtualNode;
 begin
-  if Length(optionMangaSiteSelectionNodes) < 1 then Exit;
   s := Trim(LowerCase(edWebsitesSearch.Text));
   vtOptionMangaSiteSelection.BeginUpdate;
   try
@@ -2697,22 +2993,17 @@ end;
 
 procedure TMainForm.miMangaListAddToFavoritesClick(Sender: TObject);
 var
-  i: Cardinal;
   xNode: PVirtualNode;
+  data: PMangaInfoData;
 begin
   if vtMangaList.SelectedCount = 0 then Exit;
   SilentThreadManager.BeginAdd;
   try
     xNode := vtMangaList.GetFirstSelected;
-    for i := 0 to vtMangaList.SelectedCount - 1 do
+    while Assigned(xNode) do
     begin
-      if vtMangaList.Selected[xNode] then
-      begin
-        SilentThreadManager.Add(MD_AddToFavorites,
-          dataProcess.WebsiteName[xNode^.Index],
-          DataProcess.Value[xNode^.Index, DATA_PARAM_TITLE],
-          DataProcess.Value[xNode^.Index, DATA_PARAM_LINK]);
-      end;
+      data := vtMangaList.GetNodeData(xNode);
+      SilentThreadManager.Add(MD_AddToFavorites, data^.website, data^.title, data^.link);
       xNode := vtMangaList.GetNextSelected(xNode);
     end;
   finally
@@ -2784,14 +3075,13 @@ begin
   if not Assigned(vtFavorites.FocusedNode) then
     Exit;
   s := '';
-  with TSelectDirectoryDialog.Create(Self) do
-    try
-      InitialDir := FavoriteManager.Items[vtFavorites.FocusedNode^.Index].FavoriteInfo.SaveTo;
-      if Execute then
-        s := FileName;
-    finally
-      Free;
-    end;
+  with TSelectDirectoryForm.Create(Self) do try
+    dePath.Directory := FavoriteManager.Items[vtFavorites.FocusedNode^.Index].FavoriteInfo.SaveTo;
+    if ShowModal = mrOK then
+      s := dePath.Directory;
+  finally
+    Free;
+  end;
 
   if s <> '' then
   begin
@@ -2876,27 +3166,16 @@ end;
 // ----- vtDownload popup menu -----
 
 procedure TMainForm.mnDownload1ClickClick(Sender: TObject);
-var
-  i: Integer;
 begin
-  if not isUpdating then
-  begin
-    if (MessageDlg('', RS_DlgUpdaterWantToUpdateDB, mtInformation, [mbYes, mbNo], 0) =
-      mrYes) then
-    begin
-      // if dataProcess.Title.Count > 1 then
-      //begin
-      isUpdating := True;
-      updateList := TUpdateListManagerThread.Create;
-      for i := 0 to cbSelectManga.Items.Count - 1 do
-        updateList.websites.Add(cbSelectManga.Items[i]);
-      updateList.isDownloadFromServer := True;
-      updateList.Start;
-      //end;
-    end;
-  end
+  if DBUpdaterThread <> nil then
+    DBUpdaterThread.Add(cbSelectManga.Items)
   else
-    MessageDlg('', RS_DlgFavoritesCheckIsRunning, mtInformation, [mbYes], 0);
+  if MessageDlg('', RS_DlgUpdaterWantToUpdateDB, mtInformation, [mbYes, mbNo], 0) = mrYes then
+  begin
+    DBUpdaterThread := TDBUpdaterThread.Create;
+    DBUpdaterThread.Items.AddStrings(cbSelectManga.Items);
+    DBUpdaterThread.Start;
+  end;
 end;
 
 procedure TMainForm.mnFilterGenreAllCheckClick(Sender: TObject);
@@ -2930,7 +3209,6 @@ begin
       updateList := TUpdateListManagerThread.Create;
       for i := 0 to cbSelectManga.Items.Count - 1 do
         updateList.websites.Add(cbSelectManga.Items[i]);
-      updateList.isDownloadFromServer := False;
       updateList.Start;
     end;
   end
@@ -2967,10 +3245,7 @@ end;
 
 procedure TMainForm.mnUpdateDownFromServerClick(Sender: TObject);
 begin
-  if (not isUpdating) then
-    RunGetList
-  else
-    MessageDlg('', RS_DlgFavoritesCheckIsRunning, mtInformation, [mbYes], 0);
+  RunGetList;
 end;
 
 procedure TMainForm.mnUpdateListClick(Sender: TObject);
@@ -2989,7 +3264,6 @@ begin
       updateList := TUpdateListManagerThread.Create;
       updateList.numberOfThreads := 4;
       updateList.websites.Add(cbSelectManga.Items[cbSelectManga.ItemIndex]);
-      updateList.isDownloadFromServer := False;
       updateList.Start;
     end;
   end
@@ -3022,6 +3296,7 @@ begin
       mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
       Exit;
   DLManager.RemoveAllFinishedTasks;
+  if Sender <> nil then
   UpdateVtDownload;
   // the reason we put it in here instead of in DLManager because of the size of
   // download list will change during this method
@@ -3072,15 +3347,17 @@ begin
     while Assigned(Node) do
     begin
       if dataProcess.DeleteData(Node^.Index) then
+      begin
         Inc(DeleteCount);
-      Node := vtMangaList.GetPreviousSelected(Node);
+        vtMangaList.DeleteNode(Node);
+      end;
+      Node := vtMangaList.GetPreviousSelected(nil);
     end;
     dataProcess.Table.ApplyUpdates;
     dataProcess.Table.SQLTransaction.CommitRetaining;
     if DeleteCount <> 0 then
     begin
       vtMangaList.ClearSelection;
-      vtMangaList.RootNodeCount := dataProcess.RecordCount;
       UpdateVtMangaListFilterStatus;
     end;
   finally
@@ -3092,9 +3369,10 @@ procedure TMainForm.miMangaListDownloadAllClick(Sender: TObject);
 var
   xNode: PVirtualNode;
   AllowedToCreate, YesAll, NoAll : Boolean;
-  i, j: Integer;
+  i: Integer;
   mResult: TModalResult;
   mBtns: TMsgDlgButtons;
+  data: PMangaInfoData;
 begin
   if vtMangaList.SelectedCount = 0 then Exit;
 
@@ -3108,52 +3386,46 @@ begin
       mBtns := [mbYes, mbNo, mbYesToAll, mbNoToAll];
 
     xNode := vtMangaList.GetFirstSelected;
-    for i := 0 to vtMangaList.SelectedCount - 1 do
+    while Assigned(xNode) do
     begin
-      if vtMangaList.Selected[xNode] then
-      begin
-        AllowedToCreate := True;
-        if DLManager.Count > 0 then
-          for j := 0 to DLManager.Count - 1 do
-            if dataProcess.Value[xNode^.Index, DATA_PARAM_TITLE] =
-              DLManager.Items[j].DownloadInfo.title then
+      data := vtMangaList.GetNodeData(xNode);
+      AllowedToCreate := True;
+      if DLManager.Count > 0 then
+        for i := 0 to DLManager.Count - 1 do
+          if data^.title = DLManager.Items[i].DownloadInfo.title then
+          begin
+            if YesAll then
+              AllowedToCreate := True
+            else if NoAll then
+              AllowedToCreate := False
+            else
             begin
-              if YesAll then
-                AllowedToCreate := True
-              else if NoAll then
-                AllowedToCreate := False
-              else
-              begin
-                pcMain.ActivePage := tsDownload;
-                mResult := MessageDlg('', DLManager.Items[j].DownloadInfo.title +
-                  LineEnding + LineEnding + RS_DlgTitleExistInDLlist, mtConfirmation,
-                    mBtns, 0);
-                case mResult of
-                  mrYes : AllowedToCreate := True;
-                  mrNo  : AllowedToCreate := False;
-                  mrYesToAll :
-                    begin
-                      YesAll := True;
-                      NoAll := False;
-                      AllowedToCreate := True;
-                    end;
-                  mrNoToAll :
-                    begin
-                      YesAll := False;
-                      NoAll := True;
-                      AllowedToCreate := False;
-                    end;
-                end;
+              pcMain.ActivePage := tsDownload;
+              mResult := MessageDlg('', DLManager.Items[i].DownloadInfo.title +
+                LineEnding + LineEnding + RS_DlgTitleExistInDLlist, mtConfirmation,
+                  mBtns, 0);
+              case mResult of
+                mrYes : AllowedToCreate := True;
+                mrNo  : AllowedToCreate := False;
+                mrYesToAll :
+                  begin
+                    YesAll := True;
+                    NoAll := False;
+                    AllowedToCreate := True;
+                  end;
+                mrNoToAll :
+                  begin
+                    YesAll := False;
+                    NoAll := True;
+                    AllowedToCreate := False;
+                  end;
               end;
-              Break;
             end;
+            Break;
+          end;
 
-        if AllowedToCreate then
-          SilentThreadManager.Add(MD_DownloadAll,
-            dataProcess.WebsiteName[xNode^.Index],
-            dataProcess.Value[xNode^.Index, DATA_PARAM_TITLE],
-            dataProcess.Value[xNode^.Index, DATA_PARAM_LINK]);
-      end;
+      if AllowedToCreate then
+        SilentThreadManager.Add(MD_DownloadAll, data^.website, data^.title, data^.link);
       xNode := vtMangaList.GetNextSelected(xNode);
     end;
   except
@@ -3166,23 +3438,21 @@ end;
 procedure TMainForm.miMangaListViewInfosClick(Sender: TObject);
 begin
   if Assigned(vtMangaList.FocusedNode) then
-    ViewMangaInfo(DataProcess.Value[vtMangaList.FocusedNode^.Index, DATA_PARAM_LINK],
-      DataProcess.WebsiteName[vtMangaList.FocusedNode^.Index],
-      DataProcess.Value[vtMangaList.FocusedNode^.Index, DATA_PARAM_TITLE],
-      vtMangaList.FocusedNode^.Index);
+    with PMangaInfoData(vtMangaList.GetNodeData(vtMangaList.FocusedNode))^ do
+      ViewMangaInfo(link, website, title, '', miMangaListViewInfos, vtMangaList.FocusedNode);
 end;
 
 procedure TMainForm.miFavoritesOpenFolderClick(Sender: TObject);
 begin
   if Assigned(vtFavorites.FocusedNode) then
-    OpenDocument(ChompPathDelim(
+    OpenDocument(CorrectPathSys(
       FavoriteManager.Items[vtFavorites.FocusedNode^.Index].FavoriteInfo.SaveTo));
 end;
 
 procedure TMainForm.miDownloadOpenFolderClick(Sender: TObject);
 begin
   if Assigned(vtDownload.FocusedNode) then
-    OpenDocument(ChompPathDelim(
+    OpenDocument(CorrectPathSys(
       DLManager.Items[vtDownload.FocusedNode^.Index].DownloadInfo.SaveTo));
 end;
 
@@ -3231,7 +3501,6 @@ procedure TMainForm.pmDownloadPopup(Sender: TObject);
 var
   iStop,
   iResume,
-  iFinish,
   iEnable,
   iDisable: Boolean;
 
@@ -3241,7 +3510,6 @@ var
   begin
     iStop := False;
     iResume := False;
-    iFinish := False;
     iEnable := False;
     iDisable := False;
     Node := vtDownload.GetFirstSelected();
@@ -3258,7 +3526,6 @@ var
           STATUS_STOP,
           STATUS_FAILED,
           STATUS_PROBLEM  : if not iResume then iResume := True;
-          STATUS_FINISH   : if not iFinish then iFinish := True;
         end;
       end
       else if not iEnable then
@@ -3270,16 +3537,16 @@ var
   end;
 
 begin
+  miDownloadDeleteCompleted.Enabled := DLManager.Count > 0;
+  miDownloadMergeCompleted.Enabled := miDownloadDeleteCompleted.Enabled;
   with DLManager do begin
-    if vtDownload.SelectedCount = 0 then
+    if (vtDownload.SelectedCount = 0) or (vtDownload.FocusedNode = nil) then
     begin
       miDownloadStop.Enabled := False;
       miDownloadResume.Enabled := False;
       miDownloadDelete.Enabled := False;
       miDownloadDeleteTask.Enabled := False;
       miDownloadDeleteTaskData.Enabled := False;
-      miDownloadDeleteCompleted.Enabled := False;
-      miDownloadMergeCompleted.Enabled := False;
       miDownloadViewMangaInfo.Enabled := False;
       miDownloadOpenFolder.Enabled := False;
       miDownloadOpenWith.Enabled := False;
@@ -3294,8 +3561,6 @@ begin
       miDownloadDelete.Enabled := True;
       miDownloadDeleteTask.Enabled := True;
       miDownloadDeleteTaskData.Enabled := True;
-      miDownloadDeleteCompleted.Enabled := iFinish;
-      miDownloadMergeCompleted.Enabled := miDownloadDeleteCompleted.Enabled;
       miDownloadOpenWith.Enabled := vtDownload.SelectedCount = 1;
       miDownloadOpenFolder.Enabled := miDownloadOpenWith.Enabled;
       miDownloadViewMangaInfo.Enabled := miDownloadOpenFolder.Enabled and
@@ -3319,34 +3584,39 @@ begin
 end;
 
 procedure TMainForm.pmFavoritesPopup(Sender: TObject);
+var
+  iCheck,
+  iStop,
+  iEnable,
+  iDisable: Boolean;
 
-  function SelectedStatusPresent(Stats: TFavoriteStatusTypes): Boolean;
+  procedure ScanFavs;
   var
-    xNode: PVirtualNode;
+    Node: PVirtualNode;
   begin
-    Result := False;
-    with FavoriteManager do
+    iCheck := False;
+    iStop := False;
+    iEnable := False;
+    iDisable := False;
+    Node := vtFavorites.GetFirstSelected();
+    while Assigned(Node) do
     begin
-      if vtFavorites.SelectedCount > 0 then
+      if FavoriteManager[Node^.Index].Enabled then
       begin
-        Lock;
-        try
-          xNode := vtFavorites.GetFirstSelected;
-          repeat
-            if Assigned(xNode) then
-            begin
-              if FavoriteManager.Items[xNode^.Index].Status in Stats then
-              begin
-                Result := True;
-                Break;
-              end;
-              xNode := vtFavorites.GetNextSelected(xNode);
-            end;
-          until xNode = nil;
-        finally
-          LockRelease;
+        if not iDisable then
+          iDisable := True;
+        case FavoriteManager[Node^.Index].Status of
+          STATUS_IDLE      : if not iCheck then iCheck := True;
+          STATUS_CHECK,
+          STATUS_CHECKING,
+          STATUS_CHECKED   : if not iStop then iStop := True;
         end;
-      end;
+      end
+      else if not iEnable then
+        iEnable := True;
+      if iEnable and iDisable and iCheck and iStop then
+        Break;
+      Node := vtFavorites.GetNextSelected(Node);
     end;
   end;
 
@@ -3355,42 +3625,49 @@ begin
   begin
     miFavoritesViewInfos.Enabled := False;
     miFavoritesDownloadAll.Enabled := False;
+    miFavoritesEnable.Enabled := False;
+    miFavoritesDisable.Enabled := False;
     miFavoritesDelete.Enabled := False;
     miFavoritesChangeSaveTo.Enabled := False;
     miFavoritesOpenFolder.Enabled := False;
     miFavoritesOpenWith.Enabled := False;
-  end
-  else
-  if vtFavorites.SelectedCount = 1 then
-  begin
-    miFavoritesCheckNewChapter.Visible := SelectedStatusPresent([STATUS_IDLE]);
-    miFavoritesStopCheckNewChapter.Visible :=
-      SelectedStatusPresent([STATUS_CHECK, STATUS_CHECKING]);
-    miFavoritesViewInfos.Enabled := True;
-    miFavoritesDownloadAll.Enabled := (Trim(FavoriteManager.Items[
-      vtFavorites.FocusedNode^.Index].FavoriteInfo.Link) <> '');
-    miFavoritesDelete.Enabled := True;
-    miFavoritesChangeSaveTo.Enabled := True;
-    miFavoritesOpenFolder.Enabled :=
-      DirectoryExistsUTF8(FavoriteManager.Items[vtFavorites.FocusedNode^.Index].FavoriteInfo.SaveTo);
-    miFavoritesOpenWith.Enabled := miFavoritesOpenFolder.Enabled;
+    miFavoritesTransferWebsite.Enabled := False;
+    miFavoritesRename.Enabled := False;
   end
   else
   begin
-    miFavoritesCheckNewChapter.Visible := SelectedStatusPresent([STATUS_IDLE]);
-    miFavoritesStopCheckNewChapter.Visible :=
-      SelectedStatusPresent([STATUS_CHECK, STATUS_CHECKING]);
-    miFavoritesViewInfos.Enabled := False;
-    miFavoritesDownloadAll.Enabled := True;
-    miFavoritesDelete.Enabled := True;
-    miFavoritesChangeSaveTo.Enabled := False;
-    miFavoritesOpenFolder.Enabled := False;
-    miFavoritesOpenWith.Enabled := False;
+    ScanFavs;
+    miFavoritesCheckNewChapter.Enabled := iCheck;
+    miFavoritesStopCheckNewChapter.Enabled := iStop;
+    miFavoritesEnable.Enabled := iEnable;
+    miFavoritesDisable.Enabled := iDisable;
+    miFavoritesTransferWebsite.Enabled := True;
+    if vtFavorites.SelectedCount = 1 then
+    begin
+      miFavoritesViewInfos.Enabled := True;
+      miFavoritesDownloadAll.Enabled := (Trim(FavoriteManager[vtFavorites.FocusedNode^.Index].FavoriteInfo.Link) <> '');
+      miFavoritesDelete.Enabled := True;
+      miFavoritesChangeSaveTo.Enabled := True;
+      miFavoritesOpenFolder.Enabled := DirectoryExistsUTF8(FavoriteManager.Items[vtFavorites.FocusedNode^.Index].FavoriteInfo.SaveTo);
+      miFavoritesOpenWith.Enabled := miFavoritesOpenFolder.Enabled;
+      miFavoritesRename.Enabled := True;
+    end
+    else
+    begin
+      miFavoritesViewInfos.Enabled := False;
+      miFavoritesDownloadAll.Enabled := True;
+      miFavoritesDelete.Enabled := True;
+      miFavoritesChangeSaveTo.Enabled := False;
+      miFavoritesOpenFolder.Enabled := False;
+      miFavoritesOpenWith.Enabled := False;
+      miFavoritesRename.Enabled := False;
+    end;
   end;
   if FavoriteManager.isRunning then
   begin
     miFavoritesDelete.Enabled := False;
     miFavoritesChangeSaveTo.Enabled := False;
+    miFavoritesTransferWebsite.Enabled := False;
   end;
 end;
 
@@ -3416,7 +3693,7 @@ procedure TMainForm.pmSbMainPopup(Sender: TObject);
 begin
   if Assigned(SilentThreadManager) then
   begin
-    if SilentThreadManager.ItemCount = 0 then
+    if SilentThreadManager.Count = 0 then
       Abort;
   end
   else
@@ -3829,18 +4106,30 @@ begin
     end;
 end;
 
+{$if VTMajorVersion < 5}
 procedure TMainForm.vtDownloadHeaderClick(Sender: TVTHeader;
   Column: TColumnIndex; Button: TMouseButton; Shift: TShiftState; X, Y: Integer
   );
+{$else}
+procedure TMainForm.vtDownloadHeaderClick(Sender: TVTHeader; HitInfo: TVTHeaderHitInfo);
+var
+  Column: TColumnIndex;
+  Button: TMouseButton;
+{$endif}
 begin
-  if DLManager.Count < 2 then Exit;
+  {$if VTMajorVersion >= 5}
+  Column := HitInfo.Column;
+  Button := HitInfo.Button;
+  {$endif}
+  if Button <> mbLeft then Exit;
   if (Column = 2) or (Column = 3) then Exit;
   if DLManager.SortColumn = Column then
     DLManager.SortDirection := not DLManager.SortDirection;
   DLManager.SortColumn := Column;
   vtDownload.Header.SortDirection := TSortDirection(DLManager.SortDirection);
   vtDownload.Header.SortColumn := Column;
-  DLManager.Sort(Column);
+  if DLManager.Count > 1 then
+    DLManager.Sort(Column);
   UpdateVtDownload;
 end;
 
@@ -4009,26 +4298,43 @@ begin
     end;
 end;
 
+{$if VTMajorVersion < 5}
 procedure TMainForm.vtFavoritesHeaderClick(Sender: TVTHeader;
   Column: TColumnIndex; Button: TMouseButton; Shift: TShiftState; X, Y: Integer
   );
+{$else}
+procedure TMainForm.vtFavoritesHeaderClick(Sender: TVTHeader; HitInfo: TVTHeaderHitInfo);
+var
+  Column: TColumnIndex;
+  Button: TMouseButton;
+{$endif}
 begin
+  {$if VTMajorVersion >= 5}
+  Column := HitInfo.Column;
+  Button := HitInfo.Button;
+  {$endif}
+  if Button <> mbLeft then Exit;
   if FavoriteManager.isRunning then Exit;
-  if FavoriteManager.Count < 2 then Exit;
   if Column = 0 then Exit;
   FavoriteManager.isRunning := True;
-  try
-    if FavoriteManager.SortColumn = Column then
-      FavoriteManager.sortDirection := not FavoriteManager.sortDirection
-    else
-      FavoriteManager.SortColumn := Column;
-    vtFavorites.Header.SortColumn := Column;
-    vtFavorites.Header.SortDirection := TSortDirection(FavoriteManager.sortDirection);
+  if FavoriteManager.SortColumn = Column then
+    FavoriteManager.sortDirection := not FavoriteManager.sortDirection
+  else
+    FavoriteManager.SortColumn := Column;
+  vtFavorites.Header.SortColumn := Column;
+  vtFavorites.Header.SortDirection := TSortDirection(FavoriteManager.sortDirection);
+  if FavoriteManager.Count > 1 then
     FavoriteManager.Sort(Column);
-  finally
-    UpdateVtFavorites;
-    FavoriteManager.isRunning := False;
-  end;
+  UpdateVtFavorites;
+  FavoriteManager.isRunning := False;
+end;
+
+procedure TMainForm.vtFavoritesPaintText(Sender: TBaseVirtualTree;
+  const TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
+  TextType: TVSTTextType);
+begin
+  if not FavoriteManager[Node^.Index].Enabled then
+    TargetCanvas.Font.Color := TVirtualStringTree(Sender).Colors.DisabledColor;
 end;
 
 procedure TMainForm.vtMangaListChange(Sender: TBaseVirtualTree; Node: PVirtualNode);
@@ -4052,7 +4358,7 @@ end;
 
 procedure TMainForm.btOptionApplyClick(Sender: TObject);
 begin
-  SaveOptions;
+  SaveOptions(True);
   ApplyOptions;
   if not Self.Focused then Self.SetFocus;
 end;
@@ -4062,76 +4368,84 @@ end;
 procedure TMainForm.vtMangaListBeforeCellPaint(Sender: TBaseVirtualTree;
   TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
   CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
+var
+  data: PMangaInfoData;
 begin
   if CellPaintMode <> cpmPaint then Exit;
-  if Node^.Index>=dataProcess.RecordCount then Exit;
   with TargetCanvas do
   begin
     Brush.Color := clNone;
-    if dataProcess.Value[Node^.Index, DATA_PARAM_STATUS] = MangaInfo_StatusCompleted then
+    data := Sender.GetNodeData(Node);
+    if data^.status = MangaInfo_StatusCompleted then
       Brush.Color := CL_MNCompletedManga;
-    if miHighlightNewManga.Checked and
-      (dataProcess.ValueInt[Node^.Index, DATA_PARAM_JDN] > (currentJDN - OptionNewMangaTime)) then
+    if miHighlightNewManga.Checked and (data^.jdn > OptionJDNNewMangaTime) then
+    begin
+      if Brush.Color <> clNone then
+        Brush.Color := Brush.Color + CL_MNNewManga
+      else
         Brush.Color := CL_MNNewManga;
-
+    end;
     if Brush.Color <> clNone then
       FillRect(CellRect);
   end;
 end;
 
-procedure TMainForm.vtMangaListGetCursor(Sender: TBaseVirtualTree;
-  var ACursor: TCursor);
+procedure TMainForm.vtMangaListFreeNode(Sender: TBaseVirtualTree; Node: PVirtualNode);
+var
+  data: PMangaInfoData;
 begin
-  ACursor := Sender.Cursor;
+  data := Sender.GetNodeData(Node);
+  Finalize(data^);
 end;
 
 procedure TMainForm.vtMangaListGetHint(Sender: TBaseVirtualTree;
   Node: PVirtualNode; Column: TColumnIndex; var LineBreakStyle: TVTTooltipLineBreakStyle;
   var HintText: String);
 var
-  LPos: Integer;
-  s: String;
+  data: PMangaInfoData;
 begin
-  s := '';
-  LPos := Node^.Index;
-  with dataProcess do
+  data := Sender.GetNodeData(Node);
+  with data^ do
   begin
-    if FilterAllSites then
-      s := s + RS_InfoWebsite + LineEnding +
-        dataProcess.WebsiteName[LPos] + LineEnding + LineEnding;
-    if Trim(Value[LPos, DATA_PARAM_TITLE]) <> '' then
-      s := s + RS_InfoTitle + LineEnding + Value[LPos, DATA_PARAM_TITLE];
-    if Trim(Value[LPos, DATA_PARAM_AUTHORS]) <> '' then
-      s := s + LineEnding + LineEnding + RS_InfoAuthors + LineEnding +
-        Value[LPos, DATA_PARAM_AUTHORS];
-    if Trim(Value[LPos, DATA_PARAM_ARTISTS]) <> '' then
-      s := s + LineEnding + LineEnding + RS_InfoArtists + LineEnding +
-        Value[LPos, DATA_PARAM_ARTISTS];
-    if Trim(Value[LPos, DATA_PARAM_GENRES]) <> '' then
-      s := s + LineEnding + LineEnding + RS_InfoGenres + LineEnding +
-        Value[LPos, DATA_PARAM_GENRES];
-    if Trim(Value[LPos, DATA_PARAM_STATUS]) <> '' then
+    if dataProcess.FilterAllSites then
+      HintText += RS_InfoWebsite + LineEnding + website + LineEnding2;
+    HintText += RS_InfoTitle + LineEnding + title;
+    if authors <> '' then
+      HintText += LineEnding2 + RS_InfoAuthors + LineEnding + authors;
+    if artists <> '' then
+      HintText += LineEnding2 + RS_InfoArtists + LineEnding + artists;
+    if genres <> '' then
+      HintText += LineEnding2 + RS_InfoGenres + LineEnding + genres;
+    if status <> '' then
     begin
-      s := s + LineEnding + LineEnding + RS_InfoStatus + LineEnding;
-      if Value[LPos, DATA_PARAM_STATUS] = '0' then
-        s := s + cbFilterStatus.Items[0]
+      HintText += LineEnding2 + RS_InfoStatus + LineEnding;
+      if status = '0' then
+        HintText += cbFilterStatus.Items[0]
       else
-        s := s + cbFilterStatus.Items[1];
+      if status = '1' then
+        HintText += cbFilterStatus.Items[1]
+      else
+        HintText += status;
     end;
-    if Trim(Value[LPos, DATA_PARAM_SUMMARY]) <> '' then
-      s := s + LineEnding + LineEnding + RS_InfoSummary + LineEnding +
-        StringBreaks(dataProcess.Value[LPos, DATA_PARAM_SUMMARY]);
+    if summary <> '' then
+      HintText += LineEnding2 + RS_InfoSummary + LineEnding + summary;
   end;
-  HintText := s;
+end;
+
+procedure TMainForm.vtMangaListGetNodeDataSize(Sender: TBaseVirtualTree;
+  var NodeDataSize: Integer);
+begin
+  NodeDataSize := SizeOf(TMangaInfoData);
 end;
 
 procedure TMainForm.vtMangaListGetText(Sender: TBaseVirtualTree;
   Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType;
   var CellText: String);
+var
+  data: PMangaInfoData;
 begin
-  if Assigned(Node) then
-    CellText :=  Format('%s (%d)', [dataProcess.Value[Node^.Index, DATA_PARAM_TITLE],
-      dataProcess.ValueInt[Node^.Index, DATA_PARAM_NUMCHAPTER]]);
+  data := Sender.GetNodeData(Node);
+  CellText := data^.titleformat;
 end;
 
 procedure TMainForm.InitCheckboxes;
@@ -4181,7 +4495,7 @@ end;
 
 procedure TMainForm.vtDownloadUpdateFilters(const RefreshTree: Boolean);
 var
-  ACurrentJDN: LongInt;
+  ACurrentJDN: Integer;
 
   procedure ShowTasks(S: TDownloadStatusTypes = []);
   var
@@ -4204,9 +4518,9 @@ var
     end;
   end;
 
-  procedure ShowTasksOnCertainDays(const L, H: LongInt);
+  procedure ShowTasksOnCertainDays(const L, H: Integer);
   var
-    jdn: LongInt;
+    jdn: Integer;
     xNode: PVirtualNode;
   begin
     xNode := vtDownload.GetFirst();
@@ -4289,6 +4603,7 @@ begin
     URls.Text := URL;
     if URls.Count > 0 then
     begin
+      GoogleResultURLs(URls);
       SilentThreadManager.BeginAdd;
       with TRegExpr.Create do
       try
@@ -4305,12 +4620,6 @@ begin
             m := Modules.LocateModuleByHost(host);
             if m > -1 then
               webs := Modules.Module[m].Website;
-            if webs = '' then
-            begin
-              for j := Low(WebsiteRoots) to High(WebsiteRoots) do
-                if Pos(host, LowerCase(WebsiteRoots[j, 1])) <> 0 then
-                  webs := WebsiteRoots[j, 0];
-            end;
             if webs <> '' then
             begin
               if not ((MetaDataType = MD_AddToFavorites) and SitesWithoutFavorites(webs)) then
@@ -4352,57 +4661,53 @@ begin
     s := Trim(StringBreaks(s));
   with rmInformation do
   begin
-    ReadOnly := False;
     if Lines.Count > 0 then
       Lines.Add('');
     p := SelStart;
     GetTextAttributes(p, fp);
-    Lines.Add(ATitle);
-    Lines.Add(s);
-    fp.Style := [fsBold, fsUnderline];
+    fp.Style += [fsBold, fsUnderline];
     Inc(fp.Size);
-    SetTextAttributes(p, Length(ATitle), fp);
+    SetTextAttributes(p, 0, fp);
+    Lines.Add(ATitle);
+    p := SelStart;
+    fp.Style -= [fsBold, fsUnderline];
+    Dec(fp.Size);
+    SetTextAttributes(p, 0, fp);
+    Lines.Add(s);
   end;
 end;
 
-procedure TMainForm.FilledSaveTo;
+procedure TMainForm.FillSaveTo;
 begin
-  if Trim(edSaveTo.Text) = '' then
-  begin
-    edSaveTo.Text := Trim(configfile.ReadString('saveto', 'SaveTo', DEFAULT_PATH));
-    if edSaveTo.Text = '' then
-      edSaveTo.Text := DEFAULT_PATH;
-  end
-  else
-    edSaveTo.Text := CleanAndExpandDirectory(edSaveTo.Text);
+  if Trim(edSaveTo.Text) <> '' then Exit;
+  if LastUserPickedSaveTo = '' then
+    LastUserPickedSaveTo := Trim(configfile.ReadString('saveto', 'SaveTo', DEFAULT_PATH));
+  if LastUserPickedSaveTo = '' then
+    LastUserPickedSaveTo := DEFAULT_PATH;
+  edSaveTo.Text := LastUserPickedSaveTo;
 end;
 
-procedure TMainForm.ViewMangaInfo(const AURL, AWebsite, ATitle: String;
-  const AMangaListPos: Integer);
+procedure TMainForm.ViewMangaInfo(const ALink, AWebsite, ATitle, ASaveTo: String;
+  const ASender: TObject; const AMangaListNode: PVirtualNode);
 var
-  TURL: String;
   i: Integer;
+  fav: TFavoriteContainer;
 begin
-  if (AURL = '') or (AWebsite = '') then Exit;
-  TURL := Trim(AURL);
-
-  // fix url
-  i := Modules.LocateModule(AWebsite);
-  if i > -1 then
-    TURL := FillHost(Modules.Module[i].RootURL, TURL)
-  else
-    TURL := FillMangaSiteHost(AWebsite, TURL);
+  if (ALink = '') or (AWebsite = '') then Exit;
 
   // terminate exisiting getmangainfo thread
-  if isGetMangaInfos then
-  begin
-    GetInfosThread.IsFlushed := True;
-    GetInfosThread.Terminate;
-  end;
+  if Assigned(GetInfosThread) then
+    try
+      GetInfosThread.Terminate;
+      GetInfosThread.WaitFor;
+    except
+    end;
 
   // set the UI
+  i := Modules.LocateModule(AWebsite);
+  if i <> -1 then
+    edURL.Text := FillHost(Modules.Module[i].RootURL, ALink);
   pcMain.ActivePage := tsInformation;
-  edURL.Text := TURL;
   imCover.Picture.Assign(nil);
   rmInformation.Clear;
   rmInformation.Lines.Add(RS_Loading);
@@ -4415,100 +4720,118 @@ begin
   btDownload.Enabled := False;
   btDownloadSplit.Enabled := btDownload.Enabled;
   btReadOnline.Enabled := True;
+
+  // set saveto
+  edSaveTo.Text := ASaveTo;
+  LastViewMangaInfoSender := ASender;
+  if edSaveTo.Text = '' then
+    FillSaveTo;
+
   DisableAddToFavorites(AWebsite);
   //check if manga already in FavoriteManager list
-  if btAddToFavorites.Enabled and
-    (ATitle <> '') and
-    (FavoriteManager.Count > 0) then
-    btAddToFavorites.Enabled := not FavoriteManager.IsMangaExist(ATitle, AWebsite);
+  if btAddToFavorites.Enabled and not(LastViewMangaInfoSender = miFavoritesViewInfos) then
+  begin
+    fav := FavoriteManager.LocateMangaByLink(AWebsite, ALink);
+    if fav <> nil then
+    begin
+      btAddToFavorites.Enabled := False;
+      if LastViewMangaInfoSender <> miDownloadViewMangaInfo then
+      begin
+        edSaveTo.Text := fav.FavoriteInfo.SaveTo;
+        LastViewMangaInfoSender := miFavoritesViewInfos;
+      end;
+    end;
+  end;
 
   // start the thread
   GetInfosThread := TGetMangaInfosThread.Create;
-  GetInfosThread.MangaListPos := AMangaListPos;
+  GetInfosThread.MangaListNode := AMangaListNode;
   GetInfosThread.Title := ATitle;
   GetInfosThread.Website := AWebsite;
-  GetInfosThread.Link := TURL;
+  GetInfosThread.Link := ALink;
   GetInfosThread.Start;
 end;
 
-procedure TMainForm.ShowInformation(const title, website, link: String);
+procedure TMainForm.ShowInformation;
 var
-  i: Integer;
+  i, j: Integer;
 begin
   pcMain.ActivePage := tsInformation;
-  FilledSaveTo;
+
+  imCover.Picture.Assign(nil);
 
   with rmInformation do
-  begin
-    imCover.Picture.Assign(nil);
-    Clear;
-
-    if (GetInfosThread <> nil) and
-      ((GetInfosThread.MangaListPos > -1) or (GetInfosThread.MangaListPos = -2)) then
-    begin
-      mangaInfo.title := title;
-      mangaInfo.link := link;
-    end
-    else
+    try
+      Lines.BeginUpdate;
+      Lines.Clear;
       edURL.Text := mangaInfo.url;
+      AddTextToInfo(RS_InfoTitle, mangaInfo.title);
+      AddTextToInfo(RS_InfoAuthors, mangaInfo.authors);
+      AddTextToInfo(RS_InfoArtists, mangaInfo.artists);
+      AddTextToInfo(RS_InfoGenres, mangaInfo.genres);
+      i := StrToIntDef(mangaInfo.status, -1);
+      if (i > -1) and (i < cbFilterStatus.Items.Count) then
+        AddTextToInfo(RS_InfoStatus, cbFilterStatus.Items[i]);
+      AddTextToInfo(RS_InfoSummary, mangaInfo.summary);
+      CaretPos := Point(0, 0);
+    finally
+      Lines.EndUpdate;
+    end;
 
-    AddTextToInfo(RS_InfoTitle, mangaInfo.title + LineEnding);
-    AddTextToInfo(RS_InfoAuthors, mangaInfo.authors + LineEnding);
-    AddTextToInfo(RS_InfoArtists, mangaInfo.artists + LineEnding);
-    AddTextToInfo(RS_InfoGenres, mangaInfo.genres + LineEnding);
-    i := StrToIntDef(mangaInfo.status, -1);
-    if (i > -1) and (i < cbFilterStatus.Items.Count) then
-      AddTextToInfo(RS_InfoStatus, cbFilterStatus.Items[i]);
-    AddTextToInfo(RS_InfoSummary, mangaInfo.summary);
-    CaretPos := Point(0, 0);
-  end;
   SetLength(ChapterList, mangaInfo.chapterName.Count);
-  for i := 0 to mangaInfo.chapterName.Count - 1 do
+  if Length(ChapterList) <> 0 then
   begin
-    ChapterList[i].Title := mangaInfo.chapterName[i];
-    ChapterList[i].Link := mangaInfo.chapterLinks[i];
-    ChapterList[i].Downloaded := False;
+    if miChapterListAscending.Checked then
+      j := 0
+    else
+      j := High(ChapterList);
+    for i := low(ChapterList) to High(ChapterList) do
+    begin
+      ChapterList[i].Index := j + 1;
+      ChapterList[i].Title := mangaInfo.chapterName[j];
+      ChapterList[i].Link := mangaInfo.chapterLinks[j];
+      ChapterList[i].Downloaded := False;
+      if miChapterListAscending.Checked then
+        Inc(j)
+      else
+        Dec(j);
+    end;
   end;
+
   miChapterListHighlightClick(nil);
   UpdateVtChapter;
   miChapterListHideDownloadedClick(nil);
   edFilterMangaInfoChaptersChange(nil);
+  if (clbChapterList.RootNodeCount <> 0) and miChapterListAscending.Checked then
+    clbChapterList.FocusedNode := clbChapterList.GetLast();
 
   btDownload.Enabled := (clbChapterList.RootNodeCount > 0);
   btDownloadSplit.Enabled := btDownload.Enabled;
   btReadOnline.Enabled := (mangaInfo.link <> '');
-  DisableAddToFavorites(website);
-
-  //check if manga already in FavoriteManager list
-  if btAddToFavorites.Enabled and (FavoriteManager.Count > 0) then
-    btAddToFavorites.Enabled := not FavoriteManager.IsMangaExist(mangaInfo.title, website);
 end;
 
 procedure TMainForm.RunGetList;
 begin
-  if (MessageDlg('', RS_DlgUpdaterWantToUpdateDB, mtInformation, [mbYes, mbNo], 0) =
-    mrYes) and
-    (not isUpdating) then
+  if DBUpdaterThread <> nil then
+    DBUpdaterThread.Add(cbSelectManga.Items[cbSelectManga.ItemIndex])
+  else
+  if MessageDlg('', RS_DlgUpdaterWantToUpdateDB, mtInformation, [mbYes, mbNo], 0) = mrYes then
   begin
-    isUpdating := True;
-    updateDB := TUpdateDBThread.Create;
-    updateDB.websiteName := cbSelectManga.Items[cbSelectManga.ItemIndex];
-    updateDB.Start;
+    DBUpdaterThread := TDBUpdaterThread.Create;
+    DBUpdaterThread.Items.Add(cbSelectManga.Items[cbSelectManga.ItemIndex]);
+    DBUpdaterThread.Start;
   end;
 end;
 
 procedure TMainForm.LoadOptions;
-var
-  l: TStringList;
-  i, j: Integer;
-  s: String;
-  data: PSingleItem;
 begin
   with configfile do begin
     // general
     cbOptionOneInstanceOnly.Checked := ReadBool('general', 'OneInstanceOnly', True);
     cbOptionLiveSearch.Checked := ReadBool('general', 'LiveSearch', True);
+    cbOptionMinimizeOnStart.Checked := ReadBool('general', 'MinimizeOnStart', False);
     cbOptionMinimizeToTray.Checked := ReadBool('general', 'MinimizeToTray', False);
+    cbOptionDeleteCompletedTasksOnClose.Checked := ReadBool('general', 'DeleteCompletedTasksOnClose', OptionDeleteCompletedTasksOnClose);
     cbOptionLetFMDDo.ItemIndex := ReadInteger('general', 'LetFMDDo', 0);
     edOptionExternalPath.Text := ReadString('general', 'ExternalProgramPath', '');
     edOptionExternalParams.Text := ReadString('general', 'ExternalProgramParams', DEFAULT_EXPARAM);
@@ -4516,10 +4839,15 @@ begin
     cbAddAsStopped.Checked := ReadBool('general', 'AddAsStopped', False);
     miHighLightNewManga.Checked := ReadBool('general', 'HighlightNewManga', True);
     miChapterListHighlight.Checked := ReadBool('general', 'HighlightDownloadedChapters', True);
+    miChapterListAscending.Checked := ReadBool('general', 'SortChapterListAscending', True);
+    miChapterListDescending.Checked := not miChapterListAscending.Checked;
 
     // view
     cbOptionShowDownloadToolbar.Checked := ReadBool('view', 'ShowDownloadsToolbar', True);
+    cbOptionShowDownloadToolbarLeft.Checked := ReadBool('view', 'ShowDownloadsToolbarLeft', True);
+    cbOptionShowDownloadToolbarDeleteAll.Checked := ReadBool('view', 'ShowDownloadsToolbarDeleteAll', False);
     cbOptionEnableLoadCover.Checked := ReadBool('view', 'LoadMangaCover', True);
+    cbOptionShowBalloonHint.Checked := ReadBool('view', 'ShowBalloonHint', OptionShowBalloonHint);
     ckDropTarget.Checked := ReadBool('droptarget', 'Show', False);
     frmDropTarget.FWidth := ReadInteger('droptarget', 'Width', frmDropTarget.FWidth);
     frmDropTarget.FHeight := ReadInteger('droptarget', 'Heigth', frmDropTarget.FHeight);
@@ -4529,10 +4857,14 @@ begin
     tbDropTargetOpacity.Position := ReadInteger('droptarget', 'Opacity', 255);
 
     // connection
-    seOptionMaxParallel.Value := ReadInteger('connections', 'NumberOfTasks', 1);
-    seOptionMaxThread.Value := ReadInteger('connections', 'NumberOfThreadsPerTask', 1);
-    seOptionMaxRetry.Value := ReadInteger('connections', 'Retry', 5);;
-    seOptionConnectionTimeout.Value := ReadInteger('connections', 'ConnectionTimeout', 30);
+    seOptionMaxParallel.Value := ReadInteger('connections', 'NumberOfTasks', OptionMaxParallel);
+    seOptionMaxThread.Value := ReadInteger('connections', 'NumberOfThreadsPerTask', OptionMaxThreads);
+    seOptionMaxRetry.Value := ReadInteger('connections', 'Retry', OptionMaxRetry);;
+    seOptionConnectionTimeout.Value := ReadInteger('connections', 'ConnectionTimeout', OptionConnectionTimeout);
+    seOptionRetryFailedTask.Value := ReadInteger('connections', 'NumberOfAutoRetryFailedTask', OptionRetryFailedTask);
+    ckOptionsAlwaysStartTaskFromFailedChapters.Checked := ReadBool('connections', 'AlwaysStartFromFailedChapters', OptionAlwaysStartTaskFromFailedChapters);
+
+    // proxy
     cbOptionUseProxy.Checked := ReadBool('connections', 'UseProxy', False);
     cbOptionProxyType.Text := ReadString('connections', 'ProxyType', 'HTTP');
     edOptionHost.Text := ReadString('connections', 'Host', '');
@@ -4566,10 +4898,16 @@ begin
     edOptionFilenameCustomRename.Text := ReadString('saveto', 'FilenameCustomRename', DEFAULT_FILENAME_CUSTOMRENAME);
     if Trim(edOptionFilenameCustomRename.Text) = '' then
       edOptionFilenameCustomRename.Text := DEFAULT_FILENAME_CUSTOMRENAME;
+    ckPNGSaveAsJPEG.Checked := ReadBool('saveto', 'PNGSaveAsJPEG', OptionPNGSaveAsJPEG);
+    cbWebPSaveAs.ItemIndex := ReadInteger('saveto', 'ConvertWebP', OptionWebPSaveAs);
+    cbPNGCompressionLevel.ItemIndex := ReadInteger('saveto', 'PNGCompressionLevel', OptionPNGCompressionLevel);
+    seJPEGQuality.Value := ReadInteger('saveto', 'JPEGQuality', OptionJPEGQuality);
 
     // update
     cbOptionAutoCheckLatestVersion.Checked := ReadBool('update', 'AutoCheckLatestVersion', True);
     cbOptionAutoCheckFavStartup.Checked := ReadBool('update', 'AutoCheckFavStartup', True);
+    cbOptionAutoCheckFavStartupChange(cbOptionAutoCheckFavStartup);
+    cbOptionAutoOpenFavStartup.Checked := ReadBool('update', 'AutoOpenFavStartup', False);
     cbOptionAutoCheckFavInterval.Checked := ReadBool('update', 'AutoCheckFavInterval', True);
     seOptionAutoCheckFavIntervalMinutes.Value := ReadInteger('update', 'AutoCheckFavIntervalMinutes', 60);
     lbOptionAutoCheckFavIntervalMinutes.Caption := Format(RS_LblAutoCheckNewChapterMinute, [seOptionAutoCheckFavIntervalMinutes.Value]);
@@ -4579,6 +4917,10 @@ begin
     cbOptionAutoCheckFavRemoveCompletedManga.Checked := ReadBool('update', 'AutoCheckFavAutoRemoveCompletedManga', False);
     cbOptionUpdateListNoMangaInfo.Checked := ReadBool('update', 'UpdateListNoMangaInfo', False);
     cbOptionUpdateListRemoveDuplicateLocalData.Checked := ReadBool('update', 'UpdateListRemoveDuplicateLocalData', False);
+
+    // modules updater
+    LuaModulesUpdaterForm.ckShowUpdateWarning.Checked := ReadBool('modulesupdater', 'ShowUpdateWarning', OptionModulesUpdaterShowUpdateWarning);
+    LuaModulesUpdaterForm.ckAutoRestart.Checked := ReadBool('modulesupdater', 'AutoRestart', OptionModulesUpdaterAutoRestart);
 
     // dialogs
     cbOptionShowQuitDialog.Checked := ReadBool('dialogs', 'ShowQuitDialog', True);
@@ -4590,62 +4932,30 @@ begin
     ckEnableLogging.Checked := ReadBool('logger', 'Enabled', False);
     edLogFileName.Text := ReadString('logger', 'LogFileName', '');
     if edLogFileName.Text = '' then
-      edLogFileName.Text := ChangeFileExt(Application.ExeName, '.log');
-
-    // websites
-    if Length(optionMangaSiteSelectionNodes) > 0 then
-      for i := 0 to Length(optionMangaSiteSelectionNodes) - 1 do
-        optionMangaSiteSelectionNodes[i]^.CheckState := csUncheckedNormal;
-    l := TStringList.Create;
-    try
-      s := ReadString('general', 'MangaListSelect',
-        mangalistfile.ReadString('general', 'DefaultSelect', DEFAULT_LIST));
-      if Pos(SEPERATOR, s) > 0 then
-        GetParams(l, s)    //for old config
-      else
-        ExtractStrings([','], [], PChar(s), l);
-      if (l.Count > 0) and (Length(optionMangaSiteSelectionNodes) > 0) then
-        for i := 0 to l.Count - 1 do
-          for j := 0 to Length(optionMangaSiteSelectionNodes) - 1 do
-          begin
-            data := vtOptionMangaSiteSelection.GetNodeData(
-              optionMangaSiteSelectionNodes[j]);
-            if SameText(l[i], data^.Text) then
-            begin
-              optionMangaSiteSelectionNodes[j]^.CheckState := csCheckedNormal;
-              Break;
-            end;
-          end;
-    finally
-      l.Free;
-    end;
+      edLogFileName.Text := DEFAULT_LOG_FILE;
   end;
 end;
 
-procedure TMainForm.SaveOptions;
-var
-  s: String;
+procedure TMainForm.SaveOptions(const AShowDialog: Boolean);
 begin
-  if Length(optionMangaSiteSelectionNodes) > 0 then
+  if (cbSelectManga.Items.Count = 0) and AShowDialog then
   begin
-    s := SaveMangaOptions;
-    if s = '' then
-    begin
-      MessageDlg('', RS_DlgMangaListSelect,
-        mtConfirmation, [mbYes], 0);
-      Exit;
-    end;
+    MessageDlg('', RS_DlgMangaListSelect,
+      mtConfirmation, [mbYes], 0);
+    Exit;
   end;
 
   with configfile do
     try
       // general
-      WriteString('general', 'MangaListSelect', s);
+      WriteString('general', 'MangaListSelect', cbSelectManga.Items.CommaText);
       WriteBool('general', 'LiveSearch', cbOptionLiveSearch.Checked);
       WriteBool('general', 'OneInstanceOnly', cbOptionOneInstanceOnly.Checked);
       if cbLanguages.ItemIndex > -1 then
         WriteString('languages', 'Selected', AvailableLanguages.Names[cbLanguages.ItemIndex]);
+      WriteBool('general', 'MinimizeOnStart', cbOptionMinimizeOnStart.Checked);
       WriteBool('general', 'MinimizeToTray', cbOptionMinimizeToTray.Checked);
+      WriteBool('general', 'DeleteCompletedTasksOnClose', cbOptionDeleteCompletedTasksOnClose.Checked);
       WriteInteger('general', 'LetFMDDo', cbOptionLetFMDDo.ItemIndex);
       WriteString('general', 'ExternalProgramPath', edOptionExternalPath.Text);
       WriteString('general', 'ExternalProgramParams', edOptionExternalParams.Text);
@@ -4656,14 +4966,22 @@ begin
 
       // view
       WriteBool('view', 'ShowDownloadsToolbar', cbOptionShowDownloadToolbar.Checked);
+      WriteBool('view', 'ShowDownloadsToolbarLeft', cbOptionShowDownloadToolbarLeft.Checked);
+      WriteBool('view', 'ShowDownloadsToolbarDeleteAll', cbOptionShowDownloadToolbarDeleteAll.Checked);
       WriteBool('view', 'LoadMangaCover', cbOptionEnableLoadCover.Checked);
-      SaveDropTargetFormInformation;
+      WriteBool('view', 'ShowBalloonHint', cbOptionShowBalloonHint.Checked);
+      if not (isExiting and Assigned(FormDropTarget)) then
+        SaveDropTargetFormInformation;
 
       // connections
       WriteInteger('connections', 'NumberOfTasks', seOptionMaxParallel.Value);
       WriteInteger('connections', 'NumberOfThreadsPerTask', seOptionMaxThread.Value);
       WriteInteger('connections', 'Retry', seOptionMaxRetry.Value);
       WriteInteger('connections', 'ConnectionTimeout', seOptionConnectionTimeout.Value);
+      WriteInteger('connections', 'NumberOfAutoRetryFailedTask', seOptionRetryFailedTask.Value);
+      WriteBool('connections', 'AlwaysRetruFailedChaptersOnStart', ckOptionsAlwaysStartTaskFromFailedChapters.Checked);
+
+      // proxy
       WriteBool('connections', 'UseProxy', cbOptionUseProxy.Checked);
       WriteString('connections', 'ProxyType', cbOptionProxyType.Text);
       WriteString('connections', 'Host', edOptionHost.Text);
@@ -4674,7 +4992,6 @@ begin
       // saveto
       if Trim(edOptionDefaultPath.Text) = '' then
         edOptionDefaultPath.Text := DEFAULT_PATH;
-      edOptionDefaultPath.Text := CleanAndExpandDirectory(edOptionDefaultPath.Text);
       WriteString('saveto', 'SaveTo', edOptionDefaultPath.Text);
       WriteBool('saveto', 'ChangeUnicodeCharacter', cbOptionChangeUnicodeCharacter.Checked);
       WriteString('saveto', 'ChangeUnicodeCharacterStr', edOptionChangeUnicodeCharacterStr.Text);
@@ -4696,10 +5013,15 @@ begin
       if Trim(edOptionFilenameCustomRename.Text) = '' then
         edOptionFilenameCustomRename.Text := DEFAULT_FILENAME_CUSTOMRENAME;
       WriteString('saveto', 'FilenameCustomRename', edOptionFilenameCustomRename.Text);
+      WriteBool('saveto', 'PNGSaveAsJPEG', ckPNGSaveAsJPEG.Checked);
+      WriteInteger('saveto', 'ConvertWebP', cbWebPSaveAs.ItemIndex);
+      WriteInteger('saveto', 'PNGCompressionLevel', cbPNGCompressionLevel.ItemIndex);
+      WriteInteger('saveto', 'JPEGQuality', seJPEGQuality.Value);
 
       // update
       WriteBool('update', 'AutoCheckLatestVersion', cbOptionAutoCheckLatestVersion.Checked);
       WriteBool('update', 'AutoCheckFavStartup', cbOptionAutoCheckFavStartup.Checked);
+      WriteBool('update', 'AutoOpenFavStartup', cbOptionAutoOpenFavStartup.Checked);
       WriteBool('update', 'AutoCheckFavInterval', cbOptionAutoCheckFavInterval.Checked);
       WriteInteger('update', 'AutoCheckFavIntervalMinutes', seOptionAutoCheckFavIntervalMinutes.Value);
       WriteInteger('update', 'NewMangaTime', seOptionNewMangaTime.Value);
@@ -4707,6 +5029,10 @@ begin
       WriteBool('update', 'AutoCheckFavAutoRemoveCompletedManga', cbOptionAutoCheckFavRemoveCompletedManga.Checked);
       WriteBool('update', 'UpdateListNoMangaInfo', cbOptionUpdateListNoMangaInfo.Checked);
       WriteBool('update', 'UpdateListRemoveDuplicateLocalData', cbOptionUpdateListRemoveDuplicateLocalData.Checked);
+
+      // modules updater
+      WriteBool('modulesupdater', 'ShowUpdateWarning', LuaModulesUpdaterForm.ckShowUpdateWarning.Checked);
+      WriteBool('modulesupdater', 'AutoRestart', LuaModulesUpdaterForm.ckAutoRestart.Checked);
 
       // dialogs
       WriteBool('dialogs', 'ShowQuitDialog', cbOptionShowQuitDialog.Checked);
@@ -4717,32 +5043,32 @@ begin
       frmCustomColor.SaveToIniFile(configfile);
       WriteBool('logger', 'Enabled', ckEnableLogging.Checked);
       if edLogFileName.Text = '' then
-        edLogFileName.Text := ChangeFileExt(Application.ExeName, '.log');
+        edLogFileName.Text := DEFAULT_LOG_FILE;
       WriteString('logger', 'LogFileName', edLogFileName.Text);
     finally
       UpdateFile;
     end;
-  advancedfile.UpdateFile;
-  Modules.SaveWebsiteOption;
+  Modules.SaveToFile;
 end;
 
 procedure TMainForm.ApplyOptions;
 var
   i: Integer;
-  isStillHaveCurrentWebsite: Boolean = False;
-  data: PSingleItem;
-  St: TStringList;
+  isStillHaveCurrentWebsite: Boolean;
+  node: PVirtualNode;
 begin
   try
     // general
+    // selected websites
     cbSelectManga.Clear;
-    for i := 0 to Length(optionMangaSiteSelectionNodes) - 1 do
+    node := vtOptionMangaSiteSelection.GetFirstChecked();
+    while node<>nil do
     begin
-      data := vtOptionMangaSiteSelection.GetNodeData(optionMangaSiteSelectionNodes[i]);
-      if (optionMangaSiteSelectionNodes[i]^.CheckState = csCheckedNormal) and
-        (Data^.Text <> '') then
-        cbSelectManga.Items.Add(data^.Text);
+      cbSelectManga.Items.Add(PSingleItem(vtOptionMangaSiteSelection.GetNodeData(node))^.Text);
+      node := vtOptionMangaSiteSelection.GetNextChecked(node);
     end;
+
+    isStillHaveCurrentWebsite := False;
     for i := 0 to cbSelectManga.Items.Count - 1 do
     begin
       if cbSelectManga.Items[i] = currentWebsite then
@@ -4757,7 +5083,7 @@ begin
       if cbSelectManga.Items.Count > 0 then
       begin
         cbSelectManga.ItemIndex := 0;
-        cbSelectMangaChange(cbSelectManga);
+        cbSelectMangaEditingDone(cbSelectManga);
       end
       else
       begin
@@ -4790,18 +5116,28 @@ begin
     end;
     OptionLetFMDDo := TFMDDo(cbOptionLetFMDDo.ItemIndex);
     OptionEnableLoadCover := cbOptionEnableLoadCover.Checked;
+    OptionDeleteCompletedTasksOnClose := cbOptionDeleteCompletedTasksOnClose.Checked;
 
     //view
     ToolBarDownload.Visible := cbOptionShowDownloadToolbar.Checked;
+    ToolBarDownloadLeft.Visible := cbOptionShowDownloadToolbarLeft.Checked;
+    tbDownloadDeleteCompleted.Visible := cbOptionShowDownloadToolbarDeleteAll.Checked;
+    tbSeparator1.Visible := tbDownloadDeleteCompleted.Visible;
     ShowDropTarget(ckDropTarget.Checked);
+    OptionShowBalloonHint := cbOptionShowBalloonHint.Checked;
 
     //connection
-    DLManager.maxDLTasks := seOptionMaxParallel.Value;
-    DLManager.maxDLThreadsPerTask := seOptionMaxThread.Value;
-    DLManager.retryConnect := seOptionMaxRetry.Value;
+    OptionMaxParallel := seOptionMaxParallel.Value;
     OptionMaxThreads := seOptionMaxThread.Value;
-    SetDefaultTimeoutAndApply(seOptionConnectionTimeout.Value * 1000);
-    SetDefaultRetryCountAndApply(seOptionMaxRetry.Value);
+    OptionMaxRetry := seOptionMaxRetry.Value;
+    DLManager.RetryConnect := OptionMaxRetry;
+    SetDefaultRetryCountAndApply(OptionMaxRetry);
+    OptionConnectionTimeout := seOptionConnectionTimeout.Value;
+    SetDefaultTimeoutAndApply(OptionConnectionTimeout * 1000);
+    OptionRetryFailedTask := seOptionRetryFailedTask.Value;
+    OptionAlwaysStartTaskFromFailedChapters := ckOptionsAlwaysStartTaskFromFailedChapters.Checked;
+
+    // proxy
     if cbOptionUseProxy.Checked then
       SetDefaultProxyAndApply(cbOptionProxyType.Text, edOptionHost.Text,
         edOptionPort.Text, edOptionUser.Text, edOptionPass.Text)
@@ -4810,7 +5146,7 @@ begin
 
     //saveto
     OptionPDFQuality := seOptionPDFQuality.Value;
-    DLManager.compress := rgOptionCompress.ItemIndex;
+    DLManager.CompressType := rgOptionCompress.ItemIndex;
     OptionChangeUnicodeCharacter := cbOptionChangeUnicodeCharacter.Checked;
     OptionChangeUnicodeCharacterStr := edOptionChangeUnicodeCharacterStr.Text;
     OptionRemoveMangaNameFromChapter := cbOptionRemoveMangaNameFromChapter.Checked;
@@ -4823,6 +5159,10 @@ begin
     OptionConvertDigitVolumeLength := seOptionDigitVolume.Value;
     OptionConvertDigitChapter := cbOptionDigitChapter.Checked;
     OptionConvertDigitChapterLength := seOptionDigitChapter.Value;
+    OptionPNGSaveAsJPEG := ckPNGSaveAsJPEG.Checked;
+    OptionWebPSaveAs := cbWebPSaveAs.ItemIndex;
+    OptionPNGCompressionLevel := cbPNGCompressionLevel.ItemIndex;
+    OptionJPEGQuality := seJPEGQuality.Value;
 
     //update
     OptionAutoCheckLatestVersion := cbOptionAutoCheckLatestVersion.Checked;
@@ -4830,6 +5170,7 @@ begin
     OptionAutoCheckFavInterval := cbOptionAutoCheckFavInterval.Checked;
     OptionAutoCheckFavIntervalMinutes := seOptionAutoCheckFavIntervalMinutes.Value;
     OptionNewMangaTime := seOptionNewMangaTime.Value;
+    OptionJDNNewMangaTime := currentJDN - OptionNewMangaTime;
     OptionAutoCheckFavDownload := cbOptionAutoCheckFavDownload.Checked;
     OptionAutoCheckFavRemoveCompletedManga := cbOptionAutoCheckFavRemoveCompletedManga.Checked;
     OptionUpdateListNoMangaInfo := cbOptionUpdateListNoMangaInfo.Checked;
@@ -4837,29 +5178,36 @@ begin
     tmCheckFavorites.Interval := OptionAutoCheckFavIntervalMinutes * 60000;
     tmCheckFavorites.Enabled := OptionAutoCheckFavInterval;
 
+    // modules updater
+    OptionModulesUpdaterShowUpdateWarning := LuaModulesUpdaterForm.ckShowUpdateWarning.Checked;
+    OptionModulesUpdaterAutoRestart := LuaModulesUpdaterForm.ckAutoRestart.Checked;
+
     //misc
     frmCustomColor.Apply;
     SimpleException.SetLogFileName(edLogFileName.Text);
+
     if ckEnableLogging.Checked and (not Logger.Enabled) then
     begin
       Logger.Enabled := True;
-      FileLogger := TFileChannel.Create(edLogFileName.Text, [fcoShowHeader, fcoShowPrefix, fcoShowTime]);
-      Logger.Channels.Add(FileLogger);
+      if MainExceptionHandler.LogFileOK then
+      begin
+        FileLogger := TFileChannel.Create(edLogFileName.Text, [fcoShowHeader, fcoShowPrefix, fcoShowTime]);
+        Logger.Channels.Add(FileLogger);
+      end
+      else
+        Logger.SendError('Log file error ' + MainExceptionHandler.LogFileStatus + '"' + edLogFileName.Text + '"');
       Logger.Send(QuotedStrd(Application.Title)+' started with [PID:'+IntToStr(GetProcessID)+'] [HANDLE:'+IntToStr(GetCurrentProcess)+']');
-      St := TStringList.Create;
-      try
-        St.AddText(SimpleException.GetApplicationInfo);
-        Logger.Send('Application info', St);
-      finally
-        St.Free;
-      end;
+      Logger.SendStrings('Application info', SimpleException.GetApplicationInfo);
     end
     else
     if (not ckEnableLogging.Checked) and (Logger.Enabled) then
     begin
+      if Assigned(FileLogger) then
+      begin
+        Logger.Channels.Remove(FileLogger);
+        FreeAndNil(FileLogger);
+      end;
       Logger.Enabled := False;
-      Logger.Channels.Remove(FileLogger);
-      FreeAndNil(FileLogger);
     end;
 
     //languages
@@ -4868,130 +5216,123 @@ begin
     on E: Exception do
       ExceptionHandle(Self, E);
   end;
-  if isStartup then
-    DLManager.CheckAndActiveTask;
 end;
 
 procedure TMainForm.LoadMangaOptions;
 var
-  isDeleteUnusedManga: Boolean;
-  i, j, sel: Integer;
-  lang: TStringList;
-  s, currentLanguage: String;
-  ANode, currentRootNode: PVirtualNode;
+  categories: TStringList;
+  categoriesitem: TStringList;
+  i, j: Integer;
+  s: String;
+  module: TModuleContainer;
+  node: PVirtualNode;
+  nodei: PVirtualNode;
   data: PSingleItem;
-  wName, wLang: TStringList;
 begin
-  DBDownloadURL:=mangalistfile.ReadString('general','DBDownloadURL','');
-  wName := TStringList.Create;
-  wLang := TStringList.Create;
-  lang := TStringList.Create;
+  categories := TStringList.Create;
   try
-    mangalistfile.ReadSection('available', lang);
-    TrimStrings(lang);
-    if lang.Count > 0 then
-      for i := 0 to lang.Count - 1 do
-      begin
-        s := Trim(mangalistfile.ReadString('available', lang[i], ''));
-        if s <> '' then
-          ExtractStrings([','], [], PChar(s), wName);
-        TrimStrings(wName);
-        while wlang.Count < wName.Count do
-          wLang.Add(lang[i]);
-      end;
-
-    // load to option list
-    if wName.Count > 0 then
+    // sort all
+    categories.OwnsObjects := True;
+    categories.Duplicates := dupIgnore;
+    categories.Sorted := True;
+    for i := 0 to categories.Count - 1 do
     begin
-      SetLength(optionMangaSiteSelectionNodes, wName.Count);
-      currentLanguage := '';
-      for i := 0 to wName.Count - 1 do
-        with vtOptionMangaSiteSelection do
-        begin
-          if currentLanguage <> wLang[i] then
-          begin
-            currentLanguage := wLang[i];
-            currentRootNode := AddChild(nil);
-            data := GetNodeData(currentRootNode);
-            data^.Text := currentLanguage;
-            ValidateNode(currentRootNode, False);
-          end;
-          ANode := AddChild(currentRootNode);
-          ANode^.CheckState := csUncheckedNormal;
-          data := GetNodeData(ANode);
-          data^.Text := wName[i];
-          ValidateNode(ANode, False);
-          optionMangaSiteSelectionNodes[i] := ANode;
-        end;
+      categoriesitem := TStringList(categories.Objects[i]);
+      categoriesitem.Duplicates := dupIgnore;
+      categoriesitem.Sorted := True;
     end;
 
-    // load selected manga list
-    lang.Clear;
-    s := configfile.ReadString('general', 'MangaListSelect', DEFAULT_LIST);
-    if Pos(SEPERATOR, s) <> 0 then
-      ExtractParam(lang, s, SEPERATOR, False)
-    else
-      ExtractParam(lang, s, ',', False);
-    cbSelectManga.Items.Assign(lang);
-
-    // remove unused manga name
-    i := 0;
-    if (lang.Count > 0) and (Length(optionMangaSiteSelectionNodes) > 0) then
-      while i < lang.Count do
+    // read websitemodules
+    for i := 0 to WebsiteModules.Modules.Count - 1 do
+    begin
+      module := WebsiteModules.Modules[i];
+      if module.Category <> '' then
       begin
-        isDeleteUnusedManga := True;
-        for j := 0 to Length(optionMangaSiteSelectionNodes) - 1 do
+        j := categories.IndexOf(module.Category);
+        if j = -1 then
         begin
-          Data := vtOptionMangaSiteSelection.GetNodeData(
-            optionMangaSiteSelectionNodes[j]);
-          if lang[i] = Data^.Text then
-          begin
-            isDeleteUnusedManga := False;
-            Break;
-          end;
-        end;
-        if isDeleteUnusedManga then
-          lang.Delete(i)
+          categoriesitem := TStringList.Create;
+          categories.AddObject(module.Category, categoriesitem);
+          categoriesitem.Duplicates := dupIgnore;
+          categoriesitem.Sorted := True;
+        end
         else
-          Inc(i);
+          categoriesitem := TStringList(categories.Objects[j]);
+        categoriesitem.Add(module.Website);
       end;
-
-    // load last selected manga
-    if cbSelectManga.Items.Count > 0 then
-    begin
-      sel := configfile.ReadInteger('form', 'SelectManga', 0);
-      if sel < 0 then
-        sel := 0;
-      if sel > cbSelectManga.Items.Count - 1 then
-        sel := cbSelectManga.Items.Count - 1;
-      cbSelectManga.ItemIndex := sel;
-      currentWebsite := cbSelectManga.Items[cbSelectManga.ItemIndex];
     end;
+
+    // add them to vt websites selection and availablewebsites
+    vtOptionMangaSiteSelection.BeginUpdate;
+    for i := 0 to categories.Count - 1 do
+    begin
+      node := vtOptionMangaSiteSelection.AddChild(nil, nil);
+      vtOptionMangaSiteSelection.ValidateNode(node, False);
+      data := vtOptionMangaSiteSelection.GetNodeData(node);
+      data^.Text := categories[i];
+      categoriesitem := TStringList(categories.Objects[i]);
+      for j := 0 to categoriesitem.Count - 1 do
+      begin
+        s := categoriesitem[j];
+        nodei := vtOptionMangaSiteSelection.AddChild(node, nil);
+        vtOptionMangaSiteSelection.ValidateNode(nodei, False);
+        nodei^.CheckType := ctCheckBox;
+        data := vtOptionMangaSiteSelection.GetNodeData(nodei);
+        data^.Text := s;
+        AvailableWebsites.Add(s);
+      end;
+    end;
+    vtOptionMangaSiteSelection.EndUpdate;
+    AvailableWebsites.Duplicates := dupIgnore;
+    AvailableWebsites.Sorted := True;
   finally
-    lang.Free;
-    wName.Free;
-    wLang.Free;
+    categories.Free;
   end;
-end;
 
-function TMainForm.SaveMangaOptions: String;
-var
-  i: Integer;
-  data: PSingleItem;
-begin
-  Result := '';
-  if Length(optionMangaSiteSelectionNodes) > 0 then
-    for i := Low(optionMangaSiteSelectionNodes) to High(optionMangaSiteSelectionNodes) do
+  // load selected websites
+  s := configfile.ReadString('general', 'MangaListSelect', DEFAULT_SELECTED_WEBSITES);
+  if Pos(SEPERATOR, s) <> 0 then
+    ExtractParam(cbSelectManga.Items, s, SEPERATOR, False)
+  else
+    ExtractParam(cbSelectManga.Items, s, ',', False);
+
+  // remove missing websites from selected websites
+  for i := cbSelectManga.Items.Count - 1 downto 0 do
+  begin
+    if not AvailableWebsites.Find(cbSelectManga.Items[i], j) then
+      cbSelectManga.Items.Delete(i);
+  end;
+
+  // set checked vt websites selection
+  for i := 0 to cbSelectManga.Items.Count - 1 do
+  begin
+    node := vtOptionMangaSiteSelection.GetFirst();
+    while node <> nil do
     begin
-      data := vtOptionMangaSiteSelection.GetNodeData(optionMangaSiteSelectionNodes[i]);
-      if optionMangaSiteSelectionNodes[i]^.CheckState = csCheckedNormal then
+      if node^.ChildCount = 0 then
       begin
-        if Result = '' then
-          Result := data^.Text
-        else
-          Result := Result + ',' + data^.Text;
+        data := vtOptionMangaSiteSelection.GetNodeData(node);
+        if cbSelectManga.Items[i] = data^.Text then
+        begin
+          node^.CheckState := csCheckedNormal;
+          Break;
+        end;
       end;
+      node := vtOptionMangaSiteSelection.GetNext(node);
     end;
+  end;
+
+  // load last selected webssite
+  if cbSelectManga.Items.Count > 0 then
+  begin
+    i := configfile.ReadInteger('form', 'SelectManga', 0);
+    if i < 0 then
+      i := 0;
+    if i > cbSelectManga.Items.Count - 1 then
+      i := cbSelectManga.Items.Count - 1;
+    cbSelectManga.ItemIndex := i;
+    currentWebsite := cbSelectManga.Items[cbSelectManga.ItemIndex];
+  end;
 end;
 
 procedure TMainForm.edMangaListSearchChange(Sender: TObject);
@@ -5039,7 +5380,7 @@ begin
     try
       InitialDir := edOptionDefaultPath.Text;
       if Execute then
-        edOptionDefaultPath.Text := CleanAndExpandDirectory(FileName);
+        edOptionDefaultPath.Text := FileName;
     finally
       Free;
     end;
@@ -5063,7 +5404,7 @@ begin
     try
       InitialDir := edSaveTo.Text;
       if Execute then
-        edSaveTo.Text := CleanAndExpandDirectory(FileName);
+        edSaveTo.Text := FileName;
     finally
       Free;
     end;
@@ -5072,11 +5413,9 @@ end;
 procedure TMainForm.edURLButtonClick(Sender: TObject);
 var
   i: Integer;
-  webid: Cardinal;
   website,
   host,
   link: String;
-  regx: TRegExpr;
 begin
   btDownload.Enabled := False;
   btDownloadSplit.Enabled := btDownload.Enabled;
@@ -5084,56 +5423,38 @@ begin
   btReadOnline.Enabled := False;
 
   website := '';
-  host := '';
-  link := '';
-  edURL.Text := FixURL(edURL.Text);
+  SplitURL(edURL.Text, @host, @link);
 
-  regx := TRegExpr.Create;
-  try
-    regx.Expression := '^https?\://';
-    if not (regx.Exec(edURL.Text)) then
-      edURL.Text := 'http://' + edURL.Text;
-
-    regx.Expression := REGEX_HOST;
-    if regx.Exec(edURL.Text) then
-    begin
-      host := regx.Replace(edURL.Text, '$2', True);
-      link := regx.Replace(edURL.Text, '$4', True);
-    end;
-
-    if (host <> '') and (link <> '') then
-    begin
-      host := LowerCase(host);
-      i := Modules.LocateModuleByHost(host);
-      if i > -1 then
-      begin
-        website := Modules.Module[i].Website;
-        edURL.Text := FillHost(Modules.Module[i].RootURL, link);
-      end
-      else
-      begin
-        for i := Low(WebsiteRoots) to High(WebsiteRoots) do
-          if Pos(host, WebsiteRoots[i, 1]) > 0 then
-          begin
-            webid := i;
-            website := WebsiteRoots[i, 0];
-            Break;
-          end;
-        if website <> '' then
-          edURL.Text := FillMangaSiteHost(webid, link);
-      end;
-    end;
-  finally
-    regx.Free;
+  if (host <> '') and (link <> '') then
+  begin
+    host := LowerCase(host);
+    i := Modules.LocateModuleByHost(host);
+    if i <> -1 then
+      website := Modules.Module[i].Website;
   end;
 
   if (website = '') or (link = '') then
   begin
+    tmAnimateMangaInfo.Enabled := False;
+    pbWait.Visible := False;
     MessageDlg('', RS_DlgURLNotSupport, mtInformation, [mbYes], 0);
     Exit;
   end;
 
-  ViewMangaInfo(link, website, '');
+  ViewMangaInfo(link, website, '', '', edURL);
+end;
+
+procedure TMainForm.edURLKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+begin
+  if (ssCtrl in Shift) and (ssShift in Shift) then
+  begin
+    if Key = VK_V then
+      medURLPasteandgoClick(medURLPasteandgo)
+    else
+    if Key = VK_C then
+      Clipboard.AsText := edURL.Text;
+    Key := 0;
+  end;
 end;
 
 procedure TMainForm.UpdateVtChapter;
@@ -5174,20 +5495,45 @@ begin
 end;
 
 procedure TMainForm.LoadFormInformation;
-var
-  i: Integer;
+
+  procedure restorevt(const vt: VirtualTrees.TVirtualStringTree; const name: String);
+  var
+    i: Integer;
+  begin
+    with configfile, vt.Header do
+    begin
+      SortColumn := ReadInteger(name, 'SortColumn', SortColumn);
+      SortDirection := TSortDirection(ReadInteger(name, 'SortDirection', Integer(SortDirection)));
+      for i := 0 to Columns.Count - 1 do
+      begin
+        Columns[i].Width := ReadInteger(name, 'Column' + IntToStr(i) + 'Width', Columns[i].Width);
+        Columns[i].Position := ReadInteger(name, 'Column' + IntToStr(i) + 'Position', Columns[i].Position);
+      end;
+    end;
+  end;
+
 begin
   with configfile do
   begin
-    pcLeft.Width := ReadInteger('form', 'MainSplitter', 195);
-    sbMain.Panels[0].Width := pcLeft.Width + 4;
+    psDownloads.Position := ReadInteger('form', 'DownloadsSplitter', psDownloads.Position);
+    psInfo.Position := ReadInteger('form', 'MangaInfoSplitter', psInfo.Position);
 
-    pcMain.PageIndex := ReadInteger('form', 'pcMainPageIndex', 0);
+    if ReadBool('update', 'AutoCheckFavStartup', True) and ReadBool('update', 'AutoOpenFavStartup', False) then
+      pcMain.ActivePage := tsFavorites
+    else
+      pcMain.PageIndex := ReadInteger('form', 'pcMainPageIndex', 0);
 
-    Left := ReadInteger('form', 'MainFormLeft', MainForm.Left);
-    Top := ReadInteger('form', 'MainFormTop', MainForm.Top);
-    Width := ReadInteger('form', 'MainFormWidth', 640);
-    Height := ReadInteger('form', 'MainFormHeight', 480);
+    Left := ReadInteger('form', 'MainFormLeft', Left);
+    Top := ReadInteger('form', 'MainFormTop', Top);
+    Width := ReadInteger('form', 'MainFormWidth', Width);
+    Height := ReadInteger('form', 'MainFormHeight', Height);
+
+    if Screen.PixelsPerInch > 96 then begin
+      Width := ScaleScreenTo96(Width);
+      Height := ScaleScreenTo96(Height);
+      psDownloads.Position := ScaleScreenTo96(psDownloads.Position);
+      psInfo.Position := ScaleScreenTo96(psInfo.Position);
+    end;
 
     if ReadBool('form', 'MainFormMaximized', False) then
       PrevWindowState := wsMaximized
@@ -5195,35 +5541,51 @@ begin
       PrevWindowState := wsNormal;
     WindowState := PrevWindowState;
 
-    if vtDownload.Header.Columns.Count > 0 then
-     with vtDownload.Header.Columns do
-      for i := 0 to Count - 1 do
-        Items[i].Width := ReadInteger('form', 'vtDownload' + IntToStr(i) + 'Width', 50);
+    ToolBarDownload.Visible := ReadBool('view', 'ShowDownloadsToolbar', True);
+    ToolBarDownloadLeft.Visible := ReadBool('view', 'ShowDownloadsToolbarLeft', True);
+    tbDownloadDeleteCompleted.Visible := ReadBool('view', 'ShowDownloadsToolbarDeleteAll', False);
 
-    if vtFavorites.Header.Columns.Count > 0 then
-     with vtFavorites.Header.Columns do
-      for i := 0 to Count - 1 do
-        Items[i].Width := ReadInteger('form', 'vtFavorites' + IntToStr(i) + 'Width', 50);
+    restorevt(vtDownload, 'vtDownload');
+    DLManager.SortColumn := vtDownload.Header.SortColumn;
+    DLManager.SortDirection := Boolean(vtDownload.Header.SortDirection);
 
-    FavoriteManager.SortColumn := ReadInteger('misc', 'SortFavoritesColumn', 1);
-    FavoriteManager.sortDirection := ReadBool('misc', 'SortFavoritesDirection', False);
-    vtFavorites.Header.SortColumn := FavoriteManager.SortColumn;
-    vtFavorites.Header.SortDirection := TSortDirection(FavoriteManager.sortDirection);
+    restorevt(vtFavorites, 'vtFavorites');
+    FavoriteManager.SortColumn := vtFavorites.Header.SortColumn;
+    FavoriteManager.SortDirection := Boolean(vtFavorites.Header.SortDirection);
 
-    DLManager.SortColumn := ReadInteger('misc', 'SortDownloadColumn', 0);
-    DLManager.SortDirection := ReadBool('misc', 'SortDownloadDirection', False);
-    vtDownload.Header.SortColumn := DLManager.SortColumn;
-    vtDownload.Header.SortDirection := TSortDirection(DLManager.SortDirection);
+    // lua website modules list
+    restorevt(LuaModulesUpdaterForm.vtLuaModulesRepos, 'vtLuaModulesRepos');
+    LuaModulesUpdaterForm.SortList;
+
+    // account
+    restorevt(AccountManagerForm.vtAccountList, 'vtAccountList');
+    AccountManagerForm.SortList;
   end;
 end;
 
 procedure TMainForm.SaveFormInformation;
-var
-  i: Integer;
+
+  procedure savevt(const vt: VirtualTrees.TVirtualStringTree; const name: String);
+  var
+    i: Integer;
+  begin
+    with configfile, vt.Header do
+    begin
+      WriteInteger(name, 'SortColumn', SortColumn);
+      WriteInteger(name, 'SortDirection', Integer(SortDirection));
+      for i := 0 to Columns.Count - 1 do
+      begin
+        WriteInteger(name, 'Column' + IntToStr(i) + 'Width', Columns[i].Width);
+        WriteInteger(name, 'Column' + IntToStr(i) + 'Position', Columns[i].Position);
+      end;
+    end;
+  end;
+
 begin
   with configfile do
   begin
-    WriteInteger('form', 'MainSplitter', pcLeft.Width);
+    WriteInteger('form', 'DownloadsSplitter', psDownloads.Position);
+    WriteInteger('form', 'MangaInfoSplitter', psInfo.Position);
     WriteInteger('form', 'pcMainPageIndex', pcMain.PageIndex);
     WriteInteger('form', 'SelectManga', cbSelectManga.ItemIndex);
     WriteBool('form', 'MainFormMaximized', (WindowState = wsMaximized));
@@ -5234,26 +5596,20 @@ begin
     WriteInteger('form', 'MainFormWidth', Width);
     WriteInteger('form', 'MainFormHeight', Height);
 
-    if vtDownload.Header.Columns.Count > 0 then
-     with vtDownload.Header.Columns do
-      for i := 0 to Count - 1 do
-        WriteInteger('form', 'vtDownload' + IntToStr(i) + 'Width', Items[i].Width);
+    savevt(vtDownload, 'vtDownload');
+    savevt(vtFavorites, 'vtFavorites');
 
-    if vtFavorites.Header.Columns.Count > 0 then
-     with vtFavorites.Header.Columns do
-      for i := 0 to Count - 1 do
-        WriteInteger('form', 'vtFavorites' + IntToStr(i) + 'Width', Items[i].Width);
+    // lua website modules list
+    savevt(LuaModulesUpdaterForm.vtLuaModulesRepos, 'vtLuaModulesRepos');
 
-    WriteInteger('misc', 'SortDownloadColumn', vtDownload.Header.SortColumn);
-    WriteBool('misc', 'SortDownloadDirection', DLManager.SortDirection);
-
-    WriteInteger('misc', 'SortFavoritesColumn', vtFavorites.Header.SortColumn);
-    WriteBool('misc', 'SortFavoritesDirection', FavoriteManager.sortDirection);
+    // account
+    savevt(AccountManagerForm.vtAccountList, 'vtAccountList');
   end;
 end;
 
 procedure TMainForm.ShowDropTarget(const AShow: Boolean);
 begin
+  ckDropTarget.Checked := AShow;
   configfile.WriteBool('droptarget', 'Show', AShow);
   if AShow then
   begin
@@ -5270,12 +5626,11 @@ begin
   end;
 end;
 
-procedure TMainForm.SaveDropTargetFormInformation(const isClose: Boolean);
+procedure TMainForm.SaveDropTargetFormInformation;
 begin
   with configfile do
   begin
-    if isClose then
-      WriteBool('droptarget', 'Show', False);
+    WriteBool('droptarget', 'Show', ckDropTarget.Checked);
     WriteInteger('droptarget', 'Mode', rgDropTargetMode.ItemIndex);
     WriteInteger('droptarget', 'Opacity', frmDropTarget.FAlphaBlendValue);
     WriteInteger('droptarget', 'Width', frmDropTarget.FWidth);
@@ -5290,7 +5645,7 @@ var
   i: Integer;
 begin
   cbLanguages.Items.Clear;
-  SimpleTranslator.LangDir := CleanAndExpandDirectory(GetCurrentDirUTF8) + 'languages';
+  SimpleTranslator.LangDir := FMD_DIRECTORY + 'languages';
   SimpleTranslator.LangAppName := 'fmd';
   SimpleTranslator.CollectLanguagesFiles;
   if SimpleTranslator.AvailableLanguages.Count > 0 then
@@ -5309,7 +5664,10 @@ var
   idxFilterStatus,
   idxOptionLetFMDDo,
   idxOptionProxyType,
-  idxDropTargetMode: Integer;
+  idxDropTargetMode,
+  idxOptionCompress,
+  idxOptionWebPConvertTo,
+  idxOptionWebPPNGLevel: Integer;
 begin
   if AvailableLanguages.Count = 0 then Exit;
   if cbLanguages.ItemIndex < 0 then Exit;
@@ -5325,6 +5683,9 @@ begin
     idxOptionLetFMDDo := cbOptionLetFMDDo.ItemIndex;
     idxOptionProxyType := cbOptionProxyType.ItemIndex;
     idxDropTargetMode := rgDropTargetMode.ItemIndex;
+    idxOptionCompress := rgOptionCompress.ItemIndex;
+    idxOptionWebPConvertTo := cbWebPSaveAs.ItemIndex;
+    idxOptionWebPPNGLevel := cbPNGCompressionLevel.ItemIndex;
     if SimpleTranslator.SetLangByIndex(cbLanguages.ItemIndex) then
     begin
       // assign new value
@@ -5335,6 +5696,9 @@ begin
       cbFilterStatus.Items.Text := RS_FilterStatusItems;
       cbOptionLetFMDDo.Items.Text := RS_OptionFMDDoItems;
       rgDropTargetMode.Items.Text := RS_DropTargetModeItems;
+      rgOptionCompress.Items.Text := RS_OptionCompress;
+      cbWebPSaveAs.Items.Text := RS_WebPConvertTo;
+      cbPNGCompressionLevel.Items.Text := RS_WebPPNGLevel;
 
       // restore ItemIndex
       cbSelectManga.ItemIndex:=idxSelectManga;
@@ -5343,12 +5707,16 @@ begin
       cbOptionLetFMDDo.ItemIndex := idxOptionLetFMDDo;
       cbOptionProxyType.ItemIndex := idxOptionProxyType;
       rgDropTargetMode.ItemIndex := idxDropTargetMode;
+      rgOptionCompress.ItemIndex := idxOptionCompress;
+      cbWebPSaveAs.ItemIndex := idxOptionWebPConvertTo;
+      cbPNGCompressionLevel.ItemIndex := idxOptionWebPPNGLevel;
       Self.Repaint;
       vtMangaList.Repaint;
       tvDownloadFilterRefresh(True);
 
       // refresh custom option
-      WebsiteOptionCustomForm.CreateWebsiteOption;
+      if not isStartup then
+        WebsiteOptionCustomForm.CreateWebsiteOption;
     end;
   end;
 end;
@@ -5448,13 +5816,9 @@ var
   i: Integer;
 begin
   TransferRateGraphList.Clear;
-  TransferRateGraphList.DataPoints.NameValueSeparator := '|';
   TransferRateGraphArea.Legend.Format := FormatByteSize(0, True);
-  if xCount=0 then
-    TransferRateGraphInit
-  else
-    for i:=1 to xCount do
-      TransferRateGraphList.DataPoints.Add(IntToStr(i)+'|0|?|');
+  for i:=1 to xCount do
+    TransferRateGraphList.DataPoints.Add(IntToStr(i)+'|0|?|');
 end;
 
 procedure TMainForm.TransferRateGraphAddItem(TransferRate: Integer);
@@ -5464,12 +5828,9 @@ begin
   TransferRateGraphArea.Legend.Format := FormatByteSize(TransferRate, True);
   with TransferRateGraphList.DataPoints do
   begin
-    if Count=0 then
-      TransferRateGraphInit;
-    for i := 0 to Count - 1 do
-      if i < Count - 1 then
-        Strings[i] := Format('%d|%s', [i+1, ValueFromIndex[i+1]]);
-    Strings[Count-1] := Format('%d|%d|?|',[Count,TransferRate]);
+    for i := 0 to Count - 2 do
+      Strings[i] := IntToStr(i+1)+'|'+ValueFromIndex[i+1];
+    Strings[Count-1] := IntToStr(Count)+'|'+IntToStr(TransferRate)+'|?|';
   end;
 end;
 
@@ -5496,54 +5857,47 @@ begin
     FavoriteManager.Backup;
 end;
 
-procedure TMainForm.vtOptionMangaSiteSelectionChange(Sender : TBaseVirtualTree;
-  Node : PVirtualNode);
+procedure TMainForm.vtMangaListInitNode(Sender: TBaseVirtualTree; ParentNode,
+  Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
+var
+  data: PMangaInfoData;
 begin
-  vtOptionMangaSiteSelection.Refresh;
-end;
-
-procedure TMainForm.vtOptionMangaSiteSelectionFocusChanged(
-  Sender : TBaseVirtualTree; Node : PVirtualNode; Column : TColumnIndex);
-begin
-  vtOptionMangaSiteSelection.Refresh;
+  data := Sender.GetNodeData(Node);
+  with data^ do
+  begin
+    link := dataProcess.Value[Node^.Index, DATA_PARAM_LINK];
+    title := dataProcess.Value[Node^.Index, DATA_PARAM_TITLE];
+    authors := dataProcess.Value[Node^.Index, DATA_PARAM_AUTHORS];
+    artists := dataProcess.Value[Node^.Index, DATA_PARAM_ARTISTS];
+    genres := dataProcess.Value[Node^.Index, DATA_PARAM_GENRES];
+    status := dataProcess.Value[Node^.Index, DATA_PARAM_STATUS];
+    numchapter := dataProcess.ValueInt[Node^.Index, DATA_PARAM_NUMCHAPTER];
+    jdn := dataProcess.ValueInt[Node^.Index, DATA_PARAM_JDN];
+    website := dataProcess.WebsiteName[Node^.Index];
+    summary := dataProcess.Value[Node^.Index, DATA_PARAM_SUMMARY];
+    titleformat := title + ' (' + IntToStr(numchapter) + ')';
+    if dataProcess.FilterAllSites then
+      titleformat += ' [' + website + ']';
+  end;
 end;
 
 procedure TMainForm.vtOptionMangaSiteSelectionFreeNode(
   Sender : TBaseVirtualTree; Node : PVirtualNode);
-var
-  Data: PSingleItem;
 begin
-  Data := vtOptionMangaSiteSelection.GetNodeData(Node);
-  if Assigned(Data) then
-    Finalize(Data^);
+  Finalize(PSingleItem(Sender.GetNodeData(Node))^);
 end;
 
 procedure TMainForm.vtOptionMangaSiteSelectionGetNodeDataSize(Sender: TBaseVirtualTree;
   var NodeDataSize: Integer);
 begin
-  NodeDataSize := SizeOf(TMangaListItem);
+  NodeDataSize := SizeOf(TSingleItem);
 end;
 
 procedure TMainForm.vtOptionMangaSiteSelectionGetText(Sender: TBaseVirtualTree;
   Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType;
   var CellText: String);
-var
-  Data: PSingleItem;
 begin
-  Data := vtOptionMangaSiteSelection.GetNodeData(Node);
-  if Assigned(Data) then
-    CellText := Data^.Text;
-end;
-
-procedure TMainForm.vtOptionMangaSiteSelectionInitNode(Sender: TBaseVirtualTree;
-  ParentNode, Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
-var
-  Level: Integer;
-begin
-  Level := vtOptionMangaSiteSelection.GetNodeLevel(Node);
-  if Level = 1 then
-    Node^.CheckType := ctCheckBox;
-  vtOptionMangaSiteSelection.ValidateNode(Node, False);
+  CellText := PSingleItem(vtOptionMangaSiteSelection.GetNodeData(Node))^.Text;
 end;
 
 end.

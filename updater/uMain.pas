@@ -11,8 +11,8 @@ uses
   {$endif}
   Classes, SysUtils, zipper, FileUtil, LazFileUtils, LazUTF8, LazUTF8Classes,
   Forms, Dialogs, ComCtrls, StdCtrls, ExtCtrls, RegExpr, IniFiles, blcksock,
-  ssl_openssl, ssl_openssl_lib, synacode, httpsendthread, uMisc,
-  SimpleTranslator;
+  ssl_openssl, ssl_openssl_lib, synacode, httpsendthread, uMisc, BaseThread,
+  SimpleTranslator, SimpleException;
 
 type
 
@@ -39,7 +39,7 @@ type
 
   { TDownloadThread }
 
-  TDownloadThread = class(THTTPThread)
+  TDownloadThread = class(TBaseThread)
   private
     FTotalSize, FCurrentSize: Integer;
     FHTTP: THTTPSendThread;
@@ -58,7 +58,6 @@ type
     procedure UpdateStatus(AStatus: String);
     procedure ShowErrorMessage(AMessage: String);
     procedure Execute; override;
-    procedure OnThreadTerminate(Sender: TObject);
   public
     URL: String;
     FileName: String;
@@ -90,6 +89,13 @@ var
   ProxyPort: String;
   ProxyUser: String;
   ProxyPass: String;
+
+  FMD_DIR: String;
+  CONFIG_DIR: String;
+  LANGUAGES_DIR: String;
+  CONFIG_FILE: String;
+  SZA: String;
+  OSZA: String;
 
 const
   Symbols: array [0..10] of Char =
@@ -265,7 +271,7 @@ var
   sf: Boolean = False;
   regx: TRegExpr;
   i, ctry: Cardinal;
-  Sza,
+  csza,
   rurl,
   fname,
   sproject,
@@ -426,7 +432,7 @@ begin
       (FHTTP.ResultCode >= 100) and (FHTTP.ResultCode < 300) and
       (FCurrentSize >= FTotalSize) then
     begin
-      fname := DirPath + DirectorySeparator + FileName;
+      fname := DirPath + FileName;
       if FileExistsUTF8(fname) then
         DeleteFileUTF8(fname);
 
@@ -451,112 +457,126 @@ begin
         ssl_openssl_lib.DestroySSLInterface;
 
         UpdateStatus(Format(RS_UnpackFile, [fname]));
-        Sza := GetCurrentDirUTF8 + DirectorySeparator + '7za.exe';
         if _UpdApp and
-          FileExistsUTF8(GetCurrentDirUTF8 + DirectorySeparator + '7za.exe') then
+          FileExistsUTF8(SZA) then
         begin
           st := TStringList.Create;
           try
-            FindAllFiles(st, GetCurrentDirUTF8, '*.dbg', False);
+            FindAllFiles(st, FMD_DIR, '*.dbg', False);
             if st.Count > 0 then
               for i := 0 to st.Count - 1 do
                 DeleteFileUTF8(st[i]);
           finally
             st.Free;
           end;
-          CopyFile(GetCurrentDirUTF8 + DirectorySeparator + '7za.exe',
-            GetCurrentDirUTF8 + DirectorySeparator + 'old_7za.exe');
-          Sza := GetCurrentDirUTF8 + DirectorySeparator + 'old_7za.exe';
+          if FileExistsUTF8(OSZA) then
+            DeleteFileUTF8(OSZA);
+          CopyFile(SZA, OSZA);
+          csza := OSZA;
         end;
         if Pos('.zip', LowerCase(FileName)) <> 0 then
         begin
           UZip := TUnZipper.Create;
           UZip.OnStartFile := @UZipOnStartFile;
           try
-            UZip.FileName := DirPath + DirectorySeparator + FileName;
+            UZip.FileName := DirPath + FileName;
             UZip.OutputPath := Dirpath;
             UZip.Examine;
             UZip.UnZipAllFiles;
           finally
             UZip.Free;
-            DeleteFileUTF8(DirPath + DirectorySeparator + FileName);
+            DeleteFileUTF8(DirPath + FileName);
           end;
         end
         else
         begin
-          if FileExistsUTF8(Sza) then
+          if FileExistsUTF8(csza) then
           begin
-            RunExternalProcess(Sza, ['x', fname, '-o' +
+            RunExternalProcess(csza, ['x', fname, '-o' +
               AnsiQuotedStr(DirPath, '"'), '-aoa'], False, True);
             DeleteFileUTF8(fname);
           end
           else
             ShowErrorMessage(RS_7zNotFound);
         end;
-        if FileExistsUTF8(GetCurrentDirUTF8 + DirectorySeparator + 'old_7za.exe') then
-          if FileExistsUTF8(GetCurrentDirUTF8 + DirectorySeparator + '7za.exe') then
-            DeleteFileUTF8(GetCurrentDirUTF8 + DirectorySeparator + 'old_7za.exe')
+        if FileExistsUTF8(OSZA) then
+          if FileExistsUTF8(SZA) then
+            DeleteFileUTF8(OSZA)
           else
-            RenameFileUTF8(GetCurrentDirUTF8 + DirectorySeparator + 'old_7za.exe',
-              GetCurrentDirUTF8 + DirectorySeparator + '7za.exe');
+            RenameFileUTF8(OSZA, SZA);
       end;
     end;
     UpdateStatus(RS_Finished);
     if (not Self.Terminated) and _UpdApp and (_LaunchApp <> '') then
       RunExternalProcess(_LaunchApp, [''], True, False);
   except
+    on E: Exception do
+      ExceptionHandle(Self, E);
   end;
   regx.Free;
   HTTPHeaders.Free;
-end;
-
-procedure TDownloadThread.OnThreadTerminate(Sender: TObject);
-begin
-  FHTTP.Sock.AbortSocket;
 end;
 
 { TfrmMain }
 
 procedure TfrmMain.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 begin
+  try
   if isDownload then
   begin
     dl.Terminate;
     dl.WaitFor;
   end;
   CloseAction := caFree;
+  except
+    on E: Exception do
+      ExceptionHandle(Self, E);
+  end;
 end;
 
 procedure TfrmMain.FormCreate(Sender: TObject);
-var
-  config: TIniFile;
 begin
   Randomize;
-  SimpleTranslator.LangDir := CleanAndExpandDirectory(GetCurrentDirUTF8) + 'languages';
+  FMD_DIR := CleanAndExpandDirectory(ExtractFilePath(Application.ExeName));
+  CONFIG_DIR := FMD_DIR + 'config';
+  LANGUAGES_DIR := FMD_DIR + 'languages';
+  CONFIG_FILE := CONFIG_DIR + PathDelim + 'config.ini';
+  SZA := FMD_DIR + '7za.exe';
+  OSZA := FMD_DIR + 'old_7za.exe';
+
+  InitSimpleExceptionHandler;
+  try
+  SimpleTranslator.LangDir := LANGUAGES_DIR;
   SimpleTranslator.LangAppName := 'updater';
   SimpleTranslator.CollectLanguagesFiles;
   InitCriticalSection(CS_ReadCount);
   //load proxy config from fmd
-  config := TIniFile.Create('config/config.ini');
-  try
-    if config.ReadBool('connections', 'UseProxy', False) then
-    begin
-      ProxyType := config.ReadString('connections', 'ProxyType', 'HTTP');
-      ProxyHost := config.ReadString('connections', 'Host', '');
-      ProxyPort := config.ReadString('connections', 'Port', '');
-      ProxyUser := config.ReadString('connections', 'User', '');
-      ProxyPass := config.ReadString('connections', 'Pass', '');
-    end
-    else
-    begin
-      ProxyType := '';
-      ProxyHost := '';
-      ProxyPort := '';
-      ProxyUser := '';
-      ProxyPass := '';
+  if not FileExistsUTF8(CONFIG_FILE) then Exit;
+  with TIniFile.Create(CONFIG_FILE) do
+    try
+      SimpleTranslator.SetLang(ReadString('languages', 'Selected', 'en'), 'updater');
+      if ReadBool('connections', 'UseProxy', False) then
+      begin
+        ProxyType := ReadString('connections', 'ProxyType', 'HTTP');
+        ProxyHost := ReadString('connections', 'Host', '');
+        ProxyPort := ReadString('connections', 'Port', '');
+        ProxyUser := ReadString('connections', 'User', '');
+        ProxyPass := ReadString('connections', 'Pass', '');
+      end
+      else
+      begin
+        ProxyType := '';
+        ProxyHost := '';
+        ProxyPort := '';
+        ProxyUser := '';
+        ProxyPass := '';
+      end;
+    finally
+      Free;
     end;
-  finally
-    FreeAndNil(config);
+  except
+    on E: Exception do
+      ExceptionHandle(Self, E);
   end;
 end;
 
@@ -571,6 +591,7 @@ var
   i: Integer;
   sh: Boolean = False;
 begin
+  try
   if Paramcount > 0 then
   begin
     for i := 1 to Paramcount do
@@ -600,7 +621,7 @@ begin
         else if s = '-l' then
           _LaunchApp := ParamStrUTF8(i + 1)
         else if (LowerCase(s) = '--lang') then
-          SimpleTranslator.SetLang(ParamStrUTF8(i + 1));
+          SimpleTranslator.SetLang(ParamStrUTF8(i + 1), 'updater');
       end;
     end;
   end;
@@ -623,9 +644,9 @@ begin
       dl.URL := _URL;
       dl.MaxRetry := _MaxRetry;
       if _UpdApp then
-        dl.DirPath := GetCurrentDirUTF8
+        dl.DirPath := FMD_DIR
       else
-        dl.DirPath := CleanAndExpandDirectory(GetCurrentDirUTF8) + 'data';
+        dl.DirPath := FMD_DIR + 'data' + PathDelim;
       dl.Extract := _Extract;
       dl.Start;
       itMonitor.Enabled := True;
@@ -635,6 +656,10 @@ begin
       MessageDlg(Application.Title, RS_InvalidURL, mtError, [mbOK], 0);
       Self.Close;
     end;
+  end;
+  except
+    on E: Exception do
+      ExceptionHandle(Self, E);
   end;
 end;
 

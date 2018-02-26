@@ -13,7 +13,7 @@ uses
   simplehtmltreeparser, xquery;
 
 function GetDirectoryPageNumber(const MangaInfo: TMangaInformation;
-  var Page: Integer; const Module: TModuleContainer): Integer;
+  var Page: Integer; const WorkPtr: Integer; const Module: TModuleContainer): Integer;
 begin
   Page := 100;
   Result := NO_ERROR;
@@ -159,6 +159,7 @@ begin
   begin
     Website := 'Doujin-Moe';
     RootURL := 'http://www.doujin-moe.us';
+    Category := 'H-Sites';
     SortedList := True;
     FavoriteAvailable := False;
     OnGetDirectoryPageNumber := @GetDirectoryPageNumber;

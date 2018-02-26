@@ -15,7 +15,7 @@ const
   domainImage = 'http://img.mangasaurus.com';
 
 function GetDirectoryPageNumber(const MangaInfo: TMangaInformation;
-  var Page: Integer; const Module: TModuleContainer): Integer;
+  var Page: Integer; const WorkPtr: Integer; const Module: TModuleContainer): Integer;
 var
   s: String;
 begin
@@ -190,6 +190,7 @@ begin
   begin
     Website := 'MangaSaurus';
     RootURL := 'http://mangasaurus.com';
+    Category := 'English';
     OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;

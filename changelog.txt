@@ -4,6 +4,480 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.149.0 (26-02-2018)
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.148.0...0.9.149.0
+
+0.9.148.0 (20-02-2018)
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.147.0...0.9.148.0
+
+0.9.147.0 (19-02-2018)
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.146.0...0.9.147.0
+
+0.9.146.0 (18-02-2018)
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.145.0...0.9.146.0
+
+0.9.145.0 (17-02-2018)
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.144.0...0.9.145.0
+
+0.9.144.0 (17-02-2018)
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.143.0...0.9.144.0
+
+0.9.143.0 (17-02-2018)
+[*] Update Indonesian localization
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.142.0...0.9.143.0
+
+0.9.142.0 (16-02-2018)
+[+] Added ManhwaCo [EN-SC]
+[+] Added HentaiHere [H]
+[*] Fixed update list issue
+[*] Update Indonesian localization
+[*] Update Russian localization
+[*] Update Turkish localization
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.141.0...0.9.142.0
+
+0.9.141.0 (15-02-2018)
+[+] Added new updater only to extract update package
+[*] Download new version in the background
+[*] Download mangalist database(s) in the background
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.140.0...0.9.141.0
+
+0.9.140.0 (14-02-2018)
+[+] Added SeaOtterScans [EN-SC]
+[+] Added MangaSh
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.139.0...0.9.140.0
+
+0.9.139.0 (13-02-2018)
+[+] Added SelfMangaRU [RU]
+[+] Added MerakiScans [EN-SC]
+[*] MangaOnlineTo, change domain
+[*] Update Turkish localization
+[*] Fixed empty website selection in advanced website options
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.138.0...0.9.139.0
+
+0.9.138.0 (13-02-2018)
+[+] Added option to delete completed task on close
+[+] Added option to convert PNG images to JPEG
+[+] Added NeuManga [ID]
+[+] Added HotChoholateScans [EN-SC]
+[+] Added LetItGoScans [EN-SC]
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.137.0...0.9.138.0
+
+0.9.137.0 (12-02-2018)
+[+] Added ChibiManga [EN-SC]
+[*] Fixed updater can't find 7za.exe, you need to download this release manually
+[*] Update Turkish localization
+[*] Update Indonesian localization
+[*] Update Russian localization
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.136.0...0.9.137.0
+
+0.9.136.0 (12-02-2018)
+[+] Added website modules updater
+[+] Added RavenScans [SP-SC]
+[+] Added KirishimaFansub [SP-SC]
+[+] Added NoraNoFansub [SP-SC]
+[+] Added YamiTenshiNoFansub [SP-SC]
+[+] Added Mangavy [ID]
+[-] Removed MangaWorksFansub
+[-] Removed MasterPieceScans
+[-] Removed R15TeamScanlation
+[*] TonarinoYoungJump: fixed all
+[*] Hentai2Read: fixed info
+[*] Mangadex: limit maximum connections to 4
+[*] Update Turkish localization
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.135.0...0.9.136.0
+
+0.9.135.0 (10-02-2018)
+[+] Added option to convert WebP to PNG/JPEG
+[-] Removed AnimeA
+[-] Removed CentrumMangi_PL
+[-] Removed DM5
+[-] Removed Imanhua
+[-] Removed MangaLib_PL
+[-] Removed MangaAr
+[-] Removed MangaAt
+[*] MangaStream: fixed download
+[*] Update Russian localization
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.134.0...0.9.135.0
+
+0.9.134.0 (08-02-2018)
+[+] Added Lhscans [RAW]
+[+] Added Mangakakalot/Manganelo [EN]
+[+] Added Mangawindow [EN]
+[*] MangaStream: fixed domain
+[*] Update Turkish localization
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.133.0...0.9.134.0
+
+0.9.133.0 (07-02-2018)
+[+] Added left download toolbar to move selected download(s). Options > View
+[+] Added Lua support to add website module at runtime
+[+] Added WorldThree [EN-SC]
+[+] Added PsychoPlay [EN-SC]
+[+] Added MangaZukiRaws [Raws]
+[+] Added MangaDeep [EN]
+[+] Added Imgur
+[-] Removed MangaSpy
+[-] Removed MangaIce
+[*] View manga info preserve saveto location from download or favorite
+[*] MangaZuki: fixed all
+[*] Comico: fixed all
+[*] MangaGo: fixed all
+[*] Tumangaonline: fixed all
+[*] MangaAe: fixed download
+[*] Cloudflare check added to all network events
+[*] Update Russian localization (by TokcDK)
+[*] Update Turkish localization (by Tmp341)
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.132.0...0.9.133.0
+
+0.9.132.0 (29-01-2018)
+[*] LHTranslation, fix chapter order
+[*] Mangadex, fix download
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.131.0...0.9.132.0
+
+0.9.131.0 (27-01-2018)
+[+] Added Mangarock [EN]
+[+] Added LHTranslation [EN-SC]
+[+] Added ChampionScans [EN-SC]
+[+] Added Mangaf [AR]
+[+] Added WieManga [DE]
+[+] Added MangaTube [DE]
+[+] Added AtelierDuNoir [EN-SC]
+[+] Added MangaDex [EN]
+[+] Added MangaHub [RU]
+[+] Added Turkish translation by Tmp341
+[+] Added WebP codec library (libwebp)
+[+] Enabled high DPI awareness
+[*] MangaTown, exclude ads page
+[*] MangaChan, fix domain
+[*] UnionMangas, fix download
+[*] Update localization [EN, RU]
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.130.0...0.9.131.0
+
+0.9.130.0 (23-01-2018)
+[+] Added transfer favorites
+[+] Added rename favorites
+[+] Added Subapics [ID]
+[+] Added MangaDesu [ID]
+[+] Added MangaKita [ID]
+[+] Added Whiteoutscans [EN-SC]
+[+] Added DokiFansubs [EN-SC]
+[*] NineManga: fixed all
+[*] MangaInn: fixed all
+[*] MangaLife: fixed domain
+[*] MangaId: fixed download
+[*] Madokami: fixed chapter title
+[*] Jaiminisbox: fixed downoad
+[*] MangaPark: fixed title
+[*] Tsumanga: fixed update list
+[*] Kumanga: fixed all
+[*] RawSenManga: fixed all
+[*] SenManga: fixed all
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.129.0...0.9.130.0
+
+0.9.129.0 (02-01-2018)
+[*] MangaGo: fixed download
+Full changes: https://github.com/riderkick/FMD/compare/0.9.128.0...0.9.129.0
+
+0.9.128.0 (15-12-2017)
+Full changes: https://github.com/riderkick/FMD/compare/0.9.127.0...0.9.128.0
+
+0.9.127.0 (19-11-2017)
+[*] MangaFox, MangaHere: exclude ads page
+Full changes: https://github.com/riderkick/FMD/compare/0.9.126.0...0.9.127.0
+
+0.9.126.0 (29-08-2017)
+[*] Madokami: fixed update list
+[*] Fixed download issue with some website
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.125.0...0.9.126.0
+
+0.9.125.0 (26-08-2017)
+[*] Japscan: fixed download
+[*] MangaZuki: fixed title
+[*] MangaGo: fixed title
+[*] HeyManga: fixed download
+[*] Fixed failed chapter(s) always marked as finished
+[+] Added option to always start task from failed chapter if any
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.124.0...0.9.125.0
+
+0.9.124.0 (16-08-2017)
+[*] MangaShiro: fixed all
+[*] MangaFox: remove "new" from chapter's title
+[*] Update Portuguese (Brazil) translation by Havokdan
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.123.0...0.9.124.0
+
+0.9.123.0 (13-08-2017)
+[+] Added option for auto retry failed task
+[*] MangaInn: fixed chapter name
+[*] Update Spanish translation by Mariolr39
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.122.0...0.9.123.0
+
+0.9.122.0 (02-08-2017)
+[*] MangaAe: fixed all
+[*] Tumangaonline: fixed load manhwa
+[*] MangaInn: fixed all
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.121.0...0.9.122.0
+
+0.9.121.0 (28-07-2017)
+[*] Mangago: fixed download
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.120.0...0.9.121.0
+
+0.9.120.0 (26-07-2017)
+[*] Added support for relative path
+[*] Increased task/connection limit for win32 to 16/64 and win64 to 64/256
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.119.0...0.9.120.0
+
+0.9.119.0 (21-07-2017)
+[+] Added shogakukan
+[+] Added Russian translation by TokcDK
+[*] Mangasee: fixed download
+[*] MyReadingManga: fixed download
+[*] Madokami: fixed update list
+[*] TonariYoungJump: fixed chapter list
+[*] Mangazuki: fixed chapter list
+[*] Update Greek translation by geogeo-gr
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.118.0...0.9.119.0
+
+0.9.118.0 (14-06-2017)
+[*] Madokami: fixed all
+[-] MangaKoi: removed
+[+] Added MangaHome[EN]
+[-] MangaMint: removed
+[+] Added MangaTail[EN]
+[+] Added MangaSail[EN]
+[+] Added option to minimize on start
+[*] Manga-Tr: fixed all
+[*] GManga: fixed all
+[*] TruyenTranhTuan: fixed all
+[-] Manga24H: removed
+[*] BlogTruyen: fixed all
+[*] KuManga: fixed all
+[*] LeoManga: fixed all
+Full changes: https://github.com/riderkick/FMD/compare/0.9.117.0...0.9.118.0
+
+0.9.117.0 (12-06-2017)
+[*] Fixed empty update url, you may need to download this version manually
+Full changes: https://github.com/riderkick/FMD/compare/0.9.116.0...0.9.117.0
+
+0.9.116.0 (12-06-2017)
+[*] NineManga: fixed all
+[*] MyReadingManga: fixed all
+Full changes: https://github.com/riderkick/FMD/compare/0.9.115.0...0.9.116.0
+
+0.9.115.0 (11-06-2017)
+[+] Added Taadd[EN]
+[-] Fakku: removed, not free anymore
+[-] Yomanga: removed, website down
+Full changes: https://github.com/riderkick/FMD/compare/0.9.114.0...0.9.115.0
+
+0.9.114.0 (10-06-2017)
+[*] EatManga: fixed all
+[*] Fixed layout
+Full changes: https://github.com/riderkick/FMD/compare/0.9.113.0...0.9.114.0
+
+0.9.113.0 (08-06-2017)
+[*] Pururin: fixed all
+[*] Layout changes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.112.0...0.9.113.0
+
+0.9.112.0 (29-05-2017)
+[*] HitomiLa: fixed download
+[*] MangaGo: fixed download
+Full changes: https://github.com/riderkick/FMD/compare/0.9.111.0...0.9.112.0
+
+0.9.111.0 (23-05-2017)
+[+] Added Tapas
+[*] Tumangaonline: fixed all
+[*] NeoProjectScan: fixed domain
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.110.0...0.9.111.0
+
+0.9.110.0 (02-05-2017)
+[*] CF: fixed expired cookies
+[*] KissManga: fixed download
+Full changes: https://github.com/riderkick/FMD/compare/0.9.109.0...0.9.110.0
+
+0.9.109.0 (30-03-2017)
+[*] KissManga: fixed download
+Full changes: https://github.com/riderkick/FMD/compare/0.9.108.0...0.9.109.0
+
+0.9.108.0 (27-03-2017)
+[*] KissManga: fixed download
+[*] Luscious: rewrite all
+[+] Added Pururin[H]
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.107.0...0.9.108.0
+
+0.9.107.0 (25-03-2017)
+[*] KissManga: added option to add custom key and iv #538
+Full changes: https://github.com/riderkick/FMD/compare/0.9.106.0...0.9.107.0
+
+0.9.106.0 (23-03-2017)
+[*] KissManga: fixed download
+[*] HeyManga: fixed download
+Full changes: https://github.com/riderkick/FMD/compare/0.9.105.0...0.9.106.0
+
+0.9.105.0 (22-03-2017)
+[*] Fixed memory leak
+[+] Added FallenAngelsScan[EN-SC]
+Full changes: https://github.com/riderkick/FMD/compare/0.9.104.0...0.9.105.0
+
+0.9.104.0 (16-03-2017)
+[+] Added HentaiFox[H]
+[*] Fixed memory leak
+Full changes: https://github.com/riderkick/FMD/compare/0.9.103.0...0.9.104.0
+
+0.9.103.0 (15-03-2017)
+[+] Added MangaOnlineBR[PT]
+[*] UnionMangas: exclude banner
+Full changes: https://github.com/riderkick/FMD/compare/0.9.102.0...0.9.103.0
+
+0.9.102.0 (13-03-2017)
+[*] MangaGo: fixed download
+[*] ReadMangaToday: rewrite all codes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.101.0...0.9.102.0
+
+0.9.101.0 (10-03-2017)
+[+] Batoto: added option to select the image server to download
+[*] MangaIndo: rewrite all codes
+[+] Added MangaID[ID]
+[+] Added MangaShiro[ID]
+[-] Mabuns: removed
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.100.0...0.9.101.0
+
+0.9.100.0 (08-03-2017)
+[*] Minor bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.99.0...0.9.100.0
+
+0.9.99.0 (08-03-2017)
+[+] Added MangaZuki[EN-SC]
+[-] HugeManga and MangaEsta were removed because the website is dead
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.98.0...0.9.99.0
+
+0.9.98.0 (06-03-2017)
+[*] Fixed various issue with downloads and favorites
+[*] Added enable/disable favorites
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.97.0...0.9.98.0
+
+0.9.97.0 (03-03-2017)
+[*] Fixed save and restore downloads
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.96.0...0.9.97.0
+
+0.9.96.0 (02-03-2017)
+[+] Added option to sort chapter list in mangainfo
+[*] Auto scroll chapter list to the bottom if sort is ascending
+[*] Fixed convert old downloads data before 0.9.94.0
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.95.0...0.9.96.0
+
+0.9.95.0 (29-02-2017)
+[*] Fixed various issue when terminating threads/closing app
+[*] Fixed updater
+Full changes: https://github.com/riderkick/FMD/compare/0.9.94.0...0.9.95.0
+
+0.9.94.0 (28-02-2017)
+[!+] Favorites and Downloads now saved in SQLite database file
+     WARNING: Please backup your favorites.ini and works.ini before update
+[*] Sorted downloads and favorites only allowed with left click
+[*] Fixed various issue with downloaded chapter list
+[*] Hentai2Read: fixed download
+[+] Added HelveticaScans[EN-SC]
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.93.0...0.9.94.0
+
+0.9.93.0 (22-02-2017)
+[*] WPManga: Fixed memory leak
+Full changes: https://github.com/riderkick/FMD/compare/0.9.92.0...0.9.93.0
+
+0.9.92.0 (21-02-2017)
+[+] Added MangaDoor[ES]
+[+] Added HentaiRead[H]
+[*] Replace MangaHen with MangaSpy
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.91.0...0.9.92.0
+
+0.9.91.0 (16-02-2017)
+[*] E-Hentai: fixed loading "Content Warning"
+Full changes: https://github.com/riderkick/FMD/compare/0.9.90.0...0.9.91.0
+
+0.9.90.0 (16-02-2017)
+[+] Added Portuguese (Brazil) translation by Havokdan
+[+] Added Greek translation by geogeo_gr
+[*] Fixed error when removing running download task
+[*] Fixed shop drop box at startup
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.89.0...0.9.90.0
+
+0.9.89.0 (06-02-2017)
+[*] E-Hentai: fixed root url
+[*] Split MangeEden_IT and PervEden_IT
+[+] Added Polish language, thanks to grzesjam
+[+] Added options to open favorites at startup
+Full changes: https://github.com/riderkick/FMD/compare/0.9.88.0...0.9.89.0
+
+0.9.88.0 (21-01-2017)
+[+] Added GoodManga[EN]
+Full changes: https://github.com/riderkick/FMD/compare/0.9.87.0...0.9.88.0
+
+0.9.87.0 (12-01-2017)
+[*] MangaTraders: fixed manga list
+[*] Japscan: rewrite all codes
+[*] MangaGo: rewrite all codes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.86.0...0.9.87.0
+
+0.9.86.0 (11-01-2017)
+[+] Added MangaCool[EN]
+[*] MangaTraders: fixed issue #437
+Full changes: https://github.com/riderkick/FMD/compare/0.9.85.0...0.9.86.0
+
+0.9.85.0 (08-01-2017)
+[*] MangaFox: fixed missing chapter title
+[*] MangaLife, MangaSee, MangaTraders: fixed all, MangaTraders require account
+[*] KireiCake: Fixed manga list
+[*] ReadComic: Fixed manga list
+[*] Fixed CF issue #433
+Full changes: https://github.com/riderkick/FMD/compare/0.9.84.0...0.9.85.0
+
+0.9.84.0 (04-01-2017)
+[*] MangaFox: fixed manga info and Status
+[*] MangaTown: fixed Image Url
+[*] Removed MangaCow and Moved to WPManga
+[+] Added Tonari no Young Jump, Comico, NewType and fixed Sunday Web Every[JP]
+[+] Added PowerManga, Jaiminisbox, KireiCake and ReadComics[EN]
+[*] Fixed Madokami Url
+[*] Fixed 8Muses
+Full changes: https://github.com/riderkick/FMD/compare/0.9.83.0...0.9.84.0
+
 0.9.83.0 (06-09-2016)
 [*] Fixed an issue when saving to pdf
 [*] Hentai2Read: fixed manga info

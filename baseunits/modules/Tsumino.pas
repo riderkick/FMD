@@ -11,14 +11,12 @@ uses
 implementation
 
 const
-  //dirurl = '/Browse/Index/1/';
-  // '/?pageNumber=532&RawSearch=&SortOptions=Newest&PageMinimum=1&PageMaximum=10000&RateMinimum=0&RateMaximum=5'
-  dirurl = '/Browse/Query';
-  dirurldata = 'pageNumber=';
-  dirurldataend = '&RawSearch=&SortOptions=Newest&PageMinimum=1&PageMaximum=10000&RateMinimum=0&RateMaximum=5';
+  dirurl = '/Books/Operate';
+  dirurldata = 'PageNumber=';
+  dirurldataend = '&Text=&Sort=Newest&List=0&Length=0&MinimumRating=0&ExcludeList=0&CompletelyExcludeHated=false';
 
 function GetDirectoryPageNumber(const MangaInfo: TMangaInformation;
-  var Page: Integer; const Module: TModuleContainer): Integer;
+  var Page: Integer; const WorkPtr: Integer; const Module: TModuleContainer): Integer;
 begin
   Result := NET_PROBLEM;
   Page := 1;
@@ -35,7 +33,6 @@ function GetNameAndLink(const MangaInfo: TMangaInformation;
   const Module: TModuleContainer): Integer;
 var
   v: IXQValue;
-  s: String;
 begin
   Result := NET_PROBLEM;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
@@ -45,14 +42,9 @@ begin
     Result := NO_ERROR;
     with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
       try
-        s := XPathString('json(*)("Data")');
-        if s <> '' then
-        begin
-          ParseHTML(s);
-          for v in XPath('//div[@class="overlay"]/a/@href') do
-            ALinks.Add(v.toString);
-          for v in XPath('//div[@class="overlay"]/div[@class="overlay-data"]/div[@class="overlay-title"]') do
-            ANames.Add(v.toString);
+        for v in XPath('json(*)("Data")().Entry') do begin
+          ANames.Add(v.getProperty('Title').toString());
+          ALinks.Add(Module.RootURL + '/Book/Info/' + v.getProperty('Id').toString());
         end;
       finally
         Free;
@@ -121,6 +113,7 @@ begin
   begin
     Website := 'Tsumino';
     RootURL := 'http://www.tsumino.com';
+    Category := 'H-Sites';
     OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;

@@ -20,23 +20,13 @@ resourcestring
 
 function GetNameAndLink(const MangaInfo: TMangaInformation; const ANames, ALinks: TStringList;
   const AURL: String; const Module: TModuleContainer): Integer;
-var
-  v: IXQValue;
 begin
   Result := NET_PROBLEM;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
-  if MangaInfo.FHTTP.GET(Module.RootURL + '/manga/') then begin
+  if MangaInfo.FHTTP.GET(Module.RootURL + '/manga/') then
+  begin
     Result := NO_ERROR;
-    with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
-      try
-        for v in XPath('//div[@class="manga_list"]/ul/li/a[starts-with(@class,"series_preview manga")]') do
-        begin
-          ALinks.Add(v.toNode.getAttribute('href'));
-          ANames.Add(v.toString);
-        end;
-      finally
-        Free;
-      end;
+    XPathHREFAll('//*[@class="manga_list"]/ul/li/a', MangaInfo.FHTTP.Document, ALinks, ANames);
   end;
 end;
 
@@ -44,36 +34,26 @@ function GetInfo(const MangaInfo: TMangaInformation; const AURL: String;
   const Module: TModuleContainer): Integer;
 var
   v: IXQValue;
-  s: String;
 begin
   Result := NET_PROBLEM;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
   with MangaInfo.mangaInfo, MangaInfo.FHTTP do begin
-    url := FillHost(Module.RootURL, AURL);
+    url := MaybeFillHost(Module.RootURL, AURL);
     if GET(url) then begin
       Result := NO_ERROR;
       with TXQueryEngineHTML.Create(Document) do
         try
-          coverLink := XPathString('//div[@class="cover"]/img/@src');
-          if coverLink <> '' then coverLink := MaybeFillHost(Module.RootURL, coverLink);
-          if title = '' then title := XPathString('//div[@class="cover"]/img/@alt');
-          if title = '' then begin
-            title := XPathString('//meta[@property="og:title"]/@content');
-            if RightStr(title, 6) = ' Manga' then
-              SetLength(title, Length(title) - 6);
-          end;
+          coverLink := MaybeFillHost(Module.RootURL, XPathString('//*[@class="cover"]/img/@src'));
+          if title = '' then title := XPathString('//title/substring-before(.," Manga - Read")');
           authors := XPathString('//div[@id="title"]/table/tbody/tr[2]/td[2]');
           artists := XPathString('//div[@id="title"]/table/tbody/tr[2]/td[3]');
           genres := XPathString('//div[@id="title"]/table/tbody/tr[2]/td[4]');
           summary := XPathString('//p[@class="summary"]');
-          for v in XPath('//ul[@class="chlist"]/li') do
+          status := MangaInfoStatusIfPos(XPathString('//div[@id="series_info"]/div[5]/span'));
+          for v in XPath('//ul[@class="chlist"]/li/div/*[self::h3 or self::h4]') do
           begin
-            s := XPathString('div/*/a[@class="tips"]/@href', v.toNode);
-            if RightStr(s, 6) = '1.html' then
-              SetLength(s, Length(s) - 6);
-            chapterLinks.Add(s);
-            chapterName.Add(Trim(XPathString('div/*/a[@class="tips"]', v.toNode) + ' ' +
-              XPathString('div/*/span[@class="title nowrap"]', v.toNode)));
+            chapterLinks.Add(StringReplace(XPathString('a/@href', v), '1.html', '', [rfReplaceAll]));
+            chapterName.Add(XPathString('string-join(.//*[not(contains(@class,"newch"))]/text()," ")', v));
           end;
           InvertStrings([chapterLinks, chapterName]);
         finally
@@ -85,57 +65,42 @@ end;
 
 function GetPageNumber(const DownloadThread: TDownloadThread; const AURL: String;
   const Module: TModuleContainer): Boolean;
-var
-  v: IXQValue;
-  i: Integer;
-  s: String;
 begin
   Result := False;
   if DownloadThread = nil then Exit;
   with DownloadThread.FHTTP, DownloadThread.Task.Container do begin
     PageLinks.Clear;
     PageNumber := 0;
-    s := ChapterLinks[CurrentDownloadChapterPtr];
-    if RightStr(s, 6) = '1.html' then begin
-      SetLength(s, Length(s) - 6);
-      ChapterLinks[CurrentDownloadChapterPtr] := s;
-    end;
-    if GET(AppendURLDelim(FillHost(Module.RootURL, s)) + '1.html') then begin
+    if GET(MaybeFillHost(Module.RootURL, AURL) + '1.html') then begin
       Result := True;
-      with TXQueryEngineHTML.Create(Document) do
-        try
-          v := XPath('//select[@onchange="change_page(this)"]/option');
-          for i := v.Count downto 1 do begin
-            s := v.get(i).toNode.getAttribute('value');
-            if s <> '0' then begin
-              PageNumber := StrToIntDef(s, 0);
-              Break;
-            end;
-          end;
-        finally
-          Free;
-        end;
+      PageNumber := XPathCount('//*[@id="top_bar"]//select[@onchange="change_page(this)"]/option[@value!="0"]', Document);
     end;
   end;
 end;
 
 function GetImageURL(const DownloadThread: TDownloadThread; const AURL: String;
   const Module: TModuleContainer): Boolean;
+var
+  s: String;
 begin
   Result := False;
   if DownloadThread = nil then Exit;
   with DownloadThread.Task.Container, DownloadThread.FHTTP do begin
-    if GET(AppendURLDelim(FillHost(Module.RootURL, AURL)) +
-      IncStr(DownloadThread.WorkId) + '.html') then
-    begin
+    if GET(MaybeFillHost(Module.RootURL, AURL) + IncStr(DownloadThread.WorkId) + '.html') then begin
       Result := True;
-      with TXQueryEngineHTML.Create(Document) do
-        try
-          PageLinks[DownloadThread.WorkId] :=
-            XPathString('//div[@class="read_img"]//img[@id="image"]/@src');
-        finally
-          Free;
+      s := XPathString('//div[@class="read_img"]//img[@id="image"]/@src', Document);
+      PageLinks[DownloadThread.WorkId] := s;
+      // remove invalid last page
+      if DownloadThread.WorkId = PageLinks.Count - 1 then
+      begin
+        s := LowerCase(RemovePathDelim(s));
+        if (RightStr(s, 10) = 'compressed') or
+          (Pos('/compressed?', s) <> 0) then
+        begin
+          PageLinks.Delete(DownloadThread.WorkId);
+          PageNumber := PageLinks.Count;
         end;
+      end;
     end;
   end;
 end;
@@ -152,7 +117,8 @@ begin
   with AddModule do
   begin
     Website := 'MangaFox';
-    RootURL := 'http://mangafox.me';
+    RootURL := 'http://fanfox.net';
+    Category := 'English';
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;
     OnGetPageNumber := @GetPageNumber;

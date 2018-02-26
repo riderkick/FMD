@@ -35,22 +35,21 @@ unit SimpleException;
 interface
 
 uses
-  Classes, SysUtils, LazFileUtils, LazUTF8, Forms, Controls, LCLVersion,
-  SimpleExceptionForm,
+  Classes, SysUtils, LazFileUtils, LazUTF8, Forms, Controls, SimpleExceptionForm
   {$IFDEF WINDOWS}
-  Windows, win32proc,
+  , Windows, win32proc
   {$ENDIF}
   {$IFDEF LINUX}
-  elfreader,
+  , elfreader
   {$ENDIF}
   {$IF DEFINED(DARWIN) OR DEFINED(MACOS)}
-  machoreader,
+  , machoreader
   {$ENDIF}
-  fileinfo
+  , fileinfo
   {$IFDEF MULTILOG}
-  ,MultiLog
+  , MultiLog
   {$ENDIF}
-  ;
+  , LCLVersion;
 
 type
 
@@ -58,7 +57,10 @@ type
 
   TSimpleException = class
   private
+    FLogFileHandle: TextFile;
     FLogFileName: String;
+    FLogFileOK: Boolean;
+    FLogFileStatus: String;
     FLastSender: TObject;
     FLastException: Exception;
     FApplicationInfo,
@@ -82,6 +84,8 @@ type
     IgnoredExceptionList: TStringList;
     property ApplicationInfo: String read FApplicationInfo;
     property LogFileName: String read FLogFileName write SetLogFileName;
+    property LogFileOK: Boolean read FLogFileOK;
+    property LogFileStatus: String read FLogFileStatus;
     property MaxStackCount: Integer read FMaxStackCount write SetMaxStackCount;
     property LastSender: TObject read FLastSender;
     property LastException: Exception read FLastException;
@@ -91,6 +95,14 @@ type
     constructor Create(const FileName: String = '');
     destructor Destroy; override;
   end;
+
+function GetIOResultStr(const AIOResult: Word): String;
+function GetOSVer: String;
+function GetFPCVersion: String;
+function GetLCLVersion: String;
+function GetWidgetSetName: String;
+function GetTargetCPU_OS: String;
+function GetBuildTime: String;
 
 function GetApplicationInfo: String;
 function AddIgnoredException(const EClassName: String): Boolean;
@@ -106,6 +118,18 @@ procedure DoneSimpleExceptionHandler;
 var
   MainExceptionHandler: TSimpleException;
 
+{$IFDEF MULTILOG}
+type
+  { TLoggerException }
+
+  TLoggerException = class helper for TLogger
+  public
+    procedure SendExceptionStr(const AText: String; AExceptionStr: String);
+    procedure SendStrings(const AText: String; AValue: String);
+    procedure SendWarningStrings(const AText: String; AValue: String);
+  end;
+{$ENDIF}
+
 resourcestring
   SExceptionDialogTitle = 'Exception Info';
   SExceptionCaption = 'An error occured during program execution:';
@@ -117,29 +141,159 @@ resourcestring
 
 implementation
 
+uses InterfaceBase {$IF LCL_FULLVERSION >= 1080000}, LCLPlatformDef{$ENDIF};
+
 {$IFDEF MULTILOG}
-type
-
-  { TLoggerException }
-
-  TLoggerException = class helper for TLogger
-  public
-    procedure SendExceptionStr(const AText: String; AExceptionStr: String);
-  end;
-
 { TLoggerException }
 
 procedure TLoggerException.SendExceptionStr(const AText: String; AExceptionStr: String);
 begin
   SendBuffer(ltException, AText, AExceptionStr[1], Length(AExceptionStr));
 end;
-{$ENDIF}
 
+procedure TLoggerException.SendStrings(const AText: String; AValue: String);
+begin
+  SendBuffer(ltStrings, AText, AValue[1], Length(AValue));
+end;
+
+procedure TLoggerException.SendWarningStrings(const AText: String;
+  AValue: String);
+begin
+  SendBuffer(ltWarning, AText, AValue[1], Length(AValue));
+end;
+
+{$ENDIF}
 
 procedure SetMaxStackCount(const ACount: Integer);
 begin
   if MainExceptionHandler <> nil then
     MainExceptionHandler.MaxStackCount := ACount;
+end;
+
+function GetIOResultStr(const AIOResult: Word): String;
+begin
+  Result := IntToStr(AIOResult) + ': ';
+  case AIOResult of
+    0  : Result := Result + 'OK.';
+    2  : Result := Result + 'File not found.';
+    3  : Result := Result + 'Path not found.';
+    4  : Result := Result + 'Too many open files.';
+    5  : Result := Result + 'Access denied.';
+    6  : Result := Result + 'Invalid file handle.';
+    12 : Result := Result + 'Invalid file-access mode.';
+    15 : Result := Result + 'Invalid disk number.';
+    16 : Result := Result + 'Cannot remove current directory.';
+    17 : Result := Result + 'Cannot rename across volumes.';
+    100: Result := Result + 'Error when reading from disk.';
+    101: Result := Result + 'Error when writing to disk.';
+    102: Result := Result + 'File not assigned.';
+    103: Result := Result + 'File not open.';
+    104: Result := Result + 'File not opened for input.';
+    105: Result := Result + 'File not opened for output.';
+    106: Result := Result + 'Invalid number.';
+    150: Result := Result + 'Disk is write protected.';
+    151: Result := Result + 'Unknown device.';
+    152: Result := Result + 'Drive not ready.';
+    153: Result := Result + 'Unknown command.';
+    154: Result := Result + 'CRC check failed.';
+    155: Result := Result + 'Invalid drive specified..';
+    156: Result := Result + 'Seek error on disk.';
+    157: Result := Result + 'Invalid media type.';
+    158: Result := Result + 'Sector not found.';
+    159: Result := Result + 'Printer out of paper.';
+    160: Result := Result + 'Error when writing to device.';
+    161: Result := Result + 'Error when reading from device.';
+    162: Result := Result + 'Hardware failure.';
+  end;
+end;
+
+function GetOSVer: String;
+{$IFDEF WINDOWS}
+var
+  wdir: array [0..MAX_PATH] of Char;
+
+  function WinLater: String;
+  begin
+    if (Win32MajorVersion = 6) and (Win32MinorVersion = 3) then
+      Result := 'Windows 8.1'
+    else if (Win32MajorVersion = 10) and (Win32MinorVersion = 0) then
+      Result := 'Windows 10'
+    else
+      Result := Format('Windows %d.%d', [Win32MajorVersion, Win32MinorVersion]);
+  end;
+
+{$ENDIF}
+begin
+  {$IFDEF LCLcarbon}
+  Result := 'Mac OS X 10.';
+  {$ENDIF}
+  {$IFDEF Linux}
+  Result := 'Linux Kernel ';
+  {$ENDIF}
+  {$IFDEF UNIX}
+  Result := 'Unix ';
+  {$ENDIF}
+  {$IFDEF WINDOWS}
+  case WindowsVersion of
+    wv95: Result := 'Windows 95';
+    wvNT4: Result := 'Windows NT v.4';
+    wv98: Result := 'Windows 98';
+    wvMe: Result := 'Windows ME';
+    wv2000: Result := 'Windows 2000';
+    wvXP: Result := 'Windows XP';
+    wvServer2003: Result := 'Windows Server 2003';
+    wvVista: Result := 'Windows Vista';
+    wv7: Result := 'Windows 7';
+    wv8: Result := 'Windows 8';
+    else
+      Result := WinLater;
+  end;
+  FillChar({%H-}wdir, SizeOf(wdir), 0);
+  GetWindowsDirectory(PChar(wdir), MAX_PATH);
+  if DirectoryExists(wdir + '\SysWOW64') then
+    Result := Result + ' 64-bit';
+  {$ENDIF}
+end;
+
+function GetFPCVersion: String;
+begin
+  Result := {$I %FPCVERSION%};
+end;
+
+function GetLCLVersion: String;
+begin
+  Result := LCLVersion.lcl_version;
+end;
+
+function GetWidgetSetName: String;
+begin
+  case WidgetSet.LCLPlatform of
+    lpGtk         : Result := 'GTK';
+    lpGtk2        : Result := 'GTK2';
+    lpGtk3        : Result := 'GTK3';
+    lpWin32       : Result := 'Win32/Win64';
+    lpWinCE       : Result := 'WinCE';
+    lpCarbon      : Result := 'Carbon';
+    lpQT          : Result := 'Qt';
+    lpfpGUI       : Result := 'fpGUI';
+    lpNoGUI       : Result := 'NoGUI';
+    lpCocoa       : Result := 'Cocoa';
+    lpCustomDrawn : Result := 'Custom Drawn';
+    {$IF LCL_FULLVERSION >= 1080000}
+    lpQt5         : Result := 'Qt5';
+    lpMUI         : Result := 'MUI';
+    {$ENDIF}
+  end;
+end;
+
+function GetTargetCPU_OS: String;
+begin
+  Result := {$I %FPCTARGETCPU%} + '-' + {$I %FPCTARGETOS%};
+end;
+
+function GetBuildTime: String;
+begin
+  Result := {$I %DATE%} + ' ' + {$I %TIME%};
 end;
 
 function GetApplicationInfo: String;
@@ -227,57 +381,29 @@ begin
 end;
 
 procedure TSimpleException.SetLogFileName(const AValue: String);
-begin
-  if FLogFileName = AValue then Exit;
-  FLogFileName := AValue;
-end;
-
-function GetOSVer: String;
-{$IFDEF WINDOWS}
 var
-  wdir: array [0..MAX_PATH] of Char;
-
-  function WinLater: String;
-  begin
-    if (Win32MajorVersion = 6) and (Win32MinorVersion = 3) then
-      Result := 'Windows 8.1'
-    else if (Win32MajorVersion = 10) and (Win32MinorVersion = 0) then
-      Result := 'Windows 10'
-    else
-      Result := Format('Windows %d.%d', [Win32MajorVersion, Win32MinorVersion]);
-  end;
-
-{$ENDIF}
+  ir: Word;
+  fe: Boolean;
 begin
-  {$IFDEF LCLcarbon}
-  Result := 'Mac OS X 10.';
-  {$ENDIF}
-  {$IFDEF Linux}
-  Result := 'Linux Kernel ';
-  {$ENDIF}
-  {$IFDEF UNIX}
-  Result := 'Unix ';
-  {$ENDIF}
-  {$IFDEF WINDOWS}
-  case WindowsVersion of
-    wv95: Result := 'Windows 95';
-    wvNT4: Result := 'Windows NT v.4';
-    wv98: Result := 'Windows 98';
-    wvMe: Result := 'Windows ME';
-    wv2000: Result := 'Windows 2000';
-    wvXP: Result := 'Windows XP';
-    wvServer2003: Result := 'Windows Server 2003';
-    wvVista: Result := 'Windows Vista';
-    wv7: Result := 'Windows 7';
-    wv8: Result := 'Windows 8';
-    else
-      Result := WinLater;
+  // always check for log file in case something changed at runtime (permission/disk removed)
+  FLogFileName := AValue;
+  AssignFile(FLogFileHandle, FLogFileName);
+  fe := FileExistsUTF8(FLogFileName);
+  if fe then
+  {$I-}
+    Append(FLogFileHandle)
+  else
+    Rewrite(FLogFileHandle);
+  {$I+}
+  ir := IOResult;
+  if ir = 0 then
+  begin
+    CloseFile(FLogFileHandle);
+    if not fe then
+      Erase(FLogFileHandle);
   end;
-  FillChar({%H-}wdir, SizeOf(wdir), 0);
-  GetWindowsDirectory(PChar(wdir), MAX_PATH);
-  if DirectoryExists(wdir + '\SysWOW64') then
-    Result := Result + ' 64-bit';
-  {$ENDIF}
+  FLogFileOK := ir = 0;
+  FLogFileStatus := GetIOResultStr(ir);
 end;
 
 procedure TSimpleException.ExceptionHandler;
@@ -419,20 +545,26 @@ end;
 
 procedure TSimpleException.SaveLogToFile(const LogMsg: String);
 var
-  f: TextFile;
+  ir: Word;
 begin
-  if LogFileName <> '' then
+  if FLogFileName = '' then Exit;
+  if FileExistsUTF8(FLogFileName) then
+  {$I-}
+    Append(FLogFileHandle)
+  else
+    Rewrite(FLogFileHandle);
+  {$I+}
+  ir := IOResult;
+  if ir = 0 then
   begin
-    AssignFile(f, LogFileName);
-    try
-      if FileExistsUTF8(LogFileName) then
-        Append(f)
-      else
-        Rewrite(f);
-      WriteLn(f, LogMsg);
-    finally
-      CloseFile(f);
-    end;
+    WriteLn(FLogFileHandle, LogMsg);
+    CloseFile(FLogFileHandle);
+  end
+  else
+  begin
+    FLastReport := 'Failed to write exception message to "' + (FLogFileName) + '"' + LineEnding +
+      '  ' + GetIOResultStr(ir) + LineEnding +
+      FLastReport;
   end;
 end;
 
@@ -501,10 +633,11 @@ var
   AFileVersion, AProductVersion: String;
 begin
   inherited Create;
+  FLogFileName := '';
+  FLogFileOK := False;
+  FLogFileStatus := '';
   if Trim(FileName) <> '' then
-    LogFileName := FileName
-  else
-    LogFileName := ChangeFileExt(Application.ExeName, '.log');
+    LogFileName := FileName;
   InitCriticalSection(FSimpleCriticalSection);
   IgnoredExceptionList := TStringList.Create;
   FMaxStackCount := 20;
@@ -535,9 +668,11 @@ begin
       'Product Version   : ' + AProductVersion + LineEnding;
   FApplicationInfo := FApplicationInfo +
     'Host Machine      : ' + GetOSVer + LineEnding +
-    'Target CPU_OS     : ' + {$i %FPCTARGETCPU%} +'_' + {$i %FPCTARGETOS%} +LineEnding +
-    'FPC Version       : ' + {$i %FPCVERSION%} +LineEnding +
-    'LCL Version       : ' + LCLVersion.lcl_version + LineEnding +
+    'FPC Version       : ' + GetFPCVersion + LineEnding +
+    'LCL Version       : ' + GetLCLVersion + LineEnding +
+    'WidgetSet         : ' + GetWidgetSetName + LineEnding +
+    'Target CPU-OS     : ' + GetTargetCPU_OS + LineEnding +
+    'Build Time        : ' + GetBuildTime + LineEnding +
     'Path              : ' + ParamStrUTF8(0) + LineEnding +
     'Process ID        : ' + IntToStr(GetProcessID) + LineEnding +
     'MainThread ID     : ' + IntToStr(MainThreadID);

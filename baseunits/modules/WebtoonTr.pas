@@ -17,6 +17,13 @@ const
     '/ero-listesi'
     );
 
+function GetDirectoryPageNumber(const MangaInfo: TMangaInformation;
+  var Page: Integer; const WorkPtr: Integer; const Module: TModuleContainer): Integer;
+begin
+  Result := NET_PROBLEM;
+  Page := Length(dirurls);
+end;
+
 function GetNameAndLink(const MangaInfo: TMangaInformation;
   const ANames, ALinks: TStringList; const AURL: String;
   const Module: TModuleContainer): Integer;
@@ -25,7 +32,7 @@ var
 begin
   Result := NET_PROBLEM;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
-  if MangaInfo.FHTTP.GET(Module.RootURL + dirurls[Module.CurrentDirectoryIndex]) then
+  if MangaInfo.FHTTP.GET(Module.RootURL + dirurls[StrToIntDef(AURL, 0)]) then
   begin
     Result := NO_ERROR;
     with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
@@ -110,7 +117,8 @@ begin
   begin
     Website := 'WebtoonTr';
     RootURL := 'http://webtoontr.com';
-    TotalDirectory := Length(dirurls);
+    Category := 'Turkish';
+    OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;
     OnGetPageNumber := @GetPageNumber;

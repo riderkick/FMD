@@ -15,15 +15,13 @@ type
   TAccountSetForm = class(TForm)
     btOk: TBitBtn;
     btCancel: TBitBtn;
-    cbWebsiteName: TComboBox;
     ckShowPassword: TCheckBox;
     edUsername: TEdit;
     edPassword: TEdit;
-    Label1: TLabel;
     Label2: TLabel;
     Label3: TLabel;
     procedure btOkClick(Sender: TObject);
-    procedure ckShowPasswordChange(Sender: TObject);
+    procedure ckShowPasswordEditingDone(Sender: TObject);
   private
     { private declarations }
   public
@@ -53,7 +51,7 @@ begin
     ModalResult := mrOK;
 end;
 
-procedure TAccountSetForm.ckShowPasswordChange(Sender: TObject);
+procedure TAccountSetForm.ckShowPasswordEditingDone(Sender: TObject);
 begin
   if ckShowPassword.Checked then
     edPassword.PasswordChar:=#0

@@ -6,20 +6,12 @@ interface
 
 uses
   Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
-  XQueryEngineHTML, httpsendthread, RegExpr, synautil, Cloudflare;
+  XQueryEngineHTML, httpsendthread, RegExpr, synautil;
 
 implementation
 
 const
   dirurl = '/projects/';
-var
-  goscookies: String = '';
-  goslockget: TRTLCriticalSection;
-
-function GETWithCookie(const AHTTP: THTTPSendThread; const AURL: String): Boolean;
-begin
-  Result := Cloudflare.GETCF(AHTTP, AURL, goscookies, goslockget);
-end;
 
 function GetNameAndLink(const MangaInfo: TMangaInformation;
   const ANames, ALinks: TStringList; const AURL: String;
@@ -29,7 +21,7 @@ var
 begin
   Result := NET_PROBLEM;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
-  if GETWithCookie(MangaInfo.FHTTP, Module.RootURL + dirurl) then begin
+  if MangaInfo.FHTTP.GET(Module.RootURL + dirurl) then begin
     Result := NO_ERROR;
     with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
       try
@@ -64,7 +56,7 @@ begin
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
   with MangaInfo.FHTTP, MangaInfo.mangaInfo do begin
     url := AppendURLDelim(FillHost(Module.RootURL, AURL));
-    if GETWithCookie(MangaInfo.FHTTP, url) then begin
+    if MangaInfo.FHTTP.GET(url) then begin
       Result := NO_ERROR;
       query := TXQueryEngineHTML.Create(Document);
       try
@@ -107,7 +99,7 @@ begin
     PageNumber := 0;
     s := ReplaceRegExpr('/\?\w+.*$', AURL, '/', False);
     s := AppendURLDelim(FillHost(Module.RootURL, s)) + '?chapter_view=fullstrip';
-    if GETWithCookie(DownloadThread.FHTTP, s) then begin
+    if DownloadThread.FHTTP.GET(s) then begin
       Result := True;
       with TXQueryEngineHTML.Create(Document) do
         try
@@ -129,18 +121,13 @@ begin
 end;
 
 function BeforeDownloadImage(const DownloadThread: TDownloadThread;
-  const AURL: String; const Module: TModuleContainer): Boolean;
+  var AURL: String; const Module: TModuleContainer): Boolean;
 begin
   Result := False;
   if DownloadThread = nil then Exit;
   with DownloadThread.Task.Container, DownloadThread.FHTTP do
     if CurrentDownloadChapterPtr < ChapterLinks.Count then begin
       Headers.Values['Referer'] := ' ' + FillHost(Module.RootURL, ChapterLinks[CurrentDownloadChapterPtr]);
-      Cookies.Text := goscookies;
-      if (goscookies = '') or (HEAD(AURL) and (ResultCode = 503)) then
-        Result := GETWithCookie(DownloadThread.FHTTP, Module.RootURL)
-      else
-        Result := True;
     end;
 end;
 
@@ -150,6 +137,7 @@ begin
   begin
     Website := 'GameofScanlation';
     RootURL := 'https://gameofscanlation.moe';
+    Category := 'English-Scanlation';
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;
     OnGetPageNumber := @GetPageNumber;
@@ -158,10 +146,6 @@ begin
 end;
 
 initialization
-  InitCriticalSection(goslockget);
   RegisterModule;
-
-finalization
-  DoneCriticalsection(goslockget);
 
 end.

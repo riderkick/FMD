@@ -14,7 +14,6 @@ object frmMain: TfrmMain
   OnShow = FormShow
   Position = poOwnerFormCenter
   LCLVersion = '1.7'
-  Visible = False
   object pbDownload: TProgressBar
     Left = 8
     Height = 20
@@ -25,27 +24,37 @@ object frmMain: TfrmMain
     TabOrder = 0
   end
   object lbTransferRateValue: TLabel
-    Left = 96
-    Height = 1
+    AnchorSideLeft.Control = lbTransferRate
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideBottom.Control = lbTransferRate
+    AnchorSideBottom.Side = asrBottom
+    Left = 83
+    Height = 15
     Top = 52
-    Width = 229
-    Anchors = [akTop, akLeft, akRight]
+    Width = 242
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    AutoSize = False
+    BorderSpacing.Left = 10
     ParentColor = False
   end
   object lbTransferRate: TLabel
     Left = 8
     Height = 15
     Top = 52
-    Width = 66
+    Width = 65
     Caption = 'Transfer rate'
     ParentColor = False
   end
   object lbFileSizeValue: TLabel
-    Left = 96
-    Height = 1
+    AnchorSideLeft.Control = lbTransferRateValue
+    AnchorSideBottom.Control = lbFileSize
+    AnchorSideBottom.Side = asrBottom
+    Left = 83
+    Height = 15
     Top = 34
-    Width = 229
-    Anchors = [akTop, akLeft, akRight]
+    Width = 242
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    AutoSize = False
     ParentColor = False
   end
   object lbFileSize: TLabel
@@ -68,7 +77,7 @@ object frmMain: TfrmMain
   object itMonitor: TIdleTimer
     Enabled = False
     OnTimer = itMonitorTimer
-    left = 168
-    top = 8
+    Left = 264
+    Top = 16
   end
 end

@@ -33,6 +33,8 @@ type
     CompressionQuality: Cardinal;
     function Execute: Boolean;
     property FileList: TStringList read FFileList;
+    property SavedFileName: String read FSavedFileName;
+    property Ext: String read FExt;
   public
     constructor Create;
     destructor Destroy; override;
@@ -115,7 +117,7 @@ var
   i: Integer;
 begin
   Result := False;
-  Path := CleanAndExpandDirectory(Path);
+  Path := CorrectPathSys(Path);
 
   if FFileList.Count = 0 then
   begin
@@ -123,7 +125,7 @@ begin
     with TFileSearcher.Create do
       try
         OnFileFound := FileFound;
-        Search(Self.Path, '*.jpg;*.png;*.gif', False, False);
+        Search(Self.Path, '*.jpg;*.png;*.gif;*.webp', False, False);
       finally
         Free;
       end;
@@ -161,6 +163,11 @@ end;
 constructor TPacker.Create;
 begin
   FFileList := TStringList.Create;
+  FSavedFileName := '';
+  FExt := '';
+  Path := '';
+  FileName := '';
+  Format := pfZIP;
 end;
 
 destructor TPacker.Destroy;

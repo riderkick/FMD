@@ -5,6 +5,5 @@ object CustomOptionForm: TCustomOptionForm
   Width = 320
   Caption = 'CustomOptionForm'
   OnCreate = FormCreate
-  OnDestroy = FormDestroy
-  LCLVersion = '1.7'
+  LCLVersion = '1.8.0.6'
 end

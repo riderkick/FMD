@@ -5,8 +5,8 @@ unit frmDropTarget;
 interface
 
 uses
-  Classes, Windows, SysUtils, ActiveX, comobj, HTMLUtil, Forms, Controls,
-  ExtCtrls, Menus, LCLType, DefaultTranslator, uBaseUnit;
+  Classes, Windows, SysUtils, ActiveX, comobj, Forms, Controls,
+  ExtCtrls, Menus, LCLType, DefaultTranslator, uBaseUnit, XQueryEngineHTML;
 
 type
 
@@ -138,37 +138,17 @@ end;
 
 function GetURLsFromHTML(const S: String): String;
 var
-  Parse, URls: TStringList;
-  i: Integer;
-  url: String;
+  URls: TStringList;
 begin
   Result := S;
   if S = '' then Exit;
-  Parse:= TStringList.Create;
+  URLs := TStringList.Create;
   try
-    ParseHTML(S, Parse);
-    if Parse.Count > 0 then
-    begin
-      URls := TStringList.Create;
-      try
-        for i := 0 to Parse.Count - 1 do
-        begin
-          if LowerCase(GetTagName(Parse[i])) = 'a' then
-          url := GetVal(Parse[i], 'href');
-          if Pos('javascript', url) <> 1 then
-            URls.Add(url);
-        end;
-        if URls.Count > 0 then
-        begin
-          RemoveDuplicateStrings(URls);
-          Result := URls.Text;
-        end;
-      finally
-        URls.Free;
-      end;
-    end;
+    XPathStringAll('//a[not(starts-with(@href,"javascript:"))]/@href', S, URls);
+    RemoveDuplicateStrings(URls);
+    Result := URls.Text
   finally
-    Parse.Free;
+    URls.Free;
   end;
 end;
 
@@ -256,7 +236,7 @@ begin
   FHeight := Height;
   FLeft := Left;
   FTop := Top;
-  MainForm.SaveDropTargetFormInformation(True);
+  MainForm.SaveDropTargetFormInformation;
   CloseAction := caFree;
 end;
 

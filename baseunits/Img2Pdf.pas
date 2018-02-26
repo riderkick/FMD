@@ -34,7 +34,7 @@ unit Img2Pdf;
 interface
 
 uses
-  Classes, SysUtils, LazFileUtils, LazUTF8Classes, FPimage, ImgInfos,
+  Classes, SysUtils, LazFileUtils, LazUTF8Classes, FPimage, ImgInfos, MemBitmap,
   FPReadJPEG, FPWriteJPEG, FPReadPNG, JPEGLib, JdAPImin, JDataSrc, Jerror,
   zstream;
 
@@ -97,6 +97,8 @@ type
   end;
 
 implementation
+
+uses webp, FPWritePNG;
 
 type
 
@@ -229,9 +231,9 @@ begin
   end;
 end;
 
-procedure PNGToPageInfo(const PageInfo: TPageInfo);
+procedure PNGToPageInfo(const PageInfo: TPageInfo; const AStream: TStream = nil);
 var
-  AFS: TFileStreamUTF8;
+  AFS: TStream;
   IMG: TFPCustomImage;
   RDR: TFPReaderPNGInfo;
   AMS: TMemoryStreamUTF8;
@@ -242,13 +244,21 @@ begin
   IMG := TFPMemoryImage.Create(0, 0);
   try
     try
+      if AStream = nil then
+        AFS := TFileStreamUTF8.Create(PageInfo.FileName, fmOpenRead or fmShareDenyWrite)
+      else
+        AFS := AStream;
       RDR := TFPReaderPNGInfo.Create;
-      AFS := TFileStreamUTF8.Create(PageInfo.FileName, fmOpenRead or fmShareDenyWrite);
-      RDR.CheckContents(AFS);
-      if RDR.Header.ColorType = 3 then
-        IMG.UsePalette := True;
-      AFS.Position := 0;
-      IMG.LoadFromStream(AFS, RDR);
+      try
+        RDR.CheckContents(AFS);
+        if RDR.Header.ColorType = 3 then
+          IMG.UsePalette := True;
+        AFS.Position := 0;
+        IMG.LoadFromStream(AFS, RDR);
+      finally
+        if AStream = nil then
+          FreeAndNil(AFS);
+      end;
 
       PageInfo.Filter := 'FlateDecode';
       PageInfo.BitsPerComponent := 8;
@@ -329,10 +339,41 @@ begin
       end;
     finally
       RDR.Free;
-      AFS.Free;
     end
   finally
     IMG.Free;
+  end;
+end;
+
+procedure WEBPToPageInfo(const PageInfo: TPageInfo);
+var
+  AMS: TMemoryStreamUTF8;
+  MBM: TMemBitmap;
+  WRT: TFPWriterPNG;
+begin
+  AMS := TMemoryStreamUTF8.Create;
+  try
+    AMS.LoadFromFile(PageInfo.FileName);
+    MBM := nil;
+    try
+      MBM := WebPToMemBitmap(AMS);
+      if Assigned(MBM) then
+      try
+        WRT := TFPWriterPNG.create;
+        WRT.Indexed := False;
+        WRT.UseAlpha := MBM.HasTransparentPixels;
+        WRT.CompressionLevel := clnone;
+        MBM.SaveToStream(AMS, WRT);
+      finally
+        WRT.Free;
+      end;
+    finally
+      if Assigned(MBM) then
+        MBM.Free;
+    end;
+    PNGToPageInfo(PageInfo, AMS);
+  finally
+    AMS.Free;
   end;
 end;
 
@@ -400,6 +441,9 @@ begin
     else
     if Ext = 'png' then
       PNGToPageInfo(Self)
+    else
+    if Ext = 'webp' then
+      WEBPToPageInfo(Self)
     else
       ImageToPageInfo(Self);
   except

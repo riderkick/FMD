@@ -6,7 +6,7 @@
 
 unit uDownloadsManager;
 
-{$mode delphi}
+{$mode objfpc}{$H+}
 
 {$IF FPC_FULLVERSION >= 20701}
   {$DEFINE FPC271}
@@ -15,9 +15,9 @@ unit uDownloadsManager;
 interface
 
 uses
-  LazFileUtils, FastHTMLParser, HTMLUtil, SynaCode, RegExpr, Classes, SysUtils,
-  ExtCtrls, typinfo, fgl, blcksock, MultiLog, uBaseUnit, uPacker, uMisc,
-  DownloadedChaptersDB, FMDOptions, httpsendthread, dateutils, strutils;
+  LazFileUtils, RegExpr, IniFiles, Classes, SysUtils, ExtCtrls, typinfo, fgl,
+  blcksock, MultiLog, uBaseUnit, uPacker, uMisc, DownloadedChaptersDB, FMDOptions,
+  httpsendthread, DownloadsDB, BaseThread, dateutils, strutils;
 
 type
   TDownloadStatusType = (
@@ -39,9 +39,10 @@ type
 
   { TDownloadThread }
 
-  TDownloadThread = class(THTTPThread)
+  TDownloadThread = class(TBaseThread)
   private
-    parse: TStringList;
+    FTask: TTaskThread;
+    procedure SetTask(AValue: TTaskThread);
   public
     // Get download link from URL
     function GetLinkPageFromURL(const URL: String): Boolean;
@@ -50,48 +51,49 @@ type
     // Download image
     function DownloadImage: Boolean;
 
-    procedure OnTag({%H-}NoCaseTag, ActualTag: String);
-    procedure OnText(Text: String);
-
     procedure SockOnStatus(Sender: TObject; Reason: THookSocketReason;
       const Value: String);
     function GetPage(var output: TObject; URL: String;
       const Reconnect: Integer = 0): Boolean; inline;
 
-    function SaveImage(const mangaSiteID: Integer; URL: String;
-      const Path, Name: String; const Reconnect: Integer = 0): Boolean; overload;
-
     procedure Execute; override;
-    procedure DoTerminate; override;
   public
     FHTTP: THTTPSendThread;
-    Task: TTaskThread;
     WorkId: Integer;
     constructor Create;
     destructor Destroy; override;
+    property Task: TTaskThread read FTask write SetTask;
   end;
 
-  TDownloadThreads = TFPGList<TDownloadThread>;
+  TDownloadThreads = specialize TFPGList<TDownloadThread>;
 
   { TTaskThread }
 
-  TTaskThread = class(THTTPThread)
+  TTaskThread = class(TBaseThread)
   private
+    FCS_THREADS: TRTLCriticalSection;
     FCheckAndActiveTaskFlag: Boolean;
     FCurrentWorkingDir: String;
     {$IFDEF Windows}
     FCurrentMaxFileNameLength: Integer;
     {$ENDIF}
     FCurrentCustomFileName: String;
+    FIsForDelete: Boolean;
     procedure SetCurrentWorkingDir(AValue: String);
+    procedure SetIsForDelete(AValue: Boolean);
+    procedure SyncShowBallonHint;
   protected
     procedure CheckOut;
     procedure Execute; override;
-    procedure DoTerminate; override;
-    procedure Compress;
+    function Compress: Boolean;
     procedure SyncStop;
+    procedure StatusFailedToCreateDir;
+    function FirstFailedChapters: Integer;
+    function FailedChaptersExist: Boolean;
     // show notification when download completed
-    procedure SyncShowBaloon;
+    procedure ShowBalloonHint;
+    // general exception info
+    function GetExceptionInfo: String;
   public
     //additional parameter
     httpCookies: String;
@@ -107,6 +109,7 @@ type
     property CurrentMaxFileNameLength: Integer read FCurrentMaxFileNameLength;
     // current custom filename with only %FILENAME% left intact
     property CurrentCustomFileName: String read FCurrentCustomFileName write FCurrentCustomFileName;
+    property IsForDelete: Boolean read FIsForDelete write SetIsForDelete;
   end;
 
   { TTaskContainer }
@@ -120,6 +123,7 @@ type
     procedure SetStatus(AValue: TDownloadStatusType);
     procedure SetWebsite(AValue: String);
   public
+    DlId: Integer;
     // critical section
     CS_Container: TRTLCriticalSection;
     // read count for transfer rate
@@ -136,14 +140,12 @@ type
     WorkCounter,
     DownCounter,
     PageNumber: Integer;
-    MangaSiteID: Cardinal;
     ModuleId: Integer;
     //Status: TDownloadStatusType;
     ThreadState: Boolean;
     ChapterName,
     ChapterLinks,
-    FailedChapterName,
-    FailedChapterLinks,
+    ChaptersStatus,
     PageContainerLinks,
     PageLinks: TStringList;
     FileNames: TStringList;
@@ -152,6 +154,7 @@ type
     constructor Create;
     destructor Destroy; override;
     procedure IncReadCount(const ACount: Integer);
+    procedure SaveToDB(const AOrder: Integer = -1);
   public
     Visible: Boolean;
     property Website: String read FWebsite write SetWebsite;
@@ -159,7 +162,7 @@ type
     property Enabled: Boolean read FEnabled write SetEnabled;
   end;
 
-  TTaskContainers = TFPGList<TTaskContainer>;
+  TTaskContainers = specialize TFPGList<TTaskContainer>;
 
   { TDownloadManager }
 
@@ -167,10 +170,11 @@ type
   private
     FSortDirection: Boolean;
     FSortColumn: Integer;
-    DownloadManagerFile: TIniFileRun;
+    FDownloadsDB: TDownloadsDB;
     procedure AddItemsActiveTask(const Item: TTaskContainer);
     procedure RemoveItemsActiveTask(const Item: TTaskContainer);
     function GetTask(const TaskId: Integer): TTaskContainer;
+    function ConvertToDB: Boolean;
   protected
     function GetTaskCount: Integer; inline;
     function GetTransferRate: Integer;
@@ -178,7 +182,8 @@ type
     procedure DecStatusCount(const Status: TDownloadStatusType);
     procedure IncStatusCount(const Status: TDownloadStatusType);
   public
-    CS_Task: TRTLCriticalSection;
+    CS_Task,
+    CS_ItemsActiveTask: TRTLCriticalSection;
     Items,
     ItemsActiveTask: TTaskContainers;
     isRunningBackup, isFinishTaskAccessed, isRunningBackupDownloadedChaptersList,
@@ -188,13 +193,9 @@ type
     CS_StatusCount: TRTLCriticalSection;
     StatusCount: array [TDownloadStatusType] of Integer;
     // disabled count
-    DisabledCount: Integer;
-
-    compress, retryConnect,
-    // max. active tasks
-    maxDLTasks,
-    // max. download threads per task
-    maxDLThreadsPerTask: Integer;
+    DisabledCount,
+    CompressType,
+    RetryConnect: Integer;
 
     //downloaded chapter list database
     DownloadedChapters: TDownloadedChaptersDB;
@@ -232,8 +233,10 @@ type
     procedure StopAllTasks;
     // Stop all download task inside a task before terminate the program.
     procedure StopAllDownloadTasksForExit;
+    // Free then delete task without any check, use with caution
+    procedure FreeAndDelete(const TaskId: Integer);
     // Remove a task from list.
-    procedure RemoveTask(const taskID: Integer);
+    procedure RemoveTask(const TaskID: Integer);
     // Remove all finished tasks.
     procedure RemoveAllFinishedTasks;
     // check status of task
@@ -266,7 +269,7 @@ resourcestring
 implementation
 
 uses
-  frmMain, WebsiteModules;
+  frmMain, WebsiteModules, FMDVars, SimpleException;
 
 function IntToStr(Value: Cardinal): String;
 begin
@@ -275,14 +278,13 @@ end;
 
 { TDownloadThread }
 
-procedure TDownloadThread.OnTag(NoCaseTag, ActualTag: String);
+procedure TDownloadThread.SetTask(AValue: TTaskThread);
 begin
-  parse.Add(ActualTag);
-end;
-
-procedure TDownloadThread.OnText(Text: String);
-begin
-  parse.Add(Text);
+  if FTask = AValue then Exit;
+  FTask := AValue;
+  with FTask.Container do
+    if ModuleId<>-1 then
+      WebsiteModules.Modules[ModuleId].PrepareHTTP(FHTTP);
 end;
 
 procedure TDownloadThread.SockOnStatus(Sender: TObject;
@@ -297,11 +299,18 @@ begin
   inherited Create(True);
   FHTTP := THTTPSendThread.Create(Self);
   FHTTP.Headers.NameValueSeparator := ':';
-  FHTTP.Sock.OnStatus := SockOnStatus;
+  FHTTP.Sock.OnStatus := @SockOnStatus;
 end;
 
 destructor TDownloadThread.Destroy;
 begin
+  EnterCriticalsection(Task.FCS_THREADS);
+  try
+    Modules.DecActiveConnectionCount(Task.Container.ModuleId);
+    Task.Threads.Remove(Self);
+  finally
+    LeaveCriticalsection(Task.FCS_THREADS);
+  end;
   FHTTP.Free;
   inherited Destroy;
 end;
@@ -312,12 +321,6 @@ begin
   if FHTTP.Sock.Tag <> 100 then
     FHTTP.Clear;
   Result := uBaseUnit.GetPage(FHTTP, output, URL, Reconnect);
-end;
-
-function TDownloadThread.SaveImage(const mangaSiteID: Integer; URL: String;
-  const Path, Name: String; const Reconnect: Integer): Boolean;
-begin
-  Result := uBaseUnit.SaveImage(FHTTP, mangaSiteID, URL, Path, Name, Reconnect);
 end;
 
 procedure TDownloadThread.Execute;
@@ -370,467 +373,29 @@ begin
   except
     on E: Exception do
     begin
-      E.Message := E.Message + LineEnding +
-        '  In TDownloadThread.Execute : ' + GetEnumName(TypeInfo(TFlagType), Integer(Task.Flag)) +
-        LineEnding +
-        '  Website : ' + Task.Container.DownloadInfo.Website + LineEnding +
-        '  URL     : ' + FillMangaSiteHost(Task.Container.MangaSiteID,
-        Task.Container.ChapterLinks[Task.Container.CurrentDownloadChapterPtr]) + LineEnding +
-        '  Title   : ' + Task.Container.DownloadInfo.title + LineEnding +
-        '  Chapter : ' + Task.Container.ChapterName[Task.Container.CurrentDownloadChapterPtr] +
-        LineEnding;
+      E.Message := E.Message + LineEnding + '  In TDownloadThread.Execute' + LineEnding + Task.GetExceptionInfo;
       MainForm.ExceptionHandler(Self, E);
     end;
   end;
 end;
 
-procedure TDownloadThread.DoTerminate;
-begin
-  LockCreateConnection;
-  try
-    Modules.DecActiveConnectionCount(Task.Container.ModuleId);
-    Task.Threads.Remove(Self);
-  finally
-    UnlockCreateConnection;
-  end;
-  inherited DoTerminate;
-end;
-
 function TDownloadThread.GetPageNumberFromURL(const URL: String): Boolean;
-var
-  Parser: THTMLParser;
-
-  {$I includes/AnimeStory/chapter_page_number.inc}
-
-  {$I includes/AnimExtremist/chapter_page_number.inc}
-
-  {$I includes/EatManga/chapter_page_number.inc}
-
-  {$I includes/EGScans/chapter_page_number.inc}
-
-  {$I includes/EsMangaHere/chapter_page_number.inc}
-
-  {$I includes/HugeManga/chapter_page_number.inc}
-
-  {$I includes/Kivmanga/chapter_page_number.inc}
-
-  {$I includes/MangaAe/chapter_page_number.inc}
-
-  {$I includes/MangaAr/chapter_page_number.inc}
-
-  {$I includes/Mangacow/chapter_page_number.inc}
-
-  {$I includes/MangaGo/chapter_page_number.inc}
-
-  {$I includes/MeinManga/chapter_page_number.inc}
-
-  {$I includes/S2Scans/chapter_page_number.inc}
-
-  {$I includes/Starkana/chapter_page_number.inc}
-
-  {$I includes/Turkcraft/chapter_page_number.inc}
-
-  {$I includes/AnimeA/chapter_page_number.inc}
-
-  {$I includes/NineManga/chapter_page_number.inc}
-
-  {$I includes/LectureEnLigne/chapter_page_number.inc}
-
-  {$I includes/JapanShin/chapter_page_number.inc}
-
-  {$I includes/Japscan/chapter_page_number.inc}
-
-  {$I includes/CentrumMangi_PL/chapter_page_number.inc}
-
-  {$I includes/MangaLib_PL/chapter_page_number.inc}
-
-  {$I includes/OneManga/chapter_page_number.inc}
-
-  {$I includes/MangaTown/chapter_page_number.inc}
-
-  {$I includes/MangaOku/chapter_page_number.inc}
-
-  {$I includes/MyReadingMangaInfo/chapter_page_number.inc}
-
-  {$I includes/IKomik/chapter_page_number.inc}
-
-  {$I includes/NHentai/chapter_page_number.inc}
-
-  {$I includes/MangaMint/chapter_page_number.inc}
-
-  {$I includes/UnixManga/chapter_page_number.inc}
-
-  {$I includes/ExtremeMangas/chapter_page_number.inc}
-
-  {$I includes/MangaHost/chapter_page_number.inc}
-
-  {$I includes/PornComix/chapter_page_number.inc}
-
-  {$I includes/MangaKu/chapter_page_number.inc}
-
-  {$I includes/MangaAt/chapter_page_number.inc}
-
-  {$I includes/ReadMangaToday/chapter_page_number.inc}
-
-  {$I includes/Dynasty-Scans/chapter_page_number.inc}
-
 begin
   Result := False;
   Task.Container.PageNumber := 0;
 
   if Modules.ModuleAvailable(Task.Container.ModuleId, MMGetPageNumber) then
-    Result := Modules.GetPageNumber(Self, URL, Task.Container.ModuleId)
-  else
-  begin
-    if Task.Container.MangaSiteID = ANIMEA_ID then
-      Result := GetAnimeAPageNumber
-    else
-    if Task.Container.MangaSiteID = STARKANA_ID then
-      Result := GetStarkanaPageNumber
-    else
-    if Task.Container.MangaSiteID = EATMANGA_ID then
-      Result := GetEatMangaPageNumber
-    else
-    if Task.Container.MangaSiteID = MANGAGO_ID then
-      Result := GetMangaGoPageNumber
-    else
-    if Task.Container.MangaSiteID = S2SCAN_ID then
-      Result := GetS2scanPageNumber
-    else
-    if Task.Container.MangaSiteID = MEINMANGA_ID then
-      Result := GetMeinMangaPageNumber
-    else
-    if Task.Container.MangaSiteID = ESMANGAHERE_ID then
-      Result := GetEsMangaHerePageNumber
-    else
-    if Task.Container.MangaSiteID = ANIMEEXTREMIST_ID then
-      Result := GetAnimeExtremistPageNumber
-    else
-    if Task.Container.MangaSiteID = HUGEMANGA_ID then
-      Result := GetHugeMangaPageNumber
-    else
-    if Task.Container.MangaSiteID = ANIMESTORY_ID then
-      Result := GetAnimeStoryPageNumber
-    else
-    if Task.Container.MangaSiteID = TURKCRAFT_ID then
-      Result := GetTurkcraftPageNumber
-    else
-    if Task.Container.MangaSiteID = MANGAAE_ID then
-      Result := GetMangaAePageNumber
-    else
-    if Task.Container.MangaSiteID = MANGACOW_ID then
-      Result := GetMangaCowPageNumber
-    else
-    if Task.Container.MangaSiteID = KIVMANGA_ID then
-      Result := GetKivmangaPageNumber
-    else
-    if (Task.Container.MangaSiteID = NINEMANGA_ID) or
-      (Task.Container.MangaSiteID = NINEMANGA_ES_ID) or
-      (Task.Container.MangaSiteID = NINEMANGA_CN_ID) or
-      (Task.Container.MangaSiteID = NINEMANGA_RU_ID) or
-      (Task.Container.MangaSiteID = NINEMANGA_DE_ID) or
-      (Task.Container.MangaSiteID = NINEMANGA_IT_ID) or
-      (Task.Container.MangaSiteID = NINEMANGA_BR_ID) then
-      Result := GetNineMangaPageNumber
-    else
-    if Task.Container.MangaSiteID = LECTUREENLIGNE_ID then
-      Result := GetLectureEnLignePageNumber
-    else
-    if Task.Container.MangaSiteID = JAPANSHIN_ID then
-      Result := GetJapanShinPageNumber
-    else
-    if Task.Container.MangaSiteID = JAPSCAN_ID then
-      Result := GetJapscanPageNumber
-    else
-    if Task.Container.MangaSiteID = CENTRUMMANGI_PL_ID then
-      Result := GetCentrumMangi_PLPageNumber
-    else
-    if Task.Container.MangaSiteID = MANGALIB_PL_ID then
-      Result := GetMangaLib_PLPageNumber
-    else
-    if Task.Container.MangaSiteID = ONEMANGA_ID then
-      Result := GetOneMangaPageNumber
-    else
-    if Task.Container.MangaSiteID = MANGATOWN_ID then
-      Result := GetMangaTownPageNumber
-    else
-    if Task.Container.MangaSiteID = MANGAOKU_ID then
-      Result := GetMangaOkuPageNumber
-    else
-    if Task.Container.MangaSiteID = MYREADINGMANGAINFO_ID then
-      Result := GetMyReadingMangaInfoPageNumber
-    else
-    if Task.Container.MangaSiteID = IKOMIK_ID then
-      Result := GetIKomikPageNumber
-    else
-    if Task.Container.MangaSiteID = NHENTAI_ID then
-      Result := GetNHentaiPageNumber
-    else
-    if Task.Container.MangaSiteID = MANGAMINT_ID then
-      Result := GetMangaMintPageNumber
-    else
-    if Task.Container.MangaSiteID = UNIXMANGA_ID then
-      Result := GetUnixMangaPageNumber
-    else
-    if Task.Container.MangaSiteID = EXTREMEMANGAS_ID then
-      Result := GetExtremeMangasPageNumber
-    else
-    if Task.Container.MangaSiteID = MANGAHOST_ID then
-      Result := GetMangaHostPageNumber
-    else
-    if (Task.Container.MangaSiteID = PORNCOMIX_ID) or
-      (Task.Container.MangaSiteID = XXCOMICS_ID) or
-      (Task.Container.MangaSiteID = XXCOMICSMT_ID) or
-      (Task.Container.MangaSiteID = XXCOMICS3D_ID) or
-      (Task.Container.MangaSiteID = PORNCOMIXRE_ID) or
-      (Task.Container.MangaSiteID = PORNCOMIXIC_ID) or
-      (Task.Container.MangaSiteID = PORNXXXCOMICS_ID) then
-      Result := GetPornComixPageNumber(Task.Container.MangaSiteID)
-    else
-    if Task.Container.MangaSiteID = MANGAKU_ID then
-      Result := GetMangaKuPageNumber
-    else
-    if Task.Container.MangaSiteID = MANGAAT_ID then
-      Result := GetMangaAtPageNumber
-    else
-    if Task.Container.MangaSiteID = READMANGATODAY_ID then
-      Result := GetReadMangaTodayPageNumber
-    else
-    if Task.Container.MangaSiteID = DYNASTYSCANS_ID then
-      Result := GetDynastyScansPageNumber;
-  end;
+    Result := Modules.GetPageNumber(Self, URL, Task.Container.ModuleId);
   if Task.Container.PageLinks.Count > 0 then
     TrimStrings(Task.Container.PageLinks);
 end;
 
 function TDownloadThread.GetLinkPageFromURL(const URL: String): Boolean;
-var
-  Parser: THTMLParser;
-
-  {$I includes/AnimeStory/image_url.inc}
-
-  {$I includes/AnimExtremist/image_url.inc}
-
-  {$I includes/BlogTruyen/image_url.inc}
-
-  {$I includes/CentralDeMangas/image_url.inc}
-
-  {$I includes/EatManga/image_url.inc}
-
-  {$I includes/EGScans/image_url.inc}
-
-  {$I includes/EsMangaHere/image_url.inc}
-
-  {$I includes/Fakku/image_url.inc}
-
-  {$I includes/HugeManga/image_url.inc}
-
-  {$I includes/Kivmanga/image_url.inc}
-
-  {$I includes/Mabuns/image_url.inc}
-
-  {$I includes/Manga24h/image_url.inc}
-
-  {$I includes/MangaAe/image_url.inc}
-
-  {$I includes/MangaAr/image_url.inc}
-
-  {$I includes/Mangacow/image_url.inc}
-
-  {$I includes/MangaEsta/image_url.inc}
-
-  {$I includes/MangaGo/image_url.inc}
-
-  {$I includes/MangaREADER_POR/image_url.inc}
-
-  {$I includes/MangasPROJECT/image_url.inc}
-
-  {$I includes/ScanManga/image_url.inc}
-
-  {$I includes/Starkana/image_url.inc}
-
-  {$I includes/TruyenTranhTuan/image_url.inc}
-
-  {$I includes/Turkcraft/image_url.inc}
-
-  {$I includes/VnSharing/image_url.inc}
-
-  {$I includes/AnimeA/image_url.inc}
-
-  {$I includes/NineManga/image_url.inc}
-
-  {$I includes/LectureEnLigne/image_url.inc}
-
-  {$I includes/JapanShin/image_url.inc}
-
-  {$I includes/Japscan/image_url.inc}
-
-  {$I includes/CentrumMangi_PL/image_url.inc}
-
-  {$I includes/MangaLib_PL/image_url.inc}
-
-  {$I includes/OneManga/image_url.inc}
-
-  {$I includes/MangaTown/image_url.inc}
-
-  {$I includes/MangaOku/image_url.inc}
-
-  {$I includes/IKomik/image_url.inc}
-
-  {$I includes/NHentai/image_url.inc}
-
-  {$I includes/MangaMint/image_url.inc}
-
-  {$I includes/UnixManga/image_url.inc}
-
-  {$I includes/MangaHost/image_url.inc}
-
-  {$I includes/PornComix/image_url.inc}
-
-  {$I includes/MangaAt/image_url.inc}
-
 begin
   Result := False;
   if Task.Container.PageLinks[WorkId] <> 'W' then Exit;
   if Modules.ModuleAvailable(Task.Container.ModuleId, MMGetImageURL) then
-    Result := Modules.GetImageURL(Self, URL, Task.Container.ModuleId)
-  else
-  begin
-    if Task.Container.MangaSiteID = ANIMEA_ID then
-      Result := GetAnimeAImageURL
-    else
-    if Task.Container.MangaSiteID = MANGA24H_ID then
-      Result := GetManga24hImageURL
-    else
-    if Task.Container.MangaSiteID = VNSHARING_ID then
-      Result := GetVnSharingImageURL
-    else
-    if Task.Container.MangaSiteID = FAKKU_ID then
-      Result := GetFakkuImageURL
-    else
-    if Task.Container.MangaSiteID = STARKANA_ID then
-      Result := GetStarkanaImageURL
-    else
-    if Task.Container.MangaSiteID = EATMANGA_ID then
-      Result := GetEatMangaImageURL
-    else
-    if Task.Container.MangaSiteID = MANGAGO_ID then
-      Result := GetMangaGoImageURL
-    else
-    if Task.Container.MangaSiteID = EGSCANS_ID then
-      Result := GetEGScansImageURL
-    else
-    if Task.Container.MangaSiteID = ESMANGAHERE_ID then
-      Result := GetEsMangaHereImageURL
-    else
-    if Task.Container.MangaSiteID = ANIMEEXTREMIST_ID then
-      Result := GetAnimeExtremistImageURL
-    else
-    if Task.Container.MangaSiteID = MABUNS_ID then
-      Result := GetMabunsImageURL
-    else
-    if Task.Container.MangaSiteID = MANGAESTA_ID then
-      Result := GetMangaEstaImageURL
-    else
-    if Task.Container.MangaSiteID = HUGEMANGA_ID then
-      Result := GetHugeMangaImageURL
-    else
-    if Task.Container.MangaSiteID = ANIMESTORY_ID then
-      Result := GetAnimeStoryImageURL
-    else
-    if Task.Container.MangaSiteID = SCANMANGA_ID then
-      Result := GetScanMangaImageURL
-    else
-    if Task.Container.MangaSiteID = TURKCRAFT_ID then
-      Result := GetTurkcraftImageURL
-    else
-    if Task.Container.MangaSiteID = MANGAAR_ID then
-      Result := GetMangaArImageURL
-    else
-    if Task.Container.MangaSiteID = MANGAAE_ID then
-      Result := GetMangaAeImageURL
-    else
-    if Task.Container.MangaSiteID = CENTRALDEMANGAS_ID then
-      Result := GetCentralDeMangasImageURL
-    else
-    if Task.Container.MangaSiteID = MANGACOW_ID then
-      Result := GetMangaCowImageURL
-    else
-    if Task.Container.MangaSiteID = TRUYENTRANHTUAN_ID then
-      Result := GetTruyenTranhTuanImageURL
-    else
-    if Task.Container.MangaSiteID = BLOGTRUYEN_ID then
-      Result := GetBlogTruyenImageURL
-    else
-    if Task.Container.MangaSiteID = KIVMANGA_ID then
-      Result := GetKivmangaImageURL
-    else
-    if Task.Container.MangaSiteID = MANGASPROJECT_ID then
-      Result := GetMangasPROJECTImageURL
-    else
-    if Task.Container.MangaSiteID = MANGAREADER_POR_ID then
-      Result := GetMangaREADER_PORImageURL
-    else
-    if (Task.Container.MangaSiteID = NINEMANGA_ID) or
-      (Task.Container.MangaSiteID = NINEMANGA_ES_ID) or
-      (Task.Container.MangaSiteID = NINEMANGA_CN_ID) or
-      (Task.Container.MangaSiteID = NINEMANGA_RU_ID) or
-      (Task.Container.MangaSiteID = NINEMANGA_DE_ID) or
-      (Task.Container.MangaSiteID = NINEMANGA_IT_ID) or
-      (Task.Container.MangaSiteID = NINEMANGA_BR_ID) then
-      Result := GetNineMangaImageURL
-    else
-    if Task.Container.MangaSiteID = LECTUREENLIGNE_ID then
-      Result := GeLectureEnligneImageURL
-    else
-    if Task.Container.MangaSiteID = JAPANSHIN_ID then
-      Result := GetJapanShinImageURL
-    else
-    if Task.Container.MangaSiteID = JAPSCAN_ID then
-      Result := GetJapscanImageURL
-    else
-    if Task.Container.MangaSiteID = CENTRUMMANGI_PL_ID then
-      Result := GetCentrumMangi_PLImageURL
-    else
-    if Task.Container.MangaSiteID = MANGALIB_PL_ID then
-      Result := GetMangaLib_PLImageURL
-    else
-    if Task.Container.MangaSiteID = ONEMANGA_ID then
-      Result := GetOneMangaImageURL
-    else
-    if Task.Container.MangaSiteID = MANGATOWN_ID then
-      Result := GetMangaTownImageURL
-    else
-    if Task.Container.MangaSiteID = MANGAOKU_ID then
-      Result := GetMangaOkuImageURL
-    else
-    if Task.Container.MangaSiteID = IKOMIK_ID then
-      Result := GetIKomikImageURL
-    else
-    if Task.Container.MangaSiteID = NHENTAI_ID then
-      Result := GetNHentaiImageURL
-    else
-    if Task.Container.MangaSiteID = MANGAMINT_ID then
-      Result := GetMangaMintImageURL
-    else
-    if Task.Container.MangaSiteID = UNIXMANGA_ID then
-      Result := GetUnixMangaImageURL
-    else
-    if Task.Container.MangaSiteID = MANGAHOST_ID then
-      Result := GetMangaHostImageURL
-    else
-    if (Task.Container.MangaSiteID = PORNCOMIX_ID) or
-      (Task.Container.MangaSiteID = XXCOMICS_ID) or
-      (Task.Container.MangaSiteID = XXCOMICSMT_ID) or
-      (Task.Container.MangaSiteID = XXCOMICS3D_ID) or
-      (Task.Container.MangaSiteID = PORNCOMIXRE_ID) or
-      (Task.Container.MangaSiteID = PORNCOMIXIC_ID) or
-      (Task.Container.MangaSiteID = PORNXXXCOMICS_ID) then
-      Result := GetPornComixImageURL
-    else
-    if Task.Container.MangaSiteID = MANGAAT_ID then
-      Result := GetMangaAtImageURL;
-  end;
+    Result := Modules.GetImageURL(Self, URL, Task.Container.ModuleId);
 end;
 
 // ----- TTaskThread -----
@@ -838,17 +403,69 @@ end;
 constructor TTaskThread.Create;
 begin
   inherited Create(True);
+  InitCriticalSection(FCS_THREADS);
   Threads := TDownloadThreads.Create;
   FCheckAndActiveTaskFlag := True;
+  FIsForDelete := False;
   httpCookies := '';
   FCurrentWorkingDir := '';
   FCurrentCustomFileName := '';
+  {$IFDEF WINDOWS}
   FCurrentMaxFileNameLength := 0;
+  {$ENDIF}
 end;
 
 destructor TTaskThread.Destroy;
+var
+  i: Integer;
 begin
+  EnterCriticalsection(FCS_THREADS);
+  try
+    if Threads.Count > 0 then
+      for i := 0 to Threads.Count - 1 do
+        Threads[i].Terminate;
+  finally
+    LeaveCriticalsection(FCS_THREADS);
+  end;
+  while Threads.Count > 0 do
+    Sleep(32);
+
+  Modules.DecActiveTaskCount(Container.ModuleId);
+  with Container do
+  begin
+    ThreadState := False;
+    Manager.RemoveItemsActiveTask(Container);
+    Task := nil;
+    if not (IsForDelete or Manager.isReadyForExit) then
+    begin
+      Container.ReadCount := 0;
+      DownloadInfo.TransferRate := '';
+      if Status <> STATUS_STOP then
+      begin
+        if (WorkCounter >= PageLinks.Count) and
+           (CurrentDownloadChapterPtr >= ChapterLinks.Count) and
+           (not FailedChaptersExist) then
+        begin
+          Status := STATUS_FINISH;
+          DownloadInfo.Status := Format('[%d/%d] %s',[Container.ChapterLinks.Count,Container.ChapterLinks.Count,RS_Finish]);
+          DownloadInfo.Progress := '';
+        end
+        else
+        if not (Status in [STATUS_FAILED, STATUS_PROBLEM]) then
+        begin
+          Status := STATUS_STOP;
+          DownloadInfo.Status :=
+            Format('[%d/%d] %s', [CurrentDownloadChapterPtr + 1,
+            ChapterLinks.Count, RS_Stopped]);
+          FCheckAndActiveTaskFlag := False;
+        end;
+        if not isExiting then
+          Synchronize(@SyncStop);
+      end;
+    end;
+  end;
   Threads.Free;
+  DoneCriticalsection(FCS_THREADS);
   inherited Destroy;
 end;
 
@@ -875,38 +492,44 @@ begin
   {$ENDIF}
 end;
 
-procedure TTaskThread.Compress;
+function TTaskThread.Compress: Boolean;
 var
   uPacker: TPacker;
   i: Integer;
   s: String;
 begin
-  if (Container.Manager.compress >= 1) then
+  Result := True;
+  if (Container.Manager.CompressType >= 1) then
   begin
     Container.DownloadInfo.Status :=
       Format('[%d/%d] %s', [Container.CurrentDownloadChapterPtr + 1,
       Container.ChapterLinks.Count, RS_Compressing]);
     uPacker := TPacker.Create;
     try
-      case Container.Manager.compress of
+      case Container.Manager.CompressType of
         1: uPacker.Format := pfZIP;
         2: uPacker.Format := pfCBZ;
         3: uPacker.Format := pfPDF;
       end;
       uPacker.CompressionQuality := OptionPDFQuality;
       uPacker.Path := CurrentWorkingDir;
-      uPacker.FileName := Container.DownloadInfo.SaveTo +
-        Container.ChapterName[Container.CurrentDownloadChapterPtr];
+      uPacker.FileName := RemovePathDelim(CorrectPathSys(CorrectPathSys(Container.DownloadInfo.SaveTo) +
+        Container.ChapterName[Container.CurrentDownloadChapterPtr]));
       for i := 0 to Container.PageLinks.Count - 1 do
       begin
-        s := FindImageFile(CurrentWorkingDir + GetFileName(i));
+        s := FindImageFile(uPacker.Path + GetFileName(i));
         if s <> '' then
           uPacker.FileList.Add(s);
       end;
-      uPacker.Execute;
+      Result := uPacker.Execute;
+      if not Result then
+        Logger.SendWarning(Self.ClassName+', failed to compress. '+uPacker.SavedFileName);
     except
       on E: Exception do
+      begin
+        E.Message := E.Message + LineEnding + '  In TTaskThread.Compress' + LineEnding + GetExceptionInfo;
         MainForm.ExceptionHandler(Self, E);
+      end;
     end;
     uPacker.Free;
   end;
@@ -917,7 +540,143 @@ begin
   Container.Manager.CheckAndActiveTask(FCheckAndActiveTaskFlag);
 end;
 
-procedure TTaskThread.SyncShowBaloon;
+procedure TTaskThread.StatusFailedToCreateDir;
+begin
+  Logger.SendError(Format('Failed to create dir(%d) = %s', [Length(CurrentWorkingDir), CurrentWorkingDir]));
+  Container.Status := STATUS_FAILED;
+  Container.DownloadInfo.Status := Format('[%d/%d] %s (%d) %s', [
+    Container.CurrentDownloadChapterPtr,
+    Container.ChapterLinks.Count,
+    RS_FailedToCreateDir, Length(CurrentWorkingDir), LineEnding + CurrentWorkingDir]);
+end;
+
+function TTaskThread.FirstFailedChapters: Integer;
+var
+  i: Integer;
+begin
+  for i := 0 to Container.ChaptersStatus.Count - 1 do
+    if Container.ChaptersStatus[i] = 'F' then Exit(i);
+  Result := -1;
+end;
+
+function TTaskThread.FailedChaptersExist: Boolean;
+begin
+  Result := FirstFailedChapters <> -1;
+end;
+
+procedure TTaskThread.ShowBalloonHint;
+begin
+  if OptionShowBalloonHint then
+    Synchronize(@SyncShowBallonHint);
+end;
+
+function TTaskThread.GetExceptionInfo: String;
+begin
+  Result :=
+    '  Flag        : ' + GetEnumName(TypeInfo(TFlagType), Integer(Flag)) + LineEnding +
+    '  Website     : ' + Container.DownloadInfo.Website + LineEnding +
+    '  Title       : ' + Container.DownloadInfo.title + LineEnding +
+    '  Chapterlink : ' + Container.ChapterLinks[Container.CurrentDownloadChapterPtr] + LineEnding +
+    '  Chaptername : ' + Container.ChapterName[Container.CurrentDownloadChapterPtr] + LineEnding;
+end;
+
+function TDownloadThread.DownloadImage: Boolean;
+var
+  workFilename,
+  workURL,
+  savedFilename: String;
+begin
+  Result := True;
+
+  // check download path
+  if not ForceDirectoriesUTF8(Task.CurrentWorkingDir) then
+  begin
+    Task.StatusFailedToCreateDir;
+    Result := False;
+    Exit;
+  end;
+
+  // check pagelinks url
+  workURL := Task.Container.PageLinks[WorkId];
+  if (workURL = '') or
+     (workURL = 'W') or
+     (workURL = 'D') then
+    Exit;
+
+  FHTTP.Clear;
+
+  // prepare filename
+  workFilename := Task.GetFileName(WorkId);
+
+  // download image
+  savedFilename := '';
+
+  if Modules.ModuleAvailable(Task.Container.ModuleId, MMDownloadImage) and
+    (Task.Container.PageNumber = Task.Container.PageContainerLinks.Count) and
+    (WorkId < Task.Container.PageContainerLinks.Count) then
+      workURL := Task.Container.PageContainerLinks[WorkId];
+
+  // OnBeforeDownloadImage
+  if Modules.ModuleAvailable(Task.Container.ModuleId, MMBeforeDownloadImage) then
+    Result := Modules.BeforeDownloadImage(Self, workURL, Task.Container.ModuleId);
+
+  if Result then
+  begin
+    // OnDownloadImage
+    if Modules.ModuleAvailable(Task.Container.ModuleId, MMDownloadImage) then
+      Result := Modules.DownloadImage(Self, workURL, Task.Container.ModuleId)
+    else
+      Result := FHTTP.GET(workURL);
+  end;
+
+  if Result then
+  begin
+    savedFilename := FindImageFile(Task.CurrentWorkingDir + workFilename);
+    Result := savedFilename <> '';
+    if not Result then
+    begin
+      if Modules.ModuleAvailable(Task.Container.ModuleId, MMSaveImage) then
+        savedFilename := Modules.SaveImage(FHTTP, Task.CurrentWorkingDir, workFilename, Task.Container.ModuleId)
+      else
+        savedFilename := SaveImageStreamToFile(FHTTP, Task.CurrentWorkingDir, workFilename);
+      Result := savedFilename <> '';
+    end;
+  end;
+
+  if Result then
+    Result := FileExistsUTF8(savedFilename);
+
+  if Terminated then Exit(False);
+  if Result then
+  begin
+    Task.Container.PageLinks[WorkId] := 'D';
+    // OnAfterImageSaved
+    if Modules.ModuleAvailable(Task.Container.ModuleId, MMAfterImageSaved) then
+      Modules.AfterImageSaved(savedFilename, Task.Container.ModuleId);
+  end;
+end;
+
+procedure TTaskThread.SetCurrentWorkingDir(AValue: String);
+{$IFDEF WINDOWS}
+var
+  s: UnicodeString;
+{$ENDIF}
+begin
+  if FCurrentWorkingDir = AValue then Exit;
+  FCurrentWorkingDir := CorrectPathSys(AValue);
+  {$IFDEF Windows}
+  s := UTF8Decode(FCurrentWorkingDir);
+  FCurrentMaxFileNameLength := FMDMaxImageFilePath - Length(s);
+  {$ENDIF}
+end;
+
+procedure TTaskThread.SetIsForDelete(AValue: Boolean);
+begin
+  if FIsForDelete = AValue then Exit;
+  FIsForDelete := AValue;
+end;
+
+procedure TTaskThread.SyncShowBallonHint;
 begin
   with MainForm.TrayIcon, Container.DownloadInfo do
   begin
@@ -941,129 +700,20 @@ begin
   end;
 end;
 
-function TDownloadThread.DownloadImage: Boolean;
-var
-  workFilename,
-  workURL,
-  savedFilename: String;
-
-  {$I includes/MeinManga/image_url.inc}
-
-begin
-  Result := True;
-
-  // check download path
-  if not ForceDirectoriesUTF8(Task.CurrentWorkingDir) then
-  begin
-    Task.Container.Status := STATUS_FAILED;
-    Task.Container.DownloadInfo.Status := Format('[%d/%d] %s', [
-      Task.Container.CurrentDownloadChapterPtr,
-      Task.Container.ChapterLinks.Count,
-      RS_FailedToCreateDir]);
-    Result := False;
-    Exit;
-  end;
-
-  // check pagelinks url
-  workURL := Task.Container.PageLinks[WorkId];
-  if (workURL = '') or
-     (workURL = 'W') or
-     (workURL = 'D') then
-    Exit;
-
-  FHTTP.Clear;
-
-  // call beforedownloadimage if available
-  if Modules.ModuleAvailable(Task.Container.ModuleId, MMBeforeDownloadImage) then
-    Result := Modules.BeforeDownloadImage(Self, workURL, Task.Container.ModuleId);
-
-  // prepare filename
-  workFilename := Task.GetFileName(WorkId);
-
-  // download image
-  savedFilename := '';
-  if Result then
-  begin
-    if Modules.ModuleAvailable(Task.Container.ModuleId, MMDownloadImage) then
-    begin
-      workURL := '';
-      if (Task.Container.PageNumber = Task.Container.PageContainerLinks.Count)
-        and (WorkId < Task.Container.PageContainerLinks.Count) then
-        workURL := Task.Container.PageContainerLinks[WorkId]
-      else if WorkId < Task.Container.PageLinks.Count then
-        workURL := Task.Container.PageLinks[WorkId];
-
-      if workURL <> '' then
-        Result := Modules.DownloadImage(
-          Self,
-          workURL,
-          Task.CurrentWorkingDir,
-          workFilename,
-          Task.Container.ModuleId);
-    end
-    else
-    if Task.Container.MangaSiteID = MEINMANGA_ID then
-      Result := GetMeinMangaImageURL
-    else
-      Result := uBaseUnit.SaveImage(
-        FHTTP,
-        Task.Container.MangaSiteID,
-        workURL,
-        Task.CurrentWorkingDir,
-        workFilename,
-        savedFilename,
-        Task.Container.Manager.retryConnect);
-  end;
-  if Terminated then Exit(False);
-  if Result then
-  begin
-    Task.Container.PageLinks[WorkId] := 'D';
-
-    if Modules.ModuleAvailable(Task.Container.ModuleId, MMAfterImageSaved) then
-      Modules.AfterImageSaved(savedFilename, Task.Container.ModuleId);
-  end;
-end;
-
-procedure TTaskThread.SetCurrentWorkingDir(AValue: String);
-{$IFDEF WINDOWS}
-var
-  s: UnicodeString;
-{$ENDIF}
-begin
-  if FCurrentWorkingDir = AValue then Exit;
-  FCurrentWorkingDir := CorrectPathSys(AValue);
-  {$IFDEF Windows}
-  s := UTF8Decode(FCurrentWorkingDir);
-  FCurrentMaxFileNameLength := FMDMaxImageFilePath - Length(s);
-  {$ENDIF}
-end;
-
 procedure TTaskThread.CheckOut;
 var
   currentMaxThread: Integer;
   s: String;
-  mt: Integer;
 begin
   if Terminated then Exit;
 
-  //load advanced config if any
-  mt := advancedfile.ReadInteger('DownloadMaxThreadsPerTask',
-    Container.DownloadInfo.Website, -1);
-  if (mt > 0) then
-  begin
-    if mt > MAX_CONNECTIONPERHOSTLIMIT then
-      mt := MAX_CONNECTIONPERHOSTLIMIT;
-    currentMaxThread := mt;
-  end
+  try
+  if Modules.MaxThreadPerTaskLimit[Container.ModuleId] > 0 then
+    currentMaxThread := Modules.MaxThreadPerTaskLimit[Container.ModuleId]
   else
-  begin
-    if Modules.MaxConnectionLimit[Container.ModuleId] > 0 then
-      currentMaxThread := Modules.MaxConnectionLimit[Container.ModuleId]
-    else
-      currentMaxThread := Container.Manager.maxDLThreadsPerTask;
-    if currentMaxThread > Container.Manager.maxDLThreadsPerTask then
-      currentMaxThread := Container.Manager.maxDLThreadsPerTask;
-  end;
+    currentMaxThread := OptionMaxThreads;
+  if currentMaxThread > OptionMaxThreads then
+    currentMaxThread := OptionMaxThreads;
 
   if Container.PageLinks.Count > 0 then
   begin
@@ -1089,24 +739,28 @@ begin
       Sleep(SOCKHEARTBEATRATE);
 
   if (not Terminated) and (Threads.Count < currentMaxThread) then
-  begin
-    LockCreateConnection;
     try
+      EnterCriticalsection(FCS_THREADS);
       if Modules.ActiveConnectionCount[Container.ModuleId] >= currentMaxThread then Exit;
       Modules.IncActiveConnectionCount(Container.ModuleId);
       Threads.Add(TDownloadThread.Create);
       with TDownloadThread(Threads.Last) do begin
         Task := Self;
         WorkId := Container.WorkCounter;
-        //load User-Agent from advancedfile
-        AdvanceLoadHTTPConfig(FHTTP, Container.DownloadInfo.Website);
         Start;
         Container.WorkCounter := InterLockedIncrement(Container.WorkCounter);
       end;
       if Flag = CS_GETPAGELINK then
         Container.CurrentPageNumber := InterLockedIncrement(Container.CurrentPageNumber);
     finally
-      UnlockCreateConnection;
+      LeaveCriticalsection(FCS_THREADS);
+    end;
+
+  except
+    on E: Exception do
+    begin
+      E.Message := E.Message + LineEnding + '  In TTaskThread.Checkout' + LineEnding + GetExceptionInfo;
+      MainForm.ExceptionHandler(Self, E);
     end;
   end;
 end;
@@ -1130,6 +784,7 @@ procedure TTaskThread.Execute;
   function CheckForFinish: Boolean;
   var
     i, c: Integer;
+    sf: String;
   begin
     if Container.PageLinks.Count > 0 then
       Result := True
@@ -1140,18 +795,21 @@ procedure TTaskThread.Execute;
     end;
 
     c := 0;
+    sf := '';
     for i := 0 to Container.PageLinks.Count - 1 do
-    begin
       if Trim(Container.PageLinks[i]) <> 'D' then
+      begin
         Inc(c);
-    end;
+        sf += Container.PageLinks[i] + LineEnding;
+      end;
     if c > 0 then begin
-      Logger.SendWarning(Format('%s, checkforfinish failed=%d/%d "%s" > "%s"',
+      Logger.SendWarning(Format('%s, checkforfinish failed=%d/%d [%s]"%s" > "%s"',
         [Self.ClassName,
         c,
         Container.PageLinks.Count,
+        Container.Website,
         Container.DownloadInfo.Title,
-        Container.ChapterName[Container.CurrentDownloadChapterPtr]]));
+        Container.ChapterLinks[Container.CurrentDownloadChapterPtr]]) + LineEnding + Trim(sf));
       Result := False;
     end;
   end;
@@ -1165,6 +823,7 @@ procedure TTaskThread.Execute;
 var
   j: Integer;
   DynamicPageLink: Boolean;
+  FailedRetryCount: Integer = 0;
 begin
   Container.ThreadState := True;
   Container.DownloadInfo.TransferRate := FormatByteSize(Container.ReadCount, true);
@@ -1181,26 +840,32 @@ begin
     if Trim(Container.CustomFileName) = '' then
       Container.CustomFileName := DEFAULT_FILENAME_CUSTOMRENAME;
 
+    while container.ChaptersStatus.Count < Container.CurrentDownloadChapterPtr - 1 do
+      Container.ChaptersStatus.Add('D');
+    while Container.ChaptersStatus.Count < Container.ChapterLinks.Count do
+      Container.ChaptersStatus.Add('P');
+
+    if OptionAlwaysStartTaskFromFailedChapters and (Container.CurrentDownloadChapterPtr <> 0) then
+      Container.CurrentDownloadChapterPtr := 0;
+
     while Container.CurrentDownloadChapterPtr < Container.ChapterLinks.Count do
     begin
+      while Container.ChaptersStatus[Container.CurrentDownloadChapterPtr] = 'D' do
+        Inc(Container.CurrentDownloadChapterPtr);
+
       WaitForThreads;
       if Terminated then Exit;
 
       //check path
       if OptionGenerateChapterFolder then
-        CurrentWorkingDir := Container.DownloadInfo.SaveTo +
+        CurrentWorkingDir := CorrectPathSys(Container.DownloadInfo.SaveTo) +
           Container.ChapterName[Container.CurrentDownloadChapterPtr]
       else
         CurrentWorkingDir := Container.DownloadInfo.SaveTo;
       if not ForceDirectoriesUTF8(CurrentWorkingDir) then
       begin
-        Logger.SendError(Format('Failed to create dir(%d) = %s', [Length(CurrentWorkingDir), CurrentWorkingDir]));
-        Container.Status := STATUS_FAILED;
-        Container.DownloadInfo.Status := Format('[%d/%d] %s', [
-          Container.CurrentDownloadChapterPtr,
-          Container.ChapterLinks.Count,
-          RS_FailedToCreateDir]);
-        SyncShowBaloon;
+        StatusFailedToCreateDir;
+        ShowBalloonHint;
         Exit;
       end;
 
@@ -1307,7 +972,7 @@ begin
       // If Container doesn't have any image, we will skip the loop. Otherwise
       // download them
       Container.PageNumber := Container.PageLinks.Count;
-      if (Container.PageLinks.Count > 0) then
+      if Container.PageLinks.Count > 0 then
       begin
         Flag := CS_DOWNLOAD;
         Container.WorkCounter := 0;
@@ -1337,36 +1002,54 @@ begin
         begin
           Container.Status := STATUS_COMPRESS;
           Container.DownloadInfo.Progress := '';
-          Compress;
+          if not Compress then
+            Container.Status := STATUS_FAILED;
         end
         else
+        begin
           Container.Status := STATUS_FAILED;
+          Logger.SendWarningStrings(Format('%s, download failed. "%s" "%s" "%s"',
+            [Self.ClassName,
+             Container.DownloadInfo.Title,
+             Container.ChapterName[Container.CurrentDownloadChapterPtr],
+             Container.ChapterLinks[Container.CurrentDownloadChapterPtr]
+            ]), Container.PageLinks.Text);
+        end;
       end
-      else begin
-        Logger.SendWarning(Format('%s, failed download image PageLinks=%d "%s" > "%s"',
-          [Self.ClassName,
-          Container.PageLinks.Count,
-          Container.DownloadInfo.Title,
-          Container.ChapterName[Container.CurrentDownloadChapterPtr]]));
+      else
+      begin
         Container.Status := STATUS_FAILED;
+        Logger.SendWarning(Format('%s, pagelinks is empty. "%s" "%s" "%s"',
+          [Self.ClassName,
+           Container.DownloadInfo.Title,
+           Container.ChapterName[Container.CurrentDownloadChapterPtr],
+           Container.ChapterLinks[Container.CurrentDownloadChapterPtr]
+          ]));
       end;
 
-      if (Container.Status = STATUS_FAILED) and
-        (not FindStrLinear(Container.FailedChapterLinks,
-        Container.ChapterName[Container.CurrentDownloadChapterPtr])) then
-      begin
-        Container.FailedChapterName.Add(Container.ChapterName[Container.CurrentDownloadChapterPtr]);
-        Container.FailedChapterLinks.Add(Container.ChapterLinks[Container.CurrentDownloadChapterPtr]);
-      end;
+      if Container.Status = STATUS_FAILED  then
+        Container.ChaptersStatus[Container.CurrentDownloadChapterPtr] := 'F'
+      else
+        Container.ChaptersStatus[Container.CurrentDownloadChapterPtr] := 'D';
 
       Container.CurrentPageNumber := 0;
       Container.PageLinks.Clear;
       Container.PageContainerLinks.Clear;
       Container.CurrentDownloadChapterPtr :=
         InterLockedIncrement(Container.CurrentDownloadChapterPtr);
+
+      if (Container.CurrentDownloadChapterPtr = Container.ChapterLinks.Count) and
+         (FailedRetryCount < OptionRetryFailedTask) then
+      begin
+        Container.CurrentDownloadChapterPtr := FirstFailedChapters;
+        if container.CurrentDownloadChapterPtr <> -1 then
+          Inc(FailedRetryCount)
+        else
+          Container.CurrentDownloadChapterPtr := Container.ChapterLinks.Count;
+      end;
     end;
 
-    if Container.FailedChapterLinks.Count > 0 then
+    if FailedChaptersExist then
     begin
       Container.Status := STATUS_FAILED;
       Container.DownloadInfo.Status := Format('[%d/%d] %s', [
@@ -1375,11 +1058,6 @@ begin
         RS_FailedTryResumeTask]);
       Container.DownloadInfo.Progress := '';
       Container.CurrentDownloadChapterPtr := 0;
-
-      Container.ChapterName.Assign(Container.FailedChapterName);
-      Container.ChapterLinks.Assign(Container.FailedChapterLinks);
-      Container.FailedChapterName.Clear;
-      Container.FailedChapterLinks.Clear;
     end
     else
     begin
@@ -1387,62 +1065,14 @@ begin
       Container.DownloadInfo.Status := Format('[%d/%d] %s',[Container.ChapterLinks.Count,Container.ChapterLinks.Count,RS_Finish]);
       Container.DownloadInfo.Progress := '';
     end;
-    Synchronize(SyncShowBaloon);
+    ShowBalloonHint;
   except
     on E: Exception do
-      MainForm.ExceptionHandler(Self, E);
-  end;
-end;
-
-procedure TTaskThread.DoTerminate;
-var
-  i: Integer;
-begin
-  if Threads.Count > 0 then
-  begin
-    LockCreateConnection;
-    try
-      for i := 0 to Threads.Count - 1 do
-        TDownloadThread(Threads[i]).Terminate;
-    finally
-      UnlockCreateConnection;
-    end;
-    while Threads.Count > 0 do
-      Sleep(100);
-  end;
-  Modules.DecActiveTaskCount(Container.ModuleId);
-  with Container do begin
-    Container.ReadCount := 0;
-    DownloadInfo.TransferRate := '';
-    Manager.RemoveItemsActiveTask(Container);
-    ThreadState := False;
-    Task := nil;
-    if not Manager.isReadyForExit then
     begin
-      if Status <> STATUS_STOP then
-      begin
-        if (WorkCounter >= PageLinks.Count) and
-           (CurrentDownloadChapterPtr >= ChapterLinks.Count) and
-           (FailedChapterLinks.Count = 0) then
-        begin
-          Status := STATUS_FINISH;
-          DownloadInfo.Status := Format('[%d/%d] %s',[Container.ChapterLinks.Count,Container.ChapterLinks.Count,RS_Finish]);
-          DownloadInfo.Progress := '';
-        end
-        else
-        if not (Status in [STATUS_FAILED, STATUS_PROBLEM]) then
-        begin
-          Status := STATUS_STOP;
-          DownloadInfo.Status :=
-            Format('[%d/%d] %s', [CurrentDownloadChapterPtr + 1,
-            ChapterLinks.Count, RS_Stopped]);
-          FCheckAndActiveTaskFlag := False;
-        end;
-        Synchronize(SyncStop);
-      end;
+      E.Message := E.Message + LineEnding + '  In TTaskThread.Execute' + LineEnding + GetExceptionInfo;
+      MainForm.ExceptionHandler(Self, E);
     end;
   end;
-  inherited DoTerminate;
 end;
 
 { TTaskContainer }
@@ -1452,7 +1082,6 @@ begin
   if FWebsite = AValue then Exit;
   FWebsite := AValue;
   DownloadInfo.Website := AValue;
-  MangaSiteID := GetMangaSiteID(AValue);
   ModuleId := Modules.LocateModule(AValue);
 end;
 
@@ -1480,18 +1109,17 @@ end;
 constructor TTaskContainer.Create;
 begin
   inherited Create;
+  DlId := -1;
   InitCriticalSection(CS_Container);
   ThreadState := False;
   ChapterLinks := TStringList.Create;
   ChapterName := TStringList.Create;
-  FailedChapterName := TStringList.Create;
-  FailedChapterLinks := TStringList.Create;
+  ChaptersStatus := TStringList.Create;
   PageLinks := TStringList.Create;
   PageContainerLinks := TStringList.Create;
   FileNames := TStringList.Create;
   FWebsite := '';
   ModuleId := -1;
-  MangaSiteID := High(WebsiteRoots) + 1;
   ReadCount := 0;
   WorkCounter := 0;
   CurrentPageNumber := 0;
@@ -1509,8 +1137,7 @@ begin
   PageLinks.Free;
   ChapterName.Free;
   ChapterLinks.Free;
-  FailedChapterName.Free;
-  FailedChapterLinks.Free;
+  ChaptersStatus.Free;
   DoneCriticalsection(CS_Container);
   if Assigned(Manager) then
     Manager.DecStatusCount(Status);
@@ -1527,25 +1154,56 @@ begin
   end;
 end;
 
+procedure TTaskContainer.SaveToDB(const AOrder: Integer);
+var
+  i: Integer;
+begin
+  if AOrder = -1 then
+    i := Manager.Items.IndexOf(Self)
+  else
+    i := AOrder;
+  Manager.FDownloadsDB.Add(DlId,
+    FEnabled,
+    i,
+    Integer(Status),
+    CurrentDownloadChapterPtr,
+    PageNumber,
+    CurrentPageNumber,
+    Website,
+    DownloadInfo.Link,
+    DownloadInfo.Title,
+    DownloadInfo.Status,
+    DownloadInfo.Progress,
+    DownloadInfo.SaveTo,
+    DownloadInfo.DateTime,
+    ChapterLinks.Text,
+    ChapterName.Text,
+    PageLinks.Text,
+    PageContainerLinks.Text,
+    FileNames.Text,
+    CustomFileName,
+    ChaptersStatus.Text);
+end;
+
 { TDownloadManager }
 
 procedure TDownloadManager.AddItemsActiveTask(const Item: TTaskContainer);
 begin
-  EnterCriticalsection(CS_Task);
+  EnterCriticalsection(CS_ItemsActiveTask);
   try
     ItemsActiveTask.Add(Item);
   finally
-    LeaveCriticalsection(CS_Task);
+    LeaveCriticalsection(CS_ItemsActiveTask);
   end;
 end;
 
 procedure TDownloadManager.RemoveItemsActiveTask(const Item: TTaskContainer);
 begin
-  EnterCriticalsection(CS_Task);
+  EnterCriticalsection(CS_ItemsActiveTask);
   try
     ItemsActiveTask.Remove(Item);
   finally
-    LeaveCriticalsection(CS_Task);
+    LeaveCriticalsection(CS_ItemsActiveTask);
   end;
 end;
 
@@ -1565,7 +1223,7 @@ var
 begin
   Result := 0;
   if ItemsActiveTask.Count = 0 then Exit;
-  EnterCriticalSection(CS_Task);
+  EnterCriticalSection(CS_ItemsActiveTask);
   try
     for i := 0 to ItemsActiveTask.Count - 1 do
       with ItemsActiveTask[i] do
@@ -1580,7 +1238,7 @@ begin
         end;
       end;
   finally
-    LeaveCriticalSection(CS_Task);
+    LeaveCriticalSection(CS_ItemsActiveTask);
   end;
 end;
 
@@ -1625,11 +1283,11 @@ var
 begin
   inherited Create;
   InitCriticalSection(CS_Task);
+  InitCriticalSection(CS_ItemsActiveTask);
   ForceDirectoriesUTF8(WORK_FOLDER);
-  DownloadManagerFile := TIniFileRun.Create(WORK_FILE);
   DownloadedChapters := TDownloadedChaptersDB.Create;
   DownloadedChapters.Filename := DOWNLOADEDCHAPTERSDB_FILE;
-  DownloadedChapters.OnError := MainForm.ExceptionHandler;
+  DownloadedChapters.OnError := @MainForm.ExceptionHandler;
   DownloadedChapters.Open;
   if FileExistsUTF8(DOWNLOADEDCHAPTERS_FILE) then
     if DownloadedChapters.ImportFromIni(DOWNLOADEDCHAPTERS_FILE) then
@@ -1646,6 +1304,8 @@ begin
   for ds := Low(StatusCount) to High(StatusCount) do
     StatusCount[ds] := 0;
   DisabledCount := 0;
+  FDownloadsDB := TDownloadsDB.Create(WORK_FILEDB);
+  FDownloadsDB.Open;
 end;
 
 destructor TDownloadManager.Destroy;
@@ -1656,159 +1316,124 @@ begin
     Items.Remove(Items.Last);
   end;
   Items.Free;
-  DownloadManagerFile.Free;
   ItemsActiveTask.Free;
   DownloadedChapters.Free;
+  FDownloadsDB.Free;
+  DoneCriticalsection(CS_ItemsActiveTask);
   DoneCriticalsection(CS_Task);
   DoneCriticalsection(CS_StatusCount);
   inherited Destroy;
 end;
 
-procedure TDownloadManager.Restore;
+function TDownloadManager.ConvertToDB: Boolean;
 var
-  tid, s: String;
-  tmp, i, j: Integer;
+  i, d: Integer;
+  s: String;
 begin
-  EnterCriticalSection(CS_Task);
+  Result := False;
+  if not FileExistsUTF8(WORK_FILE) then Exit;
+  with TIniFile.Create(WORK_FILE) do
   try
-    while Items.Count > 0 do
+    i := ReadInteger('general', 'NumberOfTasks', 0);
+    if i = 0 then Exit;
+    for i := 0 to i - 1 do
     begin
-      Items.Last.Free;
-      Items.Remove(Items.Last);
+      d := -1;
+      s := 'task' + IntToStr(i);
+      FDownloadsDB.Add(d,
+        ReadBool(s, 'Enabled', True),
+        i,
+        GetEnumValue(TypeInfo(TDownloadStatusType), ReadString(s, 'TaskStatus', GetEnumName(TypeInfo(TDownloadStatusType), 0))),
+        ReadInteger(s, 'ChapterPtr', 0),
+        ReadInteger(s, 'NumberOfPages', 0),
+        ReadInteger(s, 'CurrentPage', 0),
+        ReadString(s, 'Website', ''),
+        ReadString(s, 'Link', ''),
+        ReadString(s, 'Title', ''),
+        ReadString(s, 'Status', ''),
+        ReadString(s, 'Progress', ''),
+        ReadString(s, 'SaveTo', ''),
+        StrToFloatDef(ReadString(s, 'DateTime', ''), Now, FMDFormatSettings),
+        GetParams(ReadString(s, 'ChapterLinks', '') + ReadString(s, 'FailedChapterLinks', '')),
+        GetParams(ReadString(s, 'ChapterName', '') + ReadString(s, 'FailedChapterName', '')),
+        GetParams(ReadString(s, 'PageLinks', '')),
+        GetParams(ReadString(s, 'PageContainerLinks', '')),
+        GetParams(ReadString(s, 'Filenames', '')),
+        ReadString(s, 'CustomFileName', DEFAULT_FILENAME_CUSTOMRENAME),
+        '');
     end;
-
-    tmp := DownloadManagerFile.ReadInteger('general', 'NumberOfTasks', 0);
-    if tmp = 0 then
-      Exit;
-    for i := 0 to tmp - 1 do
-    begin
-      // restore download task from file
-      Items.Add(TTaskContainer.Create);
-      with DownloadManagerFile, Items.Last do
-      begin
-        tid := 'task' + IntToStr(i);
-        Manager := Self;
-        DownloadInfo.Website := ReadString(tid, 'Website', 'NULL');
-        DownloadInfo.Link := ReadString(tid, 'Link', '');
-        DownloadInfo.Title := ReadString(tid, 'Title', 'NULL');
-        DownloadInfo.SaveTo := ReadString(tid, 'SaveTo', 'NULL');
-        DownloadInfo.Status := ReadString(tid, 'Status', 'NULL');
-        DownloadInfo.Progress := ReadString(tid, 'Progress', 'NULL');
-        Enabled := ReadBool(tid, 'Enabled', True);
-        if Pos('/', DownloadInfo.Progress) > 0 then
-        begin
-          DownCounter := StrToIntDef(ExtractWord(1, DownloadInfo.Progress, ['/']), 0);
-          PageNumber := StrToIntDef(ExtractWord(2, DownloadInfo.Progress, ['/']), 0);
-        end;
-        CustomFileName := ReadString(tid, 'CustomFileName', DEFAULT_FILENAME_CUSTOMRENAME);
-        s := ReadString(tid, 'ChapterLinks', '');
-        if s <> '' then GetParams(ChapterLinks, s);
-        s := ReadString(tid, 'ChapterName', '');
-        if s <> '' then GetParams(ChapterName, s);
-        s := ReadString(tid, 'FailedChapterLinks', '');
-        if s <> '' then GetParams(FailedChapterLinks, s);
-        s := ReadString(tid, 'FailedChapterName', '');
-        if s <> '' then GetParams(FailedChapterName, s);
-        s := ReadString(tid, 'PageLinks', '');
-        if s <> '' then GetParams(PageLinks, s);
-        s := ReadString(tid, 'PageContainerLinks', '');
-        if s <> '' then GetParams(PageContainerLinks, s);
-        s := ReadString(tid, 'Filenames', '');
-        if s <> '' then GetParams(FileNames, s);
-        j := ReadInteger(tid, 'TaskStatus', -1);
-        if j >= 0 then
-          Status := TDownloadStatusType(j)
-        else
-        begin
-          s := ReadString(tid, 'TaskStatus', 'STATUS_STOP');
-          Status := TDownloadStatusType(GetEnumValue(TypeInfo(TDownloadStatusType), s));
-          if Status = STATUS_COMPRESS then
-            Status := STATUS_WAIT;
-        end;
-        CurrentDownloadChapterPtr := ReadInteger(tid, 'ChapterPtr', 0);
-        PageNumber := ReadInteger(tid, 'NumberOfPages', 0);
-        CurrentPageNumber := ReadInteger(tid, 'CurrentPage', 0);
-        if Status = STATUS_COMPRESS then
-          DownloadInfo.Status := Format('[%d/%d] %s',[CurrentDownloadChapterPtr+1,ChapterLinks.Count,RS_Waiting]);
-        s := ReadString(tid, 'DateTime', '');
-        //for old config
-        if (Pos('/', s) > 0) or (Pos('\', s) > 0) then
-          DownloadInfo.dateTime := StrToDateDef(s, Now)
-        else
-        begin
-          s := StringReplace(s, ',', FMDFormatSettings.DecimalSeparator, [rfReplaceAll]);
-          s := StringReplace(s, '.', FMDFormatSettings.DecimalSeparator, [rfReplaceAll]);
-          DownloadInfo.dateTime := StrToFloatDef(s, Now, FMDFormatSettings);
-        end;
-        if DownloadInfo.dateTime > Now then DownloadInfo.dateTime := Now;
-
-        Website := DownloadInfo.Website;
-        ThreadState := False;
-
-        //validating
-        if (CurrentDownloadChapterPtr > 0) and (CurrentDownloadChapterPtr >= ChapterLinks.Count) then
-          CurrentDownloadChapterPtr := ChapterLinks.Count - 1;
-      end;
-    end;
+    FDownloadsDB.Commit;
+    Result := True;
   finally
-    LeaveCriticalSection(CS_Task);
+    Free;
   end;
+  if Result then
+    Result := DeleteFileUTF8(WORK_FILE);
+end;
+
+procedure TDownloadManager.Restore;
+begin
+  if not FDownloadsDB.Connection.Connected then Exit;
+  ConvertToDB;
+  if FDownloadsDB.OpenTable(False) then
+  try
+    if FDownloadsDB.RecordCount = 0 then Exit;
+    EnterCriticalsection(CS_Task);
+      try
+        FDownloadsDB.Table.First;
+        while not FDownloadsDB.Table.EOF do
+        begin
+          Items.Add(TTaskContainer.Create);
+          with Items.Last, FDownloadsDB.Table do
+          begin
+            Manager := Self;
+            DlId                      := Fields[f_dlid].AsInteger;
+            Enabled                   := Fields[f_enabled].AsBoolean;
+            Status                    := TDownloadStatusType(Fields[f_taskstatus].AsInteger);
+            CurrentDownloadChapterPtr := Fields[f_chapterptr].AsInteger;
+            PageNumber                := Fields[f_numberofpages].AsInteger;
+            CurrentPageNumber         := Fields[f_currentpage].AsInteger;
+            Website                   := Fields[f_website].AsString;
+            DownloadInfo.Website      := Website;
+            DownloadInfo.Link         := Fields[f_link].AsString;
+            DownloadInfo.Title        := Fields[f_title].AsString;
+            DownloadInfo.Status       := Fields[f_status].AsString;
+            DownloadInfo.Progress     := Fields[f_progress].AsString;
+            if Pos('/', DownloadInfo.Progress) <> 0 then
+              DownCounter := StrToIntDef(Trim(ExtractWord(1, DownloadInfo.Progress, ['/'])), 0);
+            DownloadInfo.SaveTo       := Fields[f_saveto].AsString;
+            DownloadInfo.DateTime     := Fields[f_datetime].AsDateTime;
+            ChapterLinks.Text         := Fields[f_chapterslinks].AsString;
+            ChapterName.Text          := Fields[f_chaptersnames].AsString;
+            PageLinks.Text            := Fields[f_pagelinks].AsString;
+            PageContainerLinks.Text   := Fields[f_pagecontainerlinks].AsString;
+            FileNames.Text            := Fields[f_filenames].AsString;
+            CustomFileName            := Fields[f_customfilenames].AsString;
+            ChaptersStatus.Text       := Fields[f_chaptersstatus].AsString;
+          end;
+          FDownloadsDB.Table.Next;
+        end;
+      finally
+        LeaveCriticalsection(CS_Task);
+      end;
+    finally
+      FDownloadsDB.CloseTable;
+    end;
 end;
 
 procedure TDownloadManager.Backup;
 var
   i: Integer;
-  tid: String;
 begin
-  if isRunningBackup then
-    Exit;
-
-  isRunningBackup := True;
-  EnterCriticalSection(CS_Task);
-  with DownloadManagerFile do
+  if isRunningBackup then Exit;
+  if Items.Count = 0 then Exit;
+  if not FDownloadsDB.Connection.Connected then Exit;
   try
-    // Erase all sections
-    for i := 0 to ReadInteger('general', 'NumberOfTasks', 0) do
-      EraseSection('task' + IntToStr(i));
-    EraseSection('general');
-
-    // backup
-    if Items.Count > 0 then
-    begin
-      WriteInteger('general', 'NumberOfTasks', Items.Count);
-      for i := 0 to Items.Count - 1 do
-      begin
-        tid := 'task' + IntToStr(i);
-        with Items[i] do begin
-          WriteString(tid, 'Website', DownloadInfo.Website);
-          WriteString(tid, 'Link', DownloadInfo.Link);
-          WriteString(tid, 'Title', DownloadInfo.Title);
-          WriteString(tid, 'SaveTo', DownloadInfo.SaveTo);
-          WriteString(tid, 'Status', DownloadInfo.Status);
-          WriteString(tid, 'Progress', DownloadInfo.Progress);
-          WriteBool(tid, 'Enabled', Enabled);
-          WriteString(tid, 'DateTime', FloatToStr(DownloadInfo.dateTime, FMDFormatSettings));
-          WriteString(tid, 'CustomFileName', CustomFileName);
-          WriteString(tid, 'ChapterLinks', SetParams(ChapterLinks));
-          WriteString(tid, 'ChapterName', SetParams(ChapterName));
-          if FailedChapterLinks.Count > 0 then
-            WriteString(tid, 'FailedChapterLinks', SetParams(FailedChapterLinks));
-          if FailedChapterName.Count > 0 then
-            WriteString(tid, 'FailedChapterName', SetParams(FailedChapterName));
-          if PageLinks.Count > 0 then
-            WriteString(tid, 'PageLinks', SetParams(PageLinks));
-          if PageContainerLinks.Count > 0 then
-            WriteString(tid, 'PageContainerLinks', SetParams(PageContainerLinks));
-          if FileNames.Count > 0 then
-            WriteString(tid, 'Filenames', SetParams(FileNames));
-          WriteString(tid, 'TaskStatus', GetEnumName(TypeInfo(TDownloadStatusType), Integer(Status)));
-          WriteInteger(tid, 'ChapterPtr', CurrentDownloadChapterPtr);
-          WriteInteger(tid, 'NumberOfPages', PageNumber);
-          WriteInteger(tid, 'CurrentPage', CurrentPageNumber);
-        end;
-      end;
-    end;
-    UpdateFile;
+    EnterCriticalSection(CS_Task);
+    isRunningBackup := True;
+    for i := 0 to Items.Count - 1 do
+      Items[i].SaveToDB(i);
+    FDownloadsDB.Commit;
   finally
     LeaveCriticalSection(CS_Task);
   end;
@@ -1864,10 +1489,11 @@ begin
       if Items[i].ThreadState then
         Inc(tcount);
 
-    if tcount < maxDLTasks then
+    if tcount < OptionMaxParallel then
       for i := 0 to Items.Count - 1 do
         with Items[i] do
-          if (tcount < maxDLTasks) and
+          if (ModuleId<>-1) and
+            (tcount < OptionMaxParallel) and
             (Status = STATUS_WAIT) and
             Modules.CanCreateTask(ModuleId) then
           begin
@@ -1890,7 +1516,7 @@ begin
       MainForm.tmRefreshDownloadsInfo.Enabled := False;
       MainForm.UpdateVtDownload;
       if isCheckForFMDDo and (OptionLetFMDDo <> DO_NOTHING) then begin
-        frmMain.DoAfterFMD := OptionLetFMDDo;
+        DoAfterFMD := OptionLetFMDDo;
         MainForm.DoExitWaitCounter;
       end;
     end;
@@ -1904,7 +1530,7 @@ procedure TDownloadManager.SetTaskActive(const taskID: Integer);
 begin
   if not Items[taskID].Enabled then Exit;
   with Items[taskID] do
-    if not ThreadState then
+    if not (ThreadState or (Status in [STATUS_FINISH, STATUS_WAIT])) then
     begin
       Status := STATUS_WAIT;
       DownloadInfo.Status := Format('[%d/%d] %s',[CurrentDownloadChapterPtr+1,ChapterLinks.Count,RS_Waiting]);
@@ -1920,11 +1546,19 @@ begin
   for i := 0 to Items.Count - 1 do
     with Items[i] do
       if Status in [STATUS_DOWNLOAD, STATUS_PREPARE] then
-        if (tcount < maxDLTasks) and
+        if (tcount < OptionMaxParallel) and
           Modules.CanCreateTask(ModuleId) then
         begin
-          Inc(tcount);
-          ActiveTask(i);
+          if ModuleId<>-1 then
+          begin
+            Inc(tcount);
+            ActiveTask(i);
+          end
+          else
+          begin
+            Status := STATUS_STOP;
+            DownloadInfo.Status := Format('[%d/%d] %s',[CurrentDownloadChapterPtr+1,ChapterLinks.Count,RS_Stopped]);
+          end;
         end
         else
         begin
@@ -2028,17 +1662,23 @@ begin
   end;
 end;
 
-procedure TDownloadManager.RemoveTask(const taskID: Integer);
+procedure TDownloadManager.FreeAndDelete(const TaskId: Integer);
+begin
+  FDownloadsDB.Delete(Items[TaskID].DlId);
+  Items[TaskID].Free;
+  Items.Delete(taskID);
+end;
+
+procedure TDownloadManager.RemoveTask(const TaskID: Integer);
 begin
   EnterCriticalSection(CS_Task);
   try
-    with Items[taskID] do
+    with Items[TaskID] do
       if ThreadState then begin
         Task.Terminate;
         Task.WaitFor;
       end;
-    Items[taskID].Free;
-    Items.Delete(taskID);
+    FreeAndDelete(TaskID);
   finally
     LeaveCriticalSection(CS_Task);
   end;
@@ -2054,10 +1694,7 @@ begin
   try
     for i := Items.Count - 1 downto 0 do
       if Items[i].Status = STATUS_FINISH then
-      begin
-        Items[i].Free;
-        Items.Delete(i)
-      end;
+        FreeAndDelete(i);
   finally
     LeaveCriticalsection(CS_Task);
   end;
@@ -2152,7 +1789,7 @@ begin
   EnterCriticalSection(CS_Task);
   try
     SortColumn := AColumn;
-    Items.Sort(CompareTaskContainer);
+    Items.Sort(@CompareTaskContainer);
   finally
     LeaveCriticalSection(CS_Task);
   end;

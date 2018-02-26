@@ -14,7 +14,7 @@ const
   dirurl = '/listmangahentai.html';
 
 function GetDirectoryPageNumber(const MangaInfo: TMangaInformation;
-  var Page: Integer; const Module: TModuleContainer): Integer;
+  var Page: Integer; const WorkPtr: Integer; const Module: TModuleContainer): Integer;
 var
   query: TXQueryEngineHTML;
   s: String;
@@ -158,6 +158,7 @@ begin
   begin
     Website := 'Hakihome';
     RootURL := 'http://hakihome.com';
+    Category := 'H-Sites';
     OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;

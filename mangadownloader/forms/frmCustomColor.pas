@@ -110,11 +110,13 @@ type
     destructor Destroy; override;
     function IndexOf(const AVT: VirtualTrees.TVirtualStringTree): Integer;
     procedure Add(const AVT: VirtualTrees.TVirtualStringTree);
+    procedure Remove(const AVT: VirtualTrees.TVirtualStringTree);
     property Items[Index: Integer]: VirtualTrees.TVirtualStringTree read GetItems write SetItems; default;
     property Count: Integer read FCount;
   end;
 
-procedure AddVT(const AVT: VirtualTrees.TVirtualStringTree);
+procedure AddVT(const AVT: VirtualTrees.TVirtualStringTree); inline;
+procedure RemoveVT(const AVT: VirtualTrees.TVirtualStringTree); inline;
 procedure Apply;
 procedure LoadFromIniFile(const IniFile: TIniFile);
 procedure SaveToIniFile(const IniFile: TIniFile);
@@ -243,6 +245,11 @@ end;
 procedure AddVT(const AVT: VirtualTrees.TVirtualStringTree);
 begin
   VTApplyList.Add(AVT);
+end;
+
+procedure RemoveVT(const AVT: VirtualTrees.TVirtualStringTree);
+begin
+  VTApplyList.Remove(AVT);
 end;
 
 procedure ApplyToFMDOptions;
@@ -486,7 +493,9 @@ begin
       Color := clWindow;
     LineStyle:=lsDotted;
     Header.Options:=Header.Options+[hoHotTrack];
+    {$if VTMajorVersion < 5}
     TreeOptions.PaintOptions:=TreeOptions.PaintOptions+[toUseExplorerTheme,toHotTrack];
+    {$endif}
 
     // save original event
     PaintText := OnPaintText;
@@ -541,6 +550,18 @@ begin
     InstallCustomColors(FCount);
     Inc(FCount);
   end;
+end;
+
+procedure TVTApplyList.Remove(const AVT: VirtualTrees.TVirtualStringTree);
+var
+  i: Integer;
+begin
+  i := IndexOf(AVT);
+  if i = -1 then Exit;
+  Dec(FCount);
+  if i <> FCount then
+    FVTList[i] := FVTList[FCount];
+  SetLength(FVTList, FCount);
 end;
 
 { TVirtualStringTree }

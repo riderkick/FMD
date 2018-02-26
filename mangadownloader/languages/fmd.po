@@ -1,12 +1,45 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8"
 
-#: batoto.rs_showalllang
-msgid "Show all language"
+#: dbupdater.rs_buttoncancel
+msgctxt "dbupdater.rs_buttoncancel"
+msgid "Abort"
 msgstr ""
 
-#: batoto.rs_showscangroup
-msgid "Show scanlation group"
+#: dbupdater.rs_downloading
+msgid "Downloading %s"
+msgstr ""
+
+#: dbupdater.rs_extracting
+msgid "Extracting %s"
+msgstr ""
+
+#: dbupdater.rs_faileddownload
+msgid "%s: %d %s"
+msgstr ""
+
+#: dbupdater.rs_failedextract
+msgid "%s: failed to extract, exitstatus = %d"
+msgstr ""
+
+#: dbupdater.rs_faileditems
+msgid ""
+"Failed to finish:\n"
+"\n"
+"%s\n"
+msgstr ""
+
+#: dbupdater.rs_faileditemstitle
+msgctxt "dbupdater.rs_faileditemstitle"
+msgid "Failed"
+msgstr ""
+
+#: dbupdater.rs_failedtosave
+msgid "%s: failed to save"
+msgstr ""
+
+#: dbupdater.rs_missingzipexe
+msgid "%s: Missing %s"
 msgstr ""
 
 #: ehentai.rs_downloadoriginalimage
@@ -37,6 +70,7 @@ msgid "Checking"
 msgstr ""
 
 #: frmaccountmanager.rs_invalid
+msgctxt "frmaccountmanager.rs_invalid"
 msgid "Invalid"
 msgstr ""
 
@@ -45,6 +79,7 @@ msgid "Unknown"
 msgstr ""
 
 #: frmaccountmanager.rs_valid
+msgctxt "frmaccountmanager.rs_valid"
 msgid "OK"
 msgstr ""
 
@@ -58,6 +93,75 @@ msgstr ""
 
 #: frmimportfavorites.rs_listunimportedcaption
 msgid "List of unimported manga"
+msgstr ""
+
+#: frmluamodulesupdater.rs_checking
+msgctxt "frmluamodulesupdater.rs_checking"
+msgid "Checking..."
+msgstr ""
+
+#: frmluamodulesupdater.rs_checkupdate
+msgctxt "frmluamodulesupdater.rs_checkupdate"
+msgid "Check update"
+msgstr ""
+
+#: frmluamodulesupdater.rs_finishchecking
+msgid "Finish checking"
+msgstr ""
+
+#: frmluamodulesupdater.rs_finishdownload
+msgid "Finish download"
+msgstr ""
+
+#: frmluamodulesupdater.rs_modulesupdatedrestart
+msgid ""
+"Modules updated, restart now?\n"
+"\n"
+"%s\n"
+msgstr ""
+
+#: frmluamodulesupdater.rs_modulesupdatedtitle
+msgid "Modules updated!"
+msgstr ""
+
+#: frmluamodulesupdater.rs_newupdatefoundlostchanges
+msgid ""
+"Modules update found, any local changes will be lost, procced?\n"
+"\n"
+"%s\n"
+msgstr ""
+
+#: frmluamodulesupdater.rs_newupdatefoundtitle
+msgid "Modules update found!"
+msgstr ""
+
+#: frmluamodulesupdater.rs_startdownloading
+msgid "Downloading..."
+msgstr ""
+
+#: frmluamodulesupdater.rs_statusdelete
+msgctxt "frmluamodulesupdater.rs_statusdelete"
+msgid "%s DELETE*"
+msgstr ""
+
+#: frmluamodulesupdater.rs_statusfailed
+msgctxt "frmluamodulesupdater.rs_statusfailed"
+msgid "%s FAILED*"
+msgstr ""
+
+#: frmluamodulesupdater.rs_statusnew
+msgctxt "frmluamodulesupdater.rs_statusnew"
+msgid "%s NEW*"
+msgstr ""
+
+#: frmluamodulesupdater.rs_statusredownloaded
+msgctxt "frmluamodulesupdater.rs_statusredownloaded"
+msgid "%s REDOWNLOAD*"
+msgstr ""
+
+#: frmluamodulesupdater.rs_statusupdate
+msgctxt "frmluamodulesupdater.rs_statusupdate"
+msgid "%s UPDATE*"
 msgstr ""
 
 #: frmmain.rs_alldownloads
@@ -75,6 +179,7 @@ msgid "Cancel"
 msgstr ""
 
 #: frmmain.rs_checking
+msgctxt "frmmain.rs_checking"
 msgid "Checking..."
 msgstr ""
 
@@ -247,6 +352,14 @@ msgstr ""
 msgid "One week"
 msgstr ""
 
+#: frmmain.rs_optioncompress
+msgid ""
+"None\n"
+"ZIP\n"
+"CBZ\n"
+"PDF\n"
+msgstr ""
+
 #: frmmain.rs_optionfmddoitems
 msgid ""
 "Nothing\n"
@@ -272,6 +385,21 @@ msgstr ""
 msgid "Today"
 msgstr ""
 
+#: frmmain.rs_webpconvertto
+msgid ""
+"WebP\n"
+"PNG\n"
+"JPEG\n"
+msgstr ""
+
+#: frmmain.rs_webppnglevel
+msgid ""
+"None\n"
+"Fastest\n"
+"Default\n"
+"Maximum\n"
+msgstr ""
+
 #: frmmain.rs_wronginput
 msgid "Invalid input!"
 msgstr ""
@@ -292,6 +420,43 @@ msgstr ""
 msgid "System will shutdown in %d second."
 msgstr ""
 
+#: frmtransferfavorites.rs_all
+msgctxt "frmtransferfavorites.rs_all"
+msgid "All"
+msgstr ""
+
+#: frmtransferfavorites.rs_invalid
+msgctxt "frmtransferfavorites.rs_invalid"
+msgid "Invalid"
+msgstr ""
+
+#: frmtransferfavorites.rs_valid
+msgctxt "frmtransferfavorites.rs_valid"
+msgid "Valid"
+msgstr ""
+
+#: kissmanga.rs_kissmanga_initvector
+msgid "Initialization Vector:"
+msgstr ""
+
+#: kissmanga.rs_kissmanga_key
+msgid "Key:"
+msgstr ""
+
+#: kissmanga.rs_kissmanga_usegoogledcp
+msgid "Use Google DCP"
+msgstr ""
+
+#: mangadex.rs_showalllang
+msgctxt "mangadex.rs_showalllang"
+msgid "Show all language"
+msgstr ""
+
+#: mangadex.rs_showscangroup
+msgctxt "mangadex.rs_showscangroup"
+msgid "Show scanlation group"
+msgstr ""
+
 #: mangafox.rs_removewatermark
 msgid "Remove watermark"
 msgstr ""
@@ -300,14 +465,46 @@ msgstr ""
 msgid "Save as PNG"
 msgstr ""
 
-#: taccountmanagerform.btadd.caption
-msgctxt "taccountmanagerform.btadd.caption"
-msgid "Add"
+#: selfupdater.rs_buttoncancel
+msgctxt "selfupdater.rs_buttoncancel"
+msgid "Abort"
 msgstr ""
 
-#: taccountmanagerform.btdelete.caption
-msgctxt "taccountmanagerform.btdelete.caption"
-msgid "Delete"
+#: selfupdater.rs_downloading
+msgid "Downloading new version %s"
+msgstr ""
+
+#: selfupdater.rs_faileddownload
+msgid ""
+"Failed to download new version %s\n"
+"\n"
+"%d %s\n"
+msgstr ""
+
+#: selfupdater.rs_failedextract
+msgid "Failed to extract %s, exitstatus = %d"
+msgstr ""
+
+#: selfupdater.rs_failedtitle
+msgctxt "selfupdater.rs_failedtitle"
+msgid "Failed"
+msgstr ""
+
+#: selfupdater.rs_failedtosave
+msgid "Failed to save %s"
+msgstr ""
+
+#: selfupdater.rs_finishrestart
+msgid "Download update package finished, restart to proceed?"
+msgstr ""
+
+#: selfupdater.rs_finishrestarttitle
+msgid "Download finished"
+msgstr ""
+
+#: selfupdater.rs_missingfile
+msgctxt "selfupdater.rs_missingfile"
+msgid "Missing %s"
 msgstr ""
 
 #: taccountmanagerform.btedit.caption
@@ -317,6 +514,10 @@ msgstr ""
 
 #: taccountmanagerform.btrefresh.caption
 msgid "Refresh"
+msgstr ""
+
+#: taccountmanagerform.caption
+msgid "AccountManagerForm"
 msgstr ""
 
 #: taccountmanagerform.vtaccountlist.header.columns[1].text
@@ -343,6 +544,10 @@ msgstr ""
 msgid "Ok"
 msgstr ""
 
+#: taccountsetform.caption
+msgid "Account"
+msgstr ""
+
 #: taccountsetform.ckshowpassword.caption
 msgid "Show password"
 msgstr ""
@@ -355,11 +560,6 @@ msgstr ""
 #: taccountsetform.edusername.texthint
 msgctxt "TACCOUNTSETFORM.EDUSERNAME.TEXTHINT"
 msgid "Username"
-msgstr ""
-
-#: taccountsetform.label1.caption
-msgctxt "TACCOUNTSETFORM.LABEL1.CAPTION"
-msgid "Website"
 msgstr ""
 
 #: taccountsetform.label2.caption
@@ -444,6 +644,31 @@ msgstr ""
 
 #: timportfavorites.lbselectsoftware.caption
 msgid "Software:"
+msgstr ""
+
+#: tluamodulesupdaterform.btcheckupdate.caption
+msgctxt "tluamodulesupdaterform.btcheckupdate.caption"
+msgid "Check update"
+msgstr ""
+
+#: tluamodulesupdaterform.ckautorestart.caption
+msgid "Auto restart"
+msgstr ""
+
+#: tluamodulesupdaterform.ckshowupdatewarning.caption
+msgid "Show update warning"
+msgstr ""
+
+#: tluamodulesupdaterform.vtluamodulesrepos.header.columns[0].text
+msgid "Filename"
+msgstr ""
+
+#: tluamodulesupdaterform.vtluamodulesrepos.header.columns[1].text
+msgid "Last modified"
+msgstr ""
+
+#: tluamodulesupdaterform.vtluamodulesrepos.header.columns[2].text
+msgid "Last message"
 msgstr ""
 
 #: tmainform.btabortupdatelist.hint
@@ -562,6 +787,10 @@ msgctxt "TMAINFORM.CBOPTIONAUTOCHECKLATESTVERSION.CAPTION"
 msgid "Auto check for latest version "
 msgstr ""
 
+#: tmainform.cboptionautoopenfavstartup.caption
+msgid "Open Favorites at startup"
+msgstr ""
+
 #: tmainform.cboptionchangeunicodecharacter.caption
 msgctxt "TMAINFORM.CBOPTIONCHANGEUNICODECHARACTER.CAPTION"
 msgid "Replace all unicode character with"
@@ -569,6 +798,10 @@ msgstr ""
 
 #: tmainform.cboptionchangeunicodecharacter.hint
 msgid "Enable this if you have problem with unicode character in path."
+msgstr ""
+
+#: tmainform.cboptiondeletecompletedtasksonclose.caption
+msgid "Delete completed tasks on close"
 msgstr ""
 
 #: tmainform.cboptiondigitchapter.caption
@@ -596,6 +829,10 @@ msgstr ""
 msgid "Enable live search (slow on long list)"
 msgstr ""
 
+#: tmainform.cboptionminimizeonstart.caption
+msgid "Minimize on start"
+msgstr ""
+
 #: tmainform.cboptionminimizetotray.caption
 msgid "Minimize to tray"
 msgstr ""
@@ -612,6 +849,10 @@ msgstr ""
 msgid "Remove manga name from chapter"
 msgstr ""
 
+#: tmainform.cboptionshowballoonhint.caption
+msgid "Show balloon hint"
+msgstr ""
+
 #: tmainform.cboptionshowdeletetaskdialog.caption
 msgid "Delete task/favorite"
 msgstr ""
@@ -622,6 +863,14 @@ msgstr ""
 
 #: tmainform.cboptionshowdownloadtoolbar.caption
 msgid "Show downloads toolbar"
+msgstr ""
+
+#: tmainform.cboptionshowdownloadtoolbardeleteall.caption
+msgid "Show \"Delete all completed tasks\" in downloads toolbar"
+msgstr ""
+
+#: tmainform.cboptionshowdownloadtoolbarleft.caption
+msgid "Show left downloads toolbar"
 msgstr ""
 
 #: tmainform.cboptionshowquitdialog.caption
@@ -640,6 +889,11 @@ msgstr ""
 msgid "Use proxy"
 msgstr ""
 
+#: tmainform.cbpngcompressionlevel.text
+msgctxt "tmainform.cbpngcompressionlevel.text"
+msgid "Fastest"
+msgstr ""
+
 #: tmainform.cbsearchfromallsites.caption
 msgid "Search in all manga sites"
 msgstr ""
@@ -650,6 +904,11 @@ msgstr ""
 
 #: tmainform.cbuseregexpr.caption
 msgid "Regular Expression"
+msgstr ""
+
+#: tmainform.cbwebpsaveas.text
+msgctxt "tmainform.cbwebpsaveas.text"
+msgid "PNG"
 msgstr ""
 
 #: tmainform.ckdroptarget.caption
@@ -975,6 +1234,15 @@ msgstr ""
 msgid "This work usually involves intimate relationships between women."
 msgstr ""
 
+#: tmainform.ckoptionsalwaysstarttaskfromfailedchapters.caption
+msgctxt "tmainform.ckoptionsalwaysstarttaskfromfailedchapters.caption"
+msgid "Always start task from failed chapters"
+msgstr ""
+
+#: tmainform.ckpngsaveasjpeg.caption
+msgid "Save PNG as JPEG"
+msgstr ""
+
 #: tmainform.edcustomgenres.texthint
 msgid "Input custom genres, separated by comma"
 msgstr ""
@@ -1055,10 +1323,6 @@ msgstr ""
 msgid "Proxy password"
 msgstr ""
 
-#: tmainform.edoptionport.texthint
-msgid "Proxy Port"
-msgstr ""
-
 #: tmainform.edoptionuser.texthint
 msgid "Proxy username"
 msgstr ""
@@ -1083,6 +1347,10 @@ msgstr ""
 
 #: tmainform.gbdroptarget.caption
 msgid "Drop Box"
+msgstr ""
+
+#: tmainform.gbimageconversion.caption
+msgid "Image Conversion"
 msgstr ""
 
 #: tmainform.gboptionexternal.caption
@@ -1154,6 +1422,10 @@ msgstr ""
 #: tmainform.lbfiltertitle.caption
 msgctxt "tmainform.lbfiltertitle.caption"
 msgid "Title"
+msgstr ""
+
+#: tmainform.lbjpegquality.caption
+msgid "JPEG quality"
 msgstr ""
 
 #: tmainform.lblogfilename.caption
@@ -1264,7 +1536,7 @@ msgid ""
 msgstr ""
 
 #: tmainform.lboptionmaxparallel.caption
-msgid "Number of downloaded tasks at the same time (Max: 8)"
+msgid "Number of downloaded tasks at the same time"
 msgstr ""
 
 #: tmainform.lboptionmaxretry.caption
@@ -1272,7 +1544,7 @@ msgid "Number of retry times if tasks have download problems (-1 = always retry)
 msgstr ""
 
 #: tmainform.lboptionmaxthread.caption
-msgid "Number of downloaded files per task at the same time (Max: 32)"
+msgid "Number of downloaded files per task at the same time"
 msgstr ""
 
 #: tmainform.lboptionnewmangatime.caption
@@ -1310,13 +1582,26 @@ msgstr ""
 msgid "Rename  digits"
 msgstr ""
 
+#: tmainform.lboptionretryfailedtask.caption
+msgid "Number of retry times if task failed"
+msgstr ""
+
 #: tmainform.lboptionuser.caption
 msgctxt "tmainform.lboptionuser.caption"
 msgid "Username"
 msgstr ""
 
+#: tmainform.lbpngcompressionlevel.caption
+msgctxt "tmainform.lbpngcompressionlevel.caption"
+msgid "PNG Compression level"
+msgstr ""
+
 #: tmainform.lbsaveto.caption
 msgid "Save to:"
+msgstr ""
+
+#: tmainform.lbwebpsaveas.caption
+msgid "Save WebP as"
 msgstr ""
 
 #: tmainform.medturldelete.caption
@@ -1350,7 +1635,12 @@ msgid "Undo"
 msgstr ""
 
 #: tmainform.miabortsilentthread.caption
+msgctxt "tmainform.miabortsilentthread.caption"
 msgid "Abort"
+msgstr ""
+
+#: tmainform.michapterlistascending.caption
+msgid "Ascending"
 msgstr ""
 
 #: tmainform.michapterlistcheckall.caption
@@ -1360,6 +1650,10 @@ msgstr ""
 
 #: tmainform.michapterlistcheckselected.caption
 msgid "Check selected"
+msgstr ""
+
+#: tmainform.michapterlistdescending.caption
+msgid "Descending"
 msgstr ""
 
 #: tmainform.michapterlistfilter.caption
@@ -1407,10 +1701,12 @@ msgid "Task + Data + Favorite"
 msgstr ""
 
 #: tmainform.midownloaddisable.caption
+msgctxt "tmainform.midownloaddisable.caption"
 msgid "Disable"
 msgstr ""
 
 #: tmainform.midownloadenable.caption
+msgctxt "tmainform.midownloadenable.caption"
 msgid "Enable"
 msgstr ""
 
@@ -1459,9 +1755,19 @@ msgctxt "TMAINFORM.MIFAVORITESDELETE.CAPTION"
 msgid "Delete"
 msgstr ""
 
+#: tmainform.mifavoritesdisable.caption
+msgctxt "tmainform.mifavoritesdisable.caption"
+msgid "Disable"
+msgstr ""
+
 #: tmainform.mifavoritesdownloadall.caption
 msgctxt "tmainform.mifavoritesdownloadall.caption"
 msgid "Download all"
+msgstr ""
+
+#: tmainform.mifavoritesenable.caption
+msgctxt "tmainform.mifavoritesenable.caption"
+msgid "Enable"
 msgstr ""
 
 #: tmainform.mifavoritesopenfolder.caption
@@ -1474,8 +1780,17 @@ msgctxt "TMAINFORM.MIFAVORITESOPENWITH.CAPTION"
 msgid "Open ..."
 msgstr ""
 
+#: tmainform.mifavoritesrename.caption
+msgid "Rename"
+msgstr ""
+
 #: tmainform.mifavoritesstopchecknewchapter.caption
 msgid "Stop check for new chapter"
+msgstr ""
+
+#: tmainform.mifavoritestransferwebsite.caption
+msgctxt "tmainform.mifavoritestransferwebsite.caption"
+msgid "Transfer website"
 msgstr ""
 
 #: tmainform.mifavoritesviewinfos.caption
@@ -1613,6 +1928,22 @@ msgstr ""
 msgid "Stop All"
 msgstr ""
 
+#: tmainform.tbmidownloadmovebottom.hint
+msgid "Move selected item(s) to bottom"
+msgstr ""
+
+#: tmainform.tbmidownloadmovedown.hint
+msgid "Move selected item(s) down"
+msgstr ""
+
+#: tmainform.tbmidownloadmovetop.hint
+msgid "Move selected item(s) to top"
+msgstr ""
+
+#: tmainform.tbmidownloadmoveup.hint
+msgid "Move selected item(s) up"
+msgstr ""
+
 #: tmainform.tbwebsitescollapseall.caption
 msgid "Collapse All"
 msgstr ""
@@ -1654,22 +1985,22 @@ msgctxt "tmainform.tsdownload.caption"
 msgid "Downloads"
 msgstr ""
 
-#: tmainform.tsdownloadfilter.caption
-msgid ">>"
-msgstr ""
-
 #: tmainform.tsfavorites.caption
 msgctxt "tmainform.tsfavorites.caption"
 msgid "Favorites"
 msgstr ""
 
-#: tmainform.tsfilter.caption
-msgctxt "tmainform.tsfilter.caption"
+#: tmainform.tsgeneral.caption
+msgid "General"
+msgstr ""
+
+#: tmainform.tsinfofilteradv.caption
+msgctxt "tmainform.tsinfofilteradv.caption"
 msgid "Filter"
 msgstr ""
 
-#: tmainform.tsgeneral.caption
-msgid "General"
+#: tmainform.tsinfomanga.caption
+msgid "Info"
 msgstr ""
 
 #: tmainform.tsinformation.caption
@@ -1678,10 +2009,6 @@ msgstr ""
 
 #: tmainform.tslog.caption
 msgid "Log"
-msgstr ""
-
-#: tmainform.tsmangalist.caption
-msgid "Manga List"
 msgstr ""
 
 #: tmainform.tsmisc.caption
@@ -1708,6 +2035,10 @@ msgstr ""
 
 #: tmainform.tswebsiteadvanced.caption
 msgid "Advanced"
+msgstr ""
+
+#: tmainform.tswebsitemodules.caption
+msgid "Modules"
 msgstr ""
 
 #: tmainform.tswebsiteoptions.caption
@@ -1796,12 +2127,69 @@ msgctxt "TNEWCHAPTER.BTQUEUE.CAPTION"
 msgid "&Add to queue"
 msgstr ""
 
+#: tselectdirectoryform.btok.caption
+msgctxt "tselectdirectoryform.btok.caption"
+msgid "OK"
+msgstr ""
+
+#: tselectdirectoryform.caption
+msgid "Select directory"
+msgstr ""
+
 #: tshutdowncounterform.btabort.caption
 msgid "&Abort"
 msgstr ""
 
 #: tshutdowncounterform.btnow.caption
 msgid "&Now"
+msgstr ""
+
+#: ttransferfavoritesform.btcancel.caption
+msgctxt "ttransferfavoritesform.btcancel.caption"
+msgid "Cancel"
+msgstr ""
+
+#: ttransferfavoritesform.btok.caption
+msgctxt "ttransferfavoritesform.btok.caption"
+msgid "OK"
+msgstr ""
+
+#: ttransferfavoritesform.caption
+msgid "Transfer Favorites"
+msgstr ""
+
+#: ttransferfavoritesform.ckcleardownloadedchapters.caption
+msgid "Clear downloaded chapter list and reload from server"
+msgstr ""
+
+#: ttransferfavoritesform.lbtransferto.caption
+msgctxt "ttransferfavoritesform.lbtransferto.caption"
+msgid "Transfer to"
+msgstr ""
+
+#: ttransferfavoritesform.rball.caption
+msgctxt "ttransferfavoritesform.rball.caption"
+msgid "All"
+msgstr ""
+
+#: ttransferfavoritesform.rbinvalid.caption
+msgctxt "ttransferfavoritesform.rbinvalid.caption"
+msgid "Invalid"
+msgstr ""
+
+#: ttransferfavoritesform.rbvalid.caption
+msgctxt "ttransferfavoritesform.rbvalid.caption"
+msgid "Valid"
+msgstr ""
+
+#: ttransferfavoritesform.vtfavs.header.columns[1].text
+msgctxt "ttransferfavoritesform.vtfavs.header.columns[1].text"
+msgid "Title"
+msgstr ""
+
+#: ttransferfavoritesform.vtfavs.header.columns[2].text
+msgctxt "ttransferfavoritesform.vtfavs.header.columns[2].text"
+msgid "Website"
 msgstr ""
 
 #: tupdatedialogform.btnlater.caption
@@ -1918,6 +2306,18 @@ msgstr ""
 msgid "Select a website"
 msgstr ""
 
+#: twebsitesettingsform.caption
+msgid "WebsiteSettingsForm"
+msgstr ""
+
+#: twebsitesettingsform.edsearch.texthint
+msgid "Website name"
+msgstr ""
+
+#: twebsitesettingsform.edsearchproperty.texthint
+msgid "Setting name"
+msgstr ""
+
 #: udownloadsmanager.rs_compressing
 msgid "Compressing..."
 msgstr ""
@@ -1931,6 +2331,7 @@ msgid "Downloading"
 msgstr ""
 
 #: udownloadsmanager.rs_failed
+msgctxt "udownloadsmanager.rs_failed"
 msgid "Failed"
 msgstr ""
 

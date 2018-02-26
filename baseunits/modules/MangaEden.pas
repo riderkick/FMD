@@ -11,18 +11,26 @@ uses
 implementation
 
 const
-  dirurls: array[0..1] of String = (
-    '/en/en-directory/',
-    '/en/it-directory/'
-    );
+  diren = '/en/en-directory/';
+  dirit = '/en/it-directory/';
+var
+  MMangaEden, MMangaEdenIT,
+  MPervEden, MPervEdenIT: TModuleContainer;
 
-function GetDirectoryPageNumber(const MangaInfo: TMangaInformation; var Page: Integer;
+function GetDirectoryPageNumber(const MangaInfo: TMangaInformation; var Page: Integer; const WorkPtr: Integer;
   const Module: TModuleContainer): Integer;
+var
+  s: String;
 begin
   Result := NET_PROBLEM;
   Page := 1;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
-  if MangaInfo.FHTTP.GET(Module.RootURL + dirurls[Module.CurrentDirectoryIndex]) then begin
+  s := Module.RootURL;
+  if (Module = MMangaEden) or (Module = MPervEden) then
+    s += diren
+  else
+    s += dirit;
+  if MangaInfo.FHTTP.GET(s) then begin
     Result := NO_ERROR;
     with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
       try
@@ -41,7 +49,11 @@ var
 begin
   Result := NET_PROBLEM;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
-  s := Module.RootURL + dirurls[Module.CurrentDirectoryIndex];
+  s := Module.RootURL;
+  if (Module = MMangaEden) or (Module = MPervEden) then
+    s += diren
+  else
+    s += dirit;
   if AURL <> '0' then
     s := s + '?page=' + IncStr(AURL);
   if MangaInfo.FHTTP.GET(s) then begin
@@ -179,12 +191,13 @@ end;
 
 procedure RegisterModule;
 
-  procedure AddWebsiteModule(const AWebsite, ARootURL: String);
+  function AddWebsiteModule(const AWebsite, ARootURL, ACategory: String): TModuleContainer;
   begin
-    with AddModule do begin
+    Result := AddModule;
+    with Result do begin
       Website := AWebsite;
       RootURL := ARootURL;
-      TotalDirectory := Length(dirurls);
+      Category := ACategory;
       OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
       OnGetNameAndLink := @GetNameAndLink;
       OnGetInfo := @GetInfo;
@@ -194,8 +207,10 @@ procedure RegisterModule;
   end;
 
 begin
-  AddWebsiteModule('MangaEden', 'http://www.mangaeden.com');
-  AddWebsiteModule('PervEden', 'http://www.perveden.com');
+  MMangaEden := AddWebsiteModule('MangaEden', 'http://www.mangaeden.com', 'English');
+  MMangaEdenIT := AddWebsiteModule('MangaEden_IT', 'http://www.mangaeden.com', 'Italian');
+  MPervEden := AddWebsiteModule('PervEden', 'http://www.perveden.com', 'H-Sites');
+  MPervEdenIT := AddWebsiteModule('PervEden_IT', 'http://www.perveden.com', 'H-Sites');
 end;
 
 initialization

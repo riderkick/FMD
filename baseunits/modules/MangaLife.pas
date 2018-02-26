@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
-  XQueryEngineHTML, httpsendthread;
+  XQueryEngineHTML, httpsendthread, synacode;
 
 implementation
 
@@ -16,20 +16,81 @@ uses
 const
   dirURL = '/directory/';
   diralpha = '#ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  dirURLmangasee = '/directory.php';
+
 var
-  MMangaSee,
   MMangaTraders: TModuleContainer;
+  MangaTradersLockLogin: TRTLCriticalSection;
+  MangaTradersOnLogin: Boolean;
+
+function MangaTradersLogin(const AHTTP: THTTPSendThread; const Module: TModuleContainer): Boolean;
+var
+  s: String;
+begin
+  Result := False;
+  if Module.Account.Enabled = False then Exit;
+  if TryEnterCriticalsection(MangaTradersLockLogin) > 0 then
+    try
+      MangaTradersOnLogin := True;
+      Module.Account.Status := asChecking;
+      SendLog('MangaTraders: post login');
+      s :=
+        'EmailAddress=' + EncodeURLElement(Module.Account.Username) +
+        '&Password=' + EncodeURLElement(Module.Account.Password) +
+        '&RememberMe=1';
+      AHTTP.Headers.Clear;
+      if AHTTP.POST(MMangaTraders.RootURL + '/auth/process.login.php', s) then
+      begin
+        s := StreamToString(AHTTP.Document);
+        SendLog('MangaTraders: login result = ' + s);
+        if LowerCase(s) = 'ok' then
+        begin
+          Module.Account.Status := asValid;
+          Module.Account.Cookies := AHTTP.Cookies.Text;
+        end
+        else
+          Module.Account.Status := asInvalid;
+      end
+      else
+        Module.Account.Status := asUnknown;
+      Result := Module.Account.Status = asValid;
+    finally
+      MangaTradersOnLogin := False;
+      LeaveCriticalsection(MangaTradersLockLogin);
+    end
+  else
+  begin
+    while MangaTradersOnLogin do Sleep(1000);
+    Result := Module.Account.Status = asValid;
+    if Result then
+      AHTTP.Cookies.Text := Module.Account.Cookies;
+  end;
+end;
+
+function GETMangaTraders(const AHTTP: THTTPSendThread; const AURL: String; const Module: TModuleContainer): Boolean;
+var
+  accstat: TAccountStatus;
+begin
+  Result := False;
+  if Module.Account.Enabled then
+  begin
+    accstat := Module.Account.Status;
+    if accstat = asValid then
+      AHTTP.Cookies.AddText(Module.Account.Cookies)
+    else
+    if accstat in [asChecking, asUnknown] then
+      Result := MangaTradersLogin(AHTTP, Module);
+  end;
+  Result := AHTTP.GET(AURL);
+end;
 
 function GetDirectoryPageNumber(const MangaInfo: TMangaInformation;
-  var Page: Integer; const Module: TModuleContainer): Integer;
+  var Page: Integer; const WorkPtr: Integer; const Module: TModuleContainer): Integer;
 begin
   Result := NO_ERROR;
-  if (Module = MMangaSee) or
-     (Module = MMangaTraders) then
+  if Module = MMangaTraders then
     Page := Length(diralpha)
   else
-    Page := 1;
+    page := 1;
 end;
 
 function fixcleanurl(const u: string): string;
@@ -48,19 +109,12 @@ var
   s: String;
 begin
   Result := NET_PROBLEM;
-  s := Module.RootURL;
-  if Module = MMangaSee then
-    s += dirURLmangasee
-  else
-    s+=dirURL;
+  s := Module.RootURL + dirURL;
   if AURL <> '0' then
   begin
-    if Module = MMangaSee then
-      s += '?c='
-    else
     if Module = MMangaTraders then
-      s += '?start=';
-    s += diralpha[StrToIntDef(AURL, 0) + 1]
+      s += '?q=';
+    s += diralpha[StrToIntDef(AURL, 0) + 1];
   end;
   if MangaInfo.FHTTP.GET(s) then
   begin
@@ -78,58 +132,65 @@ begin
   end;
 end;
 
-function fixchapterurl(const u: string): string;
-begin
- result:=fixcleanurl(u);
- if (pos('&page=1',result)<>0) or
-    (pos('/page-1',result)<>0) then
-   setlength(result,length(result)-7);
-end;
-
 function GetInfo(const MangaInfo: TMangaInformation;
   const AURL: String; const Module: TModuleContainer): Integer;
 var
   v: IXQValue;
+  r: Boolean;
   s: String;
-  i: Integer;
 begin
   Result := NET_PROBLEM;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
   with MangaInfo.mangaInfo, MangaInfo.FHTTP do
   begin
-    url := MaybeFillHost(Module.RootURL, AURL);
-    if (Module = MMangaTraders) and (Pos('?series=', url) <> 0) then
-      url := Module.RootURL + '/read-online/' + SeparateRight(url, '?series=');
-    if GET(url) then begin
+    url := RemoveURLDelim(FillHost(Module.RootURL, AURL));
+    if Module = MMangaTraders then
+      r := GETMangaTraders(MangaInfo.FHTTP, url, Module)
+    else
+      r := GET(url);
+    if r then begin
       Result := NO_ERROR;
       with TXQueryEngineHTML.Create(Document) do
         try
-          coverLink := MaybeFillHost(Module.RootURL, XPathString('//meta[@property="og:image"]/@content'));
-          if title = '' then title := XPathString('//*[@class="row"]//h1');
-          authors := SeparateRight(XPathString('//*[@class="row"][starts-with(.,"Author:")]'), ':');
-          artists := SeparateRight(XPathString('//*[@class="row"][starts-with(.,"Artist:")]'), ':');
-          status := MangaInfoStatusIfPos(XPathString(
-            '//*[@class="row"][starts-with(.,"Scanlation Status:")]'),
-            'ongoing',
-            'completed');
-          genres := SeparateRight(XPathString('//*[@class="row"][starts-with(.,"Genre:")]'), ':');
-          summary := Trim(SeparateRight(XPathString('//*[@class="row"][starts-with(.,"Description:")]'), ':'));
-          if Module.Website = 'MangaTraders' then
-            v := XPath('//div[@class="well"]/div[@class="row"]/div/a[contains(@href,"/read-online/") and not(@class)]')
-          else
+          title := XPathString('//*[@class="row"]//h1');
+          if ResultCode = 404 then
           begin
-            if Module.Website = 'MangaSee' then
-              s := 'div.col-lg-12:nth-child(8)>div>div:nth-child(1)>a'
-            else
-              s := 'div.list>div>div>a';
-            v := CSS(s)
+            status := '-1';
+            Exit;
           end;
-          if v.Count > 0 then
+          if (Module = MMangaTraders) and (Pos('/series/', url) <> 0) then
           begin
-            for i := 1 to v.Count do
+            s := XPathString('//div[@class="alert alert-success startReading"]/a/@href');
+            if Pos('/manga/', s) <> 0 then
             begin
-              chapterLinks.Add(fixchapterurl(v.get(i).toNode.getAttribute('href')));
-              chapterName.Add(v.get(i).toString);
+              s := MaybeFillHost(Module.RootURL, s);
+              if GET(s) then
+                ParseHTML(Document)
+              else
+                r := False;
+            end
+            else
+              r := False;
+          end;
+          coverLink := MaybeFillHost(Module.RootURL, XPathString('//meta[@property="og:image"]/@content'));
+          authors := SeparateRight(XPathString('//*[@class="row"][starts-with(.,"Author")]'), ':');
+          artists := SeparateRight(XPathString('//*[@class="row"][starts-with(.,"Artist")]'), ':');
+          status := XPathString('//*[@class="row"][starts-with(.,"Scanlation Status")]');
+          if status = '' then
+            status := XPathString('//*[@class="row"][starts-with(.,"Status")]');
+          if status <> '' then
+            status := MangaInfoStatusIfPos(status);
+          genres := SeparateRight(XPathString('//*[@class="row"][starts-with(.,"Genre")]'), ':');
+          summary := Trim(SeparateRight(XPathString('//*[@class="row"][starts-with(.,"Description")]'), ':'));
+          if r then
+          begin
+            for v in XPath('//div[@class="list chapter-list"]//a') do
+            begin
+              s := v.toNode.getAttribute('href');
+              if Pos('-page-1', s) <> 0 then
+                s := StringReplace(s, '-page-1', '', []);
+              chapterLinks.Add(s);
+              chapterName.Add(XPathString('span[@class="chapterLabel"]', v));
             end;
             InvertStrings([chapterLinks, chapterName]);
           end;
@@ -145,16 +206,16 @@ function GetPageNumber(const DownloadThread: TDownloadThread;
 begin
   Result := False;
   if DownloadThread = nil then Exit;
-  with DownloadThread.Task.Container, DownloadThread.FHTTP do
+  with DownloadThread.FHTTP, DownloadThread.Task.Container do
   begin
     PageLinks.Clear;
     PageNumber := 0;
-    if GET(fixchapterurl(MaybeFillHost(Module.RootURL, AURL))) then
+    if GET(FillHost(Module.RootURL, AURL)) then
     begin
       Result := True;
       with TXQueryEngineHTML.Create(Document) do
         try
-          XPathStringAll('//p/img/@src', PageLinks);
+          XPathStringAll('//*[contains(@class,"image-container")]//img/@src', PageLinks);
         finally
           Free;
         end;
@@ -171,6 +232,7 @@ procedure RegisterModule;
     begin
       Website := AWebsite;
       RootURL := ARootURL;
+      Category := 'English';
       OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
       OnGetNameAndLink := @GetNameAndLink;
       OnGetInfo := @GetInfo;
@@ -179,12 +241,18 @@ procedure RegisterModule;
   end;
 
 begin
-  AddWebsiteModule('MangaLife', 'http://manga.life');
-  MMangaSee := AddWebsiteModule('MangaSee', 'http://mangasee.co');
-  MMangaTraders := AddWebsiteModule('MangaTraders', 'http://mangatraders.org');
+  AddWebsiteModule('MangaLife', 'http://mangalife.us');
+  AddWebsiteModule('MangaSee', 'http://mangaseeonline.us');
+  MMangaTraders := AddWebsiteModule('MangaTraders', 'http://mangatraders.biz');
+  MMangaTraders.AccountSupport := True;
+  MMangaTraders.OnLogin := @MangaTradersLogin;
 end;
 
 initialization
+  InitCriticalSection(MangaTradersLockLogin);
   RegisterModule;
+
+finalization
+  DoneCriticalsection(MangaTradersLockLogin);
 
 end.

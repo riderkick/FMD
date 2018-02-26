@@ -10,14 +10,18 @@ unit CheckUpdate;
 interface
 
 uses
-  Classes, SysUtils, Forms, Controls, uBaseUnit, FMDOptions, httpsendthread;
+  Classes, SysUtils, Forms, Controls, uBaseUnit, FMDOptions, httpsendthread,
+  BaseThread, SelfUpdater, fileinfo;
 
 type
 
-  TCheckUpdateThread = class(THTTPThread)
+  TCheckUpdateThread = class(TBaseThread)
   private
     FHTTP: THTTPSendThread;
-    fNewVersionNumber, fUpdateURL, fChangelog: String;
+    FNewVersionNumber: TProgramVersion;
+    FNewVersionString: String;
+    FUpdateURL: String;
+    FChangelog: String;
     procedure MainThreadUpdate;
     procedure SyncStartUpdate;
     procedure SyncEndUpdate;
@@ -37,7 +41,7 @@ resourcestring
 implementation
 
 uses
-  frmMain, frmUpdateDialog;
+  frmMain, frmUpdateDialog, FMDVars;
 
 { TCheckUpdateThread }
 
@@ -51,18 +55,21 @@ begin
         BeginUpdate;
         try
           Clear;
-          Add(RS_CurrentVersion + ' : ' + FMD_VERSION_NUMBER);
-          Add(RS_LatestVersion + ' : ' + fNewVersionNumber + LineEnding);
-          AddText(fChangelog);
+          Add(RS_CurrentVersion + ' : ' + FMD_VERSION_STRING);
+          Add(RS_LatestVersion + ' : ' + FNewVersionString + LineEnding);
+          AddText(FChangelog);
         finally
           EndUpdate;
         end;
       end;
       if ShowModal = mrYes then
       begin
-        frmMain.FUpdateURL := fUpdateURL;
-        DoAfterFMD := DO_UPDATE;
-        MainForm.tmExitCommand.Enabled := True;
+        with TSelfUpdaterThread.Create do
+        begin
+          UpdateURL := FUpdateURL;
+          NewVersionString := FNewVersionString;
+          Start;
+        end;
       end
       else
         MainForm.btCheckLatestVersion.Caption := RS_BtnCheckUpdates;
@@ -92,38 +99,29 @@ begin
 end;
 
 procedure TCheckUpdateThread.Execute;
-var
-  l: TStringList;
-  updateFound: Boolean = False;
 begin
+  FNewVersionString := '';
+  FUpdateURL := '';
+  FChangelog := '';
   Synchronize(@SyncStartUpdate);
-  l := TStringList.Create;
-  try
-    fNewVersionNumber := FMD_VERSION_NUMBER;
-    fUpdateURL := '';
-    if not Terminated and
-      GetPage(FHTTP, TObject(l), UPDATE_URL + 'update', 3) then
-      if l.Count > 1 then
-      begin
-        l.NameValueSeparator := '=';
-        if Trim(l.Values['VERSION']) <> FMD_VERSION_NUMBER then
-        begin
-          fNewVersionNumber := Trim(l.Values['VERSION']);
-          fUpdateURL := Trim(l.Values[UpperCase(FMD_TARGETOS)]);
-          if fUpdateURL <> '' then
-            updateFound := True;
-          FHTTP.Clear;
-          l.Clear;
-          if not Terminated and
-            GetPage(FHTTP, TObject(l), UPDATE_URL + 'changelog.txt', 3) then
-            fChangelog := l.Text;
-        end;
-      end;
+  if not Terminated and FHTTP.Get(UPDATE_URL) then
+  with TStringList.Create do try
+    LoadFromStream(FHTTP.Document);
+    if Count <> 0 then begin
+      NameValueSeparator := '=';
+      FNewVersionString := Trim(Values['VERSION']);
+      if not TryStrToProgramVersion(FNewVersionString, FNewVersionNumber) then
+        FNewVersionNumber := StrToProgramVersion('0.0.0.0');
+      if NewerVersion(FNewVersionNumber, FMD_VERSION_NUMBER) then
+        FUpdateURL := Trim(Values[UpperCase(FMD_TARGETOS)]);
+    end;
   finally
-    l.Free;
+    Free;
   end;
+  if not Terminated and (FUpdateURL <> '') and FHTTP.Get(CHANGELOG_URL) then
+    FChangelog := StreamToString(FHTTP.Document);
   Synchronize(@SyncEndUpdate);
-  if not Terminated and updateFound and (not isDlgCounter) then
+  if not Terminated and (FUpdateURL <> '') and (not isDlgCounter) then
     Synchronize(@MainThreadUpdate);
 end;
 
@@ -136,7 +134,7 @@ end;
 destructor TCheckUpdateThread.Destroy;
 begin
   FHTTP.Free;
-  MainForm.CheckUpdateThread := nil;
+  CheckUpdateThread := nil;
   inherited Destroy;
 end;
 

@@ -6,183 +6,102 @@ interface
 
 uses
   Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
-  XQueryEngineHTML, httpsendthread;
+  XQueryEngineHTML, RegExpr;
 
 implementation
 
-uses
-  synautil, RegExpr;
-
 const
-  dirURL = '/c/-/albums/t/manga/sorted/new/page/';
+  dirurl = '/c/-/albums/frontpage/0/t/manga/sorted/new/page/';
 
 function GetDirectoryPageNumber(const MangaInfo: TMangaInformation;
-  var Page: Integer; const Module: TModuleContainer): Integer;
+  var Page: Integer; const WorkPtr: Integer; const Module: TModuleContainer): Integer;
 begin
-  Page := 100;
-  Result := NO_ERROR;
+  Result := NET_PROBLEM;
+  if MangaInfo.FHTTP.GET(Module.RootURL + dirurl + '1/') then
+  begin
+    Result := NO_ERROR;
+    Page := StrToIntDef(TrimChar(XPathString('//*[@class="pagination"]/*[@class="last"]/a/@href/substring-after(.,"/new/page")', MangaInfo.FHTTP.Document), ['/']), 1);
+  end;
 end;
 
 function GetNameAndLink(const MangaInfo: TMangaInformation;
   const ANames, ALinks: TStringList; const AURL: String;
   const Module: TModuleContainer): Integer;
-var
-  Source: TStringList;
-  Query: TXQueryEngineHTML;
-  v: IXQValue;
 begin
-  if MangaInfo = nil then Exit(UNKNOWN_ERROR);
   Result := NET_PROBLEM;
-  Source := TStringList.Create;
-  try
-    if GetPage(MangaInfo.FHTTP, TObject(Source),
-      Module.RootURL + dirURL + IncStr(AURL) + '/', 3) then
-      if Source.Count > 0 then
-      begin
-        Result := NO_ERROR;
-        Query := TXQueryEngineHTML.Create(Source.Text);
-        try
-          for v in Query.XPath('//*[@id="albums_wrapper"]//*[@class="caption"]//a') do begin
-            ALinks.Add(TrimLeftChar(v.toNode.getAttribute('href'), ['.']));
-            ANames.Add(v.toString);
-          end;
-        finally
-          Query.Free;
-        end;
-      end
-      else
-        Result := INFORMATION_NOT_FOUND;
-  finally
-    Source.Free;
+  if MangaInfo.FHTTP.GET(Module.RootURL + dirurl + IncStr(AURL) + '/') then
+  begin
+    Result := NO_ERROR;
+    XPathHREFtitleAll('//*[@id="albums_wrapper"]//*[@class="item_cover"]/a', MangaInfo.FHTTP.Document, ALinks, ANames);
   end;
 end;
 
 function GetInfo(const MangaInfo: TMangaInformation;
   const AURL: String; const Module: TModuleContainer): Integer;
-var
-  Source: TStringList;
-  Query: TXQueryEngineHTML;
-  info: TMangaInfo;
-  v: IXQValue;
-  s: String;
-  regx: TRegExpr;
 begin
-  if MangaInfo = nil then Exit(UNKNOWN_ERROR);
   Result := NET_PROBLEM;
-  info := MangaInfo.mangaInfo;
-  info.website := Module.Website;
-  info.url := AppendURLDelim(FillHost(Module.RootURL, AURL));
-  Source := TStringList.Create;
-  regx := TRegExpr.Create;
-  try
-    regx.ModifierI := True;
-    regx.Expression := '/page/\d+/?$';
-    if regx.Exec(info.url) then
-      info.url := regx.Replace(info.url, '/', False);
-    if RightStr(info.url, 5) <> 'view/' then info.url += 'view/';
-    if Pos('/pictures/album/', info.url) > 0 then
-      info.url := StringReplace(info.url, '/pictures/album/', '/albums/', []);
-    if MangaInfo.FHTTP.GET(info.url, TObject(Source)) then
-      if Source.Count > 0 then
-      begin
-        Result := NO_ERROR;
-        Query := TXQueryEngineHTML.Create(Source.Text);
+  if MangaInfo = nil then Exit(UNKNOWN_ERROR);
+  with MangaInfo.mangaInfo, MangaInfo.FHTTP do
+  begin
+    url := MaybeFillHost(Module.RootURL, AURL);
+    if GET(url) then begin
+      Result := NO_ERROR;
+      with TXQueryEngineHTML.Create(Document) do
         try
-          with info do begin
-            coverLink := Query.XPathString('//*[@class="album_cover_item"]//img/@src');
-            if coverLink <> '' then
-              coverLink := TrimLeftChar(coverLink, ['/']);
-            title := Query.XPathString('//*[@class="album_cover"]/h2');
-            genres := '';
-            for v in Query.XPath('//*[@id="tag_section"]//li') do begin
-              s := v.toString;
-              if LeftStr(s, 7) = 'author:' then
-                authors := SeparateRight(s, ':')
-              else if LeftStr(s, 7) = 'artist:' then
-                artists := SeparateRight(s, ':')
-              else
-                AddCommaString(genres, s);
-            end;
-            //section, languge
-            for v in Query.XPath('//*[@class="content_info"]//p/*') do
-              AddCommaString(genres, v.toString);
-            //chapter
-            s := info.url;
-            if RightStr(s, 5) = 'view/' then SetLength(s, Length(s) - 5);
-            chapterLinks.Add(s);
-            chapterName.Add(title);
-          end;
+          coverLink := MaybeFillHost(Module.RootURL, XPathString('//*[@class="album_cover_item"]//img/@src'));
+          if title = '' then title := XPathString('//*[@class="album_cover"]/h2');
+          artists := XPathString('//*[@id="tag_section"]/ol/li/a[starts-with(.,"Artist")]/text()[last()]');
+          genres := XPathString('//*[@id="tag_section"]/ol/string-join(li/a/text()[last()],", ")');
+          chapterLinks.Add(url);
+          chapterName.Add(title);
         finally
-          Query.Free;
+          Free;
         end;
-      end
-      else
-        Result := INFORMATION_NOT_FOUND;
-  finally
-    regx.Free;
-    Source.Free;
+    end;
   end;
 end;
 
 function GetPageNumber(const DownloadThread: TDownloadThread;
   const AURL: String; const Module: TModuleContainer): Boolean;
 var
-  Source: TStringList;
-  Query: TXQueryEngineHTML;
-  Container: TTaskContainer;
-  v: IXQValue;
-  rurl: String;
-  p: Integer;
-  nextpage: Boolean;
-  regx: TRegExpr;
-  s: String;
+  n: String;
+  i: Integer;
 begin
   Result := False;
   if DownloadThread = nil then Exit;
-  Container := DownloadThread.Task.Container;
-  with Container do begin
+  with DownloadThread.Task.Container, DownloadThread.FHTTP do
+  begin
     PageLinks.Clear;
     PageNumber := 0;
-    rurl := AppendURLDelim(FillHost(Module.RootURL, AURL));
-    Source := TStringList.Create;
-    regx := TRegExpr.Create;
-    try
-      regx.ModifierI := True;
-      regx.Expression := '/page/\d+/?$';
-      if regx.Exec(rurl) then rurl := regx.Replace(rurl, '/', False);
-      if RightStr(rurl, 5) = 'view/' then SetLength(rurl, Length(rurl) - 5);
-      if RightStr(rurl, 5) <> 'page/' then rurl += 'page/';
-      if Pos('/albums/', rurl) > 0 then
-        rurl := StringReplace(rurl, '/albums/', '/pictures/album/', []);
-      Query := TXQueryEngineHTML.Create;
-      try
-        regx.Expression := '\.\d+x\d+(\.\w+)$';
-        p := 1;
-        nextpage := True;
-        while nextpage do begin
-          nextpage := False;
-          if GetPage(DownloadThread.FHTTP, TObject(Source), rurl + IntToStr(p) + '/',
-            Manager.retryConnect) then
+    if GET(MaybeFillHost(Module.RootURL, AURL)) then
+    begin
+      Result := True;
+      with TXQueryEngineHTML.Create(Document) do
+        try
+          while True do
           begin
-            Result := True;
-            Query.ParseHTML(Source.Text);
-            for v in Query.XPath('//*[@class="picture_page"]//img/@src') do begin
-              s := TrimLeftChar(v.toString, ['/']);
-              if regx.Exec(s) then s := regx.Replace(s, '$1', True);
-              Container.PageLinks.Add(s);
-            end;
-            if Query.XPathString('//*[@id="next_page"]//a/@href') <> '' then begin
-              Inc(p);
-              nextpage := True;
+            XPathStringAll('//*[@class="picture_page"]//img/@data-src', PageLinks);
+            n := XPathString('//*[@class="pagination"]/a/@href');
+            if n = '' then Break;
+            if GET(MaybeFillHost(Module.RootURL, n)) then
+              ParseHTML(Document)
+            else
+            begin
+              PageLinks.Clear;
+              Break;
             end;
           end;
+          if PageLinks.Count <> 0 then
+            with TRegExpr.Create('\.\d+x\d+(\.\w+)') do
+              try
+                for i := 0 to PageLinks.Count - 1 do
+                  PageLinks[i] := Replace(PageLinks[i], '$1', True);
+              finally
+                Free;
+              end;
+        finally
+          Free;
         end;
-      finally
-        Query.Free;
-      end;
-    finally
-      regx.Free;
-      Source.Free;
     end;
   end;
 end;
@@ -192,9 +111,9 @@ begin
   with AddModule do
   begin
     Website := 'Luscious';
-    RootURL := 'http://luscious.net/';
+    RootURL := 'https://luscious.net';
+    Category := 'H-Sites';
     SortedList := True;
-    FavoriteAvailable := False;
     OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;

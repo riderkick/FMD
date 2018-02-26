@@ -1,3 +1,10 @@
 [submodule "3rd/BESEN"]
 	path = 3rd/BESEN
 	url = https://github.com/BeRo1985/besen.git
+	ignore = dirty
+	shallow = true
+[submodule "3rd/internettools"]
+	path = 3rd/internettools
+	url = https://github.com/benibela/internettools.git
+	ignore = dirty
+	shallow = true

@@ -17,14 +17,16 @@ const
   dirurl = apiurlmangas + '?searchBy=nombre&sortDir=asc&sortedBy=nombre&itemsPerPage=';
   perpage = '1000';
   mangaurl = '/biblioteca/mangas/';
-  imgurl = 'http://img1.tumangaonline.com';
+  imgurl = 'https://img1.tumangaonline.com';
 
-function GetDirectoryPageNumber(const MangaInfo: TMangaInformation; var Page: Integer;
+function GetDirectoryPageNumber(const MangaInfo: TMangaInformation; var Page: Integer; const WorkPtr: Integer;
   const Module: TModuleContainer): Integer;
 begin
   Result := NET_PROBLEM;
   Page := 1;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
+  MangaInfo.FHTTP.Headers.Values['Referer'] := Module.RootURL;
+  MangaInfo.FHTTP.Headers.Values['Cache-Mode'] := 'no-cache';
   if MangaInfo.FHTTP.GET(Module.RootURL + dirurl + '1&page=1') then
   begin
     Result := NO_ERROR;
@@ -45,6 +47,8 @@ var
 begin
   Result := NET_PROBLEM;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
+  MangaInfo.FHTTP.Headers.Values['Referer'] := Module.RootURL;
+  MangaInfo.FHTTP.Headers.Values['Cache-Mode'] := 'no-cache';
   if MangaInfo.FHTTP.GET(Module.RootURL + dirurl + perpage + '&page=' + IncStr(AURL)) then
   begin
     Result := NO_ERROR;
@@ -65,8 +69,8 @@ end;
 function GetInfo(const MangaInfo: TMangaInformation; const AURL: String;
   const Module: TModuleContainer): Integer;
 var
-  v: IXQValue;
-  s, mangaid, purl: String;
+  v, w: IXQValue;
+  s, mangaid, purl, num: String;
   p, i: Integer;
 begin
   Result := NET_PROBLEM;
@@ -74,8 +78,10 @@ begin
   with MangaInfo.mangaInfo, MangaInfo.FHTTP do
   begin
     url := FillHost(Module.RootURL, AURL);
-    mangaid := RegExprGetMatch('/mangas/(\d+)/', url, 1);
+    mangaid := RegExprGetMatch('/\w+/(\d+)/\w+', url, 1);
     if mangaid = '' then Exit;
+    Headers.Values['Referer'] := url;
+    Headers.Values['Cache-Mode'] := 'no-cache';
     if GET(Module.RootURL + apiurlmangas + '/' + mangaid) then
     begin
       Result := NO_ERROR;
@@ -84,32 +90,43 @@ begin
           coverLink := XPathString('json(*).imageUrl');
           if coverLink <> '' then coverLink := MaybeFillHost(imgurl, coverLink);
           if title = '' then title := XPathString('json(*).nombre');
-          s := XPathString('json(*).estado');
-          if Pos('Activo', s) <> 0 then
-            status := '1'
-          else if Pos('Finalizado', s) <> 0 then
-            status := '0';
+          status := MangaInfoStatusIfPos(XPathString('json(*).estado'), 'Activo', 'Finalizado');
           summary := XPathString('json(*).info.sinopsis');
           genres := XPathStringAll('json(*).generos().genero');
           AddCommaString(genres, XPathStringAll('json(*).categorias().categoria'));
           artists := XPathStringAll('json(*).artistas().artista');
           authors := XPathStringAll('json(*).autores().autor');
           purl := Module.RootURL + apiurlmangas + '/' + mangaid + '/capitulos?tomo=-1&page=';
+          Reset;
+          Headers.Values['Referer'] := url;
+          Headers.Values['Cache-Mode'] := 'no-cache';
           if GET(purl + '1') then
           begin
             ParseHTML(Document);
             p := StrToIntDef(XPathString('json(*).last_page'), 1);
             for i := 1 to p do
             begin
-              if i > 1 then
+              if i > 1 then begin
+                Reset;
+                Headers.Values['Referer'] := url;
+                Headers.Values['Cache-Mode'] := 'no-cache';
                 if GET(purl + IntToStr(i)) then
                   ParseHTML(Document)
                 else
                   Break;
+              end;
               for v in XPath('json(*).data()') do
               begin
-                chapterLinks.Add(apiurlimagenes + XPathString('"?idManga="||tomo/idManga||"&idScanlation="||subidas/idScan||"&numeroCapitulo="||numCapitulo||"&visto=true"', v));
-                chapterName.Add(XPathString('string-join((numCapitulo,nombre)," ")', v));
+                mangaid := XPathString('tomo/idManga', v);
+                num := XPathString('numCapitulo', v);
+                s := v.getProperty('nombre').toString;
+                if s = 'null' then s := '';
+                if s <> '' then s := ' ' + s;
+                s := v.getProperty('numCapitulo').toString + s;
+                for w in XPath('jn:members(subidas)', v) do begin
+                  chapterLinks.Add(apiurlimagenes + '?idManga=' + mangaid + '&idScanlation=' + XPathString('./idScan', w) + '&numeroCapitulo=' + num + '&visto=true');
+                  chapterName.Add(s + ' [' + XPathString('./scanlation/nombre', w) + ']');
+                end;
               end;
             end;
             InvertStrings([chapterLinks, chapterName]);
@@ -133,6 +150,8 @@ begin
   begin
     PageLinks.Clear;
     PageNumber := 0;
+    Headers.Values['Referer'] := Module.RootURL;
+    Headers.Values['Cache-Mode'] := 'no-cache';
     if GET(FillHost(Module.RootURL, AURL)) then
     begin
       Result := True;
@@ -153,7 +172,8 @@ procedure RegisterModule;
 begin
   with AddModule do begin
     Website := 'Tumangaonline';
-    RootURL := 'http://www.tumangaonline.com';
+    RootURL := 'https://www.tumangaonline.com';
+    Category := 'Spanish';
     MaxTaskLimit := 1;
     MaxConnectionLimit := 1;
     OnGetDirectoryPageNumber := @GetDirectoryPageNumber;

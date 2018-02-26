@@ -54,7 +54,7 @@ begin
       with TXQueryEngineHTML.Create(Document) do
         try
           coverLink := MaybeFillHost(Module.RootURL, XPathString('//*[@class="manga_detail"]//img[@class="img"]/@src'));
-          if title = '' then title := XPathString('//h1[@class="title"]');
+          if title = '' then title := XPathString('//meta[@property="og:title"]/@content');
           authors := SeparateRight(XPathString('//*[@class="detail_topText"]/li[starts-with(.,"Author")]'), ':');
           artists := SeparateRight(XPathString('//*[@class="detail_topText"]/li[starts-with(.,"Artist")]'), ':');
           genres := SeparateRight(XPathString('//*[@class="detail_topText"]/li[starts-with(.,"Genre")]'), ':');
@@ -90,7 +90,7 @@ begin
       Result := True;
       with TXQueryEngineHTML.Create(Document) do
         try
-          PageNumber := XPath('(//span[@class="right"]/select)[1]/option').Count;
+          PageNumber := XPath('(//span[@class="right"]/select)[1]/option[not(.="Featured")]').Count;
           PageLinks.Add(XPathString(imagepath));
         finally
           Free;
@@ -108,6 +108,12 @@ begin
   if DownloadThread = nil then Exit;
   with DownloadThread, FHTTP, Task.Container do
   begin
+    if (WorkId = PageLinks.Count - 1) and (Pos('/featured.', AURL) <> 0) then
+    begin
+      PageLinks.Delete(WorkId);
+      Exit;
+    end;
+
     s := AppendURLDelim(MaybeFillHost(Module.RootURL, AURL));
     if WorkId > 0 then
       s := s + IncStr(WorkId) + '.html';
@@ -129,7 +135,8 @@ begin
   with AddModule do
   begin
     Website := 'MangaHere';
-    RootURL := 'http://www.mangahere.co';
+    RootURL := 'http://www.mangahere.cc';
+    Category := 'English';
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;
     OnGetPageNumber := @GetPageNumber;

@@ -14,7 +14,7 @@ const
   dirurl = '/manga-directory/';
 
 function GetDirectoryPageNumber(const MangaInfo: TMangaInformation;
-  var Page: Integer; const Module: TModuleContainer): Integer;
+  var Page: Integer; const WorkPtr: Integer; const Module: TModuleContainer): Integer;
 begin
   Result := NET_PROBLEM;
   Page := 1;
@@ -146,6 +146,7 @@ begin
   begin
     Website := 'MyMangaMe';
     RootURL := 'http://mymanga.me';
+    Category := 'English';
     OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;

@@ -28,7 +28,7 @@ uses
   {$ifdef windows}
   windows,
   {$endif}
-  Forms, Controls, StdCtrls, ExtCtrls, Buttons;
+  Forms, Controls, StdCtrls, ExtCtrls, Buttons, Classes;
 
 type
 
@@ -43,10 +43,6 @@ type
     LabelExceptionMessage: TLabel;
     LabelExceptionCaption: TLabel;
     MemoExceptionLog: TMemo;
-    PanelButton : TPanel;
-    PanelCenter: TPanel;
-    PanelMessage: TPanel;
-    PanelExceptionIcon: TPanel;
     PanelBottom: TPanel;
     PanelTop: TPanel;
     BevelPannelBottom: TShape;
@@ -58,6 +54,8 @@ type
     procedure FormShow(Sender: TObject);
   private
     { private declarations }
+    normalheight,
+    expandedheight: Integer;
   public
     { public declarations }
   end;
@@ -72,10 +70,10 @@ uses SimpleException;
 
 procedure TSimpleExceptionForm.ButtonDetailsClick(Sender: TObject);
 begin
-  if ClientHeight <= PanelCenter.Top + PanelCenter.ChildSizing.TopBottomSpacing then
-    ClientHeight := PanelTop.Height + PanelBottom.Height + 200
+  if ClientHeight <= normalheight then
+    ClientHeight := expandedheight
   else
-    ClientHeight := PanelTop.Height + PanelBottom.Height;
+    ClientHeight := normalheight;
 end;
 
 procedure TSimpleExceptionForm.ButtonTerminateClick(Sender: TObject);
@@ -90,26 +88,27 @@ end;
 procedure TSimpleExceptionForm.FormCreate(Sender: TObject);
 begin
   Icon.Assign(Application.Icon);
-end;
-
-procedure TSimpleExceptionForm.FormShow(Sender: TObject);
-begin
+  IconException.Visible := IconException.Picture.Graphic <> nil;
   Caption := SExceptionDialogTitle;
-  if IconException.Picture.Graphic <> nil then
-    PanelExceptionIcon.Show
-  else
-    PanelExceptionIcon.Hide;
   LabelExceptionCaption.Caption := SExceptionCaption;
   ButtonDetails.Caption := TCaption(SButtonDetails);
   ButtonTerminate.Caption := TCaption(SButtonTerminate);
   ButtonContinue.Caption := TCaption(SButtonContinue);
   CheckBoxIgnoreException.Caption := SCheckBoxIgnoreException;
   CheckBoxIgnoreException.Checked := False;
-  ClientHeight := PanelTop.Height + PanelBottom.Height;
-  ClientWidth := CheckBoxIgnoreException.Width + ButtonDetails.Width +
-                      ButtonTerminate.Width + ButtonContinue.Width +
-                      (PanelBottom.ChildSizing.LeftRightSpacing * 3);
-  Position := poDesktopCenter;
+end;
+
+procedure TSimpleExceptionForm.FormShow(Sender: TObject);
+begin
+  normalheight := min(PanelTop.Height + ButtonDetails.Height + (6 * 2), Screen.Height);
+  expandedheight := normalheight + 300;
+  Constraints.MinWidth := CheckBoxIgnoreException.Width + ButtonDetails.Width + ButtonTerminate.Width + ButtonContinue.Width + (6 * 5);
+  Constraints.MinHeight := normalheight;
+  ClientWidth := min(max(PanelTop.Width, Constraints.MinWidth), Screen.Width);
+  ClientHeight := normalheight;
+  PanelTop.AutoSize := False;
+  PanelTop.Width := ClientWidth;
+  PanelTop.Anchors := [akLeft, akRight, akTop];
   Position := poMainFormCenter;
 end;
 

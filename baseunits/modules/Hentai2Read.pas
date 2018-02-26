@@ -9,13 +9,13 @@ uses
   XQueryEngineHTML, httpsendthread, synautil;
 
 const
-  dirurl = '/hentai-list/all/any/last-added/';
-  cdnurl = 'http://hentaicdn.com';
+  dirurl = '/hentai-list/all/any/all/last-added';
+  cdnurl = 'http://static.hentaicdn.com/hentai';
 
 implementation
 
 function GetDirectoryPageNumber(const MangaInfo: TMangaInformation;
-  var Page: Integer; const Module: TModuleContainer): Integer;
+  var Page: Integer; const WorkPtr: Integer; const Module: TModuleContainer): Integer;
 begin
   Result := NET_PROBLEM;
   Page := 1;
@@ -45,7 +45,7 @@ begin
     Exit(UNKNOWN_ERROR);
   s := Module.RootURL + dirurl;
   if AURL <> '0' then
-    s := s + IncStr(AURL) + '/';
+    s := s + '/' + IncStr(AURL) + '/';
   if MangaInfo.FHTTP.GET(s) then
   begin
     Result := NO_ERROR;
@@ -66,7 +66,6 @@ function GetInfo(const MangaInfo: TMangaInformation; const AURL: String;
   const Module: TModuleContainer): Integer;
 var
   v: IXQValue;
-  s: String;
 begin
   Result := NET_PROBLEM;
   if MangaInfo = nil then
@@ -80,27 +79,13 @@ begin
       with TXQueryEngineHTML.Create(Document) do
         try
           coverLink := MaybeFillHost(cdnurl, XPathString('//img[@class="img-responsive border-black-op"]/@src'));
-          title := XPathString('//title/substring-before(.," Hentai - Read ")');
-          authors := XPathStringAll(
-            '//ul[@class="list list-simple-mini"]/li[starts-with(.,"Author")]/*[position()>1]',
-            ['-']);
-          artists := XPathStringAll(
-            '//ul[@class="list list-simple-mini"]/li[starts-with(.,"Artist")]/*[position()>1]',
-            ['-']);
-          genres := XPathStringAll(
-            '//ul[@class="list list-simple-mini"]/li[starts-with(.,"Parody") or starts-with(.,"Category") or starts-with(.,"Content") or starts-with(.,"Language")]/*[position()>1]', ['-']);
-          s := XPathString('//ul[@class="list list-simple-mini"]/li[starts-with(.,"Status")]');
-          if s <> '' then
-          begin
-            s := LowerCase(s);
-            if Pos('ongoing', s) > 0 then
-              status := '1'
-            else if Pos('completed', s) > 0 then
-              status := '0';
-          end;
-          summary := XPathStringAll(
-            '//ul[@class="list list-simple-mini"]/li[starts-with(.,"Storyline")]/*[position()>1]');
-          for v in XPath('//ul[starts-with(@class,"nav-chapters")]/li/a') do
+          title := XPathString('//h3[@class="block-title"]/a/text()');
+          status := MangaInfoStatusIfPos(XPathString('//ul[contains(@class,"list-simple-mini")]/li[starts-with(.,"Status")]'));
+          authors := XPathStringAll('//ul[contains(@class,"list-simple-mini")]/li[starts-with(.,"Author")]/a');
+          artists := XPathStringAll('//ul[contains(@class,"list-simple-mini")]/li[starts-with(.,"Artist")]/a');
+          genres := XPathStringAll('//ul[contains(@class,"list-simple-mini")]/li/a');
+          summary := XPathStringAll('//ul[contains(@class,"list-simple-mini")]/li[starts-with(.,"Storyline")]/*[position()>1]');
+          for v in XPath('//ul[contains(@class,"nav-chapters")]/li/div/a') do
           begin
             chapterLinks.Add(v.toNode.getAttribute('href'));
             chapterName.Add(XPathString('string-join(text()," ")', v.toNode));
@@ -117,9 +102,6 @@ function GetPageNumber(const DownloadThread: TDownloadThread; const AURL: String
   const Module: TModuleContainer): Boolean;
 var
   v: IXQValue;
-  Source: TStringList;
-  i: Integer;
-  s: String;
 begin
   Result := False;
   if DownloadThread = nil then
@@ -131,35 +113,13 @@ begin
     if GET(FillHost(Module.RootURL, AURL)) then
     begin
       Result := True;
-      Source := TStringList.Create;
-      try
-        Source.LoadFromStream(Document);
-        if Source.Count > 0 then
-          for i := 0 to Source.Count - 1 do
-            if Pos('var rff_imageList', Source[i]) > 0 then
-            begin
-              s := SeparateRight(Source[i], '=');
-              if s <> '' then
-              begin
-                s := Trim(TrimRightChar(s, [';']));
-                with TXQueryEngineHTML.Create(s) do
-                  try
-                    for v in XPath('json(*)()') do
-                      PageLinks.Add(cdnurl + '/hentai' + v.toString);
-                  finally
-                    Free;
-                  end;
-              end;
-              Break;
-            end;
-      finally
-        Source.Free;
-      end;
       if PageLinks.Count = 0 then
         with TXQueryEngineHTML.Create(Document) do
           try
-            PageNumber := XPath(
-              '(//ul[@class="dropdown-menu text-center list-inline"])[1]/li').Count;
+            for v in XPath('json(//script[contains(.,"images'' :")]/substring-before(substring-after(.,"images'' : "),"]")||"]")()') do
+              PageLinks.Add(cdnurl + v.toString);
+            if PageLinks.Count = 0 then
+              PageNumber := XPath('(//li[contains(@class, "pageDropdown")])[1]/ul/li').Count;
           finally
             Free;
           end;
@@ -204,6 +164,7 @@ begin
   begin
     Website := 'Hentai2Read';
     RootURL := 'http://hentai2read.com';
+    Category := 'H-Sites';
     SortedList := True;
     OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
     OnGetNameAndLink := @GetNameAndLink;

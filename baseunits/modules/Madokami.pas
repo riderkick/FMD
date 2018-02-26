@@ -6,57 +6,58 @@ interface
 
 uses
   Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
-  accountmanagerdb, XQueryEngineHTML, httpsendthread, synacode, RegExpr, fpjson;
+  XQueryEngineHTML, httpsendthread, synacode, RegExpr, fpjson;
 
 implementation
 
+uses FMDVars;
+
 const
   modulename = 'Madokami';
-  urlroot = 'https://manga.madokami.com';
-  madokamidirlist: array [0..12] of String = (
-    '/Manga/%23%20-%20F',
-    '/Manga/G%20-%20M',
-    '/Manga/N%20-%20Z',
+  urlroot = 'https://manga.madokami.al';
+  madokamilist = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ_';
+  madokamiotherlist: array [0..9] of String = (
     '/Manga/_Autouploads/AutoUploaded%20from%20Assorted%20Sources',
     '/Manga/_Autouploads/ComicWalker',
+    '/Manga/Oneshots',
     '/Manga/Non-English/Bahasa%20Indonesia',
     '/Manga/Non-English/Brazilian%20Portuguese',
+    '/Manga/Non-English/Deutsch',
     '/Manga/Non-English/Fran%C3%A7ais',
     '/Manga/Non-English/Italian',
     '/Manga/Non-English/Russian',
-    '/Manga/Non-English/Spanish',
-    '/Manga/_Doujinshi',
-    '/Raws'
+    '/Manga/Non-English/Spanish'
     );
 
 var
+  madokamiauth: String = '';
   locklogin: TRTLCriticalSection;
+  madokamiulist: array of TStrings;
+  accountexist: Boolean = False;
 
-function Login(const AHTTP: THTTPSendThread): Boolean;
+function Login(const AHTTP: THTTPSendThread; const Module: TModuleContainer): Boolean;
 begin
   Result := False;
-  if Account.Enabled[modulename] = False then Exit;
-  if Account.Username[modulename] = '' then Exit;
+  if Module.Account.Enabled = False then Exit;
+  if Module.Account.Username = '' then Exit;
   if TryEnterCriticalsection(locklogin) > 0 then
     try
-      Account.Status[modulename] := asChecking;
+      Module.Account.Status := asChecking;
       AHTTP.Reset;
       AHTTP.Cookies.Clear;
-      AHTTP.Headers.Values['Authorization'] :=
-        ' Basic ' + Base64Encode(Account.Username[modulename] +
-        ':' + Account.Password[modulename]);
-      if AHTTP.GET(urlroot + '/login') then begin
+      madokamiauth := 'Authorization: Basic ' + Base64Encode(Module.Account.Username);
+      AHTTP.Headers.Add(madokamiauth);
+      if AHTTP.GET(urlroot) then begin
         //Result := AHTTP.Cookies.Values['laravel_session'] <> '';
         Result := (AHTTP.ResultCode < 400) and (AHTTP.Headers.Values['WWW-Authenticate'] = '');
         if Result then begin
-          Account.Cookies[modulename] := AHTTP.GetCookies;
-          Account.Status[modulename] := asValid;
+          Module.Account.Cookies := AHTTP.GetCookies;
+          Module.Account.Status := asValid;
         end
         else begin
-          Account.Cookies[modulename] := '';
-          Account.Status[modulename] := asInvalid;
+          Module.Account.Cookies := '';
+          Module.Account.Status := asInvalid;
         end;
-        Account.Save;
       end;
     finally
       LeaveCriticalsection(locklogin);
@@ -65,7 +66,7 @@ begin
     EnterCriticalsection(locklogin);
     try
       if Result then
-        AHTTP.Cookies.Text := Account.Cookies[modulename];
+        AHTTP.Cookies.Text := Module.Account.Cookies;
     finally
       LeaveCriticalsection(locklogin);
     end;
@@ -73,54 +74,121 @@ begin
   AHTTP.Reset;
 end;
 
-function GETWithLogin(const AHTTP: THTTPSendThread; AURL: String): Boolean;
+procedure SetAuth(const AHTTP: THTTPSendThread; const Module: TModuleContainer);
+begin
+  AHTTP.Cookies.Text := Module.Account.Cookies;
+  if AHTTP.Cookies.Count <> 0 then
+  begin
+    if madokamiauth = '' then
+      madokamiauth := 'Authorization: Basic ' + Base64Encode(Module.Account.Username);
+    AHTTP.Headers.Add(madokamiauth);
+  end;
+end;
+
+function GETWithLogin(const AHTTP: THTTPSendThread; AURL: String; const Module: TModuleContainer): Boolean;
 begin
   Result := False;
-  AHTTP.Cookies.Text := Account.Cookies[modulename];
+  SetAuth(AHTTP, Module);
   AHTTP.FollowRedirection := False;
   Result := AHTTP.GET(AURL);
-  if (AHTTP.ResultCode > 400) and (AHTTP.Headers.Values['WWW-Authenticate'] = ' Basic') then
+  if ((AHTTP.ResultCode > 400) and (AHTTP.Headers.Values['WWW-Authenticate'] = ' Basic')) or
+    (Pos('/login',AHTTP.Headers.Values['Location']) <> 0) then
   begin
-    if Login(AHTTP) then
+    if Login(AHTTP, Module) then
       Result := AHTTP.GET(AURL);
   end;
 end;
 
+procedure ClearMadokamiUlist;
+var
+  i: Integer;
+begin
+  if Length(madokamiulist) <> 0 then begin
+    for i := Low(madokamiulist) to High(madokamiulist) do
+      FreeAndNil(madokamiulist[i]);
+    SetLength(madokamiulist, 0);
+  end;
+end;
+
+function BeforeUpdateList(const Module: TModuleContainer): Boolean;
+var
+  i: Integer;
+begin
+  Result := True;
+  accountexist := Module.Account.Username <> '';
+  if not accountexist then Exit;
+  ClearMadokamiUlist;
+  SetLength(madokamiulist, Length(madokamilist));
+  for i := Low(madokamiulist) to High(madokamiulist) do
+    madokamiulist[i] := TStringList.Create;
+end;
+
+function AfterUpdateList(const Module: TModuleContainer): Boolean;
+begin
+  Result := True;
+  if not accountexist then Exit;
+  ClearMadokamiUlist;
+end;
+
 function GetDirectoryPageNumber(const MangaInfo: TMangaInformation;
-  var Page: Integer; const Module: TModuleContainer): Integer;
+  var Page: Integer; const WorkPtr: Integer; const Module: TModuleContainer): Integer;
 begin
   Result := NO_ERROR;
-  Page := Length(madokamidirlist);
+  if not accountexist then Exit;
+  if  workPtr < Length(madokamilist) then begin
+    if GETWithLogin(MangaInfo.FHTTP, Module.RootURL + '/Manga/' + madokamilist[WorkPtr+1], Module) then begin
+      XPathStringAll('//table[@id="index-table"]/tbody/tr/td[1]/a/@href', MangaInfo.FHTTP.Document, madokamiulist[WorkPtr]);
+      Page := madokamiulist[WorkPtr].Count;
+    end;
+  end
+  else
+    Page := 1;
 end;
 
 function GetNameAndLink(const MangaInfo: TMangaInformation;
   const ANames, ALinks: TStringList; const AURL: String;
   const Module: TModuleContainer): Integer;
+
+  procedure GetList;
+  begin
+    XPathHREFAll('//table[@id="index-table"]/tbody/tr/td[1]/a[not(ends-with(.,".txt") or ends-with(.,".zip") or ends-with(.,".rar"))]', MangaInfo.FHTTP.Document, ALinks, ANames);
+  end;
+
 var
-  v: IXQValue;
-  currentdir: Integer;
-  s: String;
+  workPtr, i: Integer;
+  u: String;
+  l1: TStrings;
 begin
   Result := NET_PROBLEM;
+  if not accountexist then Exit;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
-  currentdir := StrToIntDef(AURL, 0);
-  if currentdir > Length(madokamidirlist) then Exit;
-  if MangaInfo.FHTTP.GET(Module.RootURL + madokamidirlist[currentdir]) then begin
+  workPtr := StrToIntDef(AURL, 0);
+  u := '';
+  if Module.CurrentDirectoryIndex < Length(madokamilist) then
+  begin
+    if workPtr < madokamiulist[Module.CurrentDirectoryIndex].Count then
+      u := MaybeFillHost(Module.RootURL, madokamiulist[Module.CurrentDirectoryIndex][workPtr]);
+  end
+  else
+    u := Module.RootURL + madokamiotherlist[Module.CurrentDirectoryIndex-Length(madokamilist)];
+  if u = '' then Exit;
+  if GETWithLogin(MangaInfo.FHTTP, u, Module) then begin
     Result := NO_ERROR;
-    with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
+    if Module.CurrentDirectoryIndex < Length(madokamilist) then begin
+      l1 := TStringList.Create;
       try
-        for v in XPath('//table[@id="index-table"]/tbody/tr/td[1]/a') do
-        begin
-          ALinks.Add(v.toNode.getAttribute('href'));
-          s := v.toString;
-          if Length(s) > 1 then
-            if s[Length(s)] = '/' then
-              SetLength(s, Length(s) - 1);
-          ANames.Add(s);
+        XPathStringAll('//table[@id="index-table"]/tbody/tr/td[1]/a/@href', MangaInfo.FHTTP.Document, l1);
+        for i := 0 to l1.Count - 1 do begin
+          if MangaInfo.Thread.IsTerminated then Break;
+          if GETWithLogin(MangaInfo.FHTTP, MaybeFillHost(Module.RootURL, l1[i]), Module)  then
+            GetList;
         end;
       finally
-        Free;
+        l1.Free;
       end;
+    end
+    else
+      GetList;
   end;
 end;
 
@@ -132,7 +200,7 @@ var
 begin
   Result := NET_PROBLEM;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
-  if MangaInfo.FHTTP.GET(FillHost(Module.RootURL, AURL)) then begin
+  if GETWithLogin(MangaInfo.FHTTP, MaybeFillHost(Module.RootURL, AURL), Module) then begin
     Result := NO_ERROR;
     with MangaInfo.mangaInfo, TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
       try
@@ -153,7 +221,7 @@ begin
         if chapterName.Count > 0 then
           with TRegExpr.Create do
             try
-              Expression := '\.\w+';
+              Expression := '\.\w+\s*$';
               for i := 0 to chapterName.Count - 1 do
                 chapterName[i] := Replace(chapterName[i], '', False);
             finally
@@ -176,7 +244,7 @@ begin
   with DownloadThread.Task.Container do begin
     PageLinks.Clear;
     PageNumber := 0;
-    if GETWithLogin(DownloadThread.FHTTP, FillHost(Module.RootURL, AURL)) then begin
+    if GETWithLogin(DownloadThread.FHTTP, FillHost(Module.RootURL, AURL), Module) then begin
       Result := True;
       with TXQueryEngineHTML.Create(DownloadThread.FHTTP.Document) do
         try
@@ -199,13 +267,11 @@ begin
 end;
 
 function DownloadImage(const DownloadThread: TDownloadThread;
-  const AURL, APath, AName: String; const Module: TModuleContainer): Boolean;
+  const AURL: String; const Module: TModuleContainer): Boolean;
 begin
   Result := False;
   if DownloadThread = nil then Exit;
-  if GETWithLogin(DownloadThread.FHTTP, AURL) then begin
-    SaveImageStreamToFile(DownloadThread.FHTTP, APath, AName);
-  end;
+  Result := GETWithLogin(DownloadThread.FHTTP, AURL, Module);
 end;
 
 procedure RegisterModule;
@@ -214,9 +280,13 @@ begin
   begin
     Website := modulename;
     RootURL := urlroot;
+    Category := 'English';
     AccountSupport := True;
-    MaxTaskLimit := 1;
-    MaxConnectionLimit := 4;
+    //MaxTaskLimit := 1;
+    //MaxConnectionLimit := 4;
+    TotalDirectory := Length(madokamilist) + Length(madokamiotherlist);
+    OnBeforeUpdateList := @BeforeUpdateList;
+    OnAfterUpdateList := @AfterUpdateList;
     OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;
@@ -231,6 +301,7 @@ initialization
   RegisterModule;
 
 finalization
+  ClearMadokamiUlist;
   DoneCriticalsection(locklogin);
 
 end.

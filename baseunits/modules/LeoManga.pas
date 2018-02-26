@@ -14,7 +14,7 @@ const
   dirurl = '/directorio-manga?orden=alfabetico';
 
 function GetDirectoryPageNumber(const MangaInfo: TMangaInformation;
-  var Page: Integer; const Module: TModuleContainer): Integer;
+  var Page: Integer; const WorkPtr: Integer; const Module: TModuleContainer): Integer;
 begin
   Result := NET_PROBLEM;
   Page := 1;
@@ -74,7 +74,7 @@ begin
       Result := NO_ERROR;
       with TXQueryEngineHTML.Create(Document) do
         try
-          coverLink := MaybeFillHost(Module.RootURL, XPathString('//img[@class="manga-picture"]/@src'));
+          coverLink := MaybeFillHost(Module.RootURL, XPathString('//img[contains(@class,"manga-picture")]/@data-original'));
           if title = '' then
           begin
             title := XPathString('//*[@id="page-manga"]/h1');
@@ -82,9 +82,9 @@ begin
               SetLength(title, Length(title) - 6);
           end;
           summary := XPathString('//*[@id="page-manga"]/h2[.="Sinopsis"]/following-sibling::p/text()');
-          authors := XPathStringAll('//*[@id="page-manga"]/div[@class="row"]/div/strong[.="Autor:"]/following-sibling::a');
-          genres := XPathStringAll('//*[@id="page-manga"]/div[@class="row"]/div/strong[.="Géneros:"]/following-sibling::a');
-          for v in XPath('//ul[@class="list-unstyled caps-list"]/li') do
+          authors := XPathString('//*[@id="page-manga"]/div[@class="row"]/div[starts-with(.,"Autor")]/substring-after(normalize-space(.),": ")');
+          genres := XPathString('//*[@id="page-manga"]/div[@class="row"]/div[starts-with(.,"Géneros")]/substring-after(normalize-space(.),": ")');
+          for v in XPath('//ul[contains(@class,"caps-list")]/li') do
           begin
             s := Trim(XPathString('div[1]/h3/text()[2]', v.toNode));
             for x in XPath('div[2]/ul/li/a', v.toNode) do
@@ -107,8 +107,7 @@ end;
 function GetPageNumber(const DownloadThread: TDownloadThread;
   const AURL: String; const Module: TModuleContainer): Boolean;
 var
-  s, p: String;
-  i: Integer;
+  s: String;
 begin
   Result := False;
   if DownloadThread = nil then Exit;
@@ -121,22 +120,12 @@ begin
       Result := True;
       with TXQueryEngineHTML.Create(Document) do
         try
-          s := XPathString('//a[contains(@class,"btn")][.="Online"]/@href');
+          s := XPathString('//a[contains(@class,"cap-option")]/@href');
           if s = '' then Exit;
-          if GET(MaybeFillHost(Module.RootURL, s)) then
-          begin
+          if GET(MaybeFillHost(Module.RootURL, s)) then begin
             ParseHTML(Document);
-            s := XPathString('//*[@id="read-chapter"]/@name');
-            if s <> '' then
-              s := AppendURLDelim(MaybeFillHost(Module.RootURL, s));
-            p := XPathString('//*[@id="read-chapter"]/@pos');
-            if p <> '' then
-            begin
-              ExtractStrings([';'],[], PChar(p), PageLinks, False);
-              if (s <> '') and (PageLinks.Count > 0) then
-                for i := 0 to PageLinks.Count - 1 do
-                  PageLinks[i] := s + PageLinks[i];
-            end;
+            XPathStringAll('//*[@id="cascade-images"]//img/@src', PageLinks);
+            MaybeFillHost(Module.RootURL, PageLinks);
           end;
         finally
           Free;
@@ -150,7 +139,8 @@ begin
   with AddModule do
   begin
     Website := 'LeoManga';
-    RootURL := 'http://www.leomanga.com';
+    RootURL := 'http://leomanga.com';
+    Category := 'Spanish';
     OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;

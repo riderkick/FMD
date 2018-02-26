@@ -15,7 +15,7 @@ const
   perpage = 20;
 
 function GetDirectoryPageNumber(const MangaInfo: TMangaInformation;
-  var Page: Integer; const Module: TModuleContainer): Integer;
+  var Page: Integer; const WorkPtr: Integer; const Module: TModuleContainer): Integer;
 var
   s: String;
 begin
@@ -144,12 +144,13 @@ end;
 
 procedure RegisterModule;
 
-  procedure AddWebsiteModule(const AWebsite, ARootURL: String);
+  procedure AddWebsiteModule(const AWebsite, ARootURL, ACategory: String);
   begin
     with AddModule do
     begin
       Website := AWebsite;
       RootURL := ARootURL;
+      Category := ACategory;
       SortedList := True;
       OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
       OnGetNameAndLink := @GetNameAndLink;
@@ -159,9 +160,9 @@ procedure RegisterModule;
   end;
 
 begin
-  AddWebsiteModule('MangaChanRU', 'http://mangachan.me');
-  AddWebsiteModule('HentaiChanRU', 'http://hentaichan.me');
-  AddWebsiteModule('YaoiChanRU', 'http://yaoichan.me');
+  AddWebsiteModule('MangaChanRU', 'http://mangachan.me', 'Russian');
+  AddWebsiteModule('HentaiChanRU', 'http://hentai-chan.me', 'H-Sites');
+  AddWebsiteModule('YaoiChanRU', 'http://yaoichan.me', 'H-Sites');
 end;
 
 initialization

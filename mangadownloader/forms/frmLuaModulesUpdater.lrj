@@ -1,0 +1,8 @@
+{"version":1,"strings":[
+{"hash":2901221,"name":"tluamodulesupdaterform.vtluamodulesrepos.header.columns[0].text","sourcebytes":[70,105,108,101,110,97,109,101],"value":"Filename"},
+{"hash":119908548,"name":"tluamodulesupdaterform.vtluamodulesrepos.header.columns[1].text","sourcebytes":[76,97,115,116,32,109,111,100,105,102,105,101,100],"value":"Last modified"},
+{"hash":115487141,"name":"tluamodulesupdaterform.vtluamodulesrepos.header.columns[2].text","sourcebytes":[76,97,115,116,32,109,101,115,115,97,103,101],"value":"Last message"},
+{"hash":56103285,"name":"tluamodulesupdaterform.btcheckupdate.caption","sourcebytes":[67,104,101,99,107,32,117,112,100,97,116,101],"value":"Check update"},
+{"hash":47677607,"name":"tluamodulesupdaterform.ckshowupdatewarning.caption","sourcebytes":[83,104,111,119,32,117,112,100,97,116,101,32,119,97,114,110,105,110,103],"value":"Show update warning"},
+{"hash":205920740,"name":"tluamodulesupdaterform.ckautorestart.caption","sourcebytes":[65,117,116,111,32,114,101,115,116,97,114,116],"value":"Auto restart"}
+]}

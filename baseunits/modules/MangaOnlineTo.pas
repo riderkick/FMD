@@ -100,7 +100,8 @@ begin
   with AddModule do
   begin
     Website := 'MangaOnlineTo';
-    RootURL := 'http://mangaonline.to';
+    RootURL := 'http://mangaon.net';
+    Category := 'English';
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;
     OnGetPageNumber := @GetPageNumber;

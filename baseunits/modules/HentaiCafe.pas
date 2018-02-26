@@ -14,7 +14,7 @@ uses
   synautil;
 
 function GetDirectoryPageNumber(const MangaInfo: TMangaInformation;
-  var Page: Integer; const Module: TModuleContainer): Integer;
+  var Page: Integer; const WorkPtr: Integer; const Module: TModuleContainer): Integer;
 var
   query: TXQueryEngineHTML;
 begin
@@ -133,6 +133,7 @@ begin
   begin
     Website := 'HentaiCafe';
     RootURL := 'https://hentai.cafe';
+    Category := 'H-Sites';
     SortedList := True;
     FavoriteAvailable := False;
     OnGetDirectoryPageNumber := @GetDirectoryPageNumber;

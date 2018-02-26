@@ -67,8 +67,7 @@ begin
       query := TXQueryEngineHTML.Create(Document);
       with query do
         try
-          coverLink := XPathString('//div[@class="detail_header type_white"]/span[@class="thmb"]/img/@src');
-          if coverLink <> '' then coverLink := MaybeFillHost(Module.RootURL, coverLink);
+          coverLink := XPathString('//meta[@name="twitter:image"]/@content');
           if title = '' then title := XPathString('//div[@class="info"]/h1/text()');
           authors := XPathString('//div[@class="info"]/a/text()');
           genres := XPathString('//div[@class="info"]/h2');
@@ -126,7 +125,7 @@ begin
 end;
 
 function BeforeDownloadImage(const DownloadThread: TDownloadThread;
-  const AURL: String; const Module: TModuleContainer): Boolean;
+  var AURL: String; const Module: TModuleContainer): Boolean;
 begin
   Result := False;
   if DownloadThread = nil then Exit;
@@ -144,6 +143,7 @@ begin
   begin
     Website := 'Webtoons';
     RootURL := 'http://www.webtoons.com';
+    Category := 'English';
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;
     OnGetPageNumber := @GetPageNumber;

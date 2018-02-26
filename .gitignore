@@ -21,6 +21,7 @@ fp.dsk
 *.res
 mangadownloader/lib
 updater/lib
+updaterslim/lib
 bin/
 Release/
 

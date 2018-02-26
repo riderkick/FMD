@@ -37,381 +37,202 @@ type
   TLanguageCollection = array of TLanguageItem;
 
 const
-  Lang_english: array[0..184] of array[0..1] of string = (
-    ('ab', 'Abkhaz'),
-    ('aa', 'Afar'),
-    ('af', 'Afrikaans'),
-    ('ak', 'Akan'),
-    ('sq', 'Albanian'),
-    ('am', 'Amharic'),
-    ('ar', 'Arabic'),
-    ('an', 'Aragonese'),
-    ('hy', 'Armenian'),
-    ('as', 'Assamese'),
-    ('av', 'Avaric'),
-    ('ae', 'Avestan'),
-    ('ay', 'Aymara'),
-    ('az', 'Azerbaijani'),
-    ('bm', 'Bambara'),
-    ('ba', 'Bashkir'),
-    ('eu', 'Basque'),
-    ('be', 'Belarusian'),
-    ('bn', 'Bengali, Bangla'),
-    ('bh', 'Bihari'),
-    ('bi', 'Bislama'),
-    ('bs', 'Bosnian'),
-    ('br', 'Breton'),
-    ('bg', 'Bulgarian'),
-    ('my', 'Burmese'),
-    ('ca', 'Catalan'),
-    ('ch', 'Chamorro'),
-    ('ce', 'Chechen'),
-    ('ny', 'Chichewa, Chewa, Nyanja'),
-    ('zh', 'Chinese'),
-    ('cv', 'Chuvash'),
-    ('kw', 'Cornish'),
-    ('co', 'Corsican'),
-    ('cr', 'Cree'),
-    ('hr', 'Croatian'),
-    ('cs', 'Czech'),
-    ('da', 'Danish'),
-    ('dv', 'Divehi, Dhivehi, Maldivian'),
-    ('nl', 'Dutch'),
-    ('dz', 'Dzongkha'),
-    ('en', 'English'),
-    ('eo', 'Esperanto'),
-    ('et', 'Estonian'),
-    ('ee', 'Ewe'),
-    ('fo', 'Faroese'),
-    ('fj', 'Fijian'),
-    ('fi', 'Finnish'),
-    ('fr', 'French'),
-    ('ff', 'Fula, Fulah, Pulaar, Pular'),
-    ('gl', 'Galician'),
-    ('ka', 'Georgian'),
-    ('de', 'German'),
-    ('el', 'Greek (modern)'),
-    ('gn', 'Guaraní'),
-    ('gu', 'Gujarati'),
-    ('ht', 'Haitian, Haitian Creole'),
-    ('ha', 'Hausa'),
-    ('he', 'Hebrew (modern)'),
-    ('hz', 'Herero'),
-    ('hi', 'Hindi'),
-    ('ho', 'Hiri Motu'),
-    ('hu', 'Hungarian'),
-    ('ia', 'Interlingua'),
-    ('id', 'Indonesian'),
-    ('ie', 'Interlingue'),
-    ('ga', 'Irish'),
-    ('ig', 'Igbo'),
-    ('ik', 'Inupiaq'),
-    ('io', 'Ido'),
-    ('is', 'Icelandic'),
-    ('it', 'Italian'),
-    ('iu', 'Inuktitut'),
-    ('ja', 'Japanese'),
-    ('jv', 'Javanese'),
-    ('kl', 'Kalaallisut, Greenlandic'),
-    ('kn', 'Kannada'),
-    ('kr', 'Kanuri'),
-    ('ks', 'Kashmiri'),
-    ('kk', 'Kazakh'),
-    ('km', 'Khmer'),
-    ('ki', 'Kikuyu, Gikuyu'),
-    ('rw', 'Kinyarwanda'),
-    ('ky', 'Kyrgyz'),
-    ('kv', 'Komi'),
-    ('kg', 'Kongo'),
-    ('ko', 'Korean'),
-    ('ku', 'Kurdish'),
-    ('kj', 'Kwanyama, Kuanyama'),
-    ('la', 'Latin'),
-    ('lld', 'Ladin'),
-    ('lb', 'Luxembourgish, Letzeburgesch'),
-    ('lg', 'Ganda'),
-    ('li', 'Limburgish, Limburgan, Limburger'),
-    ('ln', 'Lingala'),
-    ('lo', 'Lao'),
-    ('lt', 'Lithuanian'),
-    ('lu', 'Luba-Katanga'),
-    ('lv', 'Latvian'),
-    ('gv', 'Manx'),
-    ('mk', 'Macedonian'),
-    ('mg', 'Malagasy'),
-    ('ms', 'Malay'),
-    ('ml', 'Malayalam'),
-    ('mt', 'Maltese'),
-    ('mi', 'Māori'),
-    ('mr', 'Marathi (Marāṭhī)'),
-    ('mh', 'Marshallese'),
-    ('mn', 'Mongolian'),
-    ('na', 'Nauru'),
-    ('nv', 'Navajo, Navaho'),
-    ('nd', 'Northern Ndebele'),
-    ('ne', 'Nepali'),
-    ('ng', 'Ndonga'),
-    ('nb', 'Norwegian Bokmål'),
-    ('nn', 'Norwegian Nynorsk'),
-    ('no', 'Norwegian'),
-    ('ii', 'Nuosu'),
-    ('nr', 'Southern Ndebele'),
-    ('oc', 'Occitan'),
-    ('oj', 'Ojibwe, Ojibwa'),
-    ('cu', 'Old Church Slavonic, Church Slavonic, Old Bulgarian'),
-    ('om', 'Oromo'),
-    ('or', 'Oriya'),
-    ('os', 'Ossetian, Ossetic'),
-    ('pa', 'Panjabi, Punjabi'),
-    ('pi', 'Pāli'),
-    ('fa', 'Persian (Farsi)'),
-    ('pl', 'Polish'),
-    ('ps', 'Pashto, Pushto'),
-    ('pt', 'Portuguese'),
-    ('qu', 'Quechua'),
-    ('rm', 'Romansh'),
-    ('rn', 'Kirundi'),
-    ('ro', 'Romanian'),
-    ('ru', 'Russian'),
-    ('sa', 'Sanskrit (Saṁskṛta)'),
-    ('sc', 'Sardinian'),
-    ('sd', 'Sindhi'),
-    ('se', 'Northern Sami'),
-    ('sm', 'Samoan'),
-    ('sg', 'Sango'),
-    ('sr', 'Serbian'),
-    ('gd', 'Scottish Gaelic, Gaelic'),
-    ('sn', 'Shona'),
-    ('si', 'Sinhala, Sinhalese'),
-    ('sk', 'Slovak'),
-    ('sl', 'Slovene'),
-    ('so', 'Somali'),
-    ('st', 'Southern Sotho'),
-    ('es', 'Spanish'),
-    ('su', 'Sundanese'),
-    ('sw', 'Swahili'),
-    ('ss', 'Swati'),
-    ('sv', 'Swedish'),
-    ('ta', 'Tamil'),
-    ('te', 'Telugu'),
-    ('tg', 'Tajik'),
-    ('th', 'Thai'),
-    ('ti', 'Tigrinya'),
-    ('bo', 'Tibetan Standard, Tibetan, Central'),
-    ('tk', 'Turkmen'),
-    ('tl', 'Tagalog'),
-    ('tn', 'Tswana'),
-    ('to', 'Tonga (Tonga Islands)'),
-    ('tr', 'Turkish'),
-    ('ts', 'Tsonga'),
-    ('tt', 'Tatar'),
-    ('tw', 'Twi'),
-    ('ty', 'Tahitian'),
-    ('ug', 'Uyghur'),
-    ('uk', 'Ukrainian'),
-    ('ur', 'Urdu'),
-    ('uz', 'Uzbek'),
-    ('ve', 'Venda'),
-    ('vi', 'Vietnamese'),
-    ('vo', 'Volapük'),
-    ('wa', 'Walloon'),
-    ('cy', 'Welsh'),
-    ('wo', 'Wolof'),
-    ('fy', 'Western Frisian'),
-    ('xh', 'Xhosa'),
-    ('yi', 'Yiddish'),
-    ('yo', 'Yoruba'),
-    ('za', 'Zhuang, Chuang'),
-    ('zu', 'Zulu'));
+  {
+    https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
+    //table[2]/tbody/tr[position()>1]/concat("('",td[5],"', '",td[3],"', '",td[4],"'),")
+  }
+  lang_codes: array[0..183] of array[0..2] of string = (
+    ('ab', 'Abkhaz', 'аҧсуа бызшәа, аҧсшәа'),
+    ('aa', 'Afar', 'Afaraf'),
+    ('af', 'Afrikaans', 'Afrikaans'),
+    ('ak', 'Akan', 'Akan'),
+    ('sq', 'Albanian', 'Shqip'),
+    ('am', 'Amharic', 'አማርኛ'),
+    ('ar', 'Arabic', 'العربية'),
+    ('an', 'Aragonese', 'aragonés'),
+    ('hy', 'Armenian', 'Հայերեն'),
+    ('as', 'Assamese', 'অসমীয়া'),
+    ('av', 'Avaric', 'авар мацӀ, магӀарул мацӀ'),
+    ('ae', 'Avestan', 'avesta'),
+    ('ay', 'Aymara', 'aymar aru'),
+    ('az', 'Azerbaijani', 'azərbaycan dili'),
+    ('bm', 'Bambara', 'bamanankan'),
+    ('ba', 'Bashkir', 'башҡорт теле'),
+    ('eu', 'Basque', 'euskara, euskera'),
+    ('be', 'Belarusian', 'беларуская мова'),
+    ('bn', 'Bengali, Bangla', 'বাংলা'),
+    ('bh', 'Bihari', 'भोजपुरी'),
+    ('bi', 'Bislama', 'Bislama'),
+    ('bs', 'Bosnian', 'bosanski jezik'),
+    ('br', 'Breton', 'brezhoneg'),
+    ('bg', 'Bulgarian', 'български език'),
+    ('my', 'Burmese', 'ဗမာစာ'),
+    ('ca', 'Catalan', 'català'),
+    ('ch', 'Chamorro', 'Chamoru'),
+    ('ce', 'Chechen', 'нохчийн мотт'),
+    ('ny', 'Chichewa, Chewa, Nyanja', 'chiCheŵa, chinyanja'),
+    ('zh', 'Chinese', '中文 (Zhōngwén), 汉语, 漢語'),
+    ('cv', 'Chuvash', 'чӑваш чӗлхи'),
+    ('kw', 'Cornish', 'Kernewek'),
+    ('co', 'Corsican', 'corsu, lingua corsa'),
+    ('cr', 'Cree', 'ᓀᐦᐃᔭᐍᐏᐣ'),
+    ('hr', 'Croatian', 'hrvatski jezik'),
+    ('cs', 'Czech', 'čeština, český jazyk'),
+    ('da', 'Danish', 'dansk'),
+    ('dv', 'Divehi, Dhivehi, Maldivian', 'ދިވެހި'),
+    ('nl', 'Dutch', 'Nederlands, Vlaams'),
+    ('dz', 'Dzongkha', 'རྫོང་ཁ'),
+    ('en', 'English', 'English'),
+    ('eo', 'Esperanto', 'Esperanto'),
+    ('et', 'Estonian', 'eesti, eesti keel'),
+    ('ee', 'Ewe', 'Eʋegbe'),
+    ('fo', 'Faroese', 'føroyskt'),
+    ('fj', 'Fijian', 'vosa Vakaviti'),
+    ('fi', 'Finnish', 'suomi, suomen kieli'),
+    ('fr', 'French', 'français, langue française'),
+    ('ff', 'Fula, Fulah, Pulaar, Pular', 'Fulfulde, Pulaar, Pular'),
+    ('gl', 'Galician', 'galego'),
+    ('ka', 'Georgian', 'ქართული'),
+    ('de', 'German', 'Deutsch'),
+    ('el', 'Greek (modern)', 'ελληνικά'),
+    ('gn', 'Guaraní', 'Avañe''ẽ'),
+    ('gu', 'Gujarati', 'ગુજરાતી'),
+    ('ht', 'Haitian, Haitian Creole', 'Kreyòl ayisyen'),
+    ('ha', 'Hausa', '(Hausa) هَوُسَ'),
+    ('he', 'Hebrew (modern)', 'עברית'),
+    ('hz', 'Herero', 'Otjiherero'),
+    ('hi', 'Hindi', 'हिन्दी, हिंदी'),
+    ('ho', 'Hiri Motu', 'Hiri Motu'),
+    ('hu', 'Hungarian', 'magyar'),
+    ('ia', 'Interlingua', 'Interlingua'),
+    ('id', 'Indonesian', 'Bahasa Indonesia'),
+    ('ie', 'Interlingue', 'Originally called Occidental; then Interlingue after WWII'),
+    ('ga', 'Irish', 'Gaeilge'),
+    ('ig', 'Igbo', 'Asụsụ Igbo'),
+    ('ik', 'Inupiaq', 'Iñupiaq, Iñupiatun'),
+    ('io', 'Ido', 'Ido'),
+    ('is', 'Icelandic', 'Íslenska'),
+    ('it', 'Italian', 'Italiano'),
+    ('iu', 'Inuktitut', 'ᐃᓄᒃᑎᑐᑦ'),
+    ('ja', 'Japanese', '日本語 (にほんご)'),
+    ('jv', 'Javanese', 'ꦧꦱꦗꦮ, Basa Jawa'),
+    ('kl', 'Kalaallisut, Greenlandic', 'kalaallisut, kalaallit oqaasii'),
+    ('kn', 'Kannada', 'ಕನ್ನಡ'),
+    ('kr', 'Kanuri', 'Kanuri'),
+    ('ks', 'Kashmiri', 'कश्मीरी, كشميري‎'),
+    ('kk', 'Kazakh', 'қазақ тілі'),
+    ('km', 'Khmer', 'ខ្មែរ, ខេមរភាសា, ភាសាខ្មែរ'),
+    ('ki', 'Kikuyu, Gikuyu', 'Gĩkũyũ'),
+    ('rw', 'Kinyarwanda', 'Ikinyarwanda'),
+    ('ky', 'Kyrgyz', 'Кыргызча, Кыргыз тили'),
+    ('kv', 'Komi', 'коми кыв'),
+    ('kg', 'Kongo', 'Kikongo'),
+    ('ko', 'Korean', '한국어'),
+    ('ku', 'Kurdish', 'Kurdî, كوردی‎'),
+    ('kj', 'Kwanyama, Kuanyama', 'Kuanyama'),
+    ('la', 'Latin', 'latine, lingua latina'),
+    ('lb', 'Luxembourgish, Letzeburgesch', 'Lëtzebuergesch'),
+    ('lg', 'Ganda', 'Luganda'),
+    ('li', 'Limburgish, Limburgan, Limburger', 'Limburgs'),
+    ('ln', 'Lingala', 'Lingála'),
+    ('lo', 'Lao', 'ພາສາລາວ'),
+    ('lt', 'Lithuanian', 'lietuvių kalba'),
+    ('lu', 'Luba-Katanga', 'Tshiluba'),
+    ('lv', 'Latvian', 'latviešu valoda'),
+    ('gv', 'Manx', 'Gaelg, Gailck'),
+    ('mk', 'Macedonian', 'македонски јазик'),
+    ('mg', 'Malagasy', 'fiteny malagasy'),
+    ('ms', 'Malay', 'bahasa Melayu, بهاس ملايو‎'),
+    ('ml', 'Malayalam', 'മലയാളം'),
+    ('mt', 'Maltese', 'Malti'),
+    ('mi', 'Māori', 'te reo Māori'),
+    ('mr', 'Marathi (Marāṭhī)', 'मराठी'),
+    ('mh', 'Marshallese', 'Kajin M̧ajeļ'),
+    ('mn', 'Mongolian', 'Монгол хэл'),
+    ('na', 'Nauruan', 'Dorerin Naoero'),
+    ('nv', 'Navajo, Navaho', 'Diné bizaad'),
+    ('nd', 'Northern Ndebele', 'isiNdebele'),
+    ('ne', 'Nepali', 'नेपाली'),
+    ('ng', 'Ndonga', 'Owambo'),
+    ('nb', 'Norwegian Bokmål', 'Norsk bokmål'),
+    ('nn', 'Norwegian Nynorsk', 'Norsk nynorsk'),
+    ('no', 'Norwegian', 'Norsk'),
+    ('ii', 'Nuosu', 'ꆈꌠ꒿ Nuosuhxop'),
+    ('nr', 'Southern Ndebele', 'isiNdebele'),
+    ('oc', 'Occitan', 'occitan, lenga d''òc'),
+    ('oj', 'Ojibwe, Ojibwa', 'ᐊᓂᔑᓈᐯᒧᐎᓐ'),
+    ('cu', 'Old Church Slavonic, Church Slavonic, Old Bulgarian', 'ѩзыкъ словѣньскъ'),
+    ('om', 'Oromo', 'Afaan Oromoo'),
+    ('or', 'Oriya', 'ଓଡ଼ିଆ'),
+    ('os', 'Ossetian, Ossetic', 'ирон æвзаг'),
+    ('pa', 'Eastern Punjabi, Eastern Panjabi', 'ਪੰਜਾਬੀ'),
+    ('pi', 'Pāli', 'पाऴि'),
+    ('fa', 'Persian (Farsi)', 'فارسی'),
+    ('pl', 'Polish', 'język polski, polszczyzna'),
+    ('ps', 'Pashto, Pushto', 'پښتو'),
+    ('pt', 'Portuguese', 'Português'),
+    ('qu', 'Quechua', 'Runa Simi, Kichwa'),
+    ('rm', 'Romansh', 'rumantsch grischun'),
+    ('rn', 'Kirundi', 'Ikirundi'),
+    ('ro', 'Romanian', 'Română'),
+    ('ru', 'Russian', 'Русский'),
+    ('sa', 'Sanskrit (Saṁskṛta)', 'संस्कृतम्'),
+    ('sc', 'Sardinian', 'sardu'),
+    ('sd', 'Sindhi', 'सिन्धी, سنڌي، سندھی‎'),
+    ('se', 'Northern Sami', 'Davvisámegiella'),
+    ('sm', 'Samoan', 'gagana fa''a Samoa'),
+    ('sg', 'Sango', 'yângâ tî sängö'),
+    ('sr', 'Serbian', 'српски језик'),
+    ('gd', 'Scottish Gaelic, Gaelic', 'Gàidhlig'),
+    ('sn', 'Shona', 'chiShona'),
+    ('si', 'Sinhalese, Sinhala', 'සිංහල'),
+    ('sk', 'Slovak', 'slovenčina, slovenský jazyk'),
+    ('sl', 'Slovene', 'slovenski jezik, slovenščina'),
+    ('so', 'Somali', 'Soomaaliga, af Soomaali'),
+    ('st', 'Southern Sotho', 'Sesotho'),
+    ('es', 'Spanish', 'Español'),
+    ('su', 'Sundanese', 'Basa Sunda'),
+    ('sw', 'Swahili', 'Kiswahili'),
+    ('ss', 'Swati', 'SiSwati'),
+    ('sv', 'Swedish', 'svenska'),
+    ('ta', 'Tamil', 'தமிழ்'),
+    ('te', 'Telugu', 'తెలుగు'),
+    ('tg', 'Tajik', 'тоҷикӣ, toçikī, تاجیکی‎'),
+    ('th', 'Thai', 'ไทย'),
+    ('ti', 'Tigrinya', 'ትግርኛ'),
+    ('bo', 'Tibetan Standard, Tibetan, Central', 'བོད་ཡིག'),
+    ('tk', 'Turkmen', 'Türkmen, Түркмен'),
+    ('tl', 'Tagalog', 'Wikang Tagalog'),
+    ('tn', 'Tswana', 'Setswana'),
+    ('to', 'Tonga (Tonga Islands)', 'faka Tonga'),
+    ('tr', 'Turkish', 'Türkçe'),
+    ('ts', 'Tsonga', 'Xitsonga'),
+    ('tt', 'Tatar', 'татар теле, tatar tele'),
+    ('tw', 'Twi', 'Twi'),
+    ('ty', 'Tahitian', 'Reo Tahiti'),
+    ('ug', 'Uyghur', 'ئۇيغۇرچە‎, Uyghurche'),
+    ('uk', 'Ukrainian', 'Українська'),
+    ('ur', 'Urdu', 'اردو'),
+    ('uz', 'Uzbek', 'Oʻzbek, Ўзбек, أۇزبېك‎'),
+    ('ve', 'Venda', 'Tshivenḓa'),
+    ('vi', 'Vietnamese', 'Tiếng Việt'),
+    ('vo', 'Volapük', 'Volapük'),
+    ('wa', 'Walloon', 'walon'),
+    ('cy', 'Welsh', 'Cymraeg'),
+    ('wo', 'Wolof', 'Wollof'),
+    ('fy', 'Western Frisian', 'Frysk'),
+    ('xh', 'Xhosa', 'isiXhosa'),
+    ('yi', 'Yiddish', 'ייִדיש'),
+    ('yo', 'Yoruba', 'Yorùbá'),
+    ('za', 'Zhuang, Chuang', 'Saɯ cueŋƅ, Saw cuengh'),
+    ('zu', 'Zulu', 'isiZulu')
+  );
 
-  Lang_native: array[0..184] of array[0..1] of string = (
-    ('ab', 'аҧсуа бызшәа, аҧсшәа'),
-    ('aa', 'Afaraf'),
-    ('af', 'Afrikaans'),
-    ('ak', 'Akan'),
-    ('sq', 'Shqip'),
-    ('am', 'አማርኛ'),
-    ('ar', 'العربية'),
-    ('an', 'aragonés'),
-    ('hy', 'Հայերեն'),
-    ('as', 'অসমীয়া'),
-    ('av', 'авар мацӀ, магӀарул мацӀ'),
-    ('ae', 'avesta'),
-    ('ay', 'aymar aru'),
-    ('az', 'azərbaycan dili'),
-    ('bm', 'bamanankan'),
-    ('ba', 'башҡорт теле'),
-    ('eu', 'euskara, euskera'),
-    ('be', 'беларуская мова'),
-    ('bn', 'বাংলা'),
-    ('bh', 'भोजपुरी'),
-    ('bi', 'Bislama'),
-    ('bs', 'bosanski jezik'),
-    ('br', 'brezhoneg'),
-    ('bg', 'български език'),
-    ('my', 'ဗမာစာ'),
-    ('ca', 'català'),
-    ('ch', 'Chamoru'),
-    ('ce', 'нохчийн мотт'),
-    ('ny', 'chiCheŵa, chinyanja'),
-    ('zh', '中文 (Zhōngwén), 汉语, 漢語'),
-    ('cv', 'чӑваш чӗлхи'),
-    ('kw', 'Kernewek'),
-    ('co', 'corsu, lingua corsa'),
-    ('cr', 'ᓀᐦᐃᔭᐍᐏᐣ'),
-    ('hr', 'hrvatski jezik'),
-    ('cs', 'čeština, český jazyk'),
-    ('da', 'dansk'),
-    ('dv', 'ދިވެހި'),
-    ('nl', 'Nederlands, Vlaams'),
-    ('dz', 'རྫོང་ཁ'),
-    ('en', 'English'),
-    ('eo', 'Esperanto'),
-    ('et', 'eesti, eesti keel'),
-    ('ee', 'Eʋegbe'),
-    ('fo', 'føroyskt'),
-    ('fj', 'vosa Vakaviti'),
-    ('fi', 'suomi, suomen kieli'),
-    ('fr', 'français, langue française'),
-    ('ff', 'Fulfulde, Pulaar, Pular'),
-    ('gl', 'galego'),
-    ('ka', 'ქართული'),
-    ('de', 'Deutsch'),
-    ('el', 'ελληνικά'),
-    ('gn', 'Avañe''ẽ'),
-    ('gu', 'ગુજરાતી'),
-    ('ht', 'Kreyòl ayisyen'),
-    ('ha', '(Hausa) هَوُسَ'),
-    ('he', 'עברית'),
-    ('hz', 'Otjiherero'),
-    ('hi', 'हिन्दी, हिंदी'),
-    ('ho', 'Hiri Motu'),
-    ('hu', 'magyar'),
-    ('ia', 'Interlingua'),
-    ('id', 'Bahasa Indonesia'),
-    ('ie', 'Interlingue'),
-    ('ga', 'Gaeilge'),
-    ('ig', 'Asụsụ Igbo'),
-    ('ik', 'Iñupiaq, Iñupiatun'),
-    ('io', 'Ido'),
-    ('is', 'Íslenska'),
-    ('it', 'italiano'),
-    ('iu', 'ᐃᓄᒃᑎᑐᑦ'),
-    ('ja', '日本語 (にほんご)'),
-    ('jv', 'basa Jawa'),
-    ('kl', 'kalaallisut, kalaallit oqaasii'),
-    ('kn', 'ಕನ್ನಡ'),
-    ('kr', 'Kanuri'),
-    ('ks', 'कश्मीरी, كشميري‎'),
-    ('kk', 'қазақ тілі'),
-    ('km', 'ខ្មែរ, ខេមរភាសា, ភាសាខ្មែរ'),
-    ('ki', 'Gĩkũyũ'),
-    ('rw', 'Ikinyarwanda'),
-    ('ky', 'Кыргызча, Кыргыз тили'),
-    ('kv', 'коми кыв'),
-    ('kg', 'Kikongo'),
-    ('ko', '한국어, 조선어'),
-    ('ku', 'Kurdî, كوردی‎'),
-    ('kj', 'Kuanyama'),
-    ('la', 'latine, lingua latina'),
-    ('lld', 'ladin, lingua ladina'),
-    ('lb', 'Lëtzebuergesch'),
-    ('lg', 'Luganda'),
-    ('li', 'Limburgs'),
-    ('ln', 'Lingála'),
-    ('lo', 'ພາສາລາວ'),
-    ('lt', 'lietuvių kalba'),
-    ('lu', 'Tshiluba'),
-    ('lv', 'latviešu valoda'),
-    ('gv', 'Gaelg, Gailck'),
-    ('mk', 'македонски јазик'),
-    ('mg', 'fiteny malagasy'),
-    ('ms', 'bahasa Melayu, بهاس ملايو‎'),
-    ('ml', 'മലയാളം'),
-    ('mt', 'Malti'),
-    ('mi', 'te reo Māori'),
-    ('mr', 'मराठी'),
-    ('mh', 'Kajin M̧ajeļ'),
-    ('mn', 'монгол'),
-    ('na', 'Ekakairũ Naoero'),
-    ('nv', 'Diné bizaad'),
-    ('nd', 'isiNdebele'),
-    ('ne', 'नेपाली'),
-    ('ng', 'Owambo'),
-    ('nb', 'Norsk bokmål'),
-    ('nn', 'Norsk nynorsk'),
-    ('no', 'Norsk'),
-    ('ii', 'ꆈꌠ꒿ Nuosuhxop'),
-    ('nr', 'isiNdebele'),
-    ('oc', 'occitan, lenga d''òc'),
-    ('oj', 'ᐊᓂᔑᓈᐯᒧᐎᓐ'),
-    ('cu', 'ѩзыкъ словѣньскъ'),
-    ('om', 'Afaan Oromoo'),
-    ('or', 'ଓଡ଼ିଆ'),
-    ('os', 'ирон æвзаг'),
-    ('pa', 'ਪੰਜਾਬੀ, پنجابی‎'),
-    ('pi', 'पाऴि'),
-    ('fa', 'فارسی'),
-    ('pl', 'język polski, polszczyzna'),
-    ('ps', 'پښتو'),
-    ('pt', 'português'),
-    ('qu', 'Runa Simi, Kichwa'),
-    ('rm', 'rumantsch grischun'),
-    ('rn', 'Ikirundi'),
-    ('ro', 'limba română'),
-    ('ru', 'Русский'),
-    ('sa', 'संस्कृतम्'),
-    ('sc', 'sardu'),
-    ('sd', 'सिन्धी, سنڌي، سندھی‎'),
-    ('se', 'Davvisámegiella'),
-    ('sm', 'gagana fa''a Samoa'),
-    ('sg', 'yângâ tî sängö'),
-    ('sr', 'српски језик'),
-    ('gd', 'Gàidhlig'),
-    ('sn', 'chiShona'),
-    ('si', 'සිංහල'),
-    ('sk', 'slovenčina, slovenský jazyk'),
-    ('sl', 'slovenski jezik, slovenščina'),
-    ('so', 'Soomaaliga, af Soomaali'),
-    ('st', 'Sesotho'),
-    ('es', 'español'),
-    ('su', 'Basa Sunda'),
-    ('sw', 'Kiswahili'),
-    ('ss', 'SiSwati'),
-    ('sv', 'svenska'),
-    ('ta', 'தமிழ்'),
-    ('te', 'తెలుగు'),
-    ('tg', 'тоҷикӣ, toçikī, تاجیکی‎'),
-    ('th', 'ไทย'),
-    ('ti', 'ትግርኛ'),
-    ('bo', 'བོད་ཡིག'),
-    ('tk', 'Türkmen, Түркмен'),
-    ('tl', 'Wikang Tagalog, ᜏᜒᜃᜅ᜔ ᜆᜄᜎᜓᜄ᜔'),
-    ('tn', 'Setswana'),
-    ('to', 'faka Tonga'),
-    ('tr', 'Türkçe'),
-    ('ts', 'Xitsonga'),
-    ('tt', 'татар теле, tatar tele'),
-    ('tw', 'Twi'),
-    ('ty', 'Reo Tahiti'),
-    ('ug', 'ئۇيغۇرچە‎, Uyghurche'),
-    ('uk', 'українська мова'),
-    ('ur', 'اردو'),
-    ('uz', 'Oʻzbek, Ўзбек, أۇزبېك‎'),
-    ('ve', 'Tshivenḓa'),
-    ('vi', 'Việt Nam'),
-    ('vo', 'Volapük'),
-    ('wa', 'walon'),
-    ('cy', 'Cymraeg'),
-    ('wo', 'Wollof'),
-    ('fy', 'Frysk'),
-    ('xh', 'isiXhosa'),
-    ('yi', 'ייִדיש'),
-    ('yo', 'Yorùbá'),
-    ('za', 'Saɯ cueŋƅ, Saw cuengh'),
-    ('zu', 'isiZulu'));
-
-  Country_name: array[0..248] of array[0..1] of string = (
+  {
+    https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
+    //table[3]/tbody/tr[position()>1]/concat("('",td[1],"', '",td[2],"'),")
+  }
+  country_codes: array[0..248] of array[0..1] of string = (
     ('AD', 'Andorra'),
     ('AE', 'United Arab Emirates'),
     ('AF', 'Afghanistan'),
@@ -426,7 +247,7 @@ const
     ('AT', 'Austria'),
     ('AU', 'Australia'),
     ('AW', 'Aruba'),
-    ('AX', 'Åland Islands'),
+    ('AX', 'Aland Islands !Åland Islands'),
     ('AZ', 'Azerbaijan'),
     ('BA', 'Bosnia and Herzegovina'),
     ('BB', 'Barbados'),
@@ -455,7 +276,7 @@ const
     ('CF', 'Central African Republic'),
     ('CG', 'Congo'),
     ('CH', 'Switzerland'),
-    ('CI', 'Côte d''Ivoire'),
+    ('CI', 'Cote d''Ivoire !Côte d''Ivoire'),
     ('CK', 'Cook Islands'),
     ('CL', 'Chile'),
     ('CM', 'Cameroon'),
@@ -467,7 +288,7 @@ const
     ('CW', 'Curaçao'),
     ('CX', 'Christmas Island'),
     ('CY', 'Cyprus'),
-    ('CZ', 'Czech Republic'),
+    ('CZ', 'Czechia'),
     ('DE', 'Germany'),
     ('DJ', 'Djibouti'),
     ('DK', 'Denmark'),
@@ -599,7 +420,7 @@ const
     ('PW', 'Palau'),
     ('PY', 'Paraguay'),
     ('QA', 'Qatar'),
-    ('RE', 'Réunion'),
+    ('RE', 'Reunion !Réunion'),
     ('RO', 'Romania'),
     ('RS', 'Serbia'),
     ('RU', 'Russian Federation'),
@@ -660,7 +481,8 @@ const
     ('YT', 'Mayotte'),
     ('ZA', 'South Africa'),
     ('ZM', 'Zambia'),
-    ('ZW', 'Zimbabwe'));
+    ('ZW', 'Zimbabwe')
+  );
 
   ldir: array[0..3] of string =
     ('LANG', 'languages', 'locale', 'locale' + PathDelim + 'LC_MESSAGES');
@@ -673,7 +495,7 @@ var
 
   procedure CollectLanguagesFiles(const appname: string = ''; const dir: string = '';
     useNativeName: Boolean = True);
-  function GetLangName(const lcode: string; useNativeName: Boolean = True): string;
+  function GetLangName(const lcode: string; const useNativeName: Boolean = True): string;
 
   function SetLang(const lang: string; appname: string = ''): Boolean;
   function SetLangByIndex(const Index: Integer): Boolean;
@@ -734,7 +556,7 @@ begin
       tdir := LangDir
     else
     begin
-      tdir := CleanAndExpandDirectory(GetCurrentDirUTF8);
+      tdir := ExtractFilePath(Application.ExeName);
       lauto := True;
     end;
   end;
@@ -761,48 +583,34 @@ begin
     AvailableLanguages.CustomSort(@SortValue);
 end;
 
-function GetLangName(const lcode: string; useNativeName: Boolean): string;
+function GetLangName(const lcode: string; const useNativeName: Boolean): string;
 
-  function GetLang(const l: string): string;
+  function getlangcodes(const l: string): string;
   var
     i: Integer;
   begin
     Result := l;
-    for i := Low(Lang_english) to High(Lang_english) do
-    begin
-      if SameText(l, Lang_english[i, 0]) then
+    for i := Low(lang_codes) to High(lang_codes) do
+      if SameText(l, lang_codes[i, 0]) then
       begin
-        Result := Lang_english[i, 1];
+        if useNativeName then
+          Result := lang_codes[i, 2]
+        else
+          Result := lang_codes[i, 1];
         Break;
       end;
-    end;
   end;
 
-  function GetLangNative(const l: string): string;
+  function getcountrycodes(l: string): string;
   var
     i: Integer;
   begin
     Result := l;
-    for i := Low(Lang_native) to High(Lang_native) do
+    for i := Low(country_codes) to High(country_codes) do
     begin
-      if SameText(l, Lang_native[i, 0]) then
+      if SameText(l, country_codes[i, 0]) then
       begin
-        Result := Lang_native[i, 1];
-        Break;
-      end;
-    end;
-  end;
-
-  function GetCountry(l: string): string;
-  var
-    i: Integer;
-  begin
-    Result := l;
-    for i := Low(Country_name) to High(Country_name) do
-    begin
-      if SameText(l, Country_name[i, 0]) then
-      begin
-        Result := Country_name[i, 1];
+        Result := country_codes[i, 1];
         Break;
       end;
     end;
@@ -821,17 +629,14 @@ begin
   if p > 1 then
   begin
     id := Copy(s, 1, p - 1);
-    if useNativeName then
-      Result := GetLangNative(id)
-    else
-      Result := GetLang(id);
+    Result := getlangcodes(id);
     id := Copy(s, P + 1, Length(s));
-    s := GetCountry(id);
+    s := getcountrycodes(id);
     if s <> id then
-      Result := Format('%s (%s)', [Result, GetCountry(id)]);
+      Result := Format('%s (%s)', [Result, s]);
   end
   else
-    Result := GetLang(s);
+    Result := getlangcodes(s);
 end;
 
 function TranslateLCL(Lang: string): Boolean;
@@ -842,7 +647,7 @@ var
   procedure FindLCLFile;
   var
     i: Integer;
-    s: string;
+    l, s: string;
   begin
     if LangDir <> '' then
     begin
@@ -860,9 +665,10 @@ var
     end;
     if lcllangpath = '' then
     begin
+      l := ExtractFilePath(Application.ExeName);
       for i := Low(ldir) to High(ldir) do
       begin
-        lcllangdir := GetCurrentDirUTF8 + PathDelim + ldir[i];
+        lcllangdir := l + ldir[i];
         s := lcllangdir + 'lclstrconsts.' + lcllang;
         if FileExistsUTF8(s + '.po') then
         begin

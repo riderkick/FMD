@@ -34,62 +34,93 @@ const
   EXPARAM_CHAPTER = '%CHAPTER%';
   DEFAULT_EXPARAM = '"' + EXPARAM_PATH + EXPARAM_CHAPTER + '"';
 
-  SOCKHEARTBEATRATE = 400;
-
-  DEFAULT_LIST = 'AnimeA,MangaFox,MangaHere,MangaInn,MangaReader';
   DEFAULT_MANGA_CUSTOMRENAME = '%MANGA%';
   DEFAULT_CHAPTER_CUSTOMRENAME = '%CHAPTER%';
   DEFAULT_FILENAME_CUSTOMRENAME = '%FILENAME%';
 
   DATA_EXT = '.dat';
   DBDATA_EXT = '.db';
+  DBDATA_SERVER_EXT = '.7z';
   UPDATER_EXE = 'updater.exe';
+  OLD_UPDATER_EXE = 'old_' + UPDATER_EXE;
   ZIP_EXE = '7za.exe';
   RUN_EXE = '.run';
 
+
+  SOCKHEARTBEATRATE = 500;
+  {$IFDEF WINDOWS}
+  {$IFDEF WIN32}
+  MAX_TASKLIMIT = 16;
+  MAX_CONNECTIONPERHOSTLIMIT = 64;
+  {$ENDIF}
+  {$IFDEF WIN64}
+  MAX_TASKLIMIT = 64;
+  MAX_CONNECTIONPERHOSTLIMIT = 256;
+  {$ENDIF}
+  {$ELSE}
+  MAX_TASKLIMIT = 8;
+  MAX_CONNECTIONPERHOSTLIMIT = 32;
+  {$ENDIF}
+
 var
-  FMD_VERSION_NUMBER,
+  FMD_VERSION_NUMBER: TProgramVersion;
+  FMD_VERSION_STRING,
   FMD_DIRECTORY,
+  FMD_EXENAME,
+  CURRENT_UPDATER_EXE,
+  OLD_CURRENT_UPDATER_EXE,
+  CURRENT_ZIP_EXE,
   APPDATA_DIRECTORY,
   DEFAULT_PATH,
   WORK_FOLDER,
   WORK_FILE,
+  WORK_FILEDB,
   DOWNLOADEDCHAPTERS_FILE,
   DOWNLOADEDCHAPTERSDB_FILE,
   FAVORITES_FILE,
+  FAVORITESDB_FILE,
   CONFIG_FOLDER,
   CONFIG_FILE,
-  CONFIG_ADVANCED,
   REVISION_FILE,
   UPDATE_FILE,
-  MANGALIST_FILE,
+  BASE_FILE,
   ACCOUNTS_FILE,
-  WEBSITE_CONFIG_FILE,
+  MODULES_FILE,
   DATA_FOLDER,
   IMAGE_FOLDER,
   LANGUAGE_FILE,
   CHANGELOG_FILE,
+  DEFAULT_LOG_FILE,
   README_FILE,
   EXTRAS_FOLDER,
-  MANGAFOXTEMPLATE_FOLDER: String;
+  MANGAFOXTEMPLATE_FOLDER,
+  LUA_WEBSITEMODULE_FOLDER,
+  LUA_WEBSITEMODULE_FILE: String;
 
   // ini files
   revisionfile,
-  updatesfile,
-  mangalistfile: TIniFile;
-  configfile,
-  advancedfile: TIniFileRun;
+  updatesfile: TIniFile;
+  configfile: TIniFileRun;
 
-  // db data download url
-  DBDownloadURL: String;
+  // base url, should be in base.ini
+  DEFAULT_SELECTED_WEBSITES: String = 'MangaFox,MangaHere,MangaInn,MangaReader';
+  DB_URL: String = 'https://sourceforge.net/projects/newfmd/files/data/<website>.7z/download';
+  UPDATE_URL: String = 'https://raw.githubusercontent.com/riderkick/FMD/master/update';
+  CHANGELOG_URL: String = 'https://raw.githubusercontent.com/riderkick/FMD/master/changelog.txt';
+  UPDATE_PACKAGE_NAME: String = 'updatepackage.7z';
+  MODULES_URL: String = 'https://api.github.com/repos/riderkick/FMD/contents/lua/modules';
+  MODULES_URL2: String = 'https://github.com/riderkick/FMD/file-list/master/lua/modules';
 
   currentWebsite: String;
 
   // available website
-  AvailableWebsite: TStringList;
+  AvailableWebsites: TStringList;
 
+  // general
   OptionLetFMDDo: TFMDDo = DO_NOTHING;
+  OptionDeleteCompletedTasksOnClose: Boolean = False;
 
+  // saveto
   OptionChangeUnicodeCharacter: Boolean = False;
   OptionChangeUnicodeCharacterStr: String = '_';
   OptionGenerateMangaFolder: Boolean = False;
@@ -104,24 +135,45 @@ var
   OptionConvertDigitChapterLength: Integer;
 
   OptionPDFQuality: Cardinal = 95;
-  OptionUpdateListNoMangaInfo: Boolean = False;
-  OptionUpdateListRemoveDuplicateLocalData: Boolean = False;
 
+  OptionPNGSaveAsJPEG: Boolean = False;
+  OptionWebPSaveAs: Integer = 1;
+  OptionPNGCompressionLevel: Integer = 1;
+  OptionJPEGQuality: Integer = 80;
+
+  // connections
+  OptionMaxParallel: Integer = 1;
   OptionMaxThreads: Integer = 1;
+  OptionMaxRetry: Integer = 5;
+  OptionConnectionTimeout: Integer = 30;
+  OptionRetryFailedTask: Integer = 1;
+  OptionAlwaysStartTaskFromFailedChapters: Boolean = True;
 
+  // view
   OptionEnableLoadCover: Boolean = False;
+  OptionShowBalloonHint: Boolean = True;
 
+  // updates
   OptionAutoCheckLatestVersion: Boolean = True;
   OptionAutoCheckFavStartup: Boolean = True;
   OptionAutoCheckFavInterval: Boolean = True;
   OptionAutoCheckFavIntervalMinutes: Cardinal = 60;
-  OptionNewMangaTime: Cardinal = 1;
+  OptionNewMangaTime: Integer = 1;
+  OptionJDNNewMangaTime: Integer = MaxInt;
   OptionAutoCheckFavDownload: Boolean = False;
   OptionAutoCheckFavRemoveCompletedManga: Boolean = False;
+  OptionUpdateListNoMangaInfo: Boolean = False;
+  OptionUpdateListRemoveDuplicateLocalData: Boolean = False;
+
+  // modules
+  OptionModulesUpdaterShowUpdateWarning: Boolean = True;
+  OptionModulesUpdaterAutoRestart: Boolean = False;
 
   OptionHTTPUseGzip: Boolean = True;
 
   OptionRemoveMangaNameFromChapter: Boolean = False;
+
+  OptionRestartFMD: Boolean = False;
 
   //custom color
   //basiclist
@@ -150,7 +202,12 @@ var
 procedure SetFMDdirectory(const ADir: String);
 procedure SetAppDataDirectory(const ADir: String);
 
+procedure RestartFMD;
+procedure DoRestartFMD;
+
 implementation
+
+uses FMDVars, UTF8Process;
 
 { TIniFileRun }
 
@@ -196,63 +253,41 @@ end;
 
 procedure FreeIniFiles;
 begin
-  FreeNil(mangalistfile);
   FreeNil(configfile);
-  FreeNil(advancedfile);
-end;
-
-procedure GetAvailableWebsite;
-var
-  l, w: TStringList;
-  i, j: Integer;
-begin
-  AvailableWebsite.Clear;
-  AvailableWebsite.BeginUpdate;
-  try
-    l := TStringList.Create;
-    try
-      mangalistfile.ReadSection('available', l);
-      if l.Count > 0 then
-      begin
-        w := TStringList.Create;
-        try
-          for i := 0 to l.Count - 1 do
-          begin
-            w.Clear;
-            w.CommaText := mangalistfile.ReadString('available', l[i], '');
-            if w.Count > 0 then
-              for j := 0 to w.Count - 1 do
-                AvailableWebsite.Values[w[j]] := l[i];
-          end;
-        finally
-          w.Free;
-        end;
-      end;
-    finally
-      l.Free;
-    end;
-  finally
-    AvailableWebsite.EndUpdate;
-  end;
 end;
 
 procedure SetIniFiles;
 begin
   FreeIniFiles;
-  mangalistfile := TIniFile.Create(MANGALIST_FILE);
-  GetAvailableWebsite;
   configfile := TIniFileRun.Create(CONFIG_FILE);
-  advancedfile := TIniFileRun.Create(CONFIG_ADVANCED);
+end;
+
+procedure ReadBaseFile;
+begin
+  if not FileExistsUTF8(BASE_FILE) then Exit;
+  with TIniFile.Create(BASE_FILE) do
+    try
+      DEFAULT_SELECTED_WEBSITES:=ReadString('base','DEFAULT_SELECTED_WEBSITES',DEFAULT_SELECTED_WEBSITES);
+      DB_URL:=ReadString('base','DB_URL',DB_URL);
+      UPDATE_URL:=ReadString('base','UPDATE_URL',UPDATE_URL);
+      CHANGELOG_URL:=ReadString('base','CHANGELOG_URL',CHANGELOG_URL);
+      UPDATE_PACKAGE_NAME:=ReadString('base','UPDATE_PACKAGE_NAME',UPDATE_PACKAGE_NAME);
+      MODULES_URL:=ReadString('base','MODULES_URL',MODULES_URL);
+      MODULES_URL2:=ReadString('base','MODULES_URL2',MODULES_URL2);
+    finally
+      Free;
+    end;
 end;
 
 procedure SetFMDdirectory(const ADir: String);
 begin
   FMD_DIRECTORY := CleanAndExpandDirectory(ADir);
+  FMD_EXENAME := ExtractFileNameOnly(Application.ExeName);
 
   CONFIG_FOLDER := FMD_DIRECTORY + 'config' + PathDelim;
   REVISION_FILE := CONFIG_FOLDER + 'revision.ini';
   UPDATE_FILE := CONFIG_FOLDER + 'updates.ini';
-  MANGALIST_FILE := CONFIG_FOLDER + 'mangalist.ini';
+  BASE_FILE := CONFIG_FOLDER + 'base.ini';
 
   IMAGE_FOLDER := FMD_DIRECTORY + 'images' + PathDelim;
   LANGUAGE_FILE := FMD_DIRECTORY + 'languages.ini';
@@ -260,81 +295,80 @@ begin
   README_FILE := FMD_DIRECTORY + 'readme.rtf';
   EXTRAS_FOLDER := FMD_DIRECTORY + 'extras' + PathDelim;
   MANGAFOXTEMPLATE_FOLDER := EXTRAS_FOLDER + 'mangafoxtemplate' + PathDelim;
+  DEFAULT_LOG_FILE := FMD_DIRECTORY + FMD_EXENAME + '.log';
+  CURRENT_UPDATER_EXE := FMD_DIRECTORY + UPDATER_EXE;
+  OLD_CURRENT_UPDATER_EXE := FMD_DIRECTORY + OLD_UPDATER_EXE;
+  CURRENT_ZIP_EXE := FMD_DIRECTORY + ZIP_EXE;
+
+
+  ReadBaseFile;
 end;
 
 procedure SetAppDataDirectory(const ADir: String);
 begin
   APPDATA_DIRECTORY := CleanAndExpandDirectory(ADir);
 
-  DEFAULT_PATH := APPDATA_DIRECTORY + 'downloads' + PathDelim;
+  DEFAULT_PATH := 'downloads' + PathDelim;
 
   CONFIG_FOLDER := APPDATA_DIRECTORY + 'config' + PathDelim;
   CONFIG_FILE := CONFIG_FOLDER + 'config.ini';
-  CONFIG_ADVANCED := CONFIG_FOLDER + 'advanced.ini';
   ACCOUNTS_FILE := CONFIG_FOLDER + 'accounts.db';
-  WEBSITE_CONFIG_FILE := CONFIG_FOLDER + 'websiteconfig.ini';
+  MODULES_FILE := CONFIG_FOLDER + 'modules.json';
+  LUA_WEBSITEMODULE_FILE := CONFIG_FOLDER + 'luamodules.json';
 
   DATA_FOLDER := APPDATA_DIRECTORY + 'data' + PathDelim;
 
   WORK_FOLDER := APPDATA_DIRECTORY + 'works' + PathDelim;
   WORK_FILE := WORK_FOLDER + 'works.ini';
+  WORK_FILEDB := WORK_FOLDER + 'downloads.db';
   DOWNLOADEDCHAPTERS_FILE := WORK_FOLDER + 'downloadedchapters.ini';
   DOWNLOADEDCHAPTERSDB_FILE := WORK_FOLDER + 'downloadedchapters.db';
   FAVORITES_FILE := WORK_FOLDER + 'favorites.ini';
+  FAVORITESDB_FILE := WORK_FOLDER + 'favorites.db';
+
+  LUA_WEBSITEMODULE_FOLDER := FMD_DIRECTORY + 'lua' + PathDelim + 'modules' + PathDelim;
 
   SetIniFiles;
 end;
 
-function GetCurrentBinVersion: String;
+procedure RestartFMD;
+begin
+  OptionRestartFMD := True;
+  FormMain.Close;
+end;
+
+procedure DoRestartFMD;
 var
-  AppVerInfo: TStringList;
+  p: TProcessUTF8;
   i: Integer;
 begin
-  Result := '';
-  AppVerInfo := TStringList.Create;
-  with TFileVersionInfo.Create(nil) do
-    try
-      try
-        FileName := ParamStrUTF8(0);
-        if FileName = '' then
-          FileName := Application.ExeName;
-        {$IF FPC_FULLVERSION >= 20701}
-        ReadFileInfo;
-        {$ENDIF}
-        if VersionStrings.Count > 0 then
-        begin
-        {$IF FPC_FULLVERSION >= 20701}
-          AppVerInfo.Assign(VersionStrings);
-        {$ELSE}
-          for i := 0 to VersionStrings.Count - 1 do
-            AppVerInfo.Add(VersionCategories.Strings[i] + '=' +
-              VersionStrings.Strings[i]);
-        {$ENDIF}
-          for i := 0 to AppVerInfo.Count - 1 do
-            AppVerInfo.Strings[i] := LowerCase(AppVerInfo.Names[i]) + '=' + AppVerInfo.ValueFromIndex[i];
-          Result := AppVerInfo.Values['fileversion'];
-        end;
-      except
-      end;
-    finally
-      Free;
-      AppVerInfo.Free;
-    end;
+  p := TProcessUTF8.Create(nil);
+  try
+    p.InheritHandles := False;
+    p.CurrentDirectory := ExtractFilePath(Application.ExeName);
+    p.Executable := Application.ExeName;
+    for i := 1 to ParamCount do
+      p.Parameters.Add(ParamStrUTF8(i));
+    p.Execute;
+  finally
+    p.Free;
+  end;
 end;
 
 procedure doInitialization;
 begin
-  FMD_VERSION_NUMBER := GetCurrentBinVersion;
-  AvailableWebsite := TStringList.Create;
-  AvailableWebsite.Sorted := True;
-  SetFMDdirectory(GetCurrentDirUTF8);
-  SetAppDataDirectory(GetCurrentDirUTF8);
+  GetProgramVersion(FMD_VERSION_NUMBER);
+  FMD_VERSION_STRING := ProgramversionToStr(FMD_VERSION_NUMBER);
+  AvailableWebsites := TStringList.Create;
+  AvailableWebsites.Sorted := False;
+  SetFMDdirectory(ExtractFilePath(Application.ExeName));
+  SetAppDataDirectory(FMD_DIRECTORY);
 end;
 
 procedure doFinalization;
 begin
   FreeIniFiles;
-  AvailableWebsite.Free;
+  AvailableWebsites.Free;
 end;
 
 initialization

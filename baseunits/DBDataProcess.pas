@@ -11,7 +11,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, LazFileUtils, FMDOptions, MultiLog, sqlite3conn,
-  sqlite3backup, sqlite3dyn, sqldb, DB, dateutils, RegExpr;
+  sqlite3backup, sqlite3dyn, sqldb, DB, RegExpr;
 
 type
 
@@ -35,7 +35,10 @@ type
     FSQLSelect: String;
     FFilterSQL: String;
     FLinks: TStringList;
+    FRecNo: Integer;
     function GetLinkCount: Integer;
+    procedure ResetRecNo(Dataset: TDataSet);
+    procedure GoToRecNo(const ARecIndex: Integer);
   protected
     procedure CreateTable;
     procedure ConvertNewTable;
@@ -64,11 +67,11 @@ type
     function Search(ATitle: String): Boolean;
     function CanFilter(const checkedGenres, uncheckedGenres: TStringList;
       const stTitle, stAuthors, stArtists, stStatus, stSummary: String;
-      const {%H-}minusDay: Cardinal;
+      const {%H-}minusDay: Integer;
       const haveAllChecked, searchNewManga: Boolean): Boolean;
     function Filter(const checkedGenres, uncheckedGenres: TStringList;
       const stTitle, stAuthors, stArtists, stStatus, stSummary: String;
-      const minusDay: Cardinal; const haveAllChecked, searchNewManga: Boolean;
+      const minusDay: Integer; const haveAllChecked, searchNewManga: Boolean;
       useRegExpr: Boolean = False): Boolean;
     function WebsiteLoaded(const AWebsite: String): Boolean;
     function LinkExist(ALink: String): Boolean;
@@ -85,7 +88,7 @@ type
     function AddData(Const Title, Link, Authors, Artists, Genres, Status, Summary: String;
       NumChapter, JDN: Integer): Boolean; overload;
     function AddData(Const Title, Link, Authors, Artists, Genres, Status, Summary: String;
-      NumChapter: Integer; JDN: TDateTime): Boolean; overload;
+      NumChapter: Integer; JDN: TDateTime): Boolean; overload; inline;
     function UpdateData(Const Title, Link, Authors, Artists, Genres, Status, Summary: String;
       NumChapter: Integer; AWebsite: String = ''): Boolean;
     function DeleteData(const RecIndex: Integer): Boolean;
@@ -111,25 +114,23 @@ type
   end;
 
 const
-  DBDataProcessParam = 'title,link,authors,artists,genres,status,summary,numchapter,jdn';
+  DBDataProcessParam = '"link","title","authors","artists","genres","status","summary","numchapter","jdn"';
   DBDataProcessParams: array [0..8] of ShortString =
-    ('title', 'link', 'authors', 'artists', 'genres', 'status',
+    ('link', 'title', 'authors', 'artists', 'genres', 'status',
     'summary', 'numchapter', 'jdn');
   DBTempFieldWebsiteIndex = Length(DBDataProcessParams);
-  DBDataProccesCreateParam = '('#13#10 +
-    '"title" TEXT,'#13#10 +
-    '"link" TEXT NOT NULL PRIMARY KEY,'#13#10 +
-    '"authors" TEXT,'#13#10 +
-    '"artists" TEXT,'#13#10 +
-    '"genres" TEXT,'#13#10 +
-    '"status" TEXT,'#13#10 +
-    '"summary" TEXT,'#13#10 +
-    '"numchapter" INTEGER,'#13#10 +
-    '"jdn" INTEGER'#13#10 +
-    ');';
+  DBDataProccesCreateParam =
+    '"link" TEXT NOT NULL PRIMARY KEY,' +
+    '"title" TEXT,' +
+    '"authors" TEXT,' +
+    '"artists" TEXT,' +
+    '"genres" TEXT,' +
+    '"status" TEXT,' +
+    '"summary" TEXT,' +
+    '"numchapter" INTEGER,' +
+    '"jdn" INTEGER';
 
 function DBDataFilePath(const AWebsite: String): String;
-procedure ConvertDataProccessToDB(AWebsite: String; DeleteOriginal: Boolean = False);
 function DataFileExist(const AWebsite: String): Boolean;
 procedure CopyDBDataProcess(const AWebsite, NWebsite: String);
 function DeleteDBDataProcess(const AWebsite: String): Boolean;
@@ -138,7 +139,7 @@ procedure OverwriteDBDataProcess(const AWebsite, NWebsite: String);
 implementation
 
 uses
-  uBaseUnit, uData;
+  uBaseUnit;
 
 function NaturalCompareCallback({%H-}user: pointer; len1: longint;
   data1: pointer; len2: longint; data2: pointer): longint; cdecl;
@@ -190,53 +191,6 @@ end;
 function DBDataFilePath(const AWebsite: String): String;
 begin
   Result := DATA_FOLDER + AWebsite + DBDATA_EXT;
-end;
-
-procedure ConvertDataProccessToDB(AWebsite: String; DeleteOriginal: Boolean);
-var
-  filepath: String;
-  rawdata: TDataProcess;
-  dbdata: TDBDataProcess;
-  rcount: Integer;
-  i: Integer;
-begin
-  filepath := DATA_FOLDER + AWebsite;
-  if FileExistsUTF8(filepath + DATA_EXT) then
-  begin
-    rawdata := TDataProcess.Create;
-    dbdata := TDBDataProcess.Create;
-    try
-      if FileExistsUTF8(filepath + DBDATA_EXT) then
-        DeleteFileUTF8(filepath + DBDATA_EXT);
-      rawdata.LoadFromFile(AWebsite);
-      dbdata.CreateDatabase(AWebsite);
-      if rawdata.Data.Count > 0 then
-        with rawdata do
-        begin
-          rcount := 0;
-          for i := 0 to Data.Count - 1 do
-          begin
-            dbdata.AddData(Title[i], Link[i], Authors[i], Artists[i], Genres[i],
-              Status[i], StringBreaks(Summary[i]),
-              StrToIntDef(Param[i, DATA_PARAM_NUMCHAPTER], 1),
-              {%H-}integer(JDN[i]) - 3);
-            Inc(rcount);
-            if rcount >= 5000 then
-            begin
-              rcount := 0;
-              dbdata.Commit;
-            end;
-          end;
-          dbdata.Commit;
-        end;
-      dbdata.Sort;
-    finally
-      rawdata.Free;
-      dbdata.Free;
-    end;
-    if DeleteOriginal then
-      DeleteFileUTF8(filepath + DATA_EXT);
-  end;
 end;
 
 function DataFileExist(const AWebsite: String): Boolean;
@@ -303,13 +257,33 @@ begin
     Result := 0;
 end;
 
+procedure TDBDataProcess.ResetRecNo(Dataset: TDataSet);
+begin
+  FRecNo := 0;
+end;
+
+procedure TDBDataProcess.GoToRecNo(const ARecIndex: Integer);
+begin
+  if FRecNo<>ARecIndex then
+  begin
+    if FRecNo=ARecIndex+1 then
+      FQuery.Prior
+    else
+    if FRecNo=ARecIndex-1 then
+      FQuery.Next
+    else
+      FQuery.RecNo:=ARecIndex+1;
+    FRecNo:=ARecIndex;
+  end;
+end;
+
 procedure TDBDataProcess.CreateTable;
 begin
   if FConn.Connected then
   begin
     FConn.ExecuteDirect('DROP TABLE IF EXISTS ' + QuotedStrd(FTableName));
-    FConn.ExecuteDirect('CREATE TABLE ' + QuotedStrd(FTableName) + #13#10 +
-      DBDataProccesCreateParam);
+    FConn.ExecuteDirect('CREATE TABLE ' + QuotedStrd(FTableName) + ' (' +
+      DBDataProccesCreateParam + ');');
     FTrans.Commit;
   end;
 end;
@@ -317,7 +291,8 @@ end;
 procedure TDBDataProcess.ConvertNewTable;
 begin
   if FQuery.Active = False then Exit;
-  if (FieldTypeNames[FQuery.FieldByName('title').DataType] <> Fieldtypenames[ftMemo]) or
+  if  (FQuery.Fields[0].FieldName <> 'link') or
+      (FieldTypeNames[FQuery.FieldByName('title').DataType] <> Fieldtypenames[ftMemo]) or
       (FieldTypeNames[FQuery.FieldByName('link').DataType] <> Fieldtypenames[ftMemo]) or
       (FieldTypeNames[FQuery.FieldByName('authors').DataType] <> Fieldtypenames[ftMemo]) or
       (FieldTypeNames[FQuery.FieldByName('artists').DataType] <> Fieldtypenames[ftMemo]) or
@@ -328,8 +303,8 @@ begin
       FQuery.Close;
       with fconn do begin
         ExecuteDirect('DROP TABLE IF EXISTS '+QuotedStr('temp'+FTableName));
-        ExecuteDirect('CREATE TABLE '+QuotedStrd('temp'+FTableName)+#13#10+DBDataProccesCreateParam);
-        ExecuteDirect('INSERT INTO '+QuotedStrd('temp'+FTableName)+' SELECT * FROM '+QuotedStrd(FTableName));
+        ExecuteDirect('CREATE TABLE '+QuotedStrd('temp'+FTableName)+ ' (' + DBDataProccesCreateParam + ')');
+        ExecuteDirect('INSERT INTO '+QuotedStrd('temp'+FTableName)+' ('+DBDataProcessParam+') SELECT ' + DBDataProcessParam + ' FROM '+QuotedStrd(FTableName));
         ExecuteDirect('DROP TABLE '+QuotedStrd(FTableName));
         ExecuteDirect('ALTER TABLE '+QuotedStrd('temp'+FTableName)+' RENAME TO '+QuotedStrd(FTableName));
       end;
@@ -459,10 +434,7 @@ end;
 function TDBDataProcess.GetWebsiteName(RecIndex: Integer): String;
 begin
   Result:=FWebsite;
-  if FQuery.Active=False then Exit;
-  if DBTempFieldWebsiteIndex>=FQuery.Fields.Count then Exit;
-  if (RecIndex<0) or (RecIndex>FRecordCount) then Exit;
-  if FAttachedSites.Count>0 then
+  if FAllSitesAttached then
     try
       FQuery.RecNo:=RecIndex+1;
       Result:=FQuery.Fields[DBTempFieldWebsiteIndex].AsString;
@@ -481,7 +453,7 @@ begin
     Result:='';
   if FQuery.Active=False then Exit;
   try
-    FQuery.RecNo:=RecIndex+1;
+    GoToRecNo(RecIndex);
     Result:=FQuery.Fields[FieldIndex].AsString;
   except
   end;
@@ -494,7 +466,7 @@ begin
   if not (FieldIndex in [DATA_PARAM_NUMCHAPTER,DATA_PARAM_JDN]) then
     Exit;
   try
-    FQuery.RecNo:=RecIndex+1;
+    GoToRecNo(RecIndex);
     Result:=FQuery.Fields[FieldIndex].AsInteger;
   except
   end;
@@ -604,6 +576,13 @@ begin
   FFilterApplied := False;
   FFilterSQL := '';
   FAllSitesAttached := False;
+
+  ResetRecNo(nil);
+  FQuery.AfterOpen := @ResetRecNo;
+  FQuery.AfterInsert := @ResetRecNo;
+  FQuery.AfterDelete := @ResetRecNo;
+  FQuery.AfterEdit := @ResetRecNo;
+  FQuery.AfterRefresh := @ResetRecNo;
 end;
 
 destructor TDBDataProcess.Destroy;
@@ -655,8 +634,6 @@ begin
   if FWebsite = '' then
     Exit;
   filepath := DATA_FOLDER + FWebsite + DBDATA_EXT;
-  if not FileExistsUTF8(filepath) then
-    ConvertDataProccessToDB(AWebsite, True);
   if not FileExistsUTF8(filepath) then
     Exit;
   try
@@ -772,8 +749,11 @@ procedure TDBDataProcess.Refresh(RecheckDataCount: Boolean);
 begin
   if FConn.Connected then
   begin
-    if FQuery.Active then
-      FQuery.Refresh
+    if FQuery.Active then begin
+      if RecheckDataCount then
+        GetRecordCount;
+      FQuery.Refresh;
+    end
     else
     if Trim(FQuery.SQL.Text) <> '' then
     begin
@@ -793,8 +773,8 @@ begin
   try
     FConn.ExecuteDirect(
       'INSERT INTO '+QuotedStrd(FTableName)+' ('+DBDataProcessParam+') VALUES ('+
-      QuotedStr(Title)+', '+
       QuotedStr(Link)+', '+
+      QuotedStr(Title)+', '+
       QuotedStr(Authors)+', '+
       QuotedStr(Artists)+', '+
       QuotedStr(Genres)+', '+
@@ -846,7 +826,7 @@ function TDBDataProcess.DeleteData(const RecIndex: Integer): Boolean;
 begin
   Result := False;
   try
-    FQuery.RecNo := RecIndex + 1;
+    GoToRecNo(RecIndex);
     FQuery.Delete;
     Dec(FRecordCount);
     Result := True;
@@ -944,7 +924,7 @@ end;
 
 function TDBDataProcess.CanFilter(const checkedGenres, uncheckedGenres: TStringList;
   const stTitle, stAuthors, stArtists, stStatus, stSummary: String;
-  const minusDay: Cardinal; const haveAllChecked, searchNewManga: Boolean): Boolean;
+  const minusDay: Integer; const haveAllChecked, searchNewManga: Boolean): Boolean;
 begin
   Result := False;
   if not FQuery.Active then
@@ -965,7 +945,7 @@ end;
 
 function TDBDataProcess.Filter(const checkedGenres, uncheckedGenres: TStringList;
   const stTitle, stAuthors, stArtists, stStatus, stSummary: String;
-  const minusDay: Cardinal; const haveAllChecked, searchNewManga: Boolean;
+  const minusDay: Integer; const haveAllChecked, searchNewManga: Boolean;
   useRegExpr: Boolean): Boolean;
 var
   tsql: String;
@@ -1089,6 +1069,7 @@ begin
       end;
     end;
     Result := FFiltered;
+    Result := FFiltered;
   end;
 end;
 
@@ -1142,13 +1123,10 @@ begin
     with FConn do
       try
         ExecuteDirect('DROP TABLE IF EXISTS ' + QuotedStrd(FTableName + '_ordered'));
-        ExecuteDirect('CREATE TABLE ' + QuotedStrd(FTableName + '_ordered') +
-          DBDataProccesCreateParam);
-        ExecuteDirect('INSERT INTO '+QuotedStrd(FTableName + '_ordered') +
-          ' SELECT * FROM ' + QuotedStrd(FTableName) + ' ORDER BY "title" COLLATE NATCMP');
+        ExecuteDirect('CREATE TABLE ' + QuotedStrd(FTableName + '_ordered') + ' (' + DBDataProccesCreateParam +')');
+        ExecuteDirect('INSERT INTO '+QuotedStrd(FTableName + '_ordered') + ' (' + DBDataProcessParam + ') SELECT '+ DBDataProcessParam +' FROM ' + QuotedStrd(FTableName) + ' ORDER BY "title" COLLATE NATCMP');
         ExecuteDirect('DROP TABLE ' + QuotedStrd(FTableName));
-        ExecuteDirect('ALTER TABLE ' + QuotedStrd(FTableName + '_ordered') +
-          'RENAME TO ' + QuotedStrd(FTableName));
+        ExecuteDirect('ALTER TABLE ' + QuotedStrd(FTableName + '_ordered') + ' RENAME TO ' + QuotedStrd(FTableName));
         FTrans.Commit;
         VacuumTable;
       except

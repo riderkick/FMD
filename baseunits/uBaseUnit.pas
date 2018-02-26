@@ -6,7 +6,7 @@
 
 unit uBaseUnit;
 
-{$mode delphi}
+{$mode objfpc}{$H+}
 {$MACRO ON}
 {$DEFINE DOWNLOADER}
 
@@ -18,21 +18,20 @@ uses
   {$else}
   UTF8Process,
   {$endif}
-  SysUtils, Classes, Graphics, lazutf8classes, LazFileUtils,
-  LConvEncoding, strutils, dateutils, base64, fpjson, jsonparser, jsonscanner,
-  FastHTMLParser, fgl, RegExpr, synautil, httpsend, blcksock, ssl_openssl, synacode,
-  MultiLog, FPimage, GZIPUtils, uMisc, httpsendthread, FMDOptions,
-  simplehtmltreeparser, xquery, xquery_json, ImgInfos, NaturalSortUnit;
+  SysUtils, Classes, Graphics, lazutf8classes, LazFileUtils, LConvEncoding, LazUtils,
+  strutils, dateutils, variants, base64, fpjson, jsonparser, jsonscanner,
+  fgl, RegExpr, synautil, httpsend, blcksock, ssl_openssl,
+  synacode, MultiLog, FPimage, GZIPUtils, uMisc, httpsendthread, FMDOptions,
+  simplehtmltreeparser, xquery, xquery_json, ImgInfos, NaturalSortUnit,
+  MemBitmap, FPWritePNG, zstream, FPReadPNG, VirtualTrees;
 
 const
-  JPG_HEADER: array[0..2] of Byte = ($FF, $D8, $FF);
-  GIF_HEADER: array[0..2] of Byte = ($47, $49, $46);
-  PNG_HEADER: array[0..2] of Byte = ($89, $50, $4E);
+  LineEnding2 = LineEnding + LineEnding;
 
   UTF8BOM = #$EF#$BB#$BF;
 
-  DATA_PARAM_TITLE      = 0;
-  DATA_PARAM_LINK       = 1;
+  DATA_PARAM_LINK       = 0;
+  DATA_PARAM_TITLE      = 1;
   DATA_PARAM_AUTHORS    = 2;
   DATA_PARAM_ARTISTS    = 3;
   DATA_PARAM_GENRES     = 4;
@@ -184,8 +183,6 @@ const
     ('&gamma;', 'γ')
     );
 
-  UPDATE_URL = 'https://raw.githubusercontent.com/riderkick/FMD/master/';
-
   OPTION_MANGALIST = 0;
   OPTION_RECONNECT = 1;
 
@@ -230,247 +227,14 @@ const
   // common regex to split host/url
   REGEX_HOST = '(?ig)^(\w+://)?([^/]*\.\w+)?(\:\d+)?(/?.*)$';
 
-  ANIMEA_ID              = 0;
-  OURMANGA_ID            = 1;
-  MANGA24H_ID            = 2;
-  VNSHARING_ID           = 3;
-  FAKKU_ID               = 4;
-  TRUYEN18_ID            = 5;
-  TRUYENTRANHTUAN_ID     = 6;
-  TURKCRAFT_ID           = 7;
-  EATMANGA_ID            = 8;
-  STARKANA_ID            = 9;
-  BLOGTRUYEN_ID          = 10;
-  ESMANGAHERE_ID         = 11;
-  ANIMEEXTREMIST_ID      = 12;
-  HUGEMANGA_ID           = 13;
-  S2SCAN_ID              = 14;
-  IMANHUA_ID             = 15;
-  MABUNS_ID              = 16;
-  MANGAESTA_ID           = 17;
-  CENTRALDEMANGAS_ID     = 18;
-  EGSCANS_ID             = 19;
-  MANGAAR_ID             = 20;
-  MANGAAE_ID             = 21;
-  ANIMESTORY_ID          = 22;
-  LECTUREENLIGNE_ID      = 23;
-  SCANMANGA_ID           = 24;
-  MANGAGO_ID             = 25;
-  DM5_ID                 = 26;
-  MANGACOW_ID            = 27;
-  KIVMANGA_ID            = 28;
-  MEINMANGA_ID           = 29;
-  MANGASPROJECT_ID       = 30;
-  MANGAREADER_POR_ID     = 31;
-  NINEMANGA_ID           = 32;
-  NINEMANGA_ES_ID        = 33;
-  NINEMANGA_CN_ID        = 34;
-  NINEMANGA_RU_ID        = 35;
-  NINEMANGA_DE_ID        = 36;
-  NINEMANGA_IT_ID        = 37;
-  NINEMANGA_BR_ID        = 38;
-  JAPANSHIN_ID           = 39;
-  JAPSCAN_ID             = 40;
-  CENTRUMMANGI_PL_ID     = 41;
-  MANGALIB_PL_ID         = 42;
-  ONEMANGA_ID            = 43;
-  MANGATOWN_ID           = 44;
-  MANGAOKU_ID            = 45;
-  MYREADINGMANGAINFO_ID  = 46;
-  IKOMIK_ID              = 47;
-  NHENTAI_ID             = 48;
-  MANGAMINT_ID           = 49;
-  UNIXMANGA_ID           = 50;
-  EXTREMEMANGAS_ID       = 51;
-  MANGAHOST_ID           = 52;
-  PORNCOMIX_ID           = 53;
-  PORNCOMIXRE_ID         = 54;
-  PORNCOMIXIC_ID         = 55;
-  XXCOMICS_ID            = 56;
-  XXCOMICSMT_ID          = 57;
-  XXCOMICS3D_ID          = 58;
-  PORNXXXCOMICS_ID       = 59;
-  MANGAKU_ID             = 60;
-  MANGAAT_ID             = 61;
-  READMANGATODAY_ID      = 62;
-  DYNASTYSCANS_ID        = 63;
-
-  WebsiteRoots: array [0..63] of array [0..1] of String = (
-    ('AnimeA', 'http://manga.animea.net'),
-    ('OurManga', 'http://www.ourmanga.com'),
-    ('Manga24h', 'http://manga24h.com'),
-    ('VnSharing', 'http://truyen.vnsharing.net'),
-    ('Fakku', 'https://www.fakku.net'),
-    ('Truyen18', 'http://www.truyen18.org'),
-    ('TruyenTranhTuan', 'http://truyentranhtuan.com'),
-    ('Turkcraft', 'http://turkcraft.com'),
-    ('EatManga', 'http://eatmanga.com'),
-    ('Starkana', 'http://starkana.jp'),
-    ('BlogTruyen', 'http://blogtruyen.com'),
-    ('ESMangaHere', 'http://es.mangahere.co'),
-    ('AnimExtremist', 'http://www.animextremist.com'),
-    ('HugeManga', 'http://hugemanga.com'),
-    ('S2Scans', 'http://reader.s2smanga.com'),
-    ('imanhua', 'http://www.imanhua.com'),
-    ('Mabuns', 'http://www.mabuns.web.id'),
-    ('MangaEsta', 'http://www.mangaesta.net'),
-    ('CentralDeMangas', 'http://centraldemangas.com.br'),
-    ('EGScans', 'http://read.egscans.com'),
-    ('MangaAr', 'http://manga-ar.net'),
-    ('MangaAe', 'http://www.manga.ae'),
-    ('AnimeStory', 'http://www.anime-story.com'),
-    ('Lecture-En-Ligne', 'http://www.lecture-en-ligne.com'),
-    ('ScanManga', 'http://www.scan-manga.com'),
-    ('MangaGo', 'http://www.mangago.me'),
-    ('DM5', 'http://www.dm5.com'),
-    ('Mangacow', 'http://mangacow.co'),
-    ('KivManga', 'http://www.kivmanga.com'),
-    ('MeinManga', 'http://www.meinmanga.com/'),
-    ('MangasPROJECT', 'http://mangaproject.xpg.uol.com.br'),
-    ('MangaREADER_POR', 'http://www.mangareader.com.br'),
-    ('NineManga', 'http://www.ninemanga.com'),
-    ('NineManga_ES', 'http://es.ninemanga.com'),
-    ('NineManga_CN', 'http://cn.ninemanga.com'),
-    ('NineManga_RU', 'http://ru.ninemanga.com'),
-    ('NineManga_DE', 'http://de.ninemanga.com'),
-    ('NineManga_IT', 'http://it.ninemanga.com'),
-    ('NineManga_BR', 'http://br.ninemanga.com'),
-    ('Japan-Shin', 'http://www.japan-shin.com'),
-    ('Japscan', 'http://www.japscan.com'),
-    ('Centrum-Mangi_PL', 'http://centrum-mangi.pl'),
-    ('Manga-Lib_PL', 'http://www.manga-lib.pl/index.php'),
-    ('OneManga', 'http://www.onemanga2.com'),
-    ('MangaTown', 'http://www.mangatown.com'),
-    ('MangaOku', 'http://www.mangaoku.net'),
-    ('MyReadingMangaInfo', 'http://myreadingmanga.info'),
-    ('I-Komik', 'http://www.i-komik.com'),
-    ('NHentai', 'http://nhentai.net'),
-    ('MangaMint', 'http://www.mangamint.com'),
-    ('UnixManga', 'http://unixmanga.co'),
-    ('ExtremeMangas', 'http://www.extrememangas.com'),
-    ('MangaHost', 'http://br.mangahost.com'),
-    ('PornComix', 'http://porncomix.wf'),
-    ('PornComixRE', 'http://porncomix.re'),
-    ('PornComixIC', 'http://incest.porncomix.re'),
-    ('XXComics', 'http://gallery.xxcomics.net'),
-    ('XXComicsMT', 'http://milftoon.xxcomics.net'),
-    ('XXComics3D', 'http://3dincest.xxcomics.net'),
-    ('PornXXXComics', 'http://pornxxxcomics.com'),
-    ('MangaKu', 'http://mangaku.web.id'),
-    ('MangaAt', 'http://www.mangaat.com'),
-    ('ReadMangaToday', 'http://www.readmanga.today'),
-    ('Dynasty-Scans', 'http://dynasty-scans.com')
-    );
-
-  ALPHA_LIST = '#abcdefghijklmnopqrstuvwxyz';
-
-  ANIMEA_BROWSER = '/browse.html?page=';
-  ANIMEA_SKIP = '?skip=1';
-
-  OURMANGA_BROWSER = '/directory/';
-
-  MANGA24H_BROWSER = '/manga/update/page/';
-
-  VNSHARING_BROWSER = '/DanhSach';
-
-  FAKKU_BROWSER_1 = '/manga/newest';
-  FAKKU_BROWSER_2 = '/doujinshi/newest';
-
-  TRUYEN18_ROOT = 'http://www.truyen18.org';
-  TRUYEN18_BROWSER = '/moi-dang/danhsach';
-
-  MANGATRADERS_BROWSER = '/directory/';
-
-  TRUYENTRANHTUAN_BROWSER = '/danh-sach-truyen';
-
-  TURKCRAFT_BROWSER = '/';
-
-  EATMANGA_BROWSER = '/Manga-Scan/';
-  EATMANGA_maxDLTask: Cardinal = 1;
-
-  STARKANA_BROWSER = '/manga/list';
-
-  BLOGTRUYEN_BROWSER = '/danhsach/tatca';
-  BLOGTRUYEN_JS_BROWSER = '/ListStory/GetListStory/';
-  BLOGTRUYEN_POST_FORM = 'Url=tatca&OrderBy=1&PageIndex=';
-
-  ESMANGAHERE_BROWSER = '/mangalist/';
-
-  ANIMEEXTREMIST_BROWSER = '/mangas.htm?ord=todos';
-
-  HUGEMANGA_BROWSER = '/';
-
-  IMANHUA_BROWSER = '/all.html';
-
-  MABUNS_BROWSER = '/p/mabuns-manga-list.html';
-
-  MANGAESTA_BROWSER = '/p/manga-list.html';
-
-  CENTRALDEMANGAS_BROWSER = '/mangas/list/*';
-
-  EGSCANS_BROWSER = '/';
-
-  MANGAAR_BROWSER = '/manga/';
-
-  MANGAAE_BROWSER = '/manga/';
-
-  ANIMESTORY_BROWSER = '/mangas/';
-
-  LECTUREENLIGNE_BROWSER = '/index.php?page=liste&ordre=titre';
-
-  SCANMANGA_BROWSER = '/scanlation/liste_des_mangas.html';
-
-  MANGAGO_BROWSER = '/list/directory/all/';
-
-  DM5_BROWSER = '/manhua-new';
-
-  //MANGACOW_BROWSER :string = '/manga-list/all/any/name-az/';
-  MANGACOW_BROWSER = '/manga-list/all/any/last-added/';
-
-  KIVMANGA_BROWSER = '/';
-
-  MEINMANGA_BROWSER = '/directory/all/';
-
-  MANGASPROJECT_BROWSER = '/AJAX/listaMangas/all';
-
-  MANGAREADER_POR_BROWSER = '/AJAX/listaMangas/all';
-
-  NINEMANGA_BROWSER =
-    '/search/?name_sel=contain&wd=&author_sel=contain&author=&artist_sel=contain&artist=&category_id=&out_category_id=&completed_series=either';
-
-  JAPANSHIN_BROWSER = '/lectureenligne/reader/list/';
-  JAPSCAN_BROWSER = '/mangas/';
-
-  CENTRUMMANGI_PL_BROWSER = '/spis/';
-
-  MANGALIB_PL_BROWSER = '/manga/directory';
-
-  ONEMANGA_BROWSER = '/manga-list/all/any/last-added/';
-
-  MANGATOWN_BROWSER = '/directory/';
-
-  IKOMIK_BROWSER = '/manga-directory/';
-
-  UNIONMANGAS_BROWSER = '/mangas';
-
-  UNIXMANGA_BROWSER = '/onlinereading/manga-lists.html';
-
-  EXTREMEMANGAS_BROWSER = '/2013/04/lista-de-mangas.html';
-
-  MANGAHOST_BROWSER = '/mangas';
-
-  DYNASTYSCANS_BROWSER: array [0..3] of String = (
-    '/anthologies',
-    '/doujins',
-    '/issues',
-    '/series'
-    );
+  ALPHA_LIST    = '#abcdefghijklmnopqrstuvwxyz';
+  ALPHA_LIST_UP = '#ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
   MangaInfo_StatusCompleted = '0';
   MangaInfo_StatusOngoing = '1';
 
   FMDSupportedOutputExt: array[0..2] of ShortString = ('.zip', '.cbz', '.pdf');
-  FMDImageFileExt: array[0..2] of ShortString = ('.png', '.gif', '.jpg');
+  FMDImageFileExt: array[0..3] of ShortString = ('.png', '.gif', '.jpg', '.webp');
   {$ifdef windows}
   // MAX_PATH = 260
   // MAX_PATH - 12 - 1
@@ -498,21 +262,17 @@ var
   // Sites var
   BROWSER_INVERT: Boolean = False;
 
-  FAKKU_BROWSER: String = '/manga/newest';
-
-  MANGALIB_PL_COOKIES: String;
-
   //------------------------------------------
 
   Genre: array [0..37] of String;
 
   Revision: Cardinal;
   currentJDN: Integer;
+  isExiting: Boolean = False;
 type
   TArrayOfString = array of String;
 
-  TCheckStyleType = (CS_DIRECTORY_COUNT, CS_DIRECTORY_PAGE,
-    CS_DIRECTORY_PAGE_2, CS_INFO);
+  TCheckStyleType = (CS_DIRECTORY_COUNT, CS_DIRECTORY_PAGE, CS_INFO);
   TFlagType = (CS_GETPAGENUMBER, CS_GETPAGELINK, CS_DOWNLOAD);
 
   TFavoriteStatusType = (STATUS_IDLE, STATUS_CHECK, STATUS_CHECKING, STATUS_CHECKED);
@@ -536,9 +296,22 @@ type
   PChapterStateItem = ^TChapterStateItem;
 
   TChapterStateItem = record
+    Index: Integer;
     Title,
     Link: String;
     Downloaded: Boolean;
+  end;
+
+  PBaseMangaInfo = ^TBaseMangaInfo;
+
+  TBaseMangaInfo = record
+    title,
+    authors,
+    artists,
+    genres,
+    status,
+    summary: String;
+    numChapter: Integer;
   end;
 
   PMangaInfo = ^TMangaInfo;
@@ -569,19 +342,15 @@ type
   { TDownloadInfo }
 
   TDownloadInfo = record
-  private
-    FSaveTo: String;
-    procedure SetSaveTo(AValue: String);
-  public
     Website,
     Link,
     Title,
+    SaveTo,
     Status,
     Progress,
     TransferRate: String;
     DateTime: TDateTime;
     iProgress: Integer;
-    property SaveTo: String read FSaveTo write SetSaveTo;
   end;
 
   PFavoriteInfo = ^TFavoriteInfo;
@@ -589,21 +358,17 @@ type
   { TFavoriteInfo }
 
   TFavoriteInfo = record
-  private
-    FSaveTo: String;
-    procedure SetSaveTo(AValue: String);
-  public
     Website,
     Title,
     Link,
+    SaveTo,
     Numbering,
     DownloadedChapterList,
     CurrentChapter: String;
-    property SaveTo: String read FSaveTo write SetSaveTo;
   end;
 
-  TCardinalList = TFPGList<Cardinal>;
-  TByteList = TFPGList<Byte>;
+  TCardinalList = specialize TFPGList<Cardinal>;
+  TByteList = specialize TFPGList<Byte>;
 
   TDownloadPageThread = class(TThread)
   protected
@@ -613,20 +378,6 @@ type
     Retry: Integer;
     URL, Path: String;
     constructor Create(CreateSuspended: Boolean);
-  end;
-
-  { TParseHTML }
-
-  TParseHTML = class
-  private
-    FRaw: String;
-    procedure FoundTag(NoCaseTag, ActualTag: String);
-    procedure FoundText(Text: String);
-  public
-    Output: TStrings;
-    constructor Create(const Raw: String = '');
-    function Exec(const Raw: String = ''): String;
-    property Raw: String read FRaw write FRaw;
   end;
 
   { THTMLForm }
@@ -647,6 +398,9 @@ type
     property Data: TStringList read fdata;
   end;
 
+// VT extras
+procedure SearchOnVT(Tree: TVirtualStringTree; Key: String; Column: Integer = 0);
+
 // Remove Unicode
 function ReplaceUnicodeChar(const S, ReplaceStr: String): String;
 // Check a directory to see if it's empty (return TRUE) or not
@@ -656,30 +410,19 @@ function CorrectFilePath(const APath: String): String;
 function CorrectURL(const URL: String): String;
 procedure CheckPath(const S: String);
 
-function GetMangaSiteID(const Name: String): Integer;
-function GetMangaSiteName(const ID: Cardinal): String;
-function GetMangaSiteRoot(const Website: String): String; overload;
-function GetMangaSiteRoot(const MangaID: Cardinal): String; overload;
-function GetMangaDatabaseURL(const AWebsite: String): String;
-
-function SitesMemberOf(const website: String; MangaSiteIDs: array of Cardinal): Boolean;
 function SitesWithSortedList(const website: String): Boolean;
 function SitesWithoutFavorites(const website: String): Boolean;
 // Return true if the website doesn't contain manga information
 function SitesWithoutInformation(const website: String): Boolean;
-function SitesWithoutReferer(const website: String): Boolean;
-function SitesWithSingleChapter(const website: String): Boolean;
 
 // url
 function FillURLProtocol(const AProtocol, AURL: String): String;
 
-// Fill in website host if it's not present
-function FillMangaSiteHost(const MangaID: Cardinal; URL: String): String; overload;
-function FillMangaSiteHost(const Website, URL: String): String; overload;
-
 // modify url
-function FillHost(const Host, URL: String): String;
-function MaybeFillHost(const Host, URL: String): String;
+function FillHost(const Host, URL: String): String; overload;
+procedure FillHost(const Host: String; const URLs: TStrings); overload;
+function MaybeFillHost(const Host, URL: String): String; overload;
+procedure MaybeFillHost(const Host: String; const URLs: TStrings); overload;
 function GetHostURL(URL: String): String;
 function RemoveHostFromURL(URL: String): String;
 procedure RemoveHostFromURLs(const URLs: TStringList);
@@ -688,9 +431,6 @@ function EncodeCriticalURLElements(const URL: String): String;
 
 //JSON
 procedure ParseJSONArray(const S, Path: String; var OutArray: TStringList);
-
-//HTML
-procedure ParseHTML(const aRaw: String; aOutput: TStrings);
 
 // XPath / CSS Selector
 procedure ParseHTMLTree(var tp: TTreeParser; const S: String);
@@ -704,8 +444,10 @@ function ConvertCharsetToUTF8(S: String): String; overload;
 procedure ConvertCharsetToUTF8(S: TStrings); overload;
 
 // encode/decode
-function Base64Encode(const s: String): String;
-function Base64Decode(const s: String): String;
+function Base64Encode(const s: String): String; overload;
+function Base64Decode(const s: String): String; overload;
+function Base64Encode(const TheStream: TStream): Boolean ; overload;
+function Base64Decode(const TheStream: TStream): Boolean ; overload;
 
 // StringUtils
 function PadZero(const S: String; ATotalWidth: Integer = 3;
@@ -726,8 +468,9 @@ function TitleCase(const S: string): string;
 function StringReplaceBrackets(const S, OldPattern, NewPattern: String; Flags: TReplaceFlags): String;
 function StreamToString(const Stream: TStream): String; inline;
 function GetRightValue(const Name, s: String): String;
-function QuotedStrd(const S: String): String; overload; inline;
-function QuotedStrd(const S: Integer): String; overload; inline;
+function QuotedStr(const S: Integer): String; overload; inline;
+function QuotedStrD(const S: String): String; overload; inline;
+function QuotedStrD(const S: Integer): String; overload; inline;
 function BracketStr(const S: String): String; inline;
 function RandomString(SLength: Integer; ONumber: Boolean = False;
   OSymbol: Boolean = False; OSpace: Boolean = False): String;
@@ -736,6 +479,8 @@ procedure InvertStrings(const St: TStringList); overload;
 procedure InvertStrings(const Sts: array of TStringList); overload;
 procedure TrimStrings(TheStrings: TStrings);
 procedure RemoveDuplicateStrings(Strs: array of TStringList; RemIndex: Integer = 0);
+function MergeCaseInsensitive(Strs: array of String): String; overload;
+function MergeCaseInsensitive(Strs: array of TStrings): String; overload;
 
 procedure CleanHTMLComments(const Str: TStringList);
 function FixHTMLTagQuote(const s: String): String;
@@ -777,6 +522,8 @@ procedure AddCommaString(var Dest: String; S: String);
 function StringOfString(c: String; l: Integer): String;
 function IncStr(const S: String; N: Integer = 1): String; overload;
 function IncStr(const I: Integer; N: Integer = 1): String; overload; inline;
+function StringIn(const AText: String; const AValues: array of String): Boolean;
+function TextIn(const AText: String; const AValues: array of String): Boolean;
 
 //get heaader value from THTTPSend.Headers
 function GetHeaderValue(const AHeaders: TStrings; HName: String): String;
@@ -799,6 +546,7 @@ procedure GetParams(var output: TCardinalList; input: String); overload;
 procedure GetParams(var output: TList; input: String); overload;
 function ExtractParam(const output: TStrings; input, sep: String;
   WhiteSp: Boolean = True): Integer;
+function GetParams(const input: String): String; overload; inline;
 
 function RemoveDuplicateNumbersInString(const AString: String): String;
 // Set param from input
@@ -807,11 +555,12 @@ function SetParams(const input: array of String): String; overload;
 
 procedure CustomGenres(var output: TStringList; input: String);
 
+//parse google result urls
+function GoogleResultURL(const AURL: String): String;
+procedure GoogleResultURLs(const AURLs: TStrings);
+
 // deal with sourceforge URL.
 function SourceForgeURL(URL: String): String;
-// Get HTML source code from a URL.
-function GetPageAndParse(const AHTTP: THTTPSend; Output: TStrings; URL: String;
-  const Reconnect: Integer = 0): Integer;
 function GetPage(const AHTTP: THTTPSend; var output: TObject; URL: String;
   const Reconnect: Integer = 0; Method: String = 'GET'): Boolean; overload;
 function GetPage(var output: TObject; URL: String; const Reconnect: Integer = 0): Boolean;
@@ -819,23 +568,24 @@ function GetPage(var output: TObject; URL: String; const Reconnect: Integer = 0)
 // Get url from a bitly url.
 function GetURLFromBitly(const URL: String): String;
 
+// convert webp
+function WebPToPNGStream(const AStream: TMemoryStream; const ALevel: Tcompressionlevel = clfastest): Boolean;
+function WebPToJPEGStream(const AStream: TMemoryStream; const AQuality: Integer = 80): Boolean;
+
+// convert png
+function PNGToJPEGStream(const AStream: TMemoryStream; const AQuality: Integer = 80): Boolean;
+
 // try to save tmemorystream to file, return the saved filename if success, otherwise return empty string
 function SaveImageStreamToFile(Stream: TMemoryStream; Path, FileName: String; Age: LongInt = 0): String; overload;
 function SaveImageStreamToFile(AHTTP: THTTPSend; Path, FileName: String): String; overload;
+
 
 // detect and save image from base64 string
 function SaveImageBase64StringToFile(const S, Path, FileName: String): Boolean;
 
 // Download an image from url and save it to a specific location.
-function SaveImage(const AHTTP: THTTPSend; const mangaSiteID: Integer; URL: String;
-  const Path, Name: String; var SavedFilename: String; const Reconnect: Integer = 0): Boolean; overload;
-function SaveImage(const AHTTP: THTTPSend; const mangaSiteID: Integer; URL: String;
-  const Path, Name: String; const Reconnect: Integer = 0): Boolean; overload;
-function SaveImage(const AHTTP: THTTPSend; URL: String;
-  const Path, Name: String; const Reconnect: Integer = 0): Boolean; overload;
-function SaveImage(const mangaSiteID: Integer; URL: String;
-  const Path, Name: String; var SavedFilename: String; const Reconnect: Integer = 0): Boolean;
-  overload; inline;
+function DownloadAndSaveImage(const AHTTP: THTTPSendThread; const AURL, APath, AFileName: String; var ASavedFileName: String): Boolean; overload;
+function DownloadAndSaveImage(const AHTTP: THTTPSendThread; const AURL, APath, AFileName: String): Boolean; overload;
 
 // check file exist with known extensions. AFilename is a filename without extensions
 function ImageFileExist(const AFileName: String): Boolean;
@@ -872,7 +622,12 @@ function JDNToDate(const JDN: Longint): TDate;
 {function  ConvertInt32ToStr(const aValue: Cardinal)  : String;
 function  ConvertStrToInt32(const aStr  : String): Cardinal;}
 procedure TransferMangaInfo(var dest: TMangaInfo; const Source: TMangaInfo);
-function MangaInfoStatusIfPos(const SearchStr, OngoingStr, CompletedStr: String): String;
+function MangaInfoStatusIfPos(const SearchStr: String; const OngoingStr: String = 'Ongoing';
+    const CompletedStr: String = 'Complete'): String;
+
+procedure GetBaseMangaInfo(const M: TMangaInfo; var B: TBaseMangaInfo);
+// fill empty manga info
+procedure FillBaseMangaInfo(const M: TMangaInfo; var B: TBaseMangaInfo);
 
 // cross platform funcs
 
@@ -880,10 +635,19 @@ function fmdGetTempPath: String;
 procedure fmdPowerOff;
 procedure fmdHibernate;
 
+// logger
+procedure SendLog(const AText: String); overload; inline;
+procedure SendLog(const AText, AValue: String); overload; inline;
+procedure SendLog(const AText: String; const AValue: Variant); overload; inline;
+procedure SendLog(const AText: String; AValue: TStrings); overload; inline;
+procedure SendLogError(const AText: String); overload; inline;
+procedure SendLogWarning(const AText: String); overload; inline;
+procedure SendLogException(const AText: String; AException: Exception); inline;
+
 implementation
 
 uses
-  {$IFDEF DOWNLOADER}WebsiteModules;{$ENDIF}
+  {$IFDEF DOWNLOADER}WebsiteModules, webp, FPWriteJPEG;{$ENDIF}
 
 {$IFDEF WINDOWS}
 // thanks Leledumbo for the code
@@ -976,6 +740,50 @@ end;
 
 {$ENDIF}
 
+procedure SearchOnVT(Tree: TVirtualStringTree; Key: String; Column: Integer);
+var
+  s: String;
+  node, xnode: PVirtualNode;
+  v: Boolean;
+begin
+  if Tree.TotalCount = 0 then
+    Exit;
+  s := AnsiUpperCase(Key);
+  Tree.BeginUpdate;
+  try
+    node := Tree.GetFirst();
+    if s <> '' then
+    begin
+      while node <> nil do
+      begin
+        v := Pos(s, AnsiUpperCase(Tree.Text[node, Column])) <> 0;
+        Tree.IsVisible[node] := v;
+        if v then
+        begin
+          xnode := node^.Parent;
+          while xnode <> nil do
+          begin
+            if not (vsVisible in xnode^.States) then
+              Tree.IsVisible[xnode] := v;
+            xnode := xnode^.Parent;
+          end;
+        end;
+        node := Tree.GetNext(node);
+      end;
+    end
+    else
+    begin
+      while node <> nil do
+      begin
+        Tree.IsVisible[node] := True;
+        node := Tree.GetNext(node);
+      end;
+    end;
+  finally
+    Tree.EndUpdate;
+  end;
+end;
+
 function ReplaceUnicodeChar(const S, ReplaceStr: String): String;
 var
   i: Integer;
@@ -1001,7 +809,7 @@ var
   searchRec: TSearchRec;
 begin
   try
-    Result := (FindFirstUTF8(CleanAndExpandDirectory(ADir) + '*.*',
+    Result := (FindFirstUTF8(CorrectPathSys(ADir) + '*.*',
       faAnyFile{$ifdef unix} or faSymLink{$endif unix}, searchRec) = 0) and
       (FindNextUTF8(searchRec) = 0) and
       (FindNextUTF8(searchRec) <> 0);
@@ -1075,61 +883,6 @@ begin
   end;
 end;
 
-function GetMangaSiteID(const Name: String): Integer;
-var
-  i: Integer;
-begin
-  Result := High(WebsiteRoots) + 1;
-  for i := Low(WebsiteRoots) to High(WebsiteRoots) do
-    if SameText(Name, WebsiteRoots[i, 0]) then
-      Exit(i);
-end;
-
-function GetMangaSiteName(const ID: Cardinal): String;
-begin
-  if ID > High(WebsiteRoots) then Exit('');
-  Result := WebsiteRoots[ID, 0];
-end;
-
-function GetMangaSiteRoot(const Website: String): String;
-var
-  i: Integer;
-begin
-  Result := '';
-  for i := Low(WebsiteRoots) to High(WebsiteRoots) do
-    if Website = WebsiteRoots[i, 0] then
-      Exit(WebsiteRoots[i, 1]);
-end;
-
-function GetMangaSiteRoot(const MangaID: Cardinal): String;
-begin
-  Result := WebsiteRoots[MangaID, 1];
-end;
-
-function GetMangaDatabaseURL(const AWebsite: String): String;
-begin
-  if DBDownloadURL = '' then
-    DBDownloadURL := 'https://bintray.com/artifact/download/riderkick/FMD/db/<website>.7z';
-  Result := DBDownloadURL;
-  if Pos('<website>', LowerCase(Result)) > 0 then
-    Result := StringReplace(Result, '<website>', AWebsite, [rfIgnoreCase, rfReplaceAll])
-  else
-    Result := Result + AWebsite;
-end;
-
-function SitesMemberOf(const website: String; MangaSiteIDs: array of Cardinal): Boolean;
-var
-  i: Integer;
-begin
-  Result := False;
-  for i := Low(MangaSiteIDs) to High(MangaSiteIDs) do
-    if website = WebsiteRoots[MangaSiteIDs[i], 0] then
-    begin
-      Result := True;
-      Break;
-    end;
-end;
-
 function SitesWithSortedList(const website: String): Boolean;
 var
   i: Integer = -1;
@@ -1140,27 +893,6 @@ begin
     Result := Modules.Module[i].SortedList;
     Exit;
   end;
-  Result := SitesMemberOf(website, [
-    FAKKU_ID,
-    NINEMANGA_ID,
-    NINEMANGA_ES_ID,
-    NINEMANGA_CN_ID,
-    NINEMANGA_RU_ID,
-    NINEMANGA_DE_ID,
-    NINEMANGA_IT_ID,
-    NINEMANGA_BR_ID,
-    MANGACOW_ID,
-    ONEMANGA_ID,
-    MYREADINGMANGAINFO_ID,
-    NHENTAI_ID,
-    PORNCOMIX_ID,
-    XXCOMICS_ID,
-    XXCOMICSMT_ID,
-    XXCOMICS3D_ID,
-    PORNCOMIXRE_ID,
-    PORNCOMIXIC_ID,
-    PORNXXXCOMICS_ID
-    ]);
 end;
 
 function SitesWithoutFavorites(const website: String): Boolean;
@@ -1173,18 +905,6 @@ begin
     Result := not Modules.Module[i].FavoriteAvailable;
     Exit;
   end;
-  Result := SitesMemberOf(website, [
-    FAKKU_ID,
-    MYREADINGMANGAINFO_ID,
-    NHENTAI_ID,
-    PORNCOMIX_ID,
-    XXCOMICS_ID,
-    XXCOMICSMT_ID,
-    XXCOMICS3D_ID,
-    PORNCOMIXRE_ID,
-    PORNCOMIXIC_ID,
-    PORNXXXCOMICS_ID
-    ]);
 end;
 
 function SitesWithoutInformation(const website: String): Boolean;
@@ -1197,45 +917,6 @@ begin
     Result := not Modules.Module[i].InformationAvailable;
     Exit;
   end;
-  Result := SitesMemberOf(website, [
-    MANGASPROJECT_ID,
-    TURKCRAFT_ID,
-    HUGEMANGA_ID,
-    KIVMANGA_ID,
-    MANGAOKU_ID,
-    UNIXMANGA_ID
-    ]);
-end;
-
-function SitesWithoutReferer(const website: String): Boolean;
-begin
-  Result := False;
-  Result := SitesMemberOf(website, [
-    MEINMANGA_ID,
-    IKOMIK_ID,
-    PORNCOMIX_ID,
-    XXCOMICS_ID,
-    XXCOMICSMT_ID,
-    XXCOMICS3D_ID,
-    PORNCOMIXRE_ID,
-    PORNCOMIXIC_ID,
-    PORNXXXCOMICS_ID
-    ]);
-end;
-
-function SitesWithSingleChapter(const website: String): Boolean;
-begin
-  Result := False;
-  Result := SitesMemberOf(website, [
-    FAKKU_ID,
-    MYREADINGMANGAINFO_ID,
-    NHENTAI_ID,
-    PORNCOMIX_ID,
-    XXCOMICS_ID,
-    XXCOMICSMT_ID,
-    XXCOMICS3D_ID,
-    PORNCOMIXRE_ID
-    ]);
 end;
 
 function FillURLProtocol(const AProtocol, AURL: String): String;
@@ -1248,84 +929,74 @@ begin
   end;
 end;
 
-function FillMangaSiteHost(const MangaID: Cardinal; URL: String): String;
-begin
-  Result := URL;
-  if MangaID <= High(WebsiteRoots) then
-    Result := FillHost(WebsiteRoots[MangaID, 1], URL);
-end;
-
-function FillMangaSiteHost(const Website, URL: String): String;
-begin
-  Result := URL;
-  if Website = '' then Exit(URL);
-  Result := FillMangaSiteHost(GetMangaSiteID(Website), URL);
-end;
-
 function FillHost(const Host, URL: String): String;
 var
-  H,P: String;
+  P: String;
 begin
-  SplitURL(URL,H,P);
+  SplitURL(URL,nil,@P);
   Result:=RemoveURLDelim(Host)+P;
+end;
+
+procedure FillHost(const Host: String; const URLs: TStrings);
+var
+  i: Integer;
+begin
+  if (URLs=nil) or (URLs.Count=0) then Exit;
+  for i:=0 to URLs.Count-1 do
+    URLs[i]:=FillHost(Host,URLs[i]);
 end;
 
 function MaybeFillHost(const Host, URL: String): String;
 var
   H,P: String;
 begin
-  SplitURL(URL,H,P);
-  if H='' then Result:=RemoveURLDelim(Host)+P
+  SplitURL(URL,@H,@P);
+  if (H='') and (P<>'') then Result:=RemoveURLDelim(Host)+P
   else Result:=URL;
+end;
+
+procedure MaybeFillHost(const Host: String; const URLs: TStrings);
+var
+  i: Integer;
+begin
+  if (URLs=nil) or (URLs.Count=0) then Exit;
+  for i:=0 to URLs.Count-1 do
+    URLs[i]:=MaybeFillHost(Host,URLs[i]);
 end;
 
 function GetHostURL(URL: String): String;
 var
-  H,P: String;
+  H: String;
 begin
-  SplitURL(URL,H,P);
+  SplitURL(URL,@H,nil);
   Result:=H;
 end;
 
 function RemoveHostFromURL(URL: String): String;
-var
-  H,P: String;
 begin
-  SplitURL(URL,H,P);
-  Result:=P;
+  SplitURL(URL,nil,@Result);
 end;
 
 procedure RemoveHostFromURLs(const URLs: TStringList);
 var
   i: Integer;
-  H,P: String;
 begin
-  if URLs=nil then Exit;
-  if URLs.Count=0 then Exit;
+  if (URLs=nil) or (URLs.Count=0) then Exit;
   for i:=0 to URLs.Count-1 do
-  begin
-    SplitURL(URLs[i],H,P);
-    URLs[i]:=P;
-  end;
+    URLs[i]:=RemoveHostFromURL(URLs[i]);
 end;
 
 procedure RemoveHostFromURLsPair(const URLs, Names: TStringList);
 var
   i: Integer;
-  H,P: String;
 begin
-  if (URLs= nil) or (Names=nil) then Exit;
-  if (URLs.Count<>Names.Count) then Exit;
-  if URLs.Count=0 then Exit;
+  if (URLs=nil) or (Names=nil) or (URLs.Count<>Names.Count) or (URLs.Count=0) then Exit;
   i:=0;
   while i<URLs.Count do
   begin
-    SplitURL(URLs[i],H,P);
-    if P<>'' then
-    begin
-      URLs[i]:=P;
-      Inc(i);
-    end
+    URLs[i]:=RemoveHostFromURL(URLs[i]);
+    if URLs[i]<>'' then
+      Inc(i)
     else
     begin
       URLs.Delete(i);
@@ -1338,7 +1009,7 @@ function EncodeCriticalURLElements(const URL: String): String;
 var
   H,P: String;
 begin
-  SplitURL(URL,H,P);
+  SplitURL(URL,@H,@P);
   Result:=H+EncodeTriplet(P,'%',URLSpecialChar+URLFullSpecialChar-['/']);
 end;
 
@@ -1372,17 +1043,6 @@ begin
     P.Free;
   end;
   OutArray.EndUpdate;
-end;
-
-procedure ParseHTML(const aRaw: String; aOutput: TStrings);
-begin
-  if not Assigned(aOutput) then Exit;
-  with TParseHTML.Create(aRaw) do try
-      Output := aOutput;
-      Exec;
-    finally
-      Free;
-    end;
 end;
 
 procedure ParseHTMLTree(var tp: TTreeParser; const S: String);
@@ -1519,14 +1179,19 @@ begin
     Result := Trim(Copy(s, i + Length(Name), Length(s)));
 end;
 
-function QuotedStrd(const S: String): String;
+function QuotedStr(const S: Integer): String;
+begin
+  Result := AnsiQuotedStr(IntToStr(S), '''');
+end;
+
+function QuotedStrD(const S: String): String;
 begin
   Result := AnsiQuotedStr(S, '"');
 end;
 
-function QuotedStrd(const S: Integer): String;
+function QuotedStrD(const S: Integer): String;
 begin
-  Result := QuotedStrd(IntToStr(S));
+  Result := AnsiQuotedStr(IntToStr(S), '"');
 end;
 
 function BracketStr(const S: String): String;
@@ -1852,6 +1517,44 @@ begin
   end;
 end;
 
+function MergeCaseInsensitive(Strs: array of String): String;
+var
+  s: TStringList;
+  i: Integer;
+begin
+  if Length(Strs) = 0 then Exit;
+  s := TStringList.Create;
+  try
+    s.CaseSensitive := False;
+    s.Duplicates := dupIgnore;
+    s.Sorted := True;
+    for i := Low(Strs) to High(Strs) do
+      s.AddText(Strs[i]);
+    Result := s.Text;
+  finally
+    s.Free;
+  end;
+end;
+
+function MergeCaseInsensitive(Strs: array of TStrings): String;
+var
+  s: TStringList;
+  i: Integer;
+begin
+  if Length(Strs) = 0 then Exit;
+  s := TStringList.Create;
+  try
+    s.CaseSensitive := False;
+    s.sorted := True;
+    s.Duplicates := dupIgnore;
+    for i := Low(Strs) to High(Strs) do
+      s.AddText(Strs[i].Text);
+    Result := s.Text;
+  finally
+    s.Free;
+  end;
+end;
+
 procedure CleanHTMLComments(const Str: TStringList);
 var
   i: Integer;
@@ -1877,7 +1580,7 @@ var
 begin
   Result := FixWhiteSpace(Path);
   {$IFDEF WINDOWS}
-  Result := RemovePathDelim(CleanAndExpandFilename(GetForcedPathDelims(Result)));
+  Result := RemovePathDelim(ExpandFileNameUTF8(TrimFilename(GetForcedPathDelims(Result)), FMD_DIRECTORY));
   Result := TrimRightChar(Result, ['.']);
   s := UTF8Decode(Result);
   if Length(s) > MAX_PATHDIR then
@@ -1886,7 +1589,7 @@ begin
     Result := UTF8Encode(s);
   end;
   {$ELSE}
-  Result := CleanAndExpandFilename(GetForcedPathDelims(Path));
+  Result := ExpandFileNameUTF8(TrimFilename(Path), FMD_DIRECTORY);
   {$ENDIF}
   Result := AppendPathDelim(Trim(Result));
 end;
@@ -1925,6 +1628,26 @@ begin
   Result := IntToStr(I + N);
 end;
 
+function StringIn(const AText: String; const AValues: array of String): Boolean;
+var
+  i: Integer;
+begin
+  for i := Low(AValues) to High(AValues) do
+    if AValues[i] = AText then
+      Exit(True);
+  Result := False;
+end;
+
+function TextIn(const AText: String; const AValues: array of String): Boolean;
+var
+  i: Integer;
+begin
+  for i := Low(AValues) to High(AValues) do
+    if SameText(AValues[i], AText) then
+      Exit(True);
+  Result := False;
+end;
+
 function GetHeaderValue(const AHeaders: TStrings; HName: String): String;
 var
   i, p: Integer;
@@ -1955,6 +1678,63 @@ function Base64Decode(const s: String): String;
 begin
   if s = '' then Exit(s);
   Result := DecodeStringBase64(s);
+end;
+
+function Base64Encode(const TheStream: TStream): Boolean;
+var
+  OutStream: TMemoryStream;
+  Encoder: TBase64EncodingStream;
+begin
+  Result := False;
+  if TheStream = nil then Exit;
+  if TheStream.Size = 0 then Exit;
+  OutStream := TMemoryStream.Create;
+  try
+    Encoder := TBase64EncodingStream.Create(OutStream);
+    try
+      TheStream.Position := 0;
+      Encoder.CopyFrom(TheStream, TheStream.Size);
+      Encoder.Flush;
+      TheStream.Position := 0;
+      TheStream.Size := 0;
+      OutStream.Position := 0;
+      TheStream.CopyFrom(OutStream, OutStream.Size);
+      Result := True;
+    finally
+      Encoder.Free;
+    end;
+  finally
+    OutStream.Free;
+  end;
+end;
+
+function Base64Decode(const TheStream: TStream): Boolean;
+var
+  Decoder: TBase64DecodingStream;
+  InStream: TMemoryStream;
+begin
+  Result := False;
+  if TheStream = nil then Exit;
+  if TheStream.Size = 0 then Exit;
+  InStream := TMemoryStream.Create;
+  try
+    TheStream.Position := 0;
+    InStream.CopyFrom(TheStream, TheStream.Size);
+    try
+      InStream.Position := 0;
+      Decoder := TBase64DecodingStream.Create(InStream);
+      if Decoder.Size > 0 then begin
+        TheStream.Position := 0;
+        TheStream.Size := 0;
+        TheStream.CopyFrom(Decoder, Decoder.Size);
+        Result := True;
+      end;
+    except
+    end;
+    Decoder.Free;
+  finally
+    InStream.Free;
+  end;
 end;
 
 function PadZero(const S: String; ATotalWidth: Integer; PadAll: Boolean; StripZero: Boolean): String;
@@ -2191,15 +1971,7 @@ begin
     // numbering/index
     if (Pos(CR_NUMBERING, Result) = 0) and (Pos(CR_CHAPTER, Result) = 0) then
       Result := ANumbering + Result;
-    if AWebsite = WebsiteRoots[FAKKU_ID, 0] then
-    begin
-      if Pos('%NUMBERING% - ', Result) > 0 then
-        Result := StringReplaceBrackets(Result, CR_NUMBERING + ' - ', '', [rfReplaceAll])
-      else
-        Result := StringReplaceBrackets(Result, CR_NUMBERING, '', [rfReplaceAll]);
-    end
-    else
-      Result := StringReplaceBrackets(Result, CR_NUMBERING, ANumbering, [rfReplaceAll]);
+    Result := StringReplaceBrackets(Result, CR_NUMBERING, ANumbering, [rfReplaceAll]);
 
     // pad number
     fchapter := Trim(AChapter);
@@ -2218,12 +1990,8 @@ begin
 
     Result := StringReplaceBrackets(Result, CR_CHAPTER, fchapter, [rfReplaceAll]);
 
-    if Result = '' then begin
-      if AWebsite = WebsiteRoots[FAKKU_ID, 0] then
-        Result := fchapter
-      else
-        Result := ANumbering;
-    end;
+    if Result = '' then
+      Result := ANumbering;
   end;
 
   Result := StringReplaceBrackets(Result, CR_WEBSITE, FixStringLocal(AWebsite), [rfReplaceAll]);
@@ -2358,6 +2126,11 @@ begin
   until l = 0;
   if Length(input) > 0 then
     output.Add(input);
+end;
+
+function GetParams(const input: String): String;
+begin
+  Result := StringReplace(input, SEPERATOR, LineEnding, [rfReplaceAll]);
 end;
 
 function RemoveDuplicateNumbersInString(const AString: String): String;
@@ -2845,6 +2618,28 @@ begin
   Result := URL;
 end;
 
+function GoogleResultURL(const AURL: String): String;
+begin
+  Result := AURL;
+  if Pos('google.', LowerCase(AURL)) = 0 then Exit;
+  Result := DecodeURL(ReplaceRegExpr('(?i)^.*google\..*\&url=([^\&]+)\&?.*$', AURL, '$1', True));
+end;
+
+procedure GoogleResultURLs(const AURLs: TStrings);
+var
+  i: Integer;
+begin
+  if AURLs.Count = 0 then Exit;
+  if Pos('google.', LowerCase(AURLs.Text)) = 0 then Exit;
+  with TRegExpr.Create('(?i)^.*google\..*\&url=([^\&]+)\&?.*$') do try
+    for i := 0 to AURLs.Count - 1 do
+      if Pos('google.', LowerCase(AURLs[i])) <> 0 then
+        AURLs[i] := DecodeURL(Replace(AURLs[i], '$1', True));
+  finally
+    Free;
+  end;
+end;
+
 function SourceForgeURL(URL: String): String;
   // Detects sourceforge download and tries to deal with
   // redirection, and extracting direct download link.
@@ -2959,24 +2754,6 @@ begin
   Result := URL;
 end;
 
-function GetPageAndParse(const AHTTP: THTTPSend; Output: TStrings; URL: String;
-  const Reconnect: Integer): Integer;
-begin
-  if Output = nil then Exit(INFORMATION_NOT_FOUND);
-  if GetPage(AHTTP, TObject(Output), URL, Reconnect) then
-  begin
-    if Output.Count > 0 then
-    begin
-      Result := NO_ERROR;
-      ParseHTML(Output.Text, Output);
-    end
-    else
-      Result := INFORMATION_NOT_FOUND;
-  end
-  else
-    Result := NET_PROBLEM;
-end;
-
 function GetPage(const AHTTP: THTTPSend; var output: TObject; URL: String;
   const Reconnect: Integer; Method: String): Boolean;
   // If AHTTP <> nil, we will use it as http sender. Otherwise we create a new
@@ -3040,7 +2817,7 @@ begin
   begin
     HTTP := THTTPSend.Create;
     HTTP.Timeout := DefaultTimeout;
-    HTTP.Sock.ConnectionTimeout := DefaultTimeout;
+ //   HTTP.Sock.ConnectionTimeout := DefaultTimeout;
     HTTP.Sock.SetTimeout(DefaultTimeout);
   end;
   HTTP.Headers.NameValueSeparator := ':';
@@ -3117,27 +2894,6 @@ begin
     HTTPHeader.Delete(HTTPHeader.IndexOfName('Content-Type'));
   end;
 
-  if Pos(WebsiteRoots[MEINMANGA_ID, 1], URL) > 0 then
-    HTTPHeader.Values['Accept-Charset'] := ' utf8'
-  else
-  if Pos(WebsiteRoots[MANGALIB_PL_ID, 1], URL) > 0 then
-  begin
-    if MANGALIB_PL_COOKIES <> '' then
-      HTTP.Cookies.Text := MANGALIB_PL_COOKIES;
-    if (Pos('/page/confirm_', URL) > 0) then
-    begin
-      s := ReplaceRegExpr('^.*/confirm_(.+)\?backlink.*$', URL, '$1', True) + '=1';
-      meth := 'POST';
-      HTTP.Document.Clear;
-      HTTP.Document.Position := 0;
-      HTTP.Document.Write(PChar(s)^, Length(s));
-      HTTP.Protocol := '1.1';
-      HTTP.MimeType := 'application/x-www-form-urlencoded';
-      HTTPHeader.Values['Referer'] := ' ' + URL;
-      HTTPHeader.Values['Accept'] := ' text/html';
-    end;
-  end
-  else
   if (Pos('imgmega.com/', URL) > 0) then
   begin
     s := ReplaceRegExpr('^.*\w+\.\w+/(\w+)/.*$', URL, '$1', True);
@@ -3265,8 +3021,86 @@ begin
   httpSource.Free;
 end;
 
-function SaveImageStreamToFile(Stream: TMemoryStream; Path, FileName: String; Age: LongInt
-  ): String;
+function WebPToPNGStream(const AStream: TMemoryStream;
+  const ALevel: Tcompressionlevel): Boolean;
+var
+  mem: TMemBitmap;
+  writer: TFPWriterPNG;
+begin
+  Result := False;
+  mem := nil;
+  try
+    mem := WebPToMemBitmap(AStream);
+    if Assigned(mem) then
+    try
+      writer := TFPWriterPNG.create;
+      writer.Indexed := False;
+      writer.UseAlpha := mem.HasTransparentPixels;
+      writer.CompressionLevel := ALevel;
+      mem.SaveToStream(AStream, writer);
+      Result := True;
+    finally
+      writer.Free;
+    end;
+  finally
+    if Assigned(mem) then
+      mem.Free;
+  end;
+end;
+
+function WebPToJPEGStream(const AStream: TMemoryStream; const AQuality: Integer
+  ): Boolean;
+var
+  mem: TMemBitmap;
+  writer: TFPWriterJPEG;
+begin
+  Result := False;
+  mem := nil;
+  try
+    mem := WebPToMemBitmap(AStream);
+    if Assigned(mem) then
+    try
+      writer := TFPWriterJPEG.create;
+      writer.CompressionQuality := AQuality;
+      mem.SaveToStream(AStream, writer);
+      Result := True;
+    finally
+      writer.Free;
+    end;
+  finally
+    if Assigned(mem) then
+      mem.Free;
+  end;
+end;
+
+function PNGToJPEGStream(const AStream: TMemoryStream; const AQuality: Integer): Boolean;
+var
+  img: TFPCustomImage;
+  writer: TFPWriterJPEG;
+  reader: TFPReaderPNG;
+begin
+  Result := False;
+  img := TFPMemoryImage.create(0,0);
+  reader := TFPReaderPNG.create;
+  try
+    writer := nil;
+    try
+      img.LoadFromStream(AStream, reader);
+      writer := TFPWriterJPEG.create;
+      writer.CompressionQuality := AQuality;
+      img.SaveToStream(AStream, writer);
+      Result := True;
+    except
+    end;
+    if writer <> nil then
+      writer.Free;
+  finally
+    reader.Free;
+    img.Free;
+  end;
+end;
+
+function SaveImageStreamToFile(Stream: TMemoryStream; Path, FileName: String; Age: LongInt): String;
 var
   p, f: String;
   fs: TFileStreamUTF8;
@@ -3274,16 +3108,31 @@ begin
   Result := '';
   if Stream = nil then Exit;
   if Stream.Size = 0 then Exit;
-  p := CleanAndExpandDirectory(Path);
+  p := CorrectPathSys(Path);
   if ForceDirectoriesUTF8(p) then begin
     f := GetImageStreamExt(Stream);
+    if f = 'png' then
+    begin
+      if OptionPNGSaveAsJPEG then
+        if PNGToJPEGStream(Stream, OptionJPEGQuality) then f := 'jpg'
+    end
+    else
+    if f = 'webp' then
+    begin
+      case OptionWebPSaveAs of
+        1: if WebPToPNGStream(Stream, Tcompressionlevel(OptionPNGCompressionLevel)) then f := 'png';
+        2: if WebPToJPEGStream(Stream, OptionJPEGQuality) then f := 'jpg';
+      end;
+    end;
+
     if f = '' then Exit;
     f := p + FileName + '.' + f;
     if FileExistsUTF8(f) then DeleteFileUTF8(f);
     try
       fs := TFileStreamUTF8.Create(f, fmCreate);
       try
-        Stream.SaveToStream(fs);
+        Stream.Position := 0;
+        fs.CopyFrom(Stream, Stream.Size);
       finally
         fs.Free;
       end;
@@ -3315,10 +3164,7 @@ begin
   s := Trim(AHTTP.Headers.Values['last-modified']);
   lastmodified := 0;
   if s <> '' then
-    try
-      lastmodified := DateTimeToFileDate(ScanDateTime(HTTPDateTimeFormatStr, s, FMDFormatSettings));
-    except
-    end;
+    lastmodified := DateTimeToFileDate(DecodeRfcDateTime(s));
   Result := SaveImageStreamToFile(AHTTP.Document, Path, FileName, lastmodified);
 end;
 
@@ -3344,212 +3190,22 @@ begin
   end;
 end;
 
-function SaveImage(const AHTTP: THTTPSend; const mangaSiteID: Integer;
-  URL: String; const Path, Name: String; var SavedFilename: String;
-  const Reconnect: Integer): Boolean;
-var
-  HTTPHeader: TStringList;
-  HTTP: THTTPSend;
-  counter: Integer;
-  s: String;
-
-  procedure preTerminate;
-  begin
-    HTTPHeader.Free;
-    if AHTTP = nil then
-      HTTP.Free;
-  end;
-
-  function checkTerminate: Boolean;
-  begin
-    Result := HTTP.Sock.Tag = 1; //terminate via THTTPSendThread
-    if Result then
-    begin
-      HTTP.Sock.Tag := 0;
-      preTerminate;
-    end;
-  end;
-
+function DownloadAndSaveImage(const AHTTP: THTTPSendThread; const AURL, APath,
+  AFileName: String; var ASavedFileName: String): Boolean;
 begin
   Result := False;
-  if Trim(URL) = '' then Exit;
-
-  // Check to see if a file with similar name was already exist. If so then we
-  // skip the download process.
-  if Trim(URL) = 'D' then Exit(True);
-  s := CleanAndExpandDirectory(Path) + Name;
-  if ImageFileExist(s) then
-    Exit(True);
-
-  URL := FixURL(URL);
-  URL := EncodeURL(DecodeURL(URL));
-
-  HTTPHeader := TStringList.Create;
-  HTTPHeader.NameValueSeparator := ':';
-  if AHTTP <> nil then
+  if AHTTP.GET(AURL) then
   begin
-    if LeftStr(AHTTP.Headers.Text, 5) <> 'HTTP/' then
-      HTTPHeader.Text := AHTTP.Headers.Text;
-    HTTP := AHTTP;
-    HTTP.Clear;
-  end
-  else
-  begin
-    HTTP := THTTPSend.Create;
-    HTTP.Timeout := DefaultTimeout;
-    HTTP.Sock.ConnectionTimeout := DefaultTimeout;
-    HTTP.Sock.SetTimeout(DefaultTimeout);
+    ASavedFileName := SaveImageStreamToFile(AHTTP, APath, AFileName);
+    Result := ASavedFileName <> '';
   end;
-  HTTP.Headers.NameValueSeparator := ':';
-
-  if DefaultProxyType = 'HTTP' then
-  begin
-    HTTP.ProxyHost := DefaultProxyHost;
-    HTTP.ProxyPort := DefaultProxyPort;
-    HTTP.ProxyUser := DefaultProxyUser;
-    HTTP.ProxyPass := DefaultProxyPass;
-  end
-  else
-  if (DefaultProxyType = 'SOCKS4') or (DefaultProxyType = 'SOCKS5') then
-  begin
-    if DefaultProxyType = 'SOCKS4' then
-      HTTP.Sock.SocksType := ST_Socks4
-    else
-    if DefaultProxyType = 'SOCKS5' then
-      HTTP.Sock.SocksType := ST_Socks5;
-    HTTP.Sock.SocksIP := DefaultProxyHost;
-    HTTP.Sock.SocksPort := DefaultProxyPort;
-    HTTP.Sock.SocksUsername := DefaultProxyUser;
-    http.Sock.SocksPassword := DefaultProxyPass;
-  end
-  else
-  begin
-    HTTP.Sock.SocksIP := DefaultProxyHost;
-    HTTP.Sock.SocksPort := DefaultProxyPort;
-    HTTP.Sock.SocksUsername := DefaultProxyUser;
-    http.Sock.SocksPassword := DefaultProxyPass;
-    HTTP.ProxyHost := DefaultProxyHost;
-    HTTP.ProxyPort := DefaultProxyPort;
-    HTTP.ProxyUser := DefaultProxyUser;
-    HTTP.ProxyPass := DefaultProxyPass;
-  end;
-
-  HTTPHeader.Values['DNT'] := ' 1';
-  HTTPHeader.Values['Accept'] := ' text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8';
-  HTTPHeader.Values['Accept-Charset'] := ' UTF-8';
-  HTTPHeader.Values['Accept-Language'] := ' en-US,en;q=0.8';
-  HTTP.Protocol := '1.1';
-  HTTP.KeepAlive := False;
-  if (HTTP.UserAgent = '') or (HTTP.UserAgent = UA_SYNAPSE) then
-    HTTP.UserAgent := DEFAULT_UA;
-  HTTP.MimeType := 'text/html';
-
-  //User-Agent
-  if Trim(HTTPHeader.Values['User-Agent']) <> '' then
-  begin
-    HTTP.UserAgent := Trim(HTTPHeader.Values['User-Agent']);
-    HTTPHeader.Delete(HTTPHeader.IndexOfName('User-Agent'));
-  end;
-  //MimeType
-  if Trim(HTTPHeader.Values['Content-Type']) <> '' then
-  begin
-    HTTP.MimeType := Trim(HTTPHeader.Values['Content-Type']);
-    HTTPHeader.Delete(HTTPHeader.IndexOfName('Content-Type'));
-  end;
-
-  if Pos('.imgur.com/', LowerCase(URL)) = 0 then
-    if ((mangaSiteID >= 0) and (mangaSiteID <= High(WebsiteRoots))) then
-    begin
-      if HTTPHeader.Values['Referer'] = '' then
-        if not (SitesWithoutReferer(WebsiteRoots[mangaSiteID, 0])) then
-          HTTPHeader.Values['Referer'] := ' ' + WebsiteRoots[mangaSiteID, 1];
-    end;
-
-  HTTP.Document.Clear;
-  HTTP.RangeStart := 0;
-  HTTP.RangeEnd := 0;
-
-  if checkTerminate then Exit;
-  HTTP.Headers.Text := HTTPHeader.Text;
-  counter := 0;
-  while (not HTTP.HTTPMethod('GET', URL)) or (HTTP.ResultCode > 500) do
-  begin
-    if checkTerminate then Exit;
-    if (Reconnect > -1) and (Reconnect <= counter) then
-    begin
-      preTerminate;
-      Exit;
-    end;
-    Inc(counter);
-    HTTP.Clear;
-    HTTP.Headers.Text := HTTPHeader.Text;
-  end;
-
-  while (HTTP.ResultCode > 300) and (HTTP.ResultCode < 400) do
-  begin
-    if checkTerminate then Exit;
-    HTTPHeader.Values['Referer'] := ' ' + URL;
-    s := Trim(HTTP.Headers.Values['Location']);
-    if s <> '' then
-    begin
-      with TRegExpr.Create do
-        try
-          Expression := REGEX_HOST;
-          if Replace(s, '$1', True) = '' then
-          begin
-            if s[1] <> '/' then
-              s := '/' + s;
-            URL := Replace(URL, '$1$2$3', True) + s;
-          end
-          else
-            URL := s;
-        finally
-          Free;
-        end;
-    end;
-
-    HTTP.Clear;
-    HTTP.Headers.Text := HTTPHeader.Text;
-    counter := 0;
-    while (not HTTP.HTTPMethod('GET', URL)) or (HTTP.ResultCode > 500) do
-    begin
-      if checkTerminate then Exit;
-      if (Reconnect > -1) and (Reconnect <= counter) then
-      begin
-        preTerminate;
-        Exit;
-      end;
-      Inc(counter);
-      HTTP.Clear;
-      HTTP.Headers.Text := HTTPHeader.Text;
-    end;
-  end;
-  if checkTerminate then Exit;
-  SavedFilename := SaveImageStreamToFile(HTTP, Path, Name);
-  preTerminate;
-  Result := SavedFilename <> '';
 end;
 
-function SaveImage(const AHTTP: THTTPSend; const mangaSiteID: Integer;
-  URL: String; const Path, Name: String; const Reconnect: Integer): Boolean;
-var
-  f: String;
+function DownloadAndSaveImage(const AHTTP: THTTPSendThread; const AURL, APath, AFileName: String): Boolean;
 begin
-  Result := SaveImage(AHTTP, mangaSiteID, URL, Path, Name, f, Reconnect);
-end;
-
-function SaveImage(const AHTTP: THTTPSend; URL: String; const Path, Name: String; const Reconnect: Integer
-  ): Boolean;
-var
-  f: String;
-begin
-  Result := SaveImage(AHTTP, -1, URL, Path, Name, f, Reconnect);
-end;
-
-function SaveImage(const mangaSiteID: Integer; URL: String; const Path,
-  Name: String; var SavedFilename: String; const Reconnect: Integer): Boolean;
-begin
-  Result := SaveImage(nil, mangaSiteID, URL, Path, Name, SavedFilename, Reconnect);
+  Result := False;
+  if AHTTP.GET(AURL) then
+    Result := SaveImageStreamToFile(AHTTP, APath, AFileName) <> '';
 end;
 
 function ImageFileExist(const AFileName: String): Boolean;
@@ -3620,7 +3276,7 @@ var
 begin
   Result := False;
   if not DirectoryExistsUTF8(Directory) then Exit;
-  D := CleanAndExpandDirectory(Directory);
+  D := CorrectPathSys(Directory);
   AImgName1 := D + ImgName1;
   AImgName2 := D + ImgName2;
   if not (FileExistsUTF8(AImgName1) and FileExistsUTF8(AImgName2)) then Exit;
@@ -3966,7 +3622,8 @@ begin
   dest.chapterLinks.Assign(Source.chapterLinks);
 end;
 
-function MangaInfoStatusIfPos(const SearchStr, OngoingStr, CompletedStr: String): String;
+function MangaInfoStatusIfPos(const SearchStr: String; const OngoingStr: String;
+  const CompletedStr: String): String;
 var
   s, o, c: String;
 begin
@@ -3981,20 +3638,26 @@ begin
     Result := MangaInfo_StatusCompleted;
 end;
 
-{ TFavoriteInfo }
-
-procedure TFavoriteInfo.SetSaveTo(AValue: String);
+procedure GetBaseMangaInfo(const M: TMangaInfo; var B: TBaseMangaInfo);
 begin
-  if FSaveTo = AValue then Exit;
-  FSaveTo := CorrectPathSys(AValue);
+  B.title := M.title;
+  B.authors := M.authors;
+  B.artists := M.artists;
+  B.genres := M.genres;
+  B.status := M.status;
+  B.summary := M.summary;
+  B.numChapter := M.numChapter;
 end;
 
-{ TDownloadInfo }
-
-procedure TDownloadInfo.SetSaveTo(AValue: String);
+procedure FillBaseMangaInfo(const M: TMangaInfo; var B: TBaseMangaInfo);
 begin
-  if FSaveTo = AValue then Exit;
-  FSaveTo := CorrectPathSys(AValue);
+  if Trim(M.title) = '' then M.title := B.title;
+  if Trim(M.authors) = '' then M.authors := B.authors;
+  if Trim(M.artists) = '' then M.artists := B.artists;
+  if Trim(M.genres) = '' then M.genres := B.genres;
+  if Trim(M.status) = '' then M.status := B.status;
+  if Trim(M.summary) = '' then M.summary := B.summary;
+  if M.numChapter = 0 then M.numChapter := B.numChapter;
 end;
 
 { THTMLForm }
@@ -4037,49 +3700,6 @@ begin
       if Result <> '' then Result := Result + fdelimiter;
       Result := Result + fdata.Names[i] + fvalueseparator + EncodeURLElement(fdata.ValueFromIndex[i]);
     end;
-end;
-
-{ TParseHTML }
-
-procedure TParseHTML.FoundTag(NoCaseTag, ActualTag: String);
-begin
-  Output.Add(ActualTag);
-end;
-
-procedure TParseHTML.FoundText(Text: String);
-begin
-  Output.Add(Text);
-end;
-
-constructor TParseHTML.Create(const Raw: String);
-begin
-  inherited Create;
-  if Raw <> '' then
-    FRaw := Raw
-  else
-    FRaw := '';
-end;
-
-function TParseHTML.Exec(const Raw: String): String;
-var
-  parser: THTMLParser;
-begin
-  if not Assigned(Output) then Exit;
-  if Raw <> '' then
-    FRaw := Raw;
-  if FRaw = '' then
-    Exit('');
-  Output.Clear;
-  Output.BeginUpdate;
-  parser := THTMLParser.Create(PChar(FRaw));
-  try
-    parser.OnFoundTag := FoundTag;
-    parser.OnFoundText := FoundText;
-    parser.Exec;
-  finally
-    parser.Free;
-  end;
-  Output.EndUpdate;
 end;
 
 { TMangaInfo }
@@ -4151,6 +3771,41 @@ begin
   {$IFDEF WINDOWS}
   SetSuspendState(True, False, False);
   {$ENDIF}
+end;
+
+procedure SendLog(const AText: String);
+begin
+  Logger.Send(AText);
+end;
+
+procedure SendLog(const AText, AValue: String);
+begin
+  Logger.Send(AText, AValue);
+end;
+
+procedure SendLog(const AText: String; const AValue: Variant);
+begin
+  Logger.Send(AText, VarToStr(AValue));
+end;
+
+procedure SendLog(const AText: String; AValue: TStrings);
+begin
+  Logger.Send(AText, AValue);
+end;
+
+procedure SendLogError(const AText: String);
+begin
+  Logger.SendError(AText);
+end;
+
+procedure SendLogWarning(const AText: String);
+begin
+  Logger.SendWarning(AText);
+end;
+
+procedure SendLogException(const AText: String; AException: Exception);
+begin
+  Logger.SendException(AText, AException);
 end;
 
 function HeaderByName(const AHeaders: TStrings; const AHeaderName: String): String;
