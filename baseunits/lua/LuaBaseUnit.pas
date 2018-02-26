@@ -121,6 +121,12 @@ begin
     Result := 0;
 end;
 
+function lua_round(L: Plua_State): Integer; cdecl;
+begin
+  lua_pushinteger(L, round(lua_tonumber(L, 1)));
+  Result := 1;
+end;
+
 procedure luaBaseUnitRegister(L: Plua_State);
 begin
   luaPushFunctionGlobal(L, 'Pos', @lua_pos);
@@ -137,6 +143,7 @@ begin
   luaPushFunctionGlobal(L, 'URLDecode', @lua_urldecode);
   luaPushFunctionGlobal(L, 'IncStr', @lua_incstr);
   luaPushFunctionGlobal(L, 'StreamToString', @lua_streamtostring);
+  luaPushFunctionGlobal(L, 'Round', @lua_round);
 end;
 
 end.
