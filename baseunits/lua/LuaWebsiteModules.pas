@@ -839,6 +839,8 @@ begin
 
     if Module.Account<>nil then
       luaClassAddObject(L, MetaTable, Module.Account, 'Account', @luaWebsiteModuleAccountAddMetaTable);
+
+    luaClassAddIntegerProperty(L, MetaTable, 'Tag', @Module.Tag);
   end;
 end;
 
