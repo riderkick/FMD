@@ -26,6 +26,7 @@ type
     procedure ButtonCancelClick(Sender: TObject);
     procedure HTTPSockOnStatus(Sender: TObject; Reason: THookSocketReason;
       const Value: String);
+    procedure HTTPRedirected(const AHTTP: THTTPSendThread; const URL: String);
   protected
     procedure SyncStart;
     procedure SyncFinal;
@@ -86,6 +87,12 @@ begin
     FCurrentSize := 0;
     FTotalSize := 0;
   end;
+end;
+
+procedure TSelfUpdaterThread.HTTPRedirected(const AHTTP: THTTPSendThread;
+  const URL: String);
+begin
+  UpdateStatusText(Format(RS_Downloading, [URL]));
 end;
 
 procedure TSelfUpdaterThread.SyncStart;
@@ -296,6 +303,7 @@ begin
   FHTTP := THTTPSendThread.Create(Self);
   FHTTP.UserAgent := UserAgentCURL;
   FHTTP.Sock.OnStatus := @HTTPSockOnStatus;
+  FHTTP.OnRedirected := @HTTPRedirected;
   Synchronize(@SyncStart);
 end;
 

@@ -28,6 +28,7 @@ type
     procedure ButtonCancelClick(Sender: TObject);
     procedure HTTPSockOnStatus(Sender: TObject; Reason: THookSocketReason;
       const Value: String);
+    procedure HTTPRedirected(const AHTTP: THTTPSendThread; const URL: String);
   protected
     procedure SyncStart;
     procedure SyncFinal;
@@ -98,6 +99,13 @@ begin
     FCurrentSize := 0;
     FTotalSize := 0;
   end;
+end;
+
+procedure TDBUpdaterThread.HTTPRedirected(const AHTTP: THTTPSendThread;
+  const URL: String);
+begin
+  UpdateStatusText(Format('[%d/%d] ' + RS_Downloading,
+    [FCurrentId + 1, Items.Count, FCurrentName + DBDATA_EXT + ' ' + URL]));
 end;
 
 procedure TDBUpdaterThread.SyncStart;
@@ -340,6 +348,7 @@ begin
   FHTTP := THTTPSendThread.Create(Self);
   FHTTP.UserAgent := UserAgentCURL;
   FHTTP.Sock.OnStatus := @HTTPSockOnStatus;
+  FHTTP.OnRedirected:=@HTTPRedirected;
   Items := TStringList.Create;
   Synchronize(@SyncStart);
 end;
