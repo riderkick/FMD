@@ -2,17 +2,17 @@ unit TonariNoYoungJump;
 
 interface
 
-uses
-  Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
-  XQueryEngineHTML;
-
 implementation
 
-uses Graphics, Math, synautil;
+uses Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
+  XQueryEngineHTML, Math, synautil, ImagePuzzle;
 
 const
   chapterListQuery = '/api/viewer/readable_products?current_readable_product_id=%s&number_since=%d&number_until=-1&read_more_num=50&type=episode';
   dirurls: array[0..2] of String = ('/series', '/series/finished', '/series/oneshot');
+
+var
+  puzzle: TImagePuzzle;
 
 function GetNameAndLink(const MangaInfo: TMangaInformation;
   const ANames, ALinks: TStringList; const AURL: String;
@@ -116,56 +116,27 @@ begin
   end;
 end;
 
-function DeScramble(AURL: String; image: TPicture): TPicture;
-const
-  DIVIDE_NUM = 4;
-  MULTIPLE = 8;
-var
-  cell_width, cell_height, e, sx, sy, dx, dy, a: Integer;
-  srcrect, destrect: TRect;
-  r: TPicture;
-begin
-  Result := nil;
-  cell_width := Trunc(Real(image.Width) / Real(DIVIDE_NUM * MULTIPLE)) * MULTIPLE;
-  cell_height := Trunc(Real(image.Height) / Real(DIVIDE_NUM * MULTIPLE)) * MULTIPLE;
-  r := TPicture.Create;
-  r.Bitmap.SetSize(image.Width, image.Height);
-  for e := 0 to DIVIDE_NUM * DIVIDE_NUM - 1 do begin
-    sy := Trunc(Real(e) / Real(DIVIDE_NUM)) * cell_height;
-    sx := (e mod DIVIDE_NUM) * cell_width;
-    a := (e mod DIVIDE_NUM) * DIVIDE_NUM + Trunc(Real(e) / Real(DIVIDE_NUM));
-    dx := (a mod DIVIDE_NUM) * cell_width;
-    dy := Trunc(Real(a) / Real(DIVIDE_NUM)) * cell_height;
-    srcrect := Rect(sx, sy, sx + cell_width, sy + cell_height);
-    destrect := Rect(dx, dy, dx + cell_width, dy + cell_height);
-    r.Bitmap.Canvas.CopyRect(destrect, image.Bitmap.Canvas, srcrect);
-  end;
-  Result := r;
-end;
-
 function DownloadImage(const DownloadThread: TDownloadThread;
     const AURL: String; const Module: TModuleContainer): Boolean;
-var
-  image, r: TPicture;
 begin
   Result := False;
   if DownloadThread = nil then Exit;
   if DownloadThread.FHTTP.GET(AURL) then begin
-    image := TPicture.Create;
-    r := nil;
-    try
-      image.LoadFromStream(DownloadThread.FHTTP.Document);
-      r := DeScramble(AURL, image);
-      if r <> nil then begin
-        DownloadThread.FHTTP.Document.Clear;
-        r.SaveToStreamWithFileExt(DownloadThread.FHTTP.Document, 'jpg');
-        Result := True;
-      end;
-    finally
-      r.Free;
-      image.Free;
-    end;
+    puzzle.DeScramble(DownloadThread.FHTTP.Document, DownloadThread.FHTTP.Document);
+    Result := True;
   end;
+end;
+
+procedure CreateImagePuzzle;
+const
+  DIVIDE_NUM = 4;
+var
+  i: Integer;
+begin
+  puzzle := TImagePuzzle.Create(DIVIDE_NUM, DIVIDE_NUM);
+  puzzle.Multiply := 8;
+  for i := 0 to DIVIDE_NUM * DIVIDE_NUM - 1 do
+    puzzle.Matrix[i] := (i mod DIVIDE_NUM) * DIVIDE_NUM + trunc(float(i) / DIVIDE_NUM);
 end;
 
 procedure RegisterModule;
@@ -184,6 +155,10 @@ begin
 end;
 
 initialization
+  CreateImagePuzzle;
   RegisterModule;
+
+finalization
+  puzzle.Free;
 
 end.
