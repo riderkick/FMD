@@ -4183,6 +4183,7 @@ begin
   if CellPaintMode <> cpmPaint then Exit;
   with TargetCanvas, FavoriteManager.Items[Node^.Index] do
   begin
+    if not Enabled then Exit;
     C := Brush.Color;
     Brush.Color := clNone;
     if Trim(FavoriteInfo.Link) = '' then
