@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
-"Project-Id-Version: FMD Español 2.0.5\n"
+"Project-Id-Version: FMD\n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
 "Language-Team: Mariolr\n"
@@ -58,7 +58,7 @@ msgstr "%s: Perdido %s"
 
 #: ehentai.rs_downloadoriginalimage
 msgid "Download original image(require ExHentai account)"
-msgstr "Descargar imagen original (require una cuenta ExHentai)"
+msgstr "Descargar imagen original (require una cuenta en ExHentai)"
 
 #: ehentai.rs_settingsimagesize
 msgid "Image size:"
@@ -84,7 +84,7 @@ msgstr ""
 
 #: frmaccountmanager.rs_accountdeleteconfirmation
 msgid "Are you sure you want to delete this account?"
-msgstr "Estás seguro que deseas eliminar esta cuenta?"
+msgstr "¿Estás seguro que deseas eliminar esta cuenta?"
 
 #: frmaccountmanager.rs_checking
 msgid "Checking"
@@ -106,7 +106,7 @@ msgstr "OK"
 
 #: frmaccountset.rs_cantbeempty
 msgid "Username or password can't be empty!"
-msgstr "Nombre de usuario o contraseña no puede estar vacio!"
+msgstr "¡Nombre de usuario o contraseña no puede estar vacio!"
 
 #: frmimportfavorites.rs_importcompleted
 msgid "Import completed."
@@ -140,13 +140,13 @@ msgid ""
 "\n"
 "%s\n"
 msgstr ""
-"Módulos Actualizados, Reiniciar Ahora?\n"
+"Módulos Actualizados, ¿Reiniciar Ahora?\n"
 "\n"
 "%s\n"
 
 #: frmluamodulesupdater.rs_modulesupdatedtitle
 msgid "Modules updated!"
-msgstr "Módulos Actualizados!"
+msgstr "¡Módulos Actualizados!"
 
 #: frmluamodulesupdater.rs_newupdatefoundlostchanges
 msgid ""
@@ -154,13 +154,13 @@ msgid ""
 "\n"
 "%s\n"
 msgstr ""
-"Actualización de Módulos Encontrada, Cualquier Cambio Local Será Perdido, Proceder?\n"
+"Actualización de módulos encontrada, cualquier cambio local será perdido, ¿Quiere hacerlo?\n"
 "\n"
 "%s\n"
 
 #: frmluamodulesupdater.rs_newupdatefoundtitle
 msgid "Modules update found!"
-msgstr "Actualización de Módulos Encontrada!"
+msgstr "¡Actualización de Módulos Encontrada!"
 
 #: frmluamodulesupdater.rs_startdownloading
 msgid "Downloading..."
@@ -224,27 +224,27 @@ msgstr "Cuenta de Descarga:"
 
 #: frmmain.rs_dlgmangalistselect
 msgid "You must choose at least 1 manga website!"
-msgstr "Debes escoger al menos 1 sitio web de manga!"
+msgstr "¡Debes escoger al menos 1 sitio web manga!"
 
 #: frmmain.rs_dlgquit
 msgid "Are you sure you want to exit?"
-msgstr "Estás seguro que quieres salir?"
+msgstr "¿Estás seguro que quieres salir?"
 
 #: frmmain.rs_dlgremovefavorite
 msgid "Are you sure you want to delete the favorite(s)?"
-msgstr "Estás seguro de que quieres eliminar los favoritos?"
+msgstr "¿Estás seguro de eliminar los favoritos?"
 
 #: frmmain.rs_dlgremovefinishtasks
 msgid "Are you sure you want to delete all finished tasks?"
-msgstr "Estás seguro de que quieres eliminar todas las tareas terminadas?"
+msgstr "¿Estás seguro de eliminar todas las tareas terminadas?"
 
 #: frmmain.rs_dlgremoveitem
 msgid "Are you sure you want to delete this item(s)?"
-msgstr "Estás seguro de querer eliminar este(os) ítem(s)?"
+msgstr "¿Estás seguro de querer eliminar este(os) ítem(s)?"
 
 #: frmmain.rs_dlgremovetask
 msgid "Are you sure you want to delete the task(s)?"
-msgstr "Estás seguro de desear eliminar la(s) tarea(s)?"
+msgstr "¿Estás seguro de desear eliminar la(s) tarea(s)?"
 
 #: frmmain.rs_dlgsplitdownload
 msgctxt "frmmain.rs_dlgsplitdownload"
@@ -257,11 +257,11 @@ msgid ""
 "Do you want to download it anyway?\n"
 msgstr ""
 "Este título ya se encuentra en la lista de descarga\n"
-"Deseas descargarlo de todos modos?\n"
+"¿Deseas descargarlo de todos modos?\n"
 
 #: frmmain.rs_dlgtypeinnewchapter
 msgid "Type in new chapter:"
-msgstr "Ingresar Nuevo Capitulo?"
+msgstr "¿Ingresar Nuevo Capitulo?"
 
 #: frmmain.rs_dlgtypeinnewsavepath
 msgid "Type in new save path:"
@@ -269,15 +269,15 @@ msgstr "Ingresar Nueva Ruta de Guardado :"
 
 #: frmmain.rs_dlgupdaterisrunning
 msgid "Updater is running!"
-msgstr "Actualizador está Ejecutandose!"
+msgstr "¡Actualizador está Ejecutandose!"
 
 #: frmmain.rs_dlgupdaterwanttoupdatedb
 msgid "Do you want to download manga list from the server?"
-msgstr "Quieres Descargar la Lista de Manga del Servidor?"
+msgstr "¿Quieres Descargar la Lista de Manga del Servidor?"
 
 #: frmmain.rs_dlgurlnotsupport
 msgid "URL not supported!"
-msgstr "URL no Soportada!"
+msgstr "¡URL no Soportada!"
 
 #: frmmain.rs_droptargetmodeitems
 msgid ""
@@ -299,15 +299,15 @@ msgstr ""
 
 #: frmmain.rs_fmdalreadyrunning
 msgid "Free Manga Downloader already running!"
-msgstr "Free Manga Downloader está ya ejecutandose!"
+msgstr "¡Free Manga Downloader está ya ejecutandose!"
 
 #: frmmain.rs_hintfavoriteproblem
 msgid ""
 "There is a problem with this data!\n"
 "Removing and re-adding this data may fix the problem.\n"
 msgstr ""
-"Hay un Problema con estos Datos!\n"
-"Quitarlo y Volviendolo  a Agregar Podría Resolver el Problema.\n"
+"¡Hay un problema con estos datos!\n"
+"Quitarlo y volviendolo  a agregar podría resolver el problema.\n"
 
 #: frmmain.rs_history
 msgid "History"
@@ -535,7 +535,7 @@ msgid ""
 "\n"
 "%d %s\n"
 msgstr ""
-"Ha Fallado En Descargar Nueva Versión %s\n"
+"Fallo al descargar nueva versión %s\n"
 "\n"
 "%d %s\n"
 
@@ -554,7 +554,7 @@ msgstr "Falló en Guardar %s"
 
 #: selfupdater.rs_finishrestart
 msgid "Download update package finished, restart to proceed?"
-msgstr "La Descarga del Paquete ha Terminado, Proceder en Reiniciar?"
+msgstr "La Descarga del Paquete ha terminado, ¿proceder en reiniciar?"
 
 #: selfupdater.rs_finishrestarttitle
 msgid "Download finished"
@@ -905,11 +905,11 @@ msgstr "HTTP"
 
 #: tmainform.cboptionremovemanganamefromchapter.caption
 msgid "Remove manga name from chapter"
-msgstr "Remover Nombre del Manga del Capitulo"
+msgstr "Remover nombre del Manga del capitulo"
 
 #: tmainform.cboptionshowballoonhint.caption
 msgid "Show balloon hint"
-msgstr "Mostrar Globo de Sugerencia"
+msgstr "Mostrar globo de sugerencia"
 
 #: tmainform.cboptionshowdeletetaskdialog.caption
 msgid "Delete task/favorite"
@@ -925,11 +925,11 @@ msgstr "Mostrar Barra de Herramientas de Descargas"
 
 #: tmainform.cboptionshowdownloadtoolbardeleteall.caption
 msgid "Show \"Delete all completed tasks\" in downloads toolbar"
-msgstr "Mostrar \"Eliminar Todas las Tareas Completadas\" en la Barra de Herramientas de Descargas"
+msgstr "Mostrar \"eliminar todas las tareas completadas\" en la barra de herramientas de descargas"
 
 #: tmainform.cboptionshowdownloadtoolbarleft.caption
 msgid "Show left downloads toolbar"
-msgstr "Mostar Barra de Herramientas de Descargas Izquierda"
+msgstr "Mostar barra de herramientas de descargas en la izquierda"
 
 #: tmainform.cboptionshowquitdialog.caption
 msgid "Exit FMD"
@@ -1040,11 +1040,11 @@ msgstr "Fantasía"
 
 #: tmainform.ckfilterfantasy.hint
 msgid "Anything that involves, but not limited to, magic, dream world, and fairy tales."
-msgstr "Cualquier cosa que involucre, pero no limitado a, magia, mundo de ensueño, y cuentos de hadas."
+msgstr "Cualquier cosa que involucre, pero no limitado a: magia, mundo de ensueño, y cuentos de hadas."
 
 #: tmainform.ckfiltergenderbender.caption
 msgid "Gender Bender"
-msgstr "Transgénero"
+msgstr "Cambio de sexo"
 
 #: tmainform.ckfiltergenderbender.hint
 msgid ""
@@ -1209,7 +1209,7 @@ msgstr "Shoujo Ai"
 #: tmainform.ckfiltershoujoai.hint
 msgctxt "TMAINFORM.CKFILTERSHOUJOAI.HINT"
 msgid "Often synonymous with yuri, this can be thought of as somewhat less extreme. \"Girl''s Love\", so to speak."
-msgstr "A menudo sinónimo de yuri, esto puede ser considerado como algo menos extremo. \"Amor de Chicas\", por así decirlo."
+msgstr "A menudo sinónimo de yuri, esto puede ser considerado como algo menos extremo. \"Amor entre Chicas\", por así decirlo."
 
 #: tmainform.ckfiltershounen.caption
 msgid "Shounen"
@@ -1226,7 +1226,7 @@ msgstr "Shounen Ai"
 
 #: tmainform.ckfiltershounenai.hint
 msgid "Often synonymous with yaoi, this can be thought of as somewhat less extreme. \"Boy''s Love\", so to speak"
-msgstr "A menudo sinónimo de yaoi, esto puede ser pensado como algo menos extremo. \"Amor de Chicos\", por así decirlo"
+msgstr "A menudo sinónimo de yaoi, esto puede ser pensado como algo menos extremo. \"Amor entre Chicos\", por así decirlo"
 
 #: tmainform.ckfiltersliceoflife.caption
 msgid "Slice of Life"
