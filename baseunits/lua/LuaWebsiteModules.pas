@@ -331,6 +331,7 @@ begin
       LuaPushMe(l);
       luaPushObject(L, DownloadThread.Task.Container, 'task', @luaDownloadTaskMetaTable);
       luaPushObject(l, DownloadThread.FHTTP, 'http', @luaHTTPSendThreadAddMetaTable);
+      luaPushIntegerGlobal(l, 'workid', DownloadThread.WorkId);
       luaPushStringGlobal(l, 'url', AURL);
 
       LuaDoMe(l);
@@ -357,6 +358,7 @@ begin
       LuaPushMe(l);
       luaPushObject(L, DownloadThread.Task.Container, 'task', @luaDownloadTaskMetaTable);
       luaPushObject(l, DownloadThread.FHTTP, 'http', @luaHTTPSendThreadAddMetaTable);
+      luaPushIntegerGlobal(l, 'workid', DownloadThread.WorkId);
       luaPushStringGlobal(l, 'url', AURL);
 
       LuaDoMe(l);
