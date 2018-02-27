@@ -45,7 +45,8 @@ function getdirurl(website)
     ['AntisenseScans'] = dirurlonline,
     ['MangaichiScan'] = dirurlfsdir,
     ['Riceballicious'] = dirurlreaderlist,
-    ['Yuri-ism'] = dirurlslide
+    ['Yuri-ism'] = dirurlslide,
+    ['MangajinNoFansub'] = dirurllector
   }  
   if dirs[website] ~= nil then
     return dirs[website]
@@ -247,4 +248,5 @@ function Init()
   AddWebsiteModule('IdkScans', 'http://reader.idkscans.com', cat)
   AddWebsiteModule('Nightow', 'http://nightow.net', cat)
   AddWebsiteModule('TrueColorsScan', 'https://truecolorsscans.miocio.org', cat)
+  AddWebsiteModule('MangajinNoFansub', 'https://www.mangajinnofansub.com', cat)
 end
