@@ -211,7 +211,6 @@ end;
 
 procedure TSelfUpdaterThread.ProceedUpdate;
 begin
-  writeln('proced update?');
   if not DownloadSuccess then Exit;
   if FileExists(OLD_CURRENT_UPDATER_EXE) then
     DeleteFile(OLD_CURRENT_UPDATER_EXE);

@@ -5,7 +5,8 @@ Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
 0.9.152.0 (28-02-2018)
-[*] Various changes and bug fixes
+[*] Fix updater doesn't extract the update package after download.
+    You have to download this version manually or extract updatepakage.7z
 Full changes: https://github.com/riderkick/FMD/compare/0.9.151.0...0.9.152.0
 
 0.9.151.0 (28-02-2018)
