@@ -39,13 +39,14 @@ function Login(const AHTTP: THTTPSendThread; const Module: TModuleContainer): Bo
 begin
   Result := False;
   if Module.Account.Enabled = False then Exit;
-  if Module.Account.Username = '' then Exit;
+  if (Module.Account.Username = '') or (Module.Account.Password = '') then Exit;
   if TryEnterCriticalsection(locklogin) > 0 then
     try
       Module.Account.Status := asChecking;
       AHTTP.Reset;
       AHTTP.Cookies.Clear;
-      madokamiauth := 'Authorization: Basic ' + Base64Encode(Module.Account.Username);
+      madokamiauth := 'Authorization: Basic ' +
+        Base64Encode(Module.Account.Username + ':' + Module.Account.Password);
       AHTTP.Headers.Add(madokamiauth);
       if AHTTP.GET(urlroot) then begin
         //Result := AHTTP.Cookies.Values['laravel_session'] <> '';
