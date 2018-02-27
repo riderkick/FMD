@@ -171,7 +171,7 @@ msgstr "İndiriliyor..."
 #: frmluamodulesupdater.rs_statusdelete
 msgctxt "frmluamodulesupdater.rs_statusdelete"
 msgid "%s DELETE*"
-msgstr "%s SİL*"
+msgstr "%s SİLİNDİ*"
 
 #: frmluamodulesupdater.rs_statusfailed
 msgctxt "frmluamodulesupdater.rs_statusfailed"
@@ -186,12 +186,12 @@ msgstr "%s YENİ*"
 #: frmluamodulesupdater.rs_statusredownloaded
 msgctxt "frmluamodulesupdater.rs_statusredownloaded"
 msgid "%s REDOWNLOAD*"
-msgstr "%s TEKRAR İNDİR*"
+msgstr "%s TEKRAR İNDİRME*"
 
 #: frmluamodulesupdater.rs_statusupdate
 msgctxt "frmluamodulesupdater.rs_statusupdate"
 msgid "%s UPDATE*"
-msgstr "%s GÜNCELLE*"
+msgstr "%s GÜNCELLENDİ*"
 
 #: frmmain.rs_alldownloads
 msgid "All downloads"
@@ -295,9 +295,9 @@ msgid ""
 "Ongoing\n"
 "<none>\n"
 msgstr ""
-"Tamamlanmış\n"
-"Devam eden\n"
-"<hiçbiri>\n"
+"Tamamlandı\n"
+"Devam Ediyor\n"
+"<Hiçbiri>\n"
 
 #: frmmain.rs_fmdalreadyrunning
 msgid "Free Manga Downloader already running!"
