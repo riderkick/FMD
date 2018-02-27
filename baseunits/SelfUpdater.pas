@@ -211,6 +211,7 @@ end;
 
 procedure TSelfUpdaterThread.ProceedUpdate;
 begin
+  writeln('proced update?');
   if not DownloadSuccess then Exit;
   if FileExists(OLD_CURRENT_UPDATER_EXE) then
     DeleteFile(OLD_CURRENT_UPDATER_EXE);
@@ -257,6 +258,7 @@ begin
     Synchronize(@SyncStartDownload);
     if FHTTP.GET(UpdateURL) and (FHTTP.ResultCode < 300) then
     begin
+      DownloadSuccess := True;
       Filename := FMD_DIRECTORY + UPDATE_PACKAGE_NAME;
       if FileExists(Filename) then
         DeleteFile(Filename);
