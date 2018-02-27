@@ -46,7 +46,7 @@ end
 function getpagenumber()
   if http.get(MaybeFillHost(module.rooturl,url)) then
     local s=StreamToString(http.document)
-    local lurl=AppendURLDelim(GetBetween('var server = \'','\';',s))..GetBetween('var dataurl = \'','\';',s)..'/'
+    local lurl=MaybeFillHost(module.rooturl,AppendURLDelim(GetBetween('var server = \'','\';',s))..GetBetween('var dataurl = \'','\';',s)..'/')
     local page_array=GetBetween('var page_array = [','];',s)
     task.pagelinks.commatext=GetBetween('var page_array = [','];',s):gsub('\'','')
     for i=0,task.pagelinks.count-1 do
@@ -94,7 +94,7 @@ function Init()
   m.category='English'
   m.website='MangaDex'
   m.rooturl='https://mangadex.com'
-  m.lastupdated='February 26, 2018'
+  m.lastupdated='February 28, 2018'
   m.ongetinfo='getinfo'
   m.ongetpagenumber='getpagenumber'
   m.ongetdirectorypagenumber='getdirectorypagenumber'
