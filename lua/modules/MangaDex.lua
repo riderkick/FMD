@@ -10,12 +10,12 @@ function getinfo()
     mangainfo.summary=x.xpathstring('//tr[./th="Description:"]/td')
     local l='//*[@id="chapters"]//tr[@id]'
     local n=''
-    if module.getoption('showalllang') then
+    if module.getoption('luashowalllang') then
       n='/concat(.," [",../td[2]/img/@title,"]"'
     else
       l=l..'[./td/img[@title="English"]]'
     end
-    if module.getoption('showscangroup') then
+    if module.getoption('luashowscangroup') then
       if n=='' then n='/concat(.' end
       n=n..'," [",../td[3],"]"'
     end
@@ -103,6 +103,6 @@ function Init()
   m.maxtasklimit=1
   m.maxconnectionlimit=2
 
-  m.addoptioncheckbox('showalllang', 'Show all language', false)
-  m.addoptioncheckbox('showscangroup', 'Show scanlation group', false)
+  m.addoptioncheckbox('luashowalllang', 'Show all language', false)
+  m.addoptioncheckbox('luashowscangroup', 'Show scanlation group', false)
 end
