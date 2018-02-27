@@ -34,9 +34,16 @@ begin
     Logger.Send(lua_tostring(L, i));
 end;
 
+function luabase_sleep(L: Plua_State): Integer; cdecl;
+begin
+  Result := 0;
+  Sleep(lua_tointeger(L, 1));
+end;
+
 procedure LuaBaseRegister(L: Plua_State);
 begin
   lua_register(L, 'print', @luabase_print);
+  lua_register(L, 'Sleep', @luabase_sleep);
 
   luaBaseUnitRegister(L);
   luaRegExprRegister(L);
