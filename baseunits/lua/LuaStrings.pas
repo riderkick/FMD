@@ -131,13 +131,31 @@ begin
   TUserData(luaClassGetObject(L)).Clear;
 end;
 
+function strings_delete(L: Plua_State): Integer; cdecl;
+begin
+  Result := 0;
+  TUserData(luaClassGetObject(L)).Delete(lua_tointeger(L, 1));
+end;
+
+function strings_indexof(L: Plua_State): Integer; cdecl;
+begin
+  lua_pushinteger(L, TUserData(luaClassGetObject(L)).IndexOf(lua_tostring(L, 1)));
+  Result := 1;
+end;
+
+function strings_indexofname(L: Plua_State): Integer; cdecl;
+begin
+  lua_pushinteger(L, TUserData(luaClassGetObject(L)).IndexOfName(lua_tostring(L, 1)));
+  Result := 1;
+end;
+
 const
   constructs: packed array [0..2] of luaL_Reg = (
     (name: 'New'; func: @strings_create),
     (name: 'Create'; func: @strings_create),
     (name: nil; func: nil)
     );
-  methods: packed array [0..11] of luaL_Reg = (
+  methods: packed array [0..14] of luaL_Reg = (
     (name: 'LoadFromFile'; func: @strings_loadfromfile),
     (name: 'LoadFromStream'; func: @strings_loadfromstream),
     (name: 'SetText'; func: @strings_settext),
@@ -149,6 +167,9 @@ const
     (name: 'GetCount'; func: @strings_getcount),
     (name: 'Sort'; func: @strings_sort),
     (name: 'Clear'; func: @strings_clear),
+    (name: 'Delete'; func: @strings_delete),
+    (name: 'IndexOf'; func: @strings_indexof),
+    (name: 'IndexOfName'; func: @strings_indexofname),
     (name: nil; func: nil)
     );
   props: packed array[0..4] of lual_Reg_prop = (
