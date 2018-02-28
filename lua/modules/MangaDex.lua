@@ -49,7 +49,7 @@ function getpagenumber()
     local lurl=MaybeFillHost(module.rooturl,AppendURLDelim(GetBetween('var server = \'','\';',s))..GetBetween('var dataurl = \'','\';',s)..'/')
     local page_array=GetBetween('var page_array = [','];',s)
     task.pagelinks.commatext=GetBetween('var page_array = [','];',s):gsub('\'','')
-    for i=0,task.pagelinks.count-1 do
+    for i=0,task.pagelinks.count-2 do
       task.pagelinks[i]=lurl..task.pagelinks[i]
     end
     return true
