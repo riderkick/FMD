@@ -127,6 +127,12 @@ begin
   Result := 1;
 end;
 
+function lua_trimstrings(L: Plua_State): Integer; cdecl;
+begin
+  Result := 0;
+  TrimStrings(TStrings(luaGetUserData(L, 1)));
+end;
+
 procedure luaBaseUnitRegister(L: Plua_State);
 begin
   luaPushFunctionGlobal(L, 'Pos', @lua_pos);
@@ -144,6 +150,7 @@ begin
   luaPushFunctionGlobal(L, 'IncStr', @lua_incstr);
   luaPushFunctionGlobal(L, 'StreamToString', @lua_streamtostring);
   luaPushFunctionGlobal(L, 'Round', @lua_round);
+  luaPushFunctionGlobal(L, 'TrimStrings', @lua_trimstrings);
 end;
 
 end.
