@@ -2679,37 +2679,8 @@ begin
 end;
 
 procedure TMainForm.edDownloadsSearchChange(Sender: TObject);
-var
-  Node: PVirtualNode;
-  S: String;
 begin
-  if vtDownload.RootNodeCount = 0 then Exit;
-  with vtDownload do
-    try
-      BeginUpdate;
-      if (edDownloadsSearch.Text = '') and (VisibleCount <> RootNodeCount) then
-      begin
-        Node := GetFirst();
-        while Assigned(Node) do
-        begin
-          IsVisible[Node] := DLManager[Node^.Index].Visible;
-          Node := GetNext(Node);
-        end;
-      end
-      else
-      begin
-        S := AnsiUpperCase(edDownloadsSearch.Text);
-        Node := GetFirst();
-        while Assigned(Node) do
-        begin
-          if DLManager[Node^.Index].Visible then
-            IsVisible[Node] := Pos(S, AnsiUpperCase(DLManager[Node^.Index].DownloadInfo.Title)) > 0;
-          Node := GetNext(Node);
-        end;
-      end;
-    finally
-      EndUpdate;
-    end;
+  SearchOnVT(vtDownload, edDownloadsSearch.Text);
 end;
 
 procedure TMainForm.edFavoritesSearchButtonClick(Sender: TObject);
@@ -2718,36 +2689,8 @@ begin
 end;
 
 procedure TMainForm.edFavoritesSearchChange(Sender: TObject);
-var
-  Node: PVirtualNode;
-  S: String;
 begin
-  if vtFavorites.RootNodeCount = 0 then Exit;
-  with vtFavorites do
-    try
-      BeginUpdate;
-      if (edFavoritesSearch.Text = '') and (VisibleCount <> RootNodeCount) then
-      begin
-        Node := GetFirst();
-        while Assigned(Node) do
-        begin
-          IsVisible[Node] := True;
-          Node := GetNext(Node);
-        end;
-      end
-      else
-      begin
-        S := AnsiUpperCase(edFavoritesSearch.Text);
-        Node := GetFirst();
-        while Assigned(Node) do
-        begin
-          IsVisible[Node] := Pos(S, AnsiUpperCase(FavoriteManager[Node^.Index].FavoriteInfo.Title)) > 0;
-          Node := GetNext(Node);
-        end;
-      end;
-    finally
-      EndUpdate;
-    end;
+  SearchOnVT(vtFavorites, edFavoritesSearch.Text, 1);
 end;
 
 procedure TMainForm.edFilterMangaInfoChaptersButtonClick(Sender: TObject);
@@ -2784,85 +2727,8 @@ begin
 end;
 
 procedure TMainForm.edWebsitesSearchChange(Sender: TObject);
-var
-  s: String;
-  lcount: Integer;
-  data: PSingleItem;
-  xNode, lNode: PVirtualNode;
 begin
-  s := Trim(LowerCase(edWebsitesSearch.Text));
-  vtOptionMangaSiteSelection.BeginUpdate;
-  try
-    lNode := nil;
-    lcount := 0;
-    vtOptionMangaSiteSelection.RootNode^.TotalHeight := vtOptionMangaSiteSelection.DefaultNodeHeight;
-    if s = '' then
-    begin
-      xNode := vtOptionMangaSiteSelection.GetFirst;
-      while Assigned(xNode) do
-      begin
-        Include(xNode^.States, vsVisible);
-        if xNode^.ChildCount > 0 then
-        begin
-          lNode := xNode;
-          Inc(vtOptionMangaSiteSelection.RootNode^.TotalHeight, xNode^.NodeHeight);
-        end
-        else
-          if Assigned(lNode) then
-            if vsExpanded in lNode^.States then
-              Inc(vtOptionMangaSiteSelection.RootNode^.TotalHeight, xNode^.NodeHeight);
-        xNode := vtOptionMangaSiteSelection.GetNext(xNode);
-      end;
-    end
-    else
-    begin
-      xNode := vtOptionMangaSiteSelection.GetFirst;
-      while Assigned(xNode) do
-      begin
-        Include(xNode^.States, vsVisible);
-        if xNode^.ChildCount > 0 then
-        begin
-          if Assigned(lNode) then
-          begin
-            if lcount > 0 then
-              Inc(vtOptionMangaSiteSelection.RootNode^.TotalHeight, lNode^.NodeHeight)
-            else
-              Exclude(lNode^.States, vsVisible);
-          end;
-          lNode := xNode;
-          lcount := 0;
-        end
-        else
-        begin
-          data := vtOptionMangaSiteSelection.GetNodeData(xNode);
-          if Assigned(data) then
-          begin
-            if Pos(s, LowerCase(data^.Text)) <> 0 then
-            begin
-              Inc(lcount);
-              if Assigned(lNode) then
-              begin
-                if vsExpanded in lNode^.States then
-                  Inc(vtOptionMangaSiteSelection.RootNode^.TotalHeight, xNode^.NodeHeight);
-              end;
-            end
-            else
-              Exclude(xNode^.States, vsVisible);
-          end;
-        end;
-        xNode := vtOptionMangaSiteSelection.GetNext(xNode);
-      end;
-      if Assigned(lNode) then
-      begin
-        if lcount > 0 then
-          Inc(vtOptionMangaSiteSelection.RootNode^.TotalHeight, lNode^.NodeHeight)
-        else
-          Exclude(lNode^.States, vsVisible);
-      end;
-    end;
-  finally
-    vtOptionMangaSiteSelection.EndUpdate;
-  end;
+  SearchOnVT(vtOptionMangaSiteSelection, edWebsitesSearch.Text);
 end;
 
 procedure TMainForm.btRemoveFilterClick(Sender: TObject);
@@ -4594,7 +4460,7 @@ end;
 
 procedure TMainForm.AddSilentThread(URL: string; MetaDataType: TMetaDataType);
 var
-  i, j, m: Integer;
+  i, m: Integer;
   host, link, webs: String;
   URls: TStringList;
 begin
