@@ -761,10 +761,10 @@ begin
         if v then
         begin
           xnode := node^.Parent;
-          while xnode <> nil do
+          while (xnode <> nil)  and (xnode <> Tree.RootNode) do
           begin
             if not (vsVisible in xnode^.States) then
-              Tree.IsVisible[xnode] := v;
+              Tree.IsVisible[xnode] := True;
             xnode := xnode^.Parent;
           end;
         end;
@@ -775,7 +775,8 @@ begin
     begin
       while node <> nil do
       begin
-        Tree.IsVisible[node] := True;
+        if not (vsVisible in node^.States) then
+          Tree.IsVisible[node] := True;
         node := Tree.GetNext(node);
       end;
     end;
