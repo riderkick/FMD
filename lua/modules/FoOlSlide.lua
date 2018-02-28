@@ -46,7 +46,7 @@ function getdirurl(website)
     ['MangaichiScan'] = dirurlfsdir,
     ['Riceballicious'] = dirurlreaderlist,
     ['Yuri-ism'] = dirurlslide,
-    ['MangajinNoFansub'] = dirurllector
+    ['HatigarmScans'] = '/hs/directory/'
   }  
   if dirs[website] ~= nil then
     return dirs[website]
@@ -60,7 +60,7 @@ function getinfo()
   local result = net_problem
   if getWithCookie(lurl) then
     x = TXQuery.Create(http.document)
-    mangainfo.coverlink = x.xpathstring('//div[@class="thumbnail"]/img/@src')
+    mangainfo.coverlink = x.xpathstring('//div[@class="thumbnail" or contains(@class, "thumb")]/img/@src')
     if mangainfo.title == '' then
       if module.website == 'AtelierDuNoir' then
         mangainfo.title = x.xpathstring('//div[@class="section-headline"]//h3')
@@ -71,14 +71,18 @@ function getinfo()
     if Pos('emailprotected', mangainfo.title) > 0 then
       mangainfo.title = Trim(SeparateLeft(x.xpathstring('//title'), '::'))
     end
+    local cls = 'info'
+    if module.website == 'HatigarmScans' then
+      cls = 'well'
+    end
     mangainfo.authors = string.gsub(
-      x.xpathstring('//div[@class="info"]/*[contains(text(),"Author")]/following-sibling::text()[1]'),
+      x.xpathstring('//div[@class="'..cls..'"]/*[contains(text(),"Author")]/following-sibling::text()[1]'),
       '^[%s:]*', '')
     mangainfo.artists = string.gsub(
-      x.xpathstring('//div[@class="info"]/*[contains(text(),"Artist")]/following-sibling::text()[1]'),
+      x.xpathstring('//div[@class="'..cls..'"]/*[contains(text(),"Artist")]/following-sibling::text()[1]'),
       '^[%s:]*', '')
     mangainfo.summary = string.gsub(
-      x.xpathstring('//div[@class="info"]/*[contains(text(),"Synopsis")]/following-sibling::text()[1]'),
+      x.xpathstring('//div[@class="'..cls..'"]/*[contains(text(),"Synopsis")]/following-sibling::text()[1]'),
       '^[%s:]*', '')
     v = x.xpath('//div[@class="list"]//div[@class="title"]/a')
     for i = 1, v.count do
@@ -171,6 +175,8 @@ function getnameandlink()
         links.add(x.xpathstring('div/a/@href', v1))
         names.add(x.xpathstring('h4', v1))
       end
+    elseif module.website == 'HatigarmScans' then
+      x.XpathHREFAll('//div[@class="grid"]/div/a', links, names)
     else
       x.XpathHREFAll('//div[@class="list series"]/div/div[@class="title"]/a', links, names)
     end
@@ -225,6 +231,7 @@ function Init()
   AddWebsiteModule('SaikoScans', 'http://saikoscans.ml', cat)
   AddWebsiteModule('Yuri-ism', 'https://www.yuri-ism.net', cat)
   AddWebsiteModule('SilentSkyScans', 'http://reader.silentsky-scans.net', cat)
+  AddWebsiteModule('HatigarmScans', 'http://hatigarmscans.eu', cat)
   
   -- es-sc
   cat = 'Spanish-Scanlation'
@@ -248,5 +255,4 @@ function Init()
   AddWebsiteModule('IdkScans', 'http://reader.idkscans.com', cat)
   AddWebsiteModule('Nightow', 'http://nightow.net', cat)
   AddWebsiteModule('TrueColorsScan', 'https://truecolorsscans.miocio.org', cat)
-  AddWebsiteModule('MangajinNoFansub', 'https://www.mangajinnofansub.com', cat)
 end
