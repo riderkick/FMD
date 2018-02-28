@@ -19,6 +19,8 @@ function Pkcs7RemovePad(const s: String): String;
 function AESEncrpytCBCSHA256Base64Pkcs7(const s, key, iv: String): string;
 function AESDecryptCBCSHA256Base64Pkcs7(const s, key, iv: String): string;
 function AESDecryptCBCMD5Base64ZerosPadding(const s, key, iv: String): String;
+function MD5Hex(const s: String): String;
+function AESDecryptCBC(const s, key, iv: String): String;
 
 implementation
 
@@ -133,28 +135,16 @@ begin
   end;
 end;
 
-function AESDecryptCBCMD5Base64ZerosPadding(const s, key, iv: String): String;
+function AESDecryptCBC(const s, key, iv: String): String;
 var
-  keyHash: array[0 .. 15] of Byte;
   ivBytes: array[0 .. 15] of Byte;
-  keyBytes: array[0 .. 31] of Byte;
+  keyBytes: TBytes;
   i: Integer;
-  data: String;
 begin
   Result := '';
-
-  with TDCP_md5.Create(nil) do
-    try
-      Init;
-      UpdateStr(key);
-      Final(keyHash);
-    finally
-      Free;
-    end;
-
-  data := LowerCase(StrToHexStr(BytesToString(keyHash)));
-  for i := 0 to 31 do
-    keyBytes[i] := Byte(data[i + 1]);
+  SetLength(keyBytes, Length(key));
+  for i := 0 to Length(key)-1 do
+    keyBytes[i] := Byte(key[i + 1]);
 
   FillChar(ivBytes, 16, 0);
   for i := 0 to Min(16, Length(iv)) - 1 do
@@ -162,14 +152,33 @@ begin
 
   with TDCP_rijndael.Create(nil) do
     try
-      Init(keyBytes, 32*8, @ivBytes[0]);
-      data := DecodeStringBase64(s);
-      SetLength(Result,Length(data));
-      DecryptCBC(data[1],Result[1],Length(data));
+      Init(keyBytes, Length(key) * 8, @ivBytes[0]);
+      SetLength(Result,Length(s));
+      DecryptCBC(s[1],Result[1],Length(s));
       Burn;
     finally
       Free;
     end;
+end;
+
+function AESDecryptCBCMD5Base64ZerosPadding(const s, key, iv: String): String;
+begin
+  Result := AESDecryptCBC(DecodeStringBase64(s), MD5Hex(key), iv);
+end;
+
+function MD5Hex(const s: String): String;
+var
+  h: array[0 .. 15] of Byte;
+begin
+  with TDCP_md5.Create(nil) do
+    try
+      Init;
+      UpdateStr(s);
+      Final(h);
+    finally
+      Free;
+    end;
+  Result := LowerCase(StrToHexStr(BytesToString(h)));
 end;
 
 end.
