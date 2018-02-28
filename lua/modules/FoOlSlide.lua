@@ -46,6 +46,7 @@ function getdirurl(website)
     ['MangaichiScan'] = dirurlfsdir,
     ['Riceballicious'] = dirurlreaderlist,
     ['Yuri-ism'] = dirurlslide,
+    ['MangajinNoFansub'] = dirurllector,
     ['HatigarmScans'] = '/hs/directory/'
   }  
   if dirs[website] ~= nil then
@@ -255,4 +256,5 @@ function Init()
   AddWebsiteModule('IdkScans', 'http://reader.idkscans.com', cat)
   AddWebsiteModule('Nightow', 'http://nightow.net', cat)
   AddWebsiteModule('TrueColorsScan', 'https://truecolorsscans.miocio.org', cat)
+  AddWebsiteModule('MangajinNoFansub', 'https://www.mangajinnofansub.com', cat)
 end
