@@ -59,6 +59,13 @@ function getpagenumber()
   return true
 end
 
+function taskstart()
+  for i=0, task.pagelinks.count-1 do
+    task.pagelinks[i]=MaybeFillHost(module.rooturl,task.pagelinks[i])
+  end
+  return true
+end
+
 local dirurl='/titles'
 
 function getdirectorypagenumber()
@@ -96,6 +103,7 @@ function Init()
   m.rooturl='https://mangadex.com'
   m.lastupdated='February 28, 2018'
   m.ongetinfo='getinfo'
+  m.ontaskstart='taskstart'
   m.ongetpagenumber='getpagenumber'
   m.ongetdirectorypagenumber='getdirectorypagenumber'
   m.ongetnameandlink='getnameandlink'
