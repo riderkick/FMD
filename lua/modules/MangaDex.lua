@@ -44,11 +44,9 @@ function getinfo()
 end
 
 function getpagenumber()
-  print('mangadex get')
   if http.get(MaybeFillHost(module.rooturl,url)) then
     local s=StreamToString(http.document)
     local lurl=MaybeFillHost(module.rooturl,AppendURLDelim(GetBetween('var server = \'','\';',s))..GetBetween('var dataurl = \'','\';',s)..'/')
-    local page_array=GetBetween('var page_array = [','];',s)
     task.pagelinks.commatext=GetBetween('var page_array = [','];',s):gsub('\'','')
     task.pagelinks.text=Trim(task.pagelinks.text)
     for i=0,task.pagelinks.count-1 do
@@ -102,7 +100,7 @@ function Init()
   m=NewModule()
   m.category='English'
   m.website='MangaDex'
-  m.rooturl='https://mangadex.com'
+  m.rooturl='https://mangadex.org'
   m.lastupdated='February 28, 2018'
   m.ongetinfo='getinfo'
   m.ontaskstart='taskstart'
