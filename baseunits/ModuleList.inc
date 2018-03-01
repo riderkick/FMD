@@ -35,7 +35,6 @@ uses
   LeoManga,
   MangaPark,
   MangaIndo,
-  FunManga,
   MangaOnlineTo,
   MyMangaMe,
   ReadComics,
