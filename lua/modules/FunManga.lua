@@ -31,7 +31,7 @@ function getpagenumber()
   if Pos('/all-pages', s) == 0 then s = s .. '/all-pages' end
   if http.get(s) then
     local x=TXQuery.Create(http.Document)
-    x.xpathstringall('//div[contains(@class,"content-inner")]/img/@src', task.pagelinks)
+    x.xpathstringall('//div[contains(@class,"content-inner")]//img/@src', task.pagelinks)
   else
     return false
   end
@@ -43,7 +43,9 @@ function getnameandlink()
   if module.CurrentDirectoryIndex ~= 0 then
     s = '/'..ALPHA_LIST:sub(module.CurrentDirectoryIndex+1,module.CurrentDirectoryIndex+1)
   end
-  if http.get(module.rooturl .. '/manga-list' .. s) then
+  local dirurl = '/manga-list'
+  if module.website == 'MangaDoom' then dirurl = '/manga-directory' end
+  if http.get(module.rooturl .. dirurl .. s) then
     local x = TXQuery.Create(http.Document)
     x.XPathHREFAll('//div[@class="content"]/div/div[@class="row"]//li/a', links, names)
     return no_error
@@ -52,14 +54,20 @@ function getnameandlink()
   end
 end
 
-function Init()
+function AddWebsiteModule(name, url)
   local m = NewModule()
-  m.website = 'FunManga'
-  m.rooturl = 'http://www.funmanga.com'
+  m.website = name
+  m.rooturl = url
   m.category = 'English'
-  m.lastupdated='March 1, 2018'
+  m.lastupdated = 'March 1, 2018'
   m.ongetinfo='getinfo'
   m.ongetpagenumber='getpagenumber'
   m.ongetnameandlink='getnameandlink'
   m.totaldirectory = ALPHA_LIST:len()
+  return m
+end 
+
+function Init()
+  AddWebsiteModule('FunManga', 'http://www.funmanga.com')
+  AddWebsiteModule('MangaDoom', 'http://www.mngdoom.com')
 end
