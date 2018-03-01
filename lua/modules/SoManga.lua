@@ -58,5 +58,4 @@ function Init()
   m.ongetinfo='getinfo'
   m.ongetpagenumber='getpagenumber'
   m.ongetnameandlink='getnameandlink'
-  m.ongetimageurl='getimageurl'
 end
