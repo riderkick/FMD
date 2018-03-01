@@ -20,7 +20,6 @@ end
 function getpagenumber()
   task.pagelinks.clear()
   task.pagenumber=0
-  print(MaybeFillHost(module.rooturl,url))
   if http.get(MaybeFillHost(module.rooturl,url)) then  
     local x=TXQuery.Create(http.Document)
     task.pagenumber = x.xpath('//select[@name="page"]/option').count

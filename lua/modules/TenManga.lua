@@ -30,7 +30,6 @@ function getpagenumber()
   if http.get(MaybeFillHost(module.rooturl, url)) then
     task.pagenumber=TXQuery.Create(http.Document).xpathcount('(//select[@class="sl-page"])[1]/option')
     module.storage.text = http.cookies.text
-    print(module.storage.text)
   else
     return false
   end

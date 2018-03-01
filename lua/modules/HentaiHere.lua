@@ -29,7 +29,6 @@ function GetPageNumber()
     v=x.xpath('json(*)()')
     for i=1,v.count do
       v1=v.get(i)
-      print(v1.toString)
       task.pagelinks.add('https://hentaicdn.com/hentai' .. v1.toString)
     end
     return true
