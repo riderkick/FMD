@@ -572,7 +572,7 @@ msgstr "Обновить"
 
 #: taccountmanagerform.caption
 msgid "AccountManagerForm"
-msgstr ""
+msgstr "AccountManagerForm"
 
 #: taccountmanagerform.vtaccountlist.header.columns[1].text
 msgctxt "TACCOUNTMANAGERFORM.VTACCOUNTLIST.HEADER.COLUMNS[1].TEXT"
@@ -600,7 +600,7 @@ msgstr "OK"
 
 #: taccountsetform.caption
 msgid "Account"
-msgstr ""
+msgstr "Учетная запись"
 
 #: taccountsetform.ckshowpassword.caption
 msgid "Show password"
@@ -2398,15 +2398,15 @@ msgstr "Выбрать сайт"
 
 #: twebsitesettingsform.caption
 msgid "WebsiteSettingsForm"
-msgstr ""
+msgstr "WebsiteSettingsForm"
 
 #: twebsitesettingsform.edsearch.texthint
 msgid "Website name"
-msgstr ""
+msgstr "Название сайта"
 
 #: twebsitesettingsform.edsearchproperty.texthint
 msgid "Setting name"
-msgstr ""
+msgstr "Название параметра"
 
 #: udownloadsmanager.rs_compressing
 msgid "Compressing..."
