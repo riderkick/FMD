@@ -14,7 +14,7 @@ function GetInfo();
     x = TXQuery.Create(http.Document)
     mangainfo.coverLink = MaybeFillHost(module.RootURL, x.XPathString('//div[@class="boxed"]/img/@src'))
     if mangainfo.title == '' then 
-      mangainfo.title = x.XPathString('//h2[@class="widget-title"]')
+      mangainfo.title = x.XPathString('//h2[contains(@class,"widget-title")]')
     end
     if module.Website == 'MangaDenizi' then
       mangainfo.status = MangaInfoStatusIfPos(x.XPathString('//dt[.="Durum:"]/following-sibling::dd[1]'), 'Devam Ediyor', 'Tamamlandı')
@@ -76,6 +76,7 @@ function Init()
   c='Turkish'
   AddWebsiteModule('MangaDenizi', 'http://www.mangadenizi.com', c);
   AddWebsiteModule('ManhuaTr', 'http://manhua-tr.com', c);
+  AddWebsiteModule('MangaVadisi', 'http://manga-v2.mangavadisi.org/', c);
 
   c='English-Scanlation'
   AddWebsiteModule('FallenAngelsScans','http://manga.fascans.com', c);
