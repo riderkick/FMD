@@ -15,6 +15,9 @@ function GetInfo();
     mangainfo.coverLink = MaybeFillHost(module.RootURL, x.XPathString('//div[@class="boxed"]/img/@src'))
     if mangainfo.title == '' then 
       mangainfo.title = x.XPathString('//h2[contains(@class,"widget-title")]')
+      if mangainfo.title == '' then
+        mangainfo.title = mangainfo.url:match('/([^/]+)$')
+      end
     end
     if module.Website == 'MangaDenizi' then
       mangainfo.status = MangaInfoStatusIfPos(x.XPathString('//dt[.="Durum:"]/following-sibling::dd[1]'), 'Devam Ediyor', 'Tamamlandı')
@@ -66,12 +69,15 @@ end
 function Init()
   AddWebsiteModule('MangaForest', 'http://mangaforest.com', 'English')
   AddWebsiteModule('MangaDoor', 'http://mangadoor.com', 'Spanish');
-  AddWebsiteModule('RawMangaUpdate', 'http://rawmangaupdate.com', 'Raw');
   
   local c='Indonesian'
   AddWebsiteModule('Komikid', 'http://www.komikid.com', c);
   AddWebsiteModule('MangaDesu','http://mangadesu.net', c);
   AddWebsiteModule('MangaID', 'http://mangaid.co', c);  
+  
+  c='Raw'
+  AddWebsiteModule('RawMangaUpdate', 'http://rawmangaupdate.com', c);
+  AddWebsiteModule('MangaRawOnline', 'http://mangaraw.online', c);
   
   c='Turkish'
   AddWebsiteModule('MangaDenizi', 'http://www.mangadenizi.com', c);
