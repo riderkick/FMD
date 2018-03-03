@@ -67,6 +67,7 @@ function Init()
   AddWebsiteModule('MangaForest', 'http://mangaforest.com', 'English')
   AddWebsiteModule('MangaDoor', 'http://mangadoor.com', 'Spanish');
   AddWebsiteModule('MangaDenizi', 'http://www.mangadenizi.com', 'Turkish');
+  AddWebsiteModule('RawMangaUpdate', 'http://rawmangaupdate.com', 'Raw');
   
   local c='Indonesian'
   AddWebsiteModule('Komikid', 'http://www.komikid.com', c);
