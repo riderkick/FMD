@@ -66,13 +66,16 @@ end
 function Init()
   AddWebsiteModule('MangaForest', 'http://mangaforest.com', 'English')
   AddWebsiteModule('MangaDoor', 'http://mangadoor.com', 'Spanish');
-  AddWebsiteModule('MangaDenizi', 'http://www.mangadenizi.com', 'Turkish');
   AddWebsiteModule('RawMangaUpdate', 'http://rawmangaupdate.com', 'Raw');
   
   local c='Indonesian'
   AddWebsiteModule('Komikid', 'http://www.komikid.com', c);
   AddWebsiteModule('MangaDesu','http://mangadesu.net', c);
   AddWebsiteModule('MangaID', 'http://mangaid.co', c);  
+  
+  c='Turkish'
+  AddWebsiteModule('MangaDenizi', 'http://www.mangadenizi.com', c);
+  AddWebsiteModule('ManhuaTr', 'http://manhua-tr.com', c);
 
   c='English-Scanlation'
   AddWebsiteModule('FallenAngelsScans','http://manga.fascans.com', c);
