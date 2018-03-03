@@ -149,9 +149,15 @@ function getdirectorypagenumber()
 end
 
 function getnameandlink()
+  local w = {
+    ['MangaSpy'] = true,
+    ['MangaIce'] = true,
+    ['MangaDeep'] = true,
+    ['Manga99'] = true
+  }
   if http.GET(AppendURLDelim(module.RootURL) .. getdirurl(module.website) .. IncStr(url) .. '/') then
     x = TXQuery.Create(http.Document)
-    if (module.website == 'MangaSpy') or (module.website == 'MangaIce') or (module.website == 'MangaDeep') then
+    if w[module.website] then
       x.XPathHREFAll('//*[contains(@id,"content")]//*[@class="det"]/a', links, names)
     else
       x.XPathHREFtitleAll('//*[contains(@id,"content")]//a[./img]', links, names);
@@ -184,6 +190,7 @@ function Init()
   AddWebsiteModule('Authrone', 'http://www.authrone.com', cat)
   AddWebsiteModule('EyeOnManga', 'http://www.eyeonmanga.com', cat)
   AddWebsiteModule('MangaDeep', 'http://www.mangadeep.com', cat)
+  AddWebsiteModule('Manga99', 'http://www.manga99.com', cat)
   
   cat = 'H-Sites'
   AddWebsiteModule('ReadHentaiManga', 'http://readhentaimanga.com', cat)
