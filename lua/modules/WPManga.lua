@@ -17,6 +17,9 @@ function getinfo()
     if module.website == 'HentaiRead' then
       mangainfo.chapterLinks.Add(x.XPathString('//a[@class="lst"]/@href'))
       mangainfo.chapterNames.Add(mangainfo.title)
+    elseif module.website == 'MangaOnlineToday' then
+      mangainfo.summary = x.XPathString('//div[contains(@class,"mng_det")]/p[1]')
+      x.xpathhrefall('//ul[@class="chp_lst"]/li/a', mangainfo.chapterLinks, mangainfo.chapterNames)
     else
       while true do      
         v = x.XPath('//a[@class="lst"]')
@@ -159,6 +162,8 @@ function getnameandlink()
     x = TXQuery.Create(http.Document)
     if w[module.website] then
       x.XPathHREFAll('//*[contains(@id,"content")]//*[@class="det"]/a', links, names)
+    elseif module.website == 'MangaOnlineToday' then
+      x.XPathHREFAll('//*[contains(@id,"content")]//div[@class="box"]/ul/li/a', links, names)
     else
       x.XPathHREFtitleAll('//*[contains(@id,"content")]//a[./img]', links, names);
     end
@@ -191,6 +196,7 @@ function Init()
   AddWebsiteModule('EyeOnManga', 'http://www.eyeonmanga.com', cat)
   AddWebsiteModule('MangaDeep', 'http://www.mangadeep.com', cat)
   AddWebsiteModule('Manga99', 'http://www.manga99.com', cat)
+  AddWebsiteModule('MangaOnlineToday', 'http://www.mangaonline.today', cat)
   
   cat = 'H-Sites'
   AddWebsiteModule('ReadHentaiManga', 'http://readhentaimanga.com', cat)
