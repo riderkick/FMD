@@ -68,32 +68,21 @@ function taskstart()
   return true
 end
 
-local dirurl='/titles'
-
-function getdirectorypagenumber()
-  http.cookies.values['mangadex_h_toggle'] = '1'
-  if http.get(module.rooturl..dirurl) then
-    x=TXQuery.Create(http.document)
-    local perpage=tonumber(RegExprGetMatch('/(\\d+)$',x.xpathstring('//ul[@class="pagination"]/li[@class="active"]/following-sibling::li[@class="paging"]/a/@href'),1))
-    local lastpage=tonumber(RegExprGetMatch('/(\\d+)$',x.xpathstring('//ul[@class="pagination"]/li[@class="paging"][last()]/a/@href'),1))
-    if perpage==nil then perpage=100 end
-    if lastpage==nil then lastpage=perpage end
-    module.tag=perpage
-    page=Round(lastpage/perpage)+1
-    return true
-  else
-    return false
-  end
-end
-
+local dirurl='/titles/'
+local ALPHA_LIST_UP = '~ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 function getnameandlink()
   local lurl=dirurl
-  if url~='0' then
-    lurl=lurl..'/'..tostring(module.tag*tonumber(url))
-  end
+  lurl = lurl .. ALPHA_LIST_UP:sub(module.CurrentDirectoryIndex+1,module.CurrentDirectoryIndex+1)
+  lurl = lurl .. '/' .. IncStr(url)
   http.cookies.values['mangadex_h_toggle'] = '1'
   if http.GET(module.rooturl..lurl) then
-    TXQuery.Create(http.document).xpathhrefall('//*[@id="content"]//tr/td[2]/a',links,names)
+    local x = TXQuery.Create(http.document)
+    x.xpathhrefall('//*[@id="content"]//tr/td[2]/a',links,names)
+    local page = x.xpathstring('//ul[@class="pagination"]/li[last()]/a/@href')
+    page = page:match('/(%d+)/?$')
+    page = tonumber(page)
+    if page == nil then page = 1; end
+    updatelist.CurrentDirectoryPageNumber = page
     return no_error
   else
     return net_problem
@@ -109,8 +98,8 @@ function Init()
   m.ongetinfo='getinfo'
   m.ontaskstart='taskstart'
   m.ongetpagenumber='getpagenumber'
-  m.ongetdirectorypagenumber='getdirectorypagenumber'
   m.ongetnameandlink='getnameandlink'
+  m.totaldirectory = ALPHA_LIST_UP:len()
   
   m.maxtasklimit=1
   m.maxconnectionlimit=2
