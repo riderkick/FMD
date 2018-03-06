@@ -1,5 +1,6 @@
 function getinfo()
   mangainfo.url=MaybeFillHost(module.rooturl,url)
+  http.cookies.values['mangadex_h_toggle'] = '1'
   if http.get(mangainfo.url) then
     x=TXQuery.Create(http.document)
     if mangainfo.title=='' then mangainfo.title=x.xpathstring('//meta[@property="og:title"]/replace(@content,"\\s\\(\\w+\\)\\s-\\sMangaDex$","")') end
@@ -44,6 +45,7 @@ function getinfo()
 end
 
 function getpagenumber()
+  http.cookies.values['mangadex_h_toggle'] = '1'
   if http.get(MaybeFillHost(module.rooturl,url)) then
     local s=StreamToString(http.document)
     local lurl=MaybeFillHost(module.rooturl,AppendURLDelim(GetBetween('var server = \'','\';',s))..GetBetween('var dataurl = \'','\';',s)..'/')
@@ -69,6 +71,7 @@ end
 local dirurl='/titles'
 
 function getdirectorypagenumber()
+  http.cookies.values['mangadex_h_toggle'] = '1'
   if http.get(module.rooturl..dirurl) then
     x=TXQuery.Create(http.document)
     local perpage=tonumber(RegExprGetMatch('/(\\d+)$',x.xpathstring('//ul[@class="pagination"]/li[@class="active"]/following-sibling::li[@class="paging"]/a/@href'),1))
@@ -88,6 +91,7 @@ function getnameandlink()
   if url~='0' then
     lurl=lurl..'/'..tostring(module.tag*tonumber(url))
   end
+  http.cookies.values['mangadex_h_toggle'] = '1'
   if http.GET(module.rooturl..lurl) then
     TXQuery.Create(http.document).xpathhrefall('//*[@id="content"]//tr/td[2]/a',links,names)
     return no_error
