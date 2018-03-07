@@ -12,15 +12,15 @@ function getinfo()
     local l='//*[@id="chapters"]//tr[@id]'
     local n=''
     if module.getoption('luashowalllang') then
-      n='/concat(.," [",../td[2]/img/@title,"]"'
+      n='/concat(.," [",../td[3]/img/@title,"]"'
     else
       l=l..'[./td/img[@title="English"]]'
     end
     if module.getoption('luashowscangroup') then
       if n=='' then n='/concat(.' end
-      n=n..'," [",../td[3],"]"'
+      n=n..'," [",../td[4],"]"'
     end
-    l=l..'/td[1]'
+    l=l..'/td[2]'
     if n~='' then n=n..')' end
     n=l..n
     l=l..'/a/@href'
@@ -48,6 +48,7 @@ function getpagenumber()
   http.cookies.values['mangadex_h_toggle'] = '1'
   if http.get(MaybeFillHost(module.rooturl,url)) then
     local s=StreamToString(http.document)
+    if Pos('var page_array', s) == 0 then return false; end
     local lurl=MaybeFillHost(module.rooturl,AppendURLDelim(GetBetween('var server = \'','\';',s))..GetBetween('var dataurl = \'','\';',s)..'/')
     task.pagelinks.commatext=GetBetween('var page_array = [','];',s):gsub('\'','')
     task.pagelinks.text=Trim(task.pagelinks.text)
