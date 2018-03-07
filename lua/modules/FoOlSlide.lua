@@ -106,6 +106,25 @@ function getinfo()
   return result
 end
 
+function getinfo_ths()
+  mangainfo.url=MaybeFillHost(module.RootURL, url)
+  if getWithCookie(mangainfo.url) then
+    local x=TXQuery.Create(http.document)
+    mangainfo.title=x.xpathstring('//div[@id="series_right"]/h1')
+    mangainfo.coverlink=MaybeFillHost(module.RootURL, x.xpathstring('//img[@class="series_img"]/@src'))
+    mangainfo.authors = x.xpathstring('//ul[@class="series_left_data"]/li[contains(span, "Author")]/span[@class="value"]')
+    mangainfo.artists = x.xpathstring('//ul[@class="series_left_data"]/li[contains(span, "Artist")]/span[@class="value"]')
+    mangainfo.genres=x.xpathstringall('//ul[@class="series_left_data"]/li[contains(span, "Genre")]/span[@class="value"]/text()')
+    mangainfo.status=MangaInfoStatusIfPos(x.xpathstring('//ul[@class="series_left_data"]/li[contains(span, "Status")]/span[@class="value"]'))
+    mangainfo.summary = x.xpathstring('//div[@id="series_des"]')
+    x.xpathhreftitleall('//div[@id="staff"]/div/a', mangainfo.chapterlinks, mangainfo.chapternames)
+    InvertStrings(mangainfo.chapterlinks,mangainfo.chapternames)
+    return no_error
+  else
+    return net_problem
+  end
+end
+
 function taskstart()
   task.pagelinks.clear()
   task.pagenumber = 0
@@ -173,13 +192,20 @@ function getnameandlink()
   end
   if getWithCookie(s) then
     result = no_error
-    x = TXQuery.create(http.document)
+    local x = TXQuery.create(http.document)
     if module.website == 'AtelierDuNoir' then
-      v = x.xpath('//div[@class="caption"]')
+      local v = x.xpath('//div[@class="caption"]')
       for i = 1, v.count do
         v1 = v.get(i)
         links.add(x.xpathstring('div/a/@href', v1))
         names.add(x.xpathstring('h4', v1))
+      end
+    elseif module.website == 'TwistedHelScans' then
+      local v = x.xpath('//div[contains(@class, "series_card")]/a')
+      for i = 1, v.count do
+        local v1 = v.get(i)
+        links.add(v1.getattribute('href'))
+        names.add(x.xpathstring('span', v1))
       end
     elseif module.website == 'HatigarmScans' then
       x.XpathHREFAll('//div[@class="grid"]/div/a', links, names)
@@ -202,6 +228,7 @@ function AddWebsiteModule(name, url, category)
   m.OnGetImageURL = 'getimageurl'
   m.OnGetDirectoryPageNumber = 'getdirectorypagenumber'
   m.OnGetNameAndLink = 'getnameandlink'
+  if name == 'TwistedHelScans' then m.ongetinfo = 'getinfo_ths'; end
   return m
 end
 
@@ -243,6 +270,7 @@ function Init()
   AddWebsiteModule('HoshikuzuuScans', 'http://hoshiscans.shounen-ai.net', cat)
   AddWebsiteModule('YaoiIsLife', 'http://yaoislife.shounen-ai.net', cat)
   AddWebsiteModule('FujoshiBitches', 'http://fujoshibitches.shounen-ai.net', cat)
+  AddWebsiteModule('TwistedHelScans', 'http://www.twistedhelscans.com', cat)
   
   -- es-sc
   cat = 'Spanish-Scanlation'
