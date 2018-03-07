@@ -7,6 +7,7 @@ function getinfo()
     mangainfo.coverlink=MaybeFillHost(module.rooturl,x.xpathstring('//img[@title="Manga image"]/@src'))
     mangainfo.authors=x.xpathstring('//tr[./th="Author:"]/string-join(./td,", ")')
     mangainfo.artists=x.xpathstring('//tr[./th="Artist:"]/string-join(./td,", ")')
+    mangainfo.genres = x.xpathstringall('//tr[./th="Genres:"]/td/span/a')
     mangainfo.status=MangaInfoStatusIfPos(x.xpathstring('//tr[./th="Status:"]'))
     mangainfo.summary=x.xpathstring('//tr[./th="Description:"]/td')
     local l='//*[@id="chapters"]//tr[@id]'
