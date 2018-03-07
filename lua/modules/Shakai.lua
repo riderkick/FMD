@@ -8,9 +8,8 @@
     mangainfo.title=x.xpathstring('//*[@class="wrapper__heading"]/h1')
     mangainfo.coverlink=MaybeFillHost(module.RootURL, x.xpathstring('//div[@class="make__cover"]/img/@src'))
     mangainfo.authors=x.xpathstringall('//table[@class="make__table-info"]//tr[contains(td, "Автор")]/td/a')
-    print(x.xpathstringall('//table[@class="make__table-info"]//tr[contains(td, "Автор")]/td/a'))
     mangainfo.genres=x.xpathstringall('//table[@class="make__table-info"]//tr[contains(td, "Жанры")]/td/a')
-    mangainfo.status = MangaInfoStatusIfPos(x.xpathstring('//table[@class="make__table-info"]//tr[contains(td, "Выпуск")]/td', 'продолжается', 'завершен'))
+    mangainfo.status = MangaInfoStatusIfPos(x.xpathstring('//table[@class="make__table-info"]//tr[contains(td, "Выпуск")]/td'), 'продолжается', 'завершен')
     mangainfo.summary=x.xpathstring('//div[@class="make__description"]')
     if http.get(mangainfo.url .. '/element-list') then
       x.parsehtml(http.document)

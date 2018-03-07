@@ -7,7 +7,7 @@
     mangainfo.authors=x.xpathstringall('//div[contains(@class, "manga")]//h5[contains(*, "Autor")]/text()', '')
     mangainfo.artists=x.xpathstringall('//div[contains(@class, "manga")]//h5[contains(*, "Artista")]/text()', '')
     mangainfo.genres=x.xpathstringall('//div[contains(@class, "manga")]//h5[contains(*, "Genero")]/span')
-    mangainfo.status = MangaInfoStatusIfPos(x.xpathstring('//div[contains(@class, "manga")]//h5[contains(*, "Status")]/text()', 'Ativo', 'Completo'))
+    mangainfo.status = MangaInfoStatusIfPos(x.xpathstring('//div[contains(@class, "manga")]//h5[contains(*, "Status")]/text()'), 'Ativo', 'Completo')
     mangainfo.summary=x.xpathstring('//div[contains(@class, "manga")]//div[contains(@style, "justify")]')
     local v=x.xpath('//ul[@class="capitulos"]/li/a')
     for i=1,v.count do
