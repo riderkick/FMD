@@ -52,7 +52,8 @@ function getdirurl(website)
     ['CanisMajorScans'] = dirurlreader,
     ['HoshikuzuuScans'] = dirurl,
     ['YaoiIsLife'] = dirurlreader,
-    ['FujoshiBitches'] = dirurlreader
+    ['FujoshiBitches'] = dirurlreader,
+    ['TapTrans'] = dirurlfsdir
   }  
   if dirs[website] ~= nil then
     return dirs[website]
@@ -271,6 +272,7 @@ function Init()
   AddWebsiteModule('YaoiIsLife', 'http://yaoislife.shounen-ai.net', cat)
   AddWebsiteModule('FujoshiBitches', 'http://fujoshibitches.shounen-ai.net', cat)
   AddWebsiteModule('TwistedHelScans', 'http://www.twistedhelscans.com', cat)
+  AddWebsiteModule('TapTrans', 'https://taptaptaptaptap.net', cat)
   
   -- es-sc
   cat = 'Spanish-Scanlation'
