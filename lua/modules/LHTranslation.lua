@@ -46,7 +46,7 @@ function Init()
   m=NewModule()
   m.category = 'English-Scanlation'
   m.Website = 'LHTranslation'
-  m.RootURL = 'http://lhtranslation.com'
+  m.RootURL = 'http://lhtranslation.net'
   m.OnGetNameAndLink = 'GetNameAndLink'
   m.OnGetInfo = 'GetInfo'
   m.OnGetPageNumber = 'GetPageNumber'
