@@ -19,14 +19,22 @@ function getinfo()
     end
     mangainfo.url=u
     local x=TXQuery.Create(http.document)
-    mangainfo.title=x.xpathstring('//ul[@class="manga-info-text"]/li/h1')
+    if Pos('mangasupa', u:lower()) > 0 then
+      mangainfo.title=x.xpathstring('//h1[@class="entry-title"]')
+      mangainfo.coverlink=MaybeFillHost(module.RootURL, x.xpathstring('//span[@class="info_image"]/img/@src'))
+      mangainfo.authors=x.xpathstringall('//ul[@class="truyen_info_right"]/li[contains(., "Author")]/a')
+      mangainfo.genres=x.xpathstringall('//ul[@class="truyen_info_right"]/li[contains(., "Genre")]/a')
+      mangainfo.status = MangaInfoStatusIfPos(x.xpathstring('//ul[@class="truyen_info_right"]/li[contains(., "Status")]'))
+    else
+      mangainfo.title=x.xpathstring('//ul[@class="manga-info-text"]/li/h1')
+      mangainfo.coverlink=MaybeFillHost(module.RootURL, x.xpathstring('//div[@class="manga-info-pic"]/img/@src'))
+      mangainfo.authors=x.xpathstringall('//ul[@class="manga-info-text"]/li[contains(., "Author")]/a')
+      mangainfo.genres=x.xpathstringall('//ul[@class="manga-info-text"]/li[contains(., "Genre")]/a')
+      mangainfo.status = MangaInfoStatusIfPos(x.xpathstring('//ul[@class="manga-info-text"]/li[contains(., "Status")]'))
+    end
     if (Pos('email', mangainfo.title) > 0) and (Pos('protected', mangainfo.title) > 0) then
       mangainfo.title = Trim(x.xpathstring('//title/substring-after(substring-before(., "Manga Online"), "Read")'))
     end
-    mangainfo.coverlink=MaybeFillHost(module.RootURL, x.xpathstring('//div[@class="manga-info-pic"]/img/@src'))
-    mangainfo.authors=x.xpathstringall('//ul[@class="manga-info-text"]/li[contains(., "Author")]/a')
-    mangainfo.genres=x.xpathstringall('//ul[@class="manga-info-text"]/li[contains(., "Genre")]/a')
-    mangainfo.status = MangaInfoStatusIfPos(x.xpathstring('//ul[@class="manga-info-text"]/li[contains(., "Status")]'))
     mangainfo.summary=x.xpathstringall('//div[@id="noidungm"]/text()', '')
     x.xpathhrefall('//div[@class="chapter-list"]/div[@class="row"]/span/a', mangainfo.chapterlinks, mangainfo.chapternames)
     InvertStrings(mangainfo.chapterlinks,mangainfo.chapternames)
@@ -54,10 +62,15 @@ function getpagenumber()
     if (s ~= '') and (s ~= nil) then
       local host, _ = spliturl(s)
       local _, path = spliturl(u)
-      if not http.get(host .. path) then return false; end
+      u = host .. path
+      if not http.get(u) then return false; end
     end
     local x=TXQuery.Create(http.Document)
-    x.xpathstringall('//div[@id="vungdoc"]/img/@src', task.pagelinks)
+    if Pos('mangasupa', u:lower()) > 0 then
+      x.xpathstringall('//div[@class="vung_doc"]/img/@src', task.pagelinks)
+    else
+      x.xpathstringall('//div[@id="vungdoc"]/img/@src', task.pagelinks)
+    end
     return true
   else
     return false
@@ -67,7 +80,11 @@ end
 function getnameandlink()
   if http.get(module.rooturl .. dirurl .. IncStr(url)) then
     local x = TXQuery.Create(http.Document)
-    x.XPathHREFAll('//div[@class="truyen-list"]/div[@class="list-truyen-item-wrap"]/h3/a', links, names)
+    if module.website == 'Mangasupa' then
+      x.XPathHREFAll('//div[contains(@class,"danh_sach")]/div[contains(@class,"list_category")]/h3/a', links, names)
+    else
+      x.XPathHREFAll('//div[@class="truyen-list"]/div[@class="list-truyen-item-wrap"]/h3/a', links, names)
+    end
     return no_error
   else
     return net_problem
@@ -77,7 +94,12 @@ end
 function getdirectorypagenumber()
   if http.GET(module.RootURL .. dirurl .. '1') then
     x = TXQuery.Create(http.Document)
-    local s = x.xpathstring('//div[@class="group-page"]/a[contains(., "Last")]/@href')
+    local s = nil
+    if module.website == 'Mangasupa' then
+      s = x.xpathstring('//div[@class="phan-trang"]/a[contains(., "Last")]/@href')
+    else
+      s = x.xpathstring('//div[@class="group-page"]/a[contains(., "Last")]/@href')
+    end
     page = tonumber(s:match('page=(%d+)'))
     if page == nil then page = 1; end
     return true
@@ -103,4 +125,5 @@ end
 function Init()
   AddWebsiteModule('Mangakakalot', 'http://mangakakalot.com')
   AddWebsiteModule('Manganelo', 'http://manganelo.com')
+  AddWebsiteModule('Mangasupa', 'http://mangasupa.com')
 end
