@@ -57,7 +57,6 @@ uses
   Mangaf,
   MangaRock,
   PsychoPlay,
-  Mangakakalot,
   Lhscans,
   MangaWindow,
   // Raw Official
