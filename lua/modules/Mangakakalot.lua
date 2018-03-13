@@ -1,5 +1,3 @@
-local dirurl = '/manga_list?type=newest&category=all&state=all&page='
-
 function GetRedirectUrl(document)
   local x = TXQuery.Create(document)
   local s = x.xpathstring('//script[contains(., "window.location.assign")]')
@@ -19,7 +17,7 @@ function getinfo()
     end
     mangainfo.url=u
     local x=TXQuery.Create(http.document)
-    if Pos('mangasupa', u:lower()) > 0 then
+    if (Pos('mangasupa', u:lower()) > 0) or module.website == 'MangaFoxCom' then
       mangainfo.title=x.xpathstring('//h1[@class="entry-title"]')
       mangainfo.coverlink=MaybeFillHost(module.RootURL, x.xpathstring('//span[@class="info_image"]/img/@src'))
       mangainfo.authors=x.xpathstringall('//ul[@class="truyen_info_right"]/li[contains(., "Author")]/a')
@@ -66,10 +64,12 @@ function getpagenumber()
       if not http.get(u) then return false; end
     end
     local x=TXQuery.Create(http.Document)
-    if Pos('mangasupa', u:lower()) > 0 then
+    x.xpathstringall('//div[@id="vungdoc"]/img/@src', task.pagelinks)
+    if task.pagelinks.count == 0 then
       x.xpathstringall('//div[@class="vung_doc"]/img/@src', task.pagelinks)
-    else
-      x.xpathstringall('//div[@id="vungdoc"]/img/@src', task.pagelinks)
+    end
+    if task.pagelinks.count == 0 then
+      x.xpathstringall('//div[@id="list_chapter"]//img/@src', task.pagelinks)
     end
     return true
   else
@@ -77,13 +77,25 @@ function getpagenumber()
   end
 end
 
+local dirurl = '/manga_list?type=newest&category=all&state=all&page='
 function getnameandlink()
-  if http.get(module.rooturl .. dirurl .. IncStr(url)) then
+  local dir = dirurl
+  if module.website == 'MangaFoxCom' then
+    dir = '/manga-list?view=list&sort=date_added&page='
+  end 
+  if http.get(module.rooturl .. dir .. IncStr(url)) then
     local x = TXQuery.Create(http.Document)
-    if module.website == 'Mangasupa' then
-      x.XPathHREFAll('//div[contains(@class,"danh_sach")]/div[contains(@class,"list_category")]/h3/a', links, names)
+    if module.website == 'MangaFoxCom' then
+      local q = '//div[contains(@class,"wrap_update")]/div[@class="update_item"]/h3/a'
+      if x.xpathcount(q) > 0 then
+        x.XPathHREFAll(q, links, names)
+        updatelist.CurrentDirectoryPageNumber = updatelist.CurrentDirectoryPageNumber + 1
+      end
     else
       x.XPathHREFAll('//div[@class="truyen-list"]/div[@class="list-truyen-item-wrap"]/h3/a', links, names)
+      if links.count == 0 then
+        x.XPathHREFAll('//div[contains(@class,"danh_sach")]/div[contains(@class,"list_category")]/h3/a', links, names)
+      end
     end
     return no_error
   else
@@ -92,13 +104,13 @@ function getnameandlink()
 end
 
 function getdirectorypagenumber()
+  page = 1
+  if module.website == 'MangaFoxCom' then return true; end
   if http.GET(module.RootURL .. dirurl .. '1') then
     x = TXQuery.Create(http.Document)
-    local s = nil
-    if module.website == 'Mangasupa' then
+    local s = x.xpathstring('//div[@class="group-page"]/a[contains(., "Last")]/@href')
+    if s == '' then
       s = x.xpathstring('//div[@class="phan-trang"]/a[contains(., "Last")]/@href')
-    else
-      s = x.xpathstring('//div[@class="group-page"]/a[contains(., "Last")]/@href')
     end
     page = tonumber(s:match('page=(%d+)'))
     if page == nil then page = 1; end
@@ -126,4 +138,5 @@ function Init()
   AddWebsiteModule('Mangakakalot', 'http://mangakakalot.com')
   AddWebsiteModule('Manganelo', 'http://manganelo.com')
   AddWebsiteModule('Mangasupa', 'http://mangasupa.com')
+  AddWebsiteModule('MangaFoxCom', 'https://manga-fox.com')
 end
