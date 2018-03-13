@@ -30,7 +30,9 @@ end
 function getnameandlink()
   local dirurl = '/manga-list/'
   if module.website == 'MangaShiro' then dirurl = '/daftar-manga/'
-  elseif module.website == 'KomikStation' then dirurl = '/daftar-komik/' end
+  elseif module.website == 'KomikStation' then dirurl = '/daftar-komik/'
+  elseif module.website == 'MangaKid' then dirurl = '/manga-lists/'
+  end
   if http.get(module.rooturl..dirurl) then
     if module.website == 'KomikStation' then
       TXQuery.Create(http.document).xpathhrefall('//*[@class="daftarkomik"]//a',links,names)
@@ -60,5 +62,6 @@ function Init()
   AddWebsiteModule('Subapics', 'http://subapics.com')
   AddWebsiteModule('MangaKita', 'http://www.mangakita.net')
   AddWebsiteModule('Mangavy', 'https://mangavy.com')
-  AddWebsiteModule('KomikStation', 'http://www.komikstation.com/')
+  AddWebsiteModule('KomikStation', 'http://www.komikstation.com')
+  AddWebsiteModule('MangaKid', 'http://mangakid.net')
 end
