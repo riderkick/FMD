@@ -61,6 +61,10 @@ function AddWebsiteModule(name, url, category)
 end
 
 function Init()
-  AddWebsiteModule('Rawdevart', 'https://rawdevart.com', 'Raw')
-  AddWebsiteModule('TrashScanlations', 'http://trashscanlations.com', 'English-Scanlation')
+  local cat = 'Raw'
+  AddWebsiteModule('Rawdevart', 'https://rawdevart.com', cat)
+  
+  cat = 'English-Scanlation'
+  AddWebsiteModule('TrashScanlations', 'http://trashscanlations.com', cat)
+  AddWebsiteModule('ZeroScans', 'https://zeroscans.com', cat)
 end
