@@ -68,7 +68,7 @@ end
 function Init()
   local m = NewModule()
   m.website = 'HeavenManga'
-  m.rooturl = 'http://heavenmanga.club'
+  m.rooturl = 'http://heavenmanga.biz'
   m.category = 'English'
   m.lastupdated='February 26, 2018'
   m.ongetinfo='getinfo'
