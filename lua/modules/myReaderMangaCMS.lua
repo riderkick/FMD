@@ -98,4 +98,7 @@ function Init()
   AddWebsiteModule('DarkSkyScan', 'http://darkskyprojects.org', c);
   AddWebsiteModule('NozominoFansub', 'https://nozominofansub.com', c);
   AddWebsiteModule('CoYuHi', 'http://www.universoyuri.com/', c);
+  
+  c='Italian-Scanlation'
+  AddWebsiteModule('DigitalTeamAltervista', 'http://digitalteam1.altervista.org', c)
 end

@@ -275,6 +275,9 @@ function Init()
   AddWebsiteModule('TwistedHelScans', 'http://www.twistedhelscans.com', cat)
   AddWebsiteModule('TapTrans', 'https://taptaptaptaptap.net', cat)
   
+  cat = 'Italian-Scanlation'  
+  AddWebsiteModule('DigitalTeam', 'http://digitalteamreader.netsons.org', cat)
+  
   -- es-sc
   cat = 'Spanish-Scanlation'
   AddWebsiteModule('DangoOnlineNoFansub', 'http://lector.dangolinenofansub.com', cat)
