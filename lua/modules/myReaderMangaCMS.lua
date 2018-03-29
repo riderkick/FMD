@@ -1,5 +1,10 @@
 function GetNameAndLink()
-  if http.GET(module.RootURL .. '/changeMangaList?type=text') then
+  local u = module.RootURL
+  if module.Website == 'WhiteCloudPavilion' then
+    u = u .. '/manga/free'
+  end
+  u = u .. '/changeMangaList?type=text'
+  if http.GET(u) then
     x = TXQuery.Create(http.Document)
     x.XPathHREFAll('//li/a', links, names)
     return no_error
@@ -87,6 +92,7 @@ function Init()
   c='English-Scanlation'
   AddWebsiteModule('FallenAngelsScans','http://manga.fascans.com', c);
   AddWebsiteModule('ChibiManga','http://www.cmreader.info', c);
+  AddWebsiteModule('WhiteCloudPavilion','https://whitecloudpavilion.com', c);
 
   c='Spanish-Scanlation'
   AddWebsiteModule('DarkSkyScan', 'http://darkskyprojects.org', c);
