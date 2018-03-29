@@ -590,7 +590,7 @@ begin
     if FavoriteIndex > -1 then
     begin
       with Items[FavoriteIndex] do
-        if Status = STATUS_IDLE then
+        if FEnabled and (Status = STATUS_IDLE) then
         begin
           Status := STATUS_CHECK;
           if Assigned(TaskThread) then
