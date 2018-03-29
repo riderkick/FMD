@@ -66,6 +66,21 @@ function getpagenumber()
   return true
 end
 
+function getnameandlink()
+  if http.get(module.rooturl..'/lista-de-mangas/ordenar-por-nome/todos?page=' .. IncStr(url)) then
+    local x=TXQuery.Create(http.Document)
+    local p=x.xpathstring('//ul[contains(@class,"content-pagination")]/li[last()-1]/a')
+    p = tonumber(p)
+    if p ~= nil then
+      updatelist.CurrentDirectoryPageNumber = p
+    end
+    x.XPathHREFtitleAll('//ul[@class="seriesList"]/li/a', links, names)
+    return no_error
+  else
+    return net_problem
+  end
+end
+
 function Init()
   m=NewModule()
   m.category='Portugues'
@@ -74,6 +89,5 @@ function Init()
   m.lastupdated='February 17, 2018'
   m.ongetinfo='getinfo'
   m.ongetpagenumber='getpagenumber'
-  --m.ongetdirectorypagenumber='getdirectorypagenumber'
-  --m.ongetnameandlink='getnameandlink'
+  m.ongetnameandlink='getnameandlink'
 end 
