@@ -53,7 +53,8 @@ function getdirurl(website)
     ['HoshikuzuuScans'] = dirurl,
     ['YaoiIsLife'] = dirurlreader,
     ['FujoshiBitches'] = dirurlreader,
-    ['TapTrans'] = dirurlfsdir
+    ['TapTrans'] = dirurlfsdir,
+    ['LoliVault'] = dirurlonline
   }  
   if dirs[website] ~= nil then
     return dirs[website]
@@ -297,4 +298,5 @@ function Init()
   AddWebsiteModule('Nightow', 'http://nightow.net', cat)
   AddWebsiteModule('TrueColorsScan', 'https://truecolorsscans.miocio.org', cat)
   AddWebsiteModule('MangajinNoFansub', 'https://www.mangajinnofansub.com', cat)
+  AddWebsiteModule('LoliVault', 'https://lolivault.net', cat)
 end

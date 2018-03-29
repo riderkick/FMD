@@ -97,4 +97,5 @@ function Init()
   c='Spanish-Scanlation'
   AddWebsiteModule('DarkSkyScan', 'http://darkskyprojects.org', c);
   AddWebsiteModule('NozominoFansub', 'https://nozominofansub.com', c);
+  AddWebsiteModule('CoYuHi', 'http://www.universoyuri.com/', c);
 end
