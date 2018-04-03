@@ -10,18 +10,19 @@ function getinfo()
     mangainfo.genres = x.xpathstringall('//tr[./th="Genres:"]/td/span/a')
     mangainfo.status=MangaInfoStatusIfPos(x.xpathstring('//tr[./th="Status:"]'))
     mangainfo.summary=x.xpathstring('//tr[./th="Description:"]/td')
-    local l='//*[@id="chapters"]//tr[@id]'
-    local n='/concat(., (if (starts-with(../td/time, "in ")) then " [DELAYED]" else "")'
+    local l='//*[@id="chapters"]//tr[@id and not(starts-with(./td/time, "in "))]'
+    local n=''
     if module.getoption('luashowalllang') then
-      n=n..'," [",../td[3]/img/@title,"]"'
+      n='/concat(.," [",../td[3]/img/@title,"]"'
     else
       l=l..'[./td/img[@title="English"]]'
     end
     if module.getoption('luashowscangroup') then
+      if n=='' then n='/concat(.' end
       n=n..'," [",../td[4],"]"'
     end
     l=l..'/td[2]'
-    n=n..')'
+    if n~='' then n=n..')' end
     n=l..n
     l=l..'/a/@href'
     local nurl=''
