@@ -39,7 +39,6 @@ uses
   MyMangaMe,
   ReadComics,
   MangaCool,
-  JapScan,
   MangaGo,
   GoodManga,
   MangaZuki,
