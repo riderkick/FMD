@@ -9,7 +9,6 @@ uses
   Madokami,
   RawSenManga,
   KissManga,
-  UnionMangas,
   MangaStreamTo,
   MangaHome,
   GameofScanlation,
