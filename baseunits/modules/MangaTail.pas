@@ -124,7 +124,7 @@ procedure RegisterModule;
   end;
 
 begin
-  AddWebsiteModule('MangaTail', 'http://www.mangatail.com');
+  AddWebsiteModule('MangaTail', 'https://www.mangatail.me');
   AddWebsiteModule('MangaSail', 'http://www.mangasail.com');
 end;
 
