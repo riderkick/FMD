@@ -48,7 +48,7 @@ begin
     Result := NO_ERROR;
     with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
       try
-        for v in XPath('//ul[@class="content-list-wrap"]//li//a[@class="preferred title"]') do begin
+        for v in XPath('//ul[contains(@class,"content-list-wrap")]//li//a[@class="preferred title"]') do begin
           ALinks.Add(v.toNode.getAttribute('href'));
           ANames.Add(v.toString);
         end;
