@@ -20,7 +20,6 @@ uses
   Webtoons,
   Tsumino,
   SubManga,
-  MangaBackup,
   Tumangaonline,
   MangaEden,
   HeyMangaXyz,
