@@ -38,7 +38,6 @@ uses
   MyMangaMe,
   ReadComics,
   MangaCool,
-  MangaGo,
   GoodManga,
   MangaZuki,
   ReadMangaToday,
