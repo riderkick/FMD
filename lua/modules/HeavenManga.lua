@@ -48,7 +48,7 @@ function getdirectorypagenumber()
   if http.GET(module.RootURL .. '/manga-list/') then
     local x = TXQuery.Create(http.Document)
     page = tonumber(x.xpathstring('(//div[@class="pagination"]/a[contains(@class, "page-numbers")])[last()]/substring-after(@href, "/page-")'))
-    if page == nil then pages = 1 end
+    if page == nil then page = 1 end
     return no_error
   else
     return net_problem

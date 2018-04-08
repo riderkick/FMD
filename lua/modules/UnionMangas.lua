@@ -50,7 +50,7 @@ function getdirectorypagenumber()
   if http.GET(module.RootURL .. dirurl) then
     local x = TXQuery.Create(http.Document)
     page = tonumber(x.xpathstring('//ul[@class="pagination"]/li[last()]/a/substring-before(substring-after(@href,"a-z/"),"/")'))
-    if page == nil then pages = 1 end
+    if page == nil then page = 1 end
     return no_error
   else
     return net_problem
