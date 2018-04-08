@@ -94,7 +94,7 @@ begin
           try
             v := Execute(s);
             if v.ValueType = bvtNUMBER then
-              jschl_answer := FloatToStr(v.Num);
+              jschl_answer := FloatToStr(v.Num, FMDFormatSettings);
           finally
             Free;
           end;
