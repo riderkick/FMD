@@ -65,6 +65,6 @@ function Init()
   AddWebsiteModule('Rawdevart', 'https://rawdevart.com', cat)
   
   cat = 'English-Scanlation'
-  AddWebsiteModule('TrashScanlations', 'http://trashscanlations.com', cat)
+  AddWebsiteModule('TrashScanlations', 'https://trashscanlations.com', cat)
   AddWebsiteModule('ZeroScans', 'https://zeroscans.com', cat)
 end
