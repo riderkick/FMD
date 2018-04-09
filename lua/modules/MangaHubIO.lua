@@ -9,6 +9,8 @@ function getx()
     return "mf01"
   elseif module.website == 'MangaKakalotFun' then
     return "mn01"
+  elseif module.website == 'MangaHereFun' then
+    return "mh01"
   else
     return "m01"
   end
@@ -103,4 +105,5 @@ function Init()
   AddWebsiteModule('MangaReaderSite', 'https://mangareader.site')
   AddWebsiteModule('MangaFoxFun', 'https://mangafox.fun')
   AddWebsiteModule('MangaKakalotFun', 'https://mangakakalot.fun')
+  AddWebsiteModule('MangaHereFun', 'https://mangahere.onl')
 end
