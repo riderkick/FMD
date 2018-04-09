@@ -85,7 +85,7 @@ var
   ACookies: String;
 begin
   Result := False;
-  if Module.Account.Enabled then begin
+  if Assigned(Module.Account) and Module.Account.Enabled then begin
     AHTTP.FollowRedirection := False;
     // force no warning
     AHTTP.Cookies.Values['nw'] := '1';
