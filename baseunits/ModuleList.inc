@@ -53,7 +53,6 @@ uses
   Mangaf,
   MangaRock,
   PsychoPlay,
-  Lhscans,
   MangaWindow,
   // Raw Official
   SundayWebEvery,
