@@ -275,6 +275,7 @@ function Init()
   AddWebsiteModule('TwistedHelScans', 'http://www.twistedhelscans.com', cat)
   AddWebsiteModule('TapTrans', 'https://taptaptaptaptap.net', cat)
   AddWebsiteModule('EvilFlowers', 'http://reader.evilflowers.com', cat)
+  AddWebsiteModule('IlluminatiManga', 'http://reader.manga-download.org', cat)
   
   cat = 'Italian-Scanlation'  
   AddWebsiteModule('DigitalTeam', 'http://digitalteamreader.netsons.org', cat)
