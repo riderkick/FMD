@@ -70,5 +70,4 @@ uses
   HitomiLa,
   HentaiCafe,
   Hentai2Read,
-  HentaiFox,
-  MyReadingManga;
+  HentaiFox;
