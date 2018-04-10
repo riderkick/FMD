@@ -141,6 +141,8 @@ begin
     OnGetInfo := @GetInfo;
     OnGetPageNumber := @GetPageNumber;
     OnGetImageURL := @GetImageURL;
+    MaxConnectionLimit := 1;
+    MaxTaskLimit := 1;
   end;
 end;
 
