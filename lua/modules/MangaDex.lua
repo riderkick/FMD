@@ -13,13 +13,13 @@ function getinfo()
     local l='//table//tr[@id and not(starts-with(./td/time, "in "))]'
     local n=''
     if module.getoption('luashowalllang') then
-      n='/concat(.," [",../td[3]/img/@title,"]"'
+      n='/concat(.," [",../td[4]/img/@title,"]"'
     else
       l=l..'[./td/img[@title="English"]]'
     end
     if module.getoption('luashowscangroup') then
       if n=='' then n='/concat(.' end
-      n=n..'," [",../td[4],"]"'
+      n=n..'," [",../td[5],"]"'
     end
     l=l..'/td[2]'
     if n~='' then n=n..')' end
