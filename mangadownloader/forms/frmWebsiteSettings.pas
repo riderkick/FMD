@@ -110,13 +110,25 @@ end;
 procedure TWebsiteSettingsForm.LoadWebsiteSettings;
 var
   i: Integer;
+  items: TStringList;
 begin
-  vtWebsite.NodeDataSize := SizeOf(TModuleContainer);
-  vtWebsite.BeginUpdate;
-  for i := 0 to Modules.Count - 1 do
-    vtWebsite.AddChild(nil, Modules[i]);
-  vtWebsite.Sort(nil, 0, sdAscending, False);
-  vtWebsite.EndUpdate;
+  items := TStringList.Create;
+  try
+    items.OwnsObjects := False;
+    items.Duplicates := dupIgnore;
+    for i := Modules.Count - 1 downto 0 do
+      if items.IndexOf(Modules[i].Website) = -1 then
+        items.AddObject(Modules[i].Website, Modules[i]);
+
+    vtWebsite.NodeDataSize := SizeOf(TModuleContainer);
+    vtWebsite.BeginUpdate;
+    for i := 0 to items.Count - 1 do
+      vtWebsite.AddChild(nil, items.Objects[i]);
+    vtWebsite.Sort(nil, 0, sdAscending, False);
+    vtWebsite.EndUpdate;
+  finally
+    items.Free;
+  end;
 end;
 
 
