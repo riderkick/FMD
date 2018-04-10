@@ -3,6 +3,9 @@ function GetNameAndLink()
   if module.Website == 'WhiteCloudPavilion' then
     u = u .. '/manga/free'
   end
+  if module.Website == 'GodsRealmScan' then
+    u = u .. '/public/'
+  end    
   u = u .. '/changeMangaList?type=text'
   if http.GET(u) then
     x = TXQuery.Create(http.Document)
@@ -97,6 +100,7 @@ function Init()
   c='Spanish-Scanlation'
   AddWebsiteModule('DarkSkyScan', 'http://darkskyprojects.org', c);
   AddWebsiteModule('NozominoFansub', 'https://nozominofansub.com', c);
+  AddWebsiteModule('GodsRealmScan', 'https://godsrealmscan.com', c); 
   AddWebsiteModule('CoYuHi', 'http://www.universoyuri.com/', c);
   
   c='Italian-Scanlation'
