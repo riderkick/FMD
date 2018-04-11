@@ -45,7 +45,6 @@ uses
   EatManga,
   Taadd,
   NineManga,
-  MangaTail,
   TruyenTranhTuan,
   BlogTruyen,
   MangaAe,
