@@ -1182,15 +1182,16 @@ begin
 
   // waiting gif
   if FileExistsUTF8(IMAGE_FOLDER + 'waiting.gif') then
-  begin
-    gifWaiting := TAnimatedGif.Create(IMAGE_FOLDER + 'waiting.gif');
-    gifWaiting.EraseColor := Self.Color;
-    gifWaiting.BackgroundMode := gbmSaveBackgroundOnce;
-    gifWaitingRect.Left := 53;
-    gifWaitingRect.Top := 84;
-    gifWaitingRect.Right := 101;
-    gifWaitingRect.Bottom := 131;
-  end;
+    try
+      gifWaiting := TAnimatedGif.Create(IMAGE_FOLDER + 'waiting.gif');
+      gifWaiting.EraseColor := Self.Color;
+      gifWaiting.BackgroundMode := gbmSaveBackgroundOnce;
+      gifWaitingRect.Left := 53;
+      gifWaitingRect.Top := 84;
+      gifWaitingRect.Right := 101;
+      gifWaitingRect.Bottom := 131;
+    except
+    end;
 
   mangaCover := TPicture.Create;
 
