@@ -70,21 +70,27 @@ function taskstart()
   return true
 end
 
-local dirurl='/titles/'
-local ALPHA_LIST_UP = '~ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-function getnameandlink()
-  local lurl=dirurl
-  lurl = lurl .. ALPHA_LIST_UP:sub(module.CurrentDirectoryIndex+1,module.CurrentDirectoryIndex+1)
-  lurl = lurl .. '/' .. IncStr(url)
+local dirurl='/titles/2'
+
+function getdirectorypagenumber()
   http.cookies.values['mangadex_h_toggle'] = '1'
-  if http.GET(module.rooturl..lurl) then
+  http.cookies.values['mangadex_title_mode'] = '1'
+  if http.GET(module.RootURL .. dirurl) then
+    local x = TXQuery.Create(http.Document)
+    page = tonumber(x.xpathstring('(//ul[@class="pagination"]/li/a)[last()]/@href'):match('/2/(%d+)'))
+    if page == nil then page = 1 end
+    return no_error
+  else
+    return net_problem
+  end
+end
+
+function getnameandlink()
+  http.cookies.values['mangadex_h_toggle'] = '1'
+  http.cookies.values['mangadex_title_mode'] = '1'
+  if http.GET(module.rooturl .. dirurl .. '/' .. IncStr(url) .. '/') then
     local x = TXQuery.Create(http.document)
     x.xpathhrefall('//*[@id="content"]//tr/td[2]/a',links,names)
-    local page = x.xpathstring('//ul[@class="pagination"]/li[last()]/a/@href')
-    page = page:match('/(%d+)/?$')
-    page = tonumber(page)
-    if page == nil then page = 1; end
-    updatelist.CurrentDirectoryPageNumber = page
     return no_error
   else
     return net_problem
@@ -101,7 +107,7 @@ function Init()
   m.ontaskstart='taskstart'
   m.ongetpagenumber='getpagenumber'
   m.ongetnameandlink='getnameandlink'
-  m.totaldirectory = ALPHA_LIST_UP:len()
+  m.ongetdirectorypagenumber = 'getdirectorypagenumber'
   
   m.maxtasklimit=1
   m.maxconnectionlimit=2
