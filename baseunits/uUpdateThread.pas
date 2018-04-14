@@ -377,7 +377,7 @@ procedure TUpdateListManagerThread.GetInfo(const limit: Integer;
   end;
 
 var
-  plimit: Integer;
+  plimit, conlimit: Integer;
   s: String;
   t: TUpdateListThread;
 begin
@@ -394,6 +394,10 @@ begin
       if numberOfThreads < 1 then
         numberOfThreads := 1;  //default
 
+      conlimit := Module.GetMaxConnectionLimit;
+      if conlimit < 1 then
+        conlimit := numberOfThreads;
+
       // Finish searching for new series
       if (cs = CS_DIRECTORY_PAGE) and
         (isFinishSearchingForNewManga) then
@@ -404,7 +408,7 @@ begin
       end;
 
       if Module.GetMaxConnectionLimit > 0 then
-        while (not Terminated) and (Module.ActiveConnectionCount >= numberOfThreads) do
+        while (not Terminated) and (Module.ActiveConnectionCount >= conlimit) do
           Sleep(SOCKHEARTBEATRATE)
       else
         while (not Terminated) and (Threads.Count >= numberOfThreads) do
@@ -415,7 +419,7 @@ begin
       begin
         EnterCriticalsection(CS_Threads);
         try
-          if Module.ActiveConnectionCount >= numberOfThreads then Exit;
+          if Module.ActiveConnectionCount >= conlimit then Exit;
           Module.IncActiveConnectionCount;
           t := TUpdateListThread.Create;
           Threads.Add(t);
