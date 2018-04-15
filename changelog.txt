@@ -4,6 +4,22 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.154.0 (15-04-2018)
+[+] Added GodsRealmScan [SP-SC]
+[+] Added IlluminatiManga [EN-SC]
+[+] Added MangaFreak [EN]
+[+] Added MangaHereFun [EN]
+[+] Added MangaAll [RAW]
+[+] Added MangaTrue [RAW]
+[-] Removed MangaBackup
+[*] MangaTail, changed domain
+[*] MangaDex, fixed all
+[*] Tapas, fixed manga list update
+[*] MyReadingManga, fixed download
+[*] MangaHere, fixed manga list update
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.153.0...0.9.154.0
+
 0.9.153.0 (08-04-2018)
 [+] Added SoManga [PT]
 [+] Added ReadMangaEU [EN]
