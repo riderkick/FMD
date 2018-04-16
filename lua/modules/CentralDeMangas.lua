@@ -67,7 +67,7 @@ function Init()
   m=NewModule()
   m.category='Portugues'
   m.website='CentralDeMangas'
-  m.rooturl='http://centraldemangas.inf.br'
+  m.rooturl='http://cdmnet.com.br'
   m.lastupdated='February 15, 2018'
   m.ongetinfo='GetInfo'
   m.ongetpagenumber='GetPageNumber'
