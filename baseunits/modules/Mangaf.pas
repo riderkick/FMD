@@ -105,7 +105,7 @@ begin
   with AddModule do
   begin
     Website := 'Mangaf';
-    RootURL := 'http://mangaf.co';
+    RootURL := 'https://mangaforall.com';
     Category := 'Arabic';
     TotalDirectory := 3;
     OnGetNameAndLink := @GetNameAndLink;
