@@ -119,7 +119,7 @@ begin
   with AddModule do
   begin
     Website := 'AcademyVN';
-    RootURL := 'http://truyen.academyvn.com';
+    RootURL := 'http://hocvientruyentranh.com';
     Category := 'Vietnamese';
     OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
     OnGetNameAndLink := @GetNameAndLink;
