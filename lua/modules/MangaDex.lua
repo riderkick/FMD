@@ -90,7 +90,7 @@ function getnameandlink()
   http.cookies.values['mangadex_title_mode'] = '1'
   if http.GET(module.rooturl .. dirurl .. '/' .. IncStr(url) .. '/') then
     local x = TXQuery.Create(http.document)
-    x.xpathhrefall('//*[@id="content"]//tr/td[2]/a',links,names)
+    x.xpathhrefall('//*[@id="content"]//tr/td/a[@class="manga_title"]',links,names)
     return no_error
   else
     return net_problem
