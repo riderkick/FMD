@@ -115,10 +115,14 @@ function getpagenumber()
         for i=1,bstr:len() do b[i] = bstr:byte(i) - 48; end
         return _d(u, b)
       end
+      module.storage['r'] = '1'
       if Pos(',', s) == 0 then
         script = unp(StreamToString(http.document))
       elseif Pos('http', s) == 0 then
         script = unp(StreamToString(http.document))
+        if script:match('referrerPolicy:"no%-referrer"') ~= nil then
+          module.storage['r'] = '0'
+        end
         s = d3(script, s)
       else
       end
@@ -135,7 +139,9 @@ function getpagenumber()
 end
 
 function beforedownloadimage()
-  http.headers.values['Referer'] = module.rooturl
+  if module.storage['r'] == '1' then
+    http.headers.values['Referer'] = module.rooturl
+  end
   return true
 end
 
