@@ -74,7 +74,7 @@ local dirurl='/titles/2'
 
 function getdirectorypagenumber()
   http.cookies.values['mangadex_h_toggle'] = '1'
-  http.cookies.values['mangadex_title_mode'] = '1'
+  http.cookies.values['mangadex_title_mode'] = '2'
   if http.GET(module.RootURL .. dirurl) then
     local x = TXQuery.Create(http.Document)
     page = tonumber(x.xpathstring('(//ul[@class="pagination"]/li/a)[last()]/@href'):match('/2/(%d+)'))
@@ -87,10 +87,10 @@ end
 
 function getnameandlink()
   http.cookies.values['mangadex_h_toggle'] = '1'
-  http.cookies.values['mangadex_title_mode'] = '1'
+  http.cookies.values['mangadex_title_mode'] = '2'
   if http.GET(module.rooturl .. dirurl .. '/' .. IncStr(url) .. '/') then
     local x = TXQuery.Create(http.document)
-    x.xpathhrefall('//*[@id="content"]//tr/td/a[@class="manga_title"]',links,names)
+    x.xpathhrefall('//*[@id="content"]//tr/td[2]/a',links,names)
     return no_error
   else
     return net_problem
