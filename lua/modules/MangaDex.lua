@@ -8,7 +8,7 @@ function getinfo()
     mangainfo.authors=x.xpathstring('//tr[./th="Author:"]/string-join(./td,", ")')
     mangainfo.artists=x.xpathstring('//tr[./th="Artist:"]/string-join(./td,", ")')
     mangainfo.genres = x.xpathstringall('//tr[./th="Genres:"]/td/span/a')
-    mangainfo.status=MangaInfoStatusIfPos(x.xpathstring('//tr[./th="Status:"]'))
+    mangainfo.status=MangaInfoStatusIfPos(x.xpathstring('//tr[contains(./th,"status")]'))
     mangainfo.summary=x.xpathstring('//tr[./th="Description:"]/td')
     local l='//table//tr[@id and not(starts-with(./td/time, "in "))]'
     local n=''
