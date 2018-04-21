@@ -152,6 +152,7 @@ begin
   with DownloadThread.FHTTP, DownloadThread.Task.Container do begin
     PageLinks.Clear;
     PageNumber := 0;
+    Cookies.Values['rco_quality'] := 'hq';
     if GETWithCookie(DownloadThread.FHTTP, FillHost(Module.RootURL, AURL), Module) then
       try
         Result := True;
