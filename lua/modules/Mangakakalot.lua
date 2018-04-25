@@ -17,7 +17,7 @@ function getinfo()
     end
     mangainfo.url=u
     local x=TXQuery.Create(http.document)
-    if (Pos('mangasupa', u:lower()) > 0) or module.website == 'MangaFoxCom' then
+    if (Pos('mangasupa', u:lower()) > 0) or module.website == 'MangaFoxCom' or module.website == 'MangaHereIO' then
       mangainfo.title=x.xpathstring('//h1[@class="entry-title"]')
       mangainfo.coverlink=MaybeFillHost(module.RootURL, x.xpathstring('//span[@class="info_image"]/img/@src'))
       mangainfo.authors=x.xpathstringall('//ul[@class="truyen_info_right"]/li[contains(., "Author")]/a')
@@ -80,12 +80,12 @@ end
 local dirurl = '/manga_list?type=newest&category=all&state=all&page='
 function getnameandlink()
   local dir = dirurl
-  if module.website == 'MangaFoxCom' then
+  if module.website == 'MangaFoxCom' or module.website == 'MangaHereIO' then
     dir = '/manga-list?view=list&sort=date_added&page='
   end 
   if http.get(module.rooturl .. dir .. IncStr(url)) then
     local x = TXQuery.Create(http.Document)
-    if module.website == 'MangaFoxCom' then
+    if module.website == 'MangaFoxCom' or module.website == 'MangaHereIO' then
       local q = '//div[contains(@class,"wrap_update")]/div[@class="update_item"]/h3/a'
       if x.xpathcount(q) > 0 then
         x.XPathHREFAll(q, links, names)
@@ -138,5 +138,6 @@ function Init()
   AddWebsiteModule('Mangakakalot', 'http://mangakakalot.com')
   AddWebsiteModule('Manganelo', 'http://manganelo.com')
   AddWebsiteModule('Mangasupa', 'http://mangasupa.com')
+  AddWebsiteModule('MangaHereIO', 'https://manga-here.io')
   AddWebsiteModule('MangaFoxCom', 'https://manga-fox.com')
 end
