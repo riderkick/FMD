@@ -36,7 +36,7 @@ object WebsiteSettingsForm: TWebsiteSettingsForm
         Header.Columns = <>
         Header.DefaultHeight = 17
         Header.MainColumn = -1
-        TabOrder = 0
+        TabOrder = 1
         TreeOptions.PaintOptions = [toHideFocusRect, toShowButtons, toShowDropmark, toThemeAware, toUseBlendedImages]
         TreeOptions.SelectionOptions = [toFullRowSelect]
         OnCompareNodes = vtWebsiteCompareNodes
@@ -91,7 +91,7 @@ object WebsiteSettingsForm: TWebsiteSettingsForm
         OnButtonClick = edSearchButtonClick
         OnChange = edSearchChange
         PasswordChar = #0
-        TabOrder = 1
+        TabOrder = 0
         TextHint = 'Website name'
       end
     end

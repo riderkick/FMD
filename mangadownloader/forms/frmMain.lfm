@@ -473,7 +473,7 @@ object MainForm: TMainForm
             ParentShowHint = False
             PopupMenu = pmMangaList
             ShowHint = True
-            TabOrder = 0
+            TabOrder = 2
             TextMargin = 3
             TreeOptions.AutoOptions = [toAutoDropExpand, toAutoScrollOnExpand, toAutoTristateTracking]
             TreeOptions.PaintOptions = [toHideFocusRect, toShowButtons, toThemeAware, toUseBlendedImages]
@@ -556,7 +556,7 @@ object MainForm: TMainForm
             ParentShowHint = False
             ShowHint = True
             Sorted = True
-            TabOrder = 1
+            TabOrder = 0
           end
           object btUpdateList: TSpeedButton
             AnchorSideLeft.Side = asrBottom
@@ -621,7 +621,7 @@ object MainForm: TMainForm
             Anchors = [akTop, akLeft, akRight]
             OnChange = edMangaListSearchChange
             OnKeyDown = edMangaListSearchKeyDown
-            TabOrder = 2
+            TabOrder = 1
             TextHint = 'Search title...'
           end
           object btMangaListSearchClear: TSpeedButton
@@ -838,7 +838,7 @@ object MainForm: TMainForm
                     OnKeyPress = edURLKeyPress
                     PasswordChar = #0
                     PopupMenu = pmEditURL
-                    TabOrder = 2
+                    TabOrder = 0
                     TextHint = 'Input URL here'
                   end
                   object rmInformation: TRichMemo
@@ -856,7 +856,7 @@ object MainForm: TMainForm
                     HideSelection = False
                     ReadOnly = True
                     ScrollBars = ssAutoVertical
-                    TabOrder = 0
+                    TabOrder = 2
                     ZoomFactor = 1
                   end
                   object btDonate: TImage
@@ -1008,7 +1008,7 @@ object MainForm: TMainForm
                       3F33E99E3F00E99E3F00E99E3F00E99E3F00E99E3F00E99E3F00
                     }
                     OnClick = btDownloadClick
-                    TabOrder = 1
+                    TabOrder = 3
                   end
                   object cbAddAsStopped: TCheckBox
                     AnchorSideLeft.Control = edSaveTo
@@ -1025,7 +1025,7 @@ object MainForm: TMainForm
                     Caption = 'Add to download list as stopped task'
                     OnChange = cbAddAsStoppedChange
                     ParentFont = False
-                    TabOrder = 3
+                    TabOrder = 2
                   end
                   object btReadOnline: TBitBtn
                     AnchorSideLeft.Control = btAddToFavorites
@@ -1077,7 +1077,7 @@ object MainForm: TMainForm
                       80668080806680808066808080668080804D7F7F7F007F7F7F00
                     }
                     OnClick = btReadOnlineClick
-                    TabOrder = 2
+                    TabOrder = 4
                   end
                   object btChecks: TSpeedButton
                     AnchorSideLeft.Control = clbChapterList
@@ -1176,7 +1176,7 @@ object MainForm: TMainForm
                       E1000101E3000101E53C0101E5AB0101E53C0101E3000101E100
                     }
                     OnClick = btAddToFavoritesClick
-                    TabOrder = 4
+                    TabOrder = 5
                   end
                   object lbSaveTo: TLabel
                     AnchorSideLeft.Control = clbChapterList
@@ -1294,7 +1294,7 @@ object MainForm: TMainForm
                     OnButtonClick = edSaveToButtonClick
                     ParentFont = False
                     PasswordChar = #0
-                    TabOrder = 6
+                    TabOrder = 1
                     TextHint = 'Save to'
                   end
                   object btDownloadSplit: TSpeedButton
@@ -1382,7 +1382,7 @@ object MainForm: TMainForm
                   ChildSizing.ControlsPerLine = 3
                   ClientHeight = 23
                   ClientWidth = 528
-                  TabOrder = 2
+                  TabOrder = 1
                   object lbFilterCustomGenres: TLabel
                     Left = 0
                     Height = 23
@@ -1437,7 +1437,7 @@ object MainForm: TMainForm
                   ClientHeight = 136
                   ClientWidth = 528
                   ParentFont = False
-                  TabOrder = 1
+                  TabOrder = 2
                   object Panel1: TPanel
                     Left = 0
                     Height = 136
@@ -1490,7 +1490,7 @@ object MainForm: TMainForm
                       Height = 23
                       Top = 27
                       Width = 185
-                      TabOrder = 2
+                      TabOrder = 1
                       TextHint = 'Author'
                     end
                     object lbFilterArtists: TLabel
@@ -1510,7 +1510,7 @@ object MainForm: TMainForm
                       Height = 23
                       Top = 54
                       Width = 185
-                      TabOrder = 1
+                      TabOrder = 2
                       TextHint = 'Artist'
                     end
                     object lbFilterStatus: TLabel
@@ -2239,7 +2239,7 @@ object MainForm: TMainForm
                     }
                     OnClick = btFilterClick
                     ParentFont = False
-                    TabOrder = 1
+                    TabOrder = 0
                   end
                   object btRemoveFilterLarge: TBitBtn
                     AnchorSideLeft.Side = asrBottom
@@ -2292,7 +2292,7 @@ object MainForm: TMainForm
                     ParentFont = False
                     ParentShowHint = False
                     ShowHint = True
-                    TabOrder = 0
+                    TabOrder = 1
                   end
                   object btFilterReset: TBitBtn
                     Left = 219
@@ -2407,7 +2407,7 @@ object MainForm: TMainForm
         ParentShowHint = False
         PopupMenu = pmFavorites
         ShowHint = True
-        TabOrder = 0
+        TabOrder = 3
         TextMargin = 2
         TreeOptions.AutoOptions = [toAutoDropExpand, toAutoScrollOnExpand, toAutoTristateTracking, toDisableAutoscrollOnFocus]
         TreeOptions.PaintOptions = [toHideFocusRect, toShowButtons, toShowDropmark, toShowVertGridLines, toThemeAware, toUseBlendedImages, toFullVertGridLines]
@@ -2625,7 +2625,7 @@ object MainForm: TMainForm
         OnButtonClick = edFavoritesSearchButtonClick
         OnChange = edFavoritesSearchChange
         PasswordChar = #0
-        TabOrder = 3
+        TabOrder = 0
         TextHint = 'Search favorites...'
       end
     end
@@ -2663,7 +2663,7 @@ object MainForm: TMainForm
             Width = 106
             Caption = 'Minimize to tray'
             ParentFont = False
-            TabOrder = 0
+            TabOrder = 4
           end
           object cbOptionOneInstanceOnly: TCheckBox
             AnchorSideLeft.Control = cbOptionMinimizeToTray
@@ -2675,7 +2675,7 @@ object MainForm: TMainForm
             Width = 177
             Caption = 'Permit only one FMD running'
             ParentFont = False
-            TabOrder = 2
+            TabOrder = 5
           end
           object cbOptionLiveSearch: TCheckBox
             AnchorSideLeft.Control = cbOptionOneInstanceOnly
@@ -2687,7 +2687,7 @@ object MainForm: TMainForm
             Width = 210
             Caption = 'Enable live search (slow on long list)'
             ParentFont = False
-            TabOrder = 3
+            TabOrder = 6
           end
           object gbOptionExternal: TGroupBox
             AnchorSideLeft.Control = cbOptionLiveSearch
@@ -2707,7 +2707,7 @@ object MainForm: TMainForm
             ClientHeight = 98
             ClientWidth = 738
             ParentFont = False
-            TabOrder = 1
+            TabOrder = 8
             object lbOptionExternal: TLabel
               Left = 4
               Height = 15
@@ -2735,7 +2735,7 @@ object MainForm: TMainForm
               Top = 69
               Width = 703
               Anchors = [akTop, akLeft, akRight]
-              TabOrder = 0
+              TabOrder = 1
               TextHint = 'External program parameters'
             end
             object lbOptionExternalParamsHint: TLabel
@@ -2801,7 +2801,7 @@ object MainForm: TMainForm
               NumGlyphs = 1
               OnButtonClick = edOptionExternalPathButtonClick
               PasswordChar = #0
-              TabOrder = 1
+              TabOrder = 0
               TextHint = 'External program path'
             end
           end
@@ -2828,7 +2828,7 @@ object MainForm: TMainForm
             )
             ParentFont = False
             Style = csDropDownList
-            TabOrder = 4
+            TabOrder = 0
           end
           object lbOptionLetFMDDo: TLabel
             AnchorSideLeft.Control = cbLanguages
@@ -2858,7 +2858,7 @@ object MainForm: TMainForm
             )
             ParentFont = False
             Style = csDropDownList
-            TabOrder = 5
+            TabOrder = 1
           end
           object seOptionNewMangaTime: TSpinEdit
             AnchorSideLeft.Control = cbOptionLetFMDDo
@@ -2872,7 +2872,7 @@ object MainForm: TMainForm
             MaxValue = 365
             MinValue = 1
             ParentFont = False
-            TabOrder = 6
+            TabOrder = 2
             Value = 1
           end
           object lbOptionNewMangaTime: TLabel
@@ -2899,7 +2899,7 @@ object MainForm: TMainForm
             BorderSpacing.Top = 20
             Caption = 'Minimize on start'
             ParentFont = False
-            TabOrder = 7
+            TabOrder = 3
           end
           object cbOptionDeleteCompletedTasksOnClose: TCheckBox
             AnchorSideLeft.Control = tsGeneral
@@ -2910,7 +2910,7 @@ object MainForm: TMainForm
             Top = 251
             Width = 189
             Caption = 'Delete completed tasks on close'
-            TabOrder = 8
+            TabOrder = 7
           end
         end
         object tsView: TTabSheet
@@ -2929,7 +2929,7 @@ object MainForm: TMainForm
             Align = alTop
             Caption = 'Show downloads toolbar'
             ParentFont = False
-            TabOrder = 0
+            TabOrder = 1
           end
           object gbDropTarget: TGroupBox
             Left = 4
@@ -2945,7 +2945,7 @@ object MainForm: TMainForm
             ChildSizing.VerticalSpacing = 4
             ClientHeight = 145
             ClientWidth = 741
-            TabOrder = 1
+            TabOrder = 0
             object ckDropTarget: TCheckBox
               Left = 4
               Height = 19
@@ -2969,7 +2969,7 @@ object MainForm: TMainForm
               Min = 5
               OnChange = tbDropTargetOpacityChange
               Position = 200
-              TabOrder = 1
+              TabOrder = 2
             end
             object lbDropTargetOpacity: TLabel
               AnchorSideLeft.Control = rgDropTargetMode
@@ -3009,7 +3009,7 @@ object MainForm: TMainForm
                 'Add to favorites'
               )
               ParentFont = False
-              TabOrder = 2
+              TabOrder = 1
             end
           end
           object cbOptionEnableLoadCover: TCheckBox
@@ -3020,7 +3020,7 @@ object MainForm: TMainForm
             Align = alTop
             Caption = 'Enable load manga cover'
             ParentFont = False
-            TabOrder = 2
+            TabOrder = 4
           end
           object cbOptionShowDownloadToolbarDeleteAll: TCheckBox
             Left = 4
@@ -3030,7 +3030,7 @@ object MainForm: TMainForm
             Align = alTop
             Caption = 'Show "Delete all completed tasks" in downloads toolbar'
             ParentFont = False
-            TabOrder = 3
+            TabOrder = 2
           end
           object cbOptionShowBalloonHint: TCheckBox
             Left = 4
@@ -3040,7 +3040,7 @@ object MainForm: TMainForm
             Align = alTop
             Caption = 'Show balloon hint'
             ParentFont = False
-            TabOrder = 4
+            TabOrder = 5
           end
           object cbOptionShowDownloadToolbarLeft: TCheckBox
             Left = 4
@@ -3050,7 +3050,7 @@ object MainForm: TMainForm
             Align = alTop
             Caption = 'Show left downloads toolbar'
             ParentFont = False
-            TabOrder = 5
+            TabOrder = 3
           end
         end
         object tsConnections: TTabSheet
@@ -3085,7 +3085,7 @@ object MainForm: TMainForm
               Caption = 'Use proxy'
               OnChange = cbOptionUseProxyChange
               ParentFont = False
-              TabOrder = 0
+              TabOrder = 6
             end
             object gbOptionProxy: TGroupBox
               AnchorSideLeft.Control = cbOptionUseProxy
@@ -3105,7 +3105,7 @@ object MainForm: TMainForm
               ClientWidth = 422
               Enabled = False
               ParentFont = False
-              TabOrder = 1
+              TabOrder = 7
               object lbOptionHost: TLabel
                 AnchorSideLeft.Control = lbOptionProxyType
                 AnchorSideTop.Control = lbOptionProxyType
@@ -3134,7 +3134,7 @@ object MainForm: TMainForm
                 Font.Height = -12
                 Font.Name = 'Default'
                 ParentFont = False
-                TabOrder = 0
+                TabOrder = 1
                 TextHint = 'Proxy host/IP'
               end
               object lbOptionUser: TLabel
@@ -3161,7 +3161,7 @@ object MainForm: TMainForm
                 Font.Height = -12
                 Font.Name = 'Default'
                 ParentFont = False
-                TabOrder = 1
+                TabOrder = 3
                 TextHint = 'Proxy username'
               end
               object lbOptionPort: TLabel
@@ -3201,7 +3201,7 @@ object MainForm: TMainForm
                 Font.Height = -12
                 Font.Name = 'Default'
                 ParentFont = False
-                TabOrder = 2
+                TabOrder = 4
                 TextHint = 'Proxy password'
               end
               object lbOptionProxyType: TLabel
@@ -3229,7 +3229,7 @@ object MainForm: TMainForm
                   'SOCKS5'
                 )
                 Style = csDropDownList
-                TabOrder = 3
+                TabOrder = 0
                 Text = 'HTTP'
               end
               object edOptionPort: TSpinEdit
@@ -3246,7 +3246,7 @@ object MainForm: TMainForm
                 MaxValue = 999999
                 MinValue = 1
                 ParentFont = False
-                TabOrder = 4
+                TabOrder = 2
                 Value = 8080
               end
             end
@@ -3259,7 +3259,7 @@ object MainForm: TMainForm
               MinValue = 1
               ParentFont = False
               ParentShowHint = False
-              TabOrder = 2
+              TabOrder = 0
               Value = 1
             end
             object lbOptionMaxParallel: TLabel
@@ -3290,7 +3290,7 @@ object MainForm: TMainForm
               MinValue = 1
               ParentFont = False
               ParentShowHint = False
-              TabOrder = 3
+              TabOrder = 1
               Value = 1
             end
             object lbOptionMaxThread: TLabel
@@ -3320,7 +3320,7 @@ object MainForm: TMainForm
               MinValue = -1
               ParentFont = False
               ParentShowHint = False
-              TabOrder = 4
+              TabOrder = 2
             end
             object lbOptionMaxRetry: TLabel
               AnchorSideLeft.Control = seOptionMaxRetry
@@ -3350,7 +3350,7 @@ object MainForm: TMainForm
               MinValue = 1
               ParentFont = False
               ParentShowHint = False
-              TabOrder = 5
+              TabOrder = 3
               Value = 30
             end
             object lbOptionConnectionTimeout: TLabel
@@ -3392,7 +3392,7 @@ object MainForm: TMainForm
               Anchors = [akTop, akLeft, akRight]
               ParentFont = False
               ParentShowHint = False
-              TabOrder = 6
+              TabOrder = 4
               Value = 1
             end
             object ckOptionsAlwaysStartTaskFromFailedChapters: TCheckBox
@@ -3405,7 +3405,7 @@ object MainForm: TMainForm
               Width = 216
               BorderSpacing.Top = 20
               Caption = 'Always start task from failed chapters'
-              TabOrder = 7
+              TabOrder = 5
             end
           end
         end
@@ -3463,7 +3463,7 @@ object MainForm: TMainForm
               )
               OnSelectionChanged = rgOptionCompressSelectionChanged
               ParentFont = False
-              TabOrder = 1
+              TabOrder = 2
             end
             object gbOptionRenaming: TGroupBox
               AnchorSideLeft.Control = lbDefaultDownloadPath
@@ -3486,7 +3486,7 @@ object MainForm: TMainForm
               ClientHeight = 282
               ClientWidth = 724
               ParentFont = False
-              TabOrder = 3
+              TabOrder = 5
               object cbOptionChangeUnicodeCharacter: TCheckBox
                 Left = 4
                 Height = 19
@@ -3509,7 +3509,7 @@ object MainForm: TMainForm
                 Caption = 'Auto generate folder based on manga''s name'
                 OnChange = cbOptionGenerateMangaFolderChange
                 ParentFont = False
-                TabOrder = 1
+                TabOrder = 2
               end
               object lbOptionMangaCustomRename: TLabel
                 AnchorSideLeft.Control = cbOptionGenerateMangaFolder
@@ -3565,7 +3565,7 @@ object MainForm: TMainForm
                 Width = 208
                 Caption = 'Remove manga name from chapter'
                 ParentFont = False
-                TabOrder = 2
+                TabOrder = 4
               end
               object cbOptionGenerateChapterFolder: TCheckBox
                 AnchorSideLeft.Control = cbOptionRemoveMangaNameFromChapter
@@ -3579,7 +3579,7 @@ object MainForm: TMainForm
                 Checked = True
                 ParentFont = False
                 State = cbChecked
-                TabOrder = 4
+                TabOrder = 5
               end
               object lbOptionChapterCustomRename: TLabel
                 AnchorSideLeft.Control = cbOptionGenerateChapterFolder
@@ -3600,7 +3600,7 @@ object MainForm: TMainForm
                 Height = 23
                 Top = 161
                 Width = 308
-                TabOrder = 5
+                TabOrder = 6
                 TextHint = 'Custom rename'
               end
               object lbOptionChapterCustomRenameHint: TLabel
@@ -3641,7 +3641,7 @@ object MainForm: TMainForm
                 Width = 61
                 Caption = 'Volume'
                 OnChange = cbOptionDigitVolumeChange
-                TabOrder = 8
+                TabOrder = 7
               end
               object seOptionDigitVolume: TSpinEdit
                 AnchorSideLeft.Control = cbOptionDigitVolume
@@ -3654,7 +3654,7 @@ object MainForm: TMainForm
                 BorderSpacing.Left = 4
                 MaxValue = 10
                 MinValue = 1
-                TabOrder = 6
+                TabOrder = 8
                 Value = 1
               end
               object cbOptionDigitChapter: TCheckBox
@@ -3681,7 +3681,7 @@ object MainForm: TMainForm
                 BorderSpacing.Left = 4
                 MaxValue = 10
                 MinValue = 1
-                TabOrder = 7
+                TabOrder = 10
                 Value = 1
               end
               object lbOptionFilenameCustomRenameHint: TLabel
@@ -3709,7 +3709,7 @@ object MainForm: TMainForm
                 Height = 23
                 Top = 255
                 Width = 308
-                TabOrder = 10
+                TabOrder = 11
                 TextHint = 'Custom rename'
               end
               object lbOptionFilenameCustomRename: TLabel
@@ -3733,7 +3733,7 @@ object MainForm: TMainForm
                 Top = 4
                 Width = 80
                 Enabled = False
-                TabOrder = 11
+                TabOrder = 1
               end
             end
             object lbDefaultDownloadPath: TLabel
@@ -3788,7 +3788,7 @@ object MainForm: TMainForm
               ParentFont = False
               ParentShowHint = False
               ShowHint = True
-              TabOrder = 2
+              TabOrder = 3
               Value = 100
             end
             object lbOptionPDFQuality: TLabel
@@ -3857,7 +3857,7 @@ object MainForm: TMainForm
               OnButtonClick = edOptionDefaultPathButtonClick
               ParentFont = False
               PasswordChar = #0
-              TabOrder = 4
+              TabOrder = 1
               TextHint = 'Default download path'
             end
             object gbImageConversion: TGroupBox
@@ -3879,7 +3879,7 @@ object MainForm: TMainForm
               ChildSizing.VerticalSpacing = 6
               ClientHeight = 102
               ClientWidth = 724
-              TabOrder = 5
+              TabOrder = 4
               object lbWebPSaveAs: TLabel
                 AnchorSideLeft.Control = gbImageConversion
                 AnchorSideTop.Control = ckPNGSaveAsJPEG
@@ -3908,7 +3908,7 @@ object MainForm: TMainForm
                   'JPEG'
                 )
                 Style = csDropDownList
-                TabOrder = 0
+                TabOrder = 1
                 Text = 'PNG'
               end
               object lbPNGCompressionLevel: TLabel
@@ -3941,7 +3941,7 @@ object MainForm: TMainForm
                   'Maximum'
                 )
                 Style = csDropDownList
-                TabOrder = 1
+                TabOrder = 2
                 Text = 'Fastest'
               end
               object lbJPEGQuality: TLabel
@@ -3966,7 +3966,7 @@ object MainForm: TMainForm
                 Top = 75
                 Width = 47
                 MinValue = 1
-                TabOrder = 2
+                TabOrder = 3
                 Value = 80
               end
               object ckPNGSaveAsJPEG: TCheckBox
@@ -3977,7 +3977,7 @@ object MainForm: TMainForm
                 Top = 4
                 Width = 113
                 Caption = 'Save PNG as JPEG'
-                TabOrder = 3
+                TabOrder = 0
               end
             end
           end
@@ -4214,7 +4214,7 @@ object MainForm: TMainForm
                 Header.MainColumn = -1
                 Margin = 1
                 ParentFont = False
-                TabOrder = 0
+                TabOrder = 1
                 TreeOptions.AutoOptions = [toAutoDropExpand, toAutoScrollOnExpand, toAutoTristateTracking]
                 TreeOptions.MiscOptions = [toAcceptOLEDrop, toCheckSupport, toFullRepaintOnResize, toInitOnSave, toToggleOnDblClick, toWheelPanning, toEditOnClick]
                 TreeOptions.PaintOptions = [toHideFocusRect, toShowButtons, toShowDropmark, toShowRoot, toShowTreeLines, toThemeAware, toUseBlendedImages]
@@ -4237,7 +4237,7 @@ object MainForm: TMainForm
                 ChildSizing.VerticalSpacing = 4
                 ClientHeight = 23
                 ClientWidth = 731
-                TabOrder = 1
+                TabOrder = 0
                 object pnlWebsitesToolRight: TPanel
                   Left = 561
                   Height = 23
@@ -4454,7 +4454,7 @@ object MainForm: TMainForm
                   FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00
                 }
                 OnClick = btClearLogFileClick
-                TabOrder = 1
+                TabOrder = 2
               end
               object lbLogFileName: TLabel
                 AnchorSideLeft.Control = ckEnableLogging
@@ -4514,7 +4514,7 @@ object MainForm: TMainForm
                   FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00
                 }
                 OnClick = btOpenLogClick
-                TabOrder = 2
+                TabOrder = 3
               end
               object edLogFileName: TEditButton
                 AnchorSideLeft.Control = ckEnableLogging
@@ -4566,7 +4566,7 @@ object MainForm: TMainForm
                 NumGlyphs = 1
                 OnButtonClick = edLogFileNameButtonClick
                 PasswordChar = #0
-                TabOrder = 3
+                TabOrder = 1
               end
             end
           end
@@ -4672,7 +4672,7 @@ object MainForm: TMainForm
           FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00
         }
         OnClick = btCheckLatestVersionClick
-        TabOrder = 0
+        TabOrder = 1
       end
       object btAbortCheckLatestVersion: TSpeedButton
         AnchorSideLeft.Control = btCheckLatestVersion
@@ -4771,7 +4771,7 @@ object MainForm: TMainForm
           80668080806680808066808080668080804D7F7F7F007F7F7F00
         }
         OnClick = btVisitMyBlogClick
-        TabOrder = 1
+        TabOrder = 2
         Visible = False
       end
       object pcAbout: TPageControl
@@ -4783,7 +4783,7 @@ object MainForm: TMainForm
         Align = alTop
         Anchors = [akTop, akLeft, akRight, akBottom]
         TabIndex = 0
-        TabOrder = 2
+        TabOrder = 0
         object tsAboutText: TTabSheet
           Caption = 'About FMD'
           ClientHeight = 404

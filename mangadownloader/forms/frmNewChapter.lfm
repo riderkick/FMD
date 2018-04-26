@@ -146,7 +146,7 @@ object NewChapter: TNewChapter
       }
       ModalResult = 4
       OnClick = btQueueClick
-      TabOrder = 2
+      TabOrder = 1
     end
     object btCancel: TBitBtn
       Left = 296
@@ -194,7 +194,7 @@ object NewChapter: TNewChapter
       }
       ModalResult = 2
       OnClick = btCancelClick
-      TabOrder = 1
+      TabOrder = 2
     end
   end
 end

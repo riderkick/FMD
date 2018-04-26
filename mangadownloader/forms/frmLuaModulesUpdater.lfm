@@ -49,7 +49,7 @@ object LuaModulesUpdaterForm: TLuaModulesUpdaterForm
     Images = imStates
     ParentShowHint = False
     ShowHint = True
-    TabOrder = 0
+    TabOrder = 3
     TreeOptions.PaintOptions = [toHideFocusRect, toShowButtons, toShowDropmark, toShowVertGridLines, toThemeAware, toUseBlendedImages, toFullVertGridLines]
     TreeOptions.SelectionOptions = [toFullRowSelect, toMultiSelect]
     OnCompareNodes = vtLuaModulesReposCompareNodes
@@ -104,7 +104,7 @@ object LuaModulesUpdaterForm: TLuaModulesUpdaterForm
       FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00
     }
     OnClick = btCheckUpdateClick
-    TabOrder = 1
+    TabOrder = 0
   end
   object btCheckUpdateTerminate: TSpeedButton
     AnchorSideLeft.Control = btCheckUpdate
@@ -169,7 +169,7 @@ object LuaModulesUpdaterForm: TLuaModulesUpdaterForm
     Caption = 'Show update warning'
     Checked = True
     State = cbChecked
-    TabOrder = 2
+    TabOrder = 1
   end
   object ckAutoRestart: TCheckBox
     AnchorSideLeft.Control = ckShowUpdateWarning
@@ -180,7 +180,7 @@ object LuaModulesUpdaterForm: TLuaModulesUpdaterForm
     Top = 8
     Width = 82
     Caption = 'Auto restart'
-    TabOrder = 3
+    TabOrder = 2
   end
   object imStates: TImageList
     left = 200

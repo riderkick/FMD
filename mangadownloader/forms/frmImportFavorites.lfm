@@ -85,7 +85,7 @@ object ImportFavorites: TImportFavorites
     NumGlyphs = 1
     Align = alTop
     MaxLength = 0
-    TabOrder = 3
+    TabOrder = 1
     TextHint = 'Path to the software (e.g. C:\MangaDownloader)'
   end
   object btImport: TBitBtn
@@ -136,7 +136,7 @@ object ImportFavorites: TImportFavorites
     }
     ModalResult = 1
     OnClick = btImportClick
-    TabOrder = 1
+    TabOrder = 2
   end
   object btCancel: TBitBtn
     AnchorSideLeft.Control = btImport
@@ -185,6 +185,6 @@ object ImportFavorites: TImportFavorites
       FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00
     }
     ModalResult = 2
-    TabOrder = 2
+    TabOrder = 3
   end
 end

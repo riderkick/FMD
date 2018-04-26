@@ -73,7 +73,7 @@ object TransferFavoritesForm: TTransferFavoritesForm
     Header.Height = 23
     Header.Options = [hoColumnResize, hoDrag, hoShowSortGlyphs, hoVisible]
     Images = imgsState
-    TabOrder = 1
+    TabOrder = 5
     TreeOptions.PaintOptions = [toHideFocusRect, toShowButtons, toShowDropmark, toShowVertGridLines, toThemeAware, toUseBlendedImages, toFullVertGridLines]
     TreeOptions.SelectionOptions = [toFullRowSelect]
     WantTabs = True
@@ -131,7 +131,7 @@ object TransferFavoritesForm: TTransferFavoritesForm
       FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00
     }
     OnClick = btOKClick
-    TabOrder = 2
+    TabOrder = 7
   end
   object btCancel: TBitBtn
     AnchorSideTop.Control = btOK
@@ -180,7 +180,7 @@ object TransferFavoritesForm: TTransferFavoritesForm
       FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00
     }
     OnClick = btCancelClick
-    TabOrder = 3
+    TabOrder = 6
   end
   object rbAll: TRadioButton
     AnchorSideLeft.Control = ckClearDownloadedChapters
@@ -193,7 +193,7 @@ object TransferFavoritesForm: TTransferFavoritesForm
     Caption = 'All'
     Checked = True
     OnChange = rbAllChange
-    TabOrder = 6
+    TabOrder = 2
     TabStop = True
   end
   object rbValid: TRadioButton
@@ -207,7 +207,7 @@ object TransferFavoritesForm: TTransferFavoritesForm
     BorderSpacing.Left = 8
     Caption = 'Valid'
     OnChange = rbAllChange
-    TabOrder = 4
+    TabOrder = 3
   end
   object rbInvalid: TRadioButton
     AnchorSideLeft.Control = rbValid
@@ -220,7 +220,7 @@ object TransferFavoritesForm: TTransferFavoritesForm
     BorderSpacing.Left = 8
     Caption = 'Invalid'
     OnChange = rbAllChange
-    TabOrder = 5
+    TabOrder = 4
   end
   object ckClearDownloadedChapters: TCheckBox
     AnchorSideLeft.Control = lbTransferTo
@@ -234,7 +234,7 @@ object TransferFavoritesForm: TTransferFavoritesForm
     Caption = 'Clear downloaded chapter list and reload from server'
     Checked = True
     State = cbChecked
-    TabOrder = 7
+    TabOrder = 1
   end
   object imgState: TImage
     AnchorSideLeft.Control = cbWebsites

@@ -30,7 +30,7 @@ object FormLogger: TFormLogger
     ReadOnly = True
     ScrollBars = ssAutoBoth
     ShowTime = True
-    TabOrder = 0
+    TabOrder = 3
     TimeFormat = 'hh:nn:ss:zzz'
     Options = [tvoAllowMultiselect, tvoAutoItemHeight, tvoHideSelection, tvoHotTrack, tvoKeepCollapsedNodes, tvoReadOnly, tvoShowButtons, tvoShowLines, tvoShowRoot, tvoToolTips, tvoThemedDraw]
   end
@@ -41,7 +41,7 @@ object FormLogger: TFormLogger
     Width = 80
     Caption = 'Stay on top'
     OnChange = ckStayOnTopChange
-    TabOrder = 1
+    TabOrder = 0
   end
   object seLogLimit: TSpinEdit
     Left = 373
@@ -115,7 +115,7 @@ object FormLogger: TFormLogger
       FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00
     }
     OnClick = btnClearLogClick
-    TabOrder = 3
+    TabOrder = 1
   end
   object tmClearLog: TTimer
     Interval = 2000
