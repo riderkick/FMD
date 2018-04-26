@@ -3304,9 +3304,12 @@ end;
 
 procedure TMainForm.miMangaListViewInfosClick(Sender: TObject);
 begin
-  if Assigned(vtMangaList.FocusedNode) then
+  if Assigned(vtMangaList.FocusedNode) then begin
     with PMangaInfoData(vtMangaList.GetNodeData(vtMangaList.FocusedNode))^ do
       ViewMangaInfo(link, website, title, '', miMangaListViewInfos, vtMangaList.FocusedNode);
+    if pcInfo.ActivePage <> tsInfoManga then
+      pcInfo.ActivePage := tsInfoManga;
+  end;
 end;
 
 procedure TMainForm.miFavoritesOpenFolderClick(Sender: TObject);
