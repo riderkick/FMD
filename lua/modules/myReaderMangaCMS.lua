@@ -102,6 +102,7 @@ function Init()
   AddWebsiteModule('NozominoFansub', 'https://nozominofansub.com', c);
   AddWebsiteModule('GodsRealmScan', 'https://godsrealmscan.com', c); 
   AddWebsiteModule('CoYuHi', 'http://www.universoyuri.com/', c);
+  AddWebsiteModule('SOSScanlation', 'http://sosscanlation.com', c);
   
   c='Italian-Scanlation'
   AddWebsiteModule('DigitalTeamAltervista', 'http://digitalteam1.altervista.org', c)
