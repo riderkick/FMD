@@ -8,6 +8,9 @@ uses
   {$endif}
   sysutils, process;
 
+const
+  RetryCount = 30;
+
 var
   exefile, zipexefile, updatepackagefile, maindir, ozipexefile, oexefile: String;
   counter: Integer;
@@ -64,9 +67,9 @@ begin
     while FileExists(exefile) do begin
       if DeleteFile(exefile) then break;
       Inc(counter);
-      writeln('Waiting to close ',counter,'/',10,' ',exefile);
+      writeln('Waiting to close ',counter,'/',RetryCount,' ',exefile);
       Sleep(1000);
-      if counter=10 then break;
+      if counter=RetryCount then break;
     end;
     if not FileExists(exefile) then
     begin
