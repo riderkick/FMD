@@ -453,6 +453,8 @@ type
       var CellText: String);
     procedure clbChapterListInitNode(Sender: TBaseVirtualTree; ParentNode,
       Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
+    procedure clbChapterListKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
     procedure edDownloadsSearchButtonClick(Sender: TObject);
     procedure edDownloadsSearchChange(Sender: TObject);
     procedure edFavoritesSearchButtonClick(Sender: TObject);
@@ -2672,6 +2674,29 @@ procedure TMainForm.clbChapterListInitNode(Sender: TBaseVirtualTree;
   ParentNode, Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
 begin
   if Assigned(Node) then Node^.CheckType:=ctCheckBox;
+end;
+
+procedure TMainForm.clbChapterListKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+var
+  i: Cardinal;
+  xNode: PVirtualNode;
+begin
+  if (Key = VK_SPACE) and (clbChapterList.SelectedCount > 0) then
+  begin
+    xNode := clbChapterList.GetFirstSelected;
+    for i := 0 to clbChapterList.SelectedCount - 1 do
+    begin
+      if clbChapterList.Selected[xNode] then
+        if xNode^.CheckState = csUncheckedNormal then
+          xNode^.CheckState := csCheckedNormal
+        else if xNode^.CheckState = csCheckedNormal then
+          xNode^.CheckState := csUncheckedNormal;
+      clbChapterList.InvalidateNode(xNode);
+      xNode := clbChapterList.GetNextSelected(xNode);
+    end;
+    Key := VK_UNKNOWN;
+  end;
 end;
 
 procedure TMainForm.edDownloadsSearchButtonClick(Sender: TObject);

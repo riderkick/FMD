@@ -958,6 +958,7 @@ object MainForm: TMainForm
                     OnBeforeCellPaint = clbChapterListBeforeCellPaint
                     OnGetText = clbChapterListGetText
                     OnInitNode = clbChapterListInitNode
+                    OnKeyDown = clbChapterListKeyDown
                   end
                   object btDownload: TBitBtn
                     AnchorSideLeft.Control = btAddToFavorites
