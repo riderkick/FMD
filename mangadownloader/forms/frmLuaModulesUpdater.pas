@@ -504,7 +504,7 @@ end;
 procedure TCheckUpdateThread.SyncStartChecking;
 begin
   FOwner.btCheckUpdate.Caption := RS_Checking;
-  FOwner.btCheckUpdateTerminate.Show;
+  FOwner.btCheckUpdateTerminate.Visible := True;
   FOwner.tmRepaintList.Enabled := True;
 end;
 
@@ -540,7 +540,7 @@ end;
 
 procedure TCheckUpdateThread.SyncFinal;
 begin
-  FOwner.btCheckUpdateTerminate.Hide;
+  FOwner.btCheckUpdateTerminate.Visible := False;
   FOwner.btCheckUpdate.Caption := RS_CheckUpdate;
   FOwner.ThreadCheck := nil;
   FOwner.tmRepaintList.Enabled := False;
@@ -842,7 +842,7 @@ begin
   InitCriticalSection(FListCS);
   Repos := TLuaModulesRepos.Create;
   btCheckUpdate.Caption := RS_CheckUpdate;
-  btCheckUpdateTerminate.Hide;
+  btCheckUpdateTerminate.Visible := False;
   vtLuaModulesRepos.NodeDataSize := SizeOf(TLuaModuleRepo);
   LoadLocalRepos;
 end;
