@@ -68,6 +68,24 @@ begin
     lua_tostring(L, 3), lua_tostring(L, 4), lua_tostring(L, 5));
 end;
 
+function http_threadlasturl(L: Plua_State): Integer; cdecl;
+begin
+  lua_pushstring(L, TUserData(luaClassGetObject(L)).LastURL);
+  Result := 1;
+end;
+
+function http_threadresultcode(L: Plua_State): Integer; cdecl;
+begin
+  lua_pushinteger(L, TUserData(luaClassGetObject(L)).ResultCode);
+  Result := 1;
+end;
+
+function http_threadresultstring(L: Plua_State): Integer; cdecl;
+begin
+  lua_pushstring(L, TUserData(luaClassGetObject(L)).ResultString);
+  Result := 1;
+end;
+
 const
   methods: packed array [0..7] of luaL_Reg = (
     (name: 'GET'; func: @http_get),
@@ -79,8 +97,11 @@ const
     (name: 'SetProxy'; func: @http_setproxy),
     (name: nil; func: nil)
     );
-  props: packed array[0..1] of luaL_Reg_prop = (
+  props: packed array[0..4] of luaL_Reg_prop = (
     (name: 'Terminated'; funcget: @http_threadterminated; funcset: nil),
+    (name: 'LastURL'; funcget: @http_threadlasturl; funcset: nil),
+    (name: 'ResultCode'; funcget: @http_threadresultcode; funcset: nil),
+    (name: 'ResultString'; funcget: @http_threadresultstring; funcset: nil),
     (name: nil; funcget: nil; funcset: nil)
     );
 
