@@ -37,17 +37,29 @@ function getpagenumber()
   return true
 end
 
+local dirurls = {
+  '/weekly/list?page=',
+  '/titles/completed?page='
+}
+
 function getnameandlink()
-  if http.get(module.rooturl .. '/weekly/list?page=' .. IncStr(url)) then
+  local lurl = dirurls[module.CurrentDirectoryIndex+1]
+  if http.get(module.rooturl .. lurl .. IncStr(url)) then
     local x = TXQuery.Create(http.Document)
-    if x.xpathcount('json(*).data()') > 0 then
-      updatelist.CurrentDirectoryPageNumber = updatelist.CurrentDirectoryPageNumber + 1
+    local s = 'json(*).data().list()'
+    if module.CurrentDirectoryIndex == 1 then
+      s = 'json(*).data.list()'
     end
-    local v = x.xpath('json(*).data().list()')
+    local v = x.xpath(s)
+    local hasTitles = false
     for i = 1, v.count do
       local v1 = v.get(i)
       links.add(module.rooturl..'/titles/'..x.xpathstring('id', v1))
       names.add(x.xpathstring('name', v1))
+      hasTitles = true
+    end
+    if hasTitles then
+      updatelist.CurrentDirectoryPageNumber = updatelist.CurrentDirectoryPageNumber + 1
     end
   end
   return net_problem
@@ -62,4 +74,5 @@ function Init()
   m.ongetinfo='getinfo'
   m.ongetpagenumber='getpagenumber'
   m.ongetnameandlink='getnameandlink'
+  m.totaldirectory = 2
 end
