@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
-  XQueryEngineHTML, httpsendthread, synautil, webp, MemBitmap, Math, xquery;
+  XQueryEngineHTML, httpsendthread, synautil, webp, fpjson, Math, xquery;
 
 implementation
 
@@ -143,30 +143,39 @@ end;
 
 function GetNameAndLink(const MangaInfo: TMangaInformation; const ANames, ALinks: TStringList;
   const AURL: String; const Module: TModuleContainer): Integer;
+
+  function GetRequest(const AURL: String): String;
+  var
+    offset, i, ubound: Integer;
+  begin
+    Result := '[]';
+    offset := StrToInt(AURL) * PerPage;
+    ubound := Min(offset + PerPage - 1, mangaList.Count - 1);
+    with TJSONArray.Create do
+      try
+        for i := offset to ubound do
+          Add(mangaList[i]);
+        Result := FormatJSON([foSkipWhiteSpace, foSingleLineArray]);
+      finally
+        Free;
+      end;
+  end;
+
 var
-  offset, i, ubound: Integer;
-  request, name: String;
+  v: IXQValue;
 begin
   Result := NET_PROBLEM;
   if (MangaInfo = nil) or (mangaList = nil) then Exit(UNKNOWN_ERROR);
 
-  offset := StrToInt(AURL) * PerPage;
-  ubound := Min(offset + PerPage - 1, mangaList.Count - 1);
-  request := '["' + mangaList[offset] + '"';
-  for i := offset + 1 to ubound do
-    request += ',"' + mangaList[i] + '"';
-  request += ']';
-
   MangaInfo.FHTTP.MimeType := 'application/json';
-  if MangaInfo.FHTTP.POST(ModuleApiUrl + '/meta', request) then
+  if MangaInfo.FHTTP.POST(ModuleApiUrl + '/meta', GetRequest(AURL)) then
   begin
     Result := NO_ERROR;
     with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
       try
-        for i := offset to ubound do begin
-          name := XPathString('json(*).data("' + mangaList[i] + '").name');
-          ANames.Add(name);
-          ALinks.Add(Module.RootURL + '/manga/' + mangaList[i]);
+        for v in XPath('json(*)/data/*') do begin
+          ANames.Add(XPathString('name', v));
+          ALinks.Add(Module.RootURL + '/manga/' + XPathString('oid', v));
         end;
       finally
         Free;
@@ -187,9 +196,7 @@ begin
     with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
       try
         XPathStringAll('json(*).data()', mangaList);
-        Page := mangaList.Count div PerPage;
-        if mangaList.Count mod PerPage <> 0 then
-           Inc(Page);
+        Page := round(ceil(double(mangaList.Count) / PerPage));
       finally
         Free;
       end;
