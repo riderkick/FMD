@@ -5,11 +5,11 @@ unit webp;
 interface
 
 uses
-  Classes, SysUtils, Windows, MemBitmap, Dynlibs;
+  Classes, SysUtils, MemBitmap, Dynlibs;
 
 var
   WebPLibHandle: TLibHandle = 0;
-  DLLWebPName: String = 'libwebp.dll';
+  DLLWebPName: String = {$IFDEF LINUX} 'libwebp.so' {$ELSE} 'libwebp.dll' {$ENDIF};
 
 function IsWebPModuleLoaded: Boolean;
 procedure InitWebPModule;
@@ -23,8 +23,8 @@ uses
   FMDOptions, SyncObjs;
 
 type
-  TWebPGetInfo = function (data: LPVOID; data_size: UInt32; width, height: pInt32): Int32; cdecl;
-  TWebPDecodeBGRAInto = function (data: LPVOID; data_size: UInt32; output: LPVOID; output_size: UInt32; stride: Int32): pInt32; cdecl;
+  TWebPGetInfo = function (data: Pointer; data_size: UInt32; width, height: pInt32): Int32; cdecl;
+  TWebPDecodeBGRAInto = function (data: Pointer; data_size: UInt32; output: Pointer; output_size: UInt32; stride: Int32): pInt32; cdecl;
   TWebPGetDecoderVersion = function (): Int32; cdecl;
 
 var
@@ -81,7 +81,7 @@ begin
   end;
 end;
 
-function WebPGetInfo(data: LPVOID; data_size: UInt32; width, height: pInt32): Int32;
+function WebPGetInfo(data: Pointer; data_size: UInt32; width, height: pInt32): Int32;
 begin
   if IsWebPModuleLoaded and Assigned(pWebPGetInfo) then
     Result := pWebPGetInfo(data, data_size, width, height)
@@ -89,7 +89,7 @@ begin
     Result := 0;
 end;
 
-function WebPDecodeBGRAInto(data: LPVOID; data_size: UInt32; output: LPVOID; output_size: UInt32; stride: Int32): pInt32;
+function WebPDecodeBGRAInto(data: Pointer; data_size: UInt32; output: Pointer; output_size: UInt32; stride: Int32): pInt32;
 begin
   if IsWebPModuleLoaded and Assigned(pWebPDecodeBGRAInto) then
     Result := pWebPDecodeBGRAInto(data, data_size, output, output_size, stride)
@@ -135,7 +135,7 @@ begin
   scan := WebPDecodeBGRAInto(webp.Memory, webp.Size,
     r.ScanLine[0], stride * height, stride);
 
-  if scan <> PLONG(r.ScanLine[0]) then begin
+  if scan <> PLongint(r.ScanLine[0]) then begin
     r.Free;
     Exit;
   end;
