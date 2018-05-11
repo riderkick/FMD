@@ -10,7 +10,13 @@
     mangainfo.authors=x.xpathstring('//ul[@class="manga-info"]/li[contains(., "Author")]//a')
     mangainfo.genres=x.xpathstringall('//ul[@class="manga-info"]/li[contains(., "Genre")]//a')
     mangainfo.summary=x.xpathstring('//h3[text()="Description"]/following-sibling::p')
+    if mangainfo.summary == '' then
+      mangainfo.summary=x.xpathstring('//div[@class="detail"]/div[@class="content"]')
+    end
     x.xpathhrefall('//div[@id="tab-chapper"]//table/tbody/tr/td/a', mangainfo.chapterlinks, mangainfo.chapternames)
+    if mangainfo.chapterlinks.count == 0 then
+      x.xpathhrefall('//div[@id="list-chapters"]//a[@class="chapter"]', mangainfo.chapterlinks, mangainfo.chapternames)
+    end
     InvertStrings(mangainfo.chapterlinks, mangainfo.chapternames)
     return no_error
   else
@@ -44,14 +50,21 @@ function getnameandlink()
   end
 end
 
-function Init()
-  local m=NewModule()
-  m.category='Raw'
-  m.website='Lhscans'
-  m.rooturl='http://rawlh.com'
-  m.lastupdated='April 9, 2018'
+function AddWebsiteModule(name, url, cat)
+  local m = NewModule()
+  m.category = cat
+  m.Website = name
+  m.RootURL = url
+  m.LastUpdated = 'April 9, 2018'
   m.totaldirectory=1
   m.ongetinfo='getinfo'
   m.ongetpagenumber='getpagenumber'
   m.ongetnameandlink='getnameandlink'
+  return m
+end
+
+function Init()
+  local cat = 'Raw'
+  AddWebsiteModule('Lhscans', 'http://rawlh.com', cat)
+  AddWebsiteModule('RawQQ', 'https://rawqq.com', cat)
 end
