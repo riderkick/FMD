@@ -55,7 +55,7 @@ uses
   MangaWindow,
   // Raw Official
   SundayWebEvery,
-  TonarinoYoungJump,
+  TonariNoYoungJump,
   YoungAceUp,
   NewType,
   Comico,

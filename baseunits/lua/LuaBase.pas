@@ -23,7 +23,7 @@ function LuaLoadFromStream(L: Plua_State; AStream: TMemoryStream; AName: PAnsiCh
 implementation
 
 uses
-  luaStrings, LuaBaseUnit, LuaRegExpr, LuaSynaUtil, LuaSynaCode, MultiLog,
+  LuaStrings, LuaBaseUnit, LuaRegExpr, LuaSynaUtil, LuaSynaCode, MultiLog,
   LuaCrypto, LuaImagePuzzle;
 
 function luabase_print(L: Plua_State): Integer; cdecl;

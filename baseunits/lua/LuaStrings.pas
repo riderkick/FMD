@@ -1,4 +1,4 @@
-unit luaStrings;
+unit LuaStrings;
 
 {$mode objfpc}{$H+}
 

@@ -107,7 +107,7 @@ implementation
 
 uses
   FMDOptions, FileUtil, MultiLog, LuaClass, LuaBase, LuaMangaInfo, LuaHTTPSend,
-  LuaXQuery, LuaUtils, LuaDownloadTask, LuaUpdateListManager, luaStrings, uData,
+  LuaXQuery, LuaUtils, LuaDownloadTask, LuaUpdateListManager, LuaStrings, uData,
   uDownloadsManager, xquery, httpsendthread, FMDVars;
 
 function DoBeforeUpdateList(const Module: TModuleContainer): Boolean;
