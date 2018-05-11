@@ -2276,8 +2276,7 @@ begin
     while Pos('/', Result) = 1 do
       Delete(Result, 1, 1);
   end;
-  while Pos('//', Result) > 0 do
-    Result := StringReplace(Result, '//', '/', [rfReplaceAll]);
+  Result := ReplaceRegExpr('([^:])[\/]{2,}', Result, '$1/', True);
   Result := p + Result;
 end;
 
