@@ -103,7 +103,7 @@ const
 {$IFDEF MSWINDOWS}
    LUA_LIB_NAME = 'lua53.dll';
 {$ELSE}
-   LUA_LIB_NAME = 'liblua53.so';
+   LUA_LIB_NAME = 'liblua5.3.so';
 {$ENDIF}
 
 const
