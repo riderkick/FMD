@@ -21,6 +21,7 @@ function getpagenumber()
     local s = DecodeBase64(x.xpathstring('//*[@id="tooncontentdata"]'))
     x.parsehtml(s)
     x.xpathstringall('//img/@src', task.pagelinks)
+    task.pagecontainerlinks.values[0] = http.cookies.text
   else
     return false
   end
@@ -48,14 +49,22 @@ function getnameandlink()
   end
 end
 
+function beforedownloadimage()
+  http.reset()
+  http.cookies.text = task.pagecontainerlinks.values[0]
+  http.headers.values['Referer'] = module.rooturl
+  return true
+end
+
 function Init()
   local m = NewModule()
   m.website = 'Bamtoki'
-  m.rooturl = 'https://webtoon.bamtoki.com'
+  m.rooturl = 'https://webtoon.bamtoki.se'
   m.category = 'Raw'
   m.lastupdated='April 11, 2018'
   m.ongetinfo='getinfo'
   m.ongetpagenumber='getpagenumber'
   m.ongetnameandlink='getnameandlink'
+  m.onbeforedownloadimage='beforedownloadimage'
   m.totaldirectory = #dirurls
 end
