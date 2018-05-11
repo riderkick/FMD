@@ -34,6 +34,7 @@ function getpagenumber()
   if http.get(MaybeFillHost(module.rooturl, url)) then
     local x=TXQuery.Create(http.Document)
     x.xpathstringall('//select[@id="pages"]/option/@value', task.pagelinks)
+    task.pagecontainerlinks.text = http.cookies.text
   else
     return false
   end
@@ -51,9 +52,40 @@ function getnameandlink()
 end
 
 function downloadimage()
+  http.reset()
+  http.cookies.text = task.pagecontainerlinks.text
   if http.get(MaybeFillHost(module.rooturl, url)) then
     local x = TXQuery.Create(http.document)
-    return http.get(x.xpathstring('//img[@id="image"]/@src'))
+    local img = x.xpathstring('//img[@id="image"]/@src')
+    if img ~= '' then
+      return http.get(img)
+    end
+    local nom = x.xpathstring('//*[@id="mangas"]/@data-nom'):gsub('/', '_'):gsub('%?', '')
+    local mangauri = x.xpathstring('//*[@id="mangas"]/@data-uri')
+    local chapnom = x.xpathstring('//*[@id="chapitres"]/@data-nom')
+    local chapuri = x.xpathstring('//*[@id="chapitres"]/@data-uri')
+    local imgnom = x.xpathstring('//select[@id="pages"]/option[@value="'..url..'"]/@data-img')
+    local imgurl = 'http://cdn.japscan.cc/cr_images/' .. nom .. '/'
+    if chapnom == '' then
+      imgurl = imgurl .. chapuri
+    else
+      imgurl = imgurl .. chapnom
+    end
+    imgurl = imgurl .. '/' .. imgnom
+    if http.get(imgurl) then
+      local s = TImagePuzzle.Create(5, 5)
+      local n = 0
+      local x = {2,4,0,3,1}
+      local y = {4,3,2,1,0}
+      for i = 1, 5 do
+        for j = 1, 5 do
+          s.matrix[y[i]*5+x[j]] = n
+          n = n + 1
+        end
+      end
+      s.descramble(http.document, http.document)
+      return true
+    end
   end
   return false
 end
