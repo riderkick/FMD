@@ -25,22 +25,24 @@ function getpagenumber()
   task.pagelinks.clear()
   if http.get(MaybeFillHost(module.rooturl,url)) then
     x=TXQuery.Create(http.Document)
-	x.xpathstringall('//div[@class="separator"]/a/img/@src', task.pagelinks)
-	if task.pagelinks.count == 0 then
-	  if http.get(MaybeFillHost('http://mangaku.co',url)) then
-		x=TXQuery.Create(http.Document)
-		x.xpathstringall('//div[@class="separator"]/a/img/@src', task.pagelinks)
-		return true
-	  else
-	    return false
-	  end
-	else
-	  return true
-	end
+    x.xpathstringall('//div[@class="separator"]/a/img/@src', task.pagelinks)
+    if task.pagelinks.count == 0 then
+      x.xpathstringall('//img[./@*[starts-with(name(), "data-original")]]/@src', task.pagelinks)
+    end
+    if task.pagelinks.count == 0 then
+      if http.get(MaybeFillHost('http://mangaku.co',url)) then
+        x=TXQuery.Create(http.Document)
+        x.xpathstringall('//div[@class="separator"]/a/img/@src', task.pagelinks)
+        return true
+      else
+        return false
+      end
+    else
+      return true
+    end
   else
     return false
   end
-  return true
 end
 
 function getnameandlink()
@@ -56,7 +58,7 @@ function Init()
   m=NewModule()
   m.category='Indonesian'
   m.website='MangaKu'
-  m.rooturl='http://mangaku.web.id'
+  m.rooturl='http://mangaku.in'
   m.lastupdated='February 17, 2018'
   m.ongetinfo='getinfo'
   m.ongetpagenumber='getpagenumber'
