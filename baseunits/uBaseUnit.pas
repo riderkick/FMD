@@ -233,7 +233,7 @@ const
   MangaInfo_StatusCompleted = '0';
   MangaInfo_StatusOngoing = '1';
 
-  FMDSupportedOutputExt: array[0..2] of ShortString = ('.zip', '.cbz', '.pdf');
+  FMDSupportedOutputExt: array[0..3] of ShortString = ('.zip', '.cbz', '.pdf', '.epub');
   FMDImageFileExt: array[0..3] of ShortString = ('.png', '.gif', '.jpg', '.webp');
   {$ifdef windows}
   // MAX_PATH = 260
@@ -599,6 +599,8 @@ procedure CopyImageRect(const Source, Dest: TFPCustomImage; const DestX, DestY: 
 
 // merge 2 images to one
 function Merge2Image(const Directory, ImgName1, ImgName2, FinalName: String; const Landscape: Boolean = False): Boolean;
+
+function GetMimeType(const imgFileName: String): String;
 
 // sort
 procedure QuickSortChapters(var chapterList, linkList: TStringList);
@@ -3330,6 +3332,18 @@ begin
   finally
     Img1.Free;
     Img2.Free;
+  end;
+end;
+
+function GetMimeType(const imgFileName: String): String;
+begin
+  case ExtractFileExt(imgFileName) of
+    '.jpeg', '.jpg': Result := 'image/jpeg';
+    '.png': Result := 'image/png';
+    '.gif': Result := 'image/gif';
+    '.bmp': Result := 'image/bmp';
+    '.webp': Result := 'image/webp';
+    else Result := '';
   end;
 end;
 

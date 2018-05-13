@@ -510,6 +510,7 @@ begin
         1: uPacker.Format := pfZIP;
         2: uPacker.Format := pfCBZ;
         3: uPacker.Format := pfPDF;
+        4: uPacker.Format := pfEPUB;
       end;
       uPacker.CompressionQuality := OptionPDFQuality;
       uPacker.Path := CurrentWorkingDir;

@@ -3451,16 +3451,17 @@ object MainForm: TMainForm
               ChildSizing.ShrinkHorizontal = crsScaleChilds
               ChildSizing.ShrinkVertical = crsScaleChilds
               ChildSizing.Layout = cclLeftToRightThenTopToBottom
-              ChildSizing.ControlsPerLine = 4
+              ChildSizing.ControlsPerLine = 5
               ClientHeight = 40
               ClientWidth = 724
-              Columns = 4
+              Columns = 5
               ItemIndex = 0
               Items.Strings = (
                 'None'
                 'ZIP'
                 'CBZ'
                 'PDF'
+                'EPUB'
               )
               OnSelectionChanged = rgOptionCompressSelectionChanged
               ParentFont = False

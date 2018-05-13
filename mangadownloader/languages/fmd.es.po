@@ -393,11 +393,18 @@ msgid "One week"
 msgstr "Una Semana"
 
 #: frmmain.rs_optioncompress
+#, fuzzy
+#| msgid ""
+#| "None\n"
+#| "ZIP\n"
+#| "CBZ\n"
+#| "PDF\n"
 msgid ""
 "None\n"
 "ZIP\n"
 "CBZ\n"
 "PDF\n"
+"EPUB\n"
 msgstr ""
 "Ninguno\n"
 "ZIP\n"

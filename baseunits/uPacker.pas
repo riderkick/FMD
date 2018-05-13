@@ -12,10 +12,10 @@ interface
 
 uses
   Classes, Zipper, zstream, SysUtils, uBaseUnit, Img2Pdf, FileUtil, lazutf8classes,
-  LazFileUtils, SimpleException;
+  LazFileUtils, SimpleException, uEpub;
 
 type
-  TPackerFormat = (pfZIP, pfCBZ, pfPDF);
+  TPackerFormat = (pfZIP, pfCBZ, pfPDF, pfEPUB);
 
   { TPacker }
 
@@ -26,6 +26,7 @@ type
     procedure FileFound(FileIterator: TFileIterator);
     procedure DoZipCbz;
     procedure DoPdf;
+    procedure DoEpub;
   public
     Path,
     FileName: String;
@@ -112,6 +113,42 @@ begin
   end;
 end;
 
+procedure TPacker.DoEpub;
+var
+  epub: TEpubBuilder;
+  i: Integer;
+  fstream: TFileStreamUTF8;
+begin
+  try
+    epub := TEpubBuilder.Create;
+    try
+      epub.Title := GetLastDir(Path);
+      for i := 0 to FFileList.Count - 1 do
+      begin
+        try
+          epub.AddImage(FFileList[i]);
+        except
+        end;
+      end;
+
+      fstream := TFileStreamUTF8.Create(FSavedFileName, fmCreate);
+      try
+        epub.SaveToStream(fstream);
+      finally
+        fstream.Free;
+      end;
+    finally
+      epub.Free;
+    end;
+  except
+    on E: Exception do
+    begin
+      E.Message := 'DoEpub.Exception'#13#10 + E.Message;
+      SimpleException.ExceptionHandleSaveLogOnly(Self, E);
+    end;
+  end;
+end;
+
 function TPacker.Execute: Boolean;
 var
   i: Integer;
@@ -138,6 +175,7 @@ begin
     pfZIP: FExt := '.zip';
     pfCBZ: FExt := '.cbz';
     pfPDF: FExt := '.pdf';
+    pfEPUB: FExt := '.epub';
   end;
   if FileName <> '' then
     FSavedFileName := FileName + FExt
@@ -149,6 +187,7 @@ begin
   case Format of
     pfZIP, pfCBZ: DoZipCbz;
     pfPDF: DoPdf;
+    pfEPUB: DoEpub;
   end;
   Result := FileExistsUTF8(FSavedFileName);
   if Result then

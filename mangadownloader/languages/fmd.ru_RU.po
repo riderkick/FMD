@@ -397,11 +397,13 @@ msgid ""
 "ZIP\n"
 "CBZ\n"
 "PDF\n"
+"EPUB\n"
 msgstr ""
 "Как есть\n"
 "ZIP\n"
 "CBZ\n"
 "PDF\n"
+"EPUB\n"
 
 #: frmmain.rs_optionfmddoitems
 msgid ""

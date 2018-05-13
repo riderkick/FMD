@@ -395,6 +395,7 @@ msgid ""
 "ZIP\n"
 "CBZ\n"
 "PDF\n"
+"EPUB\n"
 msgstr ""
 
 #: frmmain.rs_optionfmddoitems

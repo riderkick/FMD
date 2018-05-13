@@ -867,7 +867,7 @@ resourcestring
   RS_FilterStatusItems = 'Completed'#13#10'Ongoing'#13#10'<none>';
   RS_OptionFMDDoItems = 'Nothing'#13#10'Exit'#13#10'Shutdown'#13#10'Hibernate';
   RS_DropTargetModeItems = 'Download all'#13#10'Add to favorites';
-  RS_OptionCompress = 'None'#13#10'ZIP'#13#10'CBZ'#13#10'PDF';
+  RS_OptionCompress = 'None'#13#10'ZIP'#13#10'CBZ'#13#10'PDF'#13#10'EPUB';
   RS_WebPConvertTo = 'WebP'#13#10'PNG'#13#10'JPEG';
   RS_WebPPNGLevel = 'None'#13#10'Fastest'#13#10'Default'#13#10'Maximum';
 
@@ -1967,6 +1967,8 @@ begin
               DeleteFileUTF8(f + '.cbz')
             else if FileExistsUTF8(f + '.pdf') then
               DeleteFileUTF8(f + '.pdf')
+            else if FileExistsUTF8(f + '.epub') then
+              DeleteFileUTF8(f + '.epub')
             else if DirectoryExistsUTF8(f) then
               DeleteDirectory(f, False);
           end;
