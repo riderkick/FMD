@@ -1353,7 +1353,7 @@ begin
         ReadInteger(s, 'NumberOfPages', 0),
         ReadInteger(s, 'CurrentPage', 0),
         ReadString(s, 'Website', ''),
-        ReadString(s, 'Link', ''),
+        RemoveHostFromURL(ReadString(s, 'Link', '')),
         ReadString(s, 'Title', ''),
         ReadString(s, 'Status', ''),
         ReadString(s, 'Progress', ''),

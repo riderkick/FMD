@@ -116,7 +116,7 @@ end;
 function TDownloadedChaptersDB.ImportFromIni(const AFilename: String): Boolean;
 var
   dc: TStringList;
-  i: Integer;
+  i: Integer = 0;
 begin
   Result := False;
   if not Connected then Exit;
@@ -125,12 +125,11 @@ begin
   try
     dc.LoadFromFile(AFilename);
     if dc.Count > 0 then
-      i := 0;
-    while i < dc.Count - 2 do
-    begin
-      Chapters[dc[i]] := GetParams(dc[i + 1]);
-      Inc(i, 2);
-    end;
+      while i <= dc.Count - 2 do
+      begin
+        Chapters[dc[i]] := RemoveHostFromURL(GetParams(dc[i + 1]));
+        Inc(i, 2);
+      end;
     Result := True;
   finally
     dc.Free;

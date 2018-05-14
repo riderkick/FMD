@@ -529,22 +529,24 @@ begin
   with TIniFile.Create(FAVORITES_FILE) do
   try
     i := ReadInteger('general', 'NumberOfFavorites', 0);
-    if i = 0 then Exit;
-    for i := 0 to i - 1 do
+    if i > 0 then
     begin
-      s := IntToStr(i);
-      FFavoritesDB.Add(
-        i,
-        True,
-        ReadString(s, 'Website', ''),
-        ReadString(s, 'Link', ''),
-        ReadString(s, 'Title', ''),
-        ReadString(s, 'CurrentChapter', ''),
-        GetParams(ReadString(s, 'DownloadedChapterList', '')),
-        ReadString(s, 'SaveTo', '')
-      );
+      for i := 0 to i - 1 do
+      begin
+        s := IntToStr(i);
+        FFavoritesDB.Add(
+          i,
+          True,
+          ReadString(s, 'Website', ''),
+          RemoveHostFromURL(ReadString(s, 'Link', '')),
+          ReadString(s, 'Title', ''),
+          ReadString(s, 'CurrentChapter', ''),
+          GetParams(ReadString(s, 'DownloadedChapterList', '')),
+          ReadString(s, 'SaveTo', '')
+        );
+      end;
+      FFavoritesDB.Commit;
     end;
-    FFavoritesDB.Commit;
     Result := True;
   finally
     Free;
