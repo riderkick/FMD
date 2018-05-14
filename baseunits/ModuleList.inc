@@ -63,7 +63,6 @@ uses
   // Adult
   WPAdultSiteSkins,
   EHentai,
-  Doujinmoeus,
   Luscious,
   EightMuses,
   HitomiLa,
