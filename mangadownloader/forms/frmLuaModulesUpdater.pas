@@ -705,9 +705,9 @@ var
   trepos: TLuaModulesRepos;
 begin
   Synchronize(@SyncStartChecking);
+  FReposUp := TLuaModulesRepos.Create;
   if FHTTP.GET(MODULES_URL) then
   begin
-    FReposUp := TLuaModulesRepos.Create;
     FReposUp.LoadFromRemote(FHTTP);
     if FHTTP.GET(MODULES_URL2) then
       FReposUp.LoadFromRemoteHTML(FHTTP);
