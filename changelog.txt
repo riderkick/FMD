@@ -4,6 +4,31 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.155.0 (14-05-2018)
+[+] Added ePub support
+[+] Added Bamtoki [RAW]
+[+] Added RawQQ [RAW]
+[+] Added AllHentai [RU]
+[+] Added ComicExtra [EN]
+[+] Added ReadComicBooksOnline [EN]
+[+] Added SOSScanlation [SP-SC]
+[+] Added MangaHereIO [EN]
+[+] Added SiberOwl [EN-SC]
+[+] Added ComicoCoID [ID]
+[+] Added IMangaScans [EN-SC]
+[+] Added InManga [SP]
+[-] Removed MangaSh
+[*] MangaKu, fixed domain name
+[*] JapScan, fixed download
+[*] Pzykosis666HFansub, fixed domain name
+[*] ReadComicOnline, set high image quality
+[*] MangaDex, fixed all
+[*] CentralDeMangas, fixed domain name
+[*] Mangaf, fixed domain name
+[*] AcademyVN, fixed domain name
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.154.0...0.9.155.0
+
 0.9.154.0 (15-04-2018)
 [+] Added GodsRealmScan [SP-SC]
 [+] Added IlluminatiManga [EN-SC]
