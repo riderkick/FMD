@@ -2,12 +2,15 @@
   mangainfo.url=MaybeFillHost(module.RootURL, url)
   if http.get(mangainfo.url) then
     local x=TXQuery.Create(http.document)
-    mangainfo.title=x.xpathstring('//table[@class="info"]//tr[contains(td[@class="title"], "Comic Title")]/td[@class="info"]')
-    mangainfo.coverlink=MaybeFillHost(module.RootURL, x.xpathstring('//img[@class="thispic"]/@src'))
-    mangainfo.authors=x.xpathstring('//table[@class="info"]//tr[contains(td[@class="title"], "Author")]/td[@class="info"]')
-    mangainfo.genres=x.xpathstring('//table[@class="info"]//tr[contains(td[@class="title"], "Genre")]/td[@class="info"]')
-    mangainfo.status = MangaInfoStatusIfPos(x.xpathstring('//table[@class="info"]//tr[contains(td[@class="title"], "Status")]/td[@class="info"]'))
-    mangainfo.summary=x.xpathstringall('//div[@id="summary"]/text()', '')
+    if mangainfo.title == '' then
+      mangainfo.title=x.xpathstring('//h1[@class="page-title"]')
+    end
+    mangainfo.coverlink=MaybeFillHost(module.RootURL, x.xpathstring('//img[@class="series"]/@src'))
+    mangainfo.authors=x.xpathstringall('//li[@class="info" and contains(*, "Author")]/text()', '')
+    mangainfo.artists = mangainfo.authors
+    mangainfo.genres=x.xpathstringall('//li[@class="info" and contains(*, "Genre")]/text()', '')
+    mangainfo.status = MangaInfoStatusIfPos(x.xpathstringall('//li[@class="info" and contains(*, "Status")]/text()', ''))
+    mangainfo.summary=x.xpathstringall('//li[@class="summary"]/text()', '')
     x.xpathhrefall('//div[@id="chapterlist"]/li/a',mangainfo.chapterlinks,mangainfo.chapternames)
     InvertStrings(mangainfo.chapterlinks,mangainfo.chapternames)
     http.reset()
