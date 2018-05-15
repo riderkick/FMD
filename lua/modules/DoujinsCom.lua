@@ -9,7 +9,6 @@ function getinfo()
       mangainfo.title = x.xpathstring('//div[@class="folder-title"]/a[last()]')
     end
     mangainfo.coverlink = x.xpathstring('(//img[@class="doujin"])[1]/@data-thumb')
-    print(x.xpathstring('(//img[@class="doujin"])[1]/@data-thumb'))
     mangainfo.authors=x.xpathstringall('//div[@class="gallery-artist"]/a')
     mangainfo.artists=x.xpathstringall('//div[@class="gallery-artist"]/a')
     mangainfo.genres=x.xpathstringall('//li[@class="tag-area"]/a')
@@ -32,47 +31,46 @@ function getpagenumber()
   return true
 end
 
---[[
+function today()
+  local now = os.date('*t');
+  return os.time({year=now.year, month=now.month, day=now.day})
+end
+
+local endDate = os.time({year=2007, month=9, day=30})
+local step = 30 * 24 * 60 * 60
+
 function getdirectorypagenumber()
-  if http.GET(module.RootURL .. dirurl) then
-    local x = TXQuery.Create(http.Document)
-    local s = x.xpathstring('//*[@class="pagination"]/a[@class="step"][last()]/@href')
-    page = tonumber(s:match('offset=(%d+)'))
-    if page == nil then page = 1 end
-    if page > 1 then page = math.ceil(page / perpage) + 1; end
-    return no_error
-  else
-    return net_problem
-  end
+  page = math.ceil((today() - endDate) / step)
+  return no_error
 end
 
 function getnameandlink()
-  local s = module.rooturl .. dirurl
-  if url ~= '0' then s = s .. '&offset=' .. (tonumber(url) * perpage) .. '&max=' .. perpage; end
-  if http.get(s) then
+  local to = today() - tonumber(url) * step
+  local from = to - step + 1
+  if from < endDate then return no_error; end
+  if http.xhr(module.rooturl .. string.format('/folders?start=%d&end=%d', from, to)) then
     local x = TXQuery.Create(http.Document)
-    local v = x.xpath('//table[@class="cTable"]//tr/td/a[not(@class)]')
+    local v = x.xpath('json(*).folders()')
     for i = 1, v.count do
       local v1 = v.get(i)
-      links.add(v1.getattribute('href'))
-      names.add(x.xpathstring('./text()', v1))
+      links.add(x.xpathstring('link', v1))
+      names.add(x.xpathstring('name', v1))
     end
     return no_error
   else
     return net_problem
   end
 end
-]]--
 
 function Init()
   local m = NewModule()
   m.website = 'DoujinsCom'
-  m.rooturl = 'https://doujins.com/'
+  m.rooturl = 'https://doujins.com'
   m.category = 'H-Sites'
   m.lastupdated='May 14, 2018'
   m.sortedlist = true
   m.ongetinfo='getinfo'
   m.ongetpagenumber='getpagenumber'
-  --m.ongetnameandlink='getnameandlink'
-  --m.ongetdirectorypagenumber = 'getdirectorypagenumber'
+  m.ongetnameandlink='getnameandlink'
+  m.ongetdirectorypagenumber = 'getdirectorypagenumber'
 end
