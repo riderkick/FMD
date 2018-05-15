@@ -33,7 +33,7 @@ function getpagenumber()
   task.pagelinks.clear()
   if http.get(MaybeFillHost(module.rooturl, url)) then
     local x=TXQuery.Create(http.Document)
-    x.xpathstringall('//select[@id="pages"]/option/@value', task.pagelinks)
+    x.xpathstringall('//select[@id="pages"]/option[position() < last()]/@value', task.pagelinks)
     task.pagecontainerlinks.text = http.cookies.text
   else
     return false
