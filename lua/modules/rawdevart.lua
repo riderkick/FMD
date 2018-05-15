@@ -2,7 +2,7 @@ function getinfo()
   mangainfo.url=MaybeFillHost(module.RootURL, url)
   if http.get(mangainfo.url) then
     x=TXQuery.Create(http.document)
-    mangainfo.title=x.xpathstring('//div[@class="post-title"]/h3')
+    mangainfo.title=x.xpathstringall('//div[@class="post-title"]/h3/text()', '')
     mangainfo.coverlink=x.xpathstring('//div[@class="summary_image"]/a/img/@src')
     mangainfo.authors=x.xpathstringall('//div[@class="author-content"]/a')
     mangainfo.artists=x.xpathstringall('//div[@class="artist-content"]/a')
