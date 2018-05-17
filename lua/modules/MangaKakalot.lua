@@ -135,9 +135,9 @@ function AddWebsiteModule(name, url)
 end 
 
 function Init()
-  AddWebsiteModule('Mangakakalot', 'http://mangakakalot.com')
-  AddWebsiteModule('Manganelo', 'http://manganelo.com')
-  AddWebsiteModule('Mangasupa', 'http://mangasupa.com')
+  AddWebsiteModule('MangaKakalot', 'http://mangakakalot.com')
+  AddWebsiteModule('MangaNelo', 'http://manganelo.com')
+  AddWebsiteModule('MangaSupa', 'http://mangasupa.com')
   AddWebsiteModule('MangaHereIO', 'https://manga-here.io')
   AddWebsiteModule('MangaFoxCom', 'https://manga-fox.com')
 end
