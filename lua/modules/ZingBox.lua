@@ -68,7 +68,7 @@ function getnameandlink()
       hasTitles = true
     end
     if hasTitles then
-      updatelist.CurrentDirectoryPageNumber = 2 --updatelist.CurrentDirectoryPageNumber + 1
+      updatelist.CurrentDirectoryPageNumber = updatelist.CurrentDirectoryPageNumber + 1
     end
     return no_error
   else
