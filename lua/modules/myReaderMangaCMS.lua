@@ -75,13 +75,17 @@ function AddWebsiteModule(name, url, cat)
 end
 
 function Init()
-  AddWebsiteModule('MangaForest', 'http://mangaforest.com', 'English')
-  AddWebsiteModule('MangaDoor', 'http://mangadoor.com', 'Spanish');
+  local c='English'
+  AddWebsiteModule('MangaForest', 'http://mangaforest.com', c)
   
-  local c='Indonesian'
+  c='Spanish'
+  AddWebsiteModule('MangaDoor', 'http://mangadoor.com', c);
+  AddWebsiteModule('MangaHispano', 'https://mangahis.com', c);
+  
+  c='Indonesian'
   AddWebsiteModule('Komikid', 'http://www.komikid.com', c);
   AddWebsiteModule('MangaDesu','http://mangadesu.net', c);
-  AddWebsiteModule('MangaID', 'http://mangaid.co', c);  
+  AddWebsiteModule('MangaID', 'http://mangaid.co', c);
   
   c='Raw'
   AddWebsiteModule('RawMangaUpdate', 'http://rawmangaupdate.com', c);
