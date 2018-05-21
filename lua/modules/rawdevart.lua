@@ -3,7 +3,13 @@ function getinfo()
   if http.get(mangainfo.url) then
     x=TXQuery.Create(http.document)
     mangainfo.title=x.xpathstringall('//div[@class="post-title"]/h3/text()', '')
-    mangainfo.coverlink=x.xpathstring('//div[@class="summary_image"]/a/img/@src')
+    if string.match(mangainfo.title:upper(), ' RAW$') ~= nil then
+      mangainfo.title = mangainfo.title:sub(1, -5)
+    end
+    mangainfo.coverlink=x.xpathstring('//div[@class="summary_image"]/a/img/@data-src')
+    if mangainfo.coverlink == '' then
+      mangainfo.coverlink=x.xpathstring('//div[@class="summary_image"]/a/img/@src')
+    end
     mangainfo.authors=x.xpathstringall('//div[@class="author-content"]/a')
     mangainfo.artists=x.xpathstringall('//div[@class="artist-content"]/a')
     mangainfo.genres=x.xpathstringall('//div[@class="genres-content"]/a')
@@ -63,6 +69,7 @@ end
 function Init()
   local cat = 'Raw'
   AddWebsiteModule('Rawdevart', 'https://rawdevart.com', cat)
+  AddWebsiteModule('RawNeko', 'http://rawneko.com', cat)
   
   cat = 'English-Scanlation'
   AddWebsiteModule('TrashScanlations', 'https://trashscanlations.com', cat)
