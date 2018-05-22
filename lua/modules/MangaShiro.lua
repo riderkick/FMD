@@ -9,6 +9,13 @@ function getinfo()
       mangainfo.genres=x.xpathstringall('//div[@class="topinfo"]//tr[contains(th, "Genres")]/td/a')
       mangainfo.status=MangaInfoStatusIfPos(x.xpathstring('//div[@class="topinfo"]//tr[contains(th, "Status")]/td'))
       mangainfo.summary=x.xpathstringall('//*[@class="sin"]/p/text()', '')
+    elseif module.website == 'WestManga' then
+      mangainfo.title=x.xpathstring('//h1')
+      mangainfo.coverlink=MaybeFillHost(module.RootURL, x.xpathstring('//div[@class="naru"]/img/@src'))
+      mangainfo.authors=x.xpathstring('//div[@class="infozin"]//li[starts-with(.,"Author")]/substring-after(.,":")')
+      mangainfo.genres=x.xpathstringall('//div[@class="infozin"]//li[starts-with(.,"Genre")]/a')
+      mangainfo.status=MangaInfoStatusIfPos(x.xpathstring('//div[@class="infozin"]//li[starts-with(.,"Status")]'), "Publishing", "Finished")
+      mangainfo.summary=x.xpathstringall('//*[@class="sinopc"]/p/text()', '')
     else
       mangainfo.title=x.xpathstring('//h1[@itemprop="name"]')
       mangainfo.coverlink=MaybeFillHost(module.RootURL, x.xpathstring('//div[@class="imgdesc"]/img/@src'))
@@ -29,7 +36,11 @@ function getpagenumber()
   task.pagenumber=0
   task.pagelinks.clear()
   if http.get(MaybeFillHost(module.rooturl,url)) then
-    TXQuery.Create(http.Document).xpathstringall('//*[@id="readerarea"]//img/@src', task.pagelinks)
+    if module.website == 'WestManga' then
+      TXQuery.Create(http.Document).xpathstringall('//*[@class="lexot"]//img/@src', task.pagelinks)
+    else
+      TXQuery.Create(http.Document).xpathstringall('//*[@id="readerarea"]//img/@src', task.pagelinks)
+    end
     return true
   else
     return false
@@ -46,6 +57,8 @@ function getnameandlink()
   if http.get(module.rooturl..dirurl) then
     if module.website == 'KomikStation' then
       TXQuery.Create(http.document).xpathhrefall('//*[@class="daftarkomik"]//a',links,names)
+    elseif module.website == 'WestManga' then
+      TXQuery.Create(http.document).xpathhrefall('//*[@class="jdlbar"]//a',links,names)
     else
       TXQuery.Create(http.document).xpathhrefall('//*[@class="soralist"]//a',links,names)
     end
@@ -75,4 +88,5 @@ function Init()
   AddWebsiteModule('KomikStation', 'http://www.komikstation.com')
   AddWebsiteModule('MangaKid', 'http://mangakid.net')
   AddWebsiteModule('KomikCast', 'https://komikcast.com')
+  AddWebsiteModule('WestManga', 'https://westmanga.info')
 end
