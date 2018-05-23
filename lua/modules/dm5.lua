@@ -4,7 +4,7 @@
   if http.get(mangainfo.url) then
     local x = TXQuery.Create(http.document)
     if mangainfo.title == '' then
-      mangainfo.title=x.xpathstring('//p[@class="title"]')
+      mangainfo.title=x.xpathstring('//div[@class="banner_detail_form"]//p[@class="title"]/text()')
     end
     mangainfo.coverlink=MaybeFillHost(module.rooturl,x.xpathstring('//div[@class="cover"]/img/@src'))
     mangainfo.authors=x.xpathstringall('//div[@class="info"]/p[@class="subtitle"]/a')
@@ -61,10 +61,10 @@ function getpagenumber()
     local dm5key = x.xpathstring('//*[@id="dm5_key"]/@value')
     local dm5page, cnt = 1, 0
     
-    task.pagenumber = tonumber(x.xpathstring('(//div[@id="chapterpager"])[1]/a[last()]'))
-    if task.pagenumber == nil then task.pagenumber = 0 end
+    local total = tonumber(x.xpathstring('(//div[@id="chapterpager"])[1]/a[last()]'))
+    if total == nil then total = 0 end
     
-    while (cnt < task.pagenumber) and (dm5page < task.pagenumber) do
+    while (cnt < total) and (dm5page <= total) do
       local xhrurl = string.format('%s/chapterfun.ashx?cid=%s&page=%d&key=%s&language=1&gtk=6&_cid=%s&_mid=%s&_dt=%s&_sign=%s',
         RemoveURLDelim(u), dm5cid, dm5page, dm5key, dm5cid, dm5mid, urlencode(dm5viewsigndt), dm5viewsign)
       if http.terminated then break end
