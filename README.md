@@ -4,7 +4,7 @@
 
 ## Download the latest release
 
-[![GitHub release](https://img.shields.io/github/release/riderkick/FMD.svg)](https://github.com/riderkick/FMD/releases/latest) [![Github Releases (by Asset)](https://img.shields.io/github/downloads/riderkick/FMD/latest/fmd_0.9.155.0.7z.svg?label=Win32)](https://github.com/riderkick/FMD/releases/download/0.9.155.0/fmd_0.9.155.0.7z) [![Github Releases (by Asset)](https://img.shields.io/github/downloads/riderkick/FMD/latest/fmd_0.9.155.0_Win64.7z.svg?label=Win64)](https://github.com/riderkick/FMD/releases/download/0.9.155.0/fmd_0.9.155.0_Win64.7z)
+[![Latest release](https://img.shields.io/github/release/riderkick/FMD.svg)](https://github.com/riderkick/FMD/releases/latest) [![Download latest release (Win32)](https://img.shields.io/github/downloads/riderkick/FMD/latest/fmd_0.9.155.0.7z.svg?label=Win32)](https://github.com/riderkick/FMD/releases/download/0.9.155.0/fmd_0.9.155.0.7z) [![Download latest release (Win64)](https://img.shields.io/github/downloads/riderkick/FMD/latest/fmd_0.9.155.0_Win64.7z.svg?label=Win64)](https://github.com/riderkick/FMD/releases/download/0.9.155.0/fmd_0.9.155.0_Win64.7z)
 
 ## Content
 
