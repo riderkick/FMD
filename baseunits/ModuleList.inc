@@ -53,6 +53,7 @@ uses
   MangaRock,
   PsychoPlay,
   MangaWindow,
+  TranslateWebtoon,
   // Raw Official
   SundayWebEvery,
   TonariNoYoungJump,
