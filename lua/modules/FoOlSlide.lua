@@ -47,7 +47,6 @@ function getdirurl(website)
     ['Riceballicious'] = dirurlreaderlist,
     ['Yuri-ism'] = dirurlslide,
     ['MangajinNoFansub'] = dirurllector,
-    ['HatigarmScans'] = '/hs/directory/',
     ['BunnysScans'] = '/read/directory/',
     ['CanisMajorScans'] = dirurlreader,
     ['HoshikuzuuScans'] = dirurl,
@@ -80,9 +79,6 @@ function getinfo()
       mangainfo.title = Trim(SeparateLeft(x.xpathstring('//title'), '::'))
     end
     local cls = 'info'
-    if module.website == 'HatigarmScans' then
-      cls = 'well'
-    end
     mangainfo.authors = string.gsub(
       x.xpathstring('//div[@class="'..cls..'"]/*[contains(text(),"Author")]/following-sibling::text()[1]'),
       '^[%s:]*', '')
@@ -209,8 +205,6 @@ function getnameandlink()
         links.add(v1.getattribute('href'))
         names.add(x.xpathstring('span', v1))
       end
-    elseif module.website == 'HatigarmScans' then
-      x.XpathHREFAll('//div[@class="grid"]/div/a', links, names)
     else
       x.XpathHREFAll('//div[@class="list series"]/div/div[@class="title"]/a', links, names)
     end
@@ -266,7 +260,6 @@ function Init()
   AddWebsiteModule('SaikoScans', 'http://saikoscans.ml', cat)
   AddWebsiteModule('Yuri-ism', 'https://www.yuri-ism.net', cat)
   AddWebsiteModule('SilentSkyScans', 'http://reader.silentsky-scans.net', cat)
-  AddWebsiteModule('HatigarmScans', 'http://hatigarmscans.eu', cat)
   AddWebsiteModule('BunnysScans', 'http://bns.shounen-ai.net', cat)
   AddWebsiteModule('CanisMajorScans', 'http://cm-scans.shounen-ai.net', cat)
   AddWebsiteModule('HoshikuzuuScans', 'http://hoshiscans.shounen-ai.net', cat)
