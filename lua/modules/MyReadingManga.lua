@@ -57,7 +57,7 @@ function getdirectorypagenumber()
 end
 
 function getnameandlink()
-  if http.get(module.rooturl .. '/page/' .. IncStr(AURL) .. '/') then
+  if http.get(module.rooturl .. '/page/' .. IncStr(url) .. '/') then
     local x = TXQuery.Create(http.Document)
     x.XPathHREFAll('//h2[@class="entry-title"]/a', links, names)
     return no_error
@@ -76,4 +76,5 @@ function Init()
   m.ongetpagenumber='getpagenumber'
   m.ongetnameandlink='getnameandlink'
   m.ongetdirectorypagenumber = 'getdirectorypagenumber'
+  m.sortedlist = true
 end
