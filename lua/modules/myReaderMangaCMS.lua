@@ -86,6 +86,7 @@ function Init()
   AddWebsiteModule('Komikid', 'http://www.komikid.com', c);
   AddWebsiteModule('MangaDesu','http://mangadesu.net', c);
   AddWebsiteModule('MangaID', 'http://mangaid.co', c);
+  AddWebsiteModule('KomikGue', 'https://www.komikgue.com', c);
   
   c='Raw'
   AddWebsiteModule('RawMangaUpdate', 'http://rawmangaupdate.com', c);
@@ -94,7 +95,7 @@ function Init()
   c='Turkish'
   AddWebsiteModule('MangaDenizi', 'http://www.mangadenizi.com', c);
   AddWebsiteModule('ManhuaTr', 'http://manhua-tr.com', c);
-  AddWebsiteModule('MangaVadisi', 'http://manga-v2.mangavadisi.org/', c);
+  AddWebsiteModule('MangaVadisi', 'http://manga-v2.mangavadisi.org', c);
 
   c='English-Scanlation'
   AddWebsiteModule('FallenAngelsScans','http://manga.fascans.com', c);
@@ -106,7 +107,7 @@ function Init()
   AddWebsiteModule('DarkSkyScan', 'http://darkskyprojects.org', c);
   AddWebsiteModule('NozominoFansub', 'https://nozominofansub.com', c);
   AddWebsiteModule('GodsRealmScan', 'https://godsrealmscan.com', c); 
-  AddWebsiteModule('CoYuHi', 'http://www.universoyuri.com/', c);
+  AddWebsiteModule('CoYuHi', 'http://www.universoyuri.com', c);
   AddWebsiteModule('SOSScanlation', 'http://sosscanlation.com', c);
   
   c='Italian-Scanlation'
