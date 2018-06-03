@@ -434,7 +434,7 @@ begin
       luaPushObject(l, AHTTP, 'http', @luaHTTPSendThreadAddMetaTable);
 
       LuaDoMe(l);
-      LuaCallFunction(l, OnTaskStart);
+      LuaCallFunction(l, OnLogin);
       Result := lua_toboolean(l, -1);
     except
       on E: Exception do
@@ -768,6 +768,18 @@ begin
   end;
 end;
 
+function lua_getaccountsupport(L: Plua_State): Integer; cdecl;
+begin
+  lua_pushboolean(L, TLuaWebsiteModule(luaClassGetObject(L)).Module.AccountSupport);
+  Result := 1;
+end;
+
+function lua_setaccountsupport(L: Plua_State): Integer; cdecl;
+begin
+  Result := 0;
+  TLuaWebsiteModule(luaClassGetObject(L)).Module.AccountSupport := lua_toboolean(L, 1);
+end;
+
 const
   methods: packed array [0..5] of luaL_Reg = (
     (name: 'AddOptionCheckBox'; func: @lua_addoptioncheckbox),
@@ -806,7 +818,6 @@ begin
     luaClassAddIntegerProperty(L, MetaTable, 'ActiveTaskCount', @Module.ActiveTaskCount);
     luaClassAddIntegerProperty(L, MetaTable, 'ActiveConnectionCount',
       @Module.ActiveConnectionCount);
-    luaClassAddBooleanProperty(L, MetaTable, 'AccountSupport', @Module.AccountSupport);
     luaClassAddBooleanProperty(L, MetaTable, 'SortedList', @Module.SortedList);
     luaClassAddBooleanProperty(L, MetaTable, 'InformationAvailable',
       @Module.InformationAvailable);
@@ -834,6 +845,7 @@ begin
     luaClassAddIntegerProperty(L, MetaTable, 'CurrentDirectoryIndex', @Module.CurrentDirectoryIndex);
 
     luaClassAddProperty(L, MetaTable, UserData, 'TotalDirectory', @lua_gettotaldirectory, @lua_settotaldirectory);
+    luaClassAddProperty(L, MetaTable, UserData, 'AccountSupport', @lua_getaccountsupport, @lua_setaccountsupport);
 
     luaClassAddFunction(L, MetaTable, UserData, methods);
 
