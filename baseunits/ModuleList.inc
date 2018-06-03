@@ -67,5 +67,4 @@ uses
   EightMuses,
   HitomiLa,
   HentaiCafe,
-  Hentai2Read,
-  HentaiFox;
+  Hentai2Read;
