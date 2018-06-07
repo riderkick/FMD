@@ -205,4 +205,7 @@ function Init()
   cat = 'English-Scanlation'
   AddWebsiteModule('MangaCow', 'http://mngcow.co', cat)
   AddWebsiteModule('MerakiScans', 'http://merakiscans.com', cat)
+  
+  cat = "Arabic-Scanlation"
+  AddWebsiteModule('3asq', 'http://www.3asq.info', cat)
 end
