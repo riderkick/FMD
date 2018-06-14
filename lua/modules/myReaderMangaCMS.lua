@@ -80,7 +80,6 @@ function Init()
   
   c='Spanish'
   AddWebsiteModule('MangaDoor', 'http://mangadoor.com', c);
-  AddWebsiteModule('MangaHispano', 'https://mangahis.com', c);
   
   c='Indonesian'
   AddWebsiteModule('Komikid', 'http://www.komikid.com', c);
