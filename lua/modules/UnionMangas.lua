@@ -34,12 +34,10 @@ end
 
 function getnameandlink()
   local s = module.RootURL .. dirurl
-  if url ~= '0' then
-    s = s .. '/a-z/' + IncStr(url) + '/*'
-  end
+  s = s .. '/a-z/' .. IncStr(url) .. '/*'
   if http.get(s) then
     local x = TXQuery.Create(http.Document)
-    x.XPathHREFAll('//*[@class="row"]/div/a[2]', links, names)
+    x.XPathHREFAll('//div[contains(@class,"bloco-manga")]/a[2]', links, names)
     return no_error
   else
     return net_problem
@@ -61,7 +59,7 @@ function Init()
   local m=NewModule()
   m.category='Portugues'
   m.website='UnionMangas'
-  m.rooturl='http://unionmangas.cc'
+  m.rooturl='http://unionmangas.site'
   m.lastupdated='April 6, 2018'
   m.ongetinfo='getinfo'
   m.ongetpagenumber='getpagenumber'
