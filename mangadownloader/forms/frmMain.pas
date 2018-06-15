@@ -1269,7 +1269,7 @@ end;
 procedure TMainForm.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 begin
   Logger.Send(Self.ClassName+'.FormClose');
-  if cbOptionShowQuitDialog.Checked and (DoAfterFMD = DO_NOTHING) then
+  if cbOptionShowQuitDialog.Checked and (DoAfterFMD = DO_NOTHING) and (not OptionRestartFMD) then
   begin
     if MessageDlg('', RS_DlgQuit, mtConfirmation, [mbYes, mbNo], 0) <> mrYes then
     begin
