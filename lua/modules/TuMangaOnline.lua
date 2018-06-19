@@ -18,9 +18,18 @@ function getinfo()
       local w = x.xpath('div//ul/li/div', v1)
       for j = 1, w.count do
         local w1 = w.get(j)
-        local scan = '[' .. x.xpathstring('div[1]//a', w1) .. ']'
+        local scan = '[' .. x.xpathstring('div[1]', w1) .. ']'
         mangainfo.chapterlinks.add(x.xpathstring('div[contains(@class, "text-right")]/a/@href', w1))
         mangainfo.chapternames.add(name .. ' ' .. scan)
+      end
+    end
+    if mangainfo.chapterlinks.count == 0 then
+      local w = x.xpath('//ul[contains(@class, "chapter-list")]/li/div')
+      for j = 1, w.count do
+        local w1 = w.get(j)
+        local scan = '[' .. x.xpathstring('div[1]', w1) .. ']'
+        mangainfo.chapterlinks.add(x.xpathstring('div[contains(@class, "text-right")]/a/@href', w1))
+        mangainfo.chapternames.add(mangainfo.title .. ' ' .. scan)
       end
     end
     InvertStrings(mangainfo.chapterlinks, mangainfo.chapternames)
@@ -44,27 +53,26 @@ function getpagenumber()
   return true
 end
 
---[[
 function getnameandlink()
-  if http.GET(module.RootURL .. '/changeMangaList?type=text') then
-    TXQuery.Create(http.Document).XPathHREFAll('//li/a', links, names)
-    return no_error
-  else
-    return net_problem
-  end
-end
-
-function getdirectorypagenumber()
-  if http.GET(module.RootURL) then
+  local s = '/library?order_item=alphabetically&order_dir=asc&filter_by=title&page='..IncStr(url)
+  if http.GET(module.RootURL .. s) then
     local x = TXQuery.Create(http.Document)
-    page = tonumber(x.xpathstring('//*[@class="pagination"]/a[last()-1]'))
-    if page == nil then page = 1 end
+    local v = x.xpath('//*[@data-identifier]/a')
+    local hasTitles = false
+    for i = 1, v.count do
+      local v1 = v.get(i)
+      links.add(v1.getAttribute('href'))
+      names.add(x.xpathstring('div/div[@class="thumbnail-title"]', v1))
+      hasTitles = true
+    end
+    if hasTitles then
+      updatelist.CurrentDirectoryPageNumber = updatelist.CurrentDirectoryPageNumber + 1
+    end
     return no_error
   else
     return net_problem
   end
 end
---]]
 
 function Init()
   local m = NewModule()
@@ -76,6 +84,5 @@ function Init()
   m.maxconnectionlimit = 1
   m.ongetinfo='getinfo'
   m.ongetpagenumber='getpagenumber'
-  --m.ongetnameandlink='getnameandlink'
-  --m.ongetdirectorypagenumber = 'getdirectorypagenumber'
+  m.ongetnameandlink='getnameandlink'
 end
