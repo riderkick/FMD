@@ -17,6 +17,9 @@
     if mangainfo.chapterlinks.count == 0 then
       x.xpathhrefall('//div[@id="list-chapters"]//a[@class="chapter"]', mangainfo.chapterlinks, mangainfo.chapternames)
     end
+    for i = 0, mangainfo.chapterlinks.count-1 do
+      mangainfo.chapterlinks[i] = string.gsub(mangainfo.chapterlinks[i], '%.', '%%2E')
+    end
     InvertStrings(mangainfo.chapterlinks, mangainfo.chapternames)
     return no_error
   else
