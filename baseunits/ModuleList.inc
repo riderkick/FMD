@@ -43,7 +43,6 @@ uses
   EatManga,
   Taadd,
   NineManga,
-  TruyenTranhTuan,
   BlogTruyen,
   MangaAe,
   MangaTube,
