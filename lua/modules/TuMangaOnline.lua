@@ -48,7 +48,7 @@ function getpagenumber()
     if not http.get(http.lasturl:gsub('paginated$', 'cascade')) then return false; end
   end
   local x=TXQuery.Create(http.Document)
-  x.xpathstringall('//img[contains(@class, "viewer-image")]/@data-original', task.pagelinks)
+  x.xpathstringall('//img[contains(@class, "viewer-image")]/@src', task.pagelinks)
   task.pagecontainerlinks.text = http.lasturl
   return true
 end
