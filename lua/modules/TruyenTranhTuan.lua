@@ -54,7 +54,6 @@ function getnameandlink()
     local p = 1
     local v = x.xpath('//*[@id="page-nav"]//li')
     for i = 1, v.count do
-    print(v.get(i).toString)
       local tmp = tonumber(v.get(i).toString)
       if tmp == nil then tmp = 1; end
       if tmp > p then p = tmp; end
