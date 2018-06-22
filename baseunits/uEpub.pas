@@ -135,7 +135,9 @@ const
     '</html>' + LineEnding;
 
   STYLE: String =
-    'body {' + LineEnding +
+    'img {' + LineEnding +
+    '  max-width: 100%;' + LineEnding +
+    '  max-height: 100%;' + LineEnding +
     '}' + LineEnding;
 
 function NewUUID: String;
