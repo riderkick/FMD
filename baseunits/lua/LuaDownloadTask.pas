@@ -23,6 +23,7 @@ begin
     luaClassAddObject(L, MetaTable, PageLinks, 'PageLinks');
     luaClassAddObject(L, MetaTable, PageContainerLinks, 'PageContainerLinks');
     luaClassAddIntegerProperty(L, MetaTable, 'PageNumber', @PageNumber);
+    luaClassAddStringProperty(L, MetaTable, 'Link', @DownloadInfo.Link);
   end;
 end;
 
