@@ -470,8 +470,8 @@ begin
   FCookiesExpires := 0.0;
   Result := inherited HTTPMethod(amethod, aurl);
   ParseCookiesExpires;
-  if Assigned(BeforeHTTPMethod) then
-    BeforeHTTPMethod(Self, amethod, aurl);
+  if Assigned(AfterHTTPMethod) then
+    AfterHTTPMethod(Self, amethod, aurl);
 end;
 
 function THTTPSendThread.HTTPRequest(const Method, URL: String; const Response: TObject): Boolean;
