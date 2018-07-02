@@ -31,7 +31,7 @@ function getpagenumber()
   end
   if http.get(aurl) then
     x=TXQuery.Create(http.Document)
-    v=x.xpathstringall('//div[@class="page-break"]/img/@src', task.pagelinks)
+    v=x.xpathstringall('//div[contains(@class, "page-break")]/img/@src', task.pagelinks)
   else
     return false
   end
@@ -74,4 +74,7 @@ function Init()
   cat = 'English-Scanlation'
   AddWebsiteModule('TrashScanlations', 'https://trashscanlations.com', cat)
   AddWebsiteModule('ZeroScans', 'https://zeroscans.com', cat)
+  
+  cat = 'Indonesian'
+  AddWebsiteModule('Mangavy', 'https://mangavy.com', cat)
 end
