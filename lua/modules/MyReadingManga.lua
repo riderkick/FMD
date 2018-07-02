@@ -19,8 +19,10 @@ function getinfo()
     local v = x.xpath('//*[contains(@class,"entry-pagination")]/a')
     for i = 1, v.count do
       local v1 = v.get(i)
-      mangainfo.chapterlinks.add(v1.getAttribute('href'));
-      mangainfo.chapternames.add(mangainfo.title .. ' - ' .. v1.toString);
+      if string.match(v1.toString, '^Next') == nil then
+        mangainfo.chapterlinks.add(v1.getAttribute('href'));
+        mangainfo.chapternames.add(mangainfo.title .. ' - ' .. v1.toString);
+      end
     end
     if mangainfo.chapternames.count > 1 then
       mangainfo.chapternames[0] = mangainfo.chapternames[0] .. ' - 1'
