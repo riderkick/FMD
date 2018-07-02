@@ -57,7 +57,7 @@ function getnameandlink()
   if http.get(module.rooturl..dirurl) then
     if module.website == 'KomikStation' then
       TXQuery.Create(http.document).xpathhrefall('//*[@class="daftarkomik"]//a',links,names)
-    elseif module.website == 'WestManga' then
+    elseif module.website == 'WestManga' or module.website == 'MangaShiro' then
       TXQuery.Create(http.document).xpathhrefall('//*[@class="jdlbar"]//a',links,names)
     else
       TXQuery.Create(http.document).xpathhrefall('//*[@class="soralist"]//a',links,names)
