@@ -4,6 +4,37 @@ Project page: https://github.com/riderkick/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.156.0 (02-07-2018)
+[+] Added DoujinsCom [H-Sites]
+[+] Added PlusComico [RAW]
+[+] Added ZingBox [EN]
+[+] Added MangaRoom [EN]
+[+] Added RawNeko [RAW]
+[+] Added MangaHispano [SP]
+[+] Added WestManga [ID]
+[+] Added DM5 [RAW]
+[+] Added TranslateWebtoon
+[+] Added RawQV [RAW]
+[+] Added AsmHentai [H-Sites]
+[+] Added KomikGue [ID]
+[+] Added Toonkor [RAW]
+[+] Added 3asq [AR-SC]
+[+] Added TruyenChon [VI]
+[+] Added NetTruyen [VI]
+[+] Added Mexat [AR-SC]
+[-] Removed Bamtoki
+[*] Tumangaonline, fixed all
+[*] Mangavy, fixed all
+[*] MyReadingManga, fixed manga info
+[*] Lhscans, fixed manga info
+[*] TruyenTranhTuan, fixed page order
+[*] MangaID, fixed domain name
+[*] UnionMangas, fixed list update
+[*] HatigarmScans, fixed domain name
+[*] HeavenManga, fixed domain name
+[*] Various changes and bug fixes
+Full changes: https://github.com/riderkick/FMD/compare/0.9.155.0...0.9.156.0
+
 0.9.155.0 (14-05-2018)
 [+] Added ePub support
 [+] Added Bamtoki [RAW]
