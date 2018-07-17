@@ -68,7 +68,7 @@ end
 
 function Init()
   local cat = 'Raw'
-  AddWebsiteModule('Lhscans', 'http://rawlh.com', cat)
+  AddWebsiteModule('Lhscans', 'http://lhscan.net', cat)
   AddWebsiteModule('RawQQ', 'https://rawqq.com', cat)
   AddWebsiteModule('RawQV', 'http://rawqv.com', cat)
 end
