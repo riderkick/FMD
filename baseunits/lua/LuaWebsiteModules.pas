@@ -532,7 +532,7 @@ var
 begin
   d := LUA_WEBSITEMODULE_FOLDER;
   try
-    f := FindAllFiles(d, '*.lua', False, faAnyFile);
+    f := FindAllFiles(d, '*.lua;*.luac', False, faAnyFile);
     if f.Count > 0 then
       for i := 0 to f.Count - 1 do
         LoadLuaToWebsiteModules(f[i]);
