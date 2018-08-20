@@ -316,7 +316,7 @@ begin
               Parameters.Add('-o' + AnsiQuotedStr(DATA_FOLDER, '"'));  // destination
               Parameters.Add('-aoa');                                  // overwrite all
               Options := Options + [poWaitOnExit];
-              ShowWindow := swoNone;
+              ShowWindow := swoHIDE;
               Execute;
               cont := ExitStatus = 0;
               if cont then
