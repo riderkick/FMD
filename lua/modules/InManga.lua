@@ -3,7 +3,7 @@ function getinfo()
   if http.get(mangainfo.url) then
     local x=TXQuery.Create(http.document)
     mangainfo.title=x.xpathstring('//h1')
-    mangainfo.coverlink=x.xpathstring('//meta[@property="og:image"]/@content')
+    mangainfo.coverlink=MaybeFillHost(module.RootURL, x.xpathstring('//meta[@property="og:image"]/@content'))
     mangainfo.summary=x.xpathstring('//div/div[h1]/following-sibling::div[@class="panel-body"]')
     local id = x.xpathstring('//input[@id="Identification"]/@value')
     local base = x.xpathstring('//script[contains(., "var chapterUrl")]')
@@ -20,7 +20,7 @@ function getinfo()
       for _, k in ipairs(t) do
         local chid = x.xpathstring('jn:members(result)[Number='..k..']/Identification', root)
         local chnum = x.xpathstring('jn:members(result)[Number='..k..']/FriendlyChapterNumber', root)
-        mangainfo.chapterlinks.add(module.rooturl .. base:gsub('chapterNumber', chnum):gsub('identification', chid))
+        mangainfo.chapterlinks.add(module.rooturl .. '/chapter/chapterIndexControls?identification=' .. chid)
         mangainfo.chapternames.add('Capítulo: ' .. chnum)
       end
     end
