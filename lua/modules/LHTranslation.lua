@@ -28,14 +28,14 @@ local readrooturl = 'http://read.lhtranslation.com'
 function GetPageNumber()
   if http.get(MaybeFillHost(readrooturl, '/read-' .. url:gsub('/', '') .. '.html')) then
     local x=TXQuery.Create(http.document)
-    x.xpathstringall('//img[@class="chapter-img"]/@src',task.pagelinks)
+    x.xpathstringall('//img[contains(@class,"chapter-img")]/@src',task.pagelinks)
     if task.pagelinks.count > 0 then return true; end
   end
   if http.get(MaybeFillHost(module.rooturl, url)) then
     local x = TXQuery.Create(http.document)
     if http.get(x.xpathstring('//div[@class="commentmetadata"][1]/p/a/@href')) then
       x.parsehtml(http.document)
-      x.xpathstringall('//img[@class="chapter-img"]/@src',task.pagelinks)
+      x.xpathstringall('//img[contains(@class,"chapter-img")]/@src',task.pagelinks)
       if task.pagelinks.count > 0 then return true; end
     end    
   end
