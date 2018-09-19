@@ -30,7 +30,6 @@ uses
   MangaPark,
   MangaIndo,
   MyMangaMe,
-  MangaCool,
   GoodManga,
   MangaZuki,
   ReadMangaToday,
