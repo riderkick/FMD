@@ -85,10 +85,7 @@ function AddWebsiteModule(name, url, cat)
 end
 
 function Init()
-  local c='English'
-  AddWebsiteModule('MangaForest', 'http://mangaforest.com', c)
-  
-  c='Spanish'
+  local c='Spanish'
   AddWebsiteModule('MangaDoor', 'http://mangadoor.com', c);
   AddWebsiteModule('MangAs', 'https://mang.as', c);
   
