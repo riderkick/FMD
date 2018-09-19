@@ -29,7 +29,6 @@ uses
   LeoManga,
   MangaPark,
   MangaIndo,
-  MangaOnlineTo,
   MyMangaMe,
   MangaCool,
   GoodManga,
