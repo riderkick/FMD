@@ -27,7 +27,6 @@ function getdirurl(website)
   local dirs = {
     ['GoManga'] = dirurlreader,
     ['Jaiminisbox'] = dirurlreader,
-    ['TripleSevenScan'] = dirurlreader,
     ['DokiFansubs'] = dirurlreader,
     ['AtelierDuNoir'] = dirurlreader,
     ['OneTimeScans'] = dirurlfoolslide,
@@ -246,7 +245,6 @@ function Init()
   AddWebsiteModule('S2Scans', 'https://reader.s2smanga.com', cat)
   AddWebsiteModule('HotChocolateScans', 'http://hotchocolatescans.com', cat)
   AddWebsiteModule('LetItGoScans', 'http://reader.letitgo.scans.today', cat)
-  AddWebsiteModule('TripleSevenScan', 'http://triplesevenscans.com', cat)
   AddWebsiteModule('SeaOtterScans', 'https://reader.seaotterscans.com', cat)
   AddWebsiteModule('AntisenseScans', 'http://antisensescans.com', cat)
   AddWebsiteModule('TheCatScans', 'https://reader.thecatscans.com', cat)
