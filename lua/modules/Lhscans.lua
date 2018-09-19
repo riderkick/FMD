@@ -29,9 +29,11 @@ end
 
 function getpagenumber()
   task.pagelinks.clear()
-  if http.get(MaybeFillHost(module.rooturl, url)) then
+  local u = MaybeFillHost(module.rooturl, url)
+  if http.get(u) then
     local x=TXQuery.Create(http.Document)
     x.xpathstringall('//img[@class="chapter-img"]/@src', task.pagelinks)
+    task.pagecontainerlinks.text = u
   else
     return false
   end
@@ -53,6 +55,11 @@ function getnameandlink()
   end
 end
 
+function BeforeDownloadImage()
+  http.headers.values['Referer'] = task.pagecontainerlinks.text
+  return true
+end
+
 function AddWebsiteModule(name, url, cat)
   local m = NewModule()
   m.category = cat
@@ -63,6 +70,7 @@ function AddWebsiteModule(name, url, cat)
   m.ongetinfo='getinfo'
   m.ongetpagenumber='getpagenumber'
   m.ongetnameandlink='getnameandlink'
+  m.OnBeforeDownloadImage = 'BeforeDownloadImage'
   return m
 end
 
