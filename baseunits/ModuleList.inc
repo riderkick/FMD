@@ -24,7 +24,6 @@ uses
   WebtoonTr,
   MangaSaurus,
   GMangaMe,
-  SekaiManga,
   KuManga,
   SenManga,
   MangaInn,
