@@ -90,6 +90,7 @@ function Init()
   c='Raw'
   AddWebsiteModule('RawMangaUpdate', 'http://rawmangaupdate.com', c);
   AddWebsiteModule('MangaRawOnline', 'http://mangaraw.online', c);
+  AddWebsiteModule('RawMangaSite', 'https://rawmanga.site', c);
   
   c='Turkish'
   AddWebsiteModule('MangaDenizi', 'http://www.mangadenizi.com', c);
