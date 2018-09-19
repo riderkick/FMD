@@ -68,7 +68,6 @@ end
 
 function Init()
   local cat = 'Raw'
-  AddWebsiteModule('Rawdevart', 'https://rawdevart.com', cat)
   AddWebsiteModule('RawNeko', 'http://rawneko.com', cat)
   
   cat = 'English-Scanlation'
