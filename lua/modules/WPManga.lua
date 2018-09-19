@@ -189,8 +189,6 @@ function AddWebsiteModule(name, url, category)
 end
 
 function Init()
-  AddWebsiteModule('MangaBoom', 'http://www.mangaboom.com', 'Thai')
-  
   local cat = 'English'
   AddWebsiteModule('Authrone', 'http://www.authrone.com', cat)
   AddWebsiteModule('EyeOnManga', 'http://www.eyeonmanga.com', cat)
