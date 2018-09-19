@@ -73,7 +73,4 @@ function Init()
   cat = 'English-Scanlation'
   AddWebsiteModule('TrashScanlations', 'https://trashscanlations.com', cat)
   AddWebsiteModule('ZeroScans', 'https://zeroscans.com', cat)
-  
-  cat = 'Indonesian'
-  AddWebsiteModule('Mangavy', 'https://mangavy.com', cat)
 end
