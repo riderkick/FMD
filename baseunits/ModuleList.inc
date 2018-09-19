@@ -32,7 +32,6 @@ uses
   MangaIndo,
   MangaOnlineTo,
   MyMangaMe,
-  ReadComics,
   MangaCool,
   GoodManga,
   MangaZuki,
