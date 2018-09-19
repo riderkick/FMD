@@ -71,5 +71,4 @@ end
 
 function Init()
   AddWebsiteModule('MangaAll', 'http://mangaall.com')
-  AddWebsiteModule('MangaTrue', 'http://mangatrue.com')
 end
