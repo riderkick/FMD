@@ -196,7 +196,6 @@ function Init()
   AddWebsiteModule('EyeOnManga', 'http://www.eyeonmanga.com', cat)
   AddWebsiteModule('MangaDeep', 'http://www.mangadeep.com', cat)
   AddWebsiteModule('Manga99', 'http://www.manga99.com', cat)
-  AddWebsiteModule('MangaOnlineToday', 'http://www.mangaonline.today', cat)
   
   cat = 'H-Sites'
   AddWebsiteModule('ReadHentaiManga', 'http://readhentaimanga.com', cat)
