@@ -22,7 +22,6 @@ uses
   MangaEden,
   HeyMangaXyz,
   WebtoonTr,
-  MangaSaurus,
   GMangaMe,
   KuManga,
   SenManga,
