@@ -32,7 +32,6 @@ function getdirurl(website)
     ['OneTimeScans'] = dirurlfoolslide,
     ['DejameProbar'] = dirurlslide,
     ['MenudoFansub'] = dirurlslide,
-    ['NeoProjectScan'] = dirurlslide,
     ['SolitarioNoFansub'] = dirurlslide,
     ['SantosScan'] = dirurlslideU,
     ['Pzykosis666HFansub'] = dirurlonline,
@@ -276,7 +275,6 @@ function Init()
   AddWebsiteModule('DejameProbar', 'http://dejameprobar.es', cat)
   AddWebsiteModule('HoshinoFansub', 'http://manga.animefrontline.com', cat)
   AddWebsiteModule('MenudoFansub', 'http://www.menudo-fansub.com', cat)
-  AddWebsiteModule('NeoProjectScan', 'http://npscan.mangaea.net', cat)
   AddWebsiteModule('Pzykosis666HFansub', 'https://pzykosis666hfansub.com', cat)
   AddWebsiteModule('SantosScan', 'http://santosfansub.com', cat)
   AddWebsiteModule('SeinagiFansub', 'https://seinagi.org', cat)
