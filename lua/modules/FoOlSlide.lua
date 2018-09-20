@@ -33,7 +33,6 @@ function getdirurl(website)
     ['DejameProbar'] = dirurlslide,
     ['MenudoFansub'] = dirurlslide,
     ['SolitarioNoFansub'] = dirurlslide,
-    ['SantosScan'] = dirurlslideU,
     ['Pzykosis666HFansub'] = dirurlonline,
     ['SeinagiFansub'] = dirurlonline,
     ['HelveticaScans'] = dirurlhelvetica,
@@ -276,7 +275,6 @@ function Init()
   AddWebsiteModule('HoshinoFansub', 'http://manga.animefrontline.com', cat)
   AddWebsiteModule('MenudoFansub', 'http://www.menudo-fansub.com', cat)
   AddWebsiteModule('Pzykosis666HFansub', 'https://pzykosis666hfansub.com', cat)
-  AddWebsiteModule('SantosScan', 'http://santosfansub.com', cat)
   AddWebsiteModule('SeinagiFansub', 'https://seinagi.org', cat)
   AddWebsiteModule('SeinagiAdultoFansub', 'https://adulto.seinagi.org', cat)
   AddWebsiteModule('SolitarioNoFansub', 'http://snf.mangaea.net', cat)
