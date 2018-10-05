@@ -20,15 +20,18 @@ The Free Manga Downloader is a free open source application written in Object Pa
 
 In order to build FMD from the source code, you must install the latest version of Lazarus and Free Pascal Compiler from http://www.lazarus-ide.org/. Then you must install the following 3rd party libraries and components:
 
- - [RichMemo](https://sourceforge.net/projects/lazarus-ccr/)
- - [Virtual TreeView](https://github.com/blikblum/VirtualTreeView-Lazarus/tree/lazarus-v4)
- - [Synapse](http://synapse.ararat.cz/)
+ - [RichMemo](https://sourceforge.net/p/lazarus-ccr/svn/HEAD/tree/components/richmemo/)
+ - [Virtual TreeView](https://github.com/blikblum/VirtualTreeView-Lazarus/tree/lazarus-v4) (and `lclextensions` from the Releases page)
+ - [Synapse](https://sourceforge.net/p/synalist/code/HEAD/tree/trunk/) (at least revision `r160`)
  - [InternetTools](https://github.com/benibela/internettools) 
  - [BESEN](https://github.com/BeRo1985/besen)
  - [MultiLog](https://github.com/blikblum/multilog)
  - [DCPCypt](https://sourceforge.net/projects/lazarus-ccr/)
 
-After everything is installed, open the file `md.lpi` by using Lazarus IDE, select `Run -> Build` to build the source code. If everything is ok, the binary file should be in `FMD_source_code_folder/bin`.
+After everything is installed, open the file `md.lpi` by using Lazarus IDE. Make sure to add `ssl_openssl` to uses list of the `laz_synapse` package.
+Then select `Run -> Build` to build the source code. If everything is ok, the binary file should be in `FMD_source_code_folder/bin`.
+
+If InternetTools or BESEN fail to compile (incompatible PPU), make sure to compile them individually first.
 
 ## Localization
 
