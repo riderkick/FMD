@@ -37,9 +37,9 @@ function getpagenumber()
   task.pagelinks.clear()
   if http.get(MaybeFillHost(module.rooturl, url)) then
     local x=TXQuery.Create(http.Document)
-    x.xpathstringall('//*[contains(@class,"entry-content")]//div//img/@src', task.pagelinks)
+    x.xpathstringall('//*[contains(@class,"entry-content")]//img/@data-lazy-src', task.pagelinks)
     if task.pagelinks.count == 0 then
-      x.xpathstringall('//div[@class="separator" and @style]//img/@src', task.pagelinks)
+      x.xpathstringall('//div[@class="separator" and @style]//img/@data-lazy-src', task.pagelinks)
     end
   else
     return false
