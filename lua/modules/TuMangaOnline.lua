@@ -77,7 +77,7 @@ end
 function Init()
   local m = NewModule()
   m.website = 'Tumangaonline'
-  m.rooturl = 'https://tumangaonline.me'
+  m.rooturl = 'https://tmofans.com'
   m.category = 'Spanish'
   m.lastupdated='June 14, 2018'
   m.maxtasklimit = 1
