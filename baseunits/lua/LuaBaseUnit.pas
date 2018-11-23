@@ -12,7 +12,7 @@ procedure luaBaseUnitRegister(L: Plua_State);
 implementation
 
 uses
-  LuaUtils, MultiLog;
+  LuaUtils, MultiLog, htmlelements;
 
 function lua_pos(L: Plua_State): Integer; cdecl;
 begin
@@ -90,6 +90,12 @@ begin
   Result := 1;
 end;
 
+function lua_htmlencode(L: Plua_State): Integer; cdecl;
+begin
+  lua_pushstring(L, EscapeHTML(lua_tostring(L, 1)));
+  Result := 1;
+end;
+
 function lua_urldecode(L: Plua_State): Integer; cdecl;
 begin
   lua_pushstring(L, URLDecode(lua_tostring(L, 1)));
@@ -146,6 +152,7 @@ begin
   luaPushFunctionGlobal(L, 'RemoveURLDelimLeft', @lua_removeurldelimleft);
   luaPushFunctionGlobal(L, 'RegExprGetMatch', @lua_regexprgetmatch);
   luaPushFunctionGlobal(L, 'HTMLDecode', @lua_htmldecode);
+  luaPushFunctionGlobal(L, 'HTMLEncode', @lua_htmlencode);
   luaPushFunctionGlobal(L, 'URLDecode', @lua_urldecode);
   luaPushFunctionGlobal(L, 'IncStr', @lua_incstr);
   luaPushFunctionGlobal(L, 'StreamToString', @lua_streamtostring);
