@@ -64,7 +64,7 @@ begin
   Result := NET_PROBLEM;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
   mangaId := TrimRightChar(SeparateRight(AURL, 'manga/'), ['/']);
-  if MangaInfo.FHTTP.GET(ModuleApiUrl + '/query/web400/info?oid=' + mangaId) then
+  if MangaInfo.FHTTP.GET(ModuleApiUrl + '/query/web401/info?oid=' + mangaId) then
   begin
     Result := NO_ERROR;
     query := TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document);
@@ -111,7 +111,7 @@ begin
   DownloadThread.Task.Container.PageLinks.Clear;
   DownloadThread.Task.Container.PageNumber := 0;
   chapterId := TrimLeftChar(AURL, ['/']);
-  if DownloadThread.FHTTP.GET(ModuleApiUrl + '/query/web400/pages?oid=' + chapterId) then
+  if DownloadThread.FHTTP.GET(ModuleApiUrl + '/query/web401/pages?oid=' + chapterId) then
   begin
     Result := True;
     XPathStringAll('json(*).data()',
@@ -189,7 +189,7 @@ begin
   Result := NET_PROBLEM;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
   MangaInfo.FHTTP.MimeType := 'application/json';
-  if MangaInfo.FHTTP.POST(ModuleApiUrl + '/query/web400/mrs_filter', DirRequest) then
+  if MangaInfo.FHTTP.POST(ModuleApiUrl + '/query/web401/mrs_filter', DirRequest) then
   begin
     Result := NO_ERROR;
     mangaList.Clear;
