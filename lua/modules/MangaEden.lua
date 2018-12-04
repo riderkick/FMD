@@ -1,5 +1,5 @@
-local diren = '/en/en-directory/'
-local dirit = '/en/it-directory/'
+local diren = '/en/en-directory/?order=-0'
+local dirit = '/en/it-directory/?order=-0'
 
 function GetInfo()
   mangainfo.url=MaybeFillHost(module.RootURL, url)
@@ -8,7 +8,11 @@ function GetInfo()
     if mangainfo.title == '' then
       mangainfo.title = x.xpathstring('//*[@class="manga-title"]')
     end
-    mangainfo.coverlink='http:'..MaybeFillHost(module.RootURL, x.xpathstring('//div[@class="mangaImage2"]//img/@src'))
+    local coverlink = x.xpathstring('//div[@class="mangaImage2"]//img/@src')
+    if coverlink ~= '' then
+      if coverlink:find('^//') then coverlink = 'https:' .. coverlink; end
+      mangainfo.coverlink=MaybeFillHost(module.RootURL, coverlink)
+    end
     mangainfo.authors=x.xpathstringall('//*[@class="rightBox"]/a[contains(@href,"/?author=")]')
     mangainfo.artists=x.xpathstringall('//*[@class="rightBox"]/a[contains(@href,"/?artist=")]')
     mangainfo.genres=x.xpathstringall('//*[@class="rightBox"]/a[contains(@href,"/?categories")]')
@@ -16,7 +20,7 @@ function GetInfo()
     mangainfo.status = MangaInfoStatusIfPos(x.xpathstring('//*[@class="rightBox"]'), 'Ongoing', 'Completed')
     x.xpathhrefall('//table//tr/td/a[@class="chapterLink"]', mangainfo.chapterlinks, mangainfo.chapternames)
     for i = 0, mangainfo.chapternames.count-1 do
-      mangainfo.chapternames[i] = mangainfo.chapternames[i]:gsub("Chapter", "")
+      mangainfo.chapternames[i] = mangainfo.chapternames[i]:gsub("Chapter", " ")
     end
     InvertStrings(mangainfo.chapterlinks, mangainfo.chapternames)
     return no_error
@@ -28,17 +32,15 @@ end
 function GetPageNumber()
   if http.get(MaybeFillHost(module.rooturl,url)) then
     x=TXQuery.Create(http.Document)
-    task.pagenumber=tonumber(x.xpathstring('count(//select[@id="pageSelect"]/option)'))
-    return true
-  else
-    return false
-  end
-end
-
-function GetImageURL()
-  if http.get(MaybeFillHost(module.rooturl,url):gsub("(.*)/1.*$","%1")..'/'..tostring(workid+1)) then
-    x=TXQuery.Create(http.Document)
-    task.pagelinks[workid]='https:'..x.xpathstring('//img[@id="mainImg"]/@src')
+    local s = x.xpathstring('//script[contains(., "var pages")]')
+    s = GetBetween('=', ';', s)
+    x.parsehtml(s)
+    x.xpathstringall('json(*)().fs', task.PageLinks)
+    for i = 0, task.PageLinks.count-1 do
+      if string.find(task.PageLinks[i], '^//') then
+        task.PageLinks[i] = 'https:' .. task.PageLinks[i]
+      end;
+    end
     return true
   else
     return false
@@ -84,7 +86,6 @@ function InitModule(website, rooturl, category)
   m.lastupdated='November 25, 2018'
   m.ongetinfo='GetInfo'
   m.ongetpagenumber='GetPageNumber'
-  m.ongetimageurl='GetImageURL'
   m.OnGetDirectoryPageNumber = 'GetDirectoryPageNumber'
   m.ongetnameandlink='GetNameAndLink' 
 end
