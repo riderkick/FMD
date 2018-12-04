@@ -19,7 +19,6 @@ uses
   AcademyVN,
   Webtoons,
   Tsumino,
-  MangaEden,
   WebtoonTr,
   GMangaMe,
   KuManga,
