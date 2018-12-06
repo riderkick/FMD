@@ -20,7 +20,6 @@ uses
   Webtoons,
   Tsumino,
   WebtoonTr,
-  GMangaMe,
   KuManga,
   SenManga,
   MangaInn,
