@@ -4,11 +4,11 @@ unit MangaFox;
 
 interface
 
+implementation
+
 uses
   Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
-  XQueryEngineHTML, httpsendthread, MangaFoxWatermark;
-
-implementation
+  XQueryEngineHTML, httpsendthread, MangaFoxWatermark, JSUtils, synautil;
 
 var
   removewatermark: Boolean = True;
@@ -20,13 +20,16 @@ resourcestring
 
 function GetNameAndLink(const MangaInfo: TMangaInformation; const ANames, ALinks: TStringList;
   const AURL: String; const Module: TModuleContainer): Integer;
+var
+  s: string;
 begin
   Result := NET_PROBLEM;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
-  if MangaInfo.FHTTP.GET(Module.RootURL + '/manga/') then
+  s := Module.RootURL + '/directory/' + IncStr(AURL) + '.html?az';
+  if MangaInfo.FHTTP.GET(s) then
   begin
     Result := NO_ERROR;
-    XPathHREFAll('//*[@class="manga_list"]/ul/li/a', MangaInfo.FHTTP.Document, ALinks, ANames);
+    XPathHREFtitleAll('//ul[contains(@class, "manga-list")]/li/a', MangaInfo.FHTTP.Document, ALinks, ANames);
   end;
 end;
 
@@ -39,21 +42,21 @@ begin
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
   with MangaInfo.mangaInfo, MangaInfo.FHTTP do begin
     url := MaybeFillHost(Module.RootURL, AURL);
+    Cookies.Values['isAdult'] := '1';
     if GET(url) then begin
       Result := NO_ERROR;
       with TXQueryEngineHTML.Create(Document) do
         try
-          coverLink := MaybeFillHost(Module.RootURL, XPathString('//*[@class="cover"]/img/@src'));
-          if title = '' then title := XPathString('//title/substring-before(.," Manga - Read")');
-          authors := XPathString('//div[@id="title"]/table/tbody/tr[2]/td[2]');
-          artists := XPathString('//div[@id="title"]/table/tbody/tr[2]/td[3]');
-          genres := XPathString('//div[@id="title"]/table/tbody/tr[2]/td[4]');
-          summary := XPathString('//p[@class="summary"]');
-          status := MangaInfoStatusIfPos(XPathString('//div[@id="series_info"]/div[5]/span'));
-          for v in XPath('//ul[@class="chlist"]/li/div/*[self::h3 or self::h4]') do
+          coverLink := MaybeFillHost(Module.RootURL, XPathString('//img[@class="detail-info-cover-img"]/@src'));
+          if title = '' then title := XPathString('//span[@class="detail-info-right-title-font"]');
+          authors := XPathStringAll('//p[@class="detail-info-right-say"]/a');
+          genres := XPathStringAll('//p[@class="detail-info-right-tag-list"]/a');
+          summary := XPathString('//p[@class="fullcontent"]');
+          status := MangaInfoStatusIfPos(XPathString('//span[@class="detail-info-right-title-tip"]'));
+          for v in XPath('//ul[@class="detail-main-list"]/li/a') do
           begin
-            chapterLinks.Add(StringReplace(XPathString('a/@href', v), '1.html', '', [rfReplaceAll]));
-            chapterName.Add(XPathString('string-join(.//*[not(contains(@class,"newch"))]/text()," ")', v));
+            chapterLinks.Add(StringReplace(v.toNode.getAttribute('href'), '1.html', '', [rfReplaceAll]));
+            chapterName.Add(XPathString('./div/p[@class="title3"]', v));
           end;
           InvertStrings([chapterLinks, chapterName]);
         finally
@@ -65,41 +68,59 @@ end;
 
 function GetPageNumber(const DownloadThread: TDownloadThread; const AURL: String;
   const Module: TModuleContainer): Boolean;
+var
+  s, key, cid: string;
+  query: TXQueryEngineHTML;
+  page: Integer;
+  v: IXQValue;
+  lst: TStringList;
 begin
   Result := False;
   if DownloadThread = nil then Exit;
   with DownloadThread.FHTTP, DownloadThread.Task.Container do begin
     PageLinks.Clear;
     PageNumber := 0;
+    Cookies.Values['isAdult'] := '1';
     if GET(MaybeFillHost(Module.RootURL, AURL) + '1.html') then begin
       Result := True;
-      PageNumber := XPathCount('//*[@id="top_bar"]//select[@onchange="change_page(this)"]/option[@value!="0"]', Document);
-    end;
-  end;
-end;
-
-function GetImageURL(const DownloadThread: TDownloadThread; const AURL: String;
-  const Module: TModuleContainer): Boolean;
-var
-  s: String;
-begin
-  Result := False;
-  if DownloadThread = nil then Exit;
-  with DownloadThread.Task.Container, DownloadThread.FHTTP do begin
-    if GET(MaybeFillHost(Module.RootURL, AURL) + IncStr(DownloadThread.WorkId) + '.html') then begin
-      Result := True;
-      s := XPathString('//div[@class="read_img"]//img[@id="image"]/@src', Document);
-      PageLinks[DownloadThread.WorkId] := s;
-      // remove invalid last page
-      if DownloadThread.WorkId = PageLinks.Count - 1 then
-      begin
-        s := LowerCase(RemovePathDelim(s));
-        if (RightStr(s, 10) = 'compressed') or
-          (Pos('/compressed?', s) <> 0) then
-        begin
-          PageLinks.Delete(DownloadThread.WorkId);
-          PageNumber := PageLinks.Count;
+      query := TXQueryEngineHTML.Create(Document);
+      try
+        s := query.XPathString('//script[contains(., "eval")]');
+        s := 'var $=function(){return{val:function(){}}},newImgs,guidkey;' + s;
+        s := s + ';newImgs||guidkey;';
+        key := ExecJS(s);
+        if Length(key) > 16 then
+          PageLinks.CommaText := key
+        else if Length(key) > 0 then begin
+          s := query.XPathString('//script[contains(., "chapterid")]');
+          cid := Trim(ReplaceString(GetBetween('chapterid', ';', s), '=', ''));
+          PageNumber := StrToIntDef(Trim(ReplaceString(GetBetween('imagecount', ';', s), '=', '')), 0);
+          page := 1;
+          while (PageLinks.Count < PageNumber) and (page <= PageNumber) do begin
+            Reset;
+            Headers.Values['Pragma'] := 'no-cache';
+            Headers.Values['Cache-Control'] := 'no-cache';
+            Headers.Values['Referer'] := MaybeFillHost(Module.RootURL, AURL) + '1.html';
+            s := 'chapterfun.ashx?cid=' + cid + '&page=' + IntToStr(page) + '&key=' + key;
+            if XHR(MaybeFillHost(Module.RootURL, AURL) + s) then begin
+              s := Trim(StreamToString(Document));
+              if s <> '' then begin
+                s := ExecJS(s);
+                lst := TStringList.Create;
+                try
+                  lst.CommaText := s;
+                  if page > 1 then lst.Delete(0);
+                  PageLinks.AddStrings(lst);
+                finally
+                  lst.Free;
+                end;
+              end;
+            end;
+            Inc(page); Sleep(3000);
+          end;
         end;
+      finally
+        query.Free;
       end;
     end;
   end;
@@ -112,6 +133,24 @@ begin
     Result := MangaFoxWatermark.RemoveWatermark(AFilename, saveaspng);
 end;
 
+function GetDirectoryPageNumber(const MangaInfo: TMangaInformation;
+  var Page: Integer; const WorkPtr: Integer; const Module: TModuleContainer): Integer;
+begin
+  Result := NET_PROBLEM;
+  Page := 1;
+  if MangaInfo = nil then Exit(UNKNOWN_ERROR);
+  if MangaInfo.FHTTP.GET(Module.RootURL + '/directory/?az') then
+  begin
+    Result := NO_ERROR;
+    with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
+      try
+        Page := StrToIntDef(XPathString('//div[@class="pager-list"]//a[last()-1]'), 1);
+      finally
+        Free;
+      end;
+  end;
+end;
+
 procedure RegisterModule;
 begin
   with AddModule do
@@ -122,8 +161,8 @@ begin
     OnGetNameAndLink := @GetNameAndLink;
     OnGetInfo := @GetInfo;
     OnGetPageNumber := @GetPageNumber;
-    OnGetImageURL := @GetImageURL;
     OnAfterImageSaved := @AfterImageSaved;
+    OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
     AddOptionCheckBox(@removewatermark, 'RemoveWatermark', @RS_RemoveWatermark);
     AddOptionCheckBox(@saveaspng, 'SaveAsPNG', @RS_SaveAsPNG);
   end;
