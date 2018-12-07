@@ -1,47 +1,165 @@
 function getinfo()
   mangainfo.url=MaybeFillHost(module.rooturl,url)
   http.cookies.values['mangadex_h_toggle'] = '1'
-  if http.get(mangainfo.url) then
-    x=TXQuery.Create(http.document)
-    if mangainfo.title=='' then mangainfo.title=x.xpathstring('//meta[@property="og:title"]/replace(@content,"\\s\\(\\w+\\)\\s-\\sMangaDex$","")') end
-    mangainfo.coverlink=MaybeFillHost(module.rooturl,x.xpathstring('//div[contains(@class, "card-body")]//img[@class]/@src'))
-    mangainfo.authors=x.xpathstring('//div[./text()="Author:"]/string-join(./following-sibling::div,", ")')
-    mangainfo.artists=x.xpathstring('//div[./text()="Artist:"]/string-join(./following-sibling::div,", ")')
-    mangainfo.genres = x.xpathstringall('//div[./text()="Genres:"]/following-sibling::div//a')
-    mangainfo.status=MangaInfoStatusIfPos(x.xpathstring('//div[contains(./text(),"status")]/following-sibling::div'))
-    mangainfo.summary=x.xpathstring('//div[./text()="Description:"]/following-sibling::div')
-    local l='//div[contains(@class, "chapter-container")]//div[@data-id and not(starts-with(./div[contains(@class, "text-warning")], "in "))]'
-    local n=''
-    if module.getoption('luashowalllang') then
-      n='/concat(.," [",../div[6]/img/@title,"]"'
-    else
-      l=l..'[./div/img[@title="English"]]'
+  local id = url:match('title/(%d+)')
+  if http.get(MaybeFillHost(module.rooturl, '/api/manga/' .. id)) then
+    local resp = HTMLEncode(StreamToString(http.document))
+    local x = TXQuery.Create(resp)
+    
+    local info = x.xpath('json(*)')
+    if mangainfo.title == '' then
+      mangainfo.title = x.xpathstring('manga/title', info)
     end
-    if module.getoption('luashowscangroup') then
-      if n=='' then n='/concat(.' end
-      n=n..'," [",../div[7],"]"'
+    mangainfo.coverlink = MaybeFillHost(module.rooturl, x.xpathstring('manga/cover_url', info))
+    mangainfo.authors = x.xpathstring('manga/author', info)
+    mangainfo.artists = x.xpathstring('manga/artist', info)
+    mangainfo.summary = x.xpathstring('manga/description', info)
+    mangainfo.status = MangaInfoStatusIfPos(x.xpathstring('manga/status', info), '1', '0')
+    
+    local genres = ''
+    local v = x.xpath('jn:members(manga/genres)', info)
+    if v.count > 0 then genres = getgenre(v.get(1).toString); end
+    for i = 2, v.count do
+      local v1 = v.get(i)
+      genres = genres .. ', ' .. getgenre(v1.toString)
     end
-    l=l..'/div[2]'
-    if n~='' then n=n..')' end
-    n=l..n
-    l=l..'/a/@href'
-    local nurl=''
-    while true do
-      x.xpathstringall(l,mangainfo.chapterlinks)
-      x.xpathstringall(n,mangainfo.chapternames)
-      if http.terminated then break end
-      nurl=x.xpathstring('//ul[contains(@class,"pagination")]/li[contains(@class,"active")]/following-sibling::li[@class="page-item"]/a/@href')
-      if nurl=='' then break end
-      if http.get(MaybeFillHost(module.rooturl,nurl)) then
-        x.parsehtml(http.document)
-      else
-        break
-      end      
+    mangainfo.genres = genres
+    
+    local chapters = x.xpath('let $c := json(*).chapter return for $k in jn:keys($c) ' ..
+      'return jn:object(object(("chapter_id", $k)), $c($k))')
+    for i = 1, chapters.count do
+      local v1 = chapters.get(i)
+      local lang = x.xpathstring('lang_code', v1)
+      if module.getoption('luashowalllang') or lang == 'gb' then
+        mangainfo.chapterlinks.add('/chapter/' .. x.xpathstring('chapter_id', v1))
+        local s = string.format('Vol. %s Ch. %s', x.xpathstring('volume', v1),
+          x.xpathstring('chapter', v1))
+        
+        local title = x.xpathstring('title', v1)
+        if title ~= '' then s = string.format('%s - %s', s, title); end
+        if module.getoption('luashowalllang') then
+          s = string.format('%s [%s]', s, getlang(lang))
+        end
+        
+        if module.getoption('luashowscangroup') then
+          local group = x.xpathstring('group_name', v1)
+          local group2 = x.xpathstring('group_name_2', v1)
+          local group3 = x.xpathstring('group_name_3', v1)
+          if group2:len() > 0 and group2 ~= 'null' then
+            group = group .. ' | ' .. group2
+          end
+          if group3:len() > 0 and group3 ~= 'null' then
+            group = group .. ' | ' .. group3
+          end
+          s = string.format('%s [%s]', s, group)
+        end
+        
+        mangainfo.chapternames.add(s)
+      end
     end
+    
     InvertStrings(mangainfo.chapterlinks,mangainfo.chapternames)
     return no_error
   else
     return net_problem
+  end
+end
+
+function getgenre(genre)
+  local genres = {
+    ["1"] = "4-koma",
+    ["2"] = "Action",
+    ["3"] = "Adventure",
+    ["4"] = "Award Winning",
+    ["5"] = "Comedy",
+    ["6"] = "Cooking",
+    ["7"] = "Doujinshi",
+    ["8"] = "Drama",
+    ["9"] = "Ecchi",
+    ["10"] = "Fantasy",
+    ["11"] = "Gender Bender",
+    ["12"] = "Harem",
+    ["13"] = "Historical",
+    ["14"] = "Horror",
+    ["15"] = "Josei",
+    ["16"] = "Martial Arts",
+    ["17"] = "Mecha",
+    ["18"] = "Medical",
+    ["19"] = "Music",
+    ["20"] = "Mystery",
+    ["21"] = "Oneshot",
+    ["22"] = "Psychological",
+    ["23"] = "Romance",
+    ["24"] = "School Life",
+    ["25"] = "Sci-Fi",
+    ["26"] = "Seinen",
+    ["27"] = "Shoujo",
+    ["28"] = "Shoujo Ai",
+    ["29"] = "Shounen",
+    ["30"] = "Shounen Ai",
+    ["31"] = "Slice of Life",
+    ["32"] = "Smut",
+    ["33"] = "Sports",
+    ["34"] = "Supernatural",
+    ["35"] = "Tragedy",
+    ["36"] = "Webtoon",
+    ["37"] = "Yaoi",
+    ["38"] = "Yuri",
+    ["39"] = "[no chapters]",
+    ["40"] = "Game",
+    ["41"] = "Isekai"
+  }
+  if genres[genre] ~= nil then
+    return genres[genre]
+  else
+    return genre
+  end
+end
+
+function getlang(lang)
+  local langs = {
+    ["sa"] = "Arabic",
+    ["bd"] = "Bengali",
+    ["bg"] = "Bulgarian",
+    ["mm"] = "Burmese",
+    ["ct"] = "Catalan",
+    ["cn"] = "Chinese (Simp)",
+    ["hk"] = "Chinese (Trad)",
+    ["cz"] = "Czech",
+    ["dk"] = "Danish",
+    ["nl"] = "Dutch",
+    ["gb"] = "English",
+    ["ph"] = "Filipino",
+    ["fi"] = "Finnish",
+    ["fr"] = "French",
+    ["de"] = "German",
+    ["gr"] = "Greek",
+    ["hu"] = "Hungarian",
+    ["id"] = "Indonesian",
+    ["it"] = "Italian",
+    ["jp"] = "Japanese",
+    ["kr"] = "Korean",
+    ["my"] = "Malay",
+    ["mn"] = "Mongolian",
+    ["ir"] = "Persian",
+    ["pl"] = "Polish",
+    ["br"] = "Portuguese (Br)",
+    ["pt"] = "Portuguese (Pt)",
+    ["ro"] = "Romanian",
+    ["ru"] = "Russian",
+    ["rs"] = "Serbo-Croatian",
+    ["es"] = "Spanish (Es)",
+    ["mx"] = "Spanish (LATAM)",
+    ["se"] = "Swedish",
+    ["th"] = "Thai",
+    ["tr"] = "Turkish",
+    ["ua"] = "Ukrainian",
+    ["vn"] = "Vietnamese"
+  }
+  if langs[lang] ~= nil then
+    return langs[lang]
+  else
+    return langs
   end
 end
 
