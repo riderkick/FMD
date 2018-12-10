@@ -26,7 +26,14 @@ end
 
 local readrooturl = 'http://read.lhtranslation.com'
 function GetPageNumber()
-  if http.get(MaybeFillHost(readrooturl, '/read-' .. url:gsub('/', '') .. '.html')) then
+  local s = '/read-' .. url:gsub('/', '') .. '.html'
+  if http.get(MaybeFillHost(readrooturl, s)) then
+    local x=TXQuery.Create(http.document)
+    x.xpathstringall('//img[contains(@class,"chapter-img")]/@src',task.pagelinks)
+    if task.pagelinks.count > 0 then return true; end
+  end
+  s = s:gsub('(%d+)-(%d+)%.html$', '%1.%2.html')
+  if http.get(MaybeFillHost(readrooturl, s)) then
     local x=TXQuery.Create(http.document)
     x.xpathstringall('//img[contains(@class,"chapter-img")]/@src',task.pagelinks)
     if task.pagelinks.count > 0 then return true; end
