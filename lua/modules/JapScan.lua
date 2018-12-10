@@ -1,4 +1,4 @@
-﻿function getinfo()
+function getinfo()
   mangainfo.url=MaybeFillHost(module.RootURL, url)
   if http.get(mangainfo.url) then
     local x=TXQuery.Create(http.document)
@@ -65,7 +65,7 @@ function downloadimage()
     local chapnom = x.xpathstring('//*[@id="chapitres"]/@data-nom')
     local chapuri = x.xpathstring('//*[@id="chapitres"]/@data-uri')
     local imgnom = x.xpathstring('//select[@id="pages"]/option[@value="'..url..'"]/@data-img')
-    local imgurl = 'http://cdn.japscan.cc/cr_images/' .. nom .. '/'
+    local imgurl = 'http://cdn.japscan.to/cr_images/' .. nom .. '/'
     if chapnom == '' then
       imgurl = imgurl .. chapuri
     else
@@ -94,7 +94,7 @@ function Init()
   local m=NewModule()
   m.category='French'
   m.website='Japscan'
-  m.rooturl='http://www.japscan.cc'
+  m.rooturl='http://www.japscan.to'
   m.lastupdated='April 6, 2018'
   m.ongetinfo='getinfo'
   m.ongetpagenumber='getpagenumber'
