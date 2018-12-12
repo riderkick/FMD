@@ -7,6 +7,8 @@ function getinfo()
     if mangainfo.title == '' then
       mangainfo.title = x.xpathstring('//h1')
       mangainfo.title = string.gsub(mangainfo.title, '^Manga ', '')
+      mangainfo.title = string.gsub(mangainfo.title, '^Manhua ', '')
+      mangainfo.title = string.gsub(mangainfo.title, '^Manhwa ', '')
       mangainfo.title = string.gsub(mangainfo.title, ' VF$', '')
     end
     mangainfo.coverlink=MaybeFillHost(module.RootURL, x.xpathstring('//div[@id="main"]//img/@src'))
@@ -27,7 +29,7 @@ function getpagenumber()
   task.pagelinks.clear()
   if http.get(MaybeFillHost(module.rooturl, url)) then
     local x=TXQuery.Create(http.Document)
-    task.pagenumber = x.xpathcount('//select[@id="pages"]/option[position() < last()]/@value')
+    task.pagenumber = x.xpathcount('//select[@id="pages"]/option/@value')
   else
     return false
   end
