@@ -2,6 +2,7 @@ function getinfo()
   mangainfo.url=MaybeFillHost(module.rooturl,url)
   http.cookies.values['mangadex_h_toggle'] = '1'
   local id = url:match('title/(%d+)')
+  if id == nil then id = url:match('manga/(%d+)'); end
   if http.get(MaybeFillHost(module.rooturl, '/api/manga/' .. id)) then
     local resp = HTMLEncode(StreamToString(http.document))
     local x = TXQuery.Create(resp)
@@ -14,7 +15,7 @@ function getinfo()
     mangainfo.authors = x.xpathstring('manga/author', info)
     mangainfo.artists = x.xpathstring('manga/artist', info)
     mangainfo.summary = x.xpathstring('manga/description', info)
-    mangainfo.status = MangaInfoStatusIfPos(x.xpathstring('manga/status', info), '1', '0')
+    mangainfo.status = MangaInfoStatusIfPos(x.xpathstring('manga/status', info), '1', '2')
     
     local genres = ''
     local v = x.xpath('jn:members(manga/genres)', info)
