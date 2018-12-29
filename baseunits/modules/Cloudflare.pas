@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, uBaseUnit, XQueryEngineHTML, httpsendthread, synautil,
-  BESEN, BESENValue, RegExpr, dateutils;
+  JSUtils, RegExpr, dateutils;
 
 type
 
@@ -47,7 +47,6 @@ function JSGetAnsweredURL(const Source, URL: String; var OMethod, OURL: String;
   var OSleepTime: Integer): Boolean;
 var
   s, meth, surl, jschl_vc, pass, jschl_answer: String;
-  v: TBESENValue;
 begin
   Result := False;
   if (Source = '') or (URL = '') then Exit;
@@ -89,15 +88,7 @@ begin
         s := Replace(s, 'a =', False);
         Expression := '^.*\.submit\(.*\},\s*(\d{4,})\).*$';
         OSleepTime := StrToIntDef(Replace(Source, '$1', True), MIN_WAIT_TIME);
-
-        with TBESEN.Create do
-          try
-            v := Execute(s);
-            if v.ValueType = bvtNUMBER then
-              jschl_answer := FloatToStr(v.Num, FMDFormatSettings);
-          finally
-            Free;
-          end;
+        jschl_answer := ExecJS(s);
       end;
     finally
       Free;
