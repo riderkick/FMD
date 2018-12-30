@@ -31,7 +31,8 @@ function getinfo()
     for i = 1, chapters.count do
       local v1 = chapters.get(i)
       local lang = x.xpathstring('lang_code', v1)
-      if module.getoption('luashowalllang') or lang == 'gb' then
+      local ts = tonumber(x.xpathstring('timestamp', v1))
+      if (module.getoption('luashowalllang') or lang == 'gb') and (ts <= os.time()) then
         mangainfo.chapterlinks.add('/chapter/' .. x.xpathstring('chapter_id', v1))
         local s = string.format('Vol. %s Ch. %s', x.xpathstring('volume', v1),
           x.xpathstring('chapter', v1))
