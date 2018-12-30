@@ -24,7 +24,6 @@ uses
   SenManga,
   MangaInn,
   LeoManga,
-  MangaPark,
   MangaIndo,
   MyMangaMe,
   GoodManga,
