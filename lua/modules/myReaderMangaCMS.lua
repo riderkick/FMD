@@ -106,7 +106,6 @@ function Init()
 
   c='English-Scanlation'
   AddWebsiteModule('FallenAngelsScans','http://manga.fascans.com', c);
-  AddWebsiteModule('ChibiManga','http://www.cmreader.info', c);
   AddWebsiteModule('WhiteCloudPavilion','https://whitecloudpavilion.com', c);
   AddWebsiteModule('HatigarmScans', 'https://www.hatigarmscans.net', c)
 

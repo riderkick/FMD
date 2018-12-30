@@ -26,14 +26,26 @@ end
 function getpagenumber()
   task.pagelinks.clear()
   local aurl = MaybeFillHost(module.rooturl, url)
-  if Pos('style=list', aurl) == 0 then
-    aurl = aurl .. '?style=list'
-  end
-  if http.get(aurl) then
-    x=TXQuery.Create(http.Document)
-    v=x.xpathstringall('//div[contains(@class, "page-break")]/img/@src', task.pagelinks)
+  if module.website == 'ChibiManga' then
+    if http.get(aurl) then
+      local x = TXQuery.Create(http.Document)
+      local s = x.xpathstring('//script[contains(., "chapter_preloaded_images")]', task.pagelinks)
+      s = "{"..GetBetween("{", "}", s).."}"
+      x.parsehtml(s)
+      x.xpathstringall('let $c := json(*) return for $k in jn:keys($c) return $c($k)', task.pagelinks)
+    else
+      return false
+    end
   else
-    return false
+    if Pos('style=list', aurl) == 0 then
+      aurl = aurl .. '?style=list'
+    end
+    if http.get(aurl) then
+      local x = TXQuery.Create(http.Document)
+      x.xpathstringall('//div[contains(@class, "page-break")]/img/@src', task.pagelinks)
+    else
+      return false
+    end
   end
   return true
 end
@@ -73,4 +85,5 @@ function Init()
   cat = 'English-Scanlation'
   AddWebsiteModule('TrashScanlations', 'https://trashscanlations.com', cat)
   AddWebsiteModule('ZeroScans', 'https://zeroscans.com', cat)
+  AddWebsiteModule('ChibiManga','http://www.cmreader.info', cat);
 end
