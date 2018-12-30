@@ -30,11 +30,11 @@ function GetInfo();
     if module.Website == 'MangaDenizi' then
       mangainfo.status = MangaInfoStatusIfPos(x.XPathString('//dt[.="Durum:"]/following-sibling::dd[1]'), 'Devam Ediyor', 'Tamamlandı')
     else
-      mangainfo.status = MangaInfoStatusIfPos(x.XPathString('//dt[.=("Status","Estado")]/following-sibling::dd[1]'))
+      mangainfo.status = MangaInfoStatusIfPos(x.XPathString('//dt[.=("Status","Estado","Statut")]/following-sibling::dd[1]'))
     end
-    mangainfo.authors = x.XPathStringAll('//dt[.=("Author(s)","Yazar & Çizer:","Autor(es)")]/following-sibling::dd[1]/string-join(*,", ")')
-    mangainfo.artists = x.XPathStringAll('//dt[.="Artist(s)"]/following-sibling::dd[1]/string-join(*,", ")')
-    mangainfo.genres = x.XPathStringAll('//dt[.=("Categories","Kategoriler:","Categorías")]/following-sibling::dd[1]/string-join(*,", ")')
+    mangainfo.authors = x.XPathStringAll('//dt[.=("Author(s)","Yazar & Çizer:","Autor(es)","Auteur(s)")]/following-sibling::dd[1]/string-join(*,", ")')
+    mangainfo.artists = x.XPathStringAll('//dt[.=("Artist(s)","Artiste(s)")]/following-sibling::dd[1]/string-join(*,", ")')
+    mangainfo.genres = x.XPathStringAll('//dt[.=("Categories","Kategoriler:","Categorías","Catégories")]/following-sibling::dd[1]/string-join(*,", ")')
     mangainfo.summary = x.XPathString('//div[@class="well"]/p')
     v = x.Xpath('//ul[@class="chapters"]/li/*[self::h5 or self::h3]')
     for i = 1, v.Count do
@@ -115,4 +115,7 @@ function Init()
   AddWebsiteModule('GodsRealmScan', 'https://godsrealmscan.com', c); 
   AddWebsiteModule('CoYuHi', 'http://www.universoyuri.com', c);
   AddWebsiteModule('SOSScanlation', 'http://sosscanlation.com', c);
+  
+  c='French'
+  AddWebsiteModule('ScanFR', 'https://www.scan-fr.io', c);
 end
