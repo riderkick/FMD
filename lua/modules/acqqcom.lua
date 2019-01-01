@@ -16,12 +16,22 @@ end
 function getpagenumber()
   if http.get(MaybeFillHost(module.rooturl,url)) then
     x=TXQuery.Create(http.Document)
-    local s = x.xpathstring('//script[contains(., "var DATA")]')
-    s = GetBetween("= '", "',", s)
-    s = DecodeBase64(s:sub(2))
-    x.parsehtml(s)
-    x.xpathstringall('json(*).picture().url', task.pagelinks)
-    return true
+    local s = x.xpathstring('//script[contains(., "window") and contains(., "eval")]')
+    local nonce = ExecJS('var window={};'..s..';window.nonce;');
+    s = x.xpathstring('//script[contains(., "var DATA")]')
+    local data = ExecJS(s..';DATA;');
+    local script = x.xpathstring('//script[contains(@src, "chapter")]/@src')
+    if http.get(script) then
+      s = StreamToString(http.document)
+      s = '!function(){eval'..GetBetween('!function(){eval', '))}();', s)..'))}();'
+      s = 'var W={nonce:"'..nonce..'",DATA:"'..data..'"};'..s..';JSON.stringify(_v);'
+      s = ExecJS(s)
+      x.parsehtml(s)
+      x.xpathstringall('json(*).picture().url', task.pagelinks)
+      return true
+    else
+      return false
+    end
   else
     return false
   end
@@ -57,7 +67,7 @@ function Init()
   m=NewModule()
   m.category='Raw'
   m.website='AcQQCom'
-  m.rooturl='http://ac.qq.com'
+  m.rooturl='https://ac.qq.com'
   m.lastupdated='April 2, 2018'
   m.ongetinfo='getinfo'
   m.ongetpagenumber='getpagenumber'
