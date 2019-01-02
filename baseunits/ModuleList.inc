@@ -54,6 +54,5 @@ uses
   EHentai,
   Luscious,
   EightMuses,
-  HitomiLa,
   HentaiCafe,
   Hentai2Read;
