@@ -290,4 +290,5 @@ function Init()
   AddWebsiteModule('TrueColorsScan', 'https://truecolorsscans.miocio.org', cat)
   AddWebsiteModule('MangajinNoFansub', 'https://www.mangajinnofansub.com', cat)
   AddWebsiteModule('LoliVault', 'https://lolivault.net', cat)
+  AddWebsiteModule('Mangasubes', 'http://mangasubes.patyscans.com', cat)
 end
