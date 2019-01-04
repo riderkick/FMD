@@ -89,4 +89,5 @@ function Init()
   
   cat = 'Indonesian'
   AddWebsiteModule('MangaYosh', 'https://mangayosh.com', cat)
+  AddWebsiteModule('KomikGo', 'https://komikgo.com', cat)
 end
