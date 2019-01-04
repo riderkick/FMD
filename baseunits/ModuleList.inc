@@ -1,7 +1,6 @@
 uses
   MangaFox,
   Mangacan,
-  PecintaKomik,
   MangaReader,
   MangaLife,
   MangaHere,

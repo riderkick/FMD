@@ -24,6 +24,16 @@ function getinfo()
       mangainfo.chapterlinks.clear()
       mangainfo.chapternames.clear()
       x.xpathhrefall('//div[@class="bxcl"]//li//div[@class="lch"]/a', mangainfo.chapterlinks, mangainfo.chapternames)
+    elseif module.website == 'PecintaKomik' then
+      mangainfo.title=x.xpathstring('//h1[@itemprop="headline"]/*')
+      mangainfo.coverlink=MaybeFillHost(module.RootURL, x.xpathstring('//div[@itemprop="image"]/img/@src'))
+      mangainfo.authors=x.xpathstring('//table[@class="listinfo"]//tr[contains(th, "Penulis")]/td')
+      mangainfo.genres=x.xpathstringall('//table[@class="listinfo"]//tr[contains(th, "Genre")]/td/a')
+      mangainfo.status=MangaInfoStatusIfPos(x.xpathstring('//table[@class="listinfo"]//tr[contains(th, "Status")]/td'))
+      mangainfo.summary=x.xpathstring('//*[@class="desc"]/string-join(.//text(),"")')
+      mangainfo.chapterlinks.clear()
+      mangainfo.chapternames.clear()
+      x.xpathhrefall('//div[@class="bxcl"]//li//*[@class="lchx"]/a', mangainfo.chapterlinks, mangainfo.chapternames)
     elseif module.website == 'MangaKita' then
       mangainfo.title=x.xpathstring('//h1')
       mangainfo.coverlink=MaybeFillHost(module.RootURL, x.xpathstring('//div[contains(@class,"leftImage")]/img/@src'))
@@ -79,6 +89,7 @@ function getnameandlink()
     ['MangaKid'] = '/manga-lists/',
     ['Kiryuu'] = '/manga-lists/?list',
     ['WestManga'] = '/manga-list/?list',
+    ['PecintaKomik'] = '/daftar-manga/?list',
   }
   local dirurl = '/manga-list/'
   if dirs[module.website] ~= nil then
@@ -119,4 +130,5 @@ function Init()
   AddWebsiteModule('WestManga', 'https://westmanga.info')
   AddWebsiteModule('Kiryuu', 'https://kiryuu.co')
   AddWebsiteModule('KomikOtaku', 'https://komikotaku.net')
+  AddWebsiteModule('PecintaKomik', 'https://www.pecintakomik.com')
 end
