@@ -14,7 +14,7 @@ function getinfo()
     mangainfo.artists=x.xpathstringall('//div[@class="artist-content"]/a')
     mangainfo.genres=x.xpathstringall('//div[@class="genres-content"]/a')
     mangainfo.status = MangaInfoStatusIfPos(x.xpathstring('//div[@class="summary-heading" and contains(h5, "Status")]/following-sibling::div/div/a'))
-    mangainfo.summary=x.xpathstring('//div[@class="summary__content"]/p')
+    mangainfo.summary=x.xpathstring('//div[contains(@class,"summary__content")]/p')
     x.XPathHREFAll('//li[@class="wp-manga-chapter"]/a', mangainfo.chapterlinks, mangainfo.chapternames)
     InvertStrings(mangainfo.chapterlinks,mangainfo.chapternames)
     return no_error
@@ -85,5 +85,8 @@ function Init()
   cat = 'English-Scanlation'
   AddWebsiteModule('TrashScanlations', 'https://trashscanlations.com', cat)
   AddWebsiteModule('ZeroScans', 'https://zeroscans.com', cat)
-  AddWebsiteModule('ChibiManga','http://www.cmreader.info', cat);
+  AddWebsiteModule('ChibiManga','http://www.cmreader.info', cat)
+  
+  cat = 'Indonesian'
+  AddWebsiteModule('MangaYosh', 'https://mangayosh.com', cat)
 end
