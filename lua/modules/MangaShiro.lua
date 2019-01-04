@@ -33,6 +33,9 @@ function getinfo()
       x.xpathhrefall('//div[@class="bxcl"]//li//div[@class="lch"]/a', mangainfo.chapterlinks, mangainfo.chapternames)
     else
       mangainfo.title=x.xpathstring('//h1[@itemprop="name"]')
+      if mangainfo.title == '' then
+        mangainfo.title=x.xpathstring('//h1'):gsub('Bahasa Indonesia$', '')
+      end
       mangainfo.coverlink=MaybeFillHost(module.RootURL, x.xpathstring('//div[@class="imgdesc"]/img/@src'))
       mangainfo.authors=x.xpathstring('//div[@class="listinfo"]//li[starts-with(.,"Author")]/substring-after(.,":")')
       mangainfo.genres=x.xpathstring('//div[@class="listinfo"]//li[starts-with(.,"Genre")]/substring-after(.,":")')
@@ -110,4 +113,5 @@ function Init()
   AddWebsiteModule('KomikCast', 'https://komikcast.com')
   AddWebsiteModule('WestManga', 'https://westmanga.info')
   AddWebsiteModule('Kiryuu', 'https://kiryuu.co')
+  AddWebsiteModule('KomikOtaku', 'https://komikotaku.net')
 end
