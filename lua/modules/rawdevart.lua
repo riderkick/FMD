@@ -2,7 +2,7 @@ function getinfo()
   mangainfo.url=MaybeFillHost(module.RootURL, url)
   if http.get(mangainfo.url) then
     x=TXQuery.Create(http.document)
-    mangainfo.title=x.xpathstringall('//div[@class="post-title"]/h3/text()', '')
+    mangainfo.title=x.xpathstringall('//div[@class="post-title"]/*[self::h1 or self::h2 or self::h3]/text()', '')
     if string.match(mangainfo.title:upper(), ' RAW$') ~= nil then
       mangainfo.title = mangainfo.title:sub(1, -5)
     end
@@ -90,4 +90,7 @@ function Init()
   cat = 'Indonesian'
   AddWebsiteModule('MangaYosh', 'https://mangayosh.com', cat)
   AddWebsiteModule('KomikGo', 'https://komikgo.com', cat)
+  
+  cat = 'H-Sites'
+  AddWebsiteModule('ManhwaHentai', 'https://manhwahentai.com', cat)
 end
