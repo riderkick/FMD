@@ -91,7 +91,7 @@ function Init()
   
   c='Indonesian'
   AddWebsiteModule('Komikid', 'http://www.komikid.com', c);
-  AddWebsiteModule('MangaID', 'http://mangaid.net', c);
+  AddWebsiteModule('MangaID', 'https://mangaid.me', c);
   AddWebsiteModule('KomikGue', 'https://www.komikgue.com', c);
   
   c='Raw'
