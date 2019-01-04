@@ -3,20 +3,13 @@ function getinfo()
   if http.get(mangainfo.url) then
     x=TXQuery.Create(http.document)
     x.xpathhrefall('//div[@class="cl"]//li/span[1]/a', mangainfo.chapterlinks, mangainfo.chapternames)
-    if module.website == 'KomikCast' then
+    if module.website == 'KomikCast' or module.website == 'WestManga' then
       mangainfo.title=x.xpathstring('//div[@class="mangainfo"]/h1')
       mangainfo.coverlink=MaybeFillHost(module.RootURL, x.xpathstring('//div[@class="topinfo"]/img/@src'))
       mangainfo.authors=x.xpathstring('//div[@class="topinfo"]//tr[contains(th, "Author")]/td')
       mangainfo.genres=x.xpathstringall('//div[@class="topinfo"]//tr[contains(th, "Genres")]/td/a')
       mangainfo.status=MangaInfoStatusIfPos(x.xpathstring('//div[@class="topinfo"]//tr[contains(th, "Status")]/td'))
       mangainfo.summary=x.xpathstringall('//*[@class="sin"]/p/text()', '')
-    elseif module.website == 'WestManga' then
-      mangainfo.title=x.xpathstring('//h1')
-      mangainfo.coverlink=MaybeFillHost(module.RootURL, x.xpathstring('//div[@class="naru"]/img/@src'))
-      mangainfo.authors=x.xpathstring('//div[@class="infozin"]//li[starts-with(.,"Author")]/substring-after(.,":")')
-      mangainfo.genres=x.xpathstringall('//div[@class="infozin"]//li[starts-with(.,"Genre")]/a')
-      mangainfo.status=MangaInfoStatusIfPos(x.xpathstring('//div[@class="infozin"]//li[starts-with(.,"Status")]'), "Publishing", "Finished")
-      mangainfo.summary=x.xpathstringall('//*[@class="sinopc"]/p/text()', '')
     elseif module.website == 'MangaShiro' or module.website == 'Kiryuu' then
       mangainfo.title=x.xpathstring('//h1[@itemprop="headline"]')
       local img = x.xpathstring('//div[@itemprop="image"]/img/@data-lazy-src')
@@ -68,13 +61,9 @@ function getpagenumber()
   task.pagenumber=0
   task.pagelinks.clear()
   if http.get(MaybeFillHost(module.rooturl,url)) then
-    if module.website == 'WestManga' then
-      TXQuery.Create(http.Document).xpathstringall('//*[@class="lexot"]//img/@src', task.pagelinks)
-    else
-      TXQuery.Create(http.Document).xpathstringall('//*[@id="readerarea"]//img/@data-lazy-src', task.pagelinks)
-      if task.pagelinks.count < 1 then
-        TXQuery.Create(http.Document).xpathstringall('//*[@id="readerarea"]//img/@src', task.pagelinks)
-      end
+    TXQuery.Create(http.Document).xpathstringall('//*[@id="readerarea"]//img/@data-lazy-src', task.pagelinks)
+    if task.pagelinks.count < 1 then
+      TXQuery.Create(http.Document).xpathstringall('//*[@id="readerarea"]//img/@src', task.pagelinks)
     end
     return true
   else
@@ -89,6 +78,7 @@ function getnameandlink()
     ['KomikCast'] = '/daftar-komik/?list',
     ['MangaKid'] = '/manga-lists/',
     ['Kiryuu'] = '/manga-lists/?list',
+    ['WestManga'] = '/manga-list/?list',
   }
   local dirurl = '/manga-list/'
   if dirs[module.website] ~= nil then
