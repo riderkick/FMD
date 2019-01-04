@@ -31,6 +31,21 @@ function getinfo()
       mangainfo.chapterlinks.clear()
       mangainfo.chapternames.clear()
       x.xpathhrefall('//div[@class="bxcl"]//li//div[@class="lch"]/a', mangainfo.chapterlinks, mangainfo.chapternames)
+    elseif module.website == 'MangaKita' then
+      mangainfo.title=x.xpathstring('//h1')
+      mangainfo.coverlink=MaybeFillHost(module.RootURL, x.xpathstring('//div[contains(@class,"leftImage")]/img/@src'))
+      mangainfo.authors=x.xpathstring('//span[@class="details"]//div[starts-with(.,"Author")]/substring-after(.,":")')
+      mangainfo.genres=x.xpathstringall('//span[@class="details"]//div[starts-with(.,"Genre")]/a')
+      mangainfo.status=MangaInfoStatusIfPos(x.xpathstring('//span[@class="details"]//div[starts-with(.,"Status")]'))
+      mangainfo.summary=x.xpathstringall('//*[@class="description"]/text()', '')
+      mangainfo.chapterlinks.clear()
+      mangainfo.chapternames.clear()
+      local v = x.xpath('//div[contains(@class, "chapter-list")]/a')
+      for i = 1, v.count do
+        local v1 = v.get(i)
+        mangainfo.chapterlinks.add(v1.getAttribute('href'))
+        mangainfo.chapternames.add(x.xpathstring('./span', v1))
+      end
     else
       mangainfo.title=x.xpathstring('//h1[@itemprop="name"]')
       if mangainfo.title == '' then
@@ -82,7 +97,7 @@ function getnameandlink()
   if http.get(module.rooturl..dirurl) then
     if module.website == 'KomikStation' then
       TXQuery.Create(http.document).xpathhrefall('//*[@class="daftarkomik"]//a',links,names)
-    elseif module.website == 'WestManga' then
+    elseif module.website == 'WestManga' or module.website == 'MangaKita' then
       TXQuery.Create(http.document).xpathhrefall('//*[@class="jdlbar"]//a',links,names)
     else
       TXQuery.Create(http.document).xpathhrefall('//*[@class="soralist"]//a',links,names)
