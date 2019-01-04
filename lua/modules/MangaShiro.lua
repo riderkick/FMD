@@ -105,7 +105,7 @@ end
 function Init()
   AddWebsiteModule('MangaShiro', 'https://mangashiro.net')
   AddWebsiteModule('MangaKita', 'http://www.mangakita.net')
-  AddWebsiteModule('KomikStation', 'http://www.komikstation.com')
+  AddWebsiteModule('KomikStation', 'https://www.komikstation.com')
   AddWebsiteModule('MangaKid', 'http://mangakid.net')
   AddWebsiteModule('KomikCast', 'https://komikcast.com')
   AddWebsiteModule('WestManga', 'https://westmanga.info')
