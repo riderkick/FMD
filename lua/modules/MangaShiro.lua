@@ -103,7 +103,7 @@ function AddWebsiteModule(site, url)
 end
 
 function Init()
-  AddWebsiteModule('MangaShiro', 'http://mangashiro.net')
+  AddWebsiteModule('MangaShiro', 'https://mangashiro.net')
   AddWebsiteModule('MangaKita', 'http://www.mangakita.net')
   AddWebsiteModule('KomikStation', 'http://www.komikstation.com')
   AddWebsiteModule('MangaKid', 'http://mangakid.net')
