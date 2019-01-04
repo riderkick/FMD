@@ -17,9 +17,13 @@ function getinfo()
       mangainfo.genres=x.xpathstringall('//div[@class="infozin"]//li[starts-with(.,"Genre")]/a')
       mangainfo.status=MangaInfoStatusIfPos(x.xpathstring('//div[@class="infozin"]//li[starts-with(.,"Status")]'), "Publishing", "Finished")
       mangainfo.summary=x.xpathstringall('//*[@class="sinopc"]/p/text()', '')
-    elseif module.website == 'MangaShiro' then
+    elseif module.website == 'MangaShiro' or module.website == 'Kiryuu' then
       mangainfo.title=x.xpathstring('//h1[@itemprop="headline"]')
-      mangainfo.coverlink=MaybeFillHost(module.RootURL, x.xpathstring('//div[@itemprop="image"]/img/@src'))
+      local img = x.xpathstring('//div[@itemprop="image"]/img/@data-lazy-src')
+      if img == '' then
+        img = x.xpathstring('//div[@itemprop="image"]/img/@src')
+      end
+      mangainfo.coverlink=MaybeFillHost(module.RootURL, img)
       mangainfo.authors=x.xpathstring('//div[@class="listinfo"]//li[starts-with(.,"Author")]/substring-after(.,":")')
       mangainfo.genres=x.xpathstringall('//div[contains(@class,"animeinfo")]/div[@class="gnr"]/a')
       mangainfo.status=MangaInfoStatusIfPos(x.xpathstring('//div[@class="listinfo"]//li[starts-with(.,"Status")]'))
@@ -49,7 +53,10 @@ function getpagenumber()
     if module.website == 'WestManga' then
       TXQuery.Create(http.Document).xpathstringall('//*[@class="lexot"]//img/@src', task.pagelinks)
     else
-      TXQuery.Create(http.Document).xpathstringall('//*[@id="readerarea"]//img/@src', task.pagelinks)
+      TXQuery.Create(http.Document).xpathstringall('//*[@id="readerarea"]//img/@data-lazy-src', task.pagelinks)
+      if task.pagelinks.count < 1 then
+        TXQuery.Create(http.Document).xpathstringall('//*[@id="readerarea"]//img/@src', task.pagelinks)
+      end
     end
     return true
   else
@@ -58,11 +65,16 @@ function getpagenumber()
 end
 
 function getnameandlink()
+  local dirs = {
+    ['MangaShiro'] = '/daftar-manga/?list',
+    ['KomikStation'] = '/daftar-komik/',
+    ['KomikCast'] = '/daftar-komik/?list',
+    ['MangaKid'] = '/manga-lists/',
+    ['Kiryuu'] = '/manga-lists/?list',
+  }
   local dirurl = '/manga-list/'
-  if module.website == 'MangaShiro' then dirurl = '/daftar-manga/?list'
-  elseif module.website == 'KomikStation' then dirurl = '/daftar-komik/'
-  elseif module.website == 'KomikCast' then dirurl = '/daftar-komik/?list'
-  elseif module.website == 'MangaKid' then dirurl = '/manga-lists/'
+  if dirs[module.website] ~= nil then
+    dirurl = dirs[module.website]
   end
   if http.get(module.rooturl..dirurl) then
     if module.website == 'KomikStation' then
@@ -97,4 +109,5 @@ function Init()
   AddWebsiteModule('MangaKid', 'http://mangakid.net')
   AddWebsiteModule('KomikCast', 'https://komikcast.com')
   AddWebsiteModule('WestManga', 'https://westmanga.info')
+  AddWebsiteModule('Kiryuu', 'https://kiryuu.co')
 end
