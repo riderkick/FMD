@@ -103,7 +103,7 @@ begin
     Result := NO_ERROR;
     with MangaInfo.mangaInfo, TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
       try
-        coverLink := XPathString('//div[@id="rightside"]//img/@src');
+        coverLink := MaybeFillHost(Module.RootURL, XPathString('//div[@id="rightside"]//img/@src'));
         if title = '' then
         begin
           title := XPathString('//title');
