@@ -12,7 +12,7 @@ procedure luaBaseUnitRegister(L: Plua_State);
 implementation
 
 uses
-  LuaUtils, MultiLog, htmlelements;
+  LuaUtils, MultiLog, htmlelements, dateutils;
 
 function lua_pos(L: Plua_State): Integer; cdecl;
 begin
@@ -139,6 +139,12 @@ begin
   TrimStrings(TStrings(luaGetUserData(L, 1)));
 end;
 
+function lua_getcurrenttime(L: Plua_State): Integer; cdecl;
+begin
+  lua_pushinteger(L, MilliSecondsBetween(Now, 0));
+  Result := 1;
+end;
+
 procedure luaBaseUnitRegister(L: Plua_State);
 begin
   luaPushFunctionGlobal(L, 'Pos', @lua_pos);
@@ -158,6 +164,7 @@ begin
   luaPushFunctionGlobal(L, 'StreamToString', @lua_streamtostring);
   luaPushFunctionGlobal(L, 'Round', @lua_round);
   luaPushFunctionGlobal(L, 'TrimStrings', @lua_trimstrings);
+  luaPushFunctionGlobal(L, 'GetCurrentTime', @lua_getcurrenttime);
 end;
 
 end.
