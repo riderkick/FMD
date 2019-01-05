@@ -824,7 +824,7 @@ begin
     luaClassAddBooleanProperty(L, MetaTable, 'FavoriteAvailable',
       @Module.FavoriteAvailable);
     luaClassAddBooleanProperty(L, MetaTable, 'DynamicPageLink', @Module.DynamicPageLink);
-    luaClassAddBooleanProperty(L, MetaTable, 'DynamicPageLink',
+    luaClassAddBooleanProperty(L, MetaTable, 'CloudflareEnabled',
       @Module.CloudflareEnabled);
     luaClassAddStringProperty(L, MetaTable, 'OnBeforeUpdateList', @OnBeforeUpdateList);
     luaClassAddStringProperty(L, MetaTable, 'OnAfterUpdateList', @OnAfterUpdateList);
