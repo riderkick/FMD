@@ -6,7 +6,7 @@ function GetInfo()
     mangainfo.coverLink=MaybeFillHost(module.rooturl, x.XPathString('//img[contains(@class, "card-img-top")]/@src'))
     mangainfo.summary = x.XPathString('//p[@class="card-text"]')
     mangainfo.genres = x.XPathStringAll('//div[@class="chip"]')
-    v=x.xpath('//div[contains(@class, "list-group")]/a')
+    v=x.xpath('//ul[contains(@class, "list-group")]/li/a')
     for i=1,v.count do
       v1=v.get(i)
       mangainfo.chapterlinks.add(v1.getAttribute('href'))
@@ -51,7 +51,7 @@ function Init()
   m=NewModule()
   m.category='English-Scanlation'
   m.website='ManhwaCo'
-  m.rooturl='https://manhwa.co'
+  m.rooturl='https://sleepypandascans.co'
   m.lastupdated='February 15, 2018'
   m.ongetinfo='GetInfo'
   m.ongetpagenumber='GetPageNumber'
