@@ -34,11 +34,20 @@ function getinfo()
       local ts = tonumber(x.xpathstring('timestamp', v1))
       if (module.getoption('luashowalllang') or lang == 'gb') and (ts <= os.time()) then
         mangainfo.chapterlinks.add('/chapter/' .. x.xpathstring('chapter_id', v1))
-        local s = string.format('Vol. %s Ch. %s', x.xpathstring('volume', v1),
-          x.xpathstring('chapter', v1))
+        
+        local s = ''
+        local vol = x.xpathstring('volume', v1)
+        local ch = x.xpathstring('chapter', v1)
+        if vol ~= '' then s = s .. string.format('Vol. %s', vol); end
+        if s ~= '' then s = s .. ' '; end
+        if ch ~= '' then s = s .. string.format('Ch. %s', ch); end
         
         local title = x.xpathstring('title', v1)
-        if title ~= '' then s = string.format('%s - %s', s, title); end
+        if title ~= '' then
+          if s ~= '' then s = s .. ' - '; end
+          s = s .. title
+        end
+        
         if module.getoption('luashowalllang') then
           s = string.format('%s [%s]', s, getlang(lang))
         end
@@ -225,6 +234,8 @@ function Init()
   
   m.maxtasklimit=1
   m.maxconnectionlimit=2
+  m.getinfodelay=5000
+  m.getinfodelayafter=10
 
   m.addoptioncheckbox('luashowalllang', 'Show all language', false)
   m.addoptioncheckbox('luashowscangroup', 'Show scanlation group', false)
