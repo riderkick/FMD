@@ -264,5 +264,5 @@ function Init()
   local items = 'All'
   local t = getlanglist()
   for k, v in ipairs(t) do items = items .. '\r\n' .. v; end
-  m.addoptioncombobox('lualang', 'Language:', items, 0)
+  m.addoptioncombobox('lualang', 'Language:', items, 11)
 end
