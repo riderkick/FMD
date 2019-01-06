@@ -26,13 +26,15 @@ function getinfo()
     end
     mangainfo.genres = genres
     
+    local selLang = module.getoption('lualang')
+    local selLangId = findlang(selLang)
     local chapters = x.xpath('let $c := json(*).chapter return for $k in jn:keys($c) ' ..
       'return jn:object(object(("chapter_id", $k)), $c($k))')
     for i = 1, chapters.count do
       local v1 = chapters.get(i)
       local lang = x.xpathstring('lang_code', v1)
       local ts = tonumber(x.xpathstring('timestamp', v1))
-      if (module.getoption('luashowalllang') or lang == 'gb') and (ts <= os.time()) then
+      if (selLang == 0 or lang == selLangId) and (ts <= os.time()) then
         mangainfo.chapterlinks.add('/chapter/' .. x.xpathstring('chapter_id', v1))
         
         local s = ''
@@ -48,7 +50,7 @@ function getinfo()
           s = s .. title
         end
         
-        if module.getoption('luashowalllang') then
+        if selLang == 0 then
           s = string.format('%s [%s]', s, getlang(lang))
         end
         
@@ -127,51 +129,73 @@ function getgenre(genre)
   end
 end
 
+local langs = {
+  ["sa"] = "Arabic",
+  ["bd"] = "Bengali",
+  ["bg"] = "Bulgarian",
+  ["mm"] = "Burmese",
+  ["ct"] = "Catalan",
+  ["cn"] = "Chinese (Simp)",
+  ["hk"] = "Chinese (Trad)",
+  ["cz"] = "Czech",
+  ["dk"] = "Danish",
+  ["nl"] = "Dutch",
+  ["gb"] = "English",
+  ["ph"] = "Filipino",
+  ["fi"] = "Finnish",
+  ["fr"] = "French",
+  ["de"] = "German",
+  ["gr"] = "Greek",
+  ["hu"] = "Hungarian",
+  ["id"] = "Indonesian",
+  ["it"] = "Italian",
+  ["jp"] = "Japanese",
+  ["kr"] = "Korean",
+  ["my"] = "Malay",
+  ["mn"] = "Mongolian",
+  ["ir"] = "Persian",
+  ["pl"] = "Polish",
+  ["br"] = "Portuguese (Br)",
+  ["pt"] = "Portuguese (Pt)",
+  ["ro"] = "Romanian",
+  ["ru"] = "Russian",
+  ["rs"] = "Serbo-Croatian",
+  ["es"] = "Spanish (Es)",
+  ["mx"] = "Spanish (LATAM)",
+  ["se"] = "Swedish",
+  ["th"] = "Thai",
+  ["tr"] = "Turkish",
+  ["ua"] = "Ukrainian",
+  ["vn"] = "Vietnamese"
+}
+
 function getlang(lang)
-  local langs = {
-    ["sa"] = "Arabic",
-    ["bd"] = "Bengali",
-    ["bg"] = "Bulgarian",
-    ["mm"] = "Burmese",
-    ["ct"] = "Catalan",
-    ["cn"] = "Chinese (Simp)",
-    ["hk"] = "Chinese (Trad)",
-    ["cz"] = "Czech",
-    ["dk"] = "Danish",
-    ["nl"] = "Dutch",
-    ["gb"] = "English",
-    ["ph"] = "Filipino",
-    ["fi"] = "Finnish",
-    ["fr"] = "French",
-    ["de"] = "German",
-    ["gr"] = "Greek",
-    ["hu"] = "Hungarian",
-    ["id"] = "Indonesian",
-    ["it"] = "Italian",
-    ["jp"] = "Japanese",
-    ["kr"] = "Korean",
-    ["my"] = "Malay",
-    ["mn"] = "Mongolian",
-    ["ir"] = "Persian",
-    ["pl"] = "Polish",
-    ["br"] = "Portuguese (Br)",
-    ["pt"] = "Portuguese (Pt)",
-    ["ro"] = "Romanian",
-    ["ru"] = "Russian",
-    ["rs"] = "Serbo-Croatian",
-    ["es"] = "Spanish (Es)",
-    ["mx"] = "Spanish (LATAM)",
-    ["se"] = "Swedish",
-    ["th"] = "Thai",
-    ["tr"] = "Turkish",
-    ["ua"] = "Ukrainian",
-    ["vn"] = "Vietnamese"
-  }
   if langs[lang] ~= nil then
     return langs[lang]
   else
-    return langs
+    return 'Unknown'
   end
+end
+
+function getlanglist()
+  local t = {}
+  for k, v in pairs(langs) do table.insert(t, v); end
+  table.sort(t)
+  return t
+end
+
+function findlang(lang)
+  local t = getlanglist()
+  for i, v in ipairs(t) do
+    if i == lang then
+      lang = v
+      break
+    end
+  end
+  for k, v in pairs(langs) do
+    if v == lang then return k; end
+  end
+  return nil
 end
 
 function getpagenumber()
@@ -234,9 +258,11 @@ function Init()
   
   m.maxtasklimit=1
   m.maxconnectionlimit=2
-  m.getinfodelay=5000
-  m.getinfodelayafter=10
 
-  m.addoptioncheckbox('luashowalllang', 'Show all language', false)
   m.addoptioncheckbox('luashowscangroup', 'Show scanlation group', false)
+  
+  local items = 'All'
+  local t = getlanglist()
+  for k, v in ipairs(t) do items = items .. '\r\n' .. v; end
+  m.addoptioncombobox('lualang', 'Language:', items, 0)
 end
