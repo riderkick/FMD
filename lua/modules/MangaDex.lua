@@ -3,6 +3,7 @@ function getinfo()
   http.cookies.values['mangadex_h_toggle'] = '1'
   local id = url:match('title/(%d+)')
   if id == nil then id = url:match('manga/(%d+)'); end
+  delay()
   if http.get(MaybeFillHost(module.rooturl, '/api/manga/' .. id)) then
     local resp = HTMLEncode(StreamToString(http.document))
     local x = TXQuery.Create(resp)
@@ -201,6 +202,7 @@ end
 function getpagenumber()
   http.cookies.values['mangadex_h_toggle'] = '1'
   local chapterid = url:match('chapter/(%d+)')
+  delay()
   if http.get(MaybeFillHost(module.rooturl,'/api/chapter/'..chapterid)) then
     local x=TXQuery.Create(http.Document)
     local hash = x.xpathstring('json(*).hash')
@@ -223,6 +225,7 @@ local dirurl='/titles/2'
 function getdirectorypagenumber()
   http.cookies.values['mangadex_h_toggle'] = '1'
   http.cookies.values['mangadex_title_mode'] = '2'
+  delay()
   if http.GET(module.RootURL .. dirurl) then
     local x = TXQuery.Create(http.Document)
     page = tonumber(x.xpathstring('(//ul[contains(@class,"pagination")]/li/a)[last()]/@href'):match('/2/(%d+)'))
@@ -236,6 +239,7 @@ end
 function getnameandlink()
   http.cookies.values['mangadex_h_toggle'] = '1'
   http.cookies.values['mangadex_title_mode'] = '2'
+  delay()
   if http.GET(module.rooturl .. dirurl .. '/' .. IncStr(url) .. '/') then
     local x = TXQuery.Create(http.document)
     x.xpathhrefall('//a[contains(@class, "manga_title")]',links,names)
@@ -243,6 +247,25 @@ function getnameandlink()
   else
     return net_problem
   end
+end
+
+function delay()
+  local interval = tonumber(module.getoption('luainterval'))
+  local delay = tonumber(module.getoption('luadelay')) -- * module.ActiveConnectionCount
+  
+  if (interval == nil) or (interval < 0) then interval = 1000; end
+  if (delay == nil) or (delay < 0) then delay = 1000; end
+  
+  local lastDelay = module.storage['lastDelay']
+  if lastDelay ~= '' then
+    lastDelay = tonumber(lastDelay)
+    if GetCurrentTime() - lastDelay < interval then
+    print(GetCurrentTime() - lastDelay)
+      Sleep(delay)
+    end
+  end
+  
+  module.storage['lastDelay'] = tostring(GetCurrentTime())
 end
 
 function Init()
@@ -259,6 +282,8 @@ function Init()
   m.maxtasklimit=1
   m.maxconnectionlimit=2
 
+  m.addoptionspinedit('luainterval', 'Min. interval between requests (ms)', 1000)
+  m.addoptionspinedit('luadelay', 'Delay (ms)', 1000)
   m.addoptioncheckbox('luashowscangroup', 'Show scanlation group', false)
   
   local items = 'All'
