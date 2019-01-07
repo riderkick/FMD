@@ -8,7 +8,6 @@ uses
   Madokami,
   RawSenManga,
   KissManga,
-  MangaStreamTo,
   MangaHome,
   GameofScanlation,
   Hakihome,
