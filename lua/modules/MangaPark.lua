@@ -63,14 +63,20 @@ function getnameandlink()
   end
 end
 
-function Init()
+function AddWebsiteModule(name, url)
   local m = NewModule()
-  m.website = 'MangaPark'
-  m.rooturl = 'https://mangapark.me'
+  m.website = name
+  m.rooturl = url
   m.category = 'English'
   m.ongetinfo='getinfo'
   m.ongetpagenumber='getpagenumber'
   m.ongetnameandlink='getnameandlink'
   m.ongetdirectorypagenumber = 'getdirectorypagenumber'
   m.sortedlist = true
+end
+
+function Init()
+  AddWebsiteModule('MangaPark', 'https://mangapark.me')
+  AddWebsiteModule('MangaParkNet', 'https://mangapark.net')
+  AddWebsiteModule('MangaParkCom', 'https://mangapark.com')
 end 
