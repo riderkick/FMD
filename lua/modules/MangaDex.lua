@@ -25,6 +25,10 @@ function getinfo()
       local v1 = v.get(i)
       genres = genres .. ', ' .. getgenre(v1.toString)
     end
+    if x.xpathstring('manga/hentai', info) == '1' then
+      if genres ~= '' then genres = genres .. ', ' end
+      genres = genres .. 'Hentai'
+    end
     mangainfo.genres = genres
     
     local selLang = module.getoption('lualang')
@@ -91,7 +95,7 @@ function getgenre(genre)
     ["8"] = "Drama",
     ["9"] = "Ecchi",
     ["10"] = "Fantasy",
-    ["11"] = "Gender Bender",
+    ["11"] = "Gyaru",
     ["12"] = "Harem",
     ["13"] = "Historical",
     ["14"] = "Horror",
@@ -116,12 +120,54 @@ function getgenre(genre)
     ["33"] = "Sports",
     ["34"] = "Supernatural",
     ["35"] = "Tragedy",
-    ["36"] = "Webtoon",
+    ["36"] = "Long Strip",
     ["37"] = "Yaoi",
     ["38"] = "Yuri",
     ["39"] = "[no chapters]",
-    ["40"] = "Game",
-    ["41"] = "Isekai"
+    ["40"] = "Video Games",
+    ["41"] = "Isekai",
+    ["42"] = "Adaptation",
+    ["43"] = "Anthology",
+    ["44"] = "Web Comic",
+    ["45"] = "Full Color",
+    ["46"] = "User Created",
+    ["47"] = "Official Colored",
+    ["48"] = "Fan Colored",
+    ["49"] = "Gore",
+    ["50"] = "Sexual Violence",
+    ["51"] = "Crime",
+    ["52"] = "Magical Girls",
+    ["53"] = "Philosophical",
+    ["54"] = "Superhero",
+    ["55"] = "Thriller",
+    ["56"] = "Wuxia",
+    ["57"] = "Aliens",
+    ["58"] = "Animals",
+    ["59"] = "Crossdressing",
+    ["60"] = "Demons",
+    ["61"] = "Delinquents",
+    ["62"] = "Genderswap",
+    ["63"] = "Ghosts",
+    ["64"] = "Monster Girls",
+    ["65"] = "Loli",
+    ["66"] = "Magic",
+    ["67"] = "Military",
+    ["68"] = "Monsters",
+    ["69"] = "Ninja",
+    ["70"] = "Office Workers",
+    ["71"] = "Police",
+    ["72"] = "Post-Apocalyptic",
+    ["73"] = "Reincarnation",
+    ["74"] = "Reverse Harem",
+    ["75"] = "Samurai",
+    ["76"] = "Shota",
+    ["77"] = "Survival",
+    ["78"] = "Time Travel",
+    ["79"] = "Vampires",
+    ["80"] = "Traditional Games",
+    ["81"] = "Virtual Reality",
+    ["82"] = "Zombies",
+    ["83"] = "Incest"
   }
   if genres[genre] ~= nil then
     return genres[genre]
