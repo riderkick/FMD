@@ -1,19 +1,23 @@
 function GetInfo()
   mangainfo.url=MaybeFillHost(module.rooturl,url)
   if http.get(mangainfo.url) then
-    x=TXQuery.Create(http.Document)
-    mangainfo.title=x.XPathString('//h1[contains(@class,"manga1")]/text()')
+    local x=TXQuery.Create(http.Document)
+    if mangainfo.title == '' then
+      mangainfo.title=x.XPathString('//h1[@itemprop="headline"]')
+      mangainfo.title=mangainfo.title:gsub('^Baca Manga','')
+      mangainfo.title=mangainfo.title:gsub('Bahasa Indonesia$','')
+    end
     mangainfo.coverLink=MaybeFillHost(module.rooturl, x.XPathString('//img[@class="imagemg"]/@src'))
-    mangainfo.status = MangaInfoStatusIfPos(x.XPathString('//div[@class="info"]/span[contains(., "Status")]/a'))
-    mangainfo.authors = x.XPathStringAll('//div[@class="info"]/span[contains(., "Author")]/a')
-    mangainfo.artists = x.XPathStringAll('//div[@class="info"]/span[contains(., "Artist")]/a')
-    mangainfo.genres = x.XPathStringAll('//div[@class="info"]/span[contains(., "Genre")]/a')
+    mangainfo.status = MangaInfoStatusIfPos(x.XPathString('//span[@class="hentry"]/span[contains(., "Status")]/a'))
+    mangainfo.authors = x.XPathStringAll('//span[@class="hentry"]/span[contains(., "Author")]/a')
+    mangainfo.artists = x.XPathStringAll('//span[@class="hentry"]/span[contains(., "Artist")]/a')
+    mangainfo.genres = x.XPathStringAll('//span[@class="hentry"]/span[contains(., "Genre")]/a')
     mangainfo.summary = x.XPathStringAll('//div[contains(@class,"summary")]/text()', '')
-    v=x.xpath('//div[@id="scans"]/div[1]/div[@class="item-content"]/a')
+    local v=x.xpath('//div[@id="scans"]//div[@class="item-content"]/a')
     for i=1, v.count do
-        v1=v.get(i)
+        local v1=v.get(i)
         mangainfo.chapterlinks.add(v1.getAttribute('href'))
-        mangainfo.chapternames.add(x.xpathstringall('text()', '', v1))
+        mangainfo.chapternames.add(x.xpathstring('h3', v1))
     end
     InvertStrings(mangainfo.chapterlinks,mangainfo.chapternames)    
     return no_error
@@ -23,22 +27,13 @@ function GetInfo()
 end
 
 function GetPageNumber()
+  task.pagelinks.clear()
+  task.pagenumber = 0
   http.cookies.values['age_confirmed'] = '1'
-  if http.get(MaybeFillHost(module.rooturl,url)) then
-    x=TXQuery.Create(http.Document)
-    task.pagenumber=x.xpath('(//select[@class="page"])[1]/option').count
-    return true
-  else
-    return false
-  end
-end
-
-function GetImageURL()
-  s=url:gsub('%?.+$','')..'/'..tostring(workid+1)
-  http.cookies.values['age_confirmed'] = '1'
-  if http.get(MaybeFillHost(module.rooturl,s)) then
-    x=TXQuery.Create(http.Document)
-    task.pagelinks[workid]=x.xpathstring('//img[@class="imagechap"]/@src')
+  local u = AppendURLDelim(MaybeFillHost(module.rooturl,url)) .. '_/1'
+  if http.get(u) then
+    local x=TXQuery.Create(http.Document)
+    x.xpathstringall('//img[@class="imagechap"]/@data-src', task.pagelinks)
     return true
   else
     return false
@@ -59,10 +54,8 @@ function Init()
   m=NewModule()
   m.category='Indonesian'
   m.website='NeuManga'
-  m.rooturl='http://neumanga.tv'
-  m.lastupdated='February 12, 2018'
+  m.rooturl='https://neumanga.tv'
   m.ongetinfo='GetInfo'
   m.ongetpagenumber='GetPageNumber'
-  m.ongetimageurl='GetImageURL'
   m.ongetnameandlink='GetNameAndLink'
 end 
