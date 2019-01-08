@@ -85,7 +85,7 @@ function getnameandlink()
   local dirs = {
     ['MangaShiro'] = '/daftar-manga/?list',
     ['KomikStation'] = '/daftar-komik/',
-    ['KomikCast'] = '/daftar-komik/?list',
+    ['KomikCast'] = '/list/',
     ['MangaKid'] = '/manga-lists/',
     ['Kiryuu'] = '/manga-lists/?list',
     ['WestManga'] = '/manga-list/?list',
@@ -98,7 +98,7 @@ function getnameandlink()
   if http.get(module.rooturl..dirurl) then
     if module.website == 'KomikStation' then
       TXQuery.Create(http.document).xpathhrefall('//*[@class="daftarkomik"]//a',links,names)
-    elseif module.website == 'WestManga' or module.website == 'MangaKita' then
+    elseif module.website == 'WestManga' or module.website == 'MangaKita' or module.website == 'KomikCast' then
       TXQuery.Create(http.document).xpathhrefall('//*[@class="jdlbar"]//a',links,names)
     else
       TXQuery.Create(http.document).xpathhrefall('//*[@class="soralist"]//a',links,names)
