@@ -10,7 +10,11 @@ function getinfo()
       mangainfo.genres=x.xpathstringall('//div[@class="topinfo"]//tr[contains(th, "Genres")]/td/a')
       mangainfo.status=MangaInfoStatusIfPos(x.xpathstring('//div[@class="topinfo"]//tr[contains(th, "Status")]/td'))
       mangainfo.summary=x.xpathstringall('//*[@class="sin"]/p/text()', '')
-    elseif module.website == 'MangaShiro' or module.website == 'Kiryuu' or module.website == 'MangaIndoNet' then
+    elseif module.website == 'MangaShiro'
+      or module.website == 'Kiryuu'
+      or module.website == 'MangaIndoNet'
+      or module.website == 'KomikIndo'
+    then
       mangainfo.title=x.xpathstring('//h1[@itemprop="headline"]')
       local img = x.xpathstring('//div[@itemprop="image"]/img/@data-lazy-src')
       if img == '' then
@@ -91,6 +95,7 @@ function getnameandlink()
     ['WestManga'] = '/manga-list/?list',
     ['PecintaKomik'] = '/daftar-manga/?list',
     ['MangaIndoNet'] = '/manga-list/?list',
+    ['KomikIndo'] = '/manga-list/?list',
   }
   local dirurl = '/manga-list/'
   if dirs[module.website] ~= nil then
@@ -132,4 +137,5 @@ function Init()
   AddWebsiteModule('KomikOtaku', 'https://komikotaku.net')
   AddWebsiteModule('PecintaKomik', 'https://www.pecintakomik.com')
   AddWebsiteModule('MangaIndoNet', 'https://mangaindo.net')
+  AddWebsiteModule('KomikIndo', 'https://komikindo.co')
 end
