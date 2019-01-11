@@ -119,6 +119,7 @@ function Modules.MangaShiro()
       local x=TXQuery.Create(http.document)
       if mangainfo.title == '' then
         mangainfo.title=x.xpathstring('//h1[@itemprop="headline"]')
+        mangainfo.title=mangainfo.title:gsub('Bahasa Indonesia$', '')
       end
       local img = x.xpathstring('//div[@itemprop="image"]/img/@data-lazy-src')
       if img == '' then
@@ -129,9 +130,8 @@ function Modules.MangaShiro()
       mangainfo.genres=x.xpathstringall('//div[contains(@class,"animeinfo")]/div[@class="gnr"]/a')
       mangainfo.status=MangaInfoStatusIfPos(x.xpathstring('//div[@class="listinfo"]//li[starts-with(.,"Status")]'))
       mangainfo.summary=x.xpathstring('//*[@class="desc"]/string-join(.//text(),"")')
-      mangainfo.chapterlinks.clear()
-      mangainfo.chapternames.clear()
       x.xpathhrefall('//div[@class="bxcl"]//li//div[@class="lch"]/a', mangainfo.chapterlinks, mangainfo.chapternames)
+      InvertStrings(mangainfo.chapterlinks,mangainfo.chapternames)
       return no_error
     end
     return net_problem
@@ -194,6 +194,7 @@ function Modules.PecintaKomik()
       mangainfo.status=MangaInfoStatusIfPos(x.xpathstring('//table[@class="listinfo"]//tr[contains(th, "Status")]/td'))
       mangainfo.summary=x.xpathstring('//*[@class="desc"]/string-join(.//text(),"")')
       x.xpathhrefall('//div[@class="bxcl"]//li//*[@class="lchx"]/a', mangainfo.chapterlinks, mangainfo.chapternames)
+      InvertStrings(mangainfo.chapterlinks,mangainfo.chapternames)
       return no_error
     end
     return net_problem
@@ -228,6 +229,7 @@ function Modules.MangaKita()
         mangainfo.chapterlinks.add(v1.getAttribute('href'))
         mangainfo.chapternames.add(x.xpathstring('./span', v1))
       end
+      InvertStrings(mangainfo.chapterlinks,mangainfo.chapternames)
       return no_error
     end
     return net_problem
@@ -267,11 +269,32 @@ function Modules.MangaKid()
   local MangaKid = {}
   setmetatable(MangaKid, { __index = Modules.MangaShiroBase() })
 
-  function KomikStation:getdirurl()
+  function MangaKid:getdirurl()
     return '/manga-lists/'
   end
 
   return MangaKid
+end
+
+function Modules.MangaID()
+  local MangaID = {}
+  setmetatable(MangaID, { __index = Modules.PecintaKomik() })
+  
+  function MangaID:getinfo()
+    Modules.PecintaKomik().getinfo()
+    local x=TXQuery.Create(http.document)
+    if mangainfo.title == '' then
+      mangainfo.title=x.xpathstring('//h1[@itemprop="headline"]')
+      mangainfo.title=mangainfo.title:gsub('Bahasa Indonesia$', '')
+    end
+    mangainfo.authors=x.xpathstring('//table[@class="listinfo"]//tr[contains(th, "Author")]/td')
+  end
+
+  function MangaID:getdirurl()
+    return '/daftar-manga/?list'
+  end
+
+  return MangaID
 end
 
 -------------------------------------------------------------------------------
@@ -322,4 +345,5 @@ function Init()
   AddWebsiteModule('PecintaKomik', 'https://www.pecintakomik.com')
   AddWebsiteModule('MangaIndoNet', 'https://mangaindo.net')
   AddWebsiteModule('KomikIndo', 'https://komikindo.co')
+  AddWebsiteModule('MangaID', 'https://mangaid.me')
 end
