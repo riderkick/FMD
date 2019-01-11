@@ -32,7 +32,12 @@ var
 begin
   Result := 0;
   for i := 1 to lua_gettop(L) do
-    Logger.Send(lua_tostring(L, i));
+    case lua_type(L, i) of
+      LUA_TBOOLEAN:
+        Logger.Send(BoolToStr(lua_toboolean(L, i), 'true', 'false'));
+      else
+        Logger.Send(lua_tostring(L, i));
+    end;
 end;
 
 function luabase_sleep(L: Plua_State): Integer; cdecl;
