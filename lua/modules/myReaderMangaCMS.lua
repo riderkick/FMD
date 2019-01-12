@@ -181,7 +181,6 @@ function Init()
   
   c='Turkish'
   AddWebsiteModule('MangaDenizi', 'http://www.mangadenizi.com', c);
-  AddWebsiteModule('ManhuaTr', 'http://manhua-tr.com', c);
   AddWebsiteModule('MangaVadisi', 'http://manga-v2.mangavadisi.org', c);
 
   c='English-Scanlation'
@@ -193,7 +192,7 @@ function Init()
   AddWebsiteModule('DarkSkyScan', 'https://darkskyprojects.org', c);
   AddWebsiteModule('NozominoFansub', 'https://nozominofansub.com', c);
   AddWebsiteModule('CoYuHi', 'http://www.universoyuri.com', c);
-  AddWebsiteModule('SOSScanlation', 'http://sosscanlation.com', c);
+  AddWebsiteModule('SOSScanlation', 'https://sosscanlation.com', c);
   
   c='French'
   AddWebsiteModule('ScanFR', 'https://www.scan-fr.io', c);
