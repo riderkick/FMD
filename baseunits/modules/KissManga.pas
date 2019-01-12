@@ -14,6 +14,7 @@ implementation
 const
   kissmangadirurl = '/MangaList/Newest';
   readcomiconlinedirurl = '/ComicList/Newest';
+  kissdoujindirurl = '/HentaiList/NewDoujinshi';
 
 var
   kissmangaiv: String ='a5e8e2e9c2721be0a84ad660c472c1f3';
@@ -45,7 +46,9 @@ begin
   if Module.Website = 'KissManga' then
     s := s + kissmangadirurl
   else if Module.Website = 'ReadComicOnline' then
-    s := s + readcomiconlinedirurl;
+    s := s + readcomiconlinedirurl
+  else if Module.Website = 'KissDoujin' then
+    s := s + kissdoujindirurl;
   if GETWithCookie(MangaInfo.FHTTP, s, Module) then begin
     Result := NO_ERROR;
     with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
@@ -74,7 +77,9 @@ begin
   if Module.Website = 'KissManga' then
     s := s + kissmangadirurl
   else if Module.Website = 'ReadComicOnline' then
-    s := s + readcomiconlinedirurl;
+    s := s + readcomiconlinedirurl
+  else if Module.Website = 'KissDoujin' then
+    s := s + kissdoujindirurl;
   if AURL <> '0' then
     s := s + '?page=' + IncStr(AURL);
   if GETWithCookie(MangaInfo.FHTTP, s, Module) then begin
@@ -115,9 +120,9 @@ begin
               title := SeparateLeft(title, 'comic | Read');
           end;
         end;
-        genres := SeparateRight(XPathString('//div[@class="barContent"]/div/p[starts-with(.,"Genres:")]'), ':');
-        authors := SeparateRight(XPathString('//div[@class="barContent"]/div/p[starts-with(.,"Author:")]'), ':');
-        artists := SeparateRight(XPathString('//div[@class="barContent"]/div/p[starts-with(.,"Artist:")]'), ':');
+        genres := XPathStringAll('//div[@class="barContent"]//span[starts-with(., "Genre")]/parent::*/a');
+        authors := XPathStringAll('//div[@class="barContent"]//span[starts-with(., "Author") or starts-with(., "Writer")]/parent::*/a');
+        artists := XPathStringAll('//div[@class="barContent"]//span[starts-with(., "Artist")]/parent::*/a');
         status := MangaInfoStatusIfPos(XPathString(
           '//div[@class="barContent"]/div/p[starts-with(.,"Status:")]'),
           'Ongoing',
@@ -131,7 +136,9 @@ begin
           if RightStr(s, 7) = ' online' then
             SetLength(s, Length(s) - 7)
           else if RightStr(s, 29) = ' comic online in high quality' then
-            SetLength(s, Length(s) - 29);
+            SetLength(s, Length(s) - 29)
+          else if RightStr(s, 23) = ' online in high quality' then
+            SetLength(s, Length(s) - 23);
           chapterName.Add(s);
         end;
         InvertStrings([chapterLinks, chapterName]);
@@ -285,14 +292,14 @@ end;
 
 procedure RegisterModule;
 
-  function AddWebsiteModule(AWebsite, ARootURL: String): TModuleContainer;
+  function AddWebsiteModule(AWebsite, ARootURL, ACategory: String): TModuleContainer;
   begin
     Result := AddModule;
     with Result do
     begin
       Website := AWebsite;
       RootURL := ARootURL;
-      Category := 'English';
+      Category := ACategory;
       SortedList := True;
       OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
       OnGetNameAndLink := @GetNameAndLink;
@@ -302,14 +309,15 @@ procedure RegisterModule;
   end;
 
 begin
-  with AddWebsiteModule('KissManga', 'http://kissmanga.com') do
+  with AddWebsiteModule('KissManga', 'http://kissmanga.com', 'English') do
   begin
     OnGetPageNumber := @KissMangaGetPageNumber;
     AddOptionEdit(@kissmangakey,'Key',@RS_KissManga_Key);
     AddOptionEdit(@kissmangaiv,'IV',@RS_KissManga_InitVector);
     AddOptionCheckBox(@kissmangausegoogledcp,'UseGoogleDCP',@RS_KissManga_UseGoogleDCP);
   end;
-  AddWebsiteModule('ReadComicOnline', 'http://readcomiconline.to');
+  AddWebsiteModule('ReadComicOnline', 'http://readcomiconline.to', 'English');
+  AddWebsiteModule('KissDoujin', 'http://kissdoujin.com', 'H-Sites');
 end;
 
 initialization
