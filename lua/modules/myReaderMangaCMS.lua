@@ -13,10 +13,10 @@ function Modules.myReaderMangaCMS()
   function myReaderMangaCMS:getinfo()
     mangainfo.url = MaybeFillHost(module.RootURL, url)
     if http.GET(mangainfo.url) then
-      x = TXQuery.Create(http.Document)
+      local x = TXQuery.Create(http.Document)
       mangainfo.coverLink = MaybeFillHost(module.RootURL, x.XPathString('//div[@class="boxed"]/img/@src'))
       if mangainfo.title == '' then 
-        mangainfo.title = x.XPathString('//h2[contains(@class,"widget-title")]')
+        mangainfo.title = x.XPathString('//*[(self::h2 or self::h1) and contains(@class,"widget-title")]')
         if mangainfo.title == '' then
           mangainfo.title = mangainfo.url:match('/([^/]+)$')
         end
@@ -26,9 +26,9 @@ function Modules.myReaderMangaCMS()
       mangainfo.artists = x.XPathStringAll('//dt[.=("Artist(s)","Artiste(s)")]/following-sibling::dd[1]/string-join(*,", ")')
       mangainfo.genres = x.XPathStringAll('//dt[.=("Categories","Kategoriler:","Categorías","Catégories")]/following-sibling::dd[1]/string-join(*,", ")')
       mangainfo.summary = x.XPathString('//div[@class="well"]/p')
-      v = x.Xpath('//ul[@class="chapters"]/li/*[self::h5 or self::h3]')
+      local v = x.Xpath('//ul[@class="chapters"]/li/*[self::h5 or self::h3]')
       for i = 1, v.Count do
-        v2 = v.Get(i)
+        local v2 = v.Get(i)
         mangainfo.chapterLinks.Add(x.XPathString('a/@href', v2))
         mangainfo.chapterNames.Add(x.XPathString('normalize-space(.)', v2))
       end
@@ -41,7 +41,7 @@ function Modules.myReaderMangaCMS()
   function myReaderMangaCMS:getpagenumber()
     local u = MaybeFillHost(module.RootURL, url)
     if http.get(u) then
-      x = TXQuery.Create(http.document)
+      local x = TXQuery.Create(http.document)
       x.xpathstringall('//div[@id="all"]/img/@data-src', task.pagelinks)
       if task.pagelinks.Count == 0 then
         x.xpathstringall('//div[@id="all"]/img/@src', task.pagelinks)
@@ -54,7 +54,7 @@ function Modules.myReaderMangaCMS()
   
   function myReaderMangaCMS:getnameandlink()
     if http.get(module.rooturl .. self.getdirurl()) then
-      x = TXQuery.create(http.document)
+      local x = TXQuery.create(http.document)
       x.xpathhrefall('//li/a', links, names)
       return no_error
     end
@@ -121,6 +121,27 @@ function Modules.FallenAngelsScans()
   end
   
   return FallenAngelsScans
+end
+
+function Modules.KomikGue()
+  local KomikGue = {}
+  setmetatable(KomikGue, { __index = Modules.myReaderMangaCMS() })
+  
+  function KomikGue:getinfo()
+    Modules.myReaderMangaCMS().getinfo()
+    local x=TXQuery.Create(http.document)
+    mangainfo.artists = x.XPathStringAll('//dt[.="Artist(s)"]/following-sibling::dd[1]')
+    mangainfo.summary = x.XPathString('//div[@class="well"]/div')
+    local v = x.xpath('//div[@class="chapter-wrapper"]/table//td[@class="chapter"]/a')
+    for i = 1, v.Count do
+      local v2 = v.Get(i)
+      mangainfo.chapterLinks.Add(v2.getAttribute('href'))
+      mangainfo.chapterNames.Add(x.XPathString('normalize-space(.)', v2))
+    end
+    InvertStrings(mangainfo.chapterLinks, mangainfo.chapterNames)
+  end
+  
+  return KomikGue
 end
 
 
