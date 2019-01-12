@@ -156,7 +156,7 @@ function Init()
   AddWebsiteModule('MangAs', 'https://mang.as', c);
   
   c='Indonesian'
-  AddWebsiteModule('Komikid', 'http://www.komikid.com', c);
+  AddWebsiteModule('Komikid', 'https://www.komikid.com', c);
   AddWebsiteModule('KomikGue', 'https://www.komikgue.com', c);
   
   c='Raw'
