@@ -109,6 +109,21 @@ function Modules.MangaDenizi()
   return MangaDenizi
 end
 
+function Modules.FallenAngelsScans()
+  local FallenAngelsScans = {}
+  setmetatable(FallenAngelsScans, { __index = Modules.myReaderMangaCMS() })
+  
+  function FallenAngelsScans:getinfo()
+    Modules.myReaderMangaCMS().getinfo()
+    if mangainfo.coverLink:match('^//') ~= nil then
+      mangainfo.coverLink = 'https:' .. mangainfo.coverLink
+    end
+  end
+  
+  return FallenAngelsScans
+end
+
+
 -------------------------------------------------------------------------------
 
 function createInstance()
@@ -170,7 +185,7 @@ function Init()
   AddWebsiteModule('MangaVadisi', 'http://manga-v2.mangavadisi.org', c);
 
   c='English-Scanlation'
-  AddWebsiteModule('FallenAngelsScans','http://manga.fascans.com', c);
+  AddWebsiteModule('FallenAngelsScans','https://manga.fascans.com', c);
   AddWebsiteModule('WhiteCloudPavilion','https://whitecloudpavilion.com', c);
   AddWebsiteModule('HatigarmScans', 'https://www.hatigarmscans.net', c)
 
