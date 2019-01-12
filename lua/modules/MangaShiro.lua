@@ -297,6 +297,43 @@ function Modules.MangaID()
   return MangaID
 end
 
+function Modules.OtakuFile()
+  local OtakuFile = {}
+  setmetatable(OtakuFile, { __index = Modules.MangaShiroBase() })
+  
+  function OtakuFile:getinfo()
+    Modules.MangaShiroBase().getinfo()
+    local x=TXQuery.Create(http.document)
+    mangainfo.title=x.xpathstring('//h1[@itemprop="name"]')
+    mangainfo.coverlink=MaybeFillHost(module.RootURL, x.xpathstring('//div[@class="imgdesc"]/a/img/@src'))
+    x.xpathhrefall('//div[@class="epl"]//li/span[1]/a', mangainfo.chapterlinks, mangainfo.chapternames)
+    InvertStrings(mangainfo.chapterlinks,mangainfo.chapternames)
+  end
+  
+  function OtakuFile:getpagenumber()
+    task.pagenumber=0
+    task.pagelinks.clear()
+    if http.get(MaybeFillHost(module.rooturl,url)) then
+      TXQuery.Create(http.Document).xpathstringall('//*[@id="wrap"]/p//img/@src', task.pagelinks)
+      return true
+    end
+  end
+  
+  function OtakuFile:getnameandlink()
+    if http.get(module.rooturl .. self.getdirurl()) then
+      TXQuery.Create(http.document).xpathhrefall('//*[@class="anilist-diatur"]//a',links,names)
+      return no_error
+    end
+    return net_problem
+  end
+
+  function OtakuFile:getdirurl()
+    return '/daftar-komik/'
+  end
+
+  return OtakuFile
+end
+
 -------------------------------------------------------------------------------
 
 function createInstance()
@@ -346,4 +383,5 @@ function Init()
   AddWebsiteModule('MangaIndoNet', 'https://mangaindo.net')
   AddWebsiteModule('KomikIndo', 'https://komikindo.co')
   AddWebsiteModule('MangaID', 'https://mangaid.me')
+  AddWebsiteModule('OtakuFile', 'https://otakufile.com')
 end
