@@ -1,85 +1,151 @@
-function GetNameAndLink()
-  local u = module.RootURL
-  if module.Website == 'WhiteCloudPavilion' then
-    u = u .. '/manga/free'
-  end
-  if module.Website == 'GodsRealmScan' then
-    u = u .. '/public/'
-  end    
-  u = u .. '/changeMangaList?type=text'
-  if http.GET(u) then
-    x = TXQuery.Create(http.Document)
-    x.XPathHREFAll('//li/a', links, names)
-    return no_error
-  else
-    return net_problem
-  end
-end
+Modules = {}
 
-function GetInfo();
-  mangainfo.url = MaybeFillHost(module.RootURL, url)
-  if http.GET(mangainfo.url) then
-    x = TXQuery.Create(http.Document)
-    mangainfo.coverLink = MaybeFillHost(module.RootURL, x.XPathString('//div[@class="boxed"]/img/@src'))
-    if mangainfo.title == '' then 
-      mangainfo.title = x.XPathString('//h2[contains(@class,"widget-title")]')
-      if mangainfo.title == '' then
-        mangainfo.title = mangainfo.url:match('/([^/]+)$')
+function Modules.myReaderMangaCMS()
+  local myReaderMangaCMS = {}
+  
+  function myReaderMangaCMS:new()
+    local obj = {}
+    setmetatable(obj, self)
+    self.__index = self
+    return obj
+  end
+  
+  function myReaderMangaCMS:getinfo()
+    mangainfo.url = MaybeFillHost(module.RootURL, url)
+    if http.GET(mangainfo.url) then
+      x = TXQuery.Create(http.Document)
+      mangainfo.coverLink = MaybeFillHost(module.RootURL, x.XPathString('//div[@class="boxed"]/img/@src'))
+      if mangainfo.title == '' then 
+        mangainfo.title = x.XPathString('//h2[contains(@class,"widget-title")]')
+        if mangainfo.title == '' then
+          mangainfo.title = mangainfo.url:match('/([^/]+)$')
+        end
       end
-    end
-    if module.Website == 'MangaDenizi' then
-      mangainfo.status = MangaInfoStatusIfPos(x.XPathString('//dt[.="Durum:"]/following-sibling::dd[1]'), 'Devam Ediyor', 'Tamamlandı')
-    else
       mangainfo.status = MangaInfoStatusIfPos(x.XPathString('//dt[.=("Status","Estado","Statut")]/following-sibling::dd[1]'))
+      mangainfo.authors = x.XPathStringAll('//dt[.=("Author(s)","Yazar & Çizer:","Autor(es)","Auteur(s)")]/following-sibling::dd[1]/string-join(*,", ")')
+      mangainfo.artists = x.XPathStringAll('//dt[.=("Artist(s)","Artiste(s)")]/following-sibling::dd[1]/string-join(*,", ")')
+      mangainfo.genres = x.XPathStringAll('//dt[.=("Categories","Kategoriler:","Categorías","Catégories")]/following-sibling::dd[1]/string-join(*,", ")')
+      mangainfo.summary = x.XPathString('//div[@class="well"]/p')
+      v = x.Xpath('//ul[@class="chapters"]/li/*[self::h5 or self::h3]')
+      for i = 1, v.Count do
+        v2 = v.Get(i)
+        mangainfo.chapterLinks.Add(x.XPathString('a/@href', v2))
+        mangainfo.chapterNames.Add(x.XPathString('normalize-space(.)', v2))
+      end
+      InvertStrings(mangainfo.chapterLinks, mangainfo.chapterNames)
+      return no_error
     end
-    mangainfo.authors = x.XPathStringAll('//dt[.=("Author(s)","Yazar & Çizer:","Autor(es)","Auteur(s)")]/following-sibling::dd[1]/string-join(*,", ")')
-    mangainfo.artists = x.XPathStringAll('//dt[.=("Artist(s)","Artiste(s)")]/following-sibling::dd[1]/string-join(*,", ")')
-    mangainfo.genres = x.XPathStringAll('//dt[.=("Categories","Kategoriler:","Categorías","Catégories")]/following-sibling::dd[1]/string-join(*,", ")')
-    mangainfo.summary = x.XPathString('//div[@class="well"]/p')
-    v = x.Xpath('//ul[@class="chapters"]/li/*[self::h5 or self::h3]')
-    for i = 1, v.Count do
-      v2 = v.Get(i)
-      mangainfo.chapterLinks.Add(x.XPathString('a/@href', v2))
-      mangainfo.chapterNames.Add(x.XPathString('normalize-space(.)', v2))
-    end
-    InvertStrings(mangainfo.chapterLinks, mangainfo.chapterNames)
-    return no_error
-  else
     return net_problem
   end
-end
-
-function GetPageNumber()
-  local u = MaybeFillHost(module.RootURL, url)
-  if http.GET(u) then
-    x = TXQuery.Create(http.Document)
-    x.XPathStringAll('//div[@id="all"]/img/@data-src', task.PageLinks)
-    if task.PageLinks.Count == 0 then
-      x.XPathStringAll('//div[@id="all"]/img/@src', task.PageLinks)
+  
+  function myReaderMangaCMS:getpagenumber()
+    local u = MaybeFillHost(module.RootURL, url)
+    if http.get(u) then
+      x = TXQuery.Create(http.document)
+      x.xpathstringall('//div[@id="all"]/img/@data-src', task.pagelinks)
+      if task.pagelinks.Count == 0 then
+        x.xpathstringall('//div[@id="all"]/img/@src', task.pagelinks)
+      end
+      task.pagecontainerlinks.text = u
+      return true
     end
-    task.pagecontainerlinks.text = u
-    return true
-  else
     return false
   end
+  
+  function myReaderMangaCMS:getnameandlink()
+    if http.get(module.rooturl .. self.getdirurl()) then
+      x = TXQuery.create(http.document)
+      x.xpathhrefall('//li/a', links, names)
+      return no_error
+    end
+    return net_problem
+  end
+  
+  function myReaderMangaCMS:getdirurl()
+    return '/changeMangaList?type=text'
+  end
+  
+  function myReaderMangaCMS:beforedownloadimage()
+    http.reset()
+    http.headers.values['Referer'] = task.pagecontainerlinks.text
+    return true
+  end
+  
+  return myReaderMangaCMS
+end
+
+function Modules.WhiteCloudPavilion()
+  local WhiteCloudPavilion = {}
+  setmetatable(WhiteCloudPavilion, { __index = Modules.myReaderMangaCMS() })
+  
+  function WhiteCloudPavilion:getdirurl()
+    return '/manga/free' .. Modules.myReaderMangaCMS().getdirurl()
+  end
+  
+  return WhiteCloudPavilion
+end
+
+function Modules.GodsRealmScan()
+  local GodsRealmScan = {}
+  setmetatable(GodsRealmScan, { __index = Modules.myReaderMangaCMS() })
+  
+  function GodsRealmScan:getdirurl()
+    return '/public' .. Modules.myReaderMangaCMS().getdirurl()
+  end
+  
+  return GodsRealmScan
+end
+
+function Modules.MangaDenizi()
+  local MangaDenizi = {}
+  setmetatable(MangaDenizi, { __index = Modules.myReaderMangaCMS() })
+  
+  function MangaDenizi:getinfo()
+    Modules.myReaderMangaCMS().getinfo()
+    local x=TXQuery.Create(http.document)
+    mangainfo.status = MangaInfoStatusIfPos(x.XPathString('//dt[.="Durum:"]/following-sibling::dd[1]'), 'Devam Ediyor', 'Tamamlandı')
+  end
+  
+  return MangaDenizi
+end
+
+-------------------------------------------------------------------------------
+
+function createInstance()
+  local m = Modules[module.website]
+  if m ~= nil then
+    return m():new()
+  else
+    return Modules.myReaderMangaCMS():new()
+  end
+end
+
+-------------------------------------------------------------------------------
+
+function getinfo()
+  return createInstance():getinfo()
+end
+
+function getpagenumber()
+  return createInstance():getpagenumber()
+end
+
+function getnameandlink()
+  return createInstance():getnameandlink()
 end
 
 function beforedownloadimage()
-  http.reset()
-  http.headers.values['Referer'] = task.pagecontainerlinks.text
-  print(http.headers.values['Referer'])
-  return true
+  return createInstance():beforedownloadimage()
 end
 
 function AddWebsiteModule(name, url, cat)
   local m = NewModule()
   m.category = cat
-  m.Website = name
-  m.RootURL = url
-  m.LastUpdated = 'February 12, 2018'
-  m.OnGetNameAndLink = 'GetNameAndLink'
-  m.OnGetInfo = 'GetInfo'
-  m.OnGetPageNumber = 'GetPageNumber'
+  m.website = name
+  m.rooturl = url
+  m.ongetnameandlink = 'getnameandlink'
+  m.ongetinfo = 'getinfo'
+  m.ongetpagenumber = 'getpagenumber'
   m.onbeforedownloadimage='beforedownloadimage'
   return m
 end
