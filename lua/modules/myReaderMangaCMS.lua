@@ -190,9 +190,8 @@ function Init()
   AddWebsiteModule('HatigarmScans', 'https://www.hatigarmscans.net', c)
 
   c='Spanish-Scanlation'
-  AddWebsiteModule('DarkSkyScan', 'http://darkskyprojects.org', c);
+  AddWebsiteModule('DarkSkyScan', 'https://darkskyprojects.org', c);
   AddWebsiteModule('NozominoFansub', 'https://nozominofansub.com', c);
-  AddWebsiteModule('GodsRealmScan', 'https://godsrealmscan.com', c); 
   AddWebsiteModule('CoYuHi', 'http://www.universoyuri.com', c);
   AddWebsiteModule('SOSScanlation', 'http://sosscanlation.com', c);
   
