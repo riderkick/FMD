@@ -199,9 +199,6 @@ function Init()
   AddWebsiteModule('ReadHentaiManga', 'http://readhentaimanga.com', cat)
   AddWebsiteModule('HentaiRead', 'http://hentairead.com', cat)
   
-  cat = 'English-Scanlation'
-  AddWebsiteModule('MangaCow', 'http://mngcow.co', cat)
-  
   cat = "Arabic-Scanlation"
   AddWebsiteModule('3asq', 'http://www.3asq.info', cat)
 end
