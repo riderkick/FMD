@@ -4,7 +4,7 @@ function getinfo()
     x=TXQuery.Create(http.document) 
     mangainfo.title=x.xpathstring('//*[@id="series-data"]//*[@class="series-title"]/h1')
     mangainfo.coverlink=x.xpathstring('//*[@id="series-data"]//img[@class="cover"]/@src')
-    mangainfo.authors=x.xpathstring('//*[@id="series-data"]//*[@class="series-author"]/text()')
+    mangainfo.authors=x.xpathstring('//*[@id="series-data"]//*[@class="series-author"]/normalize-space(text())')
     mangainfo.genres=x.xpathstringall('//*[@id="series-data"]//ul[contains(@class, "tags")]/li/a')
     if x.xpathstring('//*[@id="series-data"]//*[@class="complete-series"]') == '' then
       mangainfo.status = '1'
@@ -54,7 +54,7 @@ function getpagenumber()
 	s=x.xpathstring('//script[contains(@src, "token=")]/@src')
 	local token = s:match('%?token=(%w+)&?')
 	local id = s:match('&id_release=(%w+)&?')
-	if http.get(module.rooturl ..'/leitor/pages.json?key='..token..'&id_release='..id) then
+	if http.get(module.rooturl .. string.format('/leitor/pages/%s.json?key=%s', id, token)) then
 	  x=TXQuery.Create(http.Document)
 	  x.xpathstringall('json(*).images()', task.pagelinks)
 	else
