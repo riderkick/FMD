@@ -56,7 +56,7 @@ function GetNameAndLink()
     for i=1,v.count do
       local v1=v.get(i)
       links.add(module.rooturl..'/?cat='..v1.getattribute('value'))
-      names.add(v1.tostring)
+      names.add(Trim(v1.tostring:gsub('%(%d+%)%s*$', '')))
     end
     return no_error
   else
