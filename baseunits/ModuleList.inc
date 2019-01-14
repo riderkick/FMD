@@ -28,7 +28,6 @@ uses
   ReadMangaToday,
   MangaOnlineBR,
   Tapas,
-  EatManga,
   Taadd,
   NineManga,
   BlogTruyen,
