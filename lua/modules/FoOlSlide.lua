@@ -25,7 +25,6 @@ end
 
 function getdirurl(website)
   local dirs = {
-    ['GoManga'] = dirurlreader,
     ['Jaiminisbox'] = dirurlreader,
     ['DokiFansubs'] = dirurlreader,
     ['AtelierDuNoir'] = dirurlreader,
@@ -229,7 +228,6 @@ function Init()
   local cat = 'English-Scanlation'
   AddWebsiteModule('PowerManga', 'http://read.powermanga.org', cat)
   AddWebsiteModule('Shoujosense', 'http://reader.shoujosense.com', cat)
-  AddWebsiteModule('GoManga', 'http://gomanga.co', 'English')
   AddWebsiteModule('OneTimeScans', 'http://otscans.com', cat)
   AddWebsiteModule('SenseScans', 'http://reader.sensescans.com', cat)
   AddWebsiteModule('Jaiminisbox', 'https://jaiminisbox.com', cat)
