@@ -9,7 +9,6 @@ uses
   RawSenManga,
   KissManga,
   MangaHome,
-  GameofScanlation,
   Hakihome,
   MangaChanRU,
   MintMangaRU,
