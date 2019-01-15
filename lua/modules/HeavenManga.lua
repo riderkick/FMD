@@ -36,8 +36,8 @@ end
 function getpagenumber()
   task.pagelinks.clear()
   if http.get(MaybeFillHost(module.rooturl, url)) then
-    x=TXQuery.Create(http.Document)
-    v=x.xpathstringall('//div[@class="chapter-content"]//img/@src', task.pagelinks)
+    local x=TXQuery.Create(http.Document)
+    x.xpathstringall('//div[@class="chapter-content"]//img/@src', task.pagelinks)
   else
     return false
   end
@@ -65,14 +65,19 @@ function getnameandlink()
   end
 end
 
-function Init()
+function AddWebsiteModule(name, url)
   local m = NewModule()
-  m.website = 'HeavenManga'
-  m.rooturl = 'https://heavenmanga.ca'
+  m.website = name
+  m.rooturl = url
   m.category = 'English'
-  m.lastupdated='February 26, 2018'
   m.ongetinfo='getinfo'
   m.ongetpagenumber='getpagenumber'
   m.ongetnameandlink='getnameandlink'
   m.ongetdirectorypagenumber = 'getdirectorypagenumber'
+  return m
+end
+
+function Init()
+  AddWebsiteModule('HeavenManga', 'https://heavenmanga.ca')
+  AddWebsiteModule('HolyManga', 'http://holymanga.ca')
 end
