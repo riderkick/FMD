@@ -9,7 +9,6 @@ uses
   RawSenManga,
   KissManga,
   MangaHome,
-  Hakihome,
   MangaChanRU,
   MintMangaRU,
   MangaHubRU,
