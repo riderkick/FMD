@@ -208,6 +208,7 @@ function Init()
   AddWebsiteModule('FallenAngelsScans','https://manga.fascans.com', c);
   AddWebsiteModule('WhiteCloudPavilion','https://whitecloudpavilion.com', c);
   AddWebsiteModule('HatigarmScans', 'https://www.hatigarmscans.net', c)
+  AddWebsiteModule('WoweScans', 'https://wowescans.net', c)
 
   c='Spanish-Scanlation'
   AddWebsiteModule('DarkSkyScan', 'https://darkskyprojects.org', c);
