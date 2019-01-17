@@ -17,19 +17,11 @@ function getinfo()
     end
     mangainfo.url=u
     local x=TXQuery.Create(http.document)
-    if (Pos('mangasupa', u:lower()) > 0) or module.website == 'MangaFoxCom' or module.website == 'MangaHereIO' then
-      mangainfo.title=x.xpathstring('//h1[@class="entry-title"]')
-      mangainfo.coverlink=MaybeFillHost(module.RootURL, x.xpathstring('//span[@class="info_image"]/img/@src'))
-      mangainfo.authors=x.xpathstringall('//ul[@class="truyen_info_right"]/li[contains(., "Author")]/a')
-      mangainfo.genres=x.xpathstringall('//ul[@class="truyen_info_right"]/li[contains(., "Genre")]/a')
-      mangainfo.status = MangaInfoStatusIfPos(x.xpathstring('//ul[@class="truyen_info_right"]/li[contains(., "Status")]'))
-    else
-      mangainfo.title=x.xpathstring('//ul[@class="manga-info-text"]/li/h1')
-      mangainfo.coverlink=MaybeFillHost(module.RootURL, x.xpathstring('//div[@class="manga-info-pic"]/img/@src'))
-      mangainfo.authors=x.xpathstringall('//ul[@class="manga-info-text"]/li[contains(., "Author")]/a')
-      mangainfo.genres=x.xpathstringall('//ul[@class="manga-info-text"]/li[contains(., "Genre")]/a')
-      mangainfo.status = MangaInfoStatusIfPos(x.xpathstring('//ul[@class="manga-info-text"]/li[contains(., "Status")]'))
-    end
+    mangainfo.title=x.xpathstring('//ul[@class="manga-info-text"]/li/h1')
+    mangainfo.coverlink=MaybeFillHost(module.RootURL, x.xpathstring('//div[@class="manga-info-pic"]/img/@src'))
+    mangainfo.authors=x.xpathstringall('//ul[@class="manga-info-text"]/li[contains(., "Author")]/a')
+    mangainfo.genres=x.xpathstringall('//ul[@class="manga-info-text"]/li[contains(., "Genre")]/a')
+    mangainfo.status = MangaInfoStatusIfPos(x.xpathstring('//ul[@class="manga-info-text"]/li[contains(., "Status")]'))
     if (Pos('email', mangainfo.title) > 0) and (Pos('protected', mangainfo.title) > 0) then
       mangainfo.title = Trim(x.xpathstring('//title/substring-after(substring-before(., "Manga Online"), "Read")'))
     end
@@ -80,22 +72,11 @@ end
 local dirurl = '/manga_list?type=newest&category=all&state=all&page='
 function getnameandlink()
   local dir = dirurl
-  if module.website == 'MangaFoxCom' or module.website == 'MangaHereIO' then
-    dir = '/manga-list?view=list&sort=date_added&page='
-  end 
   if http.get(module.rooturl .. dir .. IncStr(url)) then
     local x = TXQuery.Create(http.Document)
-    if module.website == 'MangaFoxCom' or module.website == 'MangaHereIO' then
-      local q = '//div[contains(@class,"wrap_update")]/div[@class="update_item"]/h3/a'
-      if x.xpathcount(q) > 0 then
-        x.XPathHREFAll(q, links, names)
-        updatelist.CurrentDirectoryPageNumber = updatelist.CurrentDirectoryPageNumber + 1
-      end
-    else
-      x.XPathHREFAll('//div[@class="truyen-list"]/div[@class="list-truyen-item-wrap"]/h3/a', links, names)
-      if links.count == 0 then
-        x.XPathHREFAll('//div[contains(@class,"danh_sach")]/div[contains(@class,"list_category")]/h3/a', links, names)
-      end
+    x.XPathHREFAll('//div[@class="truyen-list"]/div[@class="list-truyen-item-wrap"]/h3/a', links, names)
+    if links.count == 0 then
+      x.XPathHREFAll('//div[contains(@class,"danh_sach")]/div[contains(@class,"list_category")]/h3/a', links, names)
     end
     return no_error
   else
@@ -105,7 +86,6 @@ end
 
 function getdirectorypagenumber()
   page = 1
-  if module.website == 'MangaFoxCom' then return true; end
   if http.GET(module.RootURL .. dirurl .. '1') then
     x = TXQuery.Create(http.Document)
     local s = x.xpathstring('//div[@class="group-page"]/a[contains(., "Last")]/@href')
@@ -137,7 +117,4 @@ end
 function Init()
   AddWebsiteModule('MangaKakalot', 'http://mangakakalot.com')
   AddWebsiteModule('MangaNelo', 'http://manganelo.com')
-  AddWebsiteModule('MangaSupa', 'http://mangasupa.com')
-  AddWebsiteModule('MangaHereIO', 'https://manga-here.io')
-  AddWebsiteModule('MangaFoxCom', 'https://manga-fox.com')
 end
