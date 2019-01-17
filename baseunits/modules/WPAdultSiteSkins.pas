@@ -154,9 +154,6 @@ procedure RegisterModule;
   end;
 begin
   AddWebsiteModule('PornComix', 'http://www.porncomix.info');
-  AddWebsiteModule('Comic-XXX', 'http://comics-xxx.com');
-  AddWebsiteModule('FreeAdultComix', 'http://freeadultcomix.com');
-  AddWebsiteModule('AsianHotties', 'http://tits.asianhotties.me');
 end;
 
 initialization
