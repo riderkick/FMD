@@ -267,7 +267,6 @@ function Init()
   
   -- es-sc
   cat = 'Spanish-Scanlation'
-  AddWebsiteModule('DangoOnlineNoFansub', 'http://lector.dangolinenofansub.com', cat)
   AddWebsiteModule('DejameProbar', 'http://dejameprobar.es', cat)
   AddWebsiteModule('HoshinoFansub', 'http://manga.animefrontline.com', cat)
   AddWebsiteModule('MenudoFansub', 'http://www.menudo-fansub.com', cat)
