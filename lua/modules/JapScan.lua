@@ -17,7 +17,7 @@ function getinfo()
     mangainfo.artists=x.xpathstringall('//div[@id="main"]//p[contains(span, "Artiste")]/text()', '')
     mangainfo.genres=x.xpathstringall('//div[@id="main"]//p[contains(span, "Type(s)")]/text()', '')
     mangainfo.summary=x.xpathstring('//div[@id="main"]//div[contains(text(), "Synopsis")]/following-sibling::*')
-    x.xpathhrefall('//div[@id="chapters_list"]//div[@class="chapters_list"]/a', mangainfo.chapterlinks, mangainfo.chapternames)
+    x.xpathhrefall('css("div#chapters_list div.chapters_list > a")', mangainfo.chapterlinks, mangainfo.chapternames)
     InvertStrings(mangainfo.chapterlinks, mangainfo.chapternames)
     return no_error
   else
