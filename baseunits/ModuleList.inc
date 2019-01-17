@@ -21,7 +21,6 @@ uses
   MangaInn,
   LeoManga,
   MangaIndo,
-  MyMangaMe,
   GoodManga,
   MangaZuki,
   ReadMangaToday,
