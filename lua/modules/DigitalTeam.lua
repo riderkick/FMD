@@ -25,6 +25,7 @@ function GetPageNumber()
   task.pagenumber = 0
   if http.get(MaybeFillHost(module.rooturl, url)) then
     local x=TXQuery.Create(http.Document)
+    local isExt = (x.xpathstring('//script[contains(@src, "rext.js")]/@src') ~= '')
     local title=x.xpathstring('//title')
     local s=x.xpathstring('//script[contains(., "current_page")]')
     s=ExecJS(s .. ';JSON.stringify({m:m,ch:ch,chs:chs});')
@@ -32,9 +33,10 @@ function GetPageNumber()
     local m=x.xpathstring('json(*).m')
     local ch=x.xpathstring('json(*).ch')
     local chs=x.xpathstring('json(*).chs')
-    local data=EncodeURL(string.format('info[manga]=%s&info[chapter]=%s&info[ch_sub]=%s&info[title]=%s', m, ch, chs, title))
+    local data=string.format('info[manga]=%s&info[chapter]=%s&info[ch_sub]=%s&info[title]=%s', m, ch, chs, title)
+    if isExt then data = data .. '&info[external]=1' end
     http.reset()
-    if http.post(MaybeFillHost(module.rooturl, '/reader/c_i'), data) then
+    if http.post(MaybeFillHost(module.rooturl, '/reader/c_i'), EncodeURL(data)) then
       x.parsehtml(ExecJS(StreamToString(http.document)))
       local path = x.xpathstring('json(*)()[3]')
       local v=x.xpath('json(*)()[2]()')
@@ -46,7 +48,11 @@ function GetPageNumber()
       v=x.xpath('json(*)()[1]()')
       for i = 1, v.count do
         local v1=v.get(i)
-        s = string.format('/reader/%s/%s', path, x.xpathstring('./name', v1)..t[i]..x.xpathstring('./ex', v1))
+        if isExt then
+          s = string.format('%s/%s%s', t[i], x.xpathstring('./name', v1), x.xpathstring('./ex', v1))
+        else
+          s = string.format('/reader/%s/%s%s%s', path, x.xpathstring('./name', v1), t[i], x.xpathstring('./ex', v1))
+        end
         task.pagelinks.add(MaybeFillHost(module.rooturl, s))
       end
       return true
