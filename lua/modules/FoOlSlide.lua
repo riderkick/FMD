@@ -261,9 +261,6 @@ function Init()
   AddWebsiteModule('EvilFlowers', 'http://reader.evilflowers.com', cat)
   AddWebsiteModule('IlluminatiManga', 'http://reader.manga-download.org', cat)
   
-  cat = 'Italian-Scanlation'  
-  AddWebsiteModule('DigitalTeam', 'http://digitalteamreader.netsons.org', cat)
-  
   -- es-sc
   cat = 'Spanish-Scanlation'
   AddWebsiteModule('DejameProbar', 'http://dejameprobar.es', cat)
