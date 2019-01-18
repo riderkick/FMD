@@ -96,7 +96,7 @@ begin
           cid := Trim(ReplaceString(GetBetween('chapterid', ';', s), '=', ''));
           PageNumber := StrToIntDef(Trim(ReplaceString(GetBetween('imagecount', ';', s), '=', '')), 0);
           page := 1;
-          while (PageLinks.Count < PageNumber) and (page <= PageNumber) do begin
+          while page <= PageNumber do begin
             Reset;
             Headers.Values['Pragma'] := 'no-cache';
             Headers.Values['Cache-Control'] := 'no-cache';
@@ -105,7 +105,7 @@ begin
             if XHR(MaybeFillHost(Module.RootURL, AURL) + s) then begin
               s := Trim(StreamToString(Document));
               if s <> '' then begin
-                s := ExecJS(s);
+                s := ExecJS(s + ';d;');
                 lst := TStringList.Create;
                 try
                   lst.CommaText := s;
@@ -116,6 +116,7 @@ begin
                 end;
               end;
             end;
+            if PageLinks.Count >= PageNumber then Break;
             Inc(page); Sleep(3000);
           end;
         end;
