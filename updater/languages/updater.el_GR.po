@@ -17,10 +17,6 @@ msgstr ""
 
 #: tfrmmain.caption
 msgid "Free Manga Downloader - Updater"
-msgstr ""
-
-#: tfrmmain.caption
-msgid "Free Manga Downloader - Updater"
 msgstr "Free Manga Downloader - Ενημέρωση"
 
 #: tfrmmain.lbfilesize.caption

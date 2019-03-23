@@ -103,13 +103,13 @@ var
   configfile: TIniFileRun;
 
   // base url, should be in base.ini
-  DEFAULT_SELECTED_WEBSITES: String = 'MangaFox,MangaHere,MangaInn,MangaReader';
+  DEFAULT_SELECTED_WEBSITES: String = 'MangaDex,MangaHere,MangaInn,MangaReader';
   DB_URL: String = 'https://sourceforge.net/projects/newfmd/files/data/<website>.7z/download';
-  UPDATE_URL: String = 'https://raw.githubusercontent.com/riderkick/FMD/master/update';
-  CHANGELOG_URL: String = 'https://raw.githubusercontent.com/riderkick/FMD/master/changelog.txt';
+  UPDATE_URL: String = 'https://raw.githubusercontent.com/SDXC/FMD/master/update';
+  CHANGELOG_URL: String = 'https://raw.githubusercontent.com/SDXC/FMD/master/changelog.txt';
   UPDATE_PACKAGE_NAME: String = 'updatepackage.7z';
-  MODULES_URL: String = 'https://api.github.com/repos/riderkick/FMD/contents/lua/modules';
-  MODULES_URL2: String = 'https://github.com/riderkick/FMD/file-list/master/lua/modules';
+  MODULES_URL: String = 'https://api.github.com/repos/SDXC/FMD/contents/lua/modules';
+  MODULES_URL2: String = 'https://github.com/SDXC/FMD/file-list/master/lua/modules';
 
   currentWebsite: String;
 

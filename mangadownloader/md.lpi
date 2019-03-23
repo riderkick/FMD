@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
   <ProjectOptions>
-    <Version Value="10"/>
+    <Version Value="11"/>
     <PathDelim Value="\"/>
     <General>
       <SessionStorage Value="InProjectDir"/>
@@ -24,7 +24,7 @@
       <MinorVersionNr Value="9"/>
       <RevisionNr Value="158"/>
       <Attributes pvaPrivateBuild="True"/>
-      <StringTable Comments="https://github.com/riderkick/FMD" FileDescription="Free Manga Downloader" LegalCopyright="©2015-2018" OriginalFilename="fmd.exe" ProductName="Free Manga Downloader" ProductVersion="$BuildMode()" PrivateBuild="riderkick"/>
+      <StringTable Comments="https://github.com/SDXC/FMD" FileDescription="Free Manga Downloader" LegalCopyright="©2015-2019" OriginalFilename="fmd.exe" ProductName="Free Manga Downloader" ProductVersion="$BuildMode()" PrivateBuild="SDXC"/>
     </VersionInfo>
     <BuildModes Count="6">
       <Item1 Name="Win32" Default="True"/>
@@ -33,7 +33,7 @@
           <Version Value="11"/>
           <PathDelim Value="\"/>
           <Target>
-            <Filename Value="..\bin\fmd"/>
+            <Filename Value="..\bin\$(TargetCPU)-$(TargetOS)\fmd"/>
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
@@ -47,7 +47,6 @@
               <OptimizationLevel Value="4"/>
               <VariablesInRegisters Value="True"/>
             </Optimizations>
-            <SmallerCode Value="True"/>
           </CodeGeneration>
           <Linking>
             <Debugging>
@@ -70,7 +69,7 @@
           <Version Value="11"/>
           <PathDelim Value="\"/>
           <Target>
-            <Filename Value="..\bin\fmd"/>
+            <Filename Value="..\bin\$(TargetCPU)-$(TargetOS)\fmd"/>
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
@@ -115,7 +114,7 @@
           <Version Value="11"/>
           <PathDelim Value="\"/>
           <Target>
-            <Filename Value="..\bin\fmd"/>
+            <Filename Value="..\bin\$(TargetCPU)-$(TargetOS)\fmd"/>
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
@@ -155,7 +154,7 @@
           <Version Value="11"/>
           <PathDelim Value="\"/>
           <Target>
-            <Filename Value="..\bin\fmd"/>
+            <Filename Value="..\bin\$(TargetCPU)-$(TargetOS)\fmd"/>
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir);..\baseunits\includes\AnimeA;..\baseunits\includes\AnimeStory;..\baseunits\includes\AnimExtremist;..\baseunits\includes\CentralDeMangas;..\baseunits\includes\EGScans;..\baseunits\includes\EsMangaHere;..\baseunits\includes\Kivmanga;..\baseunits\includes\LectureEnLigne;..\baseunits\includes\MangaAr;..\baseunits\includes\S2scans;..\baseunits\includes\ScanManga;..\baseunits\includes\Starkana;..\baseunits\includes\Turkcraft;..\baseunits\includes\VnSharing;..\baseunits\includes\MeinManga;..\baseunits\includes\MangaREADER_POR;..\baseunits\includes\MangasPROJECT;..\baseunits\lua"/>
@@ -203,7 +202,7 @@
           <Version Value="11"/>
           <PathDelim Value="\"/>
           <Target>
-            <Filename Value="..\bin\fmd"/>
+            <Filename Value="..\bin\$(TargetCPU)-$(TargetOS)\fmd"/>
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir);..\baseunits\includes\AnimeA;..\baseunits\includes\AnimeStory;..\baseunits\includes\AnimExtremist;..\baseunits\includes\CentralDeMangas;..\baseunits\includes\EGScans;..\baseunits\includes\EsMangaHere;..\baseunits\includes\Kivmanga;..\baseunits\includes\LectureEnLigne;..\baseunits\includes\MangaAr;..\baseunits\includes\S2scans;..\baseunits\includes\ScanManga;..\baseunits\includes\Starkana;..\baseunits\includes\Turkcraft;..\baseunits\includes\VnSharing;..\baseunits\includes\MeinManga;..\baseunits\includes\MangaREADER_POR;..\baseunits\includes\MangasPROJECT;..\baseunits\lua"/>
@@ -261,15 +260,13 @@
     </BuildModes>
     <PublishOptions>
       <Version Value="2"/>
-      <DestinationDirectory Value="C:\Users\Cholif\Desktop\laz\fmd-rev339\publish"/>
-      <IncludeFileFilter Value="*.(pas|pp|inc|lfm|lpr|lrs|lpi|lpk|sh|xml)"/>
-      <UseExcludeFileFilter Value="True"/>
-      <ExcludeFileFilter Value="*.(bak|ppu|o|so);*~;backup"/>
+      <DestinationDirectory Value="D:\Entwicklung\FMD\Publish"/>
     </PublishOptions>
     <RunParams>
-      <local>
-        <FormatVersion Value="1"/>
-      </local>
+      <FormatVersion Value="2"/>
+      <Modes Count="1">
+        <Mode0 Name="default"/>
+      </Modes>
     </RunParams>
     <RequiredPackages Count="10">
       <Item1>
@@ -427,7 +424,7 @@
     <Version Value="11"/>
     <PathDelim Value="\"/>
     <Target>
-      <Filename Value="..\bin\fmd"/>
+      <Filename Value="..\bin\$(TargetCPU)-$(TargetOS)\fmd"/>
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
@@ -441,7 +438,6 @@
         <OptimizationLevel Value="4"/>
         <VariablesInRegisters Value="True"/>
       </Optimizations>
-      <SmallerCode Value="True"/>
     </CodeGeneration>
     <Linking>
       <Debugging>

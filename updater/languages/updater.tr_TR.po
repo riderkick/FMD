@@ -106,3 +106,4 @@ msgstr "Dosya çıkartılıyor [%s]..."
 #: umain.rs_waitmainapp
 msgid "Waiting main app to close..."
 msgstr "Uygulamanın kapanması bekleniyor..."
+

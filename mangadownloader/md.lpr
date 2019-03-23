@@ -89,7 +89,7 @@ begin
       DeleteFileUTF8(trcfile);
     SetHeapTraceOutput(trcfile);
     {$ENDIF DEBUGLEAKS}
-    Application.Title := 'Free Manga Downloader';
+  Application.Title:='Free Manga Downloader';
     RequireDerivedFormResource := True;
     Logger.Enabled := False;
     InitSimpleExceptionHandler(LogFileName);

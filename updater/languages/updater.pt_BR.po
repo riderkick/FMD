@@ -106,3 +106,4 @@ msgstr "Descompactar arquivo [%s]..."
 #: umain.rs_waitmainapp
 msgid "Waiting main app to close..."
 msgstr "Esperando o aplicativo principal para fechar..."
+

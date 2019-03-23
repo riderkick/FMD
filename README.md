@@ -1,10 +1,11 @@
 # The Free Manga Downloader (FMD)
 
-<sup>(Forked from https://sf.net/p/fmd)</sup>
+<sup>(Forked from https://github.com/riderkick/FMD)</sup>
+This fork is currently WIP. I didn't decide to take over this project yet!
 
 ## Download the latest release
 
-[![Latest release](https://img.shields.io/github/release/riderkick/FMD.svg)](https://github.com/riderkick/FMD/releases/latest) [![Download latest release (Win32)](https://img.shields.io/github/downloads/riderkick/FMD/latest/fmd_0.9.158.0.7z.svg?label=Win32)](https://github.com/riderkick/FMD/releases/download/0.9.158.0/fmd_0.9.158.0.7z) [![Download latest release (Win64)](https://img.shields.io/github/downloads/riderkick/FMD/latest/fmd_0.9.158.0_Win64.7z.svg?label=Win64)](https://github.com/riderkick/FMD/releases/download/0.9.158.0/fmd_0.9.158.0_Win64.7z)
+[![Latest release](https://img.shields.io/github/release/SDXC/FMD.svg)](https://github.com/SDXC/FMD/releases/latest) [![Download latest release (Win32)](https://img.shields.io/github/downloads/SDXC/FMD/latest/fmd_0.9.158.0.7z.svg?label=Win32)](https://github.com/SDXC/FMD/releases/download/0.9.158.0/fmd_0.9.158.0.7z) [![Download latest release (Win64)](https://img.shields.io/github/downloads/SDXC/FMD/latest/fmd_0.9.158.0_Win64.7z.svg?label=Win64)](https://github.com/SDXC/FMD/releases/download/0.9.158.0/fmd_0.9.158.0_Win64.7z)
 
 ## Content
 

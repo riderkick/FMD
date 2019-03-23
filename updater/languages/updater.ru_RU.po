@@ -106,3 +106,4 @@ msgstr "Распаковка файла [%s]..."
 #: umain.rs_waitmainapp
 msgid "Waiting main app to close..."
 msgstr "Ожидание закрытия основного приложения..."
+
