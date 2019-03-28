@@ -33,6 +33,7 @@ uses
   MangaTube,
   Mangaf,
   MangaRock,
+  PsychoPlay,
   MangaWindow,
   TranslateWebtoon,
   // Raw Official
