@@ -161,7 +161,7 @@ procedure RegisterModule;
 
 begin
   AddWebsiteModule('MangaChanRU', 'http://mangachan.me', 'Russian');
-  AddWebsiteModule('HentaiChanRU', 'http://hentai-chan.me', 'H-Sites');
+  AddWebsiteModule('HentaiChanRU', 'http://henchan.me', 'H-Sites');
   AddWebsiteModule('YaoiChanRU', 'http://yaoichan.me', 'H-Sites');
 end;
 
