@@ -17,7 +17,7 @@ function GetInfo()
 end
 
 function GetPageNumber()
-  local path = 'https://api.' .. domain .. '/images'
+  local path = 'https://cdn.' .. domain .. '/assets/images/data'
   if http.get(MaybeFillHost(module.rooturl,url)) then
     local x=TXQuery.Create(http.Document)
     local s = x.xpathstring('//gallery-read/@gallery')
@@ -70,4 +70,4 @@ function Init()
   m.ongetpagenumber='GetPageNumber'
   m.ongetnameandlink='GetNameAndLink'
   m.OnGetDirectoryPageNumber = 'getdirectorypagenumber'
-end 
+end
