@@ -2182,6 +2182,10 @@ msgctxt "TNEWCHAPTER.BTQUEUE.CAPTION"
 msgid "&Add to queue"
 msgstr "&Sıraya ekle"
 
+#: tnewchapter.caption
+msgid "New Chapter Notification"
+msgstr ""
+
 #: tselectdirectoryform.btok.caption
 msgctxt "tselectdirectoryform.btok.caption"
 msgid "OK"
