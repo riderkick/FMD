@@ -65,6 +65,7 @@ function Init()
   m.category='H-Sites'
   m.website='Pururin'
   m.rooturl='https://' .. domain
+  m.lastupdated = 'March 29, 2019'
   m.sortedlist=true
   m.ongetinfo='GetInfo'
   m.ongetpagenumber='GetPageNumber'

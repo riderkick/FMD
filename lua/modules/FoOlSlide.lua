@@ -213,7 +213,7 @@ function AddWebsiteModule(name, url, category)
   m.website = name
   m.rooturl = url
   m.category = category
-  m.lastupdated = 'february, 6 2018'
+  m.lastupdated = 'March 29, 2019'
   m.ongetinfo = 'getinfo'
   m.OnTaskStart = 'taskstart'
   m.OnGetPageNumber = 'getpagenumber'
