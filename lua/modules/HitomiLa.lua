@@ -30,10 +30,12 @@ end
 function getpagenumber()
   task.pagelinks.clear()
   if http.get(MaybeFillHost(module.rooturl, url)) then
-    local subdomain = nil
+	local subdomain = nil
+	local isfixed = 0
     local galleryid = tonumber(ReplaceRegExpr('(?i)^.*reader/(\\d+).*$', url, '$1'))
+	local prefix = string.char(97 + (galleryid % 2)) .. 'a.'
     if galleryid ~= nil then
-      subdomain = string.char(97 + (galleryid % 2)) .. 'a.' ..domain
+      subdomain = prefix ..domain
     end
     local x=TXQuery.Create(http.Document)
     local v=x.xpath('//div[@class="img-url"]')
@@ -43,6 +45,21 @@ function getpagenumber()
         s=s:gsub('//[^/]+/', '//'..subdomain..'/')
       end
       s = set_https(s)
+	  
+	  if isfixed == 0 then
+	    if http.get(s) then
+	      err=TXQuery.Create(http.Document)
+		  e = err.xpathstring('//center/h1')
+		  if e == '403 Forbidden' then
+		    prefix = string.char(97 + (galleryid % 2) - 1) .. 'a.'
+		    subdomain = prefix ..domain
+		    s=v.get(i).toString
+		    s=s:gsub('//[^/]+/', '//'..subdomain..'/')
+		    s = set_https(s)
+		  end
+		  isfixed = 1
+		end
+	  end
       task.pagelinks.add(s)
     end
   else
@@ -73,6 +90,7 @@ function Init()
   m.website = 'HitomiLa'
   m.rooturl = 'https://'..domain
   m.category = 'H-Sites'
+  m.lastupdated = 'March 29, 2019'
   m.sortedlist=true
   m.ongetinfo='getinfo'
   m.ongetpagenumber='getpagenumber'
