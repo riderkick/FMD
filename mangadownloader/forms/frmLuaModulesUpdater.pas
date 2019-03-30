@@ -215,6 +215,7 @@ begin
   if sha <> t.sha then
   begin
     t.sha := sha;
+	t.download_url := download_url;
     t.last_modified := last_modified;
     t.last_message := last_message;
     t.oflag := t.flag;
