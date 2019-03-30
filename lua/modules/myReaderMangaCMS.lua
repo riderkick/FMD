@@ -144,6 +144,24 @@ function Modules.KomikGue()
   return KomikGue
 end
 
+function Modules.ScanFR()
+  local ScanFR = {}
+  setmetatable(ScanFR, { __index = Modules.myReaderMangaCMS() })
+  
+  function ScanFR:getinfo()
+    Modules.myReaderMangaCMS().getinfo()
+    local x=TXQuery.Create(http.document)
+	local v = x.xpath('//div[@class="col-lg-12"]//ul[@class="chapterszz"]/li/h5/a')
+	for i = 1, v.Count do
+      local v2 = v.Get(i)
+      mangainfo.chapterLinks.Add(v2.getAttribute('href'))
+      mangainfo.chapterNames.Add(x.XPathString('normalize-space(.)', v2))
+    end
+  end
+  
+  return ScanFR
+end
+
 
 -------------------------------------------------------------------------------
 
@@ -217,4 +235,5 @@ function Init()
   
   c='French'
   AddWebsiteModule('ScanFR', 'https://www.scan-fr.io', c);
+  AddWebsiteModule('ScanOP', 'http://www.scan-op.com', c);
 end
