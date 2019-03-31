@@ -20,7 +20,7 @@
       <MajorVersionNr Value="2"/>
       <MinorVersionNr Value="5"/>
       <Attributes pvaPrivateBuild="True"/>
-      <StringTable Comments="https://github.com/SDXC/FMD" FileDescription="Updater for Free Manga Downloader" LegalCopyright="©2015-2019" OriginalFilename="updater.exe" ProductName="Updater" ProductVersion="$BuildMode()" PrivateBuild="SDXC"/>
+      <StringTable Comments="https://github.com/fmd-project-team/FMD" FileDescription="Updater for Free Manga Downloader" LegalCopyright="©2015-2019" OriginalFilename="updater.exe" ProductName="Updater" ProductVersion="$BuildMode()" PrivateBuild="SDXC"/>
     </VersionInfo>
     <BuildModes Count="4">
       <Item1 Name="Win32" Default="True"/>

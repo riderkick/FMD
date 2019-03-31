@@ -1,13 +1,13 @@
 Free Manga Downloader
-Project page: https://github.com/SDXC/FMD
+Project page: https://github.com/fmd-project-team/FMD
 
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
 0.9.160.0 (31.03.2019)
-[!] This release is a fork of https://github.com/riderkick/FMD, which will be maintained by SDXC. More information: https://github.com/SDXC/FMD/blob/master/README.md
-[!] Report issues here: https://github.com/SDXC/FMD/issues
-[!] Troubleshooting, Cloudflare workarounds and developer infos can be found here: https://github.com/SDXC/FMD/wiki
+[!] This release is a fork of https://github.com/riderkick/FMD, which will be maintained by SDXC. More information: https://github.com/fmd-project-team/FMD/blob/master/README.md
+[!] Report issues here: https://github.com/fmd-project-team/FMD/issues
+[!] Troubleshooting, Cloudflare workarounds and developer infos can be found here: https://github.com/fmd-project-team/FMD/wiki
 [+] Added ScanOP [FR]
 [-] Removed DejameProbar [ES]
 [-] Removed MangaID [ID]
@@ -28,7 +28,7 @@ Changelog:
 [*] TonariNoYoungJump: You can now hide private chapters in the "Manga Info" tab (see "Options"->"Websites"->"Options")
 [*] Fixed position of "New Chapters" dialog window when using more than one monitor
 [*] Fixed LUA update URLs not being updated in luamodules.json
-Full changes: https://github.com/SDXC/FMD/compare/0.9.158.0...0.9.160.0
+Full changes: https://github.com/fmd-project-team/FMD/compare/0.9.158.0...0.9.160.0
 
 0.9.158.0 (06-01-2018)
 [*] Minor bug fixes
