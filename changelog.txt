@@ -1,8 +1,34 @@
 Free Manga Downloader
-Project page: https://github.com/riderkick/FMD
+Project page: https://github.com/SDXC/FMD
 
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
+
+0.9.160.0 (31.03.2019)
+[!] This release is a fork of https://github.com/riderkick/FMD, which will be maintained by SDXC. More information: https://github.com/SDXC/FMD/blob/master/README.md
+[!] Report issues here: https://github.com/SDXC/FMD/issues
+[!] Troubleshooting, Cloudflare workarounds and developer infos can be found here: https://github.com/SDXC/FMD/wiki
+[+] Added ScanOP [FR]
+[-] Removed DejameProbar [ES]
+[-] Removed MangaID [ID]
+[-] Removed MangajinNoFansub [ES]
+[-] Removed OtakuFile [ID]
+[*] GManga: Fixed chapter download
+[*] HentaiChanRU: Fixed URL
+[*] HitomiLa: Fixed chapter download
+[*] KirishimaFansub: Fixed URL
+[*] Komikcast: Fixed all -> Thank you AbidZakaria
+[*] LHTranslation: Fixed all -> Thank you AbidZakaria
+[*] MangaFox: Fixed getting page links -> Thank you 1aam2am1
+[*] MangaFoxFun: Fixed chapter download -> Thank you AbidZakaria
+[*] MangaHubIO: Fixed chapter download -> Thank you AbidZakaria
+[*] MangaShiro: Fixed all -> Thank you AbidZakaria
+[*] Pururin: Fixed page links URL -> Thank you boppen
+[*] ScanFR: Fixed manga info
+[*] TonariNoYoungJump: You can now hide private chapters in the "Manga Info" tab (see "Options"->"Websites"->"Options")
+[*] Fixed position of "New Chapters" dialog window when using more than one monitor
+[*] Fixed LUA update URLs not being updated in luamodules.json
+Full changes: https://github.com/SDXC/FMD/compare/0.9.158.0...0.9.160.0
 
 0.9.158.0 (06-01-2018)
 [*] Minor bug fixes
