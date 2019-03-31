@@ -13,6 +13,10 @@ const
 
 var
   puzzle: TImagePuzzle;
+  showprivate: Boolean = True;
+
+resourcestring
+  RS_ShowPrivate = 'Show [private] chapters';
 
 function GetNameAndLink(const MangaInfo: TMangaInformation;
   const ANames, ALinks: TStringList; const AURL: String;
@@ -42,6 +46,7 @@ var
   v: IXQValue;
   lastChapter: Integer;
   s, episode, priv: String;
+  addchapter: Boolean;
   node: TTreeNode;
 begin
   Result := NET_PROBLEM;
@@ -69,16 +74,21 @@ begin
           Free;
         end;
 
-      while lastChapter > 1 do begin
-        if not GET(Module.RootURL + Format(chapterListQuery, [episode, lastChapter])) then Break;
-        if MangaInfo.Thread.IsTerminated then Break;
-        with TXQueryEngineHTML.Create(Document) do
-          try
-            node := XPath('json(*).html').toNode;
-            for v in XPath('//li', node) do begin
-              priv := '';
-              if Pos('private', v.toNode.outerHTML()) > 0 then
-                priv := ' [private]';
+    while lastChapter > 1 do begin
+      if not GET(Module.RootURL + Format(chapterListQuery, [episode, lastChapter])) then Break;
+      if MangaInfo.Thread.IsTerminated then Break;
+      with TXQueryEngineHTML.Create(Document) do
+        try
+          node := XPath('json(*).html').toNode;
+          for v in XPath('//li', node) do begin
+            priv := '';
+			addchapter := True;
+            if Pos('private', v.toNode.outerHTML()) > 0 then begin
+              priv := ' [private]';
+			  addchapter := showprivate;
+			end;
+			
+			if addchapter then begin
               s := XPathString('a/@href', v);
               if s <> '' then begin
                 chapterLinks.Add(ReplaceString(s, '\"', ''));
@@ -88,7 +98,8 @@ begin
                 chapterLinks.Add(url);
                 chapterName.Add(XPathString('div/h4', v) + priv);
               end;
-            end;
+			end;
+          end;
           finally
             Free;
           end;
@@ -151,6 +162,7 @@ begin
     OnGetInfo := @GetInfo;
     OnGetPageNumber := @GetPageNumber;
     OnDownloadImage := @DownloadImage;
+    AddOptionCheckBox(@showprivate, 'ShowPrivate', @RS_ShowPrivate);
   end;
 end;
 
