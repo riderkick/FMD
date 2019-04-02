@@ -10,6 +10,7 @@ Changelog:
 [*] MangaParkOrg: Fixed chapter download (Issue #9)
 [*] ZeroScans: Fixed manga info (Issue #7)
 [*] Fixed language files (Issue #11)
+[*] Fixed updater (The wrong project was used)
 [*] Component updated: Synapse [r160] -> [r209] - Fixes some general networking problems (Issue #7)
 [*] Component updated: 7-Zip [18.01] -> [19.00] - Possible fix for issue #8
 [*] Component backported: Lazarus/LCL [2.0.4] -> [1.8.4] - FMD isn't fully compatible with [2.x]
