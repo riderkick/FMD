@@ -5,6 +5,7 @@ Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
 0.9.161.0 (02.04.2019)
+[!] Updater won't work because of some mistakes on my side. Please update manually. After that it should be working for further releases. Sorry.
 [!] Report issues here: https://github.com/fmd-project-team/FMD/issues
 [*] MangaPark: Fixed chapter download (Issue #9)
 [*] MangaParkOrg: Fixed chapter download (Issue #9)
