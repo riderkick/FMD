@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
   <ProjectOptions>
-    <Version Value="11"/>
+    <Version Value="10"/>
     <PathDelim Value="\"/>
     <General>
       <SessionStorage Value="InProjectDir"/>
@@ -20,7 +20,7 @@
       <MajorVersionNr Value="2"/>
       <MinorVersionNr Value="5"/>
       <Attributes pvaPrivateBuild="True"/>
-      <StringTable Comments="https://github.com/fmd-project-team/FMD" FileDescription="Updater for Free Manga Downloader" LegalCopyright="©2015-2019" OriginalFilename="updater.exe" ProductName="Updater" ProductVersion="$BuildMode()" PrivateBuild="SDXC"/>
+      <StringTable Comments="https://github.com/fmd-project-team/FMD" FileDescription="Updater for Free Manga Downloader" LegalCopyright="©2015-2019" OriginalFilename="updater.exe" ProductName="Updater" ProductVersion="$BuildMode()" PrivateBuild="FMD Project Team"/>
     </VersionInfo>
     <BuildModes Count="4">
       <Item1 Name="Win32" Default="True"/>
@@ -121,10 +121,9 @@
       <Version Value="2"/>
     </PublishOptions>
     <RunParams>
-      <FormatVersion Value="2"/>
-      <Modes Count="1">
-        <Mode0 Name="default"/>
-      </Modes>
+      <local>
+        <FormatVersion Value="1"/>
+      </local>
     </RunParams>
     <RequiredPackages Count="2">
       <Item1>

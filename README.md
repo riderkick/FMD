@@ -4,7 +4,7 @@
 
 ## Download the latest release
 
-[![Latest release](https://img.shields.io/github/release/fmd-project-team/FMD.svg)](https://github.com/fmd-project-team/FMD/releases/latest) [![Download latest release (Win32)](https://img.shields.io/github/downloads/fmd-project-team/FMD/latest/fmd_0.9.160.0.7z.svg?label=Win32)](https://github.com/fmd-project-team/FMD/releases/download/0.9.160.0/fmd_0.9.160.0.7z) [![Download latest release (Win64)](https://img.shields.io/github/downloads/fmd-project-team/FMD/latest/fmd_0.9.160.0_Win64.7z.svg?label=Win64)](https://github.com/fmd-project-team/FMD/releases/download/0.9.160.0/fmd_0.9.160.0_Win64.7z)
+[![Latest release](https://img.shields.io/github/release/fmd-project-team/FMD.svg)](https://github.com/fmd-project-team/FMD/releases/latest) [![Download latest release (Win32)](https://img.shields.io/github/downloads/fmd-project-team/FMD/latest/fmd_0.9.161.0.7z.svg?label=Win32)](https://github.com/fmd-project-team/FMD/releases/download/0.9.161.0/fmd_0.9.161.0.7z) [![Download latest release (Win64)](https://img.shields.io/github/downloads/fmd-project-team/FMD/latest/fmd_0.9.161.0_Win64.7z.svg?label=Win64)](https://github.com/fmd-project-team/FMD/releases/download/0.9.161.0/fmd_0.9.161.0_Win64.7z)
 
 ## Public Announcement
 
@@ -25,11 +25,11 @@ The Free Manga Downloader is a free open source application written in Object Pa
 
 ## Build instructions
 
-In order to build FMD from the source code, you must install the latest version of Lazarus and Free Pascal Compiler from http://www.lazarus-ide.org/. Then you must install the following 3rd party libraries and components:
+In order to build FMD from the source code, you must install the latest 1.8.x version of Lazarus (not 2.x.x) and Free Pascal Compiler from http://www.lazarus-ide.org/. Then you must install the following 3rd party libraries and components:
 
  - [RichMemo](https://sourceforge.net/p/lazarus-ccr/svn/HEAD/tree/components/richmemo/)
  - [Virtual TreeView](https://github.com/blikblum/VirtualTreeView-Lazarus/tree/lazarus-v4) (and `lclextensions` from the Releases page)
- - [Synapse](https://sourceforge.net/p/synalist/code/HEAD/tree/trunk/) (at least revision `r160`)
+ - [Synapse](https://sourceforge.net/p/synalist/code/HEAD/tree/trunk/) (at least revision `r169`)
  - [InternetTools](https://github.com/benibela/internettools) 
  - [MultiLog](https://github.com/blikblum/multilog)
  - [DCPCypt](https://sourceforge.net/projects/lazarus-ccr/)

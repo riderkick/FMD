@@ -4,6 +4,17 @@ Project page: https://github.com/fmd-project-team/FMD
 Changelog:
 (! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
 
+0.9.161.0 (02.04.2019)
+[!] Report issues here: https://github.com/fmd-project-team/FMD/issues
+[*] MangaPark: Fixed chapter download (Issue #9)
+[*] MangaParkOrg: Fixed chapter download (Issue #9)
+[*] ZeroScans: Fixed manga info (Issue #7)
+[*] Fixed language files (Issue #11)
+[*] Component updated: Synapse [r160] -> [r209] - Fixes some general networking problems (Issue #7)
+[*] Component updated: 7-Zip [18.01] -> [19.00] - Possible fix for issue #8
+[*] Component backported: Lazarus/LCL [2.0.4] -> [1.8.4] - FMD isn't fully compatible with [2.x]
+Full changes: https://github.com/fmd-project-team/FMD/compare/0.9.160.0...0.9.160.1
+
 0.9.160.0 (31.03.2019)
 [!] This release is a fork of https://github.com/riderkick/FMD, which will be maintained by SDXC. More information: https://github.com/fmd-project-team/FMD/blob/master/README.md
 [!] Report issues here: https://github.com/fmd-project-team/FMD/issues

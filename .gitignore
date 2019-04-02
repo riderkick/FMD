@@ -26,6 +26,7 @@ bin/
 Release/
 3rd/
 licenses/
+languages/
 
 # compiled languages files
 *.mo
