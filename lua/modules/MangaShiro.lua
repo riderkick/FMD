@@ -29,7 +29,11 @@ function getinfo()
       mangainfo.summary=x.xpathstring('//*[@class="desc"]/string-join(.//text(),"")')
       mangainfo.chapterlinks.clear()
       mangainfo.chapternames.clear()
-      x.xpathhrefall('//div[@class="bxcl"]//li//div[@class="lch"]/a', mangainfo.chapterlinks, mangainfo.chapternames)
+	  if module.website == 'Kiryuu' then
+		x.xpathhrefall('//li//span[@class="leftoff"]/a', mangainfo.chapterlinks, mangainfo.chapternames)
+	  else
+        x.xpathhrefall('//div[@class="bxcl"]//li//div[@class="lch"]/a', mangainfo.chapterlinks, mangainfo.chapternames)
+      end
     elseif module.website == 'PecintaKomik' then
       mangainfo.title=x.xpathstring('//h1[@itemprop="headline"]/*')
       mangainfo.coverlink=MaybeFillHost(module.RootURL, x.xpathstring('//div[@itemprop="image"]/img/@src'))
@@ -110,6 +114,8 @@ function getnameandlink()
       TXQuery.Create(http.document).xpathhrefall('//*[@class="jdlbar"]//a',links,names)
 	elseif module.website == 'KomikCast' then
 	  TXQuery.Create(http.document).xpathhrefall('//*[@class="soralist"]//a',links,names)
+	elseif module.website == 'Kiryuu' then
+	  TXQuery.Create(http.document).xpathstringall('//img[@class="img-fluid lazy"]/@src',task.pagelinks)
 	else
       TXQuery.Create(http.document).xpathhrefall('//*[@class="soralist"]//a',links,names)
     end
