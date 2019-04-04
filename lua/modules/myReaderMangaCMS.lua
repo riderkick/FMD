@@ -213,7 +213,7 @@ function Init()
   c='Indonesian'
   AddWebsiteModule('Komikid', 'https://www.komikid.com', c);
   AddWebsiteModule('KomikGue', 'https://www.komikgue.com', c);
-  AddWebsiteModule('komikManga', 'https://komikmanga.com', c);
+  AddWebsiteModule('KomikManga', 'https://komikmanga.com', c);
   
   
   c='Raw'
