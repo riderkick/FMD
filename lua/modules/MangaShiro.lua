@@ -56,7 +56,6 @@ function getinfo()
 	  mangainfo.summary=x.xpathstring('//div[@class="sinopsis"]/*')
       mangainfo.chapterlinks.clear()
       mangainfo.chapternames.clear()
-	  x.xpathstringall('//table[@class="listinfo"]//tr[contains(th, "Genre")]/td/a')
       x.xpathhrefall('//table[@class="chapter"]//tr//*[@class="judulseries"]/a', mangainfo.chapterlinks, mangainfo.chapternames)
     elseif module.website == 'MangaKita' then
       mangainfo.title=x.xpathstring('//h1')
