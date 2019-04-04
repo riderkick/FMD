@@ -197,7 +197,7 @@ function AddWebsiteModule(name, url, cat)
   m.category = cat
   m.website = name
   m.rooturl = url
-  m.lastupdated='March 30, 2019'
+  m.lastupdated='April 04, 2019'
   m.ongetnameandlink = 'getnameandlink'
   m.ongetinfo = 'getinfo'
   m.ongetpagenumber = 'getpagenumber'
@@ -213,6 +213,8 @@ function Init()
   c='Indonesian'
   AddWebsiteModule('Komikid', 'https://www.komikid.com', c);
   AddWebsiteModule('KomikGue', 'https://www.komikgue.com', c);
+  AddWebsiteModule('KomikManga', 'https://komikmanga.com', c);
+  
   
   c='Raw'
   AddWebsiteModule('RawMangaUpdate', 'http://rawmangaupdate.com', c);

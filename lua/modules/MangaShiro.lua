@@ -44,6 +44,19 @@ function getinfo()
       mangainfo.chapterlinks.clear()
       mangainfo.chapternames.clear()
       x.xpathhrefall('//div[@class="bxcl"]//li//*[@class="lchx"]/a', mangainfo.chapterlinks, mangainfo.chapternames)
+	elseif module.website == 'Komiku' or module.website == 'OtakuIndo' then
+	  mangainfo.title=x.xpathstring('//div[@class="info1"]/*')
+	  mangainfo.title = string.gsub(mangainfo.title, 'Bahasa Indonesia', '')
+	  mangainfo.title = string.gsub(mangainfo.title, 'Manga', '')
+	  mangainfo.title = string.gsub(mangainfo.title, 'Komik', '')
+      mangainfo.coverlink=MaybeFillHost(module.RootURL, x.xpathstring('//div[@class="imgseries"]/img/@src'))
+      mangainfo.authors=x.xpathstring('//div[@class="preview"]//li[starts-with(.,"Komikus")]/substring-after(.,":")')
+      mangainfo.genres=x.xpathstringall('//ul[@class="genre"]/li')
+      mangainfo.status=MangaInfoStatusIfPos(x.xpathstring('//div[@class="preview"]//li[starts-with(.,"Tanggal Rilis")]/substring-after(.,"-")'))
+	  mangainfo.summary=x.xpathstring('//div[@class="sinopsis"]/*')
+      mangainfo.chapterlinks.clear()
+      mangainfo.chapternames.clear()
+      x.xpathhrefall('//table[@class="chapter"]//tr//*[@class="judulseries"]/a', mangainfo.chapterlinks, mangainfo.chapternames)
     elseif module.website == 'MangaKita' then
       mangainfo.title=x.xpathstring('//h1')
       mangainfo.coverlink=MaybeFillHost(module.RootURL, x.xpathstring('//div[contains(@class,"leftImage")]/img/@src'))
@@ -84,6 +97,9 @@ function getpagenumber()
     TXQuery.Create(http.Document).xpathstringall('//*[@id="readerarea"]//img/@data-lazy-src', task.pagelinks)
     if task.pagelinks.count < 1 then
       TXQuery.Create(http.Document).xpathstringall('//*[@id="readerarea"]//img/@src', task.pagelinks)
+	  if task.pagelinks.count < 1 then
+		TXQuery.Create(http.Document).xpathstringall('//*[@id="readerareaimg"]//img/@src', task.pagelinks)
+	  end
     end
     return true
   else
@@ -98,6 +114,8 @@ function getnameandlink()
     ['KomikCast'] = '/daftar-komik/?list',
     ['MangaKid'] = '/manga-lists/',
     ['Kiryuu'] = '/manga-lists/?list',
+	['Komiku'] = '/daftar-komik/',
+	['OtakuIndo'] = '/daftar-komik/',
     ['WestManga'] = '/manga-list/?list',
     ['PecintaKomik'] = '/daftar-manga/?list',
     ['MangaIndoNet'] = '/manga-list/?list',
@@ -116,6 +134,8 @@ function getnameandlink()
 	  TXQuery.Create(http.document).xpathhrefall('//*[@class="soralist"]//a',links,names)
 	elseif module.website == 'Kiryuu' then
 	  TXQuery.Create(http.document).xpathstringall('//img[@class="img-fluid lazy"]/@src',task.pagelinks)
+	elseif module.website == 'Komiku' or module.website == 'OtakuIndo' then
+	  TXQuery.Create(http.document).xpathhrefall('//*[@id="a-z"]//h4/a',links,names)
 	else
       TXQuery.Create(http.document).xpathhrefall('//*[@class="soralist"]//a',links,names)
     end
@@ -149,4 +169,6 @@ function Init()
   AddWebsiteModule('PecintaKomik', 'https://www.pecintakomik.com')
   AddWebsiteModule('MangaIndoNet', 'https://mangaindo.net')
   AddWebsiteModule('KomikIndo', 'https://komikindo.co')
+  AddWebsiteModule('Komiku', 'https://komiku.co')
+  AddWebsiteModule('OtakuIndo', 'https://otakuindo.net')
 end
