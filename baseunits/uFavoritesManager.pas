@@ -825,6 +825,8 @@ begin
                 end;
 
           Backup;
+		  if OptionSortDownloadsWhenAddingNewDownloadTasks then
+		    DLManager.Sort(DLManager.SortColumn);
           if LNCResult = ncrDownload then
           begin
             DLManager.CheckAndActiveTask;

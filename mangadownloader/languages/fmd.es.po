@@ -886,6 +886,10 @@ msgstr "Mostar barra de herramientas de descargas en la izquierda"
 msgid "Exit FMD"
 msgstr "Salir de FMD"
 
+#: tmainform.cboptionsortdownloadswhenaddingnewdownloadtasks.caption
+msgid "Sort Downloads when adding new download tasks"
+msgstr ""
+
 #: tmainform.cboptionupdatelistnomangainfo.caption
 msgid "Don't load manga information when updating list (filter will be not work!)"
 msgstr "No Cargar la Información del Manga Cuando se Actualice la Lista (El Filtro no Funcionará)"

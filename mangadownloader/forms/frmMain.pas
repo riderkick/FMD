@@ -53,6 +53,7 @@ type
     cbOptionAutoCheckFavRemoveCompletedManga: TCheckBox;
     cbOptionAutoOpenFavStartup: TCheckBox;
     cbOptionDeleteCompletedTasksOnClose: TCheckBox;
+    cbOptionSortDownloadsWhenAddingNewDownloadTasks: TCheckBox;
     cbOptionEnableLoadCover: TCheckBox;
     cbOptionMinimizeOnStart: TCheckBox;
     cbOptionShowBalloonHint: TCheckBox;
@@ -2330,6 +2331,8 @@ begin
           CurrentDownloadChapterPtr:=0;
           SaveToDB(newdl);
         end;
+		if OptionSortDownloadsWhenAddingNewDownloadTasks then
+		  DLManager.Sort(DLManager.SortColumn);
       end;
       DLManager.DownloadedChapters.Chapters[mangaInfo.website+mangaInfo.link]:=links.Text;
       FavoriteManager.AddToDownloadedChaptersList(mangaInfo.website,mangaInfo.link,links);
@@ -4734,6 +4737,7 @@ begin
     cbOptionMinimizeOnStart.Checked := ReadBool('general', 'MinimizeOnStart', False);
     cbOptionMinimizeToTray.Checked := ReadBool('general', 'MinimizeToTray', False);
     cbOptionDeleteCompletedTasksOnClose.Checked := ReadBool('general', 'DeleteCompletedTasksOnClose', OptionDeleteCompletedTasksOnClose);
+    cbOptionSortDownloadsWhenAddingNewDownloadTasks.Checked := ReadBool('general', 'SortDownloadsWhenAddingNewDownloadTasks', OptionSortDownloadsWhenAddingNewDownloadTasks);
     cbOptionLetFMDDo.ItemIndex := ReadInteger('general', 'LetFMDDo', 0);
     edOptionExternalPath.Text := ReadString('general', 'ExternalProgramPath', '');
     edOptionExternalParams.Text := ReadString('general', 'ExternalProgramParams', DEFAULT_EXPARAM);
@@ -4858,6 +4862,7 @@ begin
       WriteBool('general', 'MinimizeOnStart', cbOptionMinimizeOnStart.Checked);
       WriteBool('general', 'MinimizeToTray', cbOptionMinimizeToTray.Checked);
       WriteBool('general', 'DeleteCompletedTasksOnClose', cbOptionDeleteCompletedTasksOnClose.Checked);
+      WriteBool('general', 'SortDownloadsWhenAddingNewDownloadTasks', cbOptionSortDownloadsWhenAddingNewDownloadTasks.Checked);
       WriteInteger('general', 'LetFMDDo', cbOptionLetFMDDo.ItemIndex);
       WriteString('general', 'ExternalProgramPath', edOptionExternalPath.Text);
       WriteString('general', 'ExternalProgramParams', edOptionExternalParams.Text);
@@ -5019,6 +5024,7 @@ begin
     OptionLetFMDDo := TFMDDo(cbOptionLetFMDDo.ItemIndex);
     OptionEnableLoadCover := cbOptionEnableLoadCover.Checked;
     OptionDeleteCompletedTasksOnClose := cbOptionDeleteCompletedTasksOnClose.Checked;
+    OptionSortDownloadsWhenAddingNewDownloadTasks := cbOptionSortDownloadsWhenAddingNewDownloadTasks.Checked;
 
     //view
     ToolBarDownload.Visible := cbOptionShowDownloadToolbar.Checked;

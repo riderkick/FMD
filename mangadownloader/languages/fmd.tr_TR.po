@@ -892,6 +892,10 @@ msgstr "Sol indirmeler araç çubuğunu göster"
 msgid "Exit FMD"
 msgstr "FMD'den çık"
 
+#: tmainform.cboptionsortdownloadswhenaddingnewdownloadtasks.caption
+msgid "Sort Downloads when adding new download tasks"
+msgstr ""
+
 #: tmainform.cboptionupdatelistnomangainfo.caption
 msgid "Don't load manga information when updating list (filter will be not work!)"
 msgstr "Listeyi güncellerken manga bilgisini yükleme (filtre çalışmayabilir)"

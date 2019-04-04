@@ -871,6 +871,10 @@ msgstr ""
 msgid "Exit FMD"
 msgstr "Έξοδος του FMD"
 
+#: tmainform.cboptionsortdownloadswhenaddingnewdownloadtasks.caption
+msgid "Sort Downloads when adding new download tasks"
+msgstr ""
+
 #: tmainform.cboptionupdatelistnomangainfo.caption
 msgid "Don't load manga information when updating list (filter will be not work!)"
 msgstr "Να μη φορτώνονται πληροφορίες manga κατά την ενημέρωση λίστας (το φίλτρο δεν θα λειτουργήσει!)"

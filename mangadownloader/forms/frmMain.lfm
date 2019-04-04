@@ -1,25 +1,25 @@
 object MainForm: TMainForm
-  Left = 297
-  Height = 587
-  Top = 66
-  Width = 771
+  Left = 320
+  Height = 657
+  Top = 121
+  Width = 855
   ActiveControl = pcMain
   Caption = 'Free Manga Downloader'
-  ClientHeight = 587
-  ClientWidth = 771
+  ClientHeight = 657
+  ClientWidth = 855
   Color = clWindow
   OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnWindowStateChange = FormWindowStateChange
   ShowHint = True
-  LCLVersion = '1.8.0.6'
+  LCLVersion = '1.8.4.0'
   object sbUpdateList: TStatusBar
     AnchorSideBottom.Control = sbMain
     Left = 0
     Height = 30
-    Top = 534
-    Width = 771
+    Top = 604
+    Width = 855
     AutoSize = False
     Panels = <    
       item
@@ -34,38 +34,38 @@ object MainForm: TMainForm
   end
   object pcMain: TPageControl
     Left = 2
-    Height = 526
+    Height = 596
     Top = 8
-    Width = 769
-    ActivePage = tsDownload
+    Width = 853
+    ActivePage = tsOption
     Align = alClient
     ParentFont = False
-    TabIndex = 0
+    TabIndex = 3
     TabOrder = 0
     OnChange = pcMainChange
     object tsDownload: TTabSheet
       Caption = 'Downloads'
       ChildSizing.TopBottomSpacing = 4
-      ClientHeight = 498
-      ClientWidth = 761
+      ClientHeight = 669
+      ClientWidth = 845
       object psDownloads: TPairSplitter
         Left = 0
-        Height = 490
+        Height = 661
         Top = 4
-        Width = 761
+        Width = 845
         Align = alClient
         Position = 200
         object pssDownloadsFilter: TPairSplitterSide
           Cursor = crArrow
           Left = 0
-          Height = 490
+          Height = 661
           Top = 0
           Width = 200
           ClientWidth = 200
-          ClientHeight = 490
+          ClientHeight = 661
           object tvDownloadFilter: TTreeView
             Left = 0
-            Height = 490
+            Height = 661
             Top = 0
             Width = 200
             Align = alClient
@@ -80,23 +80,23 @@ object MainForm: TMainForm
         object pssDownloads: TPairSplitterSide
           Cursor = crArrow
           Left = 205
-          Height = 490
+          Height = 661
           Top = 0
-          Width = 556
+          Width = 640
           ChildSizing.HorizontalSpacing = 4
-          ClientWidth = 556
-          ClientHeight = 490
+          ClientWidth = 640
+          ClientHeight = 661
           object pnDownloadToolbar: TPanel
             AnchorSideBottom.Control = edDownloadsSearch
             AnchorSideBottom.Side = asrBottom
             Left = 0
             Height = 26
             Top = 0
-            Width = 556
+            Width = 640
             Align = alTop
             BevelOuter = bvNone
             ClientHeight = 26
-            ClientWidth = 556
+            ClientWidth = 640
             TabOrder = 0
             object TransferRateGraph: TChart
               AnchorSideLeft.Control = pnDownloadToolbarLeft
@@ -109,16 +109,20 @@ object MainForm: TMainForm
               Left = 475
               Height = 25
               Top = 0
-              Width = 81
+              Width = 165
               AllowZoom = False
               AxisList = <              
                 item
+                  Marks.LabelBrush.Style = bsClear
                   Minors = <>
                   Title.LabelFont.Orientation = 900
+                  Title.LabelBrush.Style = bsClear
                 end              
                 item
                   Alignment = calBottom
+                  Marks.LabelBrush.Style = bsClear
                   Minors = <>
+                  Title.LabelBrush.Style = bsClear
                 end>
               AxisVisible = False
               BackColor = clDefault
@@ -282,19 +286,19 @@ object MainForm: TMainForm
           object pnDownloadList: TPanel
             AnchorSideLeft.Side = asrBottom
             Left = 0
-            Height = 464
+            Height = 635
             Top = 26
-            Width = 556
+            Width = 640
             Align = alClient
             Anchors = [akTop, akLeft, akRight]
             BevelOuter = bvNone
-            ClientHeight = 464
-            ClientWidth = 556
+            ClientHeight = 635
+            ClientWidth = 640
             ParentBidiMode = False
             TabOrder = 1
             object ToolBarDownloadLeft: TToolBar
               Left = 0
-              Height = 464
+              Height = 635
               Top = 0
               Width = 25
               Align = alLeft
@@ -344,9 +348,9 @@ object MainForm: TMainForm
             end
             object vtDownload: TVirtualStringTree
               Left = 29
-              Height = 464
+              Height = 635
               Top = 0
-              Width = 527
+              Width = 611
               Align = alClient
               Colors.DropTargetBorderColor = clHotLight
               Colors.FocusedSelectionBorderColor = clHotLight
@@ -428,30 +432,30 @@ object MainForm: TMainForm
     object tsInformation: TTabSheet
       Caption = 'Manga Info'
       ChildSizing.TopBottomSpacing = 4
-      ClientHeight = 498
-      ClientWidth = 761
+      ClientHeight = 669
+      ClientWidth = 845
       object psInfo: TPairSplitter
         Left = 0
-        Height = 490
+        Height = 661
         Top = 4
-        Width = 761
+        Width = 845
         Align = alClient
         Position = 200
         object pssInfoList: TPairSplitterSide
           Cursor = crArrow
           Left = 0
-          Height = 490
+          Height = 661
           Top = 0
           Width = 200
           ChildSizing.HorizontalSpacing = 4
           ChildSizing.VerticalSpacing = 4
           ClientWidth = 200
-          ClientHeight = 490
+          ClientHeight = 661
           object vtMangaList: TVirtualStringTree
             AnchorSideTop.Control = lbMode
             AnchorSideTop.Side = asrBottom
             Left = 0
-            Height = 409
+            Height = 580
             Top = 81
             Width = 200
             Align = alBottom
@@ -741,16 +745,16 @@ object MainForm: TMainForm
         object pssInfo: TPairSplitterSide
           Cursor = crArrow
           Left = 205
-          Height = 490
+          Height = 661
           Top = 0
-          Width = 556
-          ClientWidth = 556
-          ClientHeight = 490
+          Width = 640
+          ClientWidth = 640
+          ClientHeight = 661
           object pcInfo: TPageControl
             Left = 0
-            Height = 490
+            Height = 661
             Top = 0
-            Width = 556
+            Width = 640
             ActivePage = tsInfoManga
             Align = alClient
             TabIndex = 0
@@ -758,13 +762,13 @@ object MainForm: TMainForm
             object tsInfoManga: TTabSheet
               Caption = 'Info'
               ChildSizing.TopBottomSpacing = 4
-              ClientHeight = 462
-              ClientWidth = 548
+              ClientHeight = 633
+              ClientWidth = 632
               object sbInformation: TScrollBox
                 Left = 0
-                Height = 454
+                Height = 625
                 Top = 4
-                Width = 548
+                Width = 632
                 HorzScrollBar.Page = 308
                 VertScrollBar.Page = 401
                 Align = alClient
@@ -772,27 +776,27 @@ object MainForm: TMainForm
                 BorderStyle = bsNone
                 ChildSizing.HorizontalSpacing = 4
                 ChildSizing.VerticalSpacing = 4
-                ClientHeight = 454
-                ClientWidth = 548
+                ClientHeight = 625
+                ClientWidth = 632
                 TabOrder = 0
                 object pnInfomation: TPanel
                   Left = 0
                   Height = 248
                   Top = 0
-                  Width = 548
+                  Width = 632
                   Align = alTop
                   BevelOuter = bvNone
                   ChildSizing.HorizontalSpacing = 4
                   ChildSizing.VerticalSpacing = 4
                   ClientHeight = 248
-                  ClientWidth = 548
+                  ClientWidth = 632
                   ParentFont = False
                   TabOrder = 0
                   object edURL: TEditButton
                     Left = 0
                     Height = 23
                     Top = 0
-                    Width = 548
+                    Width = 632
                     Align = alTop
                     ButtonWidth = 30
                     Glyph.Data = {
@@ -851,7 +855,7 @@ object MainForm: TMainForm
                     Left = 158
                     Height = 219
                     Top = 27
-                    Width = 390
+                    Width = 474
                     Anchors = [akTop, akLeft, akRight, akBottom]
                     HideSelection = False
                     ReadOnly = True
@@ -861,7 +865,7 @@ object MainForm: TMainForm
                   end
                   object btDonate: TImage
                     Cursor = crHandPoint
-                    Left = -56
+                    Left = 28
                     Height = 21
                     Top = 14
                     Width = 75
@@ -910,21 +914,21 @@ object MainForm: TMainForm
                   Left = 0
                   Height = 5
                   Top = 252
-                  Width = 548
+                  Width = 632
                   Align = alTop
                   ResizeAnchor = akTop
                 end
                 object pnChapterList: TPanel
                   Left = 0
-                  Height = 193
+                  Height = 364
                   Top = 261
-                  Width = 548
+                  Width = 632
                   Align = alClient
                   BevelOuter = bvNone
                   ChildSizing.HorizontalSpacing = 4
                   ChildSizing.VerticalSpacing = 4
-                  ClientHeight = 193
-                  ClientWidth = 548
+                  ClientHeight = 364
+                  ClientWidth = 632
                   TabOrder = 2
                   object clbChapterList: TVirtualStringTree
                     AnchorSideLeft.Control = edFilterMangaInfoChapters
@@ -932,9 +936,9 @@ object MainForm: TMainForm
                     AnchorSideRight.Control = btChecks
                     AnchorSideBottom.Control = btDownload
                     Left = 0
-                    Height = 103
+                    Height = 274
                     Top = 0
-                    Width = 518
+                    Width = 602
                     Anchors = [akTop, akLeft, akRight, akBottom]
                     Colors.DropTargetBorderColor = clHotLight
                     Colors.FocusedSelectionBorderColor = clHotLight
@@ -965,9 +969,9 @@ object MainForm: TMainForm
                     AnchorSideTop.Control = btDownloadSplit
                     AnchorSideRight.Control = btDownloadSplit
                     AnchorSideBottom.Control = btReadOnline
-                    Left = 418
+                    Left = 502
                     Height = 26
-                    Top = 107
+                    Top = 278
                     Width = 100
                     Anchors = [akLeft, akRight, akBottom]
                     AutoSize = True
@@ -1020,8 +1024,8 @@ object MainForm: TMainForm
                     AnchorSideBottom.Side = asrBottom
                     Left = 0
                     Height = 19
-                    Top = 167
-                    Width = 414
+                    Top = 338
+                    Width = 498
                     Anchors = [akTop, akLeft, akRight]
                     Caption = 'Add to download list as stopped task'
                     OnChange = cbAddAsStoppedChange
@@ -1034,9 +1038,9 @@ object MainForm: TMainForm
                     AnchorSideRight.Control = btChecks
                     AnchorSideRight.Side = asrBottom
                     AnchorSideBottom.Control = btAddToFavorites
-                    Left = 418
+                    Left = 502
                     Height = 26
-                    Top = 137
+                    Top = 308
                     Width = 130
                     Anchors = [akLeft, akRight, akBottom]
                     AutoSize = True
@@ -1084,7 +1088,7 @@ object MainForm: TMainForm
                     AnchorSideLeft.Control = clbChapterList
                     AnchorSideLeft.Side = asrBottom
                     AnchorSideTop.Control = clbChapterList
-                    Left = 522
+                    Left = 606
                     Height = 26
                     Top = 0
                     Width = 26
@@ -1133,9 +1137,9 @@ object MainForm: TMainForm
                     AnchorSideTop.Side = asrBottom
                     AnchorSideRight.Control = btChecks
                     AnchorSideRight.Side = asrBottom
-                    Left = 418
+                    Left = 502
                     Height = 26
-                    Top = 167
+                    Top = 338
                     Width = 130
                     Anchors = [akRight, akBottom]
                     AutoSize = True
@@ -1177,7 +1181,7 @@ object MainForm: TMainForm
                       E1000101E3000101E53C0101E5AB0101E53C0101E3000101E100
                     }
                     OnClick = btAddToFavoritesClick
-                    TabOrder = 5
+                    TabOrder = 6
                   end
                   object lbSaveTo: TLabel
                     AnchorSideLeft.Control = clbChapterList
@@ -1185,7 +1189,7 @@ object MainForm: TMainForm
                     AnchorSideBottom.Control = edSaveTo
                     Left = 0
                     Height = 15
-                    Top = 118
+                    Top = 289
                     Width = 41
                     Anchors = [akLeft, akBottom]
                     Caption = 'Save to:'
@@ -1250,8 +1254,8 @@ object MainForm: TMainForm
                     AnchorSideBottom.Control = cbAddAsStopped
                     Left = 0
                     Height = 23
-                    Top = 137
-                    Width = 414
+                    Top = 308
+                    Width = 498
                     Anchors = [akTop, akLeft, akRight]
                     ButtonWidth = 23
                     Glyph.Data = {
@@ -1305,10 +1309,10 @@ object MainForm: TMainForm
                     AnchorSideRight.Control = btChecks
                     AnchorSideRight.Side = asrBottom
                     AnchorSideBottom.Control = btReadOnline
-                    Left = 522
+                    Left = 606
                     Height = 26
                     Hint = 'Split download'
-                    Top = 107
+                    Top = 278
                     Width = 26
                     Anchors = [akTop, akRight, akBottom]
                     Glyph.Data = {
@@ -2353,15 +2357,15 @@ object MainForm: TMainForm
     object tsFavorites: TTabSheet
       Caption = 'Favorites'
       ChildSizing.TopBottomSpacing = 4
-      ClientHeight = 498
-      ClientWidth = 761
+      ClientHeight = 669
+      ClientWidth = 845
       object vtFavorites: TVirtualStringTree
         AnchorSideTop.Control = edFavoritesSearch
         AnchorSideTop.Side = asrBottom
         Left = 0
-        Height = 464
+        Height = 635
         Top = 30
-        Width = 761
+        Width = 845
         Align = alBottom
         Anchors = [akTop, akLeft, akRight, akBottom]
         BorderSpacing.Top = 3
@@ -2429,7 +2433,7 @@ object MainForm: TMainForm
         AnchorSideTop.Side = asrCenter
         AnchorSideRight.Control = vtFavorites
         AnchorSideRight.Side = asrBottom
-        Left = 661
+        Left = 745
         Height = 26
         Top = 2
         Width = 100
@@ -2633,13 +2637,13 @@ object MainForm: TMainForm
     object tsOption: TTabSheet
       Caption = 'Options'
       ChildSizing.TopBottomSpacing = 4
-      ClientHeight = 498
-      ClientWidth = 761
+      ClientHeight = 568
+      ClientWidth = 845
       object pcOptions: TPageControl
         Left = 0
-        Height = 400
+        Height = 470
         Top = 4
-        Width = 761
+        Width = 845
         ActivePage = tsGeneral
         Align = alTop
         Anchors = [akTop, akLeft, akRight, akBottom]
@@ -2652,8 +2656,8 @@ object MainForm: TMainForm
           ChildSizing.TopBottomSpacing = 8
           ChildSizing.HorizontalSpacing = 4
           ChildSizing.VerticalSpacing = 4
-          ClientHeight = 372
-          ClientWidth = 753
+          ClientHeight = 442
+          ClientWidth = 837
           object cbOptionMinimizeToTray: TCheckBox
             AnchorSideLeft.Control = seOptionNewMangaTime
             AnchorSideTop.Control = cbOptionMinimizeOnStart
@@ -2692,12 +2696,12 @@ object MainForm: TMainForm
           end
           object gbOptionExternal: TGroupBox
             AnchorSideLeft.Control = cbOptionLiveSearch
-            AnchorSideTop.Control = cbOptionDeleteCompletedTasksOnClose
+            AnchorSideTop.Control = cbOptionSortDownloadsWhenAddingNewDownloadTasks
             AnchorSideTop.Side = asrBottom
             Left = 4
             Height = 118
-            Top = 290
-            Width = 742
+            Top = 313
+            Width = 826
             Anchors = [akTop, akLeft, akRight]
             BorderSpacing.Top = 20
             Caption = 'External program'
@@ -2706,14 +2710,14 @@ object MainForm: TMainForm
             ChildSizing.HorizontalSpacing = 4
             ChildSizing.VerticalSpacing = 4
             ClientHeight = 98
-            ClientWidth = 738
+            ClientWidth = 822
             ParentFont = False
             TabOrder = 8
             object lbOptionExternal: TLabel
               Left = 4
               Height = 15
               Top = 4
-              Width = 730
+              Width = 814
               Align = alTop
               Caption = 'Open manga by using external program:'
               ParentColor = False
@@ -2722,7 +2726,7 @@ object MainForm: TMainForm
               Left = 4
               Height = 15
               Top = 50
-              Width = 730
+              Width = 814
               Align = alTop
               Caption = 'Parameters:'
               ParentColor = False
@@ -2734,7 +2738,7 @@ object MainForm: TMainForm
               Left = 4
               Height = 23
               Top = 69
-              Width = 703
+              Width = 787
               Anchors = [akTop, akLeft, akRight]
               TabOrder = 1
               TextHint = 'External program parameters'
@@ -2744,7 +2748,7 @@ object MainForm: TMainForm
               AnchorSideLeft.Side = asrBottom
               AnchorSideTop.Control = edOptionExternalParams
               AnchorSideTop.Side = asrCenter
-              Left = 711
+              Left = 795
               Height = 15
               Top = 73
               Width = 13
@@ -2759,7 +2763,7 @@ object MainForm: TMainForm
               Left = 4
               Height = 23
               Top = 23
-              Width = 730
+              Width = 814
               Align = alTop
               ButtonWidth = 23
               Glyph.Data = {
@@ -2810,7 +2814,7 @@ object MainForm: TMainForm
             Left = 4
             Height = 15
             Top = 8
-            Width = 745
+            Width = 829
             Align = alTop
             Caption = 'Language:'
             ParentColor = False
@@ -2913,6 +2917,17 @@ object MainForm: TMainForm
             Caption = 'Delete completed tasks on close'
             TabOrder = 7
           end
+          object cbOptionSortDownloadsWhenAddingNewDownloadTasks: TCheckBox
+            AnchorSideLeft.Control = tsGeneral
+            AnchorSideTop.Control = cbOptionDeleteCompletedTasksOnClose
+            AnchorSideTop.Side = asrBottom
+            Left = 4
+            Height = 19
+            Top = 274
+            Width = 285
+            Caption = 'Sort Downloads when adding new download tasks'
+            TabOrder = 9
+          end
         end
         object tsView: TTabSheet
           Caption = 'View'
@@ -2920,13 +2935,13 @@ object MainForm: TMainForm
           ChildSizing.TopBottomSpacing = 8
           ChildSizing.HorizontalSpacing = 4
           ChildSizing.VerticalSpacing = 4
-          ClientHeight = 372
-          ClientWidth = 753
+          ClientHeight = 543
+          ClientWidth = 837
           object cbOptionShowDownloadToolbar: TCheckBox
             Left = 4
             Height = 19
             Top = 177
-            Width = 745
+            Width = 829
             Align = alTop
             Caption = 'Show downloads toolbar'
             ParentFont = False
@@ -2936,7 +2951,7 @@ object MainForm: TMainForm
             Left = 4
             Height = 165
             Top = 8
-            Width = 745
+            Width = 829
             Align = alTop
             AutoSize = True
             Caption = 'Drop Box'
@@ -2945,13 +2960,13 @@ object MainForm: TMainForm
             ChildSizing.HorizontalSpacing = 4
             ChildSizing.VerticalSpacing = 4
             ClientHeight = 145
-            ClientWidth = 741
+            ClientWidth = 825
             TabOrder = 0
             object ckDropTarget: TCheckBox
               Left = 4
               Height = 19
               Top = 4
-              Width = 733
+              Width = 817
               Align = alTop
               Caption = 'Show Drop Box'
               ParentFont = False
@@ -3017,7 +3032,7 @@ object MainForm: TMainForm
             Left = 4
             Height = 19
             Top = 246
-            Width = 745
+            Width = 829
             Align = alTop
             Caption = 'Enable load manga cover'
             ParentFont = False
@@ -3027,7 +3042,7 @@ object MainForm: TMainForm
             Left = 4
             Height = 19
             Top = 200
-            Width = 745
+            Width = 829
             Align = alTop
             Caption = 'Show "Delete all completed tasks" in downloads toolbar'
             ParentFont = False
@@ -3037,7 +3052,7 @@ object MainForm: TMainForm
             Left = 4
             Height = 19
             Top = 269
-            Width = 745
+            Width = 829
             Align = alTop
             Caption = 'Show balloon hint'
             ParentFont = False
@@ -3047,7 +3062,7 @@ object MainForm: TMainForm
             Left = 4
             Height = 19
             Top = 223
-            Width = 745
+            Width = 829
             Align = alTop
             Caption = 'Show left downloads toolbar'
             ParentFont = False
@@ -3056,13 +3071,13 @@ object MainForm: TMainForm
         end
         object tsConnections: TTabSheet
           Caption = 'Connections'
-          ClientHeight = 372
-          ClientWidth = 753
+          ClientHeight = 543
+          ClientWidth = 837
           object sbDownloadConnections: TScrollBox
             Left = 0
-            Height = 372
+            Height = 543
             Top = 0
-            Width = 753
+            Width = 837
             HorzScrollBar.Page = 455
             VertScrollBar.Page = 334
             Align = alClient
@@ -3071,8 +3086,8 @@ object MainForm: TMainForm
             ChildSizing.TopBottomSpacing = 8
             ChildSizing.HorizontalSpacing = 4
             ChildSizing.VerticalSpacing = 4
-            ClientHeight = 372
-            ClientWidth = 753
+            ClientHeight = 543
+            ClientWidth = 837
             TabOrder = 0
             object cbOptionUseProxy: TCheckBox
               AnchorSideLeft.Control = ckOptionsAlwaysStartTaskFromFailedChapters
@@ -3412,23 +3427,23 @@ object MainForm: TMainForm
         end
         object tsSaveTo: TTabSheet
           Caption = 'Save to'
-          ClientHeight = 372
-          ClientWidth = 753
+          ClientHeight = 543
+          ClientWidth = 837
           object sbSaveTo: TScrollBox
             Left = 0
-            Height = 372
+            Height = 543
             Top = 0
-            Width = 753
+            Width = 837
             HorzScrollBar.Page = 198
-            VertScrollBar.Page = 372
+            VertScrollBar.Page = 543
             Align = alClient
             BorderStyle = bsNone
             ChildSizing.LeftRightSpacing = 4
             ChildSizing.TopBottomSpacing = 8
             ChildSizing.HorizontalSpacing = 4
             ChildSizing.VerticalSpacing = 4
-            ClientHeight = 372
-            ClientWidth = 736
+            ClientHeight = 543
+            ClientWidth = 820
             TabOrder = 0
             object rgOptionCompress: TRadioGroup
               AnchorSideLeft.Control = lbDefaultDownloadPath
@@ -3439,7 +3454,7 @@ object MainForm: TMainForm
               Left = 4
               Height = 60
               Top = 54
-              Width = 728
+              Width = 812
               Anchors = [akTop, akLeft, akRight]
               AutoFill = True
               BorderSpacing.Top = 4
@@ -3453,7 +3468,7 @@ object MainForm: TMainForm
               ChildSizing.Layout = cclLeftToRightThenTopToBottom
               ChildSizing.ControlsPerLine = 5
               ClientHeight = 40
-              ClientWidth = 724
+              ClientWidth = 808
               Columns = 5
               ItemIndex = 0
               Items.Strings = (
@@ -3476,7 +3491,7 @@ object MainForm: TMainForm
               Left = 4
               Height = 302
               Top = 271
-              Width = 728
+              Width = 812
               Anchors = [akTop, akLeft, akRight]
               AutoSize = True
               BorderSpacing.Top = 4
@@ -3486,7 +3501,7 @@ object MainForm: TMainForm
               ChildSizing.HorizontalSpacing = 4
               ChildSizing.VerticalSpacing = 4
               ClientHeight = 282
-              ClientWidth = 724
+              ClientWidth = 808
               ParentFont = False
               TabOrder = 5
               object cbOptionChangeUnicodeCharacter: TCheckBox
@@ -3742,7 +3757,7 @@ object MainForm: TMainForm
               Left = 4
               Height = 15
               Top = 8
-              Width = 728
+              Width = 812
               Align = alTop
               Caption = 'Choose the default download path:'
               ParentColor = False
@@ -3752,7 +3767,7 @@ object MainForm: TMainForm
               Left = 4
               Height = 0
               Top = 54
-              Width = 728
+              Width = 812
               Align = alTop
               AutoSize = True
               BevelOuter = bvNone
@@ -3815,7 +3830,7 @@ object MainForm: TMainForm
               Left = 4
               Height = 23
               Top = 27
-              Width = 728
+              Width = 812
               Align = alTop
               ButtonWidth = 23
               Glyph.Data = {
@@ -3871,7 +3886,7 @@ object MainForm: TMainForm
               Left = 4
               Height = 122
               Top = 145
-              Width = 728
+              Width = 812
               Anchors = [akTop, akLeft, akRight]
               AutoSize = True
               Caption = 'Image Conversion'
@@ -3880,7 +3895,7 @@ object MainForm: TMainForm
               ChildSizing.HorizontalSpacing = 6
               ChildSizing.VerticalSpacing = 6
               ClientHeight = 102
-              ClientWidth = 724
+              ClientWidth = 808
               TabOrder = 4
               object lbWebPSaveAs: TLabel
                 AnchorSideLeft.Control = gbImageConversion
@@ -3990,13 +4005,13 @@ object MainForm: TMainForm
           ChildSizing.TopBottomSpacing = 8
           ChildSizing.HorizontalSpacing = 4
           ChildSizing.VerticalSpacing = 4
-          ClientHeight = 392
-          ClientWidth = 753
+          ClientHeight = 543
+          ClientWidth = 837
           object cbOptionAutoCheckLatestVersion: TCheckBox
             Left = 4
             Height = 19
             Top = 8
-            Width = 745
+            Width = 829
             Align = alTop
             Caption = 'Auto check for latest version '
             ParentFont = False
@@ -4006,7 +4021,7 @@ object MainForm: TMainForm
             Left = 4
             Height = 166
             Top = 31
-            Width = 745
+            Width = 829
             Align = alTop
             AutoSize = True
             Caption = 'Favorites'
@@ -4015,14 +4030,14 @@ object MainForm: TMainForm
             ChildSizing.HorizontalSpacing = 4
             ChildSizing.VerticalSpacing = 4
             ClientHeight = 146
-            ClientWidth = 741
+            ClientWidth = 825
             ParentFont = False
             TabOrder = 1
             object cbOptionAutoCheckFavStartup: TCheckBox
               Left = 4
               Height = 19
               Top = 4
-              Width = 733
+              Width = 817
               Align = alTop
               Caption = 'Auto check for new chapter at startup'
               OnChange = cbOptionAutoCheckFavStartupChange
@@ -4082,7 +4097,7 @@ object MainForm: TMainForm
               Left = 4
               Height = 19
               Top = 50
-              Width = 733
+              Width = 817
               Align = alTop
               Caption = 'Auto check for new chapter in an interval'
               OnChange = cbOptionAutoCheckFavIntervalChange
@@ -4093,7 +4108,7 @@ object MainForm: TMainForm
               Left = 4
               Height = 19
               Top = 27
-              Width = 733
+              Width = 817
               Align = alTop
               Caption = 'Open Favorites at startup'
               ParentFont = False
@@ -4104,7 +4119,7 @@ object MainForm: TMainForm
             Left = 4
             Height = 19
             Top = 201
-            Width = 745
+            Width = 829
             Align = alTop
             Caption = 'Don''t load manga information when updating list (filter will be not work!)'
             ParentFont = False
@@ -4114,7 +4129,7 @@ object MainForm: TMainForm
             Left = 4
             Height = 19
             Top = 224
-            Width = 745
+            Width = 829
             Align = alTop
             Caption = 'Remove duplicate local data when updating manga list'
             ParentFont = False
@@ -4128,13 +4143,13 @@ object MainForm: TMainForm
           ChildSizing.TopBottomSpacing = 8
           ChildSizing.HorizontalSpacing = 4
           ChildSizing.VerticalSpacing = 4
-          ClientHeight = 392
-          ClientWidth = 753
+          ClientHeight = 543
+          ClientWidth = 837
           object gbDialogs: TGroupBox
             Left = 4
             Height = 93
             Top = 8
-            Width = 745
+            Width = 829
             Align = alTop
             AutoSize = True
             Caption = 'Show dialog confirmation for'
@@ -4143,13 +4158,13 @@ object MainForm: TMainForm
             ChildSizing.HorizontalSpacing = 4
             ChildSizing.VerticalSpacing = 4
             ClientHeight = 73
-            ClientWidth = 741
+            ClientWidth = 825
             TabOrder = 0
             object cbOptionShowQuitDialog: TCheckBox
               Left = 4
               Height = 19
               Top = 4
-              Width = 733
+              Width = 817
               Align = alTop
               Caption = 'Exit FMD'
               ParentFont = False
@@ -4159,7 +4174,7 @@ object MainForm: TMainForm
               Left = 4
               Height = 19
               Top = 27
-              Width = 733
+              Width = 817
               Align = alTop
               Caption = 'Delete task/favorite'
               ParentFont = False
@@ -4169,7 +4184,7 @@ object MainForm: TMainForm
               Left = 4
               Height = 19
               Top = 50
-              Width = 733
+              Width = 817
               Align = alTop
               Caption = 'Download manga list if empty'
               ParentFont = False
@@ -4183,26 +4198,26 @@ object MainForm: TMainForm
           ChildSizing.TopBottomSpacing = 8
           ChildSizing.HorizontalSpacing = 4
           ChildSizing.VerticalSpacing = 4
-          ClientHeight = 372
-          ClientWidth = 753
+          ClientHeight = 543
+          ClientWidth = 837
           object pcWebsiteOptions: TPageControl
             Left = 4
-            Height = 356
+            Height = 527
             Top = 8
-            Width = 745
+            Width = 829
             ActivePage = tsWebsiteSelection
             Align = alClient
             TabIndex = 0
             TabOrder = 0
             object tsWebsiteSelection: TTabSheet
               Caption = 'Websites'
-              ClientHeight = 328
-              ClientWidth = 737
+              ClientHeight = 499
+              ClientWidth = 821
               object vtOptionMangaSiteSelection: TVirtualStringTree
                 Left = 0
-                Height = 293
+                Height = 464
                 Top = 35
-                Width = 737
+                Width = 821
                 Align = alClient
                 Colors.DropTargetBorderColor = clHotLight
                 Colors.FocusedSelectionBorderColor = clHotLight
@@ -4228,7 +4243,7 @@ object MainForm: TMainForm
                 Left = 2
                 Height = 23
                 Top = 6
-                Width = 731
+                Width = 815
                 Align = alTop
                 BorderSpacing.Top = 4
                 BorderSpacing.Right = 2
@@ -4238,10 +4253,10 @@ object MainForm: TMainForm
                 ChildSizing.HorizontalSpacing = 4
                 ChildSizing.VerticalSpacing = 4
                 ClientHeight = 23
-                ClientWidth = 731
+                ClientWidth = 815
                 TabOrder = 0
                 object pnlWebsitesToolRight: TPanel
-                  Left = 561
+                  Left = 645
                   Height = 23
                   Top = 0
                   Width = 170
@@ -4341,13 +4356,13 @@ object MainForm: TMainForm
             end
             object tsWebsiteOptions: TTabSheet
               Caption = 'Options'
-              ClientHeight = 328
-              ClientWidth = 737
+              ClientHeight = 499
+              ClientWidth = 821
               object sbWebsiteOptions: TScrollBox
                 Left = 0
-                Height = 328
+                Height = 499
                 Top = 0
-                Width = 737
+                Width = 821
                 HorzScrollBar.Increment = 1
                 HorzScrollBar.Page = 1
                 HorzScrollBar.Smooth = True
@@ -4377,13 +4392,13 @@ object MainForm: TMainForm
           ChildSizing.TopBottomSpacing = 8
           ChildSizing.HorizontalSpacing = 4
           ChildSizing.VerticalSpacing = 4
-          ClientHeight = 372
-          ClientWidth = 753
+          ClientHeight = 543
+          ClientWidth = 837
           object pcMisc: TPageControl
             Left = 4
-            Height = 356
+            Height = 527
             Top = 8
-            Width = 745
+            Width = 829
             ActivePage = tsCustomColor
             Align = alClient
             TabIndex = 0
@@ -4577,7 +4592,7 @@ object MainForm: TMainForm
       object btOptionApply: TBitBtn
         Left = 8
         Height = 45
-        Top = 440
+        Top = 510
         Width = 125
         Anchors = [akLeft, akBottom]
         AutoSize = True
@@ -4627,12 +4642,12 @@ object MainForm: TMainForm
     object tsAbout: TTabSheet
       Caption = 'About'
       ChildSizing.TopBottomSpacing = 4
-      ClientHeight = 498
-      ClientWidth = 761
+      ClientHeight = 669
+      ClientWidth = 845
       object btCheckLatestVersion: TBitBtn
         Left = 0
         Height = 40
-        Top = 452
+        Top = 623
         Width = 208
         Anchors = [akLeft, akBottom]
         BorderSpacing.Top = 3
@@ -4682,7 +4697,7 @@ object MainForm: TMainForm
         AnchorSideTop.Control = btCheckLatestVersion
         Left = 212
         Height = 35
-        Top = 452
+        Top = 623
         Width = 40
         Anchors = [akTop, akLeft, akBottom]
         BorderSpacing.Left = 4
@@ -4731,7 +4746,7 @@ object MainForm: TMainForm
         AnchorSideTop.Control = btCheckLatestVersion
         Left = 256
         Height = 35
-        Top = 452
+        Top = 623
         Width = 208
         Anchors = [akTop, akLeft, akBottom]
         BorderSpacing.Left = 4
@@ -4778,9 +4793,9 @@ object MainForm: TMainForm
       end
       object pcAbout: TPageControl
         Left = 0
-        Height = 432
+        Height = 603
         Top = 4
-        Width = 761
+        Width = 845
         ActivePage = tsAboutText
         Align = alTop
         Anchors = [akTop, akLeft, akRight, akBottom]
@@ -4788,13 +4803,13 @@ object MainForm: TMainForm
         TabOrder = 0
         object tsAboutText: TTabSheet
           Caption = 'About FMD'
-          ClientHeight = 404
-          ClientWidth = 753
+          ClientHeight = 575
+          ClientWidth = 837
           object rmAbout: TRichMemo
             Left = 0
-            Height = 396
+            Height = 567
             Top = 4
-            Width = 753
+            Width = 837
             Align = alClient
             BorderSpacing.Top = 4
             BorderSpacing.Bottom = 4
@@ -4810,8 +4825,8 @@ object MainForm: TMainForm
           object pnAboutComp: TPanel
             Left = 0
             Height = 0
-            Top = 404
-            Width = 753
+            Top = 575
+            Width = 837
             Align = alBottom
             AutoSize = True
             BevelOuter = bvNone
@@ -4851,7 +4866,7 @@ object MainForm: TMainForm
     Left = 0
     Height = 8
     Top = 0
-    Width = 771
+    Width = 855
     Align = alTop
     TabOrder = 1
     Visible = False
@@ -4859,8 +4874,8 @@ object MainForm: TMainForm
   object sbMain: TStatusBar
     Left = 0
     Height = 23
-    Top = 564
-    Width = 771
+    Top = 634
+    Width = 855
     Panels = <    
       item
         Width = 195
@@ -4873,7 +4888,7 @@ object MainForm: TMainForm
   end
   object spMainSplitter: TSplitter
     Left = 0
-    Height = 526
+    Height = 596
     Top = 8
     Width = 2
     OnMoved = spMainSplitterMoved

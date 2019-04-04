@@ -877,6 +877,10 @@ msgstr "Показать дополнительную панель загруз�
 msgid "Exit FMD"
 msgstr "Выход из программы"
 
+#: tmainform.cboptionsortdownloadswhenaddingnewdownloadtasks.caption
+msgid "Sort Downloads when adding new download tasks"
+msgstr ""
+
 #: tmainform.cboptionupdatelistnomangainfo.caption
 msgid "Don't load manga information when updating list (filter will be not work!)"
 msgstr "Не загружать информацию о манге при обновлении списка (фильтр не будет работать!)"
