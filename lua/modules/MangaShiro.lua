@@ -3,10 +3,10 @@ function getinfo()
   if http.get(mangainfo.url) then
     x=TXQuery.Create(http.document)
     x.xpathhrefall('//div[@class="cl"]//li/span[1]/a', mangainfo.chapterlinks, mangainfo.chapternames)
-    if module.website == 'KomikCast' or module.website == 'WestManga' then
+    if module.website == 'KomikCast' then
       mangainfo.title=x.xpathstring('//div[@class="infox"]/h1')
-      mangainfo.title = string.gsub(mangainfo.title, 'Bahasa Indonesia', '')
-      mangainfo.title = string.gsub(mangainfo.title, 'Baca', '')
+	  mangainfo.title = string.gsub(mangainfo.title, 'Bahasa Indonesia', '')
+	  mangainfo.title = string.gsub(mangainfo.title, 'Baca', '')
       mangainfo.coverlink=MaybeFillHost(module.RootURL, x.xpathstring('//div[@class="thumb"]/img/@src'))
       mangainfo.authors=x.xpathstring('//div[@class="spe"]//tr[contains(th, "Author")]/td')
       mangainfo.genres=x.xpathstringall('//div[@class="spe"]//tr[contains(th, "Genres")]/td/a')
@@ -44,27 +44,40 @@ function getinfo()
       mangainfo.chapterlinks.clear()
       mangainfo.chapternames.clear()
       x.xpathhrefall('//div[@class="bxcl"]//li//*[@class="lchx"]/a', mangainfo.chapterlinks, mangainfo.chapternames)
-    elseif module.website == 'Kyuroku' or module.website == 'BacaManga' then
-      mangainfo.title=x.xpathstring('//div[@class="infox"]/h1')
-      mangainfo.title = string.gsub(mangainfo.title, 'Bahasa Indonesia', '')
-      mangainfo.title = string.gsub(mangainfo.title, 'Baca', '')
+	elseif module.website == 'WestManga' then
+      mangainfo.title=x.xpathstring('//div[@class="mangainfo"]/h1')
+	  mangainfo.title = string.gsub(mangainfo.title, 'Bahasa Indonesia', '')
+	  mangainfo.title = string.gsub(mangainfo.title, 'Baca', '')
+      mangainfo.coverlink=MaybeFillHost(module.RootURL, x.xpathstring('//div[@class="mangainfo"]//div[@class="topinfo"]/img/@src'))
+      mangainfo.authors=x.xpathstring('//table[@class="attr"]//tr[contains(th, "Author")]/td')
+      mangainfo.genres=x.xpathstringall('//table[@class="attr"]//tr[contains(th, "Genres")]/td/a')
+      mangainfo.status=MangaInfoStatusIfPos(x.xpathstring('//table[@class="attr"]//tr[contains(th, "Status")]/td'))
+      mangainfo.summary=x.xpathstring('//*[@class="sin"]/string-join(.//text(),"")')
+	  mangainfo.summary = string.gsub(mangainfo.title, 'Sinopsis', '')
+      mangainfo.chapterlinks.clear()
+      mangainfo.chapternames.clear()
+      x.xpathhrefall('//li//span[@class="leftoff"]/a', mangainfo.chapterlinks, mangainfo.chapternames)
+	elseif module.website == 'Kyuroku' or module.website == 'BacaManga' then
+	  mangainfo.title=x.xpathstring('//div[@class="infox"]/h1')
+	  mangainfo.title = string.gsub(mangainfo.title, 'Bahasa Indonesia', '')
+	  mangainfo.title = string.gsub(mangainfo.title, 'Baca', '')
       mangainfo.coverlink=MaybeFillHost(module.RootURL, x.xpathstring('//div[@itemprop="image"]/img/@src'))
       mangainfo.authors=x.xpathstring('//div[@class="spe"]//span[starts-with(.,"Author")]/substring-after(.,":")')
       if module.website == 'BacaManga' then
-	mangainfo.genres=x.xpathstringall('//div[@class="spe"]//span[starts-with(.,"Genre")]/a')
-      else
-	 mangainfo.genres=x.xpathstringall('//div[@class="genrex"]/a')
-      end
-      mangainfo.status=MangaInfoStatusIfPos(x.xpathstring('//div[@class="spe"]//span[starts-with(.,"Status")]')) 
-      mangainfo.summary=x.xpathstring('//*[@class="desc"]/string-join(.//text(),"")')
+		mangainfo.genres=x.xpathstringall('//div[@class="spe"]//span[starts-with(.,"Genre")]/a')
+	  else
+		mangainfo.genres=x.xpathstringall('//div[@class="genrex"]/a')
+	  end
+	  mangainfo.status=MangaInfoStatusIfPos(x.xpathstring('//div[@class="spe"]//span[starts-with(.,"Status")]'))
+	  mangainfo.summary=x.xpathstring('//*[@class="desc"]/string-join(.//text(),"")')
       mangainfo.chapterlinks.clear()
       mangainfo.chapternames.clear()
       if module.website == 'BacaManga' then
-           x.xpathhrefall('//div[@class="bixbox bxcl"]//li//*[@class="lchx"]/a', mangainfo.chapterlinks, mangainfo.chapternames)
-      else
-           x.xpathhrefall('//div[@class="bxcl"]//li//*[@class="lchx desktop"]/a', mangainfo.chapterlinks, mangainfo.chapternames)
-      end
-    elseif module.website == 'Komiku' or module.website == 'OtakuIndo' then
+		x.xpathhrefall('//div[@class="bixbox bxcl"]//li//*[@class="lchx"]/a', mangainfo.chapterlinks, mangainfo.chapternames)
+	  else
+		x.xpathhrefall('//div[@class="bxcl"]//li//*[@class="lchx desktop"]/a', mangainfo.chapterlinks, mangainfo.chapternames)
+	  end
+	elseif module.website == 'Komiku' or module.website == 'OtakuIndo' then
 	  mangainfo.title=x.xpathstring('//div[@class="info1"]/*')
 	  mangainfo.title = string.gsub(mangainfo.title, 'Bahasa Indonesia', '')
 	  mangainfo.title = string.gsub(mangainfo.title, 'Manga', '')
@@ -134,11 +147,11 @@ function getnameandlink()
     ['KomikCast'] = '/daftar-komik/?list',
     ['MangaKid'] = '/manga-lists/',
     ['Kiryuu'] = '/manga-lists/?list',
-    ['Komiku'] = '/daftar-komik/',
-    ['OtakuIndo'] = '/daftar-komik/',
+	['Komiku'] = '/daftar-komik/',
+	['OtakuIndo'] = '/daftar-komik/',
     ['WestManga'] = '/manga-list/?list',
-    ['Kyuroku'] = '/manga-list/?list',
-    ['BacaManga'] = '/manga/?list',
+	['Kyuroku'] = '/manga-list/?list',
+	['BacaManga'] = '/manga/?list',
     ['PecintaKomik'] = '/daftar-manga/?list',
     ['MangaIndoNet'] = '/manga-list/?list',
     ['KomikIndo'] = '/manga-list/?list',
