@@ -873,7 +873,7 @@ msgstr "Tutup FMD"
 
 #: tmainform.cboptionsortdownloadswhenaddingnewdownloadtasks.caption
 msgid "Sort Downloads when adding new download tasks"
-msgstr "Urutkan Unduhan saat menambahkan tugas Unduhan baru"
+msgstr "Urutkan Unduhan ketika menambah tugas unduh baru"
 
 #: tmainform.cboptionupdatelistnomangainfo.caption
 msgid "Don't load manga information when updating list (filter will be not work!)"
@@ -2161,7 +2161,7 @@ msgstr "&Tambahkan ke antrian"
 
 #: tnewchapter.caption
 msgid "New Chapter Notification"
-msgstr "Notifikasi Chapter Manga Baru"
+msgstr "Notifikasi Bab Baru"
 
 #: tselectdirectoryform.btok.caption
 msgctxt "tselectdirectoryform.btok.caption"
