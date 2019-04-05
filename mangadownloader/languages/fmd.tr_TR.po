@@ -2188,7 +2188,7 @@ msgstr "&Sıraya ekle"
 
 #: tnewchapter.caption
 msgid "New Chapter Notification"
-msgstr ""
+msgstr "Yeni Bölüm Bildirimi"
 
 #: tselectdirectoryform.btok.caption
 msgctxt "tselectdirectoryform.btok.caption"
