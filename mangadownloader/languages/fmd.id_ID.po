@@ -4,7 +4,7 @@ msgstr "Content-Type: text/plain; charset=UTF-8"
 #: dbupdater.rs_buttoncancel
 msgctxt "dbupdater.rs_buttoncancel"
 msgid "Abort"
-msgstr "Hentikan"
+msgstr "Batalkan"
 
 #: dbupdater.rs_downloading
 #, fuzzy,badformat
@@ -48,7 +48,7 @@ msgstr "%s: Tidak ditemukan %s"
 
 #: frmaccountmanager.rs_accountdeleteconfirmation
 msgid "Are you sure you want to delete this account?"
-msgstr "Apakah anda yakin ingin menghapus akun ini?"
+msgstr "Apakah Anda yakin ingin menghapus akun ini?"
 
 #: frmaccountmanager.rs_checking
 msgid "Checking"
@@ -66,11 +66,11 @@ msgstr "Tidak diketahui"
 #: frmaccountmanager.rs_valid
 msgctxt "frmaccountmanager.rs_valid"
 msgid "OK"
-msgstr "OK"
+msgstr "Oke"
 
 #: frmaccountset.rs_cantbeempty
 msgid "Username or password can't be empty!"
-msgstr "Nama user atau kata kunci tidak boleh kosong!"
+msgstr "Nama pengguna atau kata kunci tidak boleh kosong!"
 
 #: frmimportfavorites.rs_importcompleted
 msgid "Import completed."
@@ -78,7 +78,7 @@ msgstr "Selesai mengimpor."
 
 #: frmimportfavorites.rs_listunimportedcaption
 msgid "List of unimported manga"
-msgstr "Daftar komik yang tidak bisa di-impor"
+msgstr "Daftar komik yang tidak bisa diimpor"
 
 #: frmluamodulesupdater.rs_checking
 msgctxt "frmluamodulesupdater.rs_checking"
@@ -104,7 +104,7 @@ msgid ""
 "\n"
 "%s\n"
 msgstr ""
-"Modul sudah diperbarui, muat ulang sekarang?\n"
+"Modul sudah diperbarui, mulai ulang sekarang?\n"
 "\n"
 "%s\n"
 
@@ -148,7 +148,7 @@ msgstr "%s BARU*"
 #: frmluamodulesupdater.rs_statusredownloaded
 msgctxt "frmluamodulesupdater.rs_statusredownloaded"
 msgid "%s REDOWNLOAD*"
-msgstr "%s DOWNLOADULANG*"
+msgstr "%s UNDUHULANG*"
 
 #: frmluamodulesupdater.rs_statusupdate
 msgctxt "frmluamodulesupdater.rs_statusupdate"
@@ -162,7 +162,7 @@ msgstr "Semua unduhan"
 #: frmmain.rs_btnok
 msgctxt "frmmain.rs_btnok"
 msgid "&OK"
-msgstr "&OK"
+msgstr "&Oke"
 
 #: frmmain.rs_cancel
 msgctxt "frmmain.rs_cancel"
@@ -188,19 +188,19 @@ msgstr "Jumlah unduhan:"
 
 #: frmmain.rs_dlgmangalistselect
 msgid "You must choose at least 1 manga website!"
-msgstr "Anda harus memilih minimal 1 situs komik!"
+msgstr "Anda harus memilih setidaknya 1 situs komik!"
 
 #: frmmain.rs_dlgquit
 msgid "Are you sure you want to exit?"
-msgstr "Apakah Anda yakin Anda ingin keluar?"
+msgstr "Apakah Anda yakin ingin keluar?"
 
 #: frmmain.rs_dlgremovefavorite
 msgid "Are you sure you want to delete the favorite(s)?"
-msgstr "Apakah Anda yakin Anda ingin menghapus kesukaan ini?"
+msgstr "Apakah Anda yakin ingin menghapus kesukaan ini?"
 
 #: frmmain.rs_dlgremovefinishtasks
 msgid "Are you sure you want to delete all finished tasks?"
-msgstr "Apakah Anda yakin Anda ingin menghapus semua unduhan yang sudah selesai?"
+msgstr "Apakah Anda yakin ingin menghapus semua unduhan yang sudah selesai?"
 
 #: frmmain.rs_dlgremoveitem
 msgid "Are you sure you want to delete this item(s)?"
@@ -220,20 +220,20 @@ msgid ""
 "This title are already in download list.\n"
 "Do you want to download it anyway?\n"
 msgstr ""
-"Judul ini yang sudah di daftar unduhan. \n"
-"Apakah anda ingin mengunduhnya lagi?\n"
+"Judul ini sudah ada di daftar unduhan.\n"
+"Apakah Anda ingin mengunduhnya lagi?\n"
 
 #: frmmain.rs_dlgtypeinnewchapter
 msgid "Type in new chapter:"
-msgstr "Ketik bab baru:"
+msgstr "Masukkan bab baru:"
 
 #: frmmain.rs_dlgtypeinnewsavepath
 msgid "Type in new save path:"
-msgstr "Masukkan lokasi penyimpanan yang baru:"
+msgstr "Masukkan lokasi penyimpanan baru:"
 
 #: frmmain.rs_dlgupdaterisrunning
 msgid "Updater is running!"
-msgstr "Update sedang berjalan!"
+msgstr "Pembaruan sedang berjalan!"
 
 #: frmmain.rs_dlgupdaterwanttoupdatedb
 msgid "Do you want to download manga list from the server?"
@@ -270,8 +270,8 @@ msgid ""
 "There is a problem with this data!\n"
 "Removing and re-adding this data may fix the problem.\n"
 msgstr ""
-"Ada masalah dengan data ini! \n"
-"Hapus dan tambahkan kembali mungkin dapat memperbaiki masalah ini.\n"
+"Ada masalah dengan data ini!\n"
+"Menghapus dan menambahkan kembali mungkin dapat memperbaiki masalah ini.\n"
 
 #: frmmain.rs_history
 msgid "History"
@@ -326,8 +326,8 @@ msgid ""
 "\n"
 "Example : \"%s%s\"\n"
 msgstr ""
-"%s : Lokasi komik tersimpan \n"
-"%s : Nama berkas komik\n"
+"%s : Lokasi komik tersimpan\n"
+"%s : Nama bab komik\n"
 "\n"
 "Contoh : \"%s%s\"\n"
 
@@ -380,7 +380,7 @@ msgstr ""
 "Tidak ada\n"
 "Keluar\n"
 "Matikan komputer\n"
-"Tidurkan komputer\n"
+"Hibernasikan komputer\n"
 
 #: frmmain.rs_selected
 msgid "Selected: %d"
@@ -393,7 +393,7 @@ msgstr "Perangkat lunak"
 #: frmmain.rs_softwarepath
 msgctxt "frmmain.rs_softwarepath"
 msgid "Path to the software (e.g. C:\\MangaDownloader)"
-msgstr "Path ke perangkat lunak (misalnya C:\\MangaDownloader)"
+msgstr "Lokasi ke perangkat lunak (misalnya C:\\MangaDownloader)"
 
 #: frmmain.rs_today
 msgid "Today"
@@ -416,14 +416,14 @@ msgid ""
 "Default\n"
 "Maximum\n"
 msgstr ""
-"None\n"
-"Fastest\n"
-"Default\n"
-"Maximum\n"
+"Tidak ada\n"
+"Tercepat\n"
+"Asali\n"
+"Maksimum\n"
 
 #: frmmain.rs_wronginput
 msgid "Invalid input!"
-msgstr "Input salah!"
+msgstr "Masukan salah!"
 
 #: frmmain.rs_yesterday
 msgid "Yesterday"
@@ -431,7 +431,7 @@ msgstr "Kemarin"
 
 #: frmshutdowncounter.rs_lblmessageexit
 msgid "FMD will exit in %d second."
-msgstr "FMD akan diutup dalam %d detik"
+msgstr "FMD akan ditutup dalam %d detik"
 
 #: frmshutdowncounter.rs_lblmessagehibernate
 msgid "System will hibernate in %d second."
@@ -459,7 +459,7 @@ msgstr "Valid"
 #: selfupdater.rs_buttoncancel
 msgctxt "selfupdater.rs_buttoncancel"
 msgid "Abort"
-msgstr "Hentikan"
+msgstr "Batalkan"
 
 #: selfupdater.rs_downloading
 msgid "Downloading new version %s"
@@ -490,7 +490,7 @@ msgstr "Gagal menyimpan %s"
 
 #: selfupdater.rs_finishrestart
 msgid "Download update package finished, restart to proceed?"
-msgstr "Pembaruan selesai diunduh, memuat ulang sekarang?"
+msgstr "Pembaruan selesai diunduh, mulai ulang sekarang?"
 
 #: selfupdater.rs_finishrestarttitle
 msgid "Download finished"
@@ -504,7 +504,7 @@ msgstr "Tidak ditemukan %s"
 #: taccountmanagerform.btedit.caption
 msgctxt "taccountmanagerform.btedit.caption"
 msgid "Edit"
-msgstr "Ubah"
+msgstr "Sunting"
 
 #: taccountmanagerform.btrefresh.caption
 msgid "Refresh"
@@ -512,7 +512,7 @@ msgstr "Segarkan"
 
 #: taccountmanagerform.caption
 msgid "AccountManagerForm"
-msgstr "AccountManagerForm"
+msgstr "Formulir Manajer Akun"
 
 #: taccountmanagerform.vtaccountlist.header.columns[1].text
 msgctxt "taccountmanagerform.vtaccountlist.header.columns[1].text"
@@ -522,7 +522,7 @@ msgstr "Situs"
 #: taccountmanagerform.vtaccountlist.header.columns[2].text
 msgctxt "taccountmanagerform.vtaccountlist.header.columns[2].text"
 msgid "Username"
-msgstr "Nama user"
+msgstr "Nama pengguna"
 
 #: taccountmanagerform.vtaccountlist.header.columns[3].text
 msgctxt "taccountmanagerform.vtaccountlist.header.columns[3].text"
@@ -536,7 +536,7 @@ msgstr "Batal"
 
 #: taccountsetform.btok.caption
 msgid "Ok"
-msgstr "Ok"
+msgstr "Oke"
 
 #: taccountsetform.caption
 msgid "Account"
@@ -554,12 +554,12 @@ msgstr "Kata kunci"
 #: taccountsetform.edusername.texthint
 msgctxt "taccountsetform.edusername.texthint"
 msgid "Username"
-msgstr "Nama user"
+msgstr "Nama pengguna"
 
 #: taccountsetform.label2.caption
 msgctxt "taccountsetform.label2.caption"
 msgid "Username"
-msgstr "Nama user"
+msgstr "Nama pengguna"
 
 #: taccountsetform.label3.caption
 msgctxt "taccountsetform.label3.caption"
@@ -568,11 +568,11 @@ msgstr "Kata kunci"
 
 #: tcustomcolorform.caption
 msgid "CustomColorForm"
-msgstr "CustomColorForm"
+msgstr "Formulir Kostumisasi Warna"
 
 #: tcustomcolorform.tsbasiclist.caption
 msgid "Basic list"
-msgstr "Semua daftar"
+msgstr "Daftar dasar"
 
 #: tcustomcolorform.tschapterlist.caption
 msgid "Chapter list"
@@ -615,7 +615,7 @@ msgstr "Batasi log"
 #: tformlogger.micopy.caption
 msgctxt "tformlogger.micopy.caption"
 msgid "Copy"
-msgstr "Copy"
+msgstr "Salin"
 
 #: timportfavorites.btcancel.caption
 msgctxt "timportfavorites.btcancel.caption"
@@ -625,7 +625,7 @@ msgstr "Batal"
 #: timportfavorites.btimport.caption
 msgctxt "timportfavorites.btimport.caption"
 msgid "&OK"
-msgstr "&OK"
+msgstr "&Oke"
 
 #: timportfavorites.cbsoftware.text
 msgid "Domdomsoft Manga Downloader"
@@ -634,7 +634,7 @@ msgstr "Domdomsoft Manga Downloader"
 #: timportfavorites.edpath.texthint
 msgctxt "timportfavorites.edpath.texthint"
 msgid "Path to the software (e.g. C:\\MangaDownloader)"
-msgstr "Path ke perangkat lunak (misalnya C:\\MangaDownloader)"
+msgstr "Lokasi ke perangkat lunak (misalnya C:\\MangaDownloader)"
 
 #: timportfavorites.lbselectsoftware.caption
 msgid "Software:"
@@ -647,7 +647,7 @@ msgstr "Periksa pembaruan"
 
 #: tluamodulesupdaterform.ckautorestart.caption
 msgid "Auto restart"
-msgstr "Otomatis memuat ulang"
+msgstr "Otomatis mulai ulang"
 
 #: tluamodulesupdaterform.ckshowupdatewarning.caption
 msgid "Show update warning"
@@ -655,7 +655,7 @@ msgstr "Tampilkan peringatan pembaruan"
 
 #: tluamodulesupdaterform.vtluamodulesrepos.header.columns[0].text
 msgid "Filename"
-msgstr "Nama"
+msgstr "Nama berkas"
 
 #: tluamodulesupdaterform.vtluamodulesrepos.header.columns[1].text
 msgid "Last modified"
@@ -667,7 +667,7 @@ msgstr "Pesan terakhir"
 
 #: tmainform.btabortupdatelist.hint
 msgid "Abort update list"
-msgstr "Hentikan pembaruan daftar komik"
+msgstr "Batalkan pembaruan daftar komik"
 
 #: tmainform.btaddtofavorites.caption
 msgctxt "tmainform.btaddtofavorites.caption"
@@ -752,7 +752,7 @@ msgstr "Tambahkan ke daftar unduhan tanpa dimulai"
 
 #: tmainform.cbfilterstatus.text
 msgid "<none>"
-msgstr "<none>"
+msgstr "<tidak ada>"
 
 #: tmainform.cbonlynew.caption
 msgid "Search only new manga"
@@ -788,11 +788,11 @@ msgstr "Buka Kesukaan saat program dimulai"
 #: tmainform.cboptionchangeunicodecharacter.caption
 msgctxt "tmainform.cboptionchangeunicodecharacter.caption"
 msgid "Replace all unicode character with"
-msgstr "Ubah semua simbol unicode menjadi"
+msgstr "Ganti semua simbol unicode menjadi"
 
 #: tmainform.cboptionchangeunicodecharacter.hint
 msgid "Enable this if you have problem with unicode character in path."
-msgstr "Aktifkan pilihan ini jika anda mengalami masalah dengan karakter unicode pada path."
+msgstr "Aktifkan pilihan ini jika Anda mengalami masalah dengan karakter unicode pada lokasi."
 
 #: tmainform.cboptiondeletecompletedtasksonclose.caption
 msgid "Delete completed tasks on close"
@@ -804,7 +804,7 @@ msgstr "Bab"
 
 #: tmainform.cboptiondigitvolume.caption
 msgid "Volume"
-msgstr "Volume"
+msgstr "Jilid"
 
 #: tmainform.cboptionenableloadcover.caption
 msgid "Enable load manga cover"
@@ -812,12 +812,12 @@ msgstr "Aktifkan sampul komik"
 
 #: tmainform.cboptiongeneratechapterfolder.caption
 msgid "Auto generate chapter folder"
-msgstr "Buat otomatis folder bab"
+msgstr "Buat direktori bab otomatis"
 
 #: tmainform.cboptiongeneratemangafolder.caption
 msgctxt "tmainform.cboptiongeneratemangafolder.caption"
 msgid "Auto generate folder based on manga's name"
-msgstr "Buat otomatis folder berdasarkan nama komik"
+msgstr "Buat direktori bab otomatis berdasarkan nama komik"
 
 #: tmainform.cboptionlivesearch.caption
 msgid "Enable live search (slow on long list)"
@@ -833,7 +833,7 @@ msgstr "Perkecil ke penampan"
 
 #: tmainform.cboptiononeinstanceonly.caption
 msgid "Permit only one FMD running"
-msgstr "Hanya ijinkan satu FMD berjalan"
+msgstr "Hanya izinkan satu FMD yang berjalan"
 
 #: tmainform.cboptionproxytype.text
 msgid "HTTP"
@@ -857,23 +857,23 @@ msgstr "Unduh daftar komik jika kosong"
 
 #: tmainform.cboptionshowdownloadtoolbar.caption
 msgid "Show downloads toolbar"
-msgstr "Tampilkan toolbar unduhan"
+msgstr "Tampilkan bilah alat unduhan"
 
 #: tmainform.cboptionshowdownloadtoolbardeleteall.caption
 msgid "Show \"Delete all completed tasks\" in downloads toolbar"
-msgstr "Tampilkan \"Hapus semua unduhan selesai\" di toolbar unduhan"
+msgstr "Tampilkan \"Hapus semua unduhan selesai\" di bilah alat unduhan"
 
 #: tmainform.cboptionshowdownloadtoolbarleft.caption
 msgid "Show left downloads toolbar"
-msgstr "Tampilkan toolbar kiri"
+msgstr "Tampilkan bilah alat kiri"
 
 #: tmainform.cboptionshowquitdialog.caption
 msgid "Exit FMD"
-msgstr "Tutup FMD"
+msgstr "Keluar dari FMD"
 
 #: tmainform.cboptionsortdownloadswhenaddingnewdownloadtasks.caption
 msgid "Sort Downloads when adding new download tasks"
-msgstr "Urutkan Unduhan ketika menambah tugas unduh baru"
+msgstr "Urutkan Unduhan ketika menambahkan unduhan baru"
 
 #: tmainform.cboptionupdatelistnomangainfo.caption
 msgid "Don't load manga information when updating list (filter will be not work!)"
@@ -881,7 +881,7 @@ msgstr "Tidak perlu memuat informasi komik ketika memperbarui daftar (saringan t
 
 #: tmainform.cboptionupdatelistremoveduplicatelocaldata.caption
 msgid "Remove duplicate local data when updating manga list"
-msgstr "Menghapus duplikat data lokal saat memperbarui daftar komik"
+msgstr "Hapus data lokal duplikat saat memperbarui daftar komik"
 
 #: tmainform.cboptionuseproxy.caption
 msgid "Use proxy"
@@ -890,7 +890,7 @@ msgstr "Gunakan proxy"
 #: tmainform.cbpngcompressionlevel.text
 msgctxt "tmainform.cbpngcompressionlevel.text"
 msgid "Fastest"
-msgstr "Paling cepat"
+msgstr "Tercepat"
 
 #: tmainform.cbsearchfromallsites.caption
 msgid "Search in all manga sites"
@@ -898,11 +898,11 @@ msgstr "Cari di semua situs komik"
 
 #: tmainform.cbselectmanga.hint
 msgid "For more manga sites, please go to Options->Manga sites"
-msgstr "Untuk situs komik yang lain, silahkan pilih di Pengaturan->Situs komik"
+msgstr "Untuk situs komik yang lain, silakan pilih di Pengaturan->Situs->Situs Komik"
 
 #: tmainform.cbuseregexpr.caption
 msgid "Regular Expression"
-msgstr "Regular Expression"
+msgstr "Ekspresi Reguler"
 
 #: tmainform.cbwebpsaveas.text
 msgctxt "tmainform.cbwebpsaveas.text"
@@ -924,7 +924,7 @@ msgstr "Action"
 
 #: tmainform.ckfilteraction.hint
 msgid "A work typically depicting fighting, violence, chaos, and fast paced motion."
-msgstr "Sebuah karya yang biasanya menggambarkan pertempuran, kekerasan, kekacauan, dan gerakan cepat mondar-mandir."
+msgstr "Sebuah karya yang biasanya menggambarkan pertarungan, kekerasan, kekacauan, dan gerakan cepat mondar-mandir."
 
 #: tmainform.ckfilteradult.caption
 msgid "Adult"
@@ -932,7 +932,7 @@ msgstr "Adult"
 
 #: tmainform.ckfilteradult.hint
 msgid "Contains content that is suitable only for adults. Titles in this category may include prolonged scenes of intense violence and/or graphic sexual content and nudity."
-msgstr "Berisi konten yang cocok hanya untuk orang dewasa. Judul dalam kategori ini mungkin termasuk adegan berkepanjangan intense kekerasan dan/atau konten seksual grafis dan ketelanjangan."
+msgstr "Berisi konten yang cocok hanya untuk orang dewasa. Judul dalam kategori ini mungkin termasuk adegan kekerasan berkepanjangan yang intens dan/atau konten seksual dan ketelanjangan."
 
 #: tmainform.ckfilteradventure.caption
 msgid "Adventure"
@@ -940,7 +940,7 @@ msgstr "Adventure"
 
 #: tmainform.ckfilteradventure.hint
 msgid "If a character in the story goes on a trip or along that line, your best bet is that it is an adventure manga. Otherwise, it's up to your personal prejudice on this case."
-msgstr "Petualangan."
+msgstr "Jika seorang karakter dalam cerita melakukan perjalanan ke suatu tempat, taruhan terbaik Anda adalah komik petualangan. Sebaliknya, terserah prasangka Anda pada kasus ini."
 
 #: tmainform.ckfiltercomedy.caption
 msgid "Comedy"
@@ -948,7 +948,7 @@ msgstr "Comedy"
 
 #: tmainform.ckfiltercomedy.hint
 msgid "A dramatic work that is light and often humorous or satirical in tone and that usually contains a happy resolution of the thematic conflict."
-msgstr "Sebuah karya dramatis yang ringan dan sering lucu atau satir dalam nada dan yang biasanya berisi bahagia resolusi konflik tematik."
+msgstr "Sebuah karya dramatis yang ringan dan sering lucu atau satir dalam nada dan yang biasanya berisi resolusi bahagia dari konflik tematik."
 
 #: tmainform.ckfilterdoujinshi.caption
 msgid "Doujinshi"
@@ -972,7 +972,7 @@ msgstr "Ecchi"
 
 #: tmainform.ckfilterechi.hint
 msgid "Possibly the line between hentai and non-hentai, ecchi usually refers to fanservice put in to attract a certain group of fans."
-msgstr "Diantara hentai dan non-hentai. Semi-hentai."
+msgstr "Di antara hentai dan bukan hentai, ecchi biasanya merujuk ke fanservice yang disisipkan untuk menarik sekelompok penggemar tertentu."
 
 #: tmainform.ckfilterfantasy.caption
 msgid "Fantasy"
@@ -980,7 +980,7 @@ msgstr "Fantasy"
 
 #: tmainform.ckfilterfantasy.hint
 msgid "Anything that involves, but not limited to, magic, dream world, and fairy tales."
-msgstr "Apa pun yang melibatkan sihir, dunia mimpi, dan dongeng."
+msgstr "Apa pun yang melibatkan, namun tidak terbatas pada sihir, dunia mimpi, dan dongeng."
 
 #: tmainform.ckfiltergenderbender.caption
 msgid "Gender Bender"
@@ -1026,7 +1026,7 @@ msgstr "Horror"
 
 #: tmainform.ckfilterhorror.hint
 msgid "A painful emotion of fear, dread, and abhorrence; a shuddering with terror and detestation; the feeling inspired by something frightful and shocking."
-msgstr "Ketakutan dan kebencian; gemetar dengan teror dan detestation; perasaan yang diinspirasi oleh sesuatu yang mengerikan dan mengejutkan."
+msgstr "Emosi ketakutan dan kebencian; gemetar dengan teror dan kebencian; perasaan yang diinspirasi oleh sesuatu yang mengerikan dan mengejutkan."
 
 #: tmainform.ckfilterjosei.caption
 msgid "Josei"
@@ -1034,7 +1034,7 @@ msgstr "Josei"
 
 #: tmainform.ckfilterjosei.hint
 msgid "Literally \"Woman\". Targets women 18-30. Female equivalent to seinen. Unlike shoujo the romance is more realistic and less idealized. The storytelling is more explicit and mature."
-msgstr "Secara harfiah \"perempuan\". Menargetkan wanita 18-30. Laki-laki setara dengan seinen. Tidak seperti shoujo asmara lebih realistis dan kurang ideal. Cerita lebih eksplisit dan matang."
+msgstr "Secara harfiah \"Wanita\". Menargetkan wanita umur 18-30 tahun. Setara dengan seinen. Tidak seperti shoujo, romansa lebih realistis dan kurang ideal. Cerita lebih eksplisit dan matang."
 
 #: tmainform.ckfilterlolicon.caption
 msgid "Lolicon"
@@ -1042,7 +1042,7 @@ msgstr "Lolicon"
 
 #: tmainform.ckfilterlolicon.hint
 msgid "Representing a sexual attraction to young or under-age girls."
-msgstr "Mewakili daya tarik seksual ke anak perempuan dibawah umur."
+msgstr "Mewakili daya tarik seksual ke anak perempuan di bawah umur."
 
 #: tmainform.ckfiltermartialarts.caption
 msgid "Martial Arts"
@@ -1050,7 +1050,7 @@ msgstr "Martial Arts"
 
 #: tmainform.ckfiltermartialarts.hint
 msgid "As the name suggests, anything martial arts related. Any of several arts of combat or self-defense, such as aikido, karate, judo, or taekwondo, kendo, fencing, and so on and so forth."
-msgstr "Seperti namanya, seni bela diri apa pun terkait. Salah satu dari beberapa seni tempur atau membela diri, seperti aikido, karate, judo atau taekwondo, kendo, pagar, dan seterusnya dan sebagainya."
+msgstr "Seperti namanya, apa pun yang berkaitan seni bela diri. Salah satu dari beberapa seni tempur atau membela diri, seperti aikido, karate, judo atau taekwondo, kendo, anggar, dan sebagainya."
 
 #: tmainform.ckfiltermature.caption
 msgid "Mature"
@@ -1058,7 +1058,7 @@ msgstr "Mature"
 
 #: tmainform.ckfiltermature.hint
 msgid "Contains subject matter which may be too extreme for people under the age of 17. Titles in this category may contain intense violence, blood and gore, sexual content and/or strong language."
-msgstr "Berisi materi subjek yang mungkin terlalu ekstrem untuk orang-orang di bawah usia 17. Judul dalam kategori ini mungkin berisi intense kekerasan, darah dan gore, konten seksual dan bahasa yang kuat."
+msgstr "Berisi materi pelajaran yang mungkin terlalu ekstrem untuk orang di bawah umur 17 tahun. Judul dalam kategori ini mungkin berisi kekerasan yang intens, darah dan gore, konten seksual dan bahasa yang kuat."
 
 #: tmainform.ckfiltermecha.caption
 msgid "Mecha"
@@ -1084,7 +1084,7 @@ msgstr "Mystery"
 
 #: tmainform.ckfiltermystery.hint
 msgid "Usually an unexplained event occurs, and the main protagonist attempts to find out what caused it."
-msgstr "Biasanya terjadi suatu peristiwa yang tidak dapat dijelaskan, dan tokoh utama mencoba untuk mencari tahu apa yang menyebabkannya."
+msgstr "Biasanya terjadi suatu peristiwa yang tidak dapat dijelaskan dan tokoh utama mencoba untuk mencari tahu apa yang menyebabkannya."
 
 #: tmainform.ckfilterpsychological.caption
 msgid "Psychological"
@@ -1092,7 +1092,7 @@ msgstr "Psychological"
 
 #: tmainform.ckfilterpsychological.hint
 msgid "Usually deals with the philosophy of a state of mind, in most cases detailing abnormal psychology."
-msgstr "Biasanya berkaitan dengan filosofi dari keadaan pikiran, dalam kebanyakan kasus, merinci psikologi abnormal."
+msgstr "Biasanya berkaitan dengan filosofi dari keadaan pikiran, dalam kebanyakan kasus memerinci psikologi abnormal."
 
 #: tmainform.ckfilterromance.caption
 msgid "Romance"
@@ -1100,7 +1100,7 @@ msgstr "Romance"
 
 #: tmainform.ckfilterromance.hint
 msgid "Any love related story. We will define love as between man and woman in this case. Other than that, it is up to your own imagination of what love is."
-msgstr "Apapun terkait kisah cinta. Kita akan mendefinisikan cinta antara pria dan wanita dalam hal ini. Selain itu, itu terserah imajinasi Anda sendiri apa itu cinta adalah."
+msgstr "Apa pun yang berkaitan dengan kisah cinta. Dalam hal ini kita akan mendefinisikan cinta antara pria dan wanita. Selain itu terserah pada imajinasi Anda sendiri apakah itu cinta."
 
 #: tmainform.ckfilterschoollife.caption
 msgid "School Life"
@@ -1108,7 +1108,7 @@ msgstr "School Life"
 
 #: tmainform.ckfilterschoollife.hint
 msgid "Having a major setting of the story deal with some type of school."
-msgstr "Cerita tentang kehidupan sekolah."
+msgstr "Memiliki latar cerita utama yang berhubungan dengan sekolah."
 
 #: tmainform.ckfilterscifi.caption
 msgid "Sci-Fi"
@@ -1124,7 +1124,7 @@ msgstr "Seinen"
 
 #: tmainform.ckfilterseinen.hint
 msgid "From Google: Seinen means 'young Man'. Manga and anime that specifically targets young adult males around the ages of 18 to 25 are seinen titles. The stories in seinen works appeal to university students and those in the working world. Typically the story lines deal with the issues of adulthood."
-msgstr "Dari Google: Seinen berarti 'pemuda'. Manga dan anime yang secara khusus menargetkan laki-laki dewasa muda di sekitar usia 18 sampai 25 adalah judul seinen. Kisah-kisah dalam seinen bekerja bagi mahasiswa dan orang-orang di dunia kerja. Biasanya garis cerita berurusan dengan isu-isu dewasa."
+msgstr "Dari Google: Seinen berarti \"Pemuda"\. Komik dan kartun yang secara khusus menargetkan laki-laki dewasa umur 18-25 tahun. Kisah-kisah dalam karya seinen menarik bagi mahasiswa dan orang-orang di dunia kerja. Biasanya garis cerita berurusan dengan isu-isu dewasa."
 
 #: tmainform.ckfiltershotacon.caption
 msgid "Shotacon"
@@ -1132,7 +1132,7 @@ msgstr "Shotacon"
 
 #: tmainform.ckfiltershotacon.hint
 msgid "Representing a sexual attraction to young or under-age boys."
-msgstr "Mewakili daya tarik seksual ke anak laki-laki dibawah umur."
+msgstr "Mewakili daya tarik seksual ke anak laki-laki di bawah umur."
 
 #: tmainform.ckfiltershoujo.caption
 msgid "Shoujo"
@@ -1140,7 +1140,7 @@ msgstr "Shoujo"
 
 #: tmainform.ckfiltershoujo.hint
 msgid "A work intended and primarily written for females. Usually involves a lot of romance and strong character development."
-msgstr "Sebuah karya dimaksudkan dan terutama ditulis untuk perempuan. Biasanya melibatkan banyak romance dan pengembangan karakter yang kuat."
+msgstr "Sebuah karya dimaksudkan dan terutama ditulis untuk perempuan. Biasanya melibatkan banyak romansa dan pengembangan karakter yang kuat."
 
 #: tmainform.ckfiltershoujoai.caption
 msgid "Shoujo Ai"
@@ -1149,7 +1149,7 @@ msgstr "Shoujo Ai"
 #: tmainform.ckfiltershoujoai.hint
 msgctxt "tmainform.ckfiltershoujoai.hint"
 msgid "Often synonymous with yuri, this can be thought of as somewhat less extreme. \"Girl''s Love\", so to speak."
-msgstr "Identik dengan yuri, hanya agak kurang ekstrim (percintaan antar sesama perempuan)."
+msgstr "Identik dengan yuri, hanya agak kurang ekstrem. Bisa dikatakan \"Percintaan Antara Perempuan"\."
 
 #: tmainform.ckfiltershounen.caption
 msgid "Shounen"
@@ -1158,15 +1158,15 @@ msgstr "Shounen"
 #: tmainform.ckfiltershounen.hint
 msgctxt "tmainform.ckfiltershounen.hint"
 msgid "A work intended and primarily written for males. These works usually involve fighting and/or violence."
-msgstr "Ditujukan untuk laki-laki. Biasanya melibatkan perkelahian atau kekerasan."
+msgstr "Sebuah karya yang ditujukan untuk laki-laki. Biasanya melibatkan perkelahian dan/atau kekerasan."
 
 #: tmainform.ckfiltershounenai.caption
 msgid "Shounen Ai"
 msgstr "Shounen Ai"
 
 #: tmainform.ckfiltershounenai.hint
-msgid "Often synonymous with yaoi, this can be thought of as somewhat less extreme. \"Boy''s Love\", so to speak"
-msgstr "Identik dengan yaoi, hanya agak kurang ekstrim (percintaan antar sesama laki-laki)."
+msgid "Often synonymous with yaoi, this can be thought of as somewhat less extreme. \"Boy''s Love\", so to speak"
+msgstr "Identik dengan yaoi, hanya agak kurang ekstrim. Bisa dikatakan \"Percintaan Antara Laki-laki"\."
 
 #: tmainform.ckfiltersliceoflife.caption
 msgid "Slice of Life"
@@ -1174,7 +1174,7 @@ msgstr "Slice of Life"
 
 #: tmainform.ckfiltersliceoflife.hint
 msgid "As the name suggests, this genre represents day-to-day tribulations of one/many character(s). These challenges/events could technically happen in real life and are often -if not all the time- set in the present timeline in a world that mirrors our own."
-msgstr "Sepenggal cerita dari kehidupan seseorang/banyak orang. Biasanya berhungungan dengan kejadian yang sering terjadi di kehidupan nyata."
+msgstr "Sepenggal cerita keseharian dari kehidupan seseorang/banyak orang. Biasanya berhungungan dengan kejadian yang sering terjadi di kehidupan nyata."
 
 #: tmainform.ckfiltersmut.caption
 msgid "Smut"
@@ -1190,7 +1190,7 @@ msgstr "Sports"
 
 #: tmainform.ckfiltersports.hint
 msgid "As the name suggests, anything sports related. Baseball, basketball, hockey, soccer, golf, and racing just to name a few."
-msgstr "Semua tentang olahraga."
+msgstr "Apa pun mengenai olahraga."
 
 #: tmainform.ckfiltersupernatural.caption
 msgid "Supernatural"
@@ -1206,7 +1206,7 @@ msgstr "Tragedy"
 
 #: tmainform.ckfiltertragedy.hint
 msgid "Contains events resulting in great loss and misfortune."
-msgstr "Berisi acara yang mengakibatkan kerugian besar dan kemalangan."
+msgstr "Berisi kejadian yang mengakibatkan kerugian besar dan kemalangan."
 
 #: tmainform.ckfilterweebtons.caption
 msgctxt "tmainform.ckfilterweebtons.caption"
@@ -1224,7 +1224,7 @@ msgstr "Yaoi"
 
 #: tmainform.ckfilteryaoi.hint
 msgid "This work usually involves intimate relationships between men."
-msgstr "Biasanya melibatkan hubungan yang intim antara sesama laki-laki."
+msgstr "Biasanya melibatkan hubungan yang intim antara laki-laki."
 
 #: tmainform.ckfilteryuri.caption
 msgid "Yuri"
@@ -1232,12 +1232,12 @@ msgstr "Yuri"
 
 #: tmainform.ckfilteryuri.hint
 msgid "This work usually involves intimate relationships between women."
-msgstr "Biasanya melibatkan hubungan yang intim antara sesama perempuan."
+msgstr "Biasanya melibatkan hubungan yang intim antara perempuan."
 
 #: tmainform.ckoptionsalwaysstarttaskfromfailedchapters.caption
 msgctxt "tmainform.ckoptionsalwaysstarttaskfromfailedchapters.caption"
 msgid "Always start task from failed chapters"
-msgstr "Selalu mulai undudah dari bab yang gagal"
+msgstr "Selalu mulai unduhan dari bab yang gagal"
 
 #: tmainform.ckpngsaveasjpeg.caption
 msgid "Save PNG as JPEG"
@@ -1245,7 +1245,7 @@ msgstr "Simpan PNG sebagai JPEG"
 
 #: tmainform.edcustomgenres.texthint
 msgid "Input custom genres, separated by comma"
-msgstr "Masukan genre pilihan, dipisahkan dengan koma"
+msgstr "Masukkan genre pilihan, dipisahkan dengan koma"
 
 #: tmainform.eddownloadssearch.texthint
 msgctxt "tmainform.eddownloadssearch.texthint"
@@ -1284,40 +1284,40 @@ msgstr "Judul"
 #: tmainform.edmangalistsearch.texthint
 msgctxt "tmainform.edmangalistsearch.texthint"
 msgid "Search title..."
-msgstr "Cari nama komik..."
+msgstr "Cari judul..."
 
 #: tmainform.edoptionchaptercustomrename.texthint
 msgctxt "tmainform.edoptionchaptercustomrename.texthint"
 msgid "Custom rename"
-msgstr "Ubah nama kustom"
+msgstr "Ubah nama pilihan"
 
 #: tmainform.edoptiondefaultpath.texthint
 msgid "Default download path"
-msgstr "Lokasi unduhan bawaan"
+msgstr "Lokasi unduhan asali"
 
 #: tmainform.edoptionexternalparams.texthint
 msgctxt "tmainform.edoptionexternalparams.texthint"
 msgid "External program parameters"
-msgstr "Lokasi program"
+msgstr "Parameter program"
 
 #: tmainform.edoptionexternalpath.texthint
 msgctxt "tmainform.edoptionexternalpath.texthint"
 msgid "External program path"
-msgstr "Parameter program"
+msgstr "Lokasi program"
 
 #: tmainform.edoptionfilenamecustomrename.texthint
 msgctxt "tmainform.edoptionfilenamecustomrename.texthint"
 msgid "Custom rename"
-msgstr "Ubah nama kustom"
+msgstr "Ubah nama pilihan"
 
 #: tmainform.edoptionhost.texthint
 msgid "Proxy host/IP"
-msgstr "Host/IP"
+msgstr "Proxy host/IP"
 
 #: tmainform.edoptionmangacustomrename.texthint
 msgctxt "tmainform.edoptionmangacustomrename.texthint"
 msgid "Custom rename"
-msgstr "Ubah nama kustom"
+msgstr "Ubah nama pilihan"
 
 #: tmainform.edoptionpass.texthint
 msgid "Proxy password"
@@ -1325,7 +1325,7 @@ msgstr "Kata kunci"
 
 #: tmainform.edoptionuser.texthint
 msgid "Proxy username"
-msgstr "Nama user"
+msgstr "Nama pengguna"
 
 #: tmainform.edsaveto.texthint
 msgctxt "tmainform.edsaveto.texthint"
@@ -1334,7 +1334,7 @@ msgstr "Lokasi penyimpanan"
 
 #: tmainform.edurl.texthint
 msgid "Input URL here"
-msgstr "Masukkan URL disini"
+msgstr "Masukkan URL di sini"
 
 #: tmainform.edwebsitessearch.texthint
 msgctxt "tmainform.edwebsitessearch.texthint"
@@ -1372,7 +1372,7 @@ msgstr "Mengubah nama"
 
 #: tmainform.lbdefaultdownloadpath.caption
 msgid "Choose the default download path:"
-msgstr "Pilih lokasi pengunduhan bawaan:"
+msgstr "Pilih lokasi unduhan asali:"
 
 #: tmainform.lbdroptargetopacity.caption
 msgid "Opacity"
@@ -1390,7 +1390,7 @@ msgstr "Penulis"
 
 #: tmainform.lbfiltercustomgenres.caption
 msgid "Custom Genres"
-msgstr "Genre pilihan"
+msgstr "Genre Pilihan"
 
 #: tmainform.lbfilterhint.caption
 msgctxt "tmainform.lbfilterhint.caption"
@@ -1409,15 +1409,15 @@ msgid ""
 "- Exclude a genre by placing '!' or '-' at the beginning of a genre.\n"
 "- Example: Adventure,!Ecchi,Comedy.\n"
 msgstr ""
-"Genre: \n"
-"- Dicentang: termasuk genre ini. \n"
-"- Dicentang: kecualikan genre ini. \n"
-"- Grayed: tidak penting.\n"
+"Genre:\n"
+"- Dicentang: Termasuk genre ini.\n"
+"- Dicentang: Kecualikan genre ini.\n"
+"- Grayed: Tidak penting.\n"
 "\n"
-"Genre pilihan: \n"
-"- Pisahkan beberapa genre dengan ','. \n"
-"- Kecualikan genre dengan menempatkan  '!' atau '-' pada permulaan genre. \n"
-"- Contoh: petualangan,! Ecchi, komedi.\n"
+"Genre Pilihan:\n"
+"- Pisahkan beberapa genre dengan ','.\n"
+"- Kecualikan genre dengan menempatkan  '!' atau '-' pada permulaan genre.\n"
+"- Contoh: Adventure,!Ecchi,Comedy.\n"
 
 #: tmainform.lbfilterstatus.caption
 msgctxt "TMAINFORM.LBFILTERSTATUS.CAPTION"
@@ -1481,7 +1481,7 @@ msgstr ""
 "%NUMBERING% : Penomoran\n"
 "\n"
 "Catatan:\n"
-"Nama bab setidaknya harus memiliki %CHAPTER% atau %NUMBERING%.\n"
+"Nama direktori bab setidaknya harus memiliki %CHAPTER% atau %NUMBERING%.\n"
 
 #: tmainform.lboptionconnectiontimeout.caption
 msgid "Connection timeout (seconds)"
@@ -1502,7 +1502,7 @@ msgstr "[?]"
 
 #: tmainform.lboptionfilenamecustomrename.caption
 msgid "Filename:"
-msgstr "Nama File:"
+msgstr "Nama berkas:"
 
 #: tmainform.lboptionfilenamecustomrenamehint.caption
 msgctxt "tmainform.lboptionfilenamecustomrenamehint.caption"
@@ -1522,10 +1522,10 @@ msgstr ""
 "%WEBSITE% : Nama situs\n"
 "%MANGA% : Judul komik\n"
 "%CHAPTER% : Judul bab\n"
-"%FILENAME% : Nama file\n"
+"%FILENAME% : Nama berkas\n"
 "\n"
 "Note:\n"
-"Nama file setidaknya harus memiliki %FILENAME%\n"
+"Nama berkas setidaknya harus memiliki %FILENAME%\n"
 
 #: tmainform.lboptionhost.caption
 msgid "Host"
@@ -1542,7 +1542,7 @@ msgstr "Tugas setelah unduhan selesai:"
 #: tmainform.lboptionmangacustomrename.caption
 msgctxt "tmainform.lboptionmangacustomrename.caption"
 msgid "Manga folder name:"
-msgstr "Nama folder komik:"
+msgstr "Nama direktori komik:"
 
 #: tmainform.lboptionmangacustomrenamehint.caption
 msgctxt "tmainform.lboptionmangacustomrenamehint.caption"
@@ -1565,7 +1565,7 @@ msgstr ""
 "%ARTIST% : Seniman\n"
 "\n"
 "Catatan:\n"
-"Nama folder komik setidaknya harus meiliki %MANGA%\n"
+"Nama direktori komik setidaknya harus memiliki %MANGA%\n"
 
 #: tmainform.lboptionmaxparallel.caption
 msgid "Number of downloaded tasks at the same time"
@@ -1612,7 +1612,7 @@ msgstr "Tipe"
 
 #: tmainform.lboptionrenamedigits.caption
 msgid "Rename  digits"
-msgstr "Ganti nama digit"
+msgstr "Ganti jumlah digit"
 
 #: tmainform.lboptionretryfailedtask.caption
 msgid "Number of retry times if task failed"
@@ -1621,12 +1621,12 @@ msgstr "Jumlah pengulangan pada tugas unduhan yang memiliki masalah"
 #: tmainform.lboptionuser.caption
 msgctxt "tmainform.lboptionuser.caption"
 msgid "Username"
-msgstr "Nama user"
+msgstr "Nama pengguna"
 
 #: tmainform.lbpngcompressionlevel.caption
 msgctxt "tmainform.lbpngcompressionlevel.caption"
 msgid "PNG Compression level"
-msgstr "Level kompresi PNG"
+msgstr "Tingkat kompresi PNG"
 
 #: tmainform.lbsaveto.caption
 msgid "Save to:"
@@ -1669,7 +1669,7 @@ msgstr "Urungkan"
 #: tmainform.miabortsilentthread.caption
 msgctxt "tmainform.miabortsilentthread.caption"
 msgid "Abort"
-msgstr "Hentikan"
+msgstr "Batalkan"
 
 #: tmainform.michapterlistascending.caption
 msgid "Ascending"
@@ -1730,7 +1730,7 @@ msgstr "Daftar dan data"
 
 #: tmainform.midownloaddeletetaskdatafavorite.caption
 msgid "Task + Data + Favorite"
-msgstr "Daftar, data dan kesukaan"
+msgstr "Daftar, data, dan kesukaan"
 
 #: tmainform.midownloaddisable.caption
 msgctxt "tmainform.midownloaddisable.caption"
@@ -1744,12 +1744,12 @@ msgstr "Nyalakan"
 
 #: tmainform.midownloadmergecompleted.caption
 msgid "Merge completed tasks"
-msgstr "Gabungkan unduhan selesai"
+msgstr "Gabungkan unduhan yang sudah selesai"
 
 #: tmainform.midownloadopenfolder.caption
 msgctxt "tmainform.midownloadopenfolder.caption"
 msgid "Open Folder"
-msgstr "Buka folder"
+msgstr "Buka Direktori"
 
 #: tmainform.midownloadopenwith.caption
 msgctxt "tmainform.midownloadopenwith.caption"
@@ -1762,7 +1762,7 @@ msgstr "Lanjutkan"
 
 #: tmainform.midownloadstop.caption
 msgid "Stop"
-msgstr "Hentikan!"
+msgstr "Hentikan"
 
 #: tmainform.midownloadviewmangainfo.caption
 msgctxt "tmainform.midownloadviewmangainfo.caption"
@@ -1805,7 +1805,7 @@ msgstr "Nyalakan"
 #: tmainform.mifavoritesopenfolder.caption
 msgctxt "TMAINFORM.MIFAVORITESOPENFOLDER.CAPTION"
 msgid "Open Folder"
-msgstr "Buka folder"
+msgstr "Buka Direktori"
 
 #: tmainform.mifavoritesopenwith.caption
 msgctxt "TMAINFORM.MIFAVORITESOPENWITH.CAPTION"
@@ -1823,7 +1823,7 @@ msgstr "Berhenti periksa bab baru"
 #: tmainform.mifavoritestransferwebsite.caption
 msgctxt "tmainform.mifavoritestransferwebsite.caption"
 msgid "Transfer website"
-msgstr "Transfer website"
+msgstr "Transfer situs"
 
 #: tmainform.mifavoritesviewinfos.caption
 msgctxt "TMAINFORM.MIFAVORITESVIEWINFOS.CAPTION"
@@ -1854,7 +1854,7 @@ msgstr "Lihat informasi komik"
 
 #: tmainform.mitrayafterdownloadfinish.caption
 msgid "After download finish"
-msgstr "Setelah download selesai"
+msgstr "Setelah unduhan selesai"
 
 #: tmainform.mitrayexit.caption
 msgctxt "tmainform.mitrayexit.caption"
@@ -1868,7 +1868,7 @@ msgstr "Keluar"
 
 #: tmainform.mitrayfinishhibernate.caption
 msgid "Hibernate"
-msgstr "Tidurkan komputer"
+msgstr "Hibernasikan komputer"
 
 #: tmainform.mitrayfinishnothing.caption
 msgid "Nothing"
@@ -1906,7 +1906,7 @@ msgstr "Centang semua"
 
 #: tmainform.mnfiltergenreallindeterminate.caption
 msgid "Indeterminate all"
-msgstr "Semua tak tentu"
+msgstr "Tak tentu semua"
 
 #: tmainform.mnfiltergenrealluncheck.caption
 msgctxt "tmainform.mnfiltergenrealluncheck.caption"
@@ -1936,7 +1936,7 @@ msgstr "Memiliki salah satu genre yang dicentang"
 
 #: tmainform.rgdroptargetmode.caption
 msgid "Mode"
-msgstr "Modus"
+msgstr "Mode"
 
 #: tmainform.rgoptioncompress.caption
 msgid "Save downloaded chapters as"
@@ -1962,27 +1962,27 @@ msgstr "Hentikan semua"
 
 #: tmainform.tbmidownloadmovebottom.hint
 msgid "Move selected item(s) to bottom"
-msgstr "Pindahkan item-item terpilih ke paling bawah"
+msgstr "Pindahkan data terpilih ke paling bawah"
 
 #: tmainform.tbmidownloadmovedown.hint
 msgid "Move selected item(s) down"
-msgstr "Pindahkan item-item terpilih ke bawah"
+msgstr "Pindahkan data terpilih ke bawah"
 
 #: tmainform.tbmidownloadmovetop.hint
 msgid "Move selected item(s) to top"
-msgstr "Pindahkan item-item terpilih ke paling atas"
+msgstr "Pindahkan data terpilih ke paling atas"
 
 #: tmainform.tbmidownloadmoveup.hint
 msgid "Move selected item(s) up"
-msgstr "Pindahkan item-item terpilih ke atas"
+msgstr "Pindahkan data terpilih ke atas"
 
 #: tmainform.tbwebsitescollapseall.caption
 msgid "Collapse All"
-msgstr "Lipat semua"
+msgstr "Perkecil semua"
 
 #: tmainform.tbwebsitesexpandall.caption
 msgid "Expand All"
-msgstr "Bentangkan semua"
+msgstr "Perluas semua"
 
 #: tmainform.tsabout.caption
 msgid "About"
@@ -2086,7 +2086,7 @@ msgstr "Situs"
 #: tmainform.tswebsiteselection.caption
 msgctxt "tmainform.tswebsiteselection.caption"
 msgid "Websites"
-msgstr "Situs"
+msgstr "Situs Komik"
 
 #: tmainform.vtdownload.header.columns[0].text
 msgid "Manga"
@@ -2166,7 +2166,7 @@ msgstr "Notifikasi Bab Baru"
 #: tselectdirectoryform.btok.caption
 msgctxt "tselectdirectoryform.btok.caption"
 msgid "OK"
-msgstr "OK"
+msgstr "Oke"
 
 #: tselectdirectoryform.caption
 msgid "Select directory"
@@ -2174,7 +2174,7 @@ msgstr "Pilih direktori"
 
 #: tshutdowncounterform.btabort.caption
 msgid "&Abort"
-msgstr "&Hentikan"
+msgstr "&Batalkan"
 
 #: tshutdowncounterform.btnow.caption
 msgid "&Now"
@@ -2188,7 +2188,7 @@ msgstr "Batal"
 #: ttransferfavoritesform.btok.caption
 msgctxt "ttransferfavoritesform.btok.caption"
 msgid "OK"
-msgstr "OK"
+msgstr "Oke"
 
 #: ttransferfavoritesform.caption
 msgid "Transfer Favorites"
@@ -2241,7 +2241,7 @@ msgid ""
 "New version found! Do you want to update now?\n"
 "FMD will be closed to finish the update.\n"
 msgstr ""
-"Versi baru ditemukan! Apakah Anda ingin memperbarui sekarang? \n"
+"Versi baru ditemukan! Apakah Anda ingin memperbarui sekarang?\n"
 "FMD akan ditutup untuk menyelesaikan update.\n"
 
 #: twebsiteselectionform.caption
@@ -2250,7 +2250,7 @@ msgstr "Pilih situs"
 
 #: twebsitesettingsform.caption
 msgid "WebsiteSettingsForm"
-msgstr "Form Pengaturan Situs"
+msgstr "Formulir Pengaturan Situs"
 
 #: twebsitesettingsform.edsearch.texthint
 msgid "Website name"
