@@ -2219,6 +2219,10 @@ msgctxt "TNEWCHAPTER.BTQUEUE.CAPTION"
 msgid "&Add to queue"
 msgstr "&zur Warteschlage hinzufügen"
 
+#: tnewchapter.caption
+msgid "New Chapter Notification"
+msgstr "Benachrichtigung zu neuen Kapiteln"
+
 #: tselectdirectoryform.btok.caption
 msgctxt "tselectdirectoryform.btok.caption"
 msgid "OK"
@@ -2226,7 +2230,7 @@ msgstr "OK"
 
 #: tselectdirectoryform.caption
 msgid "Select directory"
-msgstr ""
+msgstr "Verzeichnis auswählen"
 
 #: tshutdowncounterform.btabort.caption
 msgid "&Abort"

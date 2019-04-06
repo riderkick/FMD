@@ -2230,6 +2230,10 @@ msgctxt "TNEWCHAPTER.BTQUEUE.CAPTION"
 msgid "&Add to queue"
 msgstr "&Agregar a Cola"
 
+#: tnewchapter.caption
+msgid "New Chapter Notification"
+msgstr ""
+
 #: tselectdirectoryform.btok.caption
 msgctxt "tselectdirectoryform.btok.caption"
 msgid "OK"

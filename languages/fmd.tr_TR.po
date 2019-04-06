@@ -951,7 +951,7 @@ msgstr "FMD'den çık"
 
 #: tmainform.cboptionsortdownloadswhenaddingnewdownloadtasks.caption
 msgid "Sort Downloads when adding new download tasks"
-msgstr ""
+msgstr "Yeni indirme görevleri eklerken İndirmeleri Sırala"
 
 #: tmainform.cboptionupdatelistnomangainfo.caption
 msgid "Don't load manga information when updating list (filter will be not work!)"
@@ -2242,6 +2242,10 @@ msgstr "&İndir"
 msgctxt "TNEWCHAPTER.BTQUEUE.CAPTION"
 msgid "&Add to queue"
 msgstr "&Sıraya ekle"
+
+#: tnewchapter.caption
+msgid "New Chapter Notification"
+msgstr "Yeni Bölüm Bildirimi"
 
 #: tselectdirectoryform.btok.caption
 msgctxt "tselectdirectoryform.btok.caption"
