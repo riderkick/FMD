@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
-"Project-Id-Version: 0.9.118.0\n"
+"Project-Id-Version: 0.9.161.0\n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
 "Last-Translator: Tokc.D.K. <tokcdk@gmail.com>\n"
@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: ru_RU\n"
-"X-Generator: Poedit 2.0.2\n"
+"X-Generator: Poedit 2.0.6\n"
 
 #: dbupdater.rs_buttoncancel
 msgctxt "dbupdater.rs_buttoncancel"
@@ -296,7 +296,7 @@ msgstr "Артисты:"
 
 #: frmmain.rs_infoauthors
 msgid "Author(s):"
-msgstr "Автор:"
+msgstr "Автор(ы):"
 
 #: frmmain.rs_infogenres
 msgid "Genre(s):"
@@ -425,10 +425,10 @@ msgid ""
 "Default\n"
 "Maximum\n"
 msgstr ""
-"Без компрессии\n"
-"Скоростной\n"
-"Средний\n"
-"Максимальный\n"
+"Без сжатия\n"
+"Скоростное\n"
+"По умолчанию\n"
+"Максимальное\n"
 
 #: frmmain.rs_wronginput
 msgid "Invalid input!"
@@ -472,7 +472,7 @@ msgstr "Отменить"
 
 #: selfupdater.rs_downloading
 msgid "Downloading new version %s"
-msgstr ""
+msgstr "Загрузка новой версии %s"
 
 #: selfupdater.rs_faileddownload
 msgid ""
@@ -480,10 +480,13 @@ msgid ""
 "\n"
 "%d %s\n"
 msgstr ""
+"Не удалось загрузкить новую версию %s\n"
+"\n"
+"%d %s\n"
 
 #: selfupdater.rs_failedextract
 msgid "Failed to extract %s, exitstatus = %d"
-msgstr ""
+msgstr "Не удалось извлечь %s, exitstatus = %d"
 
 #: selfupdater.rs_failedtitle
 msgctxt "selfupdater.rs_failedtitle"
@@ -492,20 +495,20 @@ msgstr "Неудачно"
 
 #: selfupdater.rs_failedtosave
 msgid "Failed to save %s"
-msgstr ""
+msgstr "Не удалось сохранить %s"
 
 #: selfupdater.rs_finishrestart
 msgid "Download update package finished, restart to proceed?"
-msgstr ""
+msgstr "Загрузка пакета обновления завершена, перезапустить для запуска обновления?"
 
 #: selfupdater.rs_finishrestarttitle
 msgid "Download finished"
-msgstr ""
+msgstr "Загрузка завершена"
 
 #: selfupdater.rs_missingfile
 msgctxt "selfupdater.rs_missingfile"
 msgid "Missing %s"
-msgstr ""
+msgstr "Отсутствует %s"
 
 #: taccountmanagerform.btedit.caption
 msgctxt "taccountmanagerform.btedit.caption"
@@ -879,7 +882,7 @@ msgstr "Выход из программы"
 
 #: tmainform.cboptionsortdownloadswhenaddingnewdownloadtasks.caption
 msgid "Sort Downloads when adding new download tasks"
-msgstr ""
+msgstr "Сортировать загрузки при добавлении новых"
 
 #: tmainform.cboptionupdatelistnomangainfo.caption
 msgid "Don't load manga information when updating list (filter will be not work!)"
@@ -1299,7 +1302,7 @@ msgstr "Пользовательское переименование"
 
 #: tmainform.edoptiondefaultpath.texthint
 msgid "Default download path"
-msgstr "Путь загрузки по умолчанию:"
+msgstr "Путь по умолчанию"
 
 #: tmainform.edoptionexternalparams.texthint
 msgctxt "TMAINFORM.EDOPTIONEXTERNALPARAMS.TEXTHINT"
@@ -1860,7 +1863,7 @@ msgstr "Информация о манге"
 
 #: tmainform.mitrayafterdownloadfinish.caption
 msgid "After download finish"
-msgstr "После завершения загрузки:"
+msgstr "После загрузки"
 
 #: tmainform.mitrayexit.caption
 msgctxt "TMAINFORM.MITRAYEXIT.CAPTION"
@@ -2167,7 +2170,7 @@ msgstr "Добавить в очередь"
 
 #: tnewchapter.caption
 msgid "New Chapter Notification"
-msgstr ""
+msgstr "Уведомление о новой главе"
 
 #: tselectdirectoryform.btok.caption
 msgctxt "tselectdirectoryform.btok.caption"
@@ -2265,4 +2268,3 @@ msgstr "Название сайта"
 #: twebsitesettingsform.edsearchproperty.texthint
 msgid "Setting name"
 msgstr "Название параметра"
-
