@@ -20,13 +20,14 @@ fp.dsk
 *.lps
 *.res
 mangadownloader/lib
+mangadownloader/languages/
 updater/lib
+updater/languages/
 updaterslim/lib
 bin/
 Release/
 3rd/
 licenses/
-languages/
 
 # compiled languages files
 *.mo
