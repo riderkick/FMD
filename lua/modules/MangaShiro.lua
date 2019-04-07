@@ -150,6 +150,7 @@ function getnameandlink()
     ['PecintaKomik'] = '/daftar-manga/?list',
     ['MangaIndoNet'] = '/manga-list/?list',
     ['KomikIndo'] = '/manga-list/?list',
+    ['KomikIndoWebId'] = '/daftar-manga/?list',
   }
   local dirurl = '/manga-list/'
   if dirs[module.website] ~= nil then
@@ -200,6 +201,7 @@ function Init()
   AddWebsiteModule('PecintaKomik', 'https://www.pecintakomik.com')
   AddWebsiteModule('MangaIndoNet', 'https://mangaindo.net')
   AddWebsiteModule('KomikIndo', 'https://komikindo.co')
+  AddWebsiteModule('KomikIndoWebId', 'https://www.komikindo.web.id')
   AddWebsiteModule('Komiku', 'https://komiku.co')
   AddWebsiteModule('OtakuIndo', 'https://otakuindo.net')
 end
