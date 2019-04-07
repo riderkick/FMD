@@ -37,10 +37,10 @@ object MainForm: TMainForm
     Height = 596
     Top = 8
     Width = 853
-    ActivePage = tsOption
+    ActivePage = tsInformation
     Align = alClient
     ParentFont = False
-    TabIndex = 3
+    TabIndex = 1
     TabOrder = 0
     OnChange = pcMainChange
     object tsDownload: TTabSheet
@@ -853,7 +853,7 @@ object MainForm: TMainForm
                     AnchorSideRight.Control = edURL
                     AnchorSideRight.Side = asrBottom
                     Left = 158
-                    Height = 219
+                    Height = 216
                     Top = 27
                     Width = 474
                     Anchors = [akTop, akLeft, akRight, akBottom]
@@ -1359,25 +1359,25 @@ object MainForm: TMainForm
             object tsinfoFilterAdv: TTabSheet
               Caption = 'Filter'
               ChildSizing.TopBottomSpacing = 4
-              ClientHeight = 456
-              ClientWidth = 544
+              ClientHeight = 532
+              ClientWidth = 632
               object sbFilter: TScrollBox
                 Left = 0
-                Height = 448
+                Height = 524
                 Top = 4
-                Width = 544
+                Width = 632
                 HorzScrollBar.Page = 488
                 VertScrollBar.Page = 416
                 Align = alClient
                 BorderStyle = bsNone
-                ClientHeight = 448
-                ClientWidth = 544
+                ClientHeight = 524
+                ClientWidth = 632
                 TabOrder = 0
                 object pnCustomGenre: TPanel
                   Left = 8
                   Height = 23
                   Top = 196
-                  Width = 528
+                  Width = 616
                   Align = alTop
                   AutoSize = True
                   BorderSpacing.Around = 8
@@ -1386,7 +1386,7 @@ object MainForm: TMainForm
                   ChildSizing.VerticalSpacing = 4
                   ChildSizing.ControlsPerLine = 3
                   ClientHeight = 23
-                  ClientWidth = 528
+                  ClientWidth = 616
                   TabOrder = 1
                   object lbFilterCustomGenres: TLabel
                     Left = 0
@@ -1405,7 +1405,7 @@ object MainForm: TMainForm
                     Left = 97
                     Height = 23
                     Top = 0
-                    Width = 414
+                    Width = 502
                     Align = alClient
                     BorderSpacing.Left = 4
                     ParentFont = False
@@ -1415,7 +1415,7 @@ object MainForm: TMainForm
                   object lbFilterHint: TLabel
                     AnchorSideLeft.Control = edCustomGenres
                     AnchorSideLeft.Side = asrBottom
-                    Left = 515
+                    Left = 603
                     Height = 23
                     Hint = 'Genres:'#13#10'- Checked: Include this genre.'#13#10'- Unchecked: Exclude this genre.'#13#10'- Grayed: Doesn''t matter.'#13#10#13#10'Custom Genres:'#13#10'- Separate multiple genres with '',''.'#13#10'- Exclude a genre by placing ''!'' or ''-'' at the beginning of a genre.'#13#10'- Example: Adventure,!Ecchi,Comedy.'
                     Top = 0
@@ -1434,13 +1434,13 @@ object MainForm: TMainForm
                   Left = 8
                   Height = 136
                   Top = 237
-                  Width = 528
+                  Width = 616
                   Align = alTop
                   BorderSpacing.Top = 10
                   BorderSpacing.Around = 8
                   BevelOuter = bvNone
                   ClientHeight = 136
-                  ClientWidth = 528
+                  ClientWidth = 616
                   ParentFont = False
                   TabOrder = 2
                   object Panel1: TPanel
@@ -1571,7 +1571,7 @@ object MainForm: TMainForm
                     Left = 303
                     Height = 136
                     Top = 0
-                    Width = 225
+                    Width = 313
                     Align = alClient
                     AutoSize = True
                     BorderSpacing.Left = 4
@@ -1580,7 +1580,7 @@ object MainForm: TMainForm
                     ChildSizing.VerticalSpacing = 4
                     ChildSizing.Layout = cclLeftToRightThenTopToBottom
                     ClientHeight = 136
-                    ClientWidth = 225
+                    ClientWidth = 313
                     TabOrder = 1
                     object rbOne: TRadioButton
                       Left = 0
@@ -1633,7 +1633,7 @@ object MainForm: TMainForm
                   Left = 8
                   Height = 180
                   Top = 8
-                  Width = 528
+                  Width = 616
                   Align = alTop
                   AutoSize = True
                   BorderSpacing.Around = 8
@@ -1644,7 +1644,7 @@ object MainForm: TMainForm
                   ChildSizing.Layout = cclTopToBottomThenLeftToRight
                   ChildSizing.ControlsPerLine = 8
                   ClientHeight = 180
-                  ClientWidth = 528
+                  ClientWidth = 616
                   PopupMenu = pmFilterGenreAll
                   TabOrder = 0
                   object ckFilterAction: TCheckBox
@@ -1652,7 +1652,7 @@ object MainForm: TMainForm
                     Height = 19
                     Hint = 'A work typically depicting fighting, violence, chaos, and fast paced motion.'
                     Top = 0
-                    Width = 91
+                    Width = 109
                     AllowGrayed = True
                     Caption = 'Action'
                     ParentFont = False
@@ -1666,7 +1666,7 @@ object MainForm: TMainForm
                     Height = 19
                     Hint = 'Contains content that is suitable only for adults. Titles in this category may include prolonged scenes of intense violence and/or graphic sexual content and nudity.'
                     Top = 23
-                    Width = 91
+                    Width = 109
                     AllowGrayed = True
                     Caption = 'Adult'
                     ParentFont = False
@@ -1680,7 +1680,7 @@ object MainForm: TMainForm
                     Height = 19
                     Hint = 'If a character in the story goes on a trip or along that line, your best bet is that it is an adventure manga. Otherwise, it''s up to your personal prejudice on this case.'
                     Top = 46
-                    Width = 91
+                    Width = 109
                     AllowGrayed = True
                     Caption = 'Adventure'
                     ParentFont = False
@@ -1694,7 +1694,7 @@ object MainForm: TMainForm
                     Height = 19
                     Hint = 'A dramatic work that is light and often humorous or satirical in tone and that usually contains a happy resolution of the thematic conflict.'
                     Top = 69
-                    Width = 91
+                    Width = 109
                     AllowGrayed = True
                     Caption = 'Comedy'
                     ParentFont = False
@@ -1708,7 +1708,7 @@ object MainForm: TMainForm
                     Height = 19
                     Hint = 'Fan based work inpspired by official manga/anime.'
                     Top = 92
-                    Width = 91
+                    Width = 109
                     AllowGrayed = True
                     Caption = 'Doujinshi'
                     ParentFont = False
@@ -1722,7 +1722,7 @@ object MainForm: TMainForm
                     Height = 19
                     Hint = 'A work meant to bring on an emotional response, such as instilling sadness or tension.'
                     Top = 115
-                    Width = 91
+                    Width = 109
                     AllowGrayed = True
                     Caption = 'Drama'
                     ParentFont = False
@@ -1736,7 +1736,7 @@ object MainForm: TMainForm
                     Height = 19
                     Hint = 'Possibly the line between hentai and non-hentai, ecchi usually refers to fanservice put in to attract a certain group of fans.'
                     Top = 138
-                    Width = 91
+                    Width = 109
                     AllowGrayed = True
                     Caption = 'Ecchi'
                     ParentFont = False
@@ -1750,7 +1750,7 @@ object MainForm: TMainForm
                     Height = 19
                     Hint = 'Anything that involves, but not limited to, magic, dream world, and fairy tales.'
                     Top = 161
-                    Width = 91
+                    Width = 109
                     AllowGrayed = True
                     Caption = 'Fantasy'
                     ParentFont = False
@@ -1760,11 +1760,11 @@ object MainForm: TMainForm
                     TabOrder = 7
                   end
                   object ckFilterGenderBender: TCheckBox
-                    Left = 95
+                    Left = 113
                     Height = 19
                     Hint = 'Girls dressing up as guys, guys dressing up as girls.'#13#10'Guys turning into girls, girls turning into guys.'
                     Top = 0
-                    Width = 114
+                    Width = 132
                     AllowGrayed = True
                     Caption = 'Gender Bender'
                     ParentFont = False
@@ -1774,11 +1774,11 @@ object MainForm: TMainForm
                     TabOrder = 8
                   end
                   object ckFilterHarem: TCheckBox
-                    Left = 95
+                    Left = 113
                     Height = 19
                     Hint = 'A series involving one male character and many female characters (usually attracted to the male character). A Reverse Harem is when the genders are reversed.'
                     Top = 23
-                    Width = 114
+                    Width = 132
                     AllowGrayed = True
                     Caption = 'Harem'
                     ParentFont = False
@@ -1788,11 +1788,11 @@ object MainForm: TMainForm
                     TabOrder = 9
                   end
                   object ckFilterHentai: TCheckBox
-                    Left = 95
+                    Left = 113
                     Height = 19
                     Hint = 'Hentai'
                     Top = 46
-                    Width = 114
+                    Width = 132
                     AllowGrayed = True
                     Caption = 'Hentai'
                     ParentFont = False
@@ -1802,11 +1802,11 @@ object MainForm: TMainForm
                     TabOrder = 10
                   end
                   object ckFilterHistorical: TCheckBox
-                    Left = 95
+                    Left = 113
                     Height = 19
                     Hint = 'Having to do with old or ancient times.'
                     Top = 69
-                    Width = 114
+                    Width = 132
                     AllowGrayed = True
                     Caption = 'Historical'
                     ParentFont = False
@@ -1816,11 +1816,11 @@ object MainForm: TMainForm
                     TabOrder = 11
                   end
                   object ckFilterHorror: TCheckBox
-                    Left = 95
+                    Left = 113
                     Height = 19
                     Hint = 'A painful emotion of fear, dread, and abhorrence; a shuddering with terror and detestation; the feeling inspired by something frightful and shocking.'
                     Top = 92
-                    Width = 114
+                    Width = 132
                     AllowGrayed = True
                     Caption = 'Horror'
                     ParentFont = False
@@ -1830,11 +1830,11 @@ object MainForm: TMainForm
                     TabOrder = 12
                   end
                   object ckFilterJosei: TCheckBox
-                    Left = 95
+                    Left = 113
                     Height = 19
                     Hint = 'Literally "Woman". Targets women 18-30. Female equivalent to seinen. Unlike shoujo the romance is more realistic and less idealized. The storytelling is more explicit and mature.'
                     Top = 115
-                    Width = 114
+                    Width = 132
                     AllowGrayed = True
                     Caption = 'Josei'
                     ParentFont = False
@@ -1844,11 +1844,11 @@ object MainForm: TMainForm
                     TabOrder = 13
                   end
                   object ckFilterLolicon: TCheckBox
-                    Left = 95
+                    Left = 113
                     Height = 19
                     Hint = 'Representing a sexual attraction to young or under-age girls.'
                     Top = 138
-                    Width = 114
+                    Width = 132
                     AllowGrayed = True
                     Caption = 'Lolicon'
                     ParentFont = False
@@ -1858,11 +1858,11 @@ object MainForm: TMainForm
                     TabOrder = 14
                   end
                   object ckFilterMartialArts: TCheckBox
-                    Left = 95
+                    Left = 113
                     Height = 19
                     Hint = 'As the name suggests, anything martial arts related. Any of several arts of combat or self-defense, such as aikido, karate, judo, or taekwondo, kendo, fencing, and so on and so forth.'
                     Top = 161
-                    Width = 114
+                    Width = 132
                     AllowGrayed = True
                     Caption = 'Martial Arts'
                     ParentFont = False
@@ -1872,11 +1872,11 @@ object MainForm: TMainForm
                     TabOrder = 15
                   end
                   object ckFilterMature: TCheckBox
-                    Left = 213
+                    Left = 249
                     Height = 19
                     Hint = 'Contains subject matter which may be too extreme for people under the age of 17. Titles in this category may contain intense violence, blood and gore, sexual content and/or strong language.'
                     Top = 0
-                    Width = 109
+                    Width = 127
                     AllowGrayed = True
                     Caption = 'Mature'
                     ParentFont = False
@@ -1886,11 +1886,11 @@ object MainForm: TMainForm
                     TabOrder = 16
                   end
                   object ckFilterMecha: TCheckBox
-                    Left = 213
+                    Left = 249
                     Height = 19
                     Hint = 'A work involving and usually concentrating on all types of large robotic machines.'
                     Top = 23
-                    Width = 109
+                    Width = 127
                     AllowGrayed = True
                     Caption = 'Mecha'
                     ParentFont = False
@@ -1900,11 +1900,11 @@ object MainForm: TMainForm
                     TabOrder = 17
                   end
                   object ckFilterMusical: TCheckBox
-                    Left = 213
+                    Left = 249
                     Height = 19
                     Hint = 'Musical'
                     Top = 46
-                    Width = 109
+                    Width = 127
                     AllowGrayed = True
                     Caption = 'Musical'
                     ParentFont = False
@@ -1914,11 +1914,11 @@ object MainForm: TMainForm
                     TabOrder = 18
                   end
                   object ckFilterMystery: TCheckBox
-                    Left = 213
+                    Left = 249
                     Height = 19
                     Hint = 'Usually an unexplained event occurs, and the main protagonist attempts to find out what caused it.'
                     Top = 69
-                    Width = 109
+                    Width = 127
                     AllowGrayed = True
                     Caption = 'Mystery'
                     ParentFont = False
@@ -1928,11 +1928,11 @@ object MainForm: TMainForm
                     TabOrder = 19
                   end
                   object ckFilterPsychological: TCheckBox
-                    Left = 213
+                    Left = 249
                     Height = 19
                     Hint = 'Usually deals with the philosophy of a state of mind, in most cases detailing abnormal psychology.'
                     Top = 92
-                    Width = 109
+                    Width = 127
                     AllowGrayed = True
                     Caption = 'Psychological'
                     ParentFont = False
@@ -1942,11 +1942,11 @@ object MainForm: TMainForm
                     TabOrder = 20
                   end
                   object ckFilterRomance: TCheckBox
-                    Left = 213
+                    Left = 249
                     Height = 19
                     Hint = 'Any love related story. We will define love as between man and woman in this case. Other than that, it is up to your own imagination of what love is.'
                     Top = 115
-                    Width = 109
+                    Width = 127
                     AllowGrayed = True
                     Caption = 'Romance'
                     ParentFont = False
@@ -1956,11 +1956,11 @@ object MainForm: TMainForm
                     TabOrder = 21
                   end
                   object ckFilterSchoolLife: TCheckBox
-                    Left = 213
+                    Left = 249
                     Height = 19
                     Hint = 'Having a major setting of the story deal with some type of school.'
                     Top = 138
-                    Width = 109
+                    Width = 127
                     AllowGrayed = True
                     Caption = 'School Life'
                     ParentFont = False
@@ -1970,11 +1970,11 @@ object MainForm: TMainForm
                     TabOrder = 22
                   end
                   object ckFilterSciFi: TCheckBox
-                    Left = 213
+                    Left = 249
                     Height = 19
                     Hint = 'Short for science fiction, these works involve twists on technology and other science related phenomena which are contrary or stretches of the modern day scientific world.'
                     Top = 161
-                    Width = 109
+                    Width = 127
                     AllowGrayed = True
                     Caption = 'Sci-Fi'
                     ParentFont = False
@@ -1984,11 +1984,11 @@ object MainForm: TMainForm
                     TabOrder = 23
                   end
                   object ckFilterSeinen: TCheckBox
-                    Left = 326
+                    Left = 380
                     Height = 19
                     Hint = 'From Google: Seinen means ''young Man''. Manga and anime that specifically targets young adult males around the ages of 18 to 25 are seinen titles. The stories in seinen works appeal to university students and those in the working world. Typically the story lines deal with the issues of adulthood.'
                     Top = 0
-                    Width = 97
+                    Width = 115
                     AllowGrayed = True
                     Caption = 'Seinen'
                     ParentFont = False
@@ -1998,11 +1998,11 @@ object MainForm: TMainForm
                     TabOrder = 24
                   end
                   object ckFilterShotacon: TCheckBox
-                    Left = 326
+                    Left = 380
                     Height = 19
                     Hint = 'Representing a sexual attraction to young or under-age boys.'
                     Top = 23
-                    Width = 97
+                    Width = 115
                     AllowGrayed = True
                     Caption = 'Shotacon'
                     ParentFont = False
@@ -2012,11 +2012,11 @@ object MainForm: TMainForm
                     TabOrder = 25
                   end
                   object ckFilterShoujo: TCheckBox
-                    Left = 326
+                    Left = 380
                     Height = 19
                     Hint = 'A work intended and primarily written for females. Usually involves a lot of romance and strong character development.'
                     Top = 46
-                    Width = 97
+                    Width = 115
                     AllowGrayed = True
                     Caption = 'Shoujo'
                     ParentFont = False
@@ -2026,11 +2026,11 @@ object MainForm: TMainForm
                     TabOrder = 26
                   end
                   object ckFilterShoujoAi: TCheckBox
-                    Left = 326
+                    Left = 380
                     Height = 19
                     Hint = 'Often synonymous with yuri, this can be thought of as somewhat less extreme. "Girl''''s Love", so to speak.'
                     Top = 69
-                    Width = 97
+                    Width = 115
                     AllowGrayed = True
                     Caption = 'Shoujo Ai'
                     ParentFont = False
@@ -2040,11 +2040,11 @@ object MainForm: TMainForm
                     TabOrder = 27
                   end
                   object ckFilterShounen: TCheckBox
-                    Left = 326
+                    Left = 380
                     Height = 19
                     Hint = 'A work intended and primarily written for males. These works usually involve fighting and/or violence.'
                     Top = 92
-                    Width = 97
+                    Width = 115
                     AllowGrayed = True
                     Caption = 'Shounen'
                     ParentFont = False
@@ -2054,11 +2054,11 @@ object MainForm: TMainForm
                     TabOrder = 28
                   end
                   object ckFilterShounenAi: TCheckBox
-                    Left = 326
+                    Left = 380
                     Height = 19
                     Hint = 'Often synonymous with yaoi, this can be thought of as somewhat less extreme. "Boy''''s Love", so to speak'
                     Top = 115
-                    Width = 97
+                    Width = 115
                     AllowGrayed = True
                     Caption = 'Shounen Ai'
                     ParentFont = False
@@ -2068,11 +2068,11 @@ object MainForm: TMainForm
                     TabOrder = 29
                   end
                   object ckFilterSliceofLife: TCheckBox
-                    Left = 326
+                    Left = 380
                     Height = 19
                     Hint = 'As the name suggests, this genre represents day-to-day tribulations of one/many character(s). These challenges/events could technically happen in real life and are often -if not all the time- set in the present timeline in a world that mirrors our own.'
                     Top = 138
-                    Width = 97
+                    Width = 115
                     AllowGrayed = True
                     Caption = 'Slice of Life'
                     ParentFont = False
@@ -2082,11 +2082,11 @@ object MainForm: TMainForm
                     TabOrder = 30
                   end
                   object ckFilterSmut: TCheckBox
-                    Left = 326
+                    Left = 380
                     Height = 19
                     Hint = 'Deals with series that are considered profane or offensive, particularly with regards to sexual content.'
                     Top = 161
-                    Width = 97
+                    Width = 115
                     HelpType = htKeyword
                     AllowGrayed = True
                     Caption = 'Smut'
@@ -2097,11 +2097,11 @@ object MainForm: TMainForm
                     TabOrder = 31
                   end
                   object ckFilterSports: TCheckBox
-                    Left = 427
+                    Left = 499
                     Height = 19
                     Hint = 'As the name suggests, anything sports related. Baseball, basketball, hockey, soccer, golf, and racing just to name a few.'
                     Top = 0
-                    Width = 101
+                    Width = 117
                     AllowGrayed = True
                     Caption = 'Sports'
                     ParentFont = False
@@ -2111,11 +2111,11 @@ object MainForm: TMainForm
                     TabOrder = 32
                   end
                   object ckFilterSupernatural: TCheckBox
-                    Left = 427
+                    Left = 499
                     Height = 19
                     Hint = 'Usually entails amazing and unexplained powers or events which defy the laws of physics.'
                     Top = 23
-                    Width = 101
+                    Width = 117
                     AllowGrayed = True
                     Caption = 'Supernatural'
                     ParentFont = False
@@ -2125,11 +2125,11 @@ object MainForm: TMainForm
                     TabOrder = 33
                   end
                   object ckFilterTragedy: TCheckBox
-                    Left = 427
+                    Left = 499
                     Height = 19
                     Hint = 'Contains events resulting in great loss and misfortune.'
                     Top = 46
-                    Width = 101
+                    Width = 117
                     AllowGrayed = True
                     Caption = 'Tragedy'
                     ParentFont = False
@@ -2139,11 +2139,11 @@ object MainForm: TMainForm
                     TabOrder = 34
                   end
                   object ckFilterYaoi: TCheckBox
-                    Left = 427
+                    Left = 499
                     Height = 19
                     Hint = 'This work usually involves intimate relationships between men.'
                     Top = 69
-                    Width = 101
+                    Width = 117
                     AllowGrayed = True
                     Caption = 'Yaoi'
                     ParentFont = False
@@ -2153,11 +2153,11 @@ object MainForm: TMainForm
                     TabOrder = 35
                   end
                   object ckFilterYuri: TCheckBox
-                    Left = 427
+                    Left = 499
                     Height = 19
                     Hint = 'This work usually involves intimate relationships between women.'
                     Top = 92
-                    Width = 101
+                    Width = 117
                     AllowGrayed = True
                     Caption = 'Yuri'
                     ParentFont = False
@@ -2167,11 +2167,11 @@ object MainForm: TMainForm
                     TabOrder = 36
                   end
                   object ckFilterWeebtons: TCheckBox
-                    Left = 427
+                    Left = 499
                     Height = 19
                     Hint = 'Weebtoons'
                     Top = 115
-                    Width = 101
+                    Width = 117
                     AllowGrayed = True
                     Caption = 'Weebtoons'
                     ParentFont = False
@@ -2185,7 +2185,7 @@ object MainForm: TMainForm
                   Left = 0
                   Height = 35
                   Top = 381
-                  Width = 544
+                  Width = 632
                   Align = alTop
                   AutoSize = True
                   BevelOuter = bvNone
@@ -2196,7 +2196,7 @@ object MainForm: TMainForm
                   ChildSizing.Layout = cclLeftToRightThenTopToBottom
                   ChildSizing.ControlsPerLine = 3
                   ClientHeight = 35
-                  ClientWidth = 544
+                  ClientWidth = 632
                   TabOrder = 3
                   object btFilter: TBitBtn
                     Left = 4
