@@ -6,7 +6,7 @@ Changelog:
 
 0.9.162.0 (07.04.2019)
 [!] Report issues here: https://github.com/fmd-project-team/FMD/issues
-[!] Join us on Discord: https://discord.gg/xNBNzK
+[!] Join us on Discord: https://discord.gg/cXKKgw3
 [+] Added BacaManga [IN] -> Thank you AbidZakaria
 [+] Added KomikIndoWebId [IN]
 [+] Added OtakuIndo [IN] -> Thank you AbidZakaria
