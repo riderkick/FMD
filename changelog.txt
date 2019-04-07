@@ -1,8 +1,37 @@
 Free Manga Downloader
-Project page: https://github.com/fmd-project-team/FMD
+https://github.com/fmd-project-team/FMD
 
 Changelog:
-(! = Important, + = Addition, - = Removal, * = Bug fix/Change/Edit, ? = Require feedback)
+([!] Important, [+] Addition, [-] Removal, [*] Fix/Change, [?] Feedback needed)
+
+0.9.162.0 (07.04.2019)
+[!] Report issues here: https://github.com/fmd-project-team/FMD/issues
+[!] Join us on Discord: https://discord.gg/xNBNzK
+[+] Added BacaManga [IN] -> Thank you AbidZakaria
+[+] Added KomikIndoWebId [IN]
+[+] Added OtakuIndo [IN] -> Thank you AbidZakaria
+[+] Added KomikManga [IN] -> Thank you AbidZakaria
+[+] Added Komiku [IN] -> Thank you AbidZakaria
+[+] Added Kyuroku [IN] -> Thank you AbidZakaria
+[+] Added "(Un)Select All" buttons for website selection in options tab (Issue #28)
+[+] Added an option to automatically sort the Downloads list when adding new tasks (Issue #17)
+[-] Removed KomikOtaku [ID] (Issue #31)
+[*] BoredomSociety: Fixed chapter numbering (Issue #53)
+[*] Kiryuu: Fixed all (Issue #21)
+[*] HeavenManga: Fixed all (Issue #42) -> Thank you AbidZakaria
+[*] MangaID: Moved to BacaManga (Issue #31)
+[*] MangaKita: Fixed all (Issue #31)
+[*] NeuManga: Fixed manga info (Issue #31) -> Thank you AbidZakaria
+[*] WestManga: Fixed all (Issue #31) -> Thank you AbidZakaria
+[*] "Do you want to download manga list from the server?" dialog won't pop up anymore if you apply options
+[*] Fixed the splitter base position alignment in manga info tab (Issue #52)
+[*] Changed resizing behavior of the form when closing the application (Issue #52)
+[*] Component backported: Virtual TreeView [5.5.3-R1] -> [4.8.7-R4] (Issue #12)
+[*] Localization Update: German
+[*] Localization Update: Indonesian
+[*] Localization Update: Russian
+[*] Localization Update: Turkish
+Full changes: https://github.com/fmd-project-team/FMD/compare/0.9.161.0...0.9.162.0
 
 0.9.161.0 (02.04.2019)
 [!] Updater won't work because of some mistakes on my side. Please update manually. After that it should be working for further releases. Sorry.
@@ -15,7 +44,7 @@ Changelog:
 [*] Component updated: Synapse [r160] -> [r209] - Fixes some general networking problems (Issue #7)
 [*] Component updated: 7-Zip [18.01] -> [19.00] - Possible fix for issue #8
 [*] Component backported: Lazarus/LCL [2.0.4] -> [1.8.4] - FMD isn't fully compatible with [2.x]
-Full changes: https://github.com/fmd-project-team/FMD/compare/0.9.160.0...0.9.160.1
+Full changes: https://github.com/fmd-project-team/FMD/compare/0.9.160.0...0.9.161.0
 
 0.9.160.0 (31.03.2019)
 [!] This release is a fork of https://github.com/riderkick/FMD, which will be maintained by SDXC. More information: https://github.com/fmd-project-team/FMD/blob/master/README.md
