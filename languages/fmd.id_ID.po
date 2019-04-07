@@ -2040,6 +2040,14 @@ msgstr "Perkecil semua"
 msgid "Expand All"
 msgstr "Perluas semua"
 
+#: tmainform.tbwebsitesselectall.caption
+msgid "Select All"
+msgstr ""
+
+#: tmainform.tbwebsitesunselectall.caption
+msgid "Unselect All"
+msgstr ""
+
 #: tmainform.tsabout.caption
 msgid "About"
 msgstr "Tentang"

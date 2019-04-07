@@ -2068,6 +2068,14 @@ msgstr "Tümünü Daralt"
 msgid "Expand All"
 msgstr "Tümünü Genişlet"
 
+#: tmainform.tbwebsitesselectall.caption
+msgid "Select All"
+msgstr ""
+
+#: tmainform.tbwebsitesunselectall.caption
+msgid "Unselect All"
+msgstr ""
+
 #: tmainform.tsabout.caption
 msgid "About"
 msgstr "Hakkında"

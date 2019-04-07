@@ -154,6 +154,8 @@ type
     btDownloadSplit: TSpeedButton;
     seOptionRetryFailedTask: TSpinEdit;
     seJPEGQuality: TSpinEdit;
+    tbWebsitesSelectAll: TToolButton;
+    tbWebsitesUnselectAll: TToolButton;
     tsAccounts: TTabSheet;
     tsWebsiteModules: TTabSheet;
     ToolBarDownloadLeft: TToolBar;
@@ -496,6 +498,8 @@ type
     procedure tbmiDownloadMoveDownClick(Sender: TObject);
     procedure tbmiDownloadMoveTopClick(Sender: TObject);
     procedure tbmiDownloadMoveUpClick(Sender: TObject);
+    procedure tbWebsitesSelectAllClick(Sender: TObject);
+    procedure tbWebsitesUnselectAllClick(Sender: TObject);
     procedure tmAnimateMangaInfoTimer(Sender: TObject);
     procedure tmCheckFavoritesTimer(Sender: TObject);
     procedure tmExitCommandTimer(Sender: TObject);
@@ -886,7 +890,6 @@ resourcestring
   RS_DlgTypeInNewSavePath = 'Type in new save path:';
   RS_DlgUpdaterWantToUpdateDB = 'Do you want to download manga list from the server?';
   RS_DlgRemoveFinishTasks = 'Are you sure you want to delete all finished tasks?';
-  RS_DlgMangaListSelect = 'You must choose at least 1 manga website!';
   RS_DlgCannotGetMangaInfo = 'Cannot get manga info. Please check your internet connection and try it again.';
   RS_DlgCannotConnectToServer = 'Cannot connect to the server.';
   RS_DlgSplitDownload = 'Split download';
@@ -1593,6 +1596,74 @@ begin
   p := vtDownload.GetFirstSelected()^.Index;
   if p > 0 then
     vtDownloadMoveItems(p - 1, dmAbove);
+end;
+
+procedure TMainForm.tbWebsitesSelectAllClick(Sender: TObject);
+var
+  node: PVirtualNode;
+  b: Boolean = False;
+begin
+  { Check if any top level entries are expanded }
+  node := vtOptionMangaSiteSelection.GetFirstVisible();
+  while node<>nil do
+  begin
+    if node^.ChildCount = 0 then
+    begin
+      b := True;
+      // If at least one element without child elements is visible, we don't have to expand all elements:
+      break;
+    end;
+    node := vtOptionMangaSiteSelection.GetNextVisible(node);
+  end;
+
+  // If all top level entries are collapsed, expand all:
+  if b = False then vtOptionMangaSiteSelection.FullExpand;
+
+  { Set all visible elements to checked state }
+  node := vtOptionMangaSiteSelection.GetFirstVisible();
+  while node<>nil do
+  begin
+    if node^.ChildCount = 0 then
+    begin
+      node^.CheckState := csCheckedNormal;
+    end;
+    node := vtOptionMangaSiteSelection.GetNextVisible(node);
+  end;
+  vtOptionMangaSiteSelection.Refresh();
+end;
+
+procedure TMainForm.tbWebsitesUnselectAllClick(Sender: TObject);
+var
+  node: PVirtualNode;
+  b: Boolean = False;
+begin
+  { Check if any top level entries are expanded }
+  node := vtOptionMangaSiteSelection.GetFirstVisible();
+  while node<>nil do
+  begin
+    if node^.ChildCount = 0 then
+    begin
+      b := True;
+      // If at least one element without child elements is visible, we don't have to expand all elements:
+      break;
+    end;
+    node := vtOptionMangaSiteSelection.GetNextVisible(node);
+  end;
+
+  // If all top level entries are collapsed, expand all:
+  if b = False then vtOptionMangaSiteSelection.FullExpand;
+
+  { Set all visible elements to unchecked state }
+  node := vtOptionMangaSiteSelection.GetFirstVisible();
+  while node<>nil do
+  begin
+    if node^.ChildCount = 0 then
+    begin
+      node^.CheckState := csUncheckedNormal;
+    end;
+    node := vtOptionMangaSiteSelection.GetNextVisible(node);
+  end;
+  vtOptionMangaSiteSelection.Refresh();
 end;
 
 procedure TMainForm.tbmiDownloadMoveDownClick(Sender: TObject);
@@ -4844,13 +4915,6 @@ end;
 
 procedure TMainForm.SaveOptions(const AShowDialog: Boolean);
 begin
-  if (cbSelectManga.Items.Count = 0) and AShowDialog then
-  begin
-    MessageDlg('', RS_DlgMangaListSelect,
-      mtConfirmation, [mbYes], 0);
-    Exit;
-  end;
-
   with configfile do
     try
       // general
@@ -4961,6 +5025,7 @@ end;
 procedure TMainForm.ApplyOptions;
 var
   i: Integer;
+  b: Boolean;
   isStillHaveCurrentWebsite: Boolean;
   node: PVirtualNode;
 begin
@@ -4990,7 +5055,14 @@ begin
       if cbSelectManga.Items.Count > 0 then
       begin
         cbSelectManga.ItemIndex := 0;
-        cbSelectMangaEditingDone(cbSelectManga);
+		// Disable download manga list dialog when applying options:
+		b := cbOptionShowDownloadMangalistDialog.Checked;
+	    cbOptionShowDownloadMangalistDialog.Checked := False;
+        
+		cbSelectMangaEditingDone(cbSelectManga);
+		
+		// Revert state back to like it was before:
+		cbOptionShowDownloadMangalistDialog.Checked := b;
       end
       else
       begin

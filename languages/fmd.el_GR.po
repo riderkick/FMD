@@ -2099,6 +2099,14 @@ msgstr "Σύμπτυξη όλων"
 msgid "Expand All"
 msgstr "Ανάπτυξη όλων"
 
+#: tmainform.tbwebsitesselectall.caption
+msgid "Select All"
+msgstr ""
+
+#: tmainform.tbwebsitesunselectall.caption
+msgid "Unselect All"
+msgstr ""
+
 #: tmainform.tsabout.caption
 msgid "About"
 msgstr "Περί"
