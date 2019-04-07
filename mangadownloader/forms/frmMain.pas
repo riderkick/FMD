@@ -680,6 +680,11 @@ type
     LastSearchWeb: String;
     LastUserPickedSaveTo: String;
     LastViewMangaInfoSender: TObject;
+    
+    CurrentFormLeft: Integer;
+    CurrentFormTop: Integer;
+    CurrentFormWidth: Integer;
+    CurrentFormHeight: Integer;
 
     // state of chapterlist in mangainfo
     ChapterList: array of TChapterStateItem;
@@ -5507,6 +5512,10 @@ begin
     Top := ReadInteger('form', 'MainFormTop', Top);
     Width := ReadInteger('form', 'MainFormWidth', Width);
     Height := ReadInteger('form', 'MainFormHeight', Height);
+    CurrentFormLeft := Left;
+    CurrentFormTop := Top;
+    CurrentFormWidth := Width;
+    CurrentFormHeight := Height;
 
     if Screen.PixelsPerInch > 96 then begin
       Width := ScaleScreenTo96(Width);
@@ -5570,11 +5579,19 @@ begin
     WriteInteger('form', 'SelectManga', cbSelectManga.ItemIndex);
     WriteBool('form', 'MainFormMaximized', (WindowState = wsMaximized));
     if WindowState = wsMaximized then
-      WindowState := wsNormal;
-    WriteInteger('form', 'MainFormLeft', Left);
-    WriteInteger('form', 'MainFormTop', Top);
-    WriteInteger('form', 'MainFormWidth', Width);
-    WriteInteger('form', 'MainFormHeight', Height);
+    begin
+      WriteInteger('form', 'MainFormLeft', CurrentFormLeft);
+      WriteInteger('form', 'MainFormTop', CurrentFormTop);
+      WriteInteger('form', 'MainFormWidth', CurrentFormWidth);
+      WriteInteger('form', 'MainFormHeight', CurrentFormHeight);
+    end
+    else
+    begin
+      WriteInteger('form', 'MainFormLeft', Left);
+      WriteInteger('form', 'MainFormTop', Top);
+      WriteInteger('form', 'MainFormWidth', Width);
+      WriteInteger('form', 'MainFormHeight', Height);
+    end;
 
     savevt(vtDownload, 'vtDownload');
     savevt(vtFavorites, 'vtFavorites');
