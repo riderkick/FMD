@@ -2044,6 +2044,14 @@ msgstr "Collapse All"
 msgid "Expand All"
 msgstr "Expand All"
 
+#: tmainform.tbwebsitesselectall.caption
+msgid "Select All"
+msgstr "Alle auswählen"
+
+#: tmainform.tbwebsitesunselectall.caption
+msgid "Unselect All"
+msgstr "Alle abwählen"
+
 #: tmainform.tsabout.caption
 msgid "About"
 msgstr "Über"

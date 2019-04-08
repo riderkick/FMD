@@ -242,6 +242,8 @@
 {"hash":194645779,"name":"tmainform.tswebsiteselection.caption","sourcebytes":[87,101,98,115,105,116,101,115],"value":"Websites"},
 {"hash":138578252,"name":"tmainform.tbwebsitesexpandall.caption","sourcebytes":[69,120,112,97,110,100,32,65,108,108],"value":"Expand All"},
 {"hash":53573292,"name":"tmainform.tbwebsitescollapseall.caption","sourcebytes":[67,111,108,108,97,112,115,101,32,65,108,108],"value":"Collapse All"},
+{"hash":195288076,"name":"tmainform.tbwebsitesselectall.caption","sourcebytes":[83,101,108,101,99,116,32,65,108,108],"value":"Select All"},
+{"hash":241425420,"name":"tmainform.tbwebsitesunselectall.caption","sourcebytes":[85,110,115,101,108,101,99,116,32,65,108,108],"value":"Unselect All"},
 {"hash":32777246,"name":"tmainform.edwebsitessearch.texthint","sourcebytes":[83,101,97,114,99,104,32,119,101,98,115,105,116,101,46,46,46],"value":"Search website..."},
 {"hash":161923523,"name":"tmainform.tsaccounts.caption","sourcebytes":[65,99,99,111,117,110,116,115],"value":"Accounts"},
 {"hash":108725763,"name":"tmainform.tswebsiteoptions.caption","sourcebytes":[79,112,116,105,111,110,115],"value":"Options"},

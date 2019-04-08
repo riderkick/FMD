@@ -2049,6 +2049,14 @@ msgstr "Свернуть все"
 msgid "Expand All"
 msgstr "Раскрыть все"
 
+#: tmainform.tbwebsitesselectall.caption
+msgid "Select All"
+msgstr ""
+
+#: tmainform.tbwebsitesunselectall.caption
+msgid "Unselect All"
+msgstr ""
+
 #: tmainform.tsabout.caption
 msgid "About"
 msgstr "О программе"

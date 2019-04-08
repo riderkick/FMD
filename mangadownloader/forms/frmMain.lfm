@@ -37,20 +37,20 @@ object MainForm: TMainForm
     Height = 596
     Top = 8
     Width = 853
-    ActivePage = tsOption
+    ActivePage = tsInformation
     Align = alClient
     ParentFont = False
-    TabIndex = 3
+    TabIndex = 1
     TabOrder = 0
     OnChange = pcMainChange
     object tsDownload: TTabSheet
       Caption = 'Downloads'
       ChildSizing.TopBottomSpacing = 4
-      ClientHeight = 669
+      ClientHeight = 568
       ClientWidth = 845
       object psDownloads: TPairSplitter
         Left = 0
-        Height = 661
+        Height = 560
         Top = 4
         Width = 845
         Align = alClient
@@ -58,14 +58,14 @@ object MainForm: TMainForm
         object pssDownloadsFilter: TPairSplitterSide
           Cursor = crArrow
           Left = 0
-          Height = 661
+          Height = 560
           Top = 0
           Width = 200
           ClientWidth = 200
-          ClientHeight = 661
+          ClientHeight = 560
           object tvDownloadFilter: TTreeView
             Left = 0
-            Height = 661
+            Height = 560
             Top = 0
             Width = 200
             Align = alClient
@@ -80,12 +80,12 @@ object MainForm: TMainForm
         object pssDownloads: TPairSplitterSide
           Cursor = crArrow
           Left = 205
-          Height = 661
+          Height = 560
           Top = 0
           Width = 640
           ChildSizing.HorizontalSpacing = 4
           ClientWidth = 640
-          ClientHeight = 661
+          ClientHeight = 560
           object pnDownloadToolbar: TPanel
             AnchorSideBottom.Control = edDownloadsSearch
             AnchorSideBottom.Side = asrBottom
@@ -216,7 +216,7 @@ object MainForm: TMainForm
                 end
                 object tbSeparator1: TToolButton
                   Left = 153
-                  Height = 25
+                  Height = 5
                   Top = 0
                   Style = tbsDivider
                   Visible = False
@@ -286,19 +286,19 @@ object MainForm: TMainForm
           object pnDownloadList: TPanel
             AnchorSideLeft.Side = asrBottom
             Left = 0
-            Height = 635
+            Height = 534
             Top = 26
             Width = 640
             Align = alClient
             Anchors = [akTop, akLeft, akRight]
             BevelOuter = bvNone
-            ClientHeight = 635
+            ClientHeight = 534
             ClientWidth = 640
             ParentBidiMode = False
             TabOrder = 1
             object ToolBarDownloadLeft: TToolBar
               Left = 0
-              Height = 635
+              Height = 534
               Top = 0
               Width = 25
               Align = alLeft
@@ -348,7 +348,7 @@ object MainForm: TMainForm
             end
             object vtDownload: TVirtualStringTree
               Left = 29
-              Height = 635
+              Height = 534
               Top = 0
               Width = 611
               Align = alClient
@@ -432,11 +432,11 @@ object MainForm: TMainForm
     object tsInformation: TTabSheet
       Caption = 'Manga Info'
       ChildSizing.TopBottomSpacing = 4
-      ClientHeight = 669
+      ClientHeight = 568
       ClientWidth = 845
       object psInfo: TPairSplitter
         Left = 0
-        Height = 661
+        Height = 560
         Top = 4
         Width = 845
         Align = alClient
@@ -444,18 +444,18 @@ object MainForm: TMainForm
         object pssInfoList: TPairSplitterSide
           Cursor = crArrow
           Left = 0
-          Height = 661
+          Height = 560
           Top = 0
           Width = 200
           ChildSizing.HorizontalSpacing = 4
           ChildSizing.VerticalSpacing = 4
           ClientWidth = 200
-          ClientHeight = 661
+          ClientHeight = 560
           object vtMangaList: TVirtualStringTree
             AnchorSideTop.Control = lbMode
             AnchorSideTop.Side = asrBottom
             Left = 0
-            Height = 580
+            Height = 479
             Top = 81
             Width = 200
             Align = alBottom
@@ -745,14 +745,14 @@ object MainForm: TMainForm
         object pssInfo: TPairSplitterSide
           Cursor = crArrow
           Left = 205
-          Height = 661
+          Height = 560
           Top = 0
           Width = 640
           ClientWidth = 640
-          ClientHeight = 661
+          ClientHeight = 560
           object pcInfo: TPageControl
             Left = 0
-            Height = 661
+            Height = 560
             Top = 0
             Width = 640
             ActivePage = tsInfoManga
@@ -762,11 +762,11 @@ object MainForm: TMainForm
             object tsInfoManga: TTabSheet
               Caption = 'Info'
               ChildSizing.TopBottomSpacing = 4
-              ClientHeight = 633
+              ClientHeight = 532
               ClientWidth = 632
               object sbInformation: TScrollBox
                 Left = 0
-                Height = 625
+                Height = 524
                 Top = 4
                 Width = 632
                 HorzScrollBar.Page = 308
@@ -776,7 +776,7 @@ object MainForm: TMainForm
                 BorderStyle = bsNone
                 ChildSizing.HorizontalSpacing = 4
                 ChildSizing.VerticalSpacing = 4
-                ClientHeight = 625
+                ClientHeight = 524
                 ClientWidth = 632
                 TabOrder = 0
                 object pnInfomation: TPanel
@@ -853,7 +853,7 @@ object MainForm: TMainForm
                     AnchorSideRight.Control = edURL
                     AnchorSideRight.Side = asrBottom
                     Left = 158
-                    Height = 219
+                    Height = 216
                     Top = 27
                     Width = 474
                     Anchors = [akTop, akLeft, akRight, akBottom]
@@ -920,14 +920,14 @@ object MainForm: TMainForm
                 end
                 object pnChapterList: TPanel
                   Left = 0
-                  Height = 364
+                  Height = 263
                   Top = 261
                   Width = 632
                   Align = alClient
                   BevelOuter = bvNone
                   ChildSizing.HorizontalSpacing = 4
                   ChildSizing.VerticalSpacing = 4
-                  ClientHeight = 364
+                  ClientHeight = 263
                   ClientWidth = 632
                   TabOrder = 2
                   object clbChapterList: TVirtualStringTree
@@ -936,7 +936,7 @@ object MainForm: TMainForm
                     AnchorSideRight.Control = btChecks
                     AnchorSideBottom.Control = btDownload
                     Left = 0
-                    Height = 274
+                    Height = 173
                     Top = 0
                     Width = 602
                     Anchors = [akTop, akLeft, akRight, akBottom]
@@ -971,7 +971,7 @@ object MainForm: TMainForm
                     AnchorSideBottom.Control = btReadOnline
                     Left = 502
                     Height = 26
-                    Top = 278
+                    Top = 177
                     Width = 100
                     Anchors = [akLeft, akRight, akBottom]
                     AutoSize = True
@@ -1024,7 +1024,7 @@ object MainForm: TMainForm
                     AnchorSideBottom.Side = asrBottom
                     Left = 0
                     Height = 19
-                    Top = 338
+                    Top = 237
                     Width = 498
                     Anchors = [akTop, akLeft, akRight]
                     Caption = 'Add to download list as stopped task'
@@ -1040,7 +1040,7 @@ object MainForm: TMainForm
                     AnchorSideBottom.Control = btAddToFavorites
                     Left = 502
                     Height = 26
-                    Top = 308
+                    Top = 207
                     Width = 130
                     Anchors = [akLeft, akRight, akBottom]
                     AutoSize = True
@@ -1139,7 +1139,7 @@ object MainForm: TMainForm
                     AnchorSideRight.Side = asrBottom
                     Left = 502
                     Height = 26
-                    Top = 338
+                    Top = 237
                     Width = 130
                     Anchors = [akRight, akBottom]
                     AutoSize = True
@@ -1189,7 +1189,7 @@ object MainForm: TMainForm
                     AnchorSideBottom.Control = edSaveTo
                     Left = 0
                     Height = 15
-                    Top = 289
+                    Top = 188
                     Width = 41
                     Anchors = [akLeft, akBottom]
                     Caption = 'Save to:'
@@ -1254,7 +1254,7 @@ object MainForm: TMainForm
                     AnchorSideBottom.Control = cbAddAsStopped
                     Left = 0
                     Height = 23
-                    Top = 308
+                    Top = 207
                     Width = 498
                     Anchors = [akTop, akLeft, akRight]
                     ButtonWidth = 23
@@ -1312,7 +1312,7 @@ object MainForm: TMainForm
                     Left = 606
                     Height = 26
                     Hint = 'Split download'
-                    Top = 278
+                    Top = 177
                     Width = 26
                     Anchors = [akTop, akRight, akBottom]
                     Glyph.Data = {
@@ -1359,25 +1359,25 @@ object MainForm: TMainForm
             object tsinfoFilterAdv: TTabSheet
               Caption = 'Filter'
               ChildSizing.TopBottomSpacing = 4
-              ClientHeight = 456
-              ClientWidth = 544
+              ClientHeight = 532
+              ClientWidth = 632
               object sbFilter: TScrollBox
                 Left = 0
-                Height = 448
+                Height = 524
                 Top = 4
-                Width = 544
+                Width = 632
                 HorzScrollBar.Page = 488
                 VertScrollBar.Page = 416
                 Align = alClient
                 BorderStyle = bsNone
-                ClientHeight = 448
-                ClientWidth = 544
+                ClientHeight = 524
+                ClientWidth = 632
                 TabOrder = 0
                 object pnCustomGenre: TPanel
                   Left = 8
                   Height = 23
                   Top = 196
-                  Width = 528
+                  Width = 616
                   Align = alTop
                   AutoSize = True
                   BorderSpacing.Around = 8
@@ -1386,7 +1386,7 @@ object MainForm: TMainForm
                   ChildSizing.VerticalSpacing = 4
                   ChildSizing.ControlsPerLine = 3
                   ClientHeight = 23
-                  ClientWidth = 528
+                  ClientWidth = 616
                   TabOrder = 1
                   object lbFilterCustomGenres: TLabel
                     Left = 0
@@ -1405,7 +1405,7 @@ object MainForm: TMainForm
                     Left = 97
                     Height = 23
                     Top = 0
-                    Width = 414
+                    Width = 502
                     Align = alClient
                     BorderSpacing.Left = 4
                     ParentFont = False
@@ -1415,7 +1415,7 @@ object MainForm: TMainForm
                   object lbFilterHint: TLabel
                     AnchorSideLeft.Control = edCustomGenres
                     AnchorSideLeft.Side = asrBottom
-                    Left = 515
+                    Left = 603
                     Height = 23
                     Hint = 'Genres:'#13#10'- Checked: Include this genre.'#13#10'- Unchecked: Exclude this genre.'#13#10'- Grayed: Doesn''t matter.'#13#10#13#10'Custom Genres:'#13#10'- Separate multiple genres with '',''.'#13#10'- Exclude a genre by placing ''!'' or ''-'' at the beginning of a genre.'#13#10'- Example: Adventure,!Ecchi,Comedy.'
                     Top = 0
@@ -1434,13 +1434,13 @@ object MainForm: TMainForm
                   Left = 8
                   Height = 136
                   Top = 237
-                  Width = 528
+                  Width = 616
                   Align = alTop
                   BorderSpacing.Top = 10
                   BorderSpacing.Around = 8
                   BevelOuter = bvNone
                   ClientHeight = 136
-                  ClientWidth = 528
+                  ClientWidth = 616
                   ParentFont = False
                   TabOrder = 2
                   object Panel1: TPanel
@@ -1571,7 +1571,7 @@ object MainForm: TMainForm
                     Left = 303
                     Height = 136
                     Top = 0
-                    Width = 225
+                    Width = 313
                     Align = alClient
                     AutoSize = True
                     BorderSpacing.Left = 4
@@ -1580,7 +1580,7 @@ object MainForm: TMainForm
                     ChildSizing.VerticalSpacing = 4
                     ChildSizing.Layout = cclLeftToRightThenTopToBottom
                     ClientHeight = 136
-                    ClientWidth = 225
+                    ClientWidth = 313
                     TabOrder = 1
                     object rbOne: TRadioButton
                       Left = 0
@@ -1633,7 +1633,7 @@ object MainForm: TMainForm
                   Left = 8
                   Height = 180
                   Top = 8
-                  Width = 528
+                  Width = 616
                   Align = alTop
                   AutoSize = True
                   BorderSpacing.Around = 8
@@ -1644,7 +1644,7 @@ object MainForm: TMainForm
                   ChildSizing.Layout = cclTopToBottomThenLeftToRight
                   ChildSizing.ControlsPerLine = 8
                   ClientHeight = 180
-                  ClientWidth = 528
+                  ClientWidth = 616
                   PopupMenu = pmFilterGenreAll
                   TabOrder = 0
                   object ckFilterAction: TCheckBox
@@ -1652,7 +1652,7 @@ object MainForm: TMainForm
                     Height = 19
                     Hint = 'A work typically depicting fighting, violence, chaos, and fast paced motion.'
                     Top = 0
-                    Width = 91
+                    Width = 109
                     AllowGrayed = True
                     Caption = 'Action'
                     ParentFont = False
@@ -1666,7 +1666,7 @@ object MainForm: TMainForm
                     Height = 19
                     Hint = 'Contains content that is suitable only for adults. Titles in this category may include prolonged scenes of intense violence and/or graphic sexual content and nudity.'
                     Top = 23
-                    Width = 91
+                    Width = 109
                     AllowGrayed = True
                     Caption = 'Adult'
                     ParentFont = False
@@ -1680,7 +1680,7 @@ object MainForm: TMainForm
                     Height = 19
                     Hint = 'If a character in the story goes on a trip or along that line, your best bet is that it is an adventure manga. Otherwise, it''s up to your personal prejudice on this case.'
                     Top = 46
-                    Width = 91
+                    Width = 109
                     AllowGrayed = True
                     Caption = 'Adventure'
                     ParentFont = False
@@ -1694,7 +1694,7 @@ object MainForm: TMainForm
                     Height = 19
                     Hint = 'A dramatic work that is light and often humorous or satirical in tone and that usually contains a happy resolution of the thematic conflict.'
                     Top = 69
-                    Width = 91
+                    Width = 109
                     AllowGrayed = True
                     Caption = 'Comedy'
                     ParentFont = False
@@ -1708,7 +1708,7 @@ object MainForm: TMainForm
                     Height = 19
                     Hint = 'Fan based work inpspired by official manga/anime.'
                     Top = 92
-                    Width = 91
+                    Width = 109
                     AllowGrayed = True
                     Caption = 'Doujinshi'
                     ParentFont = False
@@ -1722,7 +1722,7 @@ object MainForm: TMainForm
                     Height = 19
                     Hint = 'A work meant to bring on an emotional response, such as instilling sadness or tension.'
                     Top = 115
-                    Width = 91
+                    Width = 109
                     AllowGrayed = True
                     Caption = 'Drama'
                     ParentFont = False
@@ -1736,7 +1736,7 @@ object MainForm: TMainForm
                     Height = 19
                     Hint = 'Possibly the line between hentai and non-hentai, ecchi usually refers to fanservice put in to attract a certain group of fans.'
                     Top = 138
-                    Width = 91
+                    Width = 109
                     AllowGrayed = True
                     Caption = 'Ecchi'
                     ParentFont = False
@@ -1750,7 +1750,7 @@ object MainForm: TMainForm
                     Height = 19
                     Hint = 'Anything that involves, but not limited to, magic, dream world, and fairy tales.'
                     Top = 161
-                    Width = 91
+                    Width = 109
                     AllowGrayed = True
                     Caption = 'Fantasy'
                     ParentFont = False
@@ -1760,11 +1760,11 @@ object MainForm: TMainForm
                     TabOrder = 7
                   end
                   object ckFilterGenderBender: TCheckBox
-                    Left = 95
+                    Left = 113
                     Height = 19
                     Hint = 'Girls dressing up as guys, guys dressing up as girls.'#13#10'Guys turning into girls, girls turning into guys.'
                     Top = 0
-                    Width = 114
+                    Width = 132
                     AllowGrayed = True
                     Caption = 'Gender Bender'
                     ParentFont = False
@@ -1774,11 +1774,11 @@ object MainForm: TMainForm
                     TabOrder = 8
                   end
                   object ckFilterHarem: TCheckBox
-                    Left = 95
+                    Left = 113
                     Height = 19
                     Hint = 'A series involving one male character and many female characters (usually attracted to the male character). A Reverse Harem is when the genders are reversed.'
                     Top = 23
-                    Width = 114
+                    Width = 132
                     AllowGrayed = True
                     Caption = 'Harem'
                     ParentFont = False
@@ -1788,11 +1788,11 @@ object MainForm: TMainForm
                     TabOrder = 9
                   end
                   object ckFilterHentai: TCheckBox
-                    Left = 95
+                    Left = 113
                     Height = 19
                     Hint = 'Hentai'
                     Top = 46
-                    Width = 114
+                    Width = 132
                     AllowGrayed = True
                     Caption = 'Hentai'
                     ParentFont = False
@@ -1802,11 +1802,11 @@ object MainForm: TMainForm
                     TabOrder = 10
                   end
                   object ckFilterHistorical: TCheckBox
-                    Left = 95
+                    Left = 113
                     Height = 19
                     Hint = 'Having to do with old or ancient times.'
                     Top = 69
-                    Width = 114
+                    Width = 132
                     AllowGrayed = True
                     Caption = 'Historical'
                     ParentFont = False
@@ -1816,11 +1816,11 @@ object MainForm: TMainForm
                     TabOrder = 11
                   end
                   object ckFilterHorror: TCheckBox
-                    Left = 95
+                    Left = 113
                     Height = 19
                     Hint = 'A painful emotion of fear, dread, and abhorrence; a shuddering with terror and detestation; the feeling inspired by something frightful and shocking.'
                     Top = 92
-                    Width = 114
+                    Width = 132
                     AllowGrayed = True
                     Caption = 'Horror'
                     ParentFont = False
@@ -1830,11 +1830,11 @@ object MainForm: TMainForm
                     TabOrder = 12
                   end
                   object ckFilterJosei: TCheckBox
-                    Left = 95
+                    Left = 113
                     Height = 19
                     Hint = 'Literally "Woman". Targets women 18-30. Female equivalent to seinen. Unlike shoujo the romance is more realistic and less idealized. The storytelling is more explicit and mature.'
                     Top = 115
-                    Width = 114
+                    Width = 132
                     AllowGrayed = True
                     Caption = 'Josei'
                     ParentFont = False
@@ -1844,11 +1844,11 @@ object MainForm: TMainForm
                     TabOrder = 13
                   end
                   object ckFilterLolicon: TCheckBox
-                    Left = 95
+                    Left = 113
                     Height = 19
                     Hint = 'Representing a sexual attraction to young or under-age girls.'
                     Top = 138
-                    Width = 114
+                    Width = 132
                     AllowGrayed = True
                     Caption = 'Lolicon'
                     ParentFont = False
@@ -1858,11 +1858,11 @@ object MainForm: TMainForm
                     TabOrder = 14
                   end
                   object ckFilterMartialArts: TCheckBox
-                    Left = 95
+                    Left = 113
                     Height = 19
                     Hint = 'As the name suggests, anything martial arts related. Any of several arts of combat or self-defense, such as aikido, karate, judo, or taekwondo, kendo, fencing, and so on and so forth.'
                     Top = 161
-                    Width = 114
+                    Width = 132
                     AllowGrayed = True
                     Caption = 'Martial Arts'
                     ParentFont = False
@@ -1872,11 +1872,11 @@ object MainForm: TMainForm
                     TabOrder = 15
                   end
                   object ckFilterMature: TCheckBox
-                    Left = 213
+                    Left = 249
                     Height = 19
                     Hint = 'Contains subject matter which may be too extreme for people under the age of 17. Titles in this category may contain intense violence, blood and gore, sexual content and/or strong language.'
                     Top = 0
-                    Width = 109
+                    Width = 127
                     AllowGrayed = True
                     Caption = 'Mature'
                     ParentFont = False
@@ -1886,11 +1886,11 @@ object MainForm: TMainForm
                     TabOrder = 16
                   end
                   object ckFilterMecha: TCheckBox
-                    Left = 213
+                    Left = 249
                     Height = 19
                     Hint = 'A work involving and usually concentrating on all types of large robotic machines.'
                     Top = 23
-                    Width = 109
+                    Width = 127
                     AllowGrayed = True
                     Caption = 'Mecha'
                     ParentFont = False
@@ -1900,11 +1900,11 @@ object MainForm: TMainForm
                     TabOrder = 17
                   end
                   object ckFilterMusical: TCheckBox
-                    Left = 213
+                    Left = 249
                     Height = 19
                     Hint = 'Musical'
                     Top = 46
-                    Width = 109
+                    Width = 127
                     AllowGrayed = True
                     Caption = 'Musical'
                     ParentFont = False
@@ -1914,11 +1914,11 @@ object MainForm: TMainForm
                     TabOrder = 18
                   end
                   object ckFilterMystery: TCheckBox
-                    Left = 213
+                    Left = 249
                     Height = 19
                     Hint = 'Usually an unexplained event occurs, and the main protagonist attempts to find out what caused it.'
                     Top = 69
-                    Width = 109
+                    Width = 127
                     AllowGrayed = True
                     Caption = 'Mystery'
                     ParentFont = False
@@ -1928,11 +1928,11 @@ object MainForm: TMainForm
                     TabOrder = 19
                   end
                   object ckFilterPsychological: TCheckBox
-                    Left = 213
+                    Left = 249
                     Height = 19
                     Hint = 'Usually deals with the philosophy of a state of mind, in most cases detailing abnormal psychology.'
                     Top = 92
-                    Width = 109
+                    Width = 127
                     AllowGrayed = True
                     Caption = 'Psychological'
                     ParentFont = False
@@ -1942,11 +1942,11 @@ object MainForm: TMainForm
                     TabOrder = 20
                   end
                   object ckFilterRomance: TCheckBox
-                    Left = 213
+                    Left = 249
                     Height = 19
                     Hint = 'Any love related story. We will define love as between man and woman in this case. Other than that, it is up to your own imagination of what love is.'
                     Top = 115
-                    Width = 109
+                    Width = 127
                     AllowGrayed = True
                     Caption = 'Romance'
                     ParentFont = False
@@ -1956,11 +1956,11 @@ object MainForm: TMainForm
                     TabOrder = 21
                   end
                   object ckFilterSchoolLife: TCheckBox
-                    Left = 213
+                    Left = 249
                     Height = 19
                     Hint = 'Having a major setting of the story deal with some type of school.'
                     Top = 138
-                    Width = 109
+                    Width = 127
                     AllowGrayed = True
                     Caption = 'School Life'
                     ParentFont = False
@@ -1970,11 +1970,11 @@ object MainForm: TMainForm
                     TabOrder = 22
                   end
                   object ckFilterSciFi: TCheckBox
-                    Left = 213
+                    Left = 249
                     Height = 19
                     Hint = 'Short for science fiction, these works involve twists on technology and other science related phenomena which are contrary or stretches of the modern day scientific world.'
                     Top = 161
-                    Width = 109
+                    Width = 127
                     AllowGrayed = True
                     Caption = 'Sci-Fi'
                     ParentFont = False
@@ -1984,11 +1984,11 @@ object MainForm: TMainForm
                     TabOrder = 23
                   end
                   object ckFilterSeinen: TCheckBox
-                    Left = 326
+                    Left = 380
                     Height = 19
                     Hint = 'From Google: Seinen means ''young Man''. Manga and anime that specifically targets young adult males around the ages of 18 to 25 are seinen titles. The stories in seinen works appeal to university students and those in the working world. Typically the story lines deal with the issues of adulthood.'
                     Top = 0
-                    Width = 97
+                    Width = 115
                     AllowGrayed = True
                     Caption = 'Seinen'
                     ParentFont = False
@@ -1998,11 +1998,11 @@ object MainForm: TMainForm
                     TabOrder = 24
                   end
                   object ckFilterShotacon: TCheckBox
-                    Left = 326
+                    Left = 380
                     Height = 19
                     Hint = 'Representing a sexual attraction to young or under-age boys.'
                     Top = 23
-                    Width = 97
+                    Width = 115
                     AllowGrayed = True
                     Caption = 'Shotacon'
                     ParentFont = False
@@ -2012,11 +2012,11 @@ object MainForm: TMainForm
                     TabOrder = 25
                   end
                   object ckFilterShoujo: TCheckBox
-                    Left = 326
+                    Left = 380
                     Height = 19
                     Hint = 'A work intended and primarily written for females. Usually involves a lot of romance and strong character development.'
                     Top = 46
-                    Width = 97
+                    Width = 115
                     AllowGrayed = True
                     Caption = 'Shoujo'
                     ParentFont = False
@@ -2026,11 +2026,11 @@ object MainForm: TMainForm
                     TabOrder = 26
                   end
                   object ckFilterShoujoAi: TCheckBox
-                    Left = 326
+                    Left = 380
                     Height = 19
                     Hint = 'Often synonymous with yuri, this can be thought of as somewhat less extreme. "Girl''''s Love", so to speak.'
                     Top = 69
-                    Width = 97
+                    Width = 115
                     AllowGrayed = True
                     Caption = 'Shoujo Ai'
                     ParentFont = False
@@ -2040,11 +2040,11 @@ object MainForm: TMainForm
                     TabOrder = 27
                   end
                   object ckFilterShounen: TCheckBox
-                    Left = 326
+                    Left = 380
                     Height = 19
                     Hint = 'A work intended and primarily written for males. These works usually involve fighting and/or violence.'
                     Top = 92
-                    Width = 97
+                    Width = 115
                     AllowGrayed = True
                     Caption = 'Shounen'
                     ParentFont = False
@@ -2054,11 +2054,11 @@ object MainForm: TMainForm
                     TabOrder = 28
                   end
                   object ckFilterShounenAi: TCheckBox
-                    Left = 326
+                    Left = 380
                     Height = 19
                     Hint = 'Often synonymous with yaoi, this can be thought of as somewhat less extreme. "Boy''''s Love", so to speak'
                     Top = 115
-                    Width = 97
+                    Width = 115
                     AllowGrayed = True
                     Caption = 'Shounen Ai'
                     ParentFont = False
@@ -2068,11 +2068,11 @@ object MainForm: TMainForm
                     TabOrder = 29
                   end
                   object ckFilterSliceofLife: TCheckBox
-                    Left = 326
+                    Left = 380
                     Height = 19
                     Hint = 'As the name suggests, this genre represents day-to-day tribulations of one/many character(s). These challenges/events could technically happen in real life and are often -if not all the time- set in the present timeline in a world that mirrors our own.'
                     Top = 138
-                    Width = 97
+                    Width = 115
                     AllowGrayed = True
                     Caption = 'Slice of Life'
                     ParentFont = False
@@ -2082,11 +2082,11 @@ object MainForm: TMainForm
                     TabOrder = 30
                   end
                   object ckFilterSmut: TCheckBox
-                    Left = 326
+                    Left = 380
                     Height = 19
                     Hint = 'Deals with series that are considered profane or offensive, particularly with regards to sexual content.'
                     Top = 161
-                    Width = 97
+                    Width = 115
                     HelpType = htKeyword
                     AllowGrayed = True
                     Caption = 'Smut'
@@ -2097,11 +2097,11 @@ object MainForm: TMainForm
                     TabOrder = 31
                   end
                   object ckFilterSports: TCheckBox
-                    Left = 427
+                    Left = 499
                     Height = 19
                     Hint = 'As the name suggests, anything sports related. Baseball, basketball, hockey, soccer, golf, and racing just to name a few.'
                     Top = 0
-                    Width = 101
+                    Width = 117
                     AllowGrayed = True
                     Caption = 'Sports'
                     ParentFont = False
@@ -2111,11 +2111,11 @@ object MainForm: TMainForm
                     TabOrder = 32
                   end
                   object ckFilterSupernatural: TCheckBox
-                    Left = 427
+                    Left = 499
                     Height = 19
                     Hint = 'Usually entails amazing and unexplained powers or events which defy the laws of physics.'
                     Top = 23
-                    Width = 101
+                    Width = 117
                     AllowGrayed = True
                     Caption = 'Supernatural'
                     ParentFont = False
@@ -2125,11 +2125,11 @@ object MainForm: TMainForm
                     TabOrder = 33
                   end
                   object ckFilterTragedy: TCheckBox
-                    Left = 427
+                    Left = 499
                     Height = 19
                     Hint = 'Contains events resulting in great loss and misfortune.'
                     Top = 46
-                    Width = 101
+                    Width = 117
                     AllowGrayed = True
                     Caption = 'Tragedy'
                     ParentFont = False
@@ -2139,11 +2139,11 @@ object MainForm: TMainForm
                     TabOrder = 34
                   end
                   object ckFilterYaoi: TCheckBox
-                    Left = 427
+                    Left = 499
                     Height = 19
                     Hint = 'This work usually involves intimate relationships between men.'
                     Top = 69
-                    Width = 101
+                    Width = 117
                     AllowGrayed = True
                     Caption = 'Yaoi'
                     ParentFont = False
@@ -2153,11 +2153,11 @@ object MainForm: TMainForm
                     TabOrder = 35
                   end
                   object ckFilterYuri: TCheckBox
-                    Left = 427
+                    Left = 499
                     Height = 19
                     Hint = 'This work usually involves intimate relationships between women.'
                     Top = 92
-                    Width = 101
+                    Width = 117
                     AllowGrayed = True
                     Caption = 'Yuri'
                     ParentFont = False
@@ -2167,11 +2167,11 @@ object MainForm: TMainForm
                     TabOrder = 36
                   end
                   object ckFilterWeebtons: TCheckBox
-                    Left = 427
+                    Left = 499
                     Height = 19
                     Hint = 'Weebtoons'
                     Top = 115
-                    Width = 101
+                    Width = 117
                     AllowGrayed = True
                     Caption = 'Weebtoons'
                     ParentFont = False
@@ -2185,7 +2185,7 @@ object MainForm: TMainForm
                   Left = 0
                   Height = 35
                   Top = 381
-                  Width = 544
+                  Width = 632
                   Align = alTop
                   AutoSize = True
                   BevelOuter = bvNone
@@ -2196,7 +2196,7 @@ object MainForm: TMainForm
                   ChildSizing.Layout = cclLeftToRightThenTopToBottom
                   ChildSizing.ControlsPerLine = 3
                   ClientHeight = 35
-                  ClientWidth = 544
+                  ClientWidth = 632
                   TabOrder = 3
                   object btFilter: TBitBtn
                     Left = 4
@@ -2357,13 +2357,13 @@ object MainForm: TMainForm
     object tsFavorites: TTabSheet
       Caption = 'Favorites'
       ChildSizing.TopBottomSpacing = 4
-      ClientHeight = 669
+      ClientHeight = 568
       ClientWidth = 845
       object vtFavorites: TVirtualStringTree
         AnchorSideTop.Control = edFavoritesSearch
         AnchorSideTop.Side = asrBottom
         Left = 0
-        Height = 635
+        Height = 534
         Top = 30
         Width = 845
         Align = alBottom
@@ -2644,11 +2644,11 @@ object MainForm: TMainForm
         Height = 470
         Top = 4
         Width = 845
-        ActivePage = tsGeneral
+        ActivePage = tsWebsites
         Align = alTop
         Anchors = [akTop, akLeft, akRight, akBottom]
         ParentFont = False
-        TabIndex = 0
+        TabIndex = 6
         TabOrder = 0
         object tsGeneral: TTabSheet
           Caption = 'General'
@@ -3427,22 +3427,22 @@ object MainForm: TMainForm
         end
         object tsSaveTo: TTabSheet
           Caption = 'Save to'
-          ClientHeight = 543
+          ClientHeight = 442
           ClientWidth = 837
           object sbSaveTo: TScrollBox
             Left = 0
-            Height = 543
+            Height = 442
             Top = 0
             Width = 837
             HorzScrollBar.Page = 198
-            VertScrollBar.Page = 543
+            VertScrollBar.Page = 442
             Align = alClient
             BorderStyle = bsNone
             ChildSizing.LeftRightSpacing = 4
             ChildSizing.TopBottomSpacing = 8
             ChildSizing.HorizontalSpacing = 4
             ChildSizing.VerticalSpacing = 4
-            ClientHeight = 543
+            ClientHeight = 442
             ClientWidth = 820
             TabOrder = 0
             object rgOptionCompress: TRadioGroup
@@ -4198,11 +4198,11 @@ object MainForm: TMainForm
           ChildSizing.TopBottomSpacing = 8
           ChildSizing.HorizontalSpacing = 4
           ChildSizing.VerticalSpacing = 4
-          ClientHeight = 543
+          ClientHeight = 442
           ClientWidth = 837
           object pcWebsiteOptions: TPageControl
             Left = 4
-            Height = 527
+            Height = 426
             Top = 8
             Width = 829
             ActivePage = tsWebsiteSelection
@@ -4211,11 +4211,11 @@ object MainForm: TMainForm
             TabOrder = 0
             object tsWebsiteSelection: TTabSheet
               Caption = 'Websites'
-              ClientHeight = 499
+              ClientHeight = 398
               ClientWidth = 821
               object vtOptionMangaSiteSelection: TVirtualStringTree
                 Left = 0
-                Height = 464
+                Height = 363
                 Top = 35
                 Width = 821
                 Align = alClient
@@ -4256,21 +4256,21 @@ object MainForm: TMainForm
                 ClientWidth = 815
                 TabOrder = 0
                 object pnlWebsitesToolRight: TPanel
-                  Left = 645
+                  Left = 483
                   Height = 23
                   Top = 0
-                  Width = 170
+                  Width = 332
                   Align = alRight
                   AutoSize = True
                   BevelOuter = bvNone
                   ClientHeight = 23
-                  ClientWidth = 170
+                  ClientWidth = 332
                   TabOrder = 0
                   object ToolBarWebsites: TToolBar
                     Left = 0
                     Height = 22
                     Top = 0
-                    Width = 170
+                    Width = 332
                     AutoSize = True
                     EdgeBorders = []
                     Images = IconList
@@ -4280,7 +4280,7 @@ object MainForm: TMainForm
                     TabOrder = 0
                     Transparent = True
                     object tbWebsitesExpandAll: TToolButton
-                      Left = 1
+                      Left = 163
                       Top = 0
                       AutoSize = True
                       Caption = 'Expand All'
@@ -4288,12 +4288,28 @@ object MainForm: TMainForm
                       OnClick = tbWebsitesExpandAllClick
                     end
                     object tbWebsitesCollapseAll: TToolButton
-                      Left = 82
+                      Left = 244
                       Top = 0
                       AutoSize = True
                       Caption = 'Collapse All'
                       ImageIndex = 18
                       OnClick = tbWebsitesCollapseAllClick
+                    end
+                    object tbWebsitesSelectAll: TToolButton
+                      Left = 1
+                      Top = 0
+                      AutoSize = True
+                      Caption = 'Select All'
+                      ImageIndex = 23
+                      OnClick = tbWebsitesSelectAllClick
+                    end
+                    object tbWebsitesUnselectAll: TToolButton
+                      Left = 75
+                      Top = 0
+                      AutoSize = True
+                      Caption = 'Unselect All'
+                      ImageIndex = 24
+                      OnClick = tbWebsitesUnselectAllClick
                     end
                   end
                 end
@@ -4642,12 +4658,12 @@ object MainForm: TMainForm
     object tsAbout: TTabSheet
       Caption = 'About'
       ChildSizing.TopBottomSpacing = 4
-      ClientHeight = 669
+      ClientHeight = 568
       ClientWidth = 845
       object btCheckLatestVersion: TBitBtn
         Left = 0
         Height = 40
-        Top = 623
+        Top = 522
         Width = 208
         Anchors = [akLeft, akBottom]
         BorderSpacing.Top = 3
@@ -4697,7 +4713,7 @@ object MainForm: TMainForm
         AnchorSideTop.Control = btCheckLatestVersion
         Left = 212
         Height = 35
-        Top = 623
+        Top = 522
         Width = 40
         Anchors = [akTop, akLeft, akBottom]
         BorderSpacing.Left = 4
@@ -4746,7 +4762,7 @@ object MainForm: TMainForm
         AnchorSideTop.Control = btCheckLatestVersion
         Left = 256
         Height = 35
-        Top = 623
+        Top = 522
         Width = 208
         Anchors = [akTop, akLeft, akBottom]
         BorderSpacing.Left = 4
@@ -4793,7 +4809,7 @@ object MainForm: TMainForm
       end
       object pcAbout: TPageControl
         Left = 0
-        Height = 603
+        Height = 502
         Top = 4
         Width = 845
         ActivePage = tsAboutText
@@ -4803,11 +4819,11 @@ object MainForm: TMainForm
         TabOrder = 0
         object tsAboutText: TTabSheet
           Caption = 'About FMD'
-          ClientHeight = 575
+          ClientHeight = 474
           ClientWidth = 837
           object rmAbout: TRichMemo
             Left = 0
-            Height = 567
+            Height = 466
             Top = 4
             Width = 837
             Align = alClient
@@ -4825,7 +4841,7 @@ object MainForm: TMainForm
           object pnAboutComp: TPanel
             Left = 0
             Height = 0
-            Top = 575
+            Top = 474
             Width = 837
             Align = alBottom
             AutoSize = True
@@ -5795,7 +5811,7 @@ object MainForm: TMainForm
     left = 278
     top = 102
     Bitmap = {
-      4C691700000010000000100000004F4F4F005050500052525200535353005454
+      4C691900000010000000100000004F4F4F005050500052525200535353005454
       54155555553E555555555555556355555563555555555555553E545454155353
       530052525200505050004F4F4F004F4F4F0050505000525252075353533D7373
       7378C8C8C8D2EAEAEAFFE6E6E6FFE6E6E6FFEAEAEAFFC7C7C7D2727272785353
@@ -6531,7 +6547,71 @@ object MainForm: TMainForm
       FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
       FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
       FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-      FF00FFFFFF00FFFFFF00FFFFFF00
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF0014A8000015A9000C15AA007315AA00BA15AA
+      00CC15AA00CC15AA00CC15AA00CC15AA00CC15AA00CC15AA00CC15AA00CC15AA
+      00BA15AA007315A9000C14A8000014A8000014A8007337C124DD66E054F96EE5
+      5DFF6EE55DFF6EE55DFF6EE55DFF6DE45CFF6DE45CFF6DE45CFF6DE45CFF64DF
+      53F936BF23DD14A8007314A8000014A5000014A500BA64DE53F95FD64EFF5FD6
+      4EFF5FD64EFF5FD64EFF5FD64EFF5FD64EFF5FD64EFF5FD64EFF5FD64EFF5FD6
+      4EFF60DA4FF914A500BA14A5000013A2000013A200CC67DE56FF57CE46FF57CE
+      46FF57CE46FF57CE46FF57CE46FF57CE46FF57CE46FF4AC139FF51C840FF57CE
+      46FF60D74FFF13A200CC13A20000129E0000129E00CC60D74FFF4EC53DFF4EC5
+      3DFF4EC53DFF4EC53DFF4EC53DFF4EC53DFF44BB33FFFFFFFFFFA7E29EFF4EC5
+      3DFF58CF47FF129E00CC129E0000119A0000119A00CC5AD149FF47BE36FF3EB5
+      2DFF47BE36FF41B930FF37AF26FF2DA41CFFE2E2E2FFE3E3E3FFE7E7E7FF269E
+      15FF39B128FF119A00CC119A000010960000109600CC55CC44FF3CB32BFFF8F8
+      F8FF2DA81CFF23A212FF229F11FFDEDEDEFFE2E2E2FFE6E6E6FF229E11FF22A1
+      11FF2CAA1BFF109600CC109600000F9200000F9200CC52C941FFA9D7A2FFD5D5
+      D5FFEBEBEBFF22A511FFDEDEDEFFE2E2E2FFE6E6E6FF22A311FF22AA11FF22AA
+      11FF28AF17FF0F9200CC0F9200000E8D00000E8D00CC41C330FF23AE12FFD5D5
+      D5FFDADADAFFDEDEDEFFE2E2E2FFE6E6E6FF22A811FF22B411FF22B411FF22B4
+      11FF25B514FF0E8D00CC0E8D00000D8900000D8900CC31C620FF22BE11FF22AD
+      11FFDEDEDEFFE2E2E2FFE6E6E6FF22AD11FF22BE11FF22BE11FF22BE11FF22BE
+      11FF23BE12FF0D8900CC0D8900000C8400000C8400CC2BCC1AFF22C811FF22C8
+      11FF22B211FFE6E6E6FF22B211FF22C811FF22C811FF22C811FF22C811FF22C8
+      11FF22C811FF0C8400CC0C8400000A7D00000A7D00BA25CA15F922D111FF22D1
+      11FF22D111FF22B611FF22D111FF22D111FF22D111FF22D111FF22D111FF22D1
+      11FF20C80FF90A7D00BA0A7D0000021D0000066D0073129208DD20CC10F922D9
+      11FF22D911FF22D911FF22D911FF22D911FF22D911FF22D911FF22D911FF1FCC
+      0FF9109207DD066D0073021D000000000012010E0033024A0083025D00BC025D
+      00CC025D00CC025D00CC025D00CC025D00CC025D00CC025D00CC025D00CC025D
+      00BC024A0083010E00330000001200000000000000160000001A0000001A0000
+      001A0000001A0000001A0000001A0000001A0000001A0000001A0000001A0000
+      001A0000001A0000001600000000FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF000000A8000000A90C0000AA730000AABA0000
+      AACC0000AACC0000AACC0000AACC0000AACC0000AACC0000AACC0000AACC0000
+      AABA0000AA730000A90C0000A8000000A8000000A8732A2AC7DD6363EFF96D6D
+      F5FF6D6DF5FF6D6DF5FF6D6DF5FF6D6DF5FF6D6DF5FF6D6DF5FF6C6CF4FF6262
+      EEF92929C5DD0000A8730000A8000000A5000000A5BA6060ECF95B5BE3FF5B5B
+      E3FF5B5BE3FF5B5BE3FF5B5BE3FF5B5BE3FF5B5BE3FF5B5BE3FF5B5BE3FF5B5B
+      E3FF5B5BE7F90000A5BA0000A5000000A2000000A2CC6262EAFF4F4FD7FF4F4F
+      D7FFFFFFFFFF4F4FD7FF4F4FD7FF4F4FD7FF4F4FD7FFFFFFFFFF4F4FD7FF4F4F
+      D7FF5A5AE2FF0000A2CC0000A20000009E0000009ECC5A5AE2FF4242CAFFFFFF
+      FFFFFFFFFFFFFFFFFFFF4242CAFF4242CAFFFFFFFFFFFFFFFFFFFFFFFFFF4242
+      CAFF4E4ED6FF00009ECC00009E0000009A0000009ACC5050D8FF3737BFFF2323
+      ABFFFFFFFFFFF7F7F7FFE8E8E8FFDEDEDEFFDBDBDBFFDDDDDDFF11119BFF1616
+      A0FF2B2BB5FF00009ACC00009A0000009600000096CC4A4AD2FF3333BBFF2E2E
+      B8FF13139FFFCECECEFFD1D1D1FFD6D6D6FFDCDCDCFF11119EFF1111A1FF1111
+      A1FF1D1DACFF000096CC0000960000009200000092CC4646CEFF2626B5FF1414
+      ABFF1111AAFFD1D1D1FFD6D6D6FFDCDCDCFFE2E2E2FF1111AAFF1111AAFF1111
+      AAFF1818B0FF000092CC0000920000008D0000008DCC3434C7FF1212B4FF1111
+      B4FFD1D1D1FFD6D6D6FFDCDCDCFFE2E2E2FFE6E6E6FFEAEAEAFF1111B4FF1111
+      B4FF1414B6FF00008DCC00008D0000008900000089CC2222C8FF1111BEFFD1D1
+      D1FFD6D6D6FFDCDCDCFF1111ADFF1111ADFFEAEAEAFFEEEEEEFFEEEEEEFF1111
+      BEFF1212BEFF000089CC0000890000008400000084CC1C1CCEFF1111C8FF1111
+      B2FFDCDCDCFF1111B2FF1111C8FF1111C8FF1111B2FFEEEEEEFF1111B2FF1111
+      C8FF1111C8FF000084CC0000840000007D0000007DBA1616CBF91111D1FF1111
+      D1FF1111B6FF1111D1FF1111D1FF1111D1FF1111D1FF1111B6FF1111D1FF1111
+      D1FF0F0FC8F900007DBA00007D0000001D0000006D73080893DD1010CCF91111
+      D9FF1111D9FF1111D9FF1111D9FF1111D9FF1111D9FF1111D9FF1111D9FF0F0F
+      CCF9070792DD00006D7300001D000000001200000E3300004A8300005DBC0000
+      5DCC00005DCC00005DCC00005DCC00005DCC00005DCC00005DCC00005DCC0000
+      5DBC00004A8300000E330000001200000000000000160000001A0000001A0000
+      001A0000001A0000001A0000001A0000001A0000001A0000001A0000001A0000
+      001A0000001A0000001600000000
     }
   end
   object IconDL: TImageList

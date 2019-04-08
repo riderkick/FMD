@@ -343,7 +343,7 @@ msgstr "Dalam proses"
 #: frmmain.rs_lblautochecknewchapterminute
 msgctxt "frmmain.rs_lblautochecknewchapterminute"
 msgid "Auto check for new chapter every %d minutes"
-msgstr "Otomatis periksa bab baru setiap %d menit"
+msgstr "Periksa bab baru otomatis setiap %d menit"
 
 #: frmmain.rs_lbloptionexternalparamshint
 msgid ""
@@ -502,7 +502,7 @@ msgstr "Tampilkan semua bahasa"
 #: mangadex.rs_showscangroup
 msgctxt "mangadex.rs_showscangroup"
 msgid "Show scanlation group"
-msgstr "Tampilkan nama grup scan"
+msgstr "Tampilkan nama grup scanlation"
 
 #: mangafox.rs_removewatermark
 msgid "Remove watermark"
@@ -568,7 +568,7 @@ msgstr "Segarkan"
 
 #: taccountmanagerform.caption
 msgid "AccountManagerForm"
-msgstr "Formulir Manajer Akun"
+msgstr "Form Manajer Akun"
 
 #: taccountmanagerform.vtaccountlist.header.columns[1].text
 msgctxt "taccountmanagerform.vtaccountlist.header.columns[1].text"
@@ -624,23 +624,23 @@ msgstr "Kata kunci"
 
 #: tcustomcolorform.caption
 msgid "CustomColorForm"
-msgstr "Formulir Kostumisasi Warna"
+msgstr "Form Kostumisasi Warna"
 
 #: tcustomcolorform.tsbasiclist.caption
 msgid "Basic list"
-msgstr "Daftar dasar"
+msgstr "Daftar Dasar"
 
 #: tcustomcolorform.tschapterlist.caption
 msgid "Chapter list"
-msgstr "Daftar bab"
+msgstr "Daftar Bab"
 
 #: tcustomcolorform.tsfavoritelist.caption
 msgid "Favorite list"
-msgstr "Daftar kesukaan"
+msgstr "Daftar Kesukaan"
 
 #: tcustomcolorform.tsmangalist.caption
 msgid "Manga list"
-msgstr "Daftar komik"
+msgstr "Daftar Komik"
 
 #: tformdroptarget.miaddtofavorites.caption
 msgctxt "tformdroptarget.miaddtofavorites.caption"
@@ -703,7 +703,7 @@ msgstr "Periksa pembaruan"
 
 #: tluamodulesupdaterform.ckautorestart.caption
 msgid "Auto restart"
-msgstr "Otomatis mulai ulang"
+msgstr "Mulai ulang otomatis"
 
 #: tluamodulesupdaterform.ckshowupdatewarning.caption
 msgid "Show update warning"
@@ -817,25 +817,25 @@ msgstr "Cari hanya komik baru"
 #: tmainform.cboptionautocheckfavdownload.caption
 msgctxt "tmainform.cboptionautocheckfavdownload.caption"
 msgid "Automatic download after finish checking"
-msgstr "Otomatis mengunduh setelah selesai memeriksa"
+msgstr "Mengunduh otomatis setelah selesai memeriksa"
 
 #: tmainform.cboptionautocheckfavinterval.caption
 msgid "Auto check for new chapter in an interval"
-msgstr "Otomatis periksa bab baru dalam interval"
+msgstr "Periksa bab baru otomatis dalam interval"
 
 #: tmainform.cboptionautocheckfavremovecompletedmanga.caption
 msgctxt "tmainform.cboptionautocheckfavremovecompletedmanga.caption"
 msgid "Automatic remove completed manga from Favorites"
-msgstr "Otomatis hapus komik yang sudah tamat dari daftar kesukaan"
+msgstr "Hapus komik yang sudah tamat otomatis dari daftar kesukaan"
 
 #: tmainform.cboptionautocheckfavstartup.caption
 msgid "Auto check for new chapter at startup"
-msgstr "Otomatis periksa bab baru saat program dimulai"
+msgstr "Periksa bab baru otomatis saat program dimulai"
 
 #: tmainform.cboptionautochecklatestversion.caption
 msgctxt "tmainform.cboptionautochecklatestversion.caption"
 msgid "Auto check for latest version "
-msgstr "Otomatis periksa versi terbaru"
+msgstr "Periksa versi terbaru otomatis"
 
 #: tmainform.cboptionautoopenfavstartup.caption
 msgid "Open Favorites at startup"
@@ -885,7 +885,7 @@ msgstr "Kecilkan ke penampan saat dimulai"
 
 #: tmainform.cboptionminimizetotray.caption
 msgid "Minimize to tray"
-msgstr "Perkecil ke penampan"
+msgstr "Kecilkan ke penampan"
 
 #: tmainform.cboptiononeinstanceonly.caption
 msgid "Permit only one FMD running"
@@ -917,7 +917,7 @@ msgstr "Tampilkan bilah alat unduhan"
 
 #: tmainform.cboptionshowdownloadtoolbardeleteall.caption
 msgid "Show \"Delete all completed tasks\" in downloads toolbar"
-msgstr "Tampilkan \"Hapus semua unduhan selesai\" di bilah alat unduhan"
+msgstr "Tampilkan \"Hapus semua unduhan yang sudah selesai\" di bilah alat unduhan"
 
 #: tmainform.cboptionshowdownloadtoolbarleft.caption
 msgid "Show left downloads toolbar"
@@ -958,7 +958,7 @@ msgstr "Untuk situs komik yang lain, silakan pilih di Pengaturan->Situs->Situs K
 
 #: tmainform.cbuseregexpr.caption
 msgid "Regular Expression"
-msgstr "Ekspresi Reguler"
+msgstr "Ekspresi reguler"
 
 #: tmainform.cbwebpsaveas.text
 msgctxt "tmainform.cbwebpsaveas.text"
@@ -1504,7 +1504,7 @@ msgstr "Mode: Tampilkan semua (0)"
 #: tmainform.lboptionautocheckfavintervalminutes.caption
 msgctxt "tmainform.lboptionautocheckfavintervalminutes.caption"
 msgid "Auto check for new chapter every %d minutes"
-msgstr "Otomatis periksa bab baru setiap %d menit"
+msgstr "Periksa bab baru otomatis setiap %d menit"
 
 #: tmainform.lboptionchaptercustomrename.caption
 msgctxt "tmainform.lboptionchaptercustomrename.caption"
@@ -2040,6 +2040,14 @@ msgstr "Perkecil semua"
 msgid "Expand All"
 msgstr "Perluas semua"
 
+#: tmainform.tbwebsitesselectall.caption
+msgid "Select All"
+msgstr "Centang semua"
+
+#: tmainform.tbwebsitesunselectall.caption
+msgid "Unselect All"
+msgstr "Hapus semua centang"
+
 #: tmainform.tsabout.caption
 msgid "About"
 msgstr "Tentang"
@@ -2054,7 +2062,7 @@ msgstr "Akun"
 
 #: tmainform.tschangelogtext.caption
 msgid "Changelog"
-msgstr "Catatan perubahan"
+msgstr "Catatan Perubahan"
 
 #: tmainform.tsconnections.caption
 msgid "Connections"
@@ -2062,7 +2070,7 @@ msgstr "Koneksi"
 
 #: tmainform.tscustomcolor.caption
 msgid "Custom color"
-msgstr "Kustomisasi warna"
+msgstr "Kustomisasi Warna"
 
 #: tmainform.tsdialogs.caption
 msgid "Dialogs"
@@ -2298,7 +2306,7 @@ msgid ""
 "FMD will be closed to finish the update.\n"
 msgstr ""
 "Versi baru ditemukan! Apakah Anda ingin memperbarui sekarang?\n"
-"FMD akan ditutup untuk menyelesaikan update.\n"
+"FMD akan ditutup untuk menyelesaikan pembaruan.\n"
 
 #: twebsiteoptionadvancedform.menuitem1.caption
 msgctxt "twebsiteoptionadvancedform.menuitem1.caption"
@@ -2308,7 +2316,7 @@ msgstr "Tambah"
 #: twebsiteoptionadvancedform.menuitem2.caption
 msgctxt "twebsiteoptionadvancedform.menuitem2.caption"
 msgid "Edit"
-msgstr "Ubah"
+msgstr "Sunting"
 
 #: twebsiteoptionadvancedform.menuitem4.caption
 msgctxt "twebsiteoptionadvancedform.menuitem4.caption"
@@ -2322,7 +2330,7 @@ msgstr "Cookies"
 
 #: twebsiteoptionadvancedform.tsdirectorypagenumber.caption
 msgid "Directory page number"
-msgstr "Jumlah halaman directory"
+msgstr "Jumlah halaman direktori"
 
 #: twebsiteoptionadvancedform.tsdownloads.caption
 msgctxt "twebsiteoptionadvancedform.tsdownloads.caption"
@@ -2331,11 +2339,11 @@ msgstr "Unduhan"
 
 #: twebsiteoptionadvancedform.tsmaxthreadspertask.caption
 msgid "Max threads per task"
-msgstr "Max jumlah threads per unduhan"
+msgstr "Maksimal jumlah utas per unduhan"
 
 #: twebsiteoptionadvancedform.tsnumberofthreads.caption
 msgid "Number of threads"
-msgstr "Jumlah threads"
+msgstr "Jumlah utas"
 
 #: twebsiteoptionadvancedform.tsupdatelist.caption
 msgid "Update List"
@@ -2402,7 +2410,7 @@ msgstr "Pilih situs"
 
 #: twebsitesettingsform.caption
 msgid "WebsiteSettingsForm"
-msgstr "Formulir Pengaturan Situs"
+msgstr "Form Pengaturan Situs"
 
 #: twebsitesettingsform.edsearch.texthint
 msgid "Website name"
@@ -2414,7 +2422,7 @@ msgstr "Nama pengaturan"
 
 #: udownloadsmanager.rs_compressing
 msgid "Compressing..."
-msgstr "Mengompresi..."
+msgstr "Mengompres..."
 
 #: udownloadsmanager.rs_disabled
 msgid "Disabled"
@@ -2513,7 +2521,7 @@ msgstr "Periksa versi baru"
 
 #: usubthread.rs_currentversion
 msgid "Installed Version"
-msgstr "Versi terpasang"
+msgstr "Versi terinstal"
 
 #: usubthread.rs_latestversion
 msgid "Latest Version   "

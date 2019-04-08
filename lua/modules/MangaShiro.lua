@@ -99,12 +99,7 @@ function getinfo()
       mangainfo.summary=x.xpathstringall('//*[@class="description"]/text()', '')
       mangainfo.chapterlinks.clear()
       mangainfo.chapternames.clear()
-      local v = x.xpath('//div[contains(@class, "chapter-list")]/a')
-      for i = 1, v.count do
-        local v1 = v.get(i)
-        mangainfo.chapterlinks.add(v1.getAttribute('href'))
-        mangainfo.chapternames.add(x.xpathstring('./span', v1))
-      end
+	  x.xpathhrefall('//div[contains(@class, "chapter-list")]//div[@class="list-group-item"]/span[contains(., "|")]/a', mangainfo.chapterlinks, mangainfo.chapternames)
     else
       mangainfo.title=x.xpathstring('//h1[@itemprop="name"]')
       if mangainfo.title == '' then
@@ -155,6 +150,7 @@ function getnameandlink()
     ['PecintaKomik'] = '/daftar-manga/?list',
     ['MangaIndoNet'] = '/manga-list/?list',
     ['KomikIndo'] = '/manga-list/?list',
+    ['KomikIndoWebId'] = '/daftar-manga/?list',
   }
   local dirurl = '/manga-list/'
   if dirs[module.website] ~= nil then
@@ -185,7 +181,7 @@ function AddWebsiteModule(site, url)
   m.category='Indonesian'
   m.website=site
   m.rooturl=url
-  m.lastupdated = 'April 5, 2019'
+  m.lastupdated = 'April 7, 2019'
   m.ongetinfo='getinfo'
   m.ongetpagenumber='getpagenumber'
   m.ongetnameandlink='getnameandlink'
@@ -205,6 +201,7 @@ function Init()
   AddWebsiteModule('PecintaKomik', 'https://www.pecintakomik.com')
   AddWebsiteModule('MangaIndoNet', 'https://mangaindo.net')
   AddWebsiteModule('KomikIndo', 'https://komikindo.co')
+  AddWebsiteModule('KomikIndoWebId', 'https://www.komikindo.web.id')
   AddWebsiteModule('Komiku', 'https://komiku.co')
   AddWebsiteModule('OtakuIndo', 'https://otakuindo.net')
 end

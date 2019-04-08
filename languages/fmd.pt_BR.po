@@ -1966,6 +1966,14 @@ msgstr "Agrupar Tudo"
 msgid "Expand All"
 msgstr "Expandir Tudo"
 
+#: tmainform.tbwebsitesselectall.caption
+msgid "Select All"
+msgstr ""
+
+#: tmainform.tbwebsitesunselectall.caption
+msgid "Unselect All"
+msgstr ""
+
 #: tmainform.tsabout.caption
 msgid "About"
 msgstr "Sobre"
