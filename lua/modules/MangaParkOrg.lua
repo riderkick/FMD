@@ -1,5 +1,6 @@
 function GetInfo()
   mangainfo.url=MaybeFillHost(module.rooturl,url)
+  http.cookies.values['set'] = 'h=1'
   if http.get(mangainfo.url) then
     local x=TXQuery.Create(http.Document)
     if mangainfo.title == '' then
@@ -70,7 +71,7 @@ function Init()
   m.category='English'
   m.website='MangaParkOrg'
   m.rooturl='https://mangapark.org'
-  m.lastupdated = 'April 01, 2019'
+  m.lastupdated = 'April 09, 2019'
   m.sortedlist = true
   m.ongetinfo='GetInfo'
   m.ongetpagenumber='GetPageNumber'

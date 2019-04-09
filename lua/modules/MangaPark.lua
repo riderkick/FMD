@@ -1,5 +1,6 @@
 function getinfo()
   mangainfo.url=MaybeFillHost(module.RootURL, url)
+  http.cookies.values['set'] = 'h=1'
   if http.get(mangainfo.url) then
     local x=TXQuery.Create(http.document)
     if mangainfo.title == '' then
@@ -68,7 +69,7 @@ function AddWebsiteModule(name, url)
   m.website = name
   m.rooturl = url
   m.category = 'English'
-  m.lastupdated = 'April 01, 2019'
+  m.lastupdated = 'April 09, 2019'
   m.ongetinfo='getinfo'
   m.ongetpagenumber='getpagenumber'
   m.ongetnameandlink='getnameandlink'
