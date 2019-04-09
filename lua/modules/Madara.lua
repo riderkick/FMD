@@ -42,7 +42,17 @@ function Modules.Madara()
     end
     if http.get(aurl) then
       local x = TXQuery.Create(http.Document)
-      x.xpathstringall('//div[contains(@class, "page-break")]/img/@src', task.pagelinks)
+      if module.website == 'MangaYosh' then
+        v = x.xpath('//div[contains(@class, "page-break")]/img')
+        for i = 1, v.count do
+          v1 = v.get(i)
+          local src = v1.getattribute('src')
+          src = src:gsub('https://cdn.shortpixel.ai/client/q_glossy,ret_img/', '')
+          task.pagelinks.add(src)
+        end
+      else
+        x.xpathstringall('//div[contains(@class, "page-break")]/img/@src', task.pagelinks)
+      end
       return true
     end
     return false
