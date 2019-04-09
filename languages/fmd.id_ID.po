@@ -683,6 +683,10 @@ msgctxt "timportfavorites.btimport.caption"
 msgid "&OK"
 msgstr "&Oke"
 
+#: timportfavorites.caption
+msgid "Import list ..."
+msgstr "Impor daftar ..."
+
 #: timportfavorites.cbsoftware.text
 msgid "Domdomsoft Manga Downloader"
 msgstr "Domdomsoft Manga Downloader"
