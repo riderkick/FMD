@@ -34,7 +34,13 @@ function getpagenumber()
 end
 
 function getnameandlink()
-  if http.get(module.rooturl..'/en/genre?page=' .. IncStr(url)) then
+  
+  local dirurl = '/genre?page='
+  if module.website == 'MangaToon' then
+	 dirurl = '/en/genre?page='
+  end
+  
+  if http.get(module.rooturl..dirurl.. IncStr(url)) then
     local x=TXQuery.Create(http.Document)
 	  TXQuery.Create(http.document).XPathHREFAll('//ul[contains(@class, "ret-search-list")]/li//h3/a',links,names)
 	  local v = x.xpath('//div[@class="items"]/a')
@@ -53,13 +59,31 @@ function getnameandlink()
   end
 end
 
-function Init()
-  m=NewModule()
-  m.category='English'
-  m.website='MangaToon'
-  m.rooturl='https://mangatoon.mobi'
+function AddWebsiteModule(site, url, cat)
+  local m=NewModule()
+  m.category=cat
+  m.website=site
+  m.rooturl=url
   m.lastupdated='April 09, 2019'
   m.ongetinfo='getinfo'
   m.ongetpagenumber='getpagenumber'
   m.ongetnameandlink='getnameandlink'
+  return m
+end
+
+function Init()
+local cat = 'English'
+      AddWebsiteModule('MangaToon', 'https://mangatoon.mobi', cat)
+
+	  cat = 'Indonesian'
+      AddWebsiteModule('MangaToonID', 'https://mangatoon.mobi/id', cat)  
+	  
+	  cat = 'Vietnamese'
+      AddWebsiteModule('MangaToonVI', 'https://mangatoon.mobi/vi', cat)
+	  
+	  cat = 'Spanish'
+      AddWebsiteModule('MangaToonSP', 'https://mangatoon.mobi/es', cat)
+	  
+	  cat = 'Webcomics'
+      AddWebsiteModule('MangaToonCN', 'https://mangatoon.mobi/cn', cat)
 end
