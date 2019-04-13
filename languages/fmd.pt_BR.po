@@ -903,6 +903,15 @@ msgstr "Apagar tarefa/favorito"
 msgid "Download manga list if empty"
 msgstr "Baixar lista de mangá se vazia"
 
+#: tmainform.cboptionshowdownloadstabonnewtasks.caption
+msgid "Show Downloads tab when adding new tasks"
+msgstr ""
+
+#: tmainform.cboptionshowfavoritestabonnewmanga.caption
+msgctxt "tmainform.cboptionshowfavoritestabonnewmanga.caption"
+msgid "Show Favorites tab when adding new manga"
+msgstr ""
+
 #: tmainform.cboptionshowdownloadtoolbar.caption
 msgid "Show downloads toolbar"
 msgstr "Exibir Barra de Ferramentas de Downloads"

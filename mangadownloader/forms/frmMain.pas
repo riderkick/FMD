@@ -54,6 +54,8 @@ type
     cbOptionAutoOpenFavStartup: TCheckBox;
     cbOptionDeleteCompletedTasksOnClose: TCheckBox;
     cbOptionSortDownloadsWhenAddingNewDownloadTasks: TCheckBox;
+    cbOptionShowFavoritesTabOnNewManga: TCheckBox;
+    cbOptionShowDownloadsTabOnNewTasks: TCheckBox;
     cbOptionEnableLoadCover: TCheckBox;
     cbOptionMinimizeOnStart: TCheckBox;
     cbOptionShowBalloonHint: TCheckBox;
@@ -2427,7 +2429,8 @@ begin
       DLManager.DownloadedChapters.Chapters[mangaInfo.website+mangaInfo.link]:=links.Text;
       FavoriteManager.AddToDownloadedChaptersList(mangaInfo.website,mangaInfo.link,links);
       DLManager.CheckAndActiveTask;
-      pcMain.ActivePage:=tsDownload;
+      if OptionShowDownloadsTabOnNewTasks then
+        pcMain.ActivePage:=tsDownload;
       UpdateVtDownload;
     end;
   finally
@@ -2461,6 +2464,11 @@ begin
     vtFavorites.NodeDataSize := SizeOf(TFavoriteInfo);
     UpdateVtFavorites;
     btAddToFavorites.Enabled := False;
+    if OptionShowFavoritesTabOnNewManga then
+    begin
+      edFavoritesSearch.Text := mangaInfo.title;
+      pcMain.ActivePage := tsFavorites;
+    end;
   end;
 end;
 
@@ -3388,7 +3396,8 @@ begin
               AllowedToCreate := False
             else
             begin
-              pcMain.ActivePage := tsDownload;
+              if OptionShowDownloadsTabOnNewTasks then
+                pcMain.ActivePage := tsDownload;
               mResult := MessageDlg('', DLManager.Items[i].DownloadInfo.title +
                 LineEnding + LineEnding + RS_DlgTitleExistInDLlist, mtConfirmation,
                   mBtns, 0);
@@ -3829,7 +3838,8 @@ end;
 procedure TMainForm.tvDownloadFilterSelectionChanged(Sender: TObject);
 begin
   vtDownloadUpdateFilters(False);
-  pcMain.ActivePage := tsDownload;
+  if OptionShowDownloadsTabOnNewTasks then
+    pcMain.ActivePage := tsDownload;
   configfile.WriteInteger('general', 'DownloadFilterSelect',
     tvDownloadFilter.Selected.AbsoluteIndex);
 end;
@@ -4855,6 +4865,8 @@ begin
     cbOptionShowDownloadToolbarDeleteAll.Checked := ReadBool('view', 'ShowDownloadsToolbarDeleteAll', False);
     cbOptionEnableLoadCover.Checked := ReadBool('view', 'LoadMangaCover', True);
     cbOptionShowBalloonHint.Checked := ReadBool('view', 'ShowBalloonHint', OptionShowBalloonHint);
+    cbOptionShowFavoritesTabOnNewManga.Checked := ReadBool('view', 'ShowFavoritesTabOnNewManga', OptionShowFavoritesTabOnNewManga);
+    cbOptionShowDownloadsTabOnNewTasks.Checked := ReadBool('view', 'ShowDownloadsTabOnNewTasks', OptionShowDownloadsTabOnNewTasks);
     ckDropTarget.Checked := ReadBool('droptarget', 'Show', False);
     frmDropTarget.FWidth := ReadInteger('droptarget', 'Width', frmDropTarget.FWidth);
     frmDropTarget.FHeight := ReadInteger('droptarget', 'Heigth', frmDropTarget.FHeight);
@@ -4968,6 +4980,8 @@ begin
       // view
       WriteBool('view', 'ShowDownloadsToolbar', cbOptionShowDownloadToolbar.Checked);
       WriteBool('view', 'ShowDownloadsToolbarLeft', cbOptionShowDownloadToolbarLeft.Checked);
+      WriteBool('view', 'ShowFavoritesTabOnNewManga', cbOptionShowFavoritesTabOnNewManga.Checked);
+      WriteBool('view', 'ShowDownloadsTabOnNewTasks', cbOptionShowDownloadsTabOnNewTasks.Checked);
       WriteBool('view', 'ShowDownloadsToolbarDeleteAll', cbOptionShowDownloadToolbarDeleteAll.Checked);
       WriteBool('view', 'LoadMangaCover', cbOptionEnableLoadCover.Checked);
       WriteBool('view', 'ShowBalloonHint', cbOptionShowBalloonHint.Checked);
@@ -5135,6 +5149,8 @@ begin
     tbSeparator1.Visible := tbDownloadDeleteCompleted.Visible;
     ShowDropTarget(ckDropTarget.Checked);
     OptionShowBalloonHint := cbOptionShowBalloonHint.Checked;
+    OptionShowFavoritesTabOnNewManga := cbOptionShowFavoritesTabOnNewManga.Checked;
+    OptionShowDownloadsTabOnNewTasks := cbOptionShowDownloadsTabOnNewTasks.Checked;
 
     //connection
     OptionMaxParallel := seOptionMaxParallel.Value;

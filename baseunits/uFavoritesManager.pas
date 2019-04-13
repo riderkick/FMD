@@ -830,7 +830,8 @@ begin
           if LNCResult = ncrDownload then
           begin
             DLManager.CheckAndActiveTask;
-            MainForm.pcMain.ActivePage := MainForm.tsDownload;
+            if OptionShowDownloadsTabOnNewTasks then
+              MainForm.pcMain.ActivePage := MainForm.tsDownload;
           end;
           if Assigned(OnUpdateDownload) then
             OnUpdateDownload;

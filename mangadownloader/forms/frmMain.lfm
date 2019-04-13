@@ -37,10 +37,10 @@ object MainForm: TMainForm
     Height = 596
     Top = 8
     Width = 853
-    ActivePage = tsDownload
+    ActivePage = tsOption
     Align = alClient
     ParentFont = False
-    TabIndex = 0
+    TabIndex = 3
     TabOrder = 0
     OnChange = pcMainChange
     object tsDownload: TTabSheet
@@ -2644,11 +2644,11 @@ object MainForm: TMainForm
         Height = 470
         Top = 4
         Width = 845
-        ActivePage = tsWebsites
+        ActivePage = tsView
         Align = alTop
         Anchors = [akTop, akLeft, akRight, akBottom]
         ParentFont = False
-        TabIndex = 6
+        TabIndex = 1
         TabOrder = 0
         object tsGeneral: TTabSheet
           Caption = 'General'
@@ -2935,7 +2935,7 @@ object MainForm: TMainForm
           ChildSizing.TopBottomSpacing = 8
           ChildSizing.HorizontalSpacing = 4
           ChildSizing.VerticalSpacing = 4
-          ClientHeight = 543
+          ClientHeight = 442
           ClientWidth = 837
           object cbOptionShowDownloadToolbar: TCheckBox
             Left = 4
@@ -3068,14 +3068,34 @@ object MainForm: TMainForm
             ParentFont = False
             TabOrder = 3
           end
+          object cbOptionShowDownloadsTabOnNewTasks: TCheckBox
+            Left = 4
+            Height = 19
+            Top = 292
+            Width = 829
+            Align = alTop
+            Caption = 'Show Downloads tab when adding new tasks'
+            ParentFont = False
+            TabOrder = 6
+          end
+          object cbOptionShowFavoritesTabOnNewManga: TCheckBox
+            Left = 4
+            Height = 19
+            Top = 315
+            Width = 829
+            Align = alTop
+            Caption = 'Show Favorites tab when adding new manga'
+            ParentFont = False
+            TabOrder = 7
+          end
         end
         object tsConnections: TTabSheet
           Caption = 'Connections'
-          ClientHeight = 543
+          ClientHeight = 442
           ClientWidth = 837
           object sbDownloadConnections: TScrollBox
             Left = 0
-            Height = 543
+            Height = 442
             Top = 0
             Width = 837
             HorzScrollBar.Page = 455
@@ -3086,7 +3106,7 @@ object MainForm: TMainForm
             ChildSizing.TopBottomSpacing = 8
             ChildSizing.HorizontalSpacing = 4
             ChildSizing.VerticalSpacing = 4
-            ClientHeight = 543
+            ClientHeight = 442
             ClientWidth = 837
             TabOrder = 0
             object cbOptionUseProxy: TCheckBox
@@ -4005,7 +4025,7 @@ object MainForm: TMainForm
           ChildSizing.TopBottomSpacing = 8
           ChildSizing.HorizontalSpacing = 4
           ChildSizing.VerticalSpacing = 4
-          ClientHeight = 543
+          ClientHeight = 442
           ClientWidth = 837
           object cbOptionAutoCheckLatestVersion: TCheckBox
             Left = 4
@@ -4143,7 +4163,7 @@ object MainForm: TMainForm
           ChildSizing.TopBottomSpacing = 8
           ChildSizing.HorizontalSpacing = 4
           ChildSizing.VerticalSpacing = 4
-          ClientHeight = 543
+          ClientHeight = 442
           ClientWidth = 837
           object gbDialogs: TGroupBox
             Left = 4
@@ -4408,11 +4428,11 @@ object MainForm: TMainForm
           ChildSizing.TopBottomSpacing = 8
           ChildSizing.HorizontalSpacing = 4
           ChildSizing.VerticalSpacing = 4
-          ClientHeight = 543
+          ClientHeight = 442
           ClientWidth = 837
           object pcMisc: TPageControl
             Left = 4
-            Height = 527
+            Height = 426
             Top = 8
             Width = 829
             ActivePage = tsCustomColor
@@ -4910,8 +4930,8 @@ object MainForm: TMainForm
     OnMoved = spMainSplitterMoved
   end
   object dlgSaveTo: TSelectDirectoryDialog
-    left = 272
-    top = 336
+    left = 648
+    top = 288
   end
   object pmDownload: TPopupMenu
     Images = IconList
@@ -5780,8 +5800,8 @@ object MainForm: TMainForm
     PopUpMenu = pmTray
     Hint = 'Free Manga Downloader'
     OnDblClick = TrayIconDblClick
-    left = 288
-    top = 432
+    left = 440
+    top = 224
   end
   object pmUpdate: TPopupMenu
     ParentBidiMode = False
@@ -7207,8 +7227,8 @@ object MainForm: TMainForm
     }
   end
   object IconSmall: TImageList
-    left = 27
-    top = 328
+    left = 568
+    top = 304
     Bitmap = {
       4C69030000001000000010000000FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
       FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
@@ -7357,8 +7377,8 @@ object MainForm: TMainForm
   object tmExitCommand: TTimer
     Enabled = False
     OnTimer = tmExitCommandTimer
-    left = 560
-    top = 472
+    left = 648
+    top = 224
   end
   object TransferRateGraphList: TListChartSource
     DataPoints.Strings = (
@@ -7373,8 +7393,8 @@ object MainForm: TMainForm
   end
   object pmSbMain: TPopupMenu
     OnPopup = pmSbMainPopup
-    left = 152
-    top = 376
+    left = 480
+    top = 296
     object miAbortSilentThread: TMenuItem
       Caption = 'Abort'
       OnClick = miAbortSilentThreadClick
@@ -7398,8 +7418,8 @@ object MainForm: TMainForm
   end
   object pmTray: TPopupMenu
     OnPopup = pmTrayPopup
-    left = 341
-    top = 432
+    left = 384
+    top = 184
     object miTrayResumeAll: TMenuItem
       Caption = 'Resume all'
       OnClick = tbDownloadResumeAllClick
@@ -7463,29 +7483,29 @@ object MainForm: TMainForm
     Enabled = False
     Interval = 48
     OnTimer = tmAnimateMangaInfoTimer
-    left = 656
-    top = 416
+    left = 512
+    top = 264
   end
   object tmRefreshDownloadsInfo: TTimer
     Enabled = False
     OnTimer = tmRefreshDownloadsInfoTimer
     OnStartTimer = tmRefreshDownloadsInfoStartTimer
     OnStopTimer = tmRefreshDownloadsInfoStopTimer
-    left = 440
-    top = 472
+    left = 328
+    top = 176
   end
   object tmBackup: TTimer
     Interval = 120000
     OnTimer = tmBackupTimer
-    left = 656
-    top = 472
+    left = 664
+    top = 176
   end
   object tmCheckFavorites: TTimer
     Enabled = False
     Interval = 600000
     OnTimer = tmCheckFavoritesTimer
-    left = 480
-    top = 472
+    left = 328
+    top = 296
   end
   object IconDLLeft: TImageList
     Height = 24
