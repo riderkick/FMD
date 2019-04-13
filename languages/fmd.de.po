@@ -385,6 +385,34 @@ msgstr "Ein Monat"
 msgid "One week"
 msgstr "Eine Woche"
 
+#: frmmain.rs_sixmonths
+msgid "Six months"
+msgstr "Sechs Monate"
+
+#: frmmain.rs_oneyear
+msgid "One year"
+msgstr "Ein Jahr"
+
+#: frmmain.rs_twoyears
+msgid "Two years"
+msgstr "Zwei Jahre"
+
+#: frmmain.rs_threeyears
+msgid "Three years"
+msgstr "Drei Jahre"
+
+#: frmmain.rs_fouryears
+msgid "Four years"
+msgstr "Vier Jahre"
+
+#: frmmain.rs_fiveyears
+msgid "Five years"
+msgstr "Fünf Jahre"
+
+#: frmmain.rs_tenyears
+msgid "Ten years"
+msgstr "Zehn Jahre"
+
 #: frmmain.rs_optioncompress
 msgid ""
 "None\n"

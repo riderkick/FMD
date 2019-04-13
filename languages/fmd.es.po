@@ -392,6 +392,34 @@ msgstr "Un Mes"
 msgid "One week"
 msgstr "Una Semana"
 
+#: frmmain.rs_sixmonths
+msgid "Six months"
+msgstr ""
+
+#: frmmain.rs_oneyear
+msgid "One year"
+msgstr ""
+
+#: frmmain.rs_twoyears
+msgid "Two years"
+msgstr ""
+
+#: frmmain.rs_threeyears
+msgid "Three years"
+msgstr ""
+
+#: frmmain.rs_fouryears
+msgid "Four years"
+msgstr ""
+
+#: frmmain.rs_fiveyears
+msgid "Five years"
+msgstr ""
+
+#: frmmain.rs_tenyears
+msgid "Ten years"
+msgstr ""
+
 #: frmmain.rs_optioncompress
 #, fuzzy
 #| msgid ""
