@@ -13,7 +13,7 @@ function getinfo()
 	mangainfo.artists=x.xpathstring('//*[contains(., "Artist")]/following-sibling::text()'):gsub("^:", "")
     mangainfo.genres=x.xpathstring('//*[contains(., "Genre")]/following-sibling::text()'):gsub("^:", "")
     mangainfo.status = MangaInfoStatusIfPos(x.xpathstring('//*[contains(., "Episodes")]/following-sibling::text()'))
-	x.xpathhrefall('//div[contains(@style, "-moz-border-radius")]/a', mangainfo.chapterlinks, mangainfo.chapternames)
+	x.xpathhrefall('//div[contains(@style, "-moz-border-radius")]//a', mangainfo.chapterlinks, mangainfo.chapternames)
     InvertStrings(mangainfo.chapterlinks,mangainfo.chapternames)
     return no_error
   else
@@ -59,7 +59,7 @@ function Init()
   m.category='Indonesian'
   m.website='MangaKu'
   m.rooturl='http://mangaku.in'
-  m.lastupdated='February 17, 2018'
+  m.lastupdated='April 13, 2019'
   m.ongetinfo='getinfo'
   m.ongetpagenumber='getpagenumber'
   m.ongetnameandlink='getnameandlink'
