@@ -4707,17 +4707,14 @@ begin
 
   DisableAddToFavorites(AWebsite);
   //check if manga already in FavoriteManager list
-  if btAddToFavorites.Enabled and not(LastViewMangaInfoSender = miFavoritesViewInfos) then
+  fav := FavoriteManager.LocateMangaByLink(AWebsite, ALink);
+  if fav <> nil then
   begin
-    fav := FavoriteManager.LocateMangaByLink(AWebsite, ALink);
-    if fav <> nil then
+    btAddToFavorites.Enabled := False;
+    if LastViewMangaInfoSender <> miDownloadViewMangaInfo then
     begin
-      btAddToFavorites.Enabled := False;
-      if LastViewMangaInfoSender <> miDownloadViewMangaInfo then
-      begin
-        edSaveTo.Text := fav.FavoriteInfo.SaveTo;
-        LastViewMangaInfoSender := miFavoritesViewInfos;
-      end;
+      edSaveTo.Text := fav.FavoriteInfo.SaveTo;
+      LastViewMangaInfoSender := miFavoritesViewInfos;
     end;
   end;
 
