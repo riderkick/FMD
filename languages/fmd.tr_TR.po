@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: tr\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 2.2.1\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
@@ -397,31 +397,31 @@ msgstr "Bir hafta"
 
 #: frmmain.rs_sixmonths
 msgid "Six months"
-msgstr ""
+msgstr "Altı ay"
 
 #: frmmain.rs_oneyear
 msgid "One year"
-msgstr ""
+msgstr "Bir yıl"
 
 #: frmmain.rs_twoyears
 msgid "Two years"
-msgstr ""
+msgstr "İki yıl"
 
 #: frmmain.rs_threeyears
 msgid "Three years"
-msgstr ""
+msgstr "Üç yıl"
 
 #: frmmain.rs_fouryears
 msgid "Four years"
-msgstr ""
+msgstr "Dört yıl"
 
 #: frmmain.rs_fiveyears
 msgid "Five years"
-msgstr ""
+msgstr "Beş yıl"
 
 #: frmmain.rs_tenyears
 msgid "Ten years"
-msgstr ""
+msgstr "On yıl"
 
 #: frmmain.rs_optioncompress
 msgid ""
@@ -967,12 +967,12 @@ msgstr "Boşsa manga listesini indir"
 
 #: tmainform.cboptionshowdownloadstabonnewtasks.caption
 msgid "Show Downloads tab when adding new tasks"
-msgstr ""
+msgstr "Yeni görevler eklerken İndirmeler sekmesini göster"
 
 #: tmainform.cboptionshowfavoritestabonnewmanga.caption
 msgctxt "tmainform.cboptionshowfavoritestabonnewmanga.caption"
 msgid "Show Favorites tab when adding new manga"
-msgstr ""
+msgstr "Yeni manga eklerken Favoriler sekmesini göster"
 
 #: tmainform.cboptionshowdownloadtoolbar.caption
 msgid "Show downloads toolbar"
@@ -1359,7 +1359,7 @@ msgstr "Görevi her zaman başarısız bölümlerden başlat"
 
 #: tmainform.ckpngsaveasjpeg.caption
 msgid "Save PNG as JPEG"
-msgstr "PNGyi JPEG olarak kaydet."
+msgstr "PNGyi JPEG olarak kaydet"
 
 #: tmainform.edcustomgenres.texthint
 msgid "Input custom genres, separated by comma"
@@ -2111,11 +2111,11 @@ msgstr "Tümünü Genişlet"
 
 #: tmainform.tbwebsitesselectall.caption
 msgid "Select All"
-msgstr ""
+msgstr "Tümünü Seç"
 
 #: tmainform.tbwebsitesunselectall.caption
 msgid "Unselect All"
-msgstr ""
+msgstr "Tüm Seçimleri Kaldır"
 
 #: tmainform.tsabout.caption
 msgid "About"
@@ -2656,4 +2656,3 @@ msgstr "Veri eşitleniyor"
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr "Liste güncelleniyor"
-
