@@ -4,6 +4,38 @@ https://github.com/fmd-project-team/FMD
 Changelog:
 ([!] Important, [+] Addition, [-] Removal, [*] Fix/Change, [?] Feedback needed)
 
+0.9.163.0 (14.04.2019)
+[!] Report issues here: https://github.com/fmd-project-team/FMD/issues
+[!] Join us on Discord: https://discord.gg/cXKKgw3
+[+] Added MangaToon [Multilanguage] -> Thank you AbidZakaria
+[+] Added more date filters (6 months, 1-5 years, 10 years) (Partially implementation of Issue #78)
+[+] Added options to toggle the jump behavior for "Downloads" and "Favorites" tab (Issue #27, #95)
+[+] Added WebToons Challenge [Multilanguage] (Options->Websites->Options->WebToons->Toggle Checkbox) (Issue #57)
+[-] Removed YamiTenshiNoFansub [ES]
+[*] BacaManga: Changed URL (Issue #99) -> Thank you AbidZakaria
+[*] KazeManga: Fixed all (Issue #85)
+[*] Kiryuu: Fixed all (Issue #85)
+[*] MangAs: Changed URL from 'mang.as' to 'mangas.pw' -> Thank you rs3mk
+[*] MangaKu: Fixed chapter list (Issue #96)
+[*] MangaPark: Fixed not getting H-manga info (Issue #70)
+[*] MangaParkOrg: Fixed not getting H-manga info (Issue #70)
+[*] MangaYosh: Fixed chapter download (Issue #73)
+[*] TheCatScans: Changed URL from 'reader.thecatscans.com' to 'reader2.thecatscans.com' (Issue #75)
+[*] Toonkor: Changed URL from 'toonkor.co' to 'toonkor.pink' (Issue #66) -> Thank you AbidZakaria
+[*] WebToons: Ported to Lua script; Added mulitlanguage support (Options->Websites->Options->WebToons)
+[*] Fixed "Add to Favorites" button behavior (Issue #92)
+[*] Fixed button arrangement in "Transfer Favorites" dialog (Issue #76)
+[*] Fixed "History/Yesterday" filter not showing any entries in "Downloads" tab (Issue #78)
+[*] Localization Update: German
+[*] Localization Update: Greek
+[*] Localization Update: Indonesian
+[*] Localization Update: Polish
+[*] Localization Update: Portuguese
+[*] Localization Update: Russian
+[*] Localization Update: Spanish
+[*] Localization Update: Turkish
+Full changes: https://github.com/fmd-project-team/FMD/compare/0.9.162.0...0.9.163.0
+
 0.9.162.0 (07.04.2019)
 [!] Report issues here: https://github.com/fmd-project-team/FMD/issues
 [!] Join us on Discord: https://discord.gg/cXKKgw3

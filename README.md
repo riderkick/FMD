@@ -4,15 +4,9 @@
 
 ## Download the latest release
 
-[![Latest release](https://img.shields.io/github/release/fmd-project-team/FMD.svg)](https://github.com/fmd-project-team/FMD/releases/latest) [![Download latest release (Win32)](https://img.shields.io/github/downloads/fmd-project-team/FMD/latest/fmd_0.9.162.0.7z.svg?label=Win32)](https://github.com/fmd-project-team/FMD/releases/download/0.9.162.0/fmd_0.9.162.0.7z) [![Download latest release (Win64)](https://img.shields.io/github/downloads/fmd-project-team/FMD/latest/fmd_0.9.162.0_Win64.7z.svg?label=Win64)](https://github.com/fmd-project-team/FMD/releases/download/0.9.162.0/fmd_0.9.162.0_Win64.7z)
-
-## Public Announcement
-
-Hi everyone
-
-From today onwards I will take over the FMD project. For the time being, I will focus on the fast and important fixes, so most of you can keep using FMD. Support from the community is appreciated (by contributing lua fixes for example).
-
-
+[![Latest release](https://img.shields.io/github/release/fmd-project-team/FMD.svg)](https://github.com/fmd-project-team/FMD/releases/latest) [![Download latest release (Win32)](https://img.shields.io/github/downloads/fmd-project-team/FMD/latest/fmd_0.9.163.0.7z.svg?label=Win32)](https://github.com/fmd-project-team/FMD/releases/download/0.9.163.0/fmd_0.9.163.0.7z) [![Download latest release (Win64)](https://img.shields.io/github/downloads/fmd-project-team/FMD/latest/fmd_0.9.163.0_Win64.7z.svg?label=Win64)](https://github.com/fmd-project-team/FMD/releases/download/0.9.163.0/fmd_0.9.163.0_Win64.7z)
+  
+  
 ## Content
 
 - [About FMD](#about-fmd)
