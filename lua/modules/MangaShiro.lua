@@ -187,7 +187,7 @@ function AddWebsiteModule(site, url)
   m.category='Indonesian'
   m.website=site
   m.rooturl=url
-  m.lastupdated = 'April 10, 2019'
+  m.lastupdated = 'April 14, 2019'
   m.ongetinfo='getinfo'
   m.ongetpagenumber='getpagenumber'
   m.ongetnameandlink='getnameandlink'
@@ -203,7 +203,7 @@ function Init()
   AddWebsiteModule('WestManga', 'https://westmanga.info')
   AddWebsiteModule('Kiryuu', 'https://kiryuu.co')
   AddWebsiteModule('Kyuroku', 'https://kyuroku.com')
-  AddWebsiteModule('BacaManga', 'https://bacamanga.web.id')
+  AddWebsiteModule('BacaManga', 'https://bacamanga.co')
   AddWebsiteModule('PecintaKomik', 'https://www.pecintakomik.com')
   AddWebsiteModule('MangaIndoNet', 'https://mangaindo.net')
   AddWebsiteModule('KomikIndo', 'https://komikindo.co')
