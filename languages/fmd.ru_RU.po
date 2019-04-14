@@ -393,31 +393,31 @@ msgstr "За неделю"
 
 #: frmmain.rs_sixmonths
 msgid "Six months"
-msgstr ""
+msgstr "Пол года"
 
 #: frmmain.rs_oneyear
 msgid "One year"
-msgstr ""
+msgstr "Год"
 
 #: frmmain.rs_twoyears
 msgid "Two years"
-msgstr ""
+msgstr "Два года"
 
 #: frmmain.rs_threeyears
 msgid "Three years"
-msgstr ""
+msgstr "Три года"
 
 #: frmmain.rs_fouryears
 msgid "Four years"
-msgstr ""
+msgstr "Четыре года"
 
 #: frmmain.rs_fiveyears
 msgid "Five years"
-msgstr ""
+msgstr "Пять лет"
 
 #: frmmain.rs_tenyears
 msgid "Ten years"
-msgstr ""
+msgstr "Десять лет"
 
 #: frmmain.rs_optioncompress
 msgid ""
@@ -954,12 +954,12 @@ msgstr "Загрузка списка манги, если он пустой"
 
 #: tmainform.cboptionshowdownloadstabonnewtasks.caption
 msgid "Show Downloads tab when adding new tasks"
-msgstr ""
+msgstr "Показать Загрузки при добавлении новых задач"
 
 #: tmainform.cboptionshowfavoritestabonnewmanga.caption
 msgctxt "tmainform.cboptionshowfavoritestabonnewmanga.caption"
 msgid "Show Favorites tab when adding new manga"
-msgstr ""
+msgstr "Показать Избранное при добавлении новой манги"
 
 #: tmainform.cboptionshowdownloadtoolbar.caption
 msgid "Show downloads toolbar"
@@ -2092,11 +2092,11 @@ msgstr "Раскрыть все"
 
 #: tmainform.tbwebsitesselectall.caption
 msgid "Select All"
-msgstr ""
+msgstr "Выбрать все"
 
 #: tmainform.tbwebsitesunselectall.caption
 msgid "Unselect All"
-msgstr ""
+msgstr "Снять все"
 
 #: tmainform.tsabout.caption
 msgid "About"
@@ -2546,7 +2546,7 @@ msgstr "Проверка избранного запущена!"
 
 #: ufavoritesmanager.rs_dlgnewchaptercaption
 msgid "%d manga(s) have new chapter(s)"
-msgstr "%d manga (s) имеют новую главу (главы)"
+msgstr "У %d экз. манги появились новые главы."
 
 #: ufavoritesmanager.rs_favoritehasnewchapter
 msgid "%s <%s> has %d new chapter(s)."
@@ -2583,7 +2583,7 @@ msgstr "Найдена новая версия!"
 
 #: uupdatethread.rs_dlghasnewmanga
 msgid "%s has %d new manga(s)"
-msgstr "%s имеет %d новых частей манги"
+msgstr "%s имеет %d экз. новой манги"
 
 #: uupdatethread.rs_gettingdirectory
 msgid "Getting directory"
@@ -2637,4 +2637,3 @@ msgstr "Синхронизацияе данных"
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr "Обновление списка"
-
