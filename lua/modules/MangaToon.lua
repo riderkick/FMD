@@ -27,6 +27,11 @@ function getpagenumber()
   task.pagelinks.clear()
   if http.get(MaybeFillHost(module.rooturl,url)) then
     TXQuery.Create(http.Document).xpathstringall('//div[@class="pictures"]//img/@src', task.pagelinks)
+    
+    if task.pagenumber == 1 then
+      return false
+    end
+
     return true
   else
     return false
