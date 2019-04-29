@@ -50,6 +50,8 @@ function Modules.Madara()
           src = src:gsub('https://cdn.shortpixel.ai/client/q_glossy,ret_img/', '')
           task.pagelinks.add(src)
         end
+      elseif module.website == 'IsekaiRaw' then
+        x.xpathstringall('//div[contains(@class, "page-break")]/img/@data-src', task.pagelinks)
       else
         x.xpathstringall('//div[contains(@class, "page-break")]/img/@src', task.pagelinks)
       end
@@ -134,7 +136,10 @@ end
 
 function Init()
   local cat = 'Raw'
-  AddWebsiteModule('RawNeko', 'http://trueneko.online', cat)
+  AddWebsiteModule('IsekaiRaw', 'http://isekairaw.com', cat)
+  
+  cat = 'English'
+  AddWebsiteModule('IsekaiScan', 'http://isekaiscan.com', cat)
   
   cat = 'English-Scanlation'
   AddWebsiteModule('TrashScanlations', 'https://trashscanlations.com', cat)
