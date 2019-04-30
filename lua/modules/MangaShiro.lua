@@ -5,13 +5,14 @@ function getinfo()
     x.xpathhrefall('//div[@class="cl"]//li/span[1]/a', mangainfo.chapterlinks, mangainfo.chapternames)
     if module.website == 'KomikCast' then
       mangainfo.title=x.xpathstring('//div[@class="infox"]/h1')
-	    mangainfo.title = string.gsub(mangainfo.title, 'Bahasa Indonesia', '')
-	    mangainfo.title = string.gsub(mangainfo.title, 'Baca', '')
+	  mangainfo.title = string.gsub(mangainfo.title, 'Bahasa Indonesia', '')
+	  mangainfo.title = string.gsub(mangainfo.title, 'Baca', '')
       mangainfo.coverlink=MaybeFillHost(module.RootURL, x.xpathstring('//div[@class="thumb"]/img/@src'))
-      mangainfo.authors=x.xpathstring('//div[@class="spe"]//tr[contains(th, "Author")]/td')
-      mangainfo.genres=x.xpathstringall('//div[@class="spe"]//tr[contains(th, "Genres")]/td/a')
-      mangainfo.status=MangaInfoStatusIfPos(x.xpathstring('//div[@class="spe"]//tr[contains(th, "Status")]/td'))
-      mangainfo.summary=x.xpathstringall('//*[@class="desc"]/p/text()', '')
+	  mangainfo.authors=x.xpathstringall('//div[@class="spe"]//span[starts-with(.,"Author:")]/substring-after(.,":")')
+	  mangainfo.genres=x.xpathstringall('//div[@class="spe"]//span[starts-with(.,"Genres:")]/substring-after(.,":")')
+	  mangainfo.status=MangaInfoStatusIfPos(x.xpathstring('//div[@class="spe"]//span[starts-with(.,"Status:")]/substring-after(.,":")'))
+	  mangainfo.summary=x.xpathstring('//*[@class="desc"]/string-join(.//text(),"")')
+	  mangainfo.summary = string.gsub(mangainfo.summary, 'Sinopsis', '')
     elseif module.website == 'MangaShiro'
       or module.website == 'Kiryuu'
       or module.website == 'MangaIndoNet'
@@ -187,7 +188,7 @@ function AddWebsiteModule(site, url)
   m.category='Indonesian'
   m.website=site
   m.rooturl=url
-  m.lastupdated = 'April 14, 2019'
+  m.lastupdated = 'April 30, 2019'
   m.ongetinfo='getinfo'
   m.ongetpagenumber='getpagenumber'
   m.ongetnameandlink='getnameandlink'
