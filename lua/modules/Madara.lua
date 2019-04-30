@@ -156,4 +156,5 @@ function Init()
   cat = 'Spanish-Scanlation'
   AddWebsiteModule('GodsRealmScan', 'https://godsrealmscan.com', cat)
   AddWebsiteModule('DarkskyProjects', 'https://darkskyprojects.org', cat) 
+  AddWebsiteModule('LeviatanScans', 'https://leviatanscans.com', cat)
 end
