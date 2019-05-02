@@ -13,7 +13,6 @@ uses
   MintMangaRU,
   MangaHubRU,
   AcademyVN,
-  Webtoons,
   Tsumino,
   WebtoonTr,
   KuManga,

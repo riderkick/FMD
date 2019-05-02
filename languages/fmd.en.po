@@ -381,6 +381,34 @@ msgstr "One month"
 msgid "One week"
 msgstr "One week"
 
+#: frmmain.rs_sixmonths
+msgid "Six months"
+msgstr "Six months"
+
+#: frmmain.rs_oneyear
+msgid "One year"
+msgstr "One year"
+
+#: frmmain.rs_twoyears
+msgid "Two years"
+msgstr "Two years"
+
+#: frmmain.rs_threeyears
+msgid "Three years"
+msgstr "Three years"
+
+#: frmmain.rs_fouryears
+msgid "Four years"
+msgstr "Four years"
+
+#: frmmain.rs_fiveyears
+msgid "Five years"
+msgstr "Five years"
+
+#: frmmain.rs_tenyears
+msgid "Ten years"
+msgstr "Ten years"
+
 #: frmmain.rs_optioncompress
 #, fuzzy
 #| msgid ""
@@ -688,6 +716,10 @@ msgctxt "timportfavorites.btimport.caption"
 msgid "&OK"
 msgstr "&OK"
 
+#: timportfavorites.caption
+msgid "Import list ..."
+msgstr "Import list ..."
+
 #: timportfavorites.cbsoftware.text
 msgid "Domdomsoft Manga Downloader"
 msgstr "Domdomsoft Manga Downloader"
@@ -915,6 +947,15 @@ msgstr "Delete task/favorite"
 #: tmainform.cboptionshowdownloadmangalistdialog.caption
 msgid "Download manga list if empty"
 msgstr "Download manga list if empty"
+
+#: tmainform.cboptionshowdownloadstabonnewtasks.caption
+msgid "Show Downloads tab when adding new tasks"
+msgstr "Show Downloads tab when adding new tasks"
+
+#: tmainform.cboptionshowfavoritestabonnewmanga.caption
+msgctxt "tmainform.cboptionshowfavoritestabonnewmanga.caption"
+msgid "Show Favorites tab when adding new manga"
+msgstr "Show Favorites tab when adding new manga"
 
 #: tmainform.cboptionshowdownloadtoolbar.caption
 msgid "Show downloads toolbar"

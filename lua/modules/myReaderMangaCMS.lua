@@ -208,7 +208,7 @@ end
 function Init()
   local c='Spanish'
   AddWebsiteModule('MangaDoor', 'http://mangadoor.com', c);
-  AddWebsiteModule('MangAs', 'https://mang.as', c);
+  AddWebsiteModule('MangAs', 'https://mangas.pw', c);
   
   c='Indonesian'
   AddWebsiteModule('Komikid', 'https://www.komikid.com', c);

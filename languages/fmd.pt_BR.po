@@ -355,6 +355,34 @@ msgstr "Um mês"
 msgid "One week"
 msgstr "Uma semana"
 
+#: frmmain.rs_sixmonths
+msgid "Six months"
+msgstr "Seis meses"
+
+#: frmmain.rs_oneyear
+msgid "One year"
+msgstr "Um ano"
+
+#: frmmain.rs_twoyears
+msgid "Two years"
+msgstr "Dois anos"
+
+#: frmmain.rs_threeyears
+msgid "Three years"
+msgstr "Três ano"
+
+#: frmmain.rs_fouryears
+msgid "Four years"
+msgstr "Quatro anos"
+
+#: frmmain.rs_fiveyears
+msgid "Five years"
+msgstr "Cinco anos"
+
+#: frmmain.rs_tenyears
+msgid "Ten years"
+msgstr "Dez anos"
+
 #: frmmain.rs_optioncompress
 #, fuzzy
 #| msgid ""
@@ -643,6 +671,10 @@ msgctxt "timportfavorites.btimport.caption"
 msgid "&OK"
 msgstr "&OK"
 
+#: timportfavorites.caption
+msgid "Import list ..."
+msgstr "Importar lista ..."
+
 #: timportfavorites.cbsoftware.text
 msgid "Domdomsoft Manga Downloader"
 msgstr "Domdomsoft Manga Downloader"
@@ -871,6 +903,15 @@ msgstr "Apagar tarefa/favorito"
 msgid "Download manga list if empty"
 msgstr "Baixar lista de mangá se vazia"
 
+#: tmainform.cboptionshowdownloadstabonnewtasks.caption
+msgid "Show Downloads tab when adding new tasks"
+msgstr "Exibir aba de Downloads quando adicionando nova tarefa"
+
+#: tmainform.cboptionshowfavoritestabonnewmanga.caption
+msgctxt "tmainform.cboptionshowfavoritestabonnewmanga.caption"
+msgid "Show Favorites tab when adding new manga"
+msgstr "Exibir aba de Favoritos quando adicionando novo mangá"
+
 #: tmainform.cboptionshowdownloadtoolbar.caption
 msgid "Show downloads toolbar"
 msgstr "Exibir Barra de Ferramentas de Downloads"
@@ -889,7 +930,7 @@ msgstr "Sair do FMD"
 
 #: tmainform.cboptionsortdownloadswhenaddingnewdownloadtasks.caption
 msgid "Sort Downloads when adding new download tasks"
-msgstr ""
+msgstr "Ordenar Download quando adicionando novas tarefas"
 
 #: tmainform.cboptionupdatelistnomangainfo.caption
 msgid "Don't load manga information when updating list (filter will be not work!)"
@@ -1968,11 +2009,11 @@ msgstr "Expandir Tudo"
 
 #: tmainform.tbwebsitesselectall.caption
 msgid "Select All"
-msgstr ""
+msgstr "Selecionar Tudo"
 
 #: tmainform.tbwebsitesunselectall.caption
 msgid "Unselect All"
-msgstr ""
+msgstr "Deselecionar Tudo"
 
 #: tmainform.tsabout.caption
 msgid "About"
@@ -2151,7 +2192,7 @@ msgstr "&Adic. à fila"
 
 #: tnewchapter.caption
 msgid "New Chapter Notification"
-msgstr ""
+msgstr "Notificação de Novo Capítulo"
 
 #: tselectdirectoryform.btok.caption
 msgctxt "tselectdirectoryform.btok.caption"
@@ -2511,3 +2552,4 @@ msgstr "Sincronizando dados"
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr "Atualizando a lista"
+

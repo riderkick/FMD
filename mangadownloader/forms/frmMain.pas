@@ -54,6 +54,8 @@ type
     cbOptionAutoOpenFavStartup: TCheckBox;
     cbOptionDeleteCompletedTasksOnClose: TCheckBox;
     cbOptionSortDownloadsWhenAddingNewDownloadTasks: TCheckBox;
+    cbOptionShowFavoritesTabOnNewManga: TCheckBox;
+    cbOptionShowDownloadsTabOnNewTasks: TCheckBox;
     cbOptionEnableLoadCover: TCheckBox;
     cbOptionMinimizeOnStart: TCheckBox;
     cbOptionShowBalloonHint: TCheckBox;
@@ -915,6 +917,13 @@ resourcestring
   RS_Yesterday = 'Yesterday';
   RS_OneWeek = 'One week';
   RS_OneMonth = 'One month';
+  RS_SixMonths = 'Six months';
+  RS_OneYear = 'One year';
+  RS_TwoYears = 'Two years';
+  RS_ThreeYears = 'Three years';
+  RS_FourYears = 'Four years';
+  RS_FiveYears = 'Five years';
+  RS_TenYears = 'Ten years';
   RS_Import = 'Import';
   RS_Software = 'Software';
   RS_SoftwarePath = 'Path to the software (e.g. C:\MangaDownloader)';
@@ -2296,6 +2305,13 @@ begin
     Add(Node, RS_Yesterday, 8);
     Add(Node, RS_OneWeek, 8);
     Add(Node, RS_OneMonth, 8);
+    Add(Node, RS_SixMonths, 8);
+    Add(Node, RS_OneYear, 8);
+    Add(Node, RS_TwoYears, 8);
+    Add(Node, RS_ThreeYears, 8);
+    Add(Node, RS_FourYears, 8);
+    Add(Node, RS_FiveYears, 8);
+    Add(Node, RS_TenYears, 8);
 
     Items[configfile.ReadInteger('general', 'DownloadFilterSelect', 0)].Selected := True;
   end;
@@ -2413,7 +2429,8 @@ begin
       DLManager.DownloadedChapters.Chapters[mangaInfo.website+mangaInfo.link]:=links.Text;
       FavoriteManager.AddToDownloadedChaptersList(mangaInfo.website,mangaInfo.link,links);
       DLManager.CheckAndActiveTask;
-      pcMain.ActivePage:=tsDownload;
+      if OptionShowDownloadsTabOnNewTasks then
+        pcMain.ActivePage:=tsDownload;
       UpdateVtDownload;
     end;
   finally
@@ -2447,6 +2464,11 @@ begin
     vtFavorites.NodeDataSize := SizeOf(TFavoriteInfo);
     UpdateVtFavorites;
     btAddToFavorites.Enabled := False;
+    if OptionShowFavoritesTabOnNewManga then
+    begin
+      edFavoritesSearch.Text := mangaInfo.title;
+      pcMain.ActivePage := tsFavorites;
+    end;
   end;
 end;
 
@@ -3374,7 +3396,8 @@ begin
               AllowedToCreate := False
             else
             begin
-              pcMain.ActivePage := tsDownload;
+              if OptionShowDownloadsTabOnNewTasks then
+                pcMain.ActivePage := tsDownload;
               mResult := MessageDlg('', DLManager.Items[i].DownloadInfo.title +
                 LineEnding + LineEnding + RS_DlgTitleExistInDLlist, mtConfirmation,
                   mBtns, 0);
@@ -3815,7 +3838,8 @@ end;
 procedure TMainForm.tvDownloadFilterSelectionChanged(Sender: TObject);
 begin
   vtDownloadUpdateFilters(False);
-  pcMain.ActivePage := tsDownload;
+  if OptionShowDownloadsTabOnNewTasks then
+    pcMain.ActivePage := tsDownload;
   configfile.WriteInteger('general', 'DownloadFilterSelect',
     tvDownloadFilter.Selected.AbsoluteIndex);
 end;
@@ -4465,6 +4489,13 @@ begin
         Items[8].Text := RS_Yesterday;
         Items[9].Text := RS_OneWeek;
         Items[10].Text := RS_OneMonth;
+        Items[11].Text := RS_SixMonths;
+        Items[12].Text := RS_OneYear;
+        Items[13].Text := RS_TwoYears;
+        Items[14].Text := RS_ThreeYears;
+        Items[15].Text := RS_FourYears;
+        Items[16].Text := RS_FiveYears;
+        Items[17].Text := RS_TenYears;
       end;
     finally
       tvDownloadFilter.EndUpdate;
@@ -4550,9 +4581,16 @@ begin
       5: ShowDisabled;
 
       7: ShowTasksOnCertainDays(ACurrentJDN, ACurrentJDN);
-      8: ShowTasksOnCertainDays(ACurrentJDN - 1, ACurrentJDN - 1);
+      8: ShowTasksOnCertainDays(ACurrentJDN - 1, ACurrentJDN);
       9: ShowTasksOnCertainDays(ACurrentJDN - 7, ACurrentJDN);
       10: ShowTasksOnCertainDays(ACurrentJDN - 30, ACurrentJDN);
+      11: ShowTasksOnCertainDays(ACurrentJDN - 180, ACurrentJDN);
+      12: ShowTasksOnCertainDays(ACurrentJDN - 365, ACurrentJDN);
+      13: ShowTasksOnCertainDays(ACurrentJDN - 730, ACurrentJDN);
+      14: ShowTasksOnCertainDays(ACurrentJDN - 1095, ACurrentJDN);
+      15: ShowTasksOnCertainDays(ACurrentJDN - 1460, ACurrentJDN);
+      16: ShowTasksOnCertainDays(ACurrentJDN - 1825, ACurrentJDN);
+      17: ShowTasksOnCertainDays(ACurrentJDN - 3650, ACurrentJDN);
     end;
   finally
     vtDownload.EndUpdate;
@@ -4707,17 +4745,14 @@ begin
 
   DisableAddToFavorites(AWebsite);
   //check if manga already in FavoriteManager list
-  if btAddToFavorites.Enabled and not(LastViewMangaInfoSender = miFavoritesViewInfos) then
+  fav := FavoriteManager.LocateMangaByLink(AWebsite, ALink);
+  if fav <> nil then
   begin
-    fav := FavoriteManager.LocateMangaByLink(AWebsite, ALink);
-    if fav <> nil then
+    btAddToFavorites.Enabled := False;
+    if LastViewMangaInfoSender <> miDownloadViewMangaInfo then
     begin
-      btAddToFavorites.Enabled := False;
-      if LastViewMangaInfoSender <> miDownloadViewMangaInfo then
-      begin
-        edSaveTo.Text := fav.FavoriteInfo.SaveTo;
-        LastViewMangaInfoSender := miFavoritesViewInfos;
-      end;
+      edSaveTo.Text := fav.FavoriteInfo.SaveTo;
+      LastViewMangaInfoSender := miFavoritesViewInfos;
     end;
   end;
 
@@ -4830,6 +4865,8 @@ begin
     cbOptionShowDownloadToolbarDeleteAll.Checked := ReadBool('view', 'ShowDownloadsToolbarDeleteAll', False);
     cbOptionEnableLoadCover.Checked := ReadBool('view', 'LoadMangaCover', True);
     cbOptionShowBalloonHint.Checked := ReadBool('view', 'ShowBalloonHint', OptionShowBalloonHint);
+    cbOptionShowFavoritesTabOnNewManga.Checked := ReadBool('view', 'ShowFavoritesTabOnNewManga', OptionShowFavoritesTabOnNewManga);
+    cbOptionShowDownloadsTabOnNewTasks.Checked := ReadBool('view', 'ShowDownloadsTabOnNewTasks', OptionShowDownloadsTabOnNewTasks);
     ckDropTarget.Checked := ReadBool('droptarget', 'Show', False);
     frmDropTarget.FWidth := ReadInteger('droptarget', 'Width', frmDropTarget.FWidth);
     frmDropTarget.FHeight := ReadInteger('droptarget', 'Heigth', frmDropTarget.FHeight);
@@ -4943,6 +4980,8 @@ begin
       // view
       WriteBool('view', 'ShowDownloadsToolbar', cbOptionShowDownloadToolbar.Checked);
       WriteBool('view', 'ShowDownloadsToolbarLeft', cbOptionShowDownloadToolbarLeft.Checked);
+      WriteBool('view', 'ShowFavoritesTabOnNewManga', cbOptionShowFavoritesTabOnNewManga.Checked);
+      WriteBool('view', 'ShowDownloadsTabOnNewTasks', cbOptionShowDownloadsTabOnNewTasks.Checked);
       WriteBool('view', 'ShowDownloadsToolbarDeleteAll', cbOptionShowDownloadToolbarDeleteAll.Checked);
       WriteBool('view', 'LoadMangaCover', cbOptionEnableLoadCover.Checked);
       WriteBool('view', 'ShowBalloonHint', cbOptionShowBalloonHint.Checked);
@@ -5110,6 +5149,8 @@ begin
     tbSeparator1.Visible := tbDownloadDeleteCompleted.Visible;
     ShowDropTarget(ckDropTarget.Checked);
     OptionShowBalloonHint := cbOptionShowBalloonHint.Checked;
+    OptionShowFavoritesTabOnNewManga := cbOptionShowFavoritesTabOnNewManga.Checked;
+    OptionShowDownloadsTabOnNewTasks := cbOptionShowDownloadsTabOnNewTasks.Checked;
 
     //connection
     OptionMaxParallel := seOptionMaxParallel.Value;

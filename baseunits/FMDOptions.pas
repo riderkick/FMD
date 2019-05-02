@@ -153,6 +153,8 @@ var
   // view
   OptionEnableLoadCover: Boolean = False;
   OptionShowBalloonHint: Boolean = True;
+  OptionShowFavoritesTabOnNewManga: Boolean = False;
+  OptionShowDownloadsTabOnNewTasks: Boolean = True;
 
   // updates
   OptionAutoCheckLatestVersion: Boolean = True;
