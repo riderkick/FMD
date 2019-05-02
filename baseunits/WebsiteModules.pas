@@ -11,7 +11,7 @@ interface
 
 uses
   Classes, SysUtils, fgl, uData, uDownloadsManager, FMDOptions, httpsendthread,
-  WebsiteModulesSettings, LazLogger, Cloudflare, RegExpr, fpjson, jsonparser,
+  WebsiteModulesSettings, Process, Multilog, LazLogger, Cloudflare, RegExpr, fpjson, jsonparser,
   jsonscanner, fpjsonrtti;
 
 const
@@ -430,9 +430,44 @@ end;
 procedure TModuleContainer.PrepareHTTP(const AHTTP: THTTPSendThread);
 var
   s: String;
+  AProcess: TProcess;
+  f: TextFile;
+  cfs: String;
 begin
   CheckCloudflareEnabled(AHTTP);
-  if not Settings.Enabled then Exit;
+  if not Settings.Enabled then
+  begin
+    AProcess := TProcess.Create(nil);
+    try
+      AProcess.InheritHandles := False;
+      AProcess.CurrentDirectory := FMD_DIRECTORY;
+      AProcess.Executable := CURRENT_CF_BYPASS_EXE;
+      AProcess.Parameters.Add(RootURL);
+      AProcess.ShowWindow := swoHide;
+      AProcess.Options := AProcess.Options + [poWaitOnExit, poUsePipes];
+      AProcess.Execute;
+    finally
+      AProcess.Free;
+    end;
+    if FileExists(CONFIG_FOLDER + 'cf_bypass.txt') then
+    begin
+      AssignFile(f, CONFIG_FOLDER + 'cf_bypass.txt');
+      try
+        reset(f);
+        while not eof(f) do
+        begin
+          cfs := '';
+          readln(f, cfs);
+          if pos('cf_clearance', cfs) > 0 then Settings.HTTP.Cookies:=cfs;
+          if pos('user_agent', cfs) > 0 then Settings.HTTP.UserAgent:=StringReplace(cfs, 'user_agent=', '', [rfIgnoreCase]);
+        end;
+      finally
+        CloseFile(f);
+        DeleteFile(CONFIG_FOLDER + 'cf_bypass.txt');
+        Settings.Enabled := True;
+      end;
+    end;
+  end;
   with Settings.HTTP do
   begin
     if UserAgent<>'' then
