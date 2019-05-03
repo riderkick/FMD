@@ -17,7 +17,6 @@ uses
   KuManga,
   SenManga,
   MangaInn,
-  LeoManga,
   GoodManga,
   MangaZuki,
   ReadMangaToday,
