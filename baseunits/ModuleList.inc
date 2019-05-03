@@ -1,6 +1,5 @@
 uses
   MangaFox,
-  Mangacan,
   MangaReader,
   MangaLife,
   MangaHere,
@@ -19,7 +18,6 @@ uses
   SenManga,
   MangaInn,
   LeoManga,
-  MangaIndo,
   GoodManga,
   MangaZuki,
   ReadMangaToday,
