@@ -42,6 +42,20 @@ type
     property UserAgent: String read FUserAgent write FUserAgent;
     property Proxy: TProxySettings read FProxy write FProxy;
   end;
+  
+  { TDynamicHTTPSettings }
+  
+  TDynamicHTTPSettings = class
+  private
+    FDynamicCookies: String;
+    FDynamicUserAgent: String;
+  public
+    constructor Create;
+    destructor Destroy; override;
+  published
+    property Cookies: String read FDynamicCookies write FDynamicCookies;
+    property UserAgent: String read FDynamicUserAgent write FDynamicUserAgent;
+  end;
 
   { TWebsiteModuleSettings }
 
@@ -49,6 +63,7 @@ type
   private
     FEnabled: Boolean;
     FHTTP: THTTPSettings;
+    FDYNHTTP: TDynamicHTTPSettings;
     FMaxConnectionLimit: Integer;
     FMaxTaskLimit: Integer;
     FMaxThreadPerTaskLimit: Integer;
@@ -65,6 +80,7 @@ type
     property UpdateListNumberOfThread: Integer read FUpdateListNumberOfThread write FUpdateListNumberOfThread default 0;
     property UpdateListDirectoryPageNumber: Integer read FUpdateListDirectoryPageNumber write FUpdateListDirectoryPageNumber default 0;
     property HTTP: THTTPSettings read FHTTP write FHTTP;
+    property DynHTTP: TDynamicHTTPSettings read FDYNHTTP write FDYNHTTP;
   end;
 
 implementation
@@ -82,16 +98,30 @@ begin
   inherited Destroy;
 end;
 
+{ TDynamicHTTPSettings }
+
+constructor TDynamicHTTPSettings.Create;
+begin
+  
+end;
+
+destructor TDynamicHTTPSettings.Destroy;
+begin
+  inherited Destroy;
+end;
+
 { TWebsiteModuleSettings }
 
 constructor TWebsiteModuleSettings.Create;
 begin
   HTTP:=THTTPSettings.Create;
+  DynHTTP:=TDynamicHTTPSettings.Create;
 end;
 
 destructor TWebsiteModuleSettings.Destroy;
 begin
   HTTP.Free;
+  DynHTTP.Free;
   inherited Destroy;
 end;
 

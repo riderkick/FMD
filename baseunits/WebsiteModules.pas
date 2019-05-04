@@ -280,6 +280,7 @@ type
 
     procedure LoadFromFile;
     procedure SaveToFile;
+    procedure ClearDynamicHTTPSettings;
   end;
 
 var
@@ -435,7 +436,7 @@ var
   cfs: String;
 begin
   CheckCloudflareEnabled(AHTTP);
-  if not Settings.Enabled then
+  if FCloudflareEnabled and ((Settings.DynHTTP.Cookies = '') or (Settings.DynHTTP.UserAgent = '')) then
   begin
     AProcess := TProcess.Create(nil);
     try
@@ -458,33 +459,56 @@ begin
         begin
           cfs := '';
           readln(f, cfs);
-          if pos('cf_clearance', cfs) > 0 then Settings.HTTP.Cookies:=cfs;
-          if pos('user_agent', cfs) > 0 then Settings.HTTP.UserAgent:=StringReplace(cfs, 'user_agent=', '', [rfIgnoreCase]);
+          if pos('cf_clearance', cfs) > 0 then Settings.DynHTTP.Cookies:=cfs;
+          if pos('user_agent', cfs) > 0 then Settings.DynHTTP.UserAgent:=StringReplace(cfs, 'user_agent=', '', [rfIgnoreCase]);
         end;
       finally
         CloseFile(f);
         DeleteFile(CONFIG_FOLDER + 'cf_bypass.txt');
-        Settings.Enabled := True;
       end;
     end;
   end;
-  with Settings.HTTP do
+  
+  if Settings.Enabled then
   begin
-    if UserAgent<>'' then
-      AHTTP.UserAgent:=UserAgent;
-    if Cookies<>'' then
-      AHTTP.Cookies.Text:=Cookies;
-    with Proxy do
+    with Settings.HTTP do
     begin
-      s:='';
-      case Proxy.ProxyType of
-        ptDirect:AHTTP.SetNoProxy;
-        ptHTTP:s:='HTTP';
-        ptSOCKS4:s:='SOCKS4';
-        ptSOCKS5:s:='SOCKS5';
+      if Cookies<>'' then
+      begin
+        AHTTP.Cookies.Text:=Cookies;
+        if pos('cf_clearance=', Cookies) = 0 then
+          AHTTP.Cookies.Text:=AHTTP.Cookies.Text + ';' + Settings.DynHTTP.Cookies;
+      end
+      else
+        AHTTP.Cookies.Text:=Settings.DynHTTP.Cookies;
+        
+      if UserAgent<>'' then
+        AHTTP.UserAgent:=UserAgent
+      else
+        AHTTP.UserAgent:=Settings.DynHTTP.UserAgent;
+      
+      with Proxy do
+      begin
+        s:='';
+        case Proxy.ProxyType of
+          ptDirect:AHTTP.SetNoProxy;
+          ptHTTP:s:='HTTP';
+          ptSOCKS4:s:='SOCKS4';
+          ptSOCKS5:s:='SOCKS5';
+        end;
+        if s<>'' then
+          AHTTP.SetProxy(s,ProxyHost,ProxyPort,ProxyUsername,ProxyPassword);
       end;
-      if s<>'' then
-        AHTTP.SetProxy(s,ProxyHost,ProxyPort,ProxyUsername,ProxyPassword);
+    end;
+  end
+  else
+  begin
+    with Settings.DynHTTP do
+    begin
+      if UserAgent<>'' then
+        AHTTP.UserAgent:=UserAgent;
+      if Cookies<>'' then
+        AHTTP.Cookies.Text:=Cookies;
     end;
   end;
 end;
@@ -1056,6 +1080,18 @@ begin
     ja.Free;
     js.Free;
   end;
+end;
+
+procedure TWebsiteModules.ClearDynamicHTTPSettings;
+var
+  i: Integer;
+begin
+  for i:=0 to FModuleList.Count-1 do
+    with FModuleList[i] do
+    begin
+      Settings.DynHTTP.Cookies:='';
+      Settings.DynHTTP.UserAgent:='';
+    end;
 end;
 
 function TWebsiteModules.GetModule(const ModuleId: Integer): TModuleContainer;
