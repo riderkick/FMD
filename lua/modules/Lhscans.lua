@@ -32,8 +32,10 @@ function getpagenumber()
   local u = MaybeFillHost(module.rooturl, url)
   if http.get(u) then
     local x=TXQuery.Create(http.Document)
-    x.xpathstringall('//img[@class="chapter-img"]/@src', task.pagelinks)
-    task.pagecontainerlinks.text = u
+    x.xpathstringall('//img[@class="chapter-img"]/@data-original', task.pagelinks)
+    if module.website ~= 'RawQQ' then
+      task.pagecontainerlinks.text = u
+    end
   else
     return false
   end
@@ -56,7 +58,9 @@ function getnameandlink()
 end
 
 function BeforeDownloadImage()
-  http.headers.values['Referer'] = task.pagecontainerlinks.text
+  if module.website ~= 'RawQQ' then
+    http.headers.values['Referer'] = task.pagecontainerlinks.text
+  end
   return true
 end
 
@@ -65,7 +69,7 @@ function AddWebsiteModule(name, url, cat)
   m.category = cat
   m.Website = name
   m.RootURL = url
-  m.LastUpdated = 'April 9, 2018'
+  m.LastUpdated = 'May 4, 2019'
   m.totaldirectory=1
   m.ongetinfo='getinfo'
   m.ongetpagenumber='getpagenumber'
