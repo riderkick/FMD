@@ -2,13 +2,18 @@ function getinfo()
   mangainfo.url=MaybeFillHost(module.RootURL, url)
   if http.get(mangainfo.url) then
     local x=TXQuery.Create(http.document)
-    mangainfo.title=x.xpathstring('//*[@class="manga__title"]/h2')
+    mangainfo.title=x.xpathstring('//*[@class="manga-bg__subtitle"]')
     mangainfo.coverlink=MaybeFillHost(module.RootURL, x.xpathstring('//img[@class="manga__cover"]/@src'))
-    mangainfo.authors=x.xpathstringall('//div[@class="manga-info"]//p[contains(*, "Автор")]/a')
-    mangainfo.artists=x.xpathstringall('//div[@class="manga-info"]//p[contains(*, "Художник")]/a')
-    mangainfo.genres=x.xpathstringall('//div[@class="manga-info"]//p[contains(*, "Жанры")]/a')
-    mangainfo.status = MangaInfoStatusIfPos(x.xpathstring('//div[@class="manga-info"]//p[contains(*, "Перевод")]/span'), 'продолжается', 'завершен')
-    mangainfo.summary=x.xpathstringall('//div[contains(@class, "manga__desc")]/blockquote/text()', '')
+    mangainfo.authors=x.xpathstring('//div[@class="info-list__row"][starts-with(.,"Автор")]')
+	mangainfo.authors=string.gsub(mangainfo.authors, 'Автор', '')
+	mangainfo.authors=string.gsub(mangainfo.authors, '  ', '')
+	mangainfo.artists=x.xpathstring('//div[@class="info-list__row"][starts-with(.,"Художник")]')
+	mangainfo.artists=string.gsub(mangainfo.artists, 'Художник', '')
+	mangainfo.artists=string.gsub(mangainfo.artists, '  ', '')
+    mangainfo.genres=x.xpathstring('//div[@class="info-list__row"][starts-with(.,"Жанры")]')
+	mangainfo.genres=string.gsub(mangainfo.genres, 'Жанры', '')
+	mangainfo.status = MangaInfoStatusIfPos(x.xpathstring('//div[@class="info-list__row"][starts-with(.,"Перевод")]'), 'продолжается', 'завершен')
+    mangainfo.summary=x.xpathstringall('//div[contains(@class, "info-desc__content")]/text()', '')
     x.xpathhrefall('//div[@class="chapters-list"]/div/div[@class="chapter-item__name"]/a', mangainfo.chapterlinks, mangainfo.chapternames)
     InvertStrings(mangainfo.chapterlinks,mangainfo.chapternames)
     return no_error
@@ -19,22 +24,29 @@ end
 
 function getpagenumber()
   task.pagelinks.clear()
-  task.pagenumber=0
   if http.get(MaybeFillHost(module.rooturl, url)) then
     local x=TXQuery.Create(http.Document)
-    local s = x.xpathstring('//script[contains(., "var pages")]')
-    local base = s:match('%.scan%-page.+src\'%s*,%s*\'([^\']+)\'')
-    s = GetBetween('var pages =', ';', s)
-    x.parsehtml(s)
-    local v = x.xpath('json(*)().page_image')
-    for i = 1,v.count do
-      local v1=v.get(i)
-      task.pagelinks.add(base .. '/' .. v1.tostring)
-    end
+    task.pagenumber = x.xpathcount('//select[@id="reader-pages"]/option/@value')
   else
     return false
   end
   return true
+end
+
+function getimageurl()
+  local s = AppendURLDelim(url)..(workid+1)
+  if http.get(MaybeFillHost(module.rooturl,s)) then
+    local x=TXQuery.Create(http.document)
+	local link = x.xpathstring('//meta[@property="og:image"]/@content')
+		  link = string.sub(link, 1, string.len(link) - 6)
+	local page = string.sub('00'..(workid+1), 2, 4)
+		  if  string.len(page) == 3 then
+			  page = (workid+1)
+		  end
+	task.pagelinks[workid]=link..page..'.png'
+  	return true
+  end
+  return false
 end
 
 function getnameandlink()
@@ -61,8 +73,9 @@ function Init()
   m.website = 'MangaLib'
   m.rooturl = 'https://mangalib.me'
   m.category = 'Russian'
-  m.lastupdated='March 3, 2018'
+  m.lastupdated='May 4, 2019'
   m.ongetinfo='getinfo'
   m.ongetpagenumber='getpagenumber'
   m.ongetnameandlink='getnameandlink'
+  m.ongetimageurl='getimageurl'
 end
