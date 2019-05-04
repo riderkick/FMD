@@ -1,0 +1,42 @@
+Legend
+------
+**Domain**  
+  
+The domain badges are dynamically generated. So it gives you always the actual status of the listed websites:  
+  
+![github.com](https://img.shields.io/website/https/github.com.svg?label=github.com&up_message=online&down_message=offline%20%2F%20cf) : Website is online.  
+![website.url](https://img.shields.io/website/http/website.url.svg?label=website.url&up_message=online&down_message=offline%20%2F%20cf) : Website is either offline or uses Cloudflare "I'm Under Attack Mode" (IUAM).  
+  
+**Status**  
+  
+![Supported](https://img.shields.io/badge/Status-Supported-BrightGreen.svg) : All features are implemented and working.  
+![Partial](https://img.shields.io/badge/Status-Partial-yellowgreen.svg) : Not all features are currently implemented.  
+![Broken](https://img.shields.io/badge/Status-Broken-red.svg) : Website changed and broke the module code.  
+![Removed](https://img.shields.io/badge/Status-Removed-inactive.svg) : Website has been removed and is not supported anymore.  
+![Moved](https://img.shields.io/badge/Moved-SomeNewWebsite-blue.svg) : Website has moved (for example to 'SomeNewWebsite').  
+  
+**Module**  
+  
+![Lua](https://img.shields.io/badge/Lua-Modulename-blueviolet.svg) : Website is implemented in a Lua module.  
+![Pascal](https://img.shields.io/badge/Pascal-Modulename-blue.svg) : Website is implemented in a Pascal module.  
+  
+---
+  
+| Website         | Domain                                                                                                                                                                                                                      | Status                                                                      | Module                                                             |
+|:--------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|:---------------------------------------------------------------------------:|:------------------------------------------------------------------:|
+| DarkskyProjects | [![darkskyprojects.org](https://img.shields.io/website/https/darkskyprojects.org.svg?label=darkskyprojects.org&up_message=online&down_message=offline%20%2F%20cf)](https://darkskyprojects.org)                             | ![Broken](https://img.shields.io/badge/Status-Broken-red.svg)               | ![Lua](https://img.shields.io/badge/Lua-Madara-blueviolet.svg)     |
+| IsekaiRaw       | [![isekairaw.com](https://img.shields.io/website/http/isekairaw.com.svg?label=isekairaw.com&up_message=online&down_message=offline%20%2F%20cf)](http://isekairaw.com)                                                       | ![Supported](https://img.shields.io/badge/Status-Supported-BrightGreen.svg) | ![Lua](https://img.shields.io/badge/Lua-Madara-blueviolet.svg)     |
+| IsekaiScan      | [![isekaiscan.com](https://img.shields.io/website/http/isekaiscan.com.svg?label=isekaiscan.com&up_message=online&down_message=offline%20%2F%20cf)](http://isekaiscan.com)                                                   | ![Supported](https://img.shields.io/badge/Status-Supported-BrightGreen.svg) | ![Lua](https://img.shields.io/badge/Lua-Madara-blueviolet.svg)     |
+| KomikCast       | [![komikcast.com](https://img.shields.io/website/https/komikcast.com.svg?label=komikcast.com&up_message=online&down_message=offline%20%2F%20cf)](https://komikcast.com)                                                     | ![Supported](https://img.shields.io/badge/Status-Supported-BrightGreen.svg) | ![Lua](https://img.shields.io/badge/Lua-MangaShiro-blueviolet.svg) |
+| LeoManga        | [![leomanga.xyz](https://img.shields.io/website/https/leomanga.xyz.svg?label=leomanga.xyz&up_message=online&down_message=offline%20%2F%20cf)](https://leomanga.xyz)                                                         | ![Supported](https://img.shields.io/badge/Status-Supported-BrightGreen.svg) | ![Lua](https://img.shields.io/badge/Lua-LeoManga-blueviolet.svg)   |
+| LetItGoScans    | [![reader.letitgo.scans.today](https://img.shields.io/website/https/reader.letitgo.scans.today.svg?label=reader.letitgo.scans.today&up_message=online&down_message=offline%20%2F%20cf)](https://reader.letitgo.scans.today) | ![Supported](https://img.shields.io/badge/Status-Supported-BrightGreen.svg) | ![Lua](https://img.shields.io/badge/Lua-ComiCake-blueviolet.svg)   |
+| LeviatanScans   | [![leviatanscans.com](https://img.shields.io/website/https/leviatanscans.com.svg?label=leviatanscans.com&up_message=online&down_message=offline%20%2F%20cf)](https://leviatanscans.com)                                     | ![Supported](https://img.shields.io/badge/Status-Supported-BrightGreen.svg) | ![Lua](https://img.shields.io/badge/Lua-Madara-blueviolet.svg)     |
+| Mangacan        | [![mangacanblog.com](https://img.shields.io/website/http/mangacanblog.com.svg?label=mangacanblog.com&up_message=online&down_message=offline%20%2F%20cf)](http://mangacanblog.com)                                           | ![Supported](https://img.shields.io/badge/Status-Supported-BrightGreen.svg) | ![Lua](https://img.shields.io/badge/Lua-MangaShiro-blueviolet.svg) |
+| MangaDex        | [![mangadex.org](https://img.shields.io/website/https/mangadex.org.svg?label=mangadex.org&up_message=online&down_message=offline%20%2F%20cf)](https://mangadex.org)                                                         | ![Supported](https://img.shields.io/badge/Status-Supported-BrightGreen.svg) | ![Lua](https://img.shields.io/badge/Lua-MangaDex-blueviolet.svg)   |
+| MangaIndo       | [![mangaindo.web.id](https://img.shields.io/website/https/mangaindo.web.id.svg?label=mangaindo.web.id&up_message=online&down_message=offline%20%2F%20cf)](https://mangaindo.web.id)                                         | ![Supported](https://img.shields.io/badge/Status-Supported-BrightGreen.svg) | ![Lua](https://img.shields.io/badge/Lua-MangaShiro-blueviolet.svg) |
+| MangaIndoNet    | [![mangaindo.net](https://img.shields.io/website/https/mangaindo.net.svg?label=mangaindo.net&up_message=online&down_message=offline%20%2F%20cf)](https://mangaindo.net)                                                     | ![Supported](https://img.shields.io/badge/Status-Supported-BrightGreen.svg) | ![Lua](https://img.shields.io/badge/Lua-MangaShiro-blueviolet.svg) |
+| MangaLib        | [![mangalib.me](https://img.shields.io/website/https/mangalib.me.svg?label=mangalib.me&up_message=online&down_message=offline%20%2F%20cf)](https://mangalib.me)                                                             | ![Supported](https://img.shields.io/badge/Status-Supported-BrightGreen.svg) | ![Lua](https://img.shields.io/badge/Lua-MangaLib-blueviolet.svg)   |
+| MangaLife       | [![mangalife.us](https://img.shields.io/website/https/mangalife.us.svg?label=mangalife.us&up_message=online&down_message=offline%20%2F%20cf)](https://mangalife.us)                                                         | ![Supported](https://img.shields.io/badge/Status-Supported-BrightGreen.svg) | ![Pascal](https://img.shields.io/badge/Pascal-MangaLife-Blue.svg)  |
+| RawNeko         | [![trueneko.online](https://img.shields.io/website/http/trueneko.online.svg?label=trueneko.online&up_message=online&down_message=offline%20%2F%20cf)](http://trueneko.online)                                               | ![Moved](https://img.shields.io/badge/Moved-IsekaiRaw-Blue.svg)             | ![Lua](https://img.shields.io/badge/Lua-Madara-blueviolet.svg)     |
+| RawQQ           | [![rawqq.com](https://img.shields.io/website/https/rawqq.com.svg?label=rawqq.com&up_message=online&down_message=offline%20%2F%20cf)](https://rawqq.com)                                                                     | ![Supported](https://img.shields.io/badge/Status-Supported-BrightGreen.svg) | ![Pascal](https://img.shields.io/badge/Lua-Lhscans-blueviolet.svg) |
+| ReadComicOnline | [![readcomiconline.to](https://img.shields.io/website/https/readcomiconline.to.svg?label=readcomiconline.to&up_message=online&down_message=offline%20%2F%20cf)](https://readcomiconline.to)                                 | ![Supported](https://img.shields.io/badge/Status-Supported-BrightGreen.svg) | ![Pascal](https://img.shields.io/badge/Pascal-KissManga-Blue.svg)  |
