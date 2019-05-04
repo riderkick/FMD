@@ -1648,7 +1648,7 @@ msgstr ""
 "%FILENAME% : Dosya adı\n"
 "\n"
 "Not:\n"
-"Dosya adı en azından %FILENAME% içermeldir\n"
+"Dosya adı en azından %FILENAME% içermelidir\n"
 
 #: tmainform.lboptionhost.caption
 msgid "Host"
