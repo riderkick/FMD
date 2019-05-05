@@ -222,7 +222,7 @@ function AddWebsiteModule(site, url)
   m.category='Indonesian'
   m.website=site
   m.rooturl=url
-  m.lastupdated = 'April 30, 2019'
+  m.lastupdated = 'May 05, 2019'
   m.ongetinfo='getinfo'
   m.ongetpagenumber='getpagenumber'
   m.ongetnameandlink='getnameandlink'
@@ -244,7 +244,7 @@ function Init()
   AddWebsiteModule('KomikIndo', 'https://komikindo.co')
   AddWebsiteModule('KomikIndoWebId', 'https://www.komikindo.web.id')
   AddWebsiteModule('Komiku', 'https://komiku.co')
-  AddWebsiteModule('OtakuIndo', 'https://otakuindo.net')
+  AddWebsiteModule('OtakuIndo', 'https://otakuindo.co')
   AddWebsiteModule('KazeManga', 'https://kazemanga.xyz')
   AddWebsiteModule('Mangacan', 'http://www.mangacanblog.com')
   AddWebsiteModule('MangaIndo', 'https://mangaindo.web.id')
