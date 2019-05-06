@@ -29,7 +29,7 @@ Then you must install the following 3rd party Lazarus packages and components:
  - [Synapse](https://sourceforge.net/p/synalist/code/HEAD/tree/trunk/) [Currently used: `r209`]
  - [InternetTools](https://github.com/benibela/internettools) [Currently used: `git master commit af3cb6c5b010270ec9647fd22a5cd49bdb89a9c3 (29.01.2019)`]
  - [MultiLog](https://github.com/blikblum/multilog) [Currently used: `git master commit dac8373f485e4f8e20a41f6f7e7da298b48df0ab (15.10.2017)`]
- - [DCPCypt](https://sourceforge.net/projects/lazarus-ccr/) [Currently used: `2.0.4.1`]
+ - [DCPCrypt](https://sourceforge.net/projects/lazarus-ccr/) [Currently used: `2.0.4.1`]
 
 After everything is installed, open the file `md.lpi` by using Lazarus IDE. Make sure to add `ssl_openssl` to uses list of the `laz_synapse` package.
 Then select `Run -> Build` to build the source code. If everything is ok, the binary file should be in `FMD_source_code_folder/bin`.

@@ -8,7 +8,6 @@ uses
   RawSenManga,
   KissManga,
   MangaHome,
-  MangaChanRU,
   MintMangaRU,
   MangaHubRU,
   AcademyVN,
