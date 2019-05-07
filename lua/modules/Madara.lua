@@ -50,7 +50,7 @@ function Modules.Madara()
           src = src:gsub('https://cdn.shortpixel.ai/client/q_glossy,ret_img/', '')
           task.pagelinks.add(src)
         end
-      elseif module.website == 'IsekaiRaw' or module.website == 'ManyToon' then
+      elseif module.website == 'IsekaiRaw' then
         x.xpathstringall('//div[contains(@class, "page-break")]/img/@data-src', task.pagelinks)
       else
         x.xpathstringall('//div[contains(@class, "page-break")]/img/@src', task.pagelinks)
@@ -160,4 +160,8 @@ function Init()
   
   cat = 'Webcomics'
   AddWebsiteModule('ManyToon', 'https://manytoon.com', cat)
+  
+  cat = 'Arabic-Scanlation'
+  AddWebsiteModule('3asqOrg', 'https://3asq.org', cat)
+  
 end
