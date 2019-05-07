@@ -157,4 +157,7 @@ function Init()
   AddWebsiteModule('GodsRealmScan', 'https://godsrealmscan.com', cat)
   AddWebsiteModule('DarkskyProjects', 'https://darkskyprojects.org', cat) 
   AddWebsiteModule('LeviatanScans', 'https://leviatanscans.com', cat)
+  
+  cat = 'Webcomics'
+  AddWebsiteModule('ManyToon', 'https://manytoon.com', cat)
 end
