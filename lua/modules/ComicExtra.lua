@@ -11,7 +11,10 @@ function getinfo()
 	
     local spages = x.xpathstring('//div[@class="general-nav"]/a[last()]/@href')		  
 		  spages = string.sub(spages, string.len(spages) - 1, string.len(spages))
-		  spages = spages:gsub('/', '')	  
+		  spages = spages:gsub('/', '')
+		  if spages == '' or spages == 'N/A' then
+			 spages = 1
+		  end
 	local pages = tonumber(spages)
 	local p = 1
     while p <= pages do
@@ -27,6 +30,9 @@ function getinfo()
         local spg = x.xpathstring('//div[@class="general-nav"]/a[last()]/@href')
 		      spg = string.sub(spg, string.len(spg) - 1, string.len(spg))
 		      spg = spg:gsub('/', '')
+			  if spg == '' or spg == 'N/A' then
+				 spg = 1
+			  end
 		local pg = tonumber(spg)
 		if pg ~= '' then pages = pg end
       end
