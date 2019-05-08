@@ -2,17 +2,17 @@ function getinfo()
   mangainfo.url=MaybeFillHost(module.RootURL, url)
   if http.get(mangainfo.url) then
     local x=TXQuery.Create(http.document)
-    mangainfo.title=x.xpathstring('//*[@class="manga-bg__subtitle"]')
+    mangainfo.title=x.xpathstring('//meta[@itemprop="alternativeHeadline"]/@content')
     mangainfo.coverlink=MaybeFillHost(module.RootURL, x.xpathstring('//img[@class="manga__cover"]/@src'))
     mangainfo.authors=x.xpathstring('//div[@class="info-list__row"][starts-with(.,"Автор")]')
-	mangainfo.authors=string.gsub(mangainfo.authors, 'Автор', '')
-	mangainfo.authors=string.gsub(mangainfo.authors, '  ', '')
-	mangainfo.artists=x.xpathstring('//div[@class="info-list__row"][starts-with(.,"Художник")]')
-	mangainfo.artists=string.gsub(mangainfo.artists, 'Художник', '')
-	mangainfo.artists=string.gsub(mangainfo.artists, '  ', '')
+    mangainfo.authors=string.gsub(mangainfo.authors, 'Автор', '')
+    mangainfo.authors=string.gsub(mangainfo.authors, '  ', '')
+    mangainfo.artists=x.xpathstring('//div[@class="info-list__row"][starts-with(.,"Художник")]')
+    mangainfo.artists=string.gsub(mangainfo.artists, 'Художник', '')
+    mangainfo.artists=string.gsub(mangainfo.artists, '  ', '')
     mangainfo.genres=x.xpathstring('//div[@class="info-list__row"][starts-with(.,"Жанры")]')
-	mangainfo.genres=string.gsub(mangainfo.genres, 'Жанры', '')
-	mangainfo.status = MangaInfoStatusIfPos(x.xpathstring('//div[@class="info-list__row"][starts-with(.,"Перевод")]'), 'продолжается', 'завершен')
+    mangainfo.genres=string.gsub(mangainfo.genres, 'Жанры', '')
+    mangainfo.status = MangaInfoStatusIfPos(x.xpathstring('//div[@class="info-list__row"][starts-with(.,"Перевод")]'), 'продолжается', 'завершен')
     mangainfo.summary=x.xpathstringall('//div[contains(@class, "info-desc__content")]/text()', '')
     x.xpathhrefall('//div[@class="chapters-list"]/div/div[@class="chapter-item__name"]/a', mangainfo.chapterlinks, mangainfo.chapternames)
     InvertStrings(mangainfo.chapterlinks,mangainfo.chapternames)
@@ -50,17 +50,18 @@ function getimageurl()
 end
 
 function getnameandlink()
-  if tonumber(url) < 0 then return no_error end
-  if http.get(module.rooturl .. '/filterlist?page='..IncStr(url)..'&cat=&alpha=&sortBy=name&asc=true&author=&artist=') then
+  if tonumber(url) <= 0 then url = 200 end
+ if http.get(module.rooturl .. '/filterlist?page='..IncStr(url)..'&cat=&alpha=&sortBy=name&asc=true&author=&artist=') then
     local x = TXQuery.Create(http.Document)
+    local page = x.xpathstring('//div[@class="paginator paginator_full paginator_border-top"]//ul[@class="pagination"]/li[last()]/a/substring-after(@href, "?page=")')
     if x.xpathstring('//div/p[contains(., "Ничего не найдено")]') == '' then
-      local v = x.xpath('//ul[contains(@class, "manga-list")]/li/div/div[@class="heading"]/a[@class="ttl"]')
+      local v = x.xpath('//*[@class="manga-list-item"]/a[@class="manga-list-item__content"]')
       for i=1,v.count do
         local v1=v.get(i)
         links.add(v1.getattribute('href'))
-        names.add(x.xpathstringall('h2/text()', '', v1))
+        names.add(v1.getattribute('title'))
       end
-      updatelist.CurrentDirectoryPageNumber = updatelist.CurrentDirectoryPageNumber + 1
+      updatelist.CurrentDirectoryPageNumber = page
     end
     return no_error
   else
