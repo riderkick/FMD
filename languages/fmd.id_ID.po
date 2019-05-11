@@ -2548,7 +2548,7 @@ msgstr "Pemeriksaan kesukaan sedang berjalan!"
 
 #: ufavoritesmanager.rs_dlgnewchaptercaption
 msgid "Found %d new chapter(s)"
-msgstr ""
+msgstr "Ditemukan %d bab baru"
 
 #: ufavoritesmanager.rs_favoritehasnewchapter
 msgid "%s <%s> has %d new chapter(s)."
@@ -2560,7 +2560,7 @@ msgstr "Komik yang sudah tamat akan dihapus:"
 
 #: ufavoritesmanager.rs_lblnewchapterfound
 msgid "%d new chapter(s) from %d manga(s):"
-msgstr ""
+msgstr "%d bab baru dari %d komik:"
 
 #: usilentthread.rs_silentthreadloadstatus
 msgid "Loading: %d/%d"
