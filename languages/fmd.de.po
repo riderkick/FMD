@@ -19,11 +19,11 @@ msgstr "Abbrechen"
 
 #: dbupdater.rs_downloading
 msgid "Downloading %s"
-msgstr ""
+msgstr "Lade %s herunter"
 
 #: dbupdater.rs_extracting
 msgid "Extracting %s"
-msgstr ""
+msgstr "Entpacke %s"
 
 #: dbupdater.rs_faileddownload
 msgid "%s: %d %s"
@@ -31,7 +31,7 @@ msgstr ""
 
 #: dbupdater.rs_failedextract
 msgid "%s: failed to extract, exitstatus = %d"
-msgstr ""
+msgstr "Konnte %s nicht entpacken, Fehlercode: %d"
 
 #: dbupdater.rs_faileditems
 msgid ""
@@ -47,7 +47,7 @@ msgstr "Gescheitert"
 
 #: dbupdater.rs_failedtosave
 msgid "%s: failed to save"
-msgstr ""
+msgstr "Konnte %s nicht speichern"
 
 #: dbupdater.rs_missingzipexe
 msgid "%s: Missing %s"
@@ -122,7 +122,7 @@ msgstr "Prüfe..."
 #: frmluamodulesupdater.rs_checkupdate
 msgctxt "frmluamodulesupdater.rs_checkupdate"
 msgid "Check update"
-msgstr ""
+msgstr "Überprüfe auf Updates"
 
 #: frmluamodulesupdater.rs_finishchecking
 msgid "Finish checking"
@@ -156,7 +156,7 @@ msgstr ""
 
 #: frmluamodulesupdater.rs_startdownloading
 msgid "Downloading..."
-msgstr ""
+msgstr "Lade herunter..."
 
 #: frmluamodulesupdater.rs_statusdelete
 msgctxt "frmluamodulesupdater.rs_statusdelete"
@@ -212,7 +212,7 @@ msgstr "Keine Manga-Informationen abrufbar. Bitte prüfen Sie ihre Internetverbi
 
 #: frmmain.rs_dlgdownloadcount
 msgid "Download count:"
-msgstr "Download zähler:"
+msgstr "Download Zähler:"
 
 #: frmmain.rs_dlgmangalistselect
 msgid "You must choose at least 1 manga website!"
