@@ -511,7 +511,7 @@ msgstr "Schlüssel:"
 
 #: kissmanga.rs_kissmanga_usegoogledcp
 msgid "Use Google DCP"
-msgstr ""
+msgstr "Google DCP benutzen"
 
 #: mangadex.rs_showalllang
 msgctxt "mangadex.rs_showalllang"
@@ -538,7 +538,7 @@ msgstr "Abbrechen"
 
 #: selfupdater.rs_downloading
 msgid "Downloading new version %s"
-msgstr ""
+msgstr "Lade neue Version %s herunter "
 
 #: selfupdater.rs_faileddownload
 msgid ""
@@ -724,27 +724,27 @@ msgstr "Software:"
 #: tluamodulesupdaterform.btcheckupdate.caption
 msgctxt "tluamodulesupdaterform.btcheckupdate.caption"
 msgid "Check update"
-msgstr ""
+msgstr "Überprüfe auf Updates"
 
 #: tluamodulesupdaterform.ckautorestart.caption
 msgid "Auto restart"
-msgstr ""
+msgstr "Automatisch neustarten"
 
 #: tluamodulesupdaterform.ckshowupdatewarning.caption
 msgid "Show update warning"
-msgstr ""
+msgstr "Zeige Update-Warnung"
 
 #: tluamodulesupdaterform.vtluamodulesrepos.header.columns[0].text
 msgid "Filename"
-msgstr ""
+msgstr "Dateiname"
 
 #: tluamodulesupdaterform.vtluamodulesrepos.header.columns[1].text
 msgid "Last modified"
-msgstr ""
+msgstr "Zuletzt geändert"
 
 #: tluamodulesupdaterform.vtluamodulesrepos.header.columns[2].text
 msgid "Last message"
-msgstr ""
+msgstr "Letzte Nachricht"
 
 #: tmainform.btabortupdatelist.hint
 msgid "Abort update list"
@@ -2180,7 +2180,7 @@ msgstr "Erweitert"
 
 #: tmainform.tswebsitemodules.caption
 msgid "Modules"
-msgstr ""
+msgstr "Module"
 
 #: tmainform.tswebsiteoptions.caption
 msgctxt "tmainform.tswebsiteoptions.caption"
