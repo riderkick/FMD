@@ -1,4 +1,4 @@
-msgid ""
+﻿msgid ""
 msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Project-Id-Version: DE\n"
@@ -902,7 +902,7 @@ msgstr "Automatischen Kapitel-Ordner erzeugen"
 #: tmainform.cboptiongeneratemangafolder.caption
 msgctxt "tmainform.cboptiongeneratemangafolder.caption"
 msgid "Auto generate folder based on manga's name"
-msgstr "Auto generate folder based on manga's name"
+msgstr "Ordner basierend auf Manga-Namen generieren"
 
 #: tmainform.cboptionlivesearch.caption
 msgid "Enable live search (slow on long list)"
@@ -979,7 +979,7 @@ msgstr "Remove duplicate local data when updating manga list"
 
 #: tmainform.cboptionuseproxy.caption
 msgid "Use proxy"
-msgstr "Benutze proxy"
+msgstr "Benutze Proxy"
 
 #: tmainform.cbpngcompressionlevel.text
 msgctxt "tmainform.cbpngcompressionlevel.text"
@@ -1006,7 +1006,7 @@ msgstr ""
 #: tmainform.ckdroptarget.caption
 msgctxt "tmainform.ckdroptarget.caption"
 msgid "Show Drop Box"
-msgstr "Show Drop Box"
+msgstr "Zeige Link-Ablage"
 
 #: tmainform.ckenablelogging.caption
 msgid "Enable logging"
@@ -1335,7 +1335,7 @@ msgstr ""
 
 #: tmainform.ckpngsaveasjpeg.caption
 msgid "Save PNG as JPEG"
-msgstr ""
+msgstr "Speichere PNG als JPEG"
 
 #: tmainform.edcustomgenres.texthint
 msgid "Input custom genres, separated by comma"
@@ -1449,7 +1449,7 @@ msgstr "Drop Box"
 
 #: tmainform.gbimageconversion.caption
 msgid "Image Conversion"
-msgstr ""
+msgstr "Bildverarbeitung"
 
 #: tmainform.gboptionexternal.caption
 msgid "External program"
@@ -1474,7 +1474,7 @@ msgstr "Wähle den Standarddownloadpfad:"
 
 #: tmainform.lbdroptargetopacity.caption
 msgid "Opacity"
-msgstr "Opazität"
+msgstr "Transparenz"
 
 #: tmainform.lbfilterartists.caption
 msgctxt "tmainform.lbfilterartists.caption"
@@ -1533,7 +1533,7 @@ msgstr "Titel"
 
 #: tmainform.lbjpegquality.caption
 msgid "JPEG quality"
-msgstr ""
+msgstr "JPEG Qualität"
 
 #: tmainform.lblogfilename.caption
 msgid "Log file:"
@@ -1726,7 +1726,7 @@ msgstr "Benutzername"
 #: tmainform.lbpngcompressionlevel.caption
 msgctxt "tmainform.lbpngcompressionlevel.caption"
 msgid "PNG Compression level"
-msgstr ""
+msgstr "PNG Komprimierungsstufe"
 
 #: tmainform.lbsaveto.caption
 msgid "Save to:"
@@ -1734,7 +1734,7 @@ msgstr "Speichern unter:"
 
 #: tmainform.lbwebpsaveas.caption
 msgid "Save WebP as"
-msgstr ""
+msgstr "Speichere WebP als"
 
 #: tmainform.medturldelete.caption
 msgctxt "TMAINFORM.MEDTURLDELETE.CAPTION"
