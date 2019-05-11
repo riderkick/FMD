@@ -2565,7 +2565,7 @@ msgstr "Favorilerin kontrolü devam ediyor!"
 
 #: ufavoritesmanager.rs_dlgnewchaptercaption
 msgid "Found %d new chapter(s)"
-msgstr ""
+msgstr "%d yeni bölüm(ler) bulundu"
 
 #: ufavoritesmanager.rs_favoritehasnewchapter
 msgid "%s <%s> has %d new chapter(s)."
@@ -2577,7 +2577,7 @@ msgstr "Tamamlanmış manga kaldırılacak:"
 
 #: ufavoritesmanager.rs_lblnewchapterfound
 msgid "%d new chapter(s) from %d manga(s):"
-msgstr ""
+msgstr "%d yeni bölüm(ler) bulundu %d manga(lar)dan:"
 
 #: usilentthread.rs_silentthreadloadstatus
 msgid "Loading: %d/%d"
