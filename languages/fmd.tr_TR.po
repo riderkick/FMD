@@ -2564,7 +2564,7 @@ msgid "Favorites check is running!"
 msgstr "Favorilerin kontrolü devam ediyor!"
 
 #: ufavoritesmanager.rs_dlgnewchaptercaption
-msgid "%d new chapter(s) from %d manga(s):"
+msgid "Found %d new chapter(s)"
 msgstr ""
 
 #: ufavoritesmanager.rs_favoritehasnewchapter
