@@ -54,7 +54,7 @@ msgstr "Konnte %s nicht speichern"
 
 #: dbupdater.rs_missingzipexe
 msgid "%s: Missing %s"
-msgstr "%s: %s existiert nicht"
+msgstr "%s: %s fehlt"
 
 #: ehentai.rs_downloadoriginalimage
 msgid "Download original image(require ExHentai account)"
