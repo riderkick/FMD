@@ -27,7 +27,7 @@ msgstr "Entpacke %s"
 
 #: dbupdater.rs_faileddownload
 msgid "%s: %d %s"
-msgstr ""
+msgstr "%s: %d %s"
 
 #: dbupdater.rs_failedextract
 msgid "%s: failed to extract, exitstatus = %d"
@@ -39,6 +39,9 @@ msgid ""
 "\n"
 "%s\n"
 msgstr ""
+"Fehlgeschlagen:\n"
+"\n"
+"%s\n"
 
 #: dbupdater.rs_faileditemstitle
 msgctxt "dbupdater.rs_faileditemstitle"
@@ -51,7 +54,7 @@ msgstr "Konnte %s nicht speichern"
 
 #: dbupdater.rs_missingzipexe
 msgid "%s: Missing %s"
-msgstr ""
+msgstr "%s: %s fehlt"
 
 #: ehentai.rs_downloadoriginalimage
 msgid "Download original image(require ExHentai account)"
@@ -126,11 +129,11 @@ msgstr "Überprüfe auf Updates"
 
 #: frmluamodulesupdater.rs_finishchecking
 msgid "Finish checking"
-msgstr ""
+msgstr "Überprüfung abschließen"
 
 #: frmluamodulesupdater.rs_finishdownload
 msgid "Finish download"
-msgstr ""
+msgstr "Herunterladen abschließen"
 
 #: frmluamodulesupdater.rs_modulesupdatedrestart
 msgid ""
@@ -138,10 +141,13 @@ msgid ""
 "\n"
 "%s\n"
 msgstr ""
+"Module geupdated, jetzt neustarten?\n"
+"\n"
+"%s\n"
 
 #: frmluamodulesupdater.rs_modulesupdatedtitle
 msgid "Modules updated!"
-msgstr ""
+msgstr "Module geupdated!"
 
 #: frmluamodulesupdater.rs_newupdatefoundlostchanges
 msgid ""
@@ -149,10 +155,13 @@ msgid ""
 "\n"
 "%s\n"
 msgstr ""
+"Modul-Updates gefunden, alle lokalen Änderungen gehen verloren, fortfahren?\n"
+"\n"
+"%s\n"
 
 #: frmluamodulesupdater.rs_newupdatefoundtitle
 msgid "Modules update found!"
-msgstr ""
+msgstr "Module-Updates gefunden"
 
 #: frmluamodulesupdater.rs_startdownloading
 msgid "Downloading..."
@@ -161,27 +170,27 @@ msgstr "Lade herunter..."
 #: frmluamodulesupdater.rs_statusdelete
 msgctxt "frmluamodulesupdater.rs_statusdelete"
 msgid "%s DELETE*"
-msgstr ""
+msgstr "%s Löschen*"
 
 #: frmluamodulesupdater.rs_statusfailed
 msgctxt "frmluamodulesupdater.rs_statusfailed"
 msgid "%s FAILED*"
-msgstr ""
+msgstr "%s Fehlgeschlagen*"
 
 #: frmluamodulesupdater.rs_statusnew
 msgctxt "frmluamodulesupdater.rs_statusnew"
 msgid "%s NEW*"
-msgstr ""
+msgstr "%s Neu*"
 
 #: frmluamodulesupdater.rs_statusredownloaded
 msgctxt "frmluamodulesupdater.rs_statusredownloaded"
 msgid "%s REDOWNLOAD*"
-msgstr ""
+msgstr "%s Erneut herunterladen*"
 
 #: frmluamodulesupdater.rs_statusupdate
 msgctxt "frmluamodulesupdater.rs_statusupdate"
 msgid "%s UPDATE*"
-msgstr ""
+msgstr "%s Update*"
 
 #: frmmain.rs_alldownloads
 msgid "All downloads"
@@ -249,7 +258,7 @@ msgid ""
 "Do you want to download it anyway?\n"
 msgstr ""
 "Dieser Titel ist bereits in der Downloadliste.\n"
-"Wollen Sie ihn dennoch laden?\n"
+"Wollen Sie ihn dennoch herunterladen?\n"
 
 #: frmmain.rs_dlgtypeinnewchapter
 msgid "Type in new chapter:"
@@ -276,7 +285,7 @@ msgid ""
 "Download all\n"
 "Add to favorites\n"
 msgstr ""
-"Lade alle\n"
+"Lade alle herunter\n"
 "Zu den Favoriten hinzufügen\n"
 
 #: frmmain.rs_filterstatusitems
@@ -345,7 +354,7 @@ msgstr "Im Gange"
 #: frmmain.rs_lblautochecknewchapterminute
 msgctxt "frmmain.rs_lblautochecknewchapterminute"
 msgid "Auto check for new chapter every %d minutes"
-msgstr "Automatisch nach neuen Kapitel alle %d Minuten suchen"
+msgstr "Automatisch nach neuem Kapitel alle %d Minuten suchen"
 
 #: frmmain.rs_lbloptionexternalparamshint
 msgid ""
@@ -465,6 +474,10 @@ msgid ""
 "Default\n"
 "Maximum\n"
 msgstr ""
+"Keine\n"
+"Schnellste\n"
+"Standard\n"
+"Maximum\n"
 
 #: frmmain.rs_wronginput
 msgid "Invalid input!"
@@ -476,20 +489,20 @@ msgstr "Gestern"
 
 #: frmshutdowncounter.rs_lblmessageexit
 msgid "FMD will exit in %d second."
-msgstr "FMD wird beendet in %d Sekunden."
+msgstr "FMD wird in %d Sekunden beendet."
 
 #: frmshutdowncounter.rs_lblmessagehibernate
 msgid "System will hibernate in %d second."
-msgstr "System wird in den Ruhemodus versetzt in %d Sekunden."
+msgstr "System wird in %d Sekunden in den Ruhemodus versetzt."
 
 #: frmshutdowncounter.rs_lblmessageshutdown
 msgid "System will shutdown in %d second."
-msgstr "System wird heruntergefahren in %d Sekunden."
+msgstr "System wird in %d Sekunden heruntergefahren."
 
 #: frmtransferfavorites.rs_all
 msgctxt "frmtransferfavorites.rs_all"
 msgid "All"
-msgstr ""
+msgstr "Alle"
 
 #: frmtransferfavorites.rs_invalid
 msgctxt "frmtransferfavorites.rs_invalid"
@@ -499,7 +512,7 @@ msgstr "Ungültig"
 #: frmtransferfavorites.rs_valid
 msgctxt "frmtransferfavorites.rs_valid"
 msgid "Valid"
-msgstr ""
+msgstr "Gültig"
 
 #: kissmanga.rs_kissmanga_initvector
 msgid "Initialization Vector:"
@@ -549,7 +562,7 @@ msgstr ""
 
 #: selfupdater.rs_failedextract
 msgid "Failed to extract %s, exitstatus = %d"
-msgstr ""
+msgstr "Konnte %s nicht entpacken, Fehlercode: %d"
 
 #: selfupdater.rs_failedtitle
 msgctxt "selfupdater.rs_failedtitle"
@@ -558,20 +571,20 @@ msgstr "Gescheitert"
 
 #: selfupdater.rs_failedtosave
 msgid "Failed to save %s"
-msgstr ""
+msgstr "Konnte %s nicht speichern"
 
 #: selfupdater.rs_finishrestart
 msgid "Download update package finished, restart to proceed?"
-msgstr ""
+msgstr "Herunterladen des Updates fertig, neustarten?"
 
 #: selfupdater.rs_finishrestarttitle
 msgid "Download finished"
-msgstr ""
+msgstr "Herunterladen abgeschlossen"
 
 #: selfupdater.rs_missingfile
 msgctxt "selfupdater.rs_missingfile"
 msgid "Missing %s"
-msgstr ""
+msgstr "%s fehlt"
 
 #: taccountmanagerform.btedit.caption
 msgctxt "taccountmanagerform.btedit.caption"
@@ -881,7 +894,7 @@ msgstr "Aktiviere dies, falls du Probleme mit Unicode Zeichen in diesem Pfad has
 
 #: tmainform.cboptiondeletecompletedtasksonclose.caption
 msgid "Delete completed tasks on close"
-msgstr ""
+msgstr "Beim schließen abgeschlossene Aufgaben entfernen"
 
 #: tmainform.cboptiondigitchapter.caption
 msgid "Chapter"
@@ -984,7 +997,7 @@ msgstr "Benutze Proxy"
 #: tmainform.cbpngcompressionlevel.text
 msgctxt "tmainform.cbpngcompressionlevel.text"
 msgid "Fastest"
-msgstr ""
+msgstr "Schnellste"
 
 #: tmainform.cbsearchfromallsites.caption
 msgid "Search in all manga sites"
@@ -1708,7 +1721,7 @@ msgstr "Port"
 
 #: tmainform.lboptionproxytype.caption
 msgid "Type"
-msgstr "Type"
+msgstr "Typ"
 
 #: tmainform.lboptionrenamedigits.caption
 msgid "Rename  digits"
@@ -1915,7 +1928,7 @@ msgstr "Öffne ..."
 
 #: tmainform.mifavoritesrename.caption
 msgid "Rename"
-msgstr ""
+msgstr "Umbenennen"
 
 #: tmainform.mifavoritesstopchecknewchapter.caption
 msgid "Stop check for new chapter"
@@ -2063,27 +2076,27 @@ msgstr "Alle anhalten"
 
 #: tmainform.tbmidownloadmovebottom.hint
 msgid "Move selected item(s) to bottom"
-msgstr ""
+msgstr "Verschiebe markierte Einträge ganz nach unten"
 
 #: tmainform.tbmidownloadmovedown.hint
 msgid "Move selected item(s) down"
-msgstr ""
+msgstr "Verschiebe markierte Einträge nach unten"
 
 #: tmainform.tbmidownloadmovetop.hint
 msgid "Move selected item(s) to top"
-msgstr ""
+msgstr "Verschiebe markierte Einträge ganz nach oben"
 
 #: tmainform.tbmidownloadmoveup.hint
 msgid "Move selected item(s) up"
-msgstr ""
+msgstr "Verschiebe markierte Einträge nach oben"
 
 #: tmainform.tbwebsitescollapseall.caption
 msgid "Collapse All"
-msgstr "Collapse All"
+msgstr "Alle schließen"
 
 #: tmainform.tbwebsitesexpandall.caption
 msgid "Expand All"
-msgstr "Expand All"
+msgstr "Alle Öffnen"
 
 #: tmainform.tbwebsitesselectall.caption
 msgid "Select All"
@@ -2115,7 +2128,7 @@ msgstr "Verbindungen"
 
 #: tmainform.tscustomcolor.caption
 msgid "Custom color"
-msgstr "Custom color"
+msgstr "Benutzerdefinierte Farbe"
 
 #: tmainform.tsdialogs.caption
 msgid "Dialogs"
@@ -2305,7 +2318,7 @@ msgstr ""
 
 #: ttransferfavoritesform.ckcleardownloadedchapters.caption
 msgid "Clear downloaded chapter list and reload from server"
-msgstr ""
+msgstr "Kapitelliste löschen und erneut vom Server herunterladen"
 
 #: ttransferfavoritesform.lbtransferto.caption
 msgctxt "ttransferfavoritesform.lbtransferto.caption"
@@ -2315,7 +2328,7 @@ msgstr ""
 #: ttransferfavoritesform.rball.caption
 msgctxt "ttransferfavoritesform.rball.caption"
 msgid "All"
-msgstr ""
+msgstr "Alle"
 
 #: ttransferfavoritesform.rbinvalid.caption
 msgctxt "ttransferfavoritesform.rbinvalid.caption"
@@ -2325,12 +2338,12 @@ msgstr "Ungültig"
 #: ttransferfavoritesform.rbvalid.caption
 msgctxt "ttransferfavoritesform.rbvalid.caption"
 msgid "Valid"
-msgstr ""
+msgstr "Gültig"
 
 #: ttransferfavoritesform.vtfavs.header.columns[1].text
 msgctxt "ttransferfavoritesform.vtfavs.header.columns[1].text"
 msgid "Title"
-msgstr "Title"
+msgstr "Titel"
 
 #: ttransferfavoritesform.vtfavs.header.columns[2].text
 msgctxt "ttransferfavoritesform.vtfavs.header.columns[2].text"
@@ -2459,15 +2472,15 @@ msgstr ""
 
 #: twebsitesettingsform.edsearch.texthint
 msgid "Website name"
-msgstr ""
+msgstr "Webseitenname"
 
 #: twebsitesettingsform.edsearchproperty.texthint
 msgid "Setting name"
-msgstr ""
+msgstr "Einstellungsname"
 
 #: udownloadsmanager.rs_compressing
 msgid "Compressing..."
-msgstr "Compressing..."
+msgstr "Kompressiere..."
 
 #: udownloadsmanager.rs_disabled
 msgid "Disabled"
@@ -2475,7 +2488,7 @@ msgstr "Deaktiviert"
 
 #: udownloadsmanager.rs_downloading
 msgid "Downloading"
-msgstr "Downloading"
+msgstr "Lade herunter"
 
 #: udownloadsmanager.rs_failed
 msgctxt "udownloadsmanager.rs_failed"
@@ -2497,7 +2510,7 @@ msgstr "Abgeschlossen"
 #: udownloadsmanager.rs_preparing
 msgctxt "udownloadsmanager.rs_preparing"
 msgid "Preparing"
-msgstr "Preparing"
+msgstr "Bereite vor"
 
 #: udownloadsmanager.rs_stopped
 msgid "Stopped"
