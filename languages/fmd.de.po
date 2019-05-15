@@ -185,12 +185,12 @@ msgstr "%s Neu*"
 #: frmluamodulesupdater.rs_statusredownloaded
 msgctxt "frmluamodulesupdater.rs_statusredownloaded"
 msgid "%s REDOWNLOAD*"
-msgstr "%s Erneut herunterladen"
+msgstr "%s Erneut herunterladen*"
 
 #: frmluamodulesupdater.rs_statusupdate
 msgctxt "frmluamodulesupdater.rs_statusupdate"
 msgid "%s UPDATE*"
-msgstr "%s Update"
+msgstr "%s Update*"
 
 #: frmmain.rs_alldownloads
 msgid "All downloads"
