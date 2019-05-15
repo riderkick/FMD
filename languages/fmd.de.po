@@ -575,7 +575,7 @@ msgstr "Konnte %s nicht speichern"
 
 #: selfupdater.rs_finishrestart
 msgid "Download update package finished, restart to proceed?"
-msgstr "herunterladen des Updates fertig, neustarten?"
+msgstr "Herunterladen des Updates fertig, neustarten?"
 
 #: selfupdater.rs_finishrestarttitle
 msgid "Download finished"
@@ -1928,7 +1928,7 @@ msgstr "Öffne ..."
 
 #: tmainform.mifavoritesrename.caption
 msgid "Rename"
-msgstr "Umbennen"
+msgstr "Umbenennen"
 
 #: tmainform.mifavoritesstopchecknewchapter.caption
 msgid "Stop check for new chapter"
