@@ -129,11 +129,11 @@ msgstr "Überprüfe auf Updates"
 
 #: frmluamodulesupdater.rs_finishchecking
 msgid "Finish checking"
-msgstr "Überprüfung abgeschlossen"
+msgstr "Überprüfung abschließen"
 
 #: frmluamodulesupdater.rs_finishdownload
 msgid "Finish download"
-msgstr "Herunterladen abgeschlossen"
+msgstr "Herunterladen abschließen"
 
 #: frmluamodulesupdater.rs_modulesupdatedrestart
 msgid ""
