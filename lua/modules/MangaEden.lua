@@ -69,7 +69,7 @@ function GetDirectoryPageNumber()
 end
 
 function GetNameAndLink()
-  if http.get(module.rooturl..GetDirUrl(module.website).."?page="..IncStr(url)) then
+  if http.get(module.rooturl..GetDirUrl(module.website).."&page="..IncStr(url)) then
     x=TXQuery.Create(http.Document)
     x.xpathhrefall('//table[@id="mangaList"]//tr/td[1]/a', links, names)
     return no_error
@@ -83,7 +83,7 @@ function InitModule(website, rooturl, category)
   m.category=category
   m.website=website
   m.rooturl=rooturl
-  m.lastupdated='November 25, 2018'
+  m.lastupdated='May 17, 2019'
   m.ongetinfo='GetInfo'
   m.ongetpagenumber='GetPageNumber'
   m.OnGetDirectoryPageNumber = 'GetDirectoryPageNumber'
