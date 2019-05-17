@@ -3,7 +3,6 @@ uses
   MangaReader,
   MangaLife,
   MangaHere,
-  MangaTr,
   Madokami,
   RawSenManga,
   KissManga,
