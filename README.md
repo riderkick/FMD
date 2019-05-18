@@ -4,7 +4,7 @@
 
 ## Download the latest release
 
-[![Latest release](https://img.shields.io/github/release/fmd-project-team/FMD.svg)](https://github.com/fmd-project-team/FMD/releases/latest) [![Download latest release (Win32)](https://img.shields.io/github/downloads/fmd-project-team/FMD/latest/fmd_0.9.163.0.7z.svg?label=Win32)](https://github.com/fmd-project-team/FMD/releases/download/0.9.163.0/fmd_0.9.163.0.7z) [![Download latest release (Win64)](https://img.shields.io/github/downloads/fmd-project-team/FMD/latest/fmd_0.9.163.0_Win64.7z.svg?label=Win64)](https://github.com/fmd-project-team/FMD/releases/download/0.9.163.0/fmd_0.9.163.0_Win64.7z)
+[![Latest release](https://img.shields.io/github/release/fmd-project-team/FMD.svg)](https://github.com/fmd-project-team/FMD/releases/latest) [![Download latest release (Win32)](https://img.shields.io/github/downloads/fmd-project-team/FMD/latest/fmd_0.9.164.0.7z.svg?label=Win32)](https://github.com/fmd-project-team/FMD/releases/download/0.9.164.0/fmd_0.9.164.0.7z) [![Download latest release (Win64)](https://img.shields.io/github/downloads/fmd-project-team/FMD/latest/fmd_0.9.164.0_Win64.7z.svg?label=Win64)](https://github.com/fmd-project-team/FMD/releases/download/0.9.164.0/fmd_0.9.164.0_Win64.7z)
   
   
 ## Content
@@ -15,7 +15,7 @@
 
 ## About FMD
 
-The Free Manga Downloader is a free open source application written in Object Pascal for managing and downloading manga from various websites. The source code was released under the GPLv2 license. FMD homesite is at https://github.com/riderkick/FMD or http://sf.net/p/newfmd.
+The Free Manga Downloader is a free open source application written in Object Pascal for managing and downloading manga from various websites. The source code was released under the GPLv2 license.
 
 ## Build instructions
 
@@ -44,6 +44,8 @@ Some other external 3rd party tools and libraries are used:
  - [Lua](http://luabinaries.sourceforge.net/) [Currently used: `5.3.x`]
  - [OpenSSL](https://www.openssl.org/) [Currently used: `1.0.2n`]
  - [SQLite](https://www.sqlite.org/) [Currently used: `3.22.0`]
+ - [cfscrape](https://github.com/Anorov/cloudflare-scrape/) [Currently used: `2.0.5`] (Compiled with PyInstaller included in cf_bypass.exe)
+ - [Node.js](https://nodejs.org/) [Currently used: `12.1.0.0`]
 
 These tools and libraries are not part of the source. You have to either download pre-compiled binaries, compile them yourself or just copy them from the latest FMD releases.
 

@@ -1,3 +1,3 @@
-VERSION=0.9.163.0
-WIN32=https://github.com/fmd-project-team/FMD/releases/download/0.9.163.0/fmd_0.9.163.0.7z
-WIN64=https://github.com/fmd-project-team/FMD/releases/download/0.9.163.0/fmd_0.9.163.0_Win64.7z
+VERSION=0.9.164.0
+WIN32=https://github.com/fmd-project-team/FMD/releases/download/0.9.164.0/fmd_0.9.164.0.7z
+WIN64=https://github.com/fmd-project-team/FMD/releases/download/0.9.164.0/fmd_0.9.164.0_Win64.7z
