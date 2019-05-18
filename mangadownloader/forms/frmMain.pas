@@ -2995,6 +2995,8 @@ var
   data: PMangaInfoData;
 begin
   if vtMangaList.SelectedCount = 0 then Exit;
+  LastUserPickedSaveTo := '';
+  FillSaveTo;
   SilentThreadManager.BeginAdd;
   try
     xNode := vtMangaList.GetFirstSelected;
@@ -4697,7 +4699,6 @@ end;
 
 procedure TMainForm.FillSaveTo;
 begin
-  if Trim(edSaveTo.Text) <> '' then Exit;
   if LastUserPickedSaveTo = '' then
     LastUserPickedSaveTo := Trim(configfile.ReadString('saveto', 'SaveTo', DEFAULT_PATH));
   if LastUserPickedSaveTo = '' then
