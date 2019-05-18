@@ -261,6 +261,7 @@ const
 var
   // Sites var
   BROWSER_INVERT: Boolean = False;
+  RESET_CF_VALUES: Boolean = False;
 
   //------------------------------------------
 

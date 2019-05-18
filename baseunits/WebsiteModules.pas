@@ -12,7 +12,7 @@ interface
 uses
   Classes, SysUtils, fgl, uData, uDownloadsManager, FMDOptions, httpsendthread,
   WebsiteModulesSettings, Process, Multilog, LazLogger, Cloudflare, RegExpr, fpjson, jsonparser,
-  jsonscanner, fpjsonrtti;
+  jsonscanner, fpjsonrtti, uBaseUnit;
 
 const
   MODULE_NOT_FOUND = -1;
@@ -436,6 +436,12 @@ var
   cfs: String;
 begin
   CheckCloudflareEnabled(AHTTP);
+  if RESET_CF_VALUES then
+  begin
+    Settings.DynHTTP.Cookies := '';
+    Settings.DynHTTP.UserAgent := '';
+    RESET_CF_VALUES := False;
+  end;
   if FCloudflareEnabled and ((Settings.DynHTTP.Cookies = '') or (Settings.DynHTTP.UserAgent = '')) then
   begin
     AProcess := TProcess.Create(nil);
