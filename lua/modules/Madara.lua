@@ -155,11 +155,11 @@ function Init()
   cat = 'Indonesian'
   AddWebsiteModule('MangaYosh', 'https://mangayosh.com', cat)
   AddWebsiteModule('KomikGo', 'https://komikgo.com', cat)
-  AddWebsiteModule('ManhwaHand', 'https://klikmanga.com', cat)
+  AddWebsiteModule('KlikManga', 'https://klikmanga.com', cat)
   
   cat = 'H-Sites'
   AddWebsiteModule('ManhwaHentai', 'https://manhwahentai.com', cat)
-  AddWebsiteModule('ManhwaHentai', 'https://manhwahand.com', cat)
+  AddWebsiteModule('manhwaHand', 'https://manhwahand.com', cat)
   
   cat = 'Spanish-Scanlation'
   AddWebsiteModule('GodsRealmScan', 'https://godsrealmscan.com', cat)
