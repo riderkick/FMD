@@ -162,7 +162,7 @@ function Init()
   cat = 'Webcomics'
   AddWebsiteModule('ManyToon', 'https://manytoon.com', cat)
   AddWebsiteModule('PocketAngelScan', 'https://pocketangelscans.com', cat)
-  AddWebsiteModule('Toonily', 'https://toonily.com/', cat)
+  AddWebsiteModule('Toonily', 'https://toonily.com', cat)
   
   cat = 'Arabic-Scanlation'
   AddWebsiteModule('3asqOrg', 'https://3asq.org', cat)
