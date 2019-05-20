@@ -11,8 +11,8 @@ interface
 
 uses
   Classes, SysUtils, fgl, uData, uDownloadsManager, FMDOptions, httpsendthread,
-  WebsiteModulesSettings, LazLogger, Cloudflare, RegExpr, fpjson, jsonparser,
-  jsonscanner, fpjsonrtti;
+  WebsiteModulesSettings, Process, Multilog, LazLogger, Cloudflare, RegExpr, fpjson, jsonparser,
+  jsonscanner, fpjsonrtti, uBaseUnit;
 
 const
   MODULE_NOT_FOUND = -1;
@@ -280,6 +280,7 @@ type
 
     procedure LoadFromFile;
     procedure SaveToFile;
+    procedure ClearDynamicHTTPSettings;
   end;
 
 var
@@ -430,26 +431,90 @@ end;
 procedure TModuleContainer.PrepareHTTP(const AHTTP: THTTPSendThread);
 var
   s: String;
+  AProcess: TProcess;
+  f: TextFile;
+  cfs: String;
 begin
   CheckCloudflareEnabled(AHTTP);
-  if not Settings.Enabled then Exit;
-  with Settings.HTTP do
+  if RESET_CF_VALUES then
   begin
-    if UserAgent<>'' then
-      AHTTP.UserAgent:=UserAgent;
-    if Cookies<>'' then
-      AHTTP.Cookies.Text:=Cookies;
-    with Proxy do
+    Settings.DynHTTP.Cookies := '';
+    Settings.DynHTTP.UserAgent := '';
+    RESET_CF_VALUES := False;
+  end;
+  if FCloudflareEnabled and ((Settings.DynHTTP.Cookies = '') or (Settings.DynHTTP.UserAgent = '')) then
+  begin
+    AProcess := TProcess.Create(nil);
+    try
+      AProcess.InheritHandles := False;
+      AProcess.CurrentDirectory := FMD_DIRECTORY;
+      AProcess.Executable := CURRENT_CF_BYPASS_EXE;
+      AProcess.Parameters.Add(RootURL);
+      AProcess.ShowWindow := swoHide;
+      AProcess.Options := AProcess.Options + [poWaitOnExit, poUsePipes];
+      AProcess.Execute;
+    finally
+      AProcess.Free;
+    end;
+    if FileExists(CONFIG_FOLDER + 'cf_bypass.txt') then
     begin
-      s:='';
-      case Proxy.ProxyType of
-        ptDirect:AHTTP.SetNoProxy;
-        ptHTTP:s:='HTTP';
-        ptSOCKS4:s:='SOCKS4';
-        ptSOCKS5:s:='SOCKS5';
+      AssignFile(f, CONFIG_FOLDER + 'cf_bypass.txt');
+      try
+        reset(f);
+        while not eof(f) do
+        begin
+          cfs := '';
+          readln(f, cfs);
+          if pos('cf_clearance', cfs) > 0 then Settings.DynHTTP.Cookies:=cfs;
+          if pos('user_agent', cfs) > 0 then Settings.DynHTTP.UserAgent:=StringReplace(cfs, 'user_agent=', '', [rfIgnoreCase]);
+        end;
+      finally
+        CloseFile(f);
+        DeleteFile(CONFIG_FOLDER + 'cf_bypass.txt');
       end;
-      if s<>'' then
-        AHTTP.SetProxy(s,ProxyHost,ProxyPort,ProxyUsername,ProxyPassword);
+    end;
+  end;
+  
+  if Settings.Enabled then
+  begin
+    with Settings.HTTP do
+    begin
+      if Cookies<>'' then
+      begin
+        AHTTP.Cookies.Text:=Cookies;
+        if pos('cf_clearance=', Cookies) = 0 then
+          AHTTP.Cookies.Text:=AHTTP.Cookies.Text + ';' + Settings.DynHTTP.Cookies;
+      end
+      else
+        AHTTP.Cookies.Text:=Settings.DynHTTP.Cookies;
+        
+      if UserAgent<>'' then
+        AHTTP.UserAgent:=UserAgent
+      else
+        AHTTP.UserAgent:=Settings.DynHTTP.UserAgent;
+      
+      with Proxy do
+      begin
+        s:='';
+        case Proxy.ProxyType of
+          ptDirect:AHTTP.SetNoProxy;
+          ptHTTP:s:='HTTP';
+          ptSOCKS4:s:='SOCKS4';
+          ptSOCKS5:s:='SOCKS5';
+        end;
+        if s<>'' then
+          AHTTP.SetProxy(s,ProxyHost,ProxyPort,ProxyUsername,ProxyPassword);
+      end;
+    end;
+  end
+  else
+  begin
+    with Settings.DynHTTP do
+    begin
+      if UserAgent<>'' then
+        AHTTP.UserAgent:=UserAgent;
+      if Cookies<>'' then
+        AHTTP.Cookies.Text:=Cookies;
     end;
   end;
 end;
@@ -1021,6 +1086,18 @@ begin
     ja.Free;
     js.Free;
   end;
+end;
+
+procedure TWebsiteModules.ClearDynamicHTTPSettings;
+var
+  i: Integer;
+begin
+  for i:=0 to FModuleList.Count-1 do
+    with FModuleList[i] do
+    begin
+      Settings.DynHTTP.Cookies:='';
+      Settings.DynHTTP.UserAgent:='';
+    end;
 end;
 
 function TWebsiteModules.GetModule(const ModuleId: Integer): TModuleContainer;

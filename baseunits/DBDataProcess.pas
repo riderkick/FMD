@@ -264,16 +264,10 @@ end;
 
 procedure TDBDataProcess.GoToRecNo(const ARecIndex: Integer);
 begin
-  if FRecNo<>ARecIndex then
+  if FQuery.RecNo<>(ARecIndex+1) then
   begin
-    if FRecNo=ARecIndex+1 then
-      FQuery.Prior
-    else
-    if FRecNo=ARecIndex-1 then
-      FQuery.Next
-    else
-      FQuery.RecNo:=ARecIndex+1;
     FRecNo:=ARecIndex;
+    FQuery.RecNo:=ARecIndex+1;
   end;
 end;
 

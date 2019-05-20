@@ -167,7 +167,9 @@ begin
       try
         CFProps.Reset;
         //AHTTP.Cookies.Clear;
-        Result := CFJS(AHTTP, AURL, CFProps.cf_clearance, CFProps.Expires);
+        //Result := CFJS(AHTTP, AURL, CFProps.cf_clearance, CFProps.Expires);
+        Result := False;
+        RESET_CF_VALUES := True;
         // reduce the expires by 5 minutes, usually it is 24 hours or 16 hours
         // in case of the different between local and server time
         if Result then

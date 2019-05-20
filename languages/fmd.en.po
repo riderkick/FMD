@@ -2541,8 +2541,8 @@ msgid "Favorites check is running!"
 msgstr "Favorites check is running!"
 
 #: ufavoritesmanager.rs_dlgnewchaptercaption
-msgid "%d manga(s) have new chapter(s)"
-msgstr "%d manga(s) have new chapter(s)"
+msgid "Found %d new chapter(s)"
+msgstr "Found %d new chapter(s)"
 
 #: ufavoritesmanager.rs_favoritehasnewchapter
 msgid "%s <%s> has %d new chapter(s)."
@@ -2553,8 +2553,8 @@ msgid "Completed manga will be removed:"
 msgstr "Completed manga will be removed:"
 
 #: ufavoritesmanager.rs_lblnewchapterfound
-msgid "Found %d new chapter from %d manga(s):"
-msgstr "Found %d new chapter from %d manga(s):"
+msgid "%d new chapter(s) from %d manga(s):"
+msgstr "%d new chapter(s) from %d manga(s):"
 
 #: usilentthread.rs_silentthreadloadstatus
 msgid "Loading: %d/%d"

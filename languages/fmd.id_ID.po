@@ -123,7 +123,7 @@ msgstr "Memeriksa..."
 #: frmluamodulesupdater.rs_checkupdate
 msgctxt "frmluamodulesupdater.rs_checkupdate"
 msgid "Check update"
-msgstr "Periksa pembaruan"
+msgstr "Periksa pemutakhiran"
 
 #: frmluamodulesupdater.rs_finishchecking
 msgid "Finish checking"
@@ -139,13 +139,13 @@ msgid ""
 "\n"
 "%s\n"
 msgstr ""
-"Modul diperbarui, mulai ulang sekarang?\n"
+"Modul dimutakhirkan, mulai ulang sekarang?\n"
 "\n"
 "%s\n"
 
 #: frmluamodulesupdater.rs_modulesupdatedtitle
 msgid "Modules updated!"
-msgstr "Modul diperbarui!"
+msgstr "Modul dimutakhirkan!"
 
 #: frmluamodulesupdater.rs_newupdatefoundlostchanges
 msgid ""
@@ -153,13 +153,13 @@ msgid ""
 "\n"
 "%s\n"
 msgstr ""
-"Pembaruan modul ditemukan, perubahan lokal akan ditimpa, lanjutkan?\n"
+"Modul mutakhir ditemukan, perubahan lokal akan ditimpa, lanjutkan?\n"
 "\n"
 "%s\n"
 
 #: frmluamodulesupdater.rs_newupdatefoundtitle
 msgid "Modules update found!"
-msgstr "Pembaruan modul ditemukan!"
+msgstr "Modul mutakhir ditemukan!"
 
 #: frmluamodulesupdater.rs_startdownloading
 msgid "Downloading..."
@@ -188,7 +188,7 @@ msgstr "%s DIUNDUH ULANG*"
 #: frmluamodulesupdater.rs_statusupdate
 msgctxt "frmluamodulesupdater.rs_statusupdate"
 msgid "%s UPDATE*"
-msgstr "%s PEMBARUAN*"
+msgstr "%s PEMUTAKHIRAN*"
 
 #: frmmain.rs_alldownloads
 msgid "All downloads"
@@ -268,7 +268,7 @@ msgstr "Masukkan lokasi penyimpanan baru:"
 
 #: frmmain.rs_dlgupdaterisrunning
 msgid "Updater is running!"
-msgstr "Pembaruan sedang berjalan!"
+msgstr "Pemutakhiran sedang berjalan!"
 
 #: frmmain.rs_dlgupdaterwanttoupdatedb
 msgid "Do you want to download manga list from the server?"
@@ -556,7 +556,7 @@ msgstr "Batalkan"
 
 #: selfupdater.rs_downloading
 msgid "Downloading new version %s"
-msgstr "Mengunduh versi baru %s"
+msgstr "Mengunduh versi mutakhir %s"
 
 #: selfupdater.rs_faileddownload
 msgid ""
@@ -564,7 +564,7 @@ msgid ""
 "\n"
 "%d %s\n"
 msgstr ""
-"Gagal mengunduh versi baru %s\n"
+"Gagal mengunduh versi mutakhir %s\n"
 "\n"
 "%d %s\n"
 
@@ -583,7 +583,7 @@ msgstr "Gagal menyimpan %s"
 
 #: selfupdater.rs_finishrestart
 msgid "Download update package finished, restart to proceed?"
-msgstr "Pembaruan selesai diunduh, mulai ulang sekarang?"
+msgstr "Pemutakhiran selesai diunduh, mulai ulang sekarang?"
 
 #: selfupdater.rs_finishrestarttitle
 msgid "Download finished"
@@ -663,7 +663,7 @@ msgstr "Kata kunci"
 #: tcustomcolorform.caption
 #, fuzzy
 msgid "CustomColorForm"
-msgstr "Form Kostumisasi Warna"
+msgstr "Form Kustomisasi Warna"
 
 #: tcustomcolorform.tsbasiclist.caption
 msgid "Basic list"
@@ -742,7 +742,7 @@ msgstr "Perangkat lunak:"
 #: tluamodulesupdaterform.btcheckupdate.caption
 msgctxt "tluamodulesupdaterform.btcheckupdate.caption"
 msgid "Check update"
-msgstr "Periksa pembaruan"
+msgstr "Periksa pemutakhiran"
 
 #: tluamodulesupdaterform.ckautorestart.caption
 msgid "Auto restart"
@@ -750,7 +750,7 @@ msgstr "Mulai ulang otomatis"
 
 #: tluamodulesupdaterform.ckshowupdatewarning.caption
 msgid "Show update warning"
-msgstr "Tampilkan peringatan pembaruan"
+msgstr "Tampilkan peringatan pemutakhiran"
 
 #: tluamodulesupdaterform.vtluamodulesrepos.header.columns[0].text
 msgid "Filename"
@@ -758,7 +758,7 @@ msgstr "Nama berkas"
 
 #: tluamodulesupdaterform.vtluamodulesrepos.header.columns[1].text
 msgid "Last modified"
-msgstr "Terakhir diperbarui"
+msgstr "Terakhir dimutakhirkan"
 
 #: tluamodulesupdaterform.vtluamodulesrepos.header.columns[2].text
 msgid "Last message"
@@ -766,7 +766,7 @@ msgstr "Pesan terakhir"
 
 #: tmainform.btabortupdatelist.hint
 msgid "Abort update list"
-msgstr "Batalkan pembaruan daftar komik"
+msgstr "Batalkan memutakhirkan daftar komik"
 
 #: tmainform.btaddtofavorites.caption
 msgctxt "tmainform.btaddtofavorites.caption"
@@ -776,7 +776,7 @@ msgstr "Tambahkan ke kesukaan"
 #: tmainform.btchecklatestversion.caption
 msgctxt "tmainform.btchecklatestversion.caption"
 msgid "Check for latest version"
-msgstr "Periksa versi terbaru"
+msgstr "Periksa versi mutakhir"
 
 #: tmainform.btclearlogfile.caption
 msgid "Clear log file"
@@ -835,7 +835,7 @@ msgstr "Singkirkan"
 #: tmainform.btupdatelist.hint
 msgctxt "tmainform.btupdatelist.hint"
 msgid "Update manga list"
-msgstr "Perbarui daftar komik"
+msgstr "Mutakhirkan daftar komik"
 
 #: tmainform.btvisitmyblog.caption
 msgid "Visit my blog"
@@ -878,7 +878,7 @@ msgstr "Periksa bab baru otomatis saat program dimulai"
 #: tmainform.cboptionautochecklatestversion.caption
 msgctxt "tmainform.cboptionautochecklatestversion.caption"
 msgid "Auto check for latest version "
-msgstr "Periksa versi terbaru otomatis"
+msgstr "Periksa versi mutakhir otomatis"
 
 #: tmainform.cboptionautoopenfavstartup.caption
 msgid "Open Favorites at startup"
@@ -985,11 +985,11 @@ msgstr "Urutkan daftar unduhan saat menambahkan unduhan baru"
 
 #: tmainform.cboptionupdatelistnomangainfo.caption
 msgid "Don't load manga information when updating list (filter will be not work!)"
-msgstr "Tidak perlu memuat informasi komik saat memperbarui daftar (saringan tidak akan bekerja!)"
+msgstr "Tidak perlu memuat informasi komik saat memutakhirkan daftar (saringan tidak akan bekerja!)"
 
 #: tmainform.cboptionupdatelistremoveduplicatelocaldata.caption
 msgid "Remove duplicate local data when updating manga list"
-msgstr "Hapus data lokal duplikat saat memperbarui daftar komik"
+msgstr "Hapus data lokal duplikat saat memutakhirkan daftar komik"
 
 #: tmainform.cboptionuseproxy.caption
 msgid "Use proxy"
@@ -1689,7 +1689,7 @@ msgstr "Jumlah koneksi per unduhan pada waktu yang sama"
 
 #: tmainform.lboptionnewmangatime.caption
 msgid "New manga based on  it's update time (days)"
-msgstr "Komik baru berdasarkan waktu pembaruan (hari)"
+msgstr "Komik baru berdasarkan waktu pemutakhiran (hari)"
 
 #: tmainform.lboptionpass.caption
 msgctxt "tmainform.lboptionpass.caption"
@@ -2023,7 +2023,7 @@ msgstr "Hapus semua centang"
 
 #: tmainform.mnupdate1click.caption
 msgid "Update all lists at once"
-msgstr "Perbarui semua daftar"
+msgstr "Mutakhirkan semua daftar"
 
 #: tmainform.mnupdatedownfromserver.caption
 msgid "Download manga list from server"
@@ -2032,7 +2032,7 @@ msgstr "Unduh daftar komik dari peladen"
 #: tmainform.mnupdatelist.caption
 msgctxt "TMAINFORM.MNUPDATELIST.CAPTION"
 msgid "Update manga list"
-msgstr "Perbarui daftar komik"
+msgstr "Mutakhirkan daftar komik"
 
 #: tmainform.rball.caption
 msgid "Have all genre checked"
@@ -2175,7 +2175,7 @@ msgstr "Penyimpanan"
 
 #: tmainform.tsupdate.caption
 msgid "Updates"
-msgstr "Pembaruan"
+msgstr "Pemutakhiran"
 
 #: tmainform.tsview.caption
 msgid "View"
@@ -2350,15 +2350,15 @@ msgstr "&Nanti saja"
 
 #: tupdatedialogform.btnupdate.caption
 msgid "&Update"
-msgstr "&Perbarui"
+msgstr "&Mutakhirkan"
 
 #: tupdatedialogform.lbmessage.caption
 msgid ""
 "New version found! Do you want to update now?\n"
 "FMD will be closed to finish the update.\n"
 msgstr ""
-"Versi baru ditemukan! Apakah Anda ingin memperbarui sekarang?\n"
-"FMD akan ditutup untuk menyelesaikan pembaruan.\n"
+"Versi mutakhir ditemukan! Apakah Anda ingin memutakhirkan sekarang?\n"
+"FMD akan ditutup untuk menyelesaikan pemutakhiran.\n"
 
 #: twebsiteoptionadvancedform.menuitem1.caption
 msgctxt "twebsiteoptionadvancedform.menuitem1.caption"
@@ -2399,7 +2399,7 @@ msgstr "Jumlah utas"
 
 #: twebsiteoptionadvancedform.tsupdatelist.caption
 msgid "Update List"
-msgstr "Pembaruan daftar"
+msgstr "Mutakhirkan daftar"
 
 #: twebsiteoptionadvancedform.tsuseragent.caption
 msgctxt "twebsiteoptionadvancedform.tsuseragent.caption"
@@ -2547,8 +2547,8 @@ msgid "Favorites check is running!"
 msgstr "Pemeriksaan kesukaan sedang berjalan!"
 
 #: ufavoritesmanager.rs_dlgnewchaptercaption
-msgid "%d manga(s) have new chapter(s)"
-msgstr "%d komik memiliki bab baru"
+msgid "Found %d new chapter(s)"
+msgstr "Ditemukan %d bab baru"
 
 #: ufavoritesmanager.rs_favoritehasnewchapter
 msgid "%s <%s> has %d new chapter(s)."
@@ -2559,8 +2559,8 @@ msgid "Completed manga will be removed:"
 msgstr "Komik yang sudah tamat akan dihapus:"
 
 #: ufavoritesmanager.rs_lblnewchapterfound
-msgid "Found %d new chapter from %d manga(s):"
-msgstr "Menemukan %d bab baru dari %d komik:"
+msgid "%d new chapter(s) from %d manga(s):"
+msgstr "%d bab baru dari %d komik:"
 
 #: usilentthread.rs_silentthreadloadstatus
 msgid "Loading: %d/%d"
@@ -2569,7 +2569,7 @@ msgstr "Memuat: %d/%d"
 #: usubthread.rs_btncheckupdates
 msgctxt "usubthread.rs_btncheckupdates"
 msgid "Check for new version"
-msgstr "Periksa versi baru"
+msgstr "Periksa versi mutakhir"
 
 #: usubthread.rs_currentversion
 msgid "Installed Version"
@@ -2577,11 +2577,11 @@ msgstr "Versi terinstal"
 
 #: usubthread.rs_latestversion
 msgid "Latest Version   "
-msgstr "Versi terbaru  "
+msgstr "Versi mutakhir  "
 
 #: usubthread.rs_newversionfound
 msgid "New Version found!"
-msgstr "Versi baru ditemukan!"
+msgstr "Versi mutakhir ditemukan!"
 
 #: uupdatethread.rs_dlghasnewmanga
 msgid "%s has %d new manga(s)"
@@ -2638,4 +2638,4 @@ msgstr "Sinkronisasi data"
 
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
-msgstr "Memperbarui daftar"
+msgstr "Memutakhirkan daftar"

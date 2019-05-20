@@ -4,6 +4,48 @@ https://github.com/fmd-project-team/FMD
 Changelog:
 ([!] Important, [+] Addition, [-] Removal, [*] Fix/Change, [?] Feedback needed)
 
+0.9.164.0 (18.05.2019)
+[!] Report issues here: https://github.com/fmd-project-team/FMD/issues
+[!] Check website status here: https://github.com/fmd-project-team/FMD/wiki/Supported-Websites-(WIP)
+[!] Join us on Discord: https://discord.gg/cXKKgw3
+[+] Added a bypass machanism for Cloudflare. The manual workaround is still possible, but not needed as much as before.
+[+] Added 3asqOrg [AR-SC] -> Thank you AbidZakaria
+[+] Added DarkskyProjects [ES-SC]
+[+] Added HentaiNexus [H-Sites] (Issue #139)
+[+] Added IsekaiScan [EN] -> Thank you rs3mk
+[+] Added IsekaiRaw [RAW] (Issue #135)
+[+] Added LeviatanScans [ES-SC] -> Thank you rs3mk
+[+] Added ManyToon [Webtoon] (Issue #125) -> Thank you AbidZakaria
+[+] Added PlotTwistNoFansub [ES-SC] -> Thank you rs3mk
+[-] Removed RawNeko [RAW] (Issue #135) -> You can transfer your favorites to IsekaiRaw when you updated the manga list
+[*] ComicExtra: Fixed getting chapter list (Isue #151) -> Thank you AbidZakaria
+[*] HentaiChanRu: Ported to Lua script; Fixed all
+[*] KomikCast: Fixed all (Issue #122) -> Thank you AbidZakaria
+[*] LeoManga: Ported to Lua script; Changed to new website -> Thank you AbidZakaria
+[*] LetItGoScans: Moved from FoOlSlide to ComiCake (Issue #97)
+[*] Mangacan: Ported to Lua script -> Thank you AbidZakaria
+[*] MangaChanRu: Ported to Lua script; Fixed all (Issue #130)
+[*] MangaEden: Fixed getting manga list (Issue #156)
+[*] MangaEdenIT: Fixed getting manga list (Issue #156)
+[*] MangaIndo: Ported to Lua script -> Thank you AbidZakaria
+[*] MangaLib: Fixed all (Issue #140) -> Thank you AbidZakaria
+[*] MangaToon: Check for premium chapters -> Thank you AbidZakaria
+[*] Manga-Tr: Ported to Lua script; Fixed getting chapter list (Issue #54) -> Thank you AbidZakaria
+[*] ManhwaCo: Fixed all (Issue #145)
+[*] OtakuIndo: Changed URL from otakuindo.net to otakuindo.co (Issue #149)
+[*] PervEden: Fixed getting manga list (Issue #156)
+[*] PervEdenIT: Fixed getting manga list (Issue #156)
+[*] Puzzmos: Ported to Lua script -> Thank you AbidZakaria
+[*] RawQQ: Fixed some download problems (Issue #87)
+[*] YaoiChanRU: Ported to Lua script; Fixed all
+[*] Fixed an inconsistency when deleting the top entries in the manga list
+[*] Fixed string format of NewChapter dialog (Issue #159)
+[*] Fixed adding a manga to favorites by right-click setting wrong target folder (Issue #131)
+[*] Localization Update: German
+[*] Localization Update: Indonesian
+[*] Localization Update: Portuguese
+Full changes: https://github.com/fmd-project-team/FMD/compare/0.9.163.0...0.9.164.0
+
 0.9.163.0 (14.04.2019)
 [!] Report issues here: https://github.com/fmd-project-team/FMD/issues
 [!] Join us on Discord: https://discord.gg/cXKKgw3
@@ -22,7 +64,7 @@ Changelog:
 [*] MangaYosh: Fixed chapter download (Issue #73)
 [*] TheCatScans: Changed URL from 'reader.thecatscans.com' to 'reader2.thecatscans.com' (Issue #75)
 [*] Toonkor: Changed URL from 'toonkor.co' to 'toonkor.pink' (Issue #66) -> Thank you AbidZakaria
-[*] WebToons: Ported to Lua script; Added mulitlanguage support (Options->Websites->Options->WebToons)
+[*] WebToons: Ported to Lua script; Added multilanguage support (Options->Websites->Options->WebToons)
 [*] Fixed "Add to Favorites" button behavior (Issue #92)
 [*] Fixed button arrangement in "Transfer Favorites" dialog (Issue #76)
 [*] Fixed "History/Yesterday" filter not showing any entries in "Downloads" tab (Issue #78)

@@ -1394,6 +1394,8 @@ begin
   DLManager.Backup;
   Logger.Send(Self.ClassName+'.CloseNow, backup favorites');
   FavoriteManager.Backup;
+  Logger.Send(Self.ClassName+'.CloseNow, cleaning up dynamic HTTP settings');
+  Modules.ClearDynamicHTTPSettings;
   Logger.Send(Self.ClassName+'.CloseNow, backup all data to file');
   SaveOptions;
   SaveFormInformation;
@@ -2993,6 +2995,8 @@ var
   data: PMangaInfoData;
 begin
   if vtMangaList.SelectedCount = 0 then Exit;
+  LastUserPickedSaveTo := '';
+  FillSaveTo;
   SilentThreadManager.BeginAdd;
   try
     xNode := vtMangaList.GetFirstSelected;
@@ -3330,7 +3334,7 @@ end;
 
 procedure TMainForm.miMangaListDeleteClick(Sender: TObject);
 var
-  Node: PVirtualNode;
+  xNode: PVirtualNode;
   DeleteCount: Integer;
 begin
   if vtMangaList.SelectedCount = 0 then Exit;
@@ -3339,18 +3343,18 @@ begin
   try
     vtMangaList.BeginUpdate;
     DeleteCount := 0;
-    Node := vtMangaList.GetPreviousSelected(nil);
-    while Assigned(Node) do
+    xNode := vtMangaList.GetPreviousSelected(nil);
+    while Assigned(xNode) do
     begin
-      if dataProcess.DeleteData(Node^.Index) then
+      if dataProcess.DeleteData(xNode^.Index) then
       begin
         Inc(DeleteCount);
-        vtMangaList.DeleteNode(Node);
+        vtMangaList.DeleteNode(xNode);
       end;
-      Node := vtMangaList.GetPreviousSelected(nil);
+      dataProcess.Table.ApplyUpdates;
+      dataProcess.Table.SQLTransaction.CommitRetaining;
+      xNode := vtMangaList.GetPreviousSelected(xNode);
     end;
-    dataProcess.Table.ApplyUpdates;
-    dataProcess.Table.SQLTransaction.CommitRetaining;
     if DeleteCount <> 0 then
     begin
       vtMangaList.ClearSelection;
@@ -4695,7 +4699,6 @@ end;
 
 procedure TMainForm.FillSaveTo;
 begin
-  if Trim(edSaveTo.Text) <> '' then Exit;
   if LastUserPickedSaveTo = '' then
     LastUserPickedSaveTo := Trim(configfile.ReadString('saveto', 'SaveTo', DEFAULT_PATH));
   if LastUserPickedSaveTo = '' then

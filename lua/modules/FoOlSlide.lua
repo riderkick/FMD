@@ -213,7 +213,7 @@ function AddWebsiteModule(name, url, category)
   m.website = name
   m.rooturl = url
   m.category = category
-  m.lastupdated = 'April 09, 2019'
+  m.lastupdated = 'May 04, 2019'
   m.ongetinfo = 'getinfo'
   m.OnTaskStart = 'taskstart'
   m.OnGetPageNumber = 'getpagenumber'
@@ -238,7 +238,6 @@ function Init()
   AddWebsiteModule('WorldThree', 'http://www.slide.world-three.org', cat)
   AddWebsiteModule('S2Scans', 'https://reader.s2smanga.com', cat)
   AddWebsiteModule('HotChocolateScans', 'http://hotchocolatescans.com', cat)
-  AddWebsiteModule('LetItGoScans', 'http://reader.letitgo.scans.today', cat)
   AddWebsiteModule('SeaOtterScans', 'https://reader.seaotterscans.com', cat)
   AddWebsiteModule('AntisenseScans', 'http://antisensescans.com', cat)
   AddWebsiteModule('TheCatScans', 'https://reader2.thecatscans.com', cat)

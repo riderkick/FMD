@@ -50,7 +50,7 @@ function Modules.Madara()
           src = src:gsub('https://cdn.shortpixel.ai/client/q_glossy,ret_img/', '')
           task.pagelinks.add(src)
         end
-      elseif module.website == 'IsekaiRaw' then
+      elseif module.website == 'IsekaiRaw' or module.website == 'ManyToon' or module.website == 'PocketAngelScan' or module.website == 'Toonily' then
         x.xpathstringall('//div[contains(@class, "page-break")]/img/@data-src', task.pagelinks)
       else
         x.xpathstringall('//div[contains(@class, "page-break")]/img/@src', task.pagelinks)
@@ -157,4 +157,14 @@ function Init()
   AddWebsiteModule('GodsRealmScan', 'https://godsrealmscan.com', cat)
   AddWebsiteModule('DarkskyProjects', 'https://darkskyprojects.org', cat) 
   AddWebsiteModule('LeviatanScans', 'https://leviatanscans.com', cat)
+  AddWebsiteModule('PlotTwistNoFansub', 'https://www.plot-twistnf-scan.tk', cat)
+  
+  cat = 'Webcomics'
+  AddWebsiteModule('ManyToon', 'https://manytoon.com', cat)
+  AddWebsiteModule('PocketAngelScan', 'https://pocketangelscans.com', cat)
+  AddWebsiteModule('Toonily', 'https://toonily.com', cat)
+  
+  cat = 'Arabic-Scanlation'
+  AddWebsiteModule('3asqOrg', 'https://3asq.org', cat)
+  
 end
