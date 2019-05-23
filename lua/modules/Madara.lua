@@ -159,7 +159,7 @@ function Init()
   
   cat = 'H-Sites'
   AddWebsiteModule('ManhwaHentai', 'https://manhwahentai.com', cat)
-  AddWebsiteModule('manhwaHand', 'https://manhwahand.com', cat)
+  AddWebsiteModule('ManhwaHand', 'https://manhwahand.com', cat)
   
   cat = 'Spanish-Scanlation'
   AddWebsiteModule('GodsRealmScan', 'https://godsrealmscan.com', cat)
