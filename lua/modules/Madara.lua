@@ -166,6 +166,7 @@ function Init()
   AddWebsiteModule('DarkskyProjects', 'https://darkskyprojects.org', cat) 
   AddWebsiteModule('LeviatanScans', 'https://leviatanscans.com', cat)
   AddWebsiteModule('PlotTwistNoFansub', 'https://www.plot-twistnf-scan.tk', cat)
+  AddWebsiteModule('KnightNoFansub', 'https://knightnofansub.com/', cat)
   
   cat = 'Webcomics'
   AddWebsiteModule('ManyToon', 'https://manytoon.com', cat)
