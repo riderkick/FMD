@@ -526,6 +526,10 @@ msgstr "Schlüssel:"
 msgid "Use Google DCP"
 msgstr "Google DCP benutzen"
 
+#: mangarock.rs_mangarock_country
+msgid "Country (change this if some manga or chapters are missing):"
+msgstr "Land (Ändere das Land, wenn einzelne Titel oder Kapitel fehlen):"
+
 #: mangadex.rs_showalllang
 msgctxt "mangadex.rs_showalllang"
 msgid "Show all language"
