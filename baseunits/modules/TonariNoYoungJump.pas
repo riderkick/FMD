@@ -64,7 +64,7 @@ begin
           authors := XPathString('//h2[@class="series-header-author"]');
           summary := XPathString('//*[@class="series-header-description"]');
           lastChapter := XPathCount('//ul[contains(@class, "series-episode-list")]/li') + 1;
-          s := XPathString('//button[@class="js-read-more-button"]/@data-read-more-endpoint');
+          s := XPathString('//div[@class="js-readable-product-list"]/@data-latest-list-endpoint');
           if s <> '' then begin
             s := RegExprGetMatch('number_since\=(\d+)\&', s, 1);
             lastChapter += StrToIntDef(s, 0);
