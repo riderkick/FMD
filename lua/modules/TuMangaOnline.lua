@@ -40,17 +40,26 @@ function getinfo()
 end
 
 function getpagenumber()
-  task.pagelinks.clear()
-  task.pagecontainerlinks.clear()
   http.headers.values['Referer'] = module.rooturl
   if not http.get(MaybeFillHost(module.rooturl, url)) then return false; end
-  if http.lasturl:match('paginated$') ~= nil then
-    if not http.get(http.lasturl:gsub('paginated$', 'cascade')) then return false; end
+  local x = TXQuery.Create(http.Document)
+  local u = x.xpathstring('//a[@class="nav-link" and @title="Cascada"]/substring-before(@href, "/cascade")')
+  task.pagenumber = tonumber(x.xpathstring('(//select[@id="viewer-pages-select"])[1]/option[last()]/text()'))
+  for i = 1, task.pagenumber do
+    task.pagecontainerlinks.add(u..'/paginated/'..i)
   end
-  local x=TXQuery.Create(http.Document)
-  x.xpathstringall('//img[contains(@class, "viewer-image")]/@src', task.pagelinks)
-  task.pagecontainerlinks.text = http.lasturl
   return true
+end
+
+function getimageurl()
+  local s = MaybeFillHost(module.rooturl, task.pagecontainerlinks[workid])
+  http.headers.values['Referer'] = module.rooturl
+  if http.get(s) then
+    task.pagelinks[workid] = TXQuery.Create(http.document).xpathstring('//script[contains(., "img.src =")]'):match('img.src = "(.-)";')
+    
+    return true
+  end
+  return false
 end
 
 function getnameandlink()
@@ -85,4 +94,5 @@ function Init()
   m.ongetinfo='getinfo'
   m.ongetpagenumber='getpagenumber'
   m.ongetnameandlink='getnameandlink'
+  m.ongetimageurl='getimageurl'
 end
