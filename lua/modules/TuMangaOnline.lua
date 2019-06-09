@@ -43,10 +43,17 @@ function getpagenumber()
   http.headers.values['Referer'] = module.rooturl
   if not http.get(MaybeFillHost(module.rooturl, url)) then return false; end
   local x = TXQuery.Create(http.Document)
-  local u = x.xpathstring('//a[@class="nav-link" and @title="Cascada"]/substring-before(@href, "/cascade")')
+  local u = x.xpathstring('//meta[@property="og:url"]/@content')
+  if string.match(u, 'cascade') then
+    u = string.gsub(u, '/cascade', '/paginated')
+    print(u)
+    if not http.get(MaybeFillHost(module.rooturl, u)) then return false; end
+    x = TXQuery.Create(http.Document)
+  end
+  --local u = x.xpathstring('//a[@class="nav-link" and @title="Cascada"]/substring-before(@href, "/cascade")')
   task.pagenumber = tonumber(x.xpathstring('(//select[@id="viewer-pages-select"])[1]/option[last()]/text()'))
   for i = 1, task.pagenumber do
-    task.pagecontainerlinks.add(u..'/paginated/'..i)
+    task.pagecontainerlinks.add(u..'/'..i)
   end
   return true
 end
