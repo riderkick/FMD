@@ -537,7 +537,7 @@ msgstr "Google DCP kullan"
 
 #: mangarock.rs_mangarock_country
 msgid "Country (change this if some manga or chapters are missing):"
-msgstr ""
+msgstr "Ülke (eğer bazı mangalar ya da bölümler eksikse bunu değiştirin)"
 
 #: mangadex.rs_showalllang
 msgctxt "mangadex.rs_showalllang"
@@ -1718,7 +1718,7 @@ msgstr "Şifre"
 
 #: tmainform.lboptionpdfquality.caption
 msgid "PDF Quality Level"
-msgstr ""
+msgstr "PDF Kalite Seviyesi"
 
 #: tmainform.lboptionpdfquality.hint
 msgctxt "TMAINFORM.LBOPTIONPDFQUALITY.HINT"
