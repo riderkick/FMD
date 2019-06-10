@@ -1748,8 +1748,8 @@ msgid "Password"
 msgstr "Κωδικός"
 
 #: tmainform.lboptionpdfquality.caption
-msgid "PDF compression level"
-msgstr "Επίπεδο συμπίεσης PDF"
+msgid "PDF Quality Level"
+msgstr ""
 
 #: tmainform.lboptionpdfquality.hint
 msgctxt "TMAINFORM.LBOPTIONPDFQUALITY.HINT"

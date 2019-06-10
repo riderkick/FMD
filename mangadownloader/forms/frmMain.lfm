@@ -3839,7 +3839,7 @@ object MainForm: TMainForm
               Top = 122
               Width = 119
               BorderSpacing.Left = 4
-              Caption = 'PDF compression level'
+              Caption = 'PDF Quality Level'
               Enabled = False
               ParentColor = False
               ParentFont = False

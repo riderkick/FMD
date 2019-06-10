@@ -1776,8 +1776,8 @@ msgid "Password"
 msgstr "Mot de passe"
 
 #: tmainform.lboptionpdfquality.caption
-msgid "PDF compression level"
-msgstr "Niveau de compression du PDF"
+msgid "PDF Quality Level"
+msgstr ""
 
 #: tmainform.lboptionpdfquality.hint
 msgctxt "TMAINFORM.LBOPTIONPDFQUALITY.HINT"
