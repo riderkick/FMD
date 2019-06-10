@@ -51,6 +51,7 @@ type
     FCloudflareCookies: String;
     FCloudflareUserAgent: String;
     FBypassLock: Boolean;
+    FBypassUrl: String;
   public
     constructor Create;
     destructor Destroy; override;
@@ -59,6 +60,7 @@ type
     property DisableCloudflareBypass: Boolean read FDisableCloudflareBypass write FDisableCloudflareBypass;
     property Cookies: String read FCloudflareCookies write FCloudflareCookies;
     property UserAgent: String read FCloudflareUserAgent write FCloudflareUserAgent;
+    property BypassURL: String read FBypassUrl write FBypassUrl;
   end;
 
   { TWebsiteModuleSettings }

@@ -454,7 +454,10 @@ begin
       AProcess.InheritHandles := False;
       AProcess.CurrentDirectory := FMD_DIRECTORY;
       AProcess.Executable := CURRENT_CF_BYPASS_EXE;
-      AProcess.Parameters.Add(RootURL);
+      if pos('http', Settings.CloudflareBypass.BypassURL) > 0 then
+        AProcess.Parameters.Add(Settings.CloudflareBypass.BypassURL)
+      else
+        AProcess.Parameters.Add(RootURL);
       AProcess.Parameters.Add(Website);
       AProcess.ShowWindow := swoHide;
       AProcess.Options := AProcess.Options + [poWaitOnExit, poUsePipes];
