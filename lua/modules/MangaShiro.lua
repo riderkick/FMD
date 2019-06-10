@@ -98,7 +98,9 @@ function getinfo()
       mangainfo.chapterlinks.clear()
       mangainfo.chapternames.clear()
       x.xpathhrefall('//li//span[@class="leftoff"]/a', mangainfo.chapterlinks, mangainfo.chapternames)
-    elseif module.website == 'Kyuroku' or module.website == 'BacaManga' then
+    elseif module.website == 'Kyuroku' or 
+	       module.website == 'BacaManga' or
+           module.website == 'MangaCeng' then
       mangainfo.title=x.xpathstring('//div[@class="infox"]/h1')
       mangainfo.title = string.gsub(mangainfo.title, 'Bahasa Indonesia', '')
       mangainfo.title = string.gsub(mangainfo.title, 'Baca', '')
@@ -106,16 +108,18 @@ function getinfo()
       mangainfo.authors=x.xpathstring('//div[@class="spe"]//span[starts-with(.,"Author")]/substring-after(.,":")')
       if module.website == 'BacaManga' then
         mangainfo.genres=x.xpathstringall('//div[@class="spe"]//span[starts-with(.,"Genre")]/a')
-      else
+      elseif module.website == 'MangaCeng' then
+	    mangainfo.genres=x.xpathstringall('//div[@class="spe"]//span[starts-with(.,"Genres")]/a')
+	  else
         mangainfo.genres=x.xpathstringall('//div[@class="genrex"]/a')
       end
       mangainfo.status=MangaInfoStatusIfPos(x.xpathstring('//div[@class="spe"]//span[starts-with(.,"Status")]'))
       mangainfo.summary=x.xpathstring('//*[@class="desc"]/string-join(.//text(),"")')
       mangainfo.chapterlinks.clear()
       mangainfo.chapternames.clear()
-      if module.website == 'BacaManga' then
+      if module.website == 'BacaManga' or module.website == 'MangaCeng' then
         x.xpathhrefall('//div[@class="bixbox bxcl"]//li//*[@class="lchx"]/a', mangainfo.chapterlinks, mangainfo.chapternames)
-      else
+	  else
         x.xpathhrefall('//div[@class="bxcl"]//li//*[@class="lchx desktop"]/a', mangainfo.chapterlinks, mangainfo.chapternames)
       end
     elseif module.website == 'Komiku'
@@ -202,6 +206,7 @@ function getnameandlink()
     ['KazeManga'] = '/komik-list/',
     ['Mangacan'] =  '/daftar-komik-manga-bahasa-indonesia.html',
     ['MangaIndo'] = '/manga-list-201902-v052/',
+	['MangaCeng'] = '/manga/?list',
   }
   local dirurl = '/manga-list/'
   if dirs[module.website] ~= nil then
@@ -216,7 +221,7 @@ function getnameandlink()
       TXQuery.Create(http.document).xpathhrefall('//*[@class="soralist"]//a',links,names)
     elseif module.website == 'Komiku' or module.website == 'OtakuIndo' then
       TXQuery.Create(http.document).xpathhrefall('//*[@id="a-z"]//h4/a',links,names)
-    elseif module.website == 'Mangacan' or module.website == 'PecintaKomik' or module.website == 'KomikMama' then
+    elseif module.website == 'Mangacan' or module.website == 'PecintaKomik' or module.website == 'KomikMama' or module.website == 'MangaCeng' then
       TXQuery.Create(http.document).xpathhrefall('//*[@class="blix"]//a',links,names)
     elseif module.website == 'MangaIndo' then
       TXQuery.Create(http.document).xpathhrefall('//*[@class="manga-list"]/a',links,names)
@@ -261,4 +266,5 @@ function Init()
   AddWebsiteModule('Mangacan', 'http://www.mangacanblog.com')
   AddWebsiteModule('MangaIndo', 'https://mangaindo.web.id')
   AddWebsiteModule('KomikMama', 'https://komikmama.net')
+  AddWebsiteModule('MangaCeng', 'https://mangaceng.com')
 end
