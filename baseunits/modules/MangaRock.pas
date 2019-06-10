@@ -11,7 +11,7 @@ uses
 implementation
 
 var
-  mangarockcountry: String ='United States';
+  mangarockcountry: String ='China';
   mangaList: TStringList = nil;
 
 const
