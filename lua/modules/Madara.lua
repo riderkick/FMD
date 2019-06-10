@@ -144,6 +144,7 @@ function Init()
   cat = 'English'
   AddWebsiteModule('IsekaiScan', 'http://isekaiscan.com', cat)
   AddWebsiteModule('MangaLike', 'https://mangalike.net', cat)
+  AddWebsiteModule('MangaZukiOnline', 'https://www.mangazuki.online', cat)
   
   cat = 'English-Scanlation'
   AddWebsiteModule('TrashScanlations', 'https://trashscanlations.com', cat)
@@ -160,6 +161,7 @@ function Init()
   cat = 'H-Sites'
   AddWebsiteModule('ManhwaHentai', 'https://manhwahentai.com', cat)
   AddWebsiteModule('ManhwaHand', 'https://manhwahand.com', cat)
+  AddWebsiteModule('DoujinYosh', 'https://doujinyosh.com', cat)
 	
   cat = 'Spanish'
   AddWebsiteModule('ZManga', 'https://zmanga.org', cat)
