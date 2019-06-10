@@ -144,6 +144,7 @@ function Init()
   cat = 'English'
   AddWebsiteModule('IsekaiScan', 'http://isekaiscan.com', cat)
   AddWebsiteModule('MangaLike', 'https://mangalike.net', cat)
+  AddWebsiteModule('MangaZukiOnline', 'https://www.mangazuki.online', cat)
   
   cat = 'English-Scanlation'
   AddWebsiteModule('TrashScanlations', 'https://trashscanlations.com', cat)
