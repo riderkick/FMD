@@ -63,8 +63,6 @@ function getnameandlink()
       v1 = v.get(i)
       links.add(v1.getattribute('href'))
       names.add(x.xpathstring('div/header/@title', v1))
-      print(v1.getattribute('href'))
-      print(x.xpathstring('div/header/@title', v1))
     end
     
     return no_error
