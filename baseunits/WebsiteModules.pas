@@ -477,9 +477,12 @@ begin
       finally
         CloseFile(f);
         DeleteFile(CONFIG_FOLDER + 'cf_bypass-' + Website + '.txt');
-        Settings.CloudflareBypass.BypassLock := False;
       end;
-    end;
+    end
+    else
+      Settings.CloudflareBypass.DisableCloudflareBypass := True;
+    
+    Settings.CloudflareBypass.BypassLock := False;
   end;
   
   if Settings.Enabled then
