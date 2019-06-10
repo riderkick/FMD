@@ -50,7 +50,6 @@ function getpagenumber()
     if not http.get(MaybeFillHost(module.rooturl, u)) then return false; end
     x = TXQuery.Create(http.Document)
   end
-  --local u = x.xpathstring('//a[@class="nav-link" and @title="Cascada"]/substring-before(@href, "/cascade")')
   task.pagenumber = tonumber(x.xpathstring('(//select[@id="viewer-pages-select"])[1]/option[last()]/text()'))
   for i = 1, task.pagenumber do
     task.pagecontainerlinks.add(u..'/'..i)
@@ -62,7 +61,7 @@ function getimageurl()
   local s = MaybeFillHost(module.rooturl, task.pagecontainerlinks[workid])
   http.headers.values['Referer'] = module.rooturl
   if http.get(s) then
-    task.pagelinks[workid] = TXQuery.Create(http.document).xpathstring('//script[contains(., "img.src =")]'):match('img.src = "(.-)";')
+    task.pagelinks[workid] = TXQuery.Create(http.document).xpathstring('//img[@class="viewer-image"]/@src')
     
     return true
   end
@@ -95,7 +94,6 @@ function Init()
   m.website = 'Tumangaonline'
   m.rooturl = 'https://tmofans.com'
   m.category = 'Spanish'
-  m.lastupdated='June 14, 2018'
   m.maxtasklimit = 1
   m.maxconnectionlimit = 1
   m.ongetinfo='getinfo'
