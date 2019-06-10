@@ -1718,7 +1718,7 @@ msgstr "Şifre"
 
 #: tmainform.lboptionpdfquality.caption
 msgid "PDF Quality Level"
-msgstr ""
+msgstr "PDF Kalite Seviyesi"
 
 #: tmainform.lboptionpdfquality.hint
 msgctxt "TMAINFORM.LBOPTIONPDFQUALITY.HINT"
