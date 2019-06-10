@@ -70,9 +70,9 @@ function getpagenumber()
 end
 
 local dirurl = '/manga_list?type=newest&category=all&state=all&page='
+
 function getnameandlink()
-  local dir = dirurl
-  if http.get(module.rooturl .. dir .. IncStr(url)) then
+  if http.get(module.rooturl .. dirurl .. IncStr(url)) then
     local x = TXQuery.Create(http.Document)
     x.XPathHREFAll('//div[@class="truyen-list"]/div[@class="list-truyen-item-wrap"]/h3/a', links, names)
     if links.count == 0 then
@@ -85,19 +85,12 @@ function getnameandlink()
 end
 
 function getdirectorypagenumber()
-  page = 1
   if http.GET(module.RootURL .. dirurl .. '1') then
-    x = TXQuery.Create(http.Document)
-    local s = x.xpathstring('//div[@class="group-page"]/a[contains(., "Last")]/@href')
-    if s == '' then
-      s = x.xpathstring('//div[@class="phan-trang"]/a[contains(., "Last")]/@href')
-    end
-    page = tonumber(s:match('page=(%d+)'))
-    if page == nil then page = 1; end
-    return true
-  else
-    return false
+    page = tonumber(TXQuery.Create(http.Document).xpathstring('//a[contains(@class, "page_last")]/@href'):match('page=(%d+)'))
+    
+    return no_error
   end
+  return net_problem
 end
 
 function AddWebsiteModule(name, url)
@@ -105,8 +98,6 @@ function AddWebsiteModule(name, url)
   m.website = name
   m.rooturl = url
   m.category = 'English'
-  m.lastupdated = 'March 12, 2018'
-  m.sortedlist = true
   m.ongetinfo='getinfo'
   m.ongetpagenumber='getpagenumber'
   m.ongetnameandlink='getnameandlink'
@@ -115,6 +106,6 @@ function AddWebsiteModule(name, url)
 end 
 
 function Init()
-  AddWebsiteModule('MangaKakalot', 'http://mangakakalot.com')
-  AddWebsiteModule('MangaNelo', 'http://manganelo.com')
+  AddWebsiteModule('MangaKakalot', 'https://mangakakalot.com')
+  AddWebsiteModule('MangaNelo', 'https://manganelo.com')
 end
