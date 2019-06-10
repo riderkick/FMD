@@ -43,18 +43,22 @@ type
     property Proxy: TProxySettings read FProxy write FProxy;
   end;
   
-  { TDynamicHTTPSettings }
+  { TCloudflareBypassSettings }
   
-  TDynamicHTTPSettings = class
+  TCloudflareBypass = class
   private
-    FDynamicCookies: String;
-    FDynamicUserAgent: String;
+    FDisableCloudflareBypass: Boolean;
+    FCloudflareCookies: String;
+    FCloudflareUserAgent: String;
+    FBypassLock: Boolean;
   public
     constructor Create;
     destructor Destroy; override;
+    property BypassLock: Boolean read FBypassLock write FBypassLock;
   published
-    property Cookies: String read FDynamicCookies write FDynamicCookies;
-    property UserAgent: String read FDynamicUserAgent write FDynamicUserAgent;
+    property DisableCloudflareBypass: Boolean read FDisableCloudflareBypass write FDisableCloudflareBypass;
+    property Cookies: String read FCloudflareCookies write FCloudflareCookies;
+    property UserAgent: String read FCloudflareUserAgent write FCloudflareUserAgent;
   end;
 
   { TWebsiteModuleSettings }
@@ -63,7 +67,7 @@ type
   private
     FEnabled: Boolean;
     FHTTP: THTTPSettings;
-    FDYNHTTP: TDynamicHTTPSettings;
+    FCloudflareBypass: TCloudflareBypass;
     FMaxConnectionLimit: Integer;
     FMaxTaskLimit: Integer;
     FMaxThreadPerTaskLimit: Integer;
@@ -80,7 +84,7 @@ type
     property UpdateListNumberOfThread: Integer read FUpdateListNumberOfThread write FUpdateListNumberOfThread default 0;
     property UpdateListDirectoryPageNumber: Integer read FUpdateListDirectoryPageNumber write FUpdateListDirectoryPageNumber default 0;
     property HTTP: THTTPSettings read FHTTP write FHTTP;
-    property DynHTTP: TDynamicHTTPSettings read FDYNHTTP write FDYNHTTP;
+    property CloudflareBypass: TCloudflareBypass read FCloudflareBypass write FCloudflareBypass;
   end;
 
 implementation
@@ -98,14 +102,14 @@ begin
   inherited Destroy;
 end;
 
-{ TDynamicHTTPSettings }
+{ TCloudflareBypass }
 
-constructor TDynamicHTTPSettings.Create;
+constructor TCloudflareBypass.Create;
 begin
   
 end;
 
-destructor TDynamicHTTPSettings.Destroy;
+destructor TCloudflareBypass.Destroy;
 begin
   inherited Destroy;
 end;
@@ -115,13 +119,13 @@ end;
 constructor TWebsiteModuleSettings.Create;
 begin
   HTTP:=THTTPSettings.Create;
-  DynHTTP:=TDynamicHTTPSettings.Create;
+  CloudflareBypass:=TCloudflareBypass.Create;
 end;
 
 destructor TWebsiteModuleSettings.Destroy;
 begin
   HTTP.Free;
-  DynHTTP.Free;
+  CloudflareBypass.Free;
   inherited Destroy;
 end;
 

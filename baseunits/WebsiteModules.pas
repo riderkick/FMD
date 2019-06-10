@@ -280,7 +280,7 @@ type
 
     procedure LoadFromFile;
     procedure SaveToFile;
-    procedure ClearDynamicHTTPSettings;
+    procedure ClearCloudflareBypassSettings;
   end;
 
 var
@@ -438,39 +438,46 @@ begin
   CheckCloudflareEnabled(AHTTP);
   if RESET_CF_VALUES then
   begin
-    Settings.DynHTTP.Cookies := '';
-    Settings.DynHTTP.UserAgent := '';
+    Settings.CloudflareBypass.Cookies := '';
+    Settings.CloudflareBypass.UserAgent := '';
     RESET_CF_VALUES := False;
   end;
-  if FCloudflareEnabled and ((Settings.DynHTTP.Cookies = '') or (Settings.DynHTTP.UserAgent = '')) then
+  
+  if Settings.CloudflareBypass.BypassLock then Sleep(6000);
+  
+  if not Settings.CloudflareBypass.DisableCloudflareBypass and FCloudflareEnabled and ((Settings.CloudflareBypass.Cookies = '') or (Settings.CloudflareBypass.UserAgent = '')) then
   begin
+    Settings.CloudflareBypass.BypassLock := True;
+    Logger.Send('Running cf_bypass for website: [' + Website + ']');
     AProcess := TProcess.Create(nil);
     try
       AProcess.InheritHandles := False;
       AProcess.CurrentDirectory := FMD_DIRECTORY;
       AProcess.Executable := CURRENT_CF_BYPASS_EXE;
       AProcess.Parameters.Add(RootURL);
+      AProcess.Parameters.Add(Website);
       AProcess.ShowWindow := swoHide;
       AProcess.Options := AProcess.Options + [poWaitOnExit, poUsePipes];
       AProcess.Execute;
     finally
       AProcess.Free;
     end;
-    if FileExists(CONFIG_FOLDER + 'cf_bypass.txt') then
+    if FileExists(CONFIG_FOLDER + 'cf_bypass-' + Website + '.txt') then
     begin
-      AssignFile(f, CONFIG_FOLDER + 'cf_bypass.txt');
+      AssignFile(f, CONFIG_FOLDER + 'cf_bypass-' + Website + '.txt');
       try
         reset(f);
         while not eof(f) do
         begin
           cfs := '';
           readln(f, cfs);
-          if pos('cf_clearance', cfs) > 0 then Settings.DynHTTP.Cookies:=cfs;
-          if pos('user_agent', cfs) > 0 then Settings.DynHTTP.UserAgent:=StringReplace(cfs, 'user_agent=', '', [rfIgnoreCase]);
+          if pos('cf_clearance', cfs) > 0 then Settings.CloudflareBypass.Cookies:=cfs;
+          if pos('user_agent', cfs) > 0 then Settings.CloudflareBypass.UserAgent:=StringReplace(cfs, 'user_agent=', '', [rfIgnoreCase]);
         end;
       finally
         CloseFile(f);
-        DeleteFile(CONFIG_FOLDER + 'cf_bypass.txt');
+        DeleteFile(CONFIG_FOLDER + 'cf_bypass-' + Website + '.txt');
+        Settings.CloudflareBypass.BypassLock := False;
       end;
     end;
   end;
@@ -483,15 +490,15 @@ begin
       begin
         AHTTP.Cookies.Text:=Cookies;
         if pos('cf_clearance=', Cookies) = 0 then
-          AHTTP.Cookies.Text:=AHTTP.Cookies.Text + ';' + Settings.DynHTTP.Cookies;
+          AHTTP.Cookies.Text:=AHTTP.Cookies.Text + ';' + Settings.CloudflareBypass.Cookies;
       end
       else
-        AHTTP.Cookies.Text:=Settings.DynHTTP.Cookies;
+        AHTTP.Cookies.Text:=Settings.CloudflareBypass.Cookies;
         
       if UserAgent<>'' then
         AHTTP.UserAgent:=UserAgent
       else
-        AHTTP.UserAgent:=Settings.DynHTTP.UserAgent;
+        AHTTP.UserAgent:=Settings.CloudflareBypass.UserAgent;
       
       with Proxy do
       begin
@@ -509,7 +516,7 @@ begin
   end
   else
   begin
-    with Settings.DynHTTP do
+    with Settings.CloudflareBypass do
     begin
       if UserAgent<>'' then
         AHTTP.UserAgent:=UserAgent;
@@ -1088,15 +1095,15 @@ begin
   end;
 end;
 
-procedure TWebsiteModules.ClearDynamicHTTPSettings;
+procedure TWebsiteModules.ClearCloudflareBypassSettings;
 var
   i: Integer;
 begin
   for i:=0 to FModuleList.Count-1 do
     with FModuleList[i] do
     begin
-      Settings.DynHTTP.Cookies:='';
-      Settings.DynHTTP.UserAgent:='';
+      Settings.CloudflareBypass.Cookies:='';
+      Settings.CloudflareBypass.UserAgent:='';
     end;
 end;
 
