@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Last-Translator: Lucas Martin <codedeep@hotmail.com>\n & lordzidiousback (AKA LZB) <lordzidiousback@gmail.com>"
+"Last-Translator: Lucas Martin <codedeep@hotmail.com> & lordzidiousback (AKA LZB) <lordzidiousback@gmail.com>\n"
 "PO-Revision-Date: 2019-06-10 20:21+0100\n"
 "Language-Team: \n"
 "Content-Type: text/plain; charset=UTF-8\n"
