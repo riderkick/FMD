@@ -49,7 +49,8 @@ function getdirurl(website)
     ['YaoiIsLife'] = dirurlreader,
     ['FujoshiBitches'] = dirurlreader,
     ['TapTrans'] = dirurlfsdir,
-    ['LoliVault'] = dirurlonline
+    ['LoliVault'] = dirurlonline,
+  	['Shoujohearts'] = dirurlreader
   }  
   if dirs[website] ~= nil then
     return dirs[website]
@@ -213,7 +214,7 @@ function AddWebsiteModule(name, url, category)
   m.website = name
   m.rooturl = url
   m.category = category
-  m.lastupdated = 'May 04, 2019'
+  m.lastupdated = 'June 11, 2019'
   m.ongetinfo = 'getinfo'
   m.OnTaskStart = 'taskstart'
   m.OnGetPageNumber = 'getpagenumber'
@@ -259,6 +260,7 @@ function Init()
   AddWebsiteModule('TapTrans', 'https://taptaptaptaptap.net', cat)
   AddWebsiteModule('EvilFlowers', 'http://reader.evilflowers.com', cat)
   AddWebsiteModule('IlluminatiManga', 'http://reader.manga-download.org', cat)
+  AddWebsiteModule('Shoujohearts', 'http://shoujohearts.com', cat)
   
   -- es-sc
   cat = 'Spanish-Scanlation'
