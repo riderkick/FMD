@@ -50,7 +50,7 @@ function getdirurl(website)
     ['FujoshiBitches'] = dirurlreader,
     ['TapTrans'] = dirurlfsdir,
     ['LoliVault'] = dirurlonline,
-  	['Shoujohearts'] = dirurlreader
+    ['Shoujohearts'] = dirurlreader
   }  
   if dirs[website] ~= nil then
     return dirs[website]
