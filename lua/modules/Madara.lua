@@ -152,6 +152,7 @@ function Init()
   AddWebsiteModule('ChibiManga','http://www.cmreader.info', cat)
   AddWebsiteModule('ZinManga','https://zinmanga.com', cat)
   AddWebsiteModule('SiXiangScans','http://www.sixiangscans.com', cat)
+  AddWebsiteModule('NinjaScans', 'https://ninjascans.com/', cat)
   
   cat = 'Indonesian'
   AddWebsiteModule('MangaYosh', 'https://mangayosh.com', cat)
