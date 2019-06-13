@@ -56,6 +56,9 @@ function Modules.Madara()
 	
 	  if task.pagelinks.count == 0 or task.pagelinks.count == 1 then
 		x.xpathstringall('//div[contains(@class, "page-break")]/img/@data-src', task.pagelinks)
+		if task.pagelinks.count == 0 or task.pagelinks.count == 1 then
+			x.xpathstringall('//*[@class="wp-manga-chapter-img webpexpress-processed"]/@src', task.pagelinks)
+		end
 	  end
 	  
       return true
