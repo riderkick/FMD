@@ -117,11 +117,7 @@ function getinfo()
       mangainfo.summary=x.xpathstring('//*[@class="desc"]/string-join(.//text(),"")')
       mangainfo.chapterlinks.clear()
       mangainfo.chapternames.clear()
-      if module.website == 'BacaManga' or module.website == 'MangaCeng' then
-        x.xpathhrefall('//div[@class="bixbox bxcl"]//li//*[@class="lchx"]/a', mangainfo.chapterlinks, mangainfo.chapternames)
-	  else
-        x.xpathhrefall('//div[@class="bxcl"]//li//*[@class="lchx desktop"]/a', mangainfo.chapterlinks, mangainfo.chapternames)
-      end
+      x.xpathhrefall('//div[@class="bixbox bxcl"]//li//*[@class="lchx"]/a', mangainfo.chapterlinks, mangainfo.chapternames)
     elseif module.website == 'Komiku'
       or module.website == 'OtakuIndo'
     then
