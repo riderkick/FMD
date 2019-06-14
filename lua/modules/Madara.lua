@@ -174,7 +174,7 @@ function Init()
   AddWebsiteModule('LeviatanScans', 'https://leviatanscans.com', cat)
   AddWebsiteModule('PlotTwistNoFansub', 'https://www.plot-twistnf-scan.tk', cat)
   AddWebsiteModule('KnightNoFansub', 'https://knightnofansub.com/', cat)
-  AddWebsiteModule('HuntefansubScan', 'https://hunterfansubscan.com', cat)
+  AddWebsiteModule('HunterFansubScan', 'https://hunterfansubscan.com', cat)
   AddWebsiteModule('ZManga', 'https://zmanga.org', cat)	
 	
   cat = 'Webcomics'
