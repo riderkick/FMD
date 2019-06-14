@@ -192,7 +192,7 @@ function getnameandlink()
     ['Komiku'] = '/daftar-komik/',
     ['OtakuIndo'] = '/daftar-komik/',
     ['WestManga'] = '/manga-list/?list',
-    ['Kyuroku'] = '/manga-list/?list',
+    ['Kyuroku'] = '/manga/?list',
     ['BacaManga'] = '/manga/?list',
     ['PecintaKomik'] = '/daftar-manga/?list',
     ['MangaIndoNet'] = '/manga-list/?list',
@@ -211,7 +211,7 @@ function getnameandlink()
   if http.get(module.rooturl..dirurl) then
     if module.website == 'KomikStation' then
       TXQuery.Create(http.document).xpathhrefall('//*[@class="daftarkomik"]//a',links,names)
-    elseif module.website == 'WestManga' or module.website == 'MangaKita' or module.website == 'Kyuroku' or module.website == 'KazeManga' then
+    elseif module.website == 'WestManga' or module.website == 'MangaKita' or module.website == 'KazeManga' then
       TXQuery.Create(http.document).xpathhrefall('//*[@class="jdlbar"]//a',links,names)
     elseif module.website == 'KomikCast' or module.website == 'BacaManga' then
       TXQuery.Create(http.document).xpathhrefall('//*[@class="soralist"]//a',links,names)
@@ -235,7 +235,6 @@ function AddWebsiteModule(site, url)
   m.category='Indonesian'
   m.website=site
   m.rooturl=url
-  m.lastupdated = 'May 05, 2019'
   m.ongetinfo='getinfo'
   m.ongetpagenumber='getpagenumber'
   m.ongetnameandlink='getnameandlink'
