@@ -1,4 +1,4 @@
-﻿function getinfo()
+function getinfo()
   mangainfo.url=MaybeFillHost(module.RootURL, url)
   if http.get(mangainfo.url) then
     local x=TXQuery.Create(http.document)
@@ -82,5 +82,6 @@ function Init()
   local cat = 'Raw'
   AddWebsiteModule('Lhscans', 'http://lhscan.net', cat)
   AddWebsiteModule('RawQQ', 'https://rawqq.com', cat)
-  AddWebsiteModule('RawQV', 'http://rawqv.com', cat)
+  AddWebsiteModule('RawQV', 'https://rawqv.com', cat)
+  AddWebsiteModule('HanaScan', 'https://hanascan.com', cat)
 end
