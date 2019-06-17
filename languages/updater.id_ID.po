@@ -13,7 +13,7 @@ msgstr ""
 
 #: tfrmmain.caption
 msgid "Free Manga Downloader - Updater"
-msgstr "Free Manga Downloader - Pembaruan"
+msgstr "Free Manga Downloader - Pemutakhiran"
 
 #: tfrmmain.lbfilesize.caption
 msgid "File size"
@@ -33,11 +33,11 @@ msgstr "Bantuan"
 
 #: umain.rs_7znotfound
 msgid "Can't extract file because 7za.exe not found!"
-msgstr "Tidak bisa mengekstrak karena 7za.exe tidak ditemukan!"
+msgstr "Tidak bisa mengekstrak berkas karena 7za.exe tidak ditemukan!"
 
 #: umain.rs_anerroroccured
 msgid "An error occured when trying to download file."
-msgstr "Terjadi kesalahan ketika mencoba mengunduh berkas."
+msgstr "Terjadi galat saat mencoba mengunduh berkas."
 
 #: umain.rs_downloading
 msgid "Downloading [%s]..."
@@ -45,7 +45,7 @@ msgstr "Mengunduh [%s]..."
 
 #: umain.rs_errorcheckantivirus
 msgid "Error saving file, check your AntiVirus!"
-msgstr "Gagal menyimpan berkas, periksa AntiVirus Anda!"
+msgstr "Galat menyimpan berkas, periksa AntiVirus Anda!"
 
 #: umain.rs_faileddownloadpage
 msgid "Failed downloading file!"
@@ -93,7 +93,7 @@ msgstr "Menyimpan berkas..."
 
 #: umain.rs_servererror
 msgid "Server response error!"
-msgstr "Terjadi kesalahan pada server!"
+msgstr "Terjadi kesalahan pada peladen!"
 
 #: umain.rs_unknown
 msgid "(unknown)"
@@ -105,5 +105,5 @@ msgstr "Membuka berkas [%s]..."
 
 #: umain.rs_waitmainapp
 msgid "Waiting main app to close..."
-msgstr "Menunggu aplikasi utama untuk berhenti..."
+msgstr "Menunggu aplikasi utama ditutup..."
 
