@@ -18,9 +18,9 @@ function Modules.Madara()
       if string.match(mangainfo.title:upper(), ' RAW$') ~= nil then
         mangainfo.title = mangainfo.title:sub(1, -5)
       end
-      mangainfo.coverlink=x.xpathstring('//div[@class="summary_image"]/a/img/@data-src')
+      mangainfo.coverlink=x.xpathstring('//div[@class="summary_image"]//img/@data-src')
       if mangainfo.coverlink == '' then
-        mangainfo.coverlink=x.xpathstring('//div[@class="summary_image"]/a/img/@src')
+        mangainfo.coverlink=x.xpathstring('//div[@class="summary_image"]//img/@src')
       end
       mangainfo.authors=x.xpathstringall('//div[@class="author-content"]/a')
       mangainfo.artists=x.xpathstringall('//div[@class="artist-content"]/a')
@@ -52,6 +52,9 @@ function Modules.Madara()
         end
       else
         x.xpathstringall('//div[contains(@class, "page-break")]/img/@src', task.pagelinks)
+      end
+      if task.pagelinks.count == 0 then
+        x.xpathstringall('//div[@class="entry-content"]//picture/img/@src', task.pagelinks)
       end
 	
 	  if task.pagelinks.count == 0 or task.pagelinks.count == 1 then
@@ -155,7 +158,7 @@ function Init()
   AddWebsiteModule('ChibiManga','http://www.cmreader.info', cat)
   AddWebsiteModule('ZinManga','https://zinmanga.com', cat)
   AddWebsiteModule('SiXiangScans','http://www.sixiangscans.com', cat)
-  AddWebsiteModule('NinjaScans', 'https://ninjascans.com/', cat)
+  AddWebsiteModule('NinjaScans', 'https://ninjascans.com', cat)
   AddWebsiteModule('ReadManhua', 'https://readmanhua.net', cat)
   
   cat = 'Indonesian'
@@ -173,7 +176,7 @@ function Init()
   AddWebsiteModule('DarkskyProjects', 'https://darkskyprojects.org', cat) 
   AddWebsiteModule('LeviatanScans', 'https://leviatanscans.com', cat)
   AddWebsiteModule('PlotTwistNoFansub', 'https://www.plot-twistnf-scan.tk', cat)
-  AddWebsiteModule('KnightNoFansub', 'https://knightnofansub.com/', cat)
+  AddWebsiteModule('KnightNoFansub', 'https://knightnofansub.com', cat)
   AddWebsiteModule('HunterFansubScan', 'https://hunterfansubscan.com', cat)
   AddWebsiteModule('ZManga', 'https://zmanga.org', cat)	
 	
