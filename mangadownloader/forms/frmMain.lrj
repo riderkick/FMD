@@ -215,7 +215,7 @@
 {"hash":24397,"name":"tmainform.lboptionpdfqualityhint.caption","sourcebytes":[91,63,93],"value":"[?]"},
 {"hash":265971401,"name":"tmainform.seoptionpdfquality.hint","sourcebytes":[49,48,48,32,61,32,70,108,97,116,101,69,110,99,111,100,101,32,40,108,111,115,115,108,101,115,115,41,44,32,108,111,119,101,114,32,61,32,68,67,84,69,110,99,111,100,101,32,40,108,111,115,115,121,41],"value":"100 = FlateEncode (lossless), lower = DCTEncode (lossy)"},
 {"hash":265971401,"name":"tmainform.lboptionpdfquality.hint","sourcebytes":[49,48,48,32,61,32,70,108,97,116,101,69,110,99,111,100,101,32,40,108,111,115,115,108,101,115,115,41,44,32,108,111,119,101,114,32,61,32,68,67,84,69,110,99,111,100,101,32,40,108,111,115,115,121,41],"value":"100 = FlateEncode (lossless), lower = DCTEncode (lossy)"},
-{"hash":13786124,"name":"tmainform.lboptionpdfquality.caption","sourcebytes":[80,68,70,32,99,111,109,112,114,101,115,115,105,111,110,32,108,101,118,101,108],"value":"PDF compression level"},
+{"hash":13786124,"name":"tmainform.lboptionpdfquality.caption","sourcebytes":[80,68,70,32,99,111,109,112,114,101,115,115,105,111,110,32,108,101,118,101,108],"value":"PDF Quality Level"},
 {"hash":8726312,"name":"tmainform.edoptiondefaultpath.texthint","sourcebytes":[68,101,102,97,117,108,116,32,100,111,119,110,108,111,97,100,32,112,97,116,104],"value":"Default download path"},
 {"hash":28850558,"name":"tmainform.gbimageconversion.caption","sourcebytes":[73,109,97,103,101,32,67,111,110,118,101,114,115,105,111,110],"value":"Image Conversion"},
 {"hash":137355731,"name":"tmainform.lbwebpsaveas.caption","sourcebytes":[83,97,118,101,32,87,101,98,80,32,97,115],"value":"Save WebP as"},

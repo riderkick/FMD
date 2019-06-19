@@ -9,7 +9,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 2.0.6\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"Last-Translator: Mariolr\n"
+"Last-Translator: Mariolr & Lordzidiousback (AKA LZB)\n"
 "Language: es_419\n"
 
 #: dbupdater.rs_buttoncancel
@@ -169,27 +169,27 @@ msgstr "Descargando..."
 #: frmluamodulesupdater.rs_statusdelete
 msgctxt "frmluamodulesupdater.rs_statusdelete"
 msgid "%s DELETE*"
-msgstr ""
+msgstr "%s ELIMINAR"
 
 #: frmluamodulesupdater.rs_statusfailed
 msgctxt "frmluamodulesupdater.rs_statusfailed"
 msgid "%s FAILED*"
-msgstr ""
+msgstr "%s FALLO"
 
 #: frmluamodulesupdater.rs_statusnew
 msgctxt "frmluamodulesupdater.rs_statusnew"
 msgid "%s NEW*"
-msgstr ""
+msgstr "%s NUEVO"
 
 #: frmluamodulesupdater.rs_statusredownloaded
 msgctxt "frmluamodulesupdater.rs_statusredownloaded"
 msgid "%s REDOWNLOAD*"
-msgstr ""
+msgstr "%s VOLVER A DESCARGAR"
 
 #: frmluamodulesupdater.rs_statusupdate
 msgctxt "frmluamodulesupdater.rs_statusupdate"
 msgid "%s UPDATE*"
-msgstr ""
+msgstr "%s ACTUALIZAR*"
 
 #: frmmain.rs_alldownloads
 msgid "All downloads"
@@ -394,31 +394,31 @@ msgstr "Una Semana"
 
 #: frmmain.rs_sixmonths
 msgid "Six months"
-msgstr ""
+msgstr "6 meses"
 
 #: frmmain.rs_oneyear
 msgid "One year"
-msgstr ""
+msgstr "Un año"
 
 #: frmmain.rs_twoyears
 msgid "Two years"
-msgstr ""
+msgstr "Dos años"
 
 #: frmmain.rs_threeyears
 msgid "Three years"
-msgstr ""
+msgstr "Tres años"
 
 #: frmmain.rs_fouryears
 msgid "Four years"
-msgstr ""
+msgstr "Cuatro años"
 
 #: frmmain.rs_fiveyears
 msgid "Five years"
-msgstr ""
+msgstr "5 años"
 
 #: frmmain.rs_tenyears
 msgid "Ten years"
-msgstr ""
+msgstr "Dies años"
 
 #: frmmain.rs_optioncompress
 #, fuzzy
@@ -438,6 +438,7 @@ msgstr ""
 "ZIP\n"
 "CBZ\n"
 "PDF\n"
+"EPUB\n"
 
 #: frmmain.rs_optionfmddoitems
 msgid ""
@@ -537,6 +538,10 @@ msgstr "Llave:"
 msgid "Use Google DCP"
 msgstr "Usar Google DCP"
 
+#: mangarock.rs_mangarock_country
+msgid "Country (change this if some manga or chapters are missing):"
+msgstr "Región (Cambie esto si algun manga o capitulo no aparece)"
+
 #: mangadex.rs_showalllang
 msgctxt "mangadex.rs_showalllang"
 msgid "Show all language"
@@ -611,7 +616,7 @@ msgstr "Actualizar"
 
 #: taccountmanagerform.caption
 msgid "AccountManagerForm"
-msgstr ""
+msgstr "formulariodeAdministradordeCuentas"
 
 #: taccountmanagerform.vtaccountlist.header.columns[1].text
 msgctxt "taccountmanagerform.vtaccountlist.header.columns[1].text"
@@ -639,7 +644,7 @@ msgstr "Ok"
 
 #: taccountsetform.caption
 msgid "Account"
-msgstr ""
+msgstr "Cuenta"
 
 #: taccountsetform.ckshowpassword.caption
 msgid "Show password"
@@ -667,7 +672,7 @@ msgstr "Contraseña"
 
 #: tcustomcolorform.caption
 msgid "CustomColorForm"
-msgstr "FormadeColorPersonalizada"
+msgstr "FormulariodeColorPersonalizado"
 
 #: tcustomcolorform.tsbasiclist.caption
 msgid "Basic list"
@@ -824,7 +829,7 @@ msgstr "Aplicar"
 
 #: tmainform.btreadonline.caption
 msgid "Read online"
-msgstr "Leer Online"
+msgstr "Leer en Linea"
 
 #: tmainform.btremovefilterlarge.caption
 msgctxt "TMAINFORM.BTREMOVEFILTERLARGE.CAPTION"
@@ -915,12 +920,12 @@ msgstr "Habilitar Carga de Cover (Portada)"
 
 #: tmainform.cboptiongeneratechapterfolder.caption
 msgid "Auto generate chapter folder"
-msgstr "Generar Automáticamente Folder de Capítulo"
+msgstr "Generar Automáticamente Carpeta de Capítulo"
 
 #: tmainform.cboptiongeneratemangafolder.caption
 msgctxt "tmainform.cboptiongeneratemangafolder.caption"
 msgid "Auto generate folder based on manga's name"
-msgstr "Auto Generar Folder Basado en Nombre del Manga"
+msgstr "Auto Generar Carpeta Basado en Nombre del Manga"
 
 #: tmainform.cboptionlivesearch.caption
 msgid "Enable live search (slow on long list)"
@@ -960,12 +965,12 @@ msgstr "Descargar Lista de Manga si está Vacía"
 
 #: tmainform.cboptionshowdownloadstabonnewtasks.caption
 msgid "Show Downloads tab when adding new tasks"
-msgstr ""
+msgstr "Enseñar pestaña de Descarga cuando agrege una nueva tarea"
 
 #: tmainform.cboptionshowfavoritestabonnewmanga.caption
 msgctxt "tmainform.cboptionshowfavoritestabonnewmanga.caption"
 msgid "Show Favorites tab when adding new manga"
-msgstr ""
+msgstr "Enseñar pestaña de Favoritos cuando agrege un nuevo manga"
 
 #: tmainform.cboptionshowdownloadtoolbar.caption
 msgid "Show downloads toolbar"
@@ -985,7 +990,7 @@ msgstr "Salir de FMD"
 
 #: tmainform.cboptionsortdownloadswhenaddingnewdownloadtasks.caption
 msgid "Sort Downloads when adding new download tasks"
-msgstr ""
+msgstr "Ordenar descargas al agregar nuevas tareas de descarga"
 
 #: tmainform.cboptionupdatelistnomangainfo.caption
 msgid "Don't load manga information when updating list (filter will be not work!)"
@@ -1701,8 +1706,8 @@ msgid "Password"
 msgstr "Contraseña"
 
 #: tmainform.lboptionpdfquality.caption
-msgid "PDF compression level"
-msgstr "Nivel de Compresión PDF"
+msgid "PDF Quality Level"
+msgstr "Nivel de Calidad PDF"
 
 #: tmainform.lboptionpdfquality.hint
 msgctxt "TMAINFORM.LBOPTIONPDFQUALITY.HINT"
@@ -1760,7 +1765,7 @@ msgstr "Copiar"
 
 #: tmainform.medurlcut.caption
 msgid "Cut"
-msgstr "Cotar"
+msgstr "Cortar"
 
 #: tmainform.medurlpaste.caption
 msgid "Paste"
@@ -2098,11 +2103,11 @@ msgstr "Expandir Todo"
 
 #: tmainform.tbwebsitesselectall.caption
 msgid "Select All"
-msgstr ""
+msgstr "Seleccionar Todo"
 
 #: tmainform.tbwebsitesunselectall.caption
 msgid "Unselect All"
-msgstr ""
+msgstr "Deseleccionar Todo"
 
 #: tmainform.tsabout.caption
 msgid "About"
@@ -2281,7 +2286,7 @@ msgstr "&Agregar a Cola"
 
 #: tnewchapter.caption
 msgid "New Chapter Notification"
-msgstr ""
+msgstr "Notificacion de Nuevo Capitulo"
 
 #: tselectdirectoryform.btok.caption
 msgctxt "tselectdirectoryform.btok.caption"
@@ -2466,15 +2471,15 @@ msgstr "Seleccionar un Sitio Web"
 
 #: twebsitesettingsform.caption
 msgid "WebsiteSettingsForm"
-msgstr ""
+msgstr "FormulariodeOpcionesdeSitioWEb"
 
 #: twebsitesettingsform.edsearch.texthint
 msgid "Website name"
-msgstr ""
+msgstr "Nombre del Sitio Web"
 
 #: twebsitesettingsform.edsearchproperty.texthint
 msgid "Setting name"
-msgstr ""
+msgstr "Nombre de Opciones"
 
 #: udownloadsmanager.rs_compressing
 msgid "Compressing..."
@@ -2552,7 +2557,7 @@ msgstr "Revisar Favoritos está Ejecutándose!"
 
 #: ufavoritesmanager.rs_dlgnewchaptercaption
 msgid "Found %d new chapter(s)"
-msgstr ""
+msgstr "Encontrado %d Nuevo(s) Capitulo(s)"
 
 #: ufavoritesmanager.rs_favoritehasnewchapter
 msgid "%s <%s> has %d new chapter(s)."
@@ -2564,7 +2569,7 @@ msgstr "Manga Completado será Removido:"
 
 #: ufavoritesmanager.rs_lblnewchapterfound
 msgid "%d new chapter(s) from %d manga(s):"
-msgstr ""
+msgstr "%d nuevo(s) capitulo(s) de %d manga(s)"
 
 #: usilentthread.rs_silentthreadloadstatus
 msgid "Loading: %d/%d"

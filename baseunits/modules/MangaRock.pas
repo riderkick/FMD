@@ -11,12 +11,16 @@ uses
 implementation
 
 var
+  mangarockcountry: String ='China';
   mangaList: TStringList = nil;
 
 const
   ModuleApiUrl: String = 'https://api.mangarockhd.com';
   DirRequest: String = '{"status":"all","genres":{},"rank":"all","order":"name"}';
   PerPage = 500;
+
+resourcestring
+  RS_MangaRock_Country = 'Country (change this if some manga or chapters are missing):';
 
 function DecryptImage(const imageData: TStream): TMemoryStream;
 var
@@ -64,7 +68,7 @@ begin
   Result := NET_PROBLEM;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
   mangaId := TrimRightChar(SeparateRight(AURL, 'manga/'), ['/']);
-  if MangaInfo.FHTTP.GET(ModuleApiUrl + '/query/web401/info?oid=' + mangaId) then
+  if MangaInfo.FHTTP.GET(ModuleApiUrl + '/query/web401/info?country=' + mangarockcountry + '&oid=' + mangaId) then
   begin
     Result := NO_ERROR;
     query := TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document);
@@ -111,7 +115,7 @@ begin
   DownloadThread.Task.Container.PageLinks.Clear;
   DownloadThread.Task.Container.PageNumber := 0;
   chapterId := TrimLeftChar(AURL, ['/']);
-  if DownloadThread.FHTTP.GET(ModuleApiUrl + '/query/web401/pages?oid=' + chapterId) then
+  if DownloadThread.FHTTP.GET(ModuleApiUrl + '/query/web401/pages?country=' + mangarockcountry + '&oid=' + chapterId) then
   begin
     Result := True;
     XPathStringAll('json(*).data()',
@@ -189,7 +193,7 @@ begin
   Result := NET_PROBLEM;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
   MangaInfo.FHTTP.MimeType := 'application/json';
-  if MangaInfo.FHTTP.POST(ModuleApiUrl + '/query/web401/mrs_filter', DirRequest) then
+  if MangaInfo.FHTTP.POST(ModuleApiUrl + '/query/web401/mrs_filter?country=' + mangarockcountry, DirRequest) then
   begin
     Result := NO_ERROR;
     mangaList.Clear;
@@ -215,6 +219,7 @@ begin
     OnDownloadImage := @DownloadImage;
     OnGetNameAndLink := @GetNameAndLink;
     OnGetDirectoryPageNumber := @GetDirectoryPageNumber;
+    AddOptionEdit(@mangarockcountry, 'Country', @RS_MangaRock_Country);
   end;
 end;
 

@@ -4,10 +4,55 @@ https://github.com/fmd-project-team/FMD
 Changelog:
 ([!] Important, [+] Addition, [-] Removal, [*] Fix/Change, [?] Feedback needed)
 
-0.9.164.0 (18.05.2019)
+0.9.165.0 (10.06.2019)
 [!] Report issues here: https://github.com/fmd-project-team/FMD/issues
 [!] Check website status here: https://github.com/fmd-project-team/FMD/wiki/Supported-Websites-(WIP)
 [!] Join us on Discord: https://discord.gg/cXKKgw3
+[!] We changed the website database server to a new github repository. We're still uploading more database files so some might be missing at first.
+[+] Added Localization: French -> Thank you jsoudeer
+[+] Added DoujinYosh [H-Sites] (Issue #230)
+[+] Added KlikManga [ID] (Issue #113)
+[+] Added KnightNoFansub [ES-SC]
+[+] Added KomikMama [ID] (Issue #174) -> Thank you AbidZakaria
+[+] Added MangaArab [AR-SC]
+[+] Added MangaCeng [ID] (Issue #230) -> Thank you AbidZakaria
+[+] Added MangaFull [EN] (Issue #160) -> Thank you AbidZakaria
+[+] Added MangaLike [EN] (Issue #175)
+[+] Added MangaZukiOnline [EN] (Issue #222)
+[+] Added ManhwaHand [H-Sites]
+[+] Added PocketAngelScan [Webtoon] (Issue #165)
+[+] Added ReadComicsOnlineRU [EN] (Issue @226) -> Thank you AbidZakaria
+[+] Added SiXiangScans [EN-SC]
+[+] Added TMOHentai [H-Sites] (Issue #83) -> Thank you AbidZakaria
+[+] Added Toonily [Webtoon] (Issue #142)
+[+] Added ZinManga [EN-SC]
+[+] Added ZManga [ES] (Issue #171)
+[*] HentaiChanRU: Fixed url (Issue #228)
+[*] HentaiNexus: Fixed getting download links
+[*] MangaChanRU: Fixed url (Issue #228)
+[*] MangaKakalot: Fixed getting manga list (Issue #235)
+[*] MangaNelo: Fixed getting manga list (Issue #235)
+[*] MangaRock: Fixed not getting latest chapter sometimes (Issue #211)
+[*] MangaRock: You can now set a different country in the options if some titles or chapters are missing because of region locks (Issue #212)
+[*] MangaSail: Fixed url
+[*] PecintaKomik: Fixed all (Issue #181) -> Thank you AbidZakaria
+[*] TonariNoYoungJump: Fixed getting latest chapters (Issue #221)
+[*] Tumangaonline: Fixed chapter download (Issue #227)
+[*] YaoiChanRU: Fixed url (Issue #228)
+[*] cf_bypass: If a cf_bypass for a website is already running, the other tasks for the same website wait 6 seconds before continuing.
+[*] cf_bypass: Renamed the advanced settings section from DynHTTP to CloudflareBypass.
+[*] cf_bypass: Added an option in the advanced settings to disable cf_bypass per website.
+[*] cf_bypass: For each website a separate cf_bypass.txt will be generated.
+[*] cf_bypass: The cf_bypass.exe shouldn't be a hanging process anymore if an error occurs. A simple error line will be written into a separate logfile.
+[*] cf_bypass: When cf_bypass is being executed, a log entry will be made.
+[*] cf_bypass: If a website causes cf_bypass to be called but fails, it will be disabled in the advanced settings for that website.
+[*] cf_bypass: You can set a custom url for the cf_bypass in the advanced settings. When cf_bypass is called it will check the set url instead of the base url of the website. This is a workaround for websites that use Cloudflare for their imageservers.
+[*] Localization Update: German
+[*] Localization Update: Indonesian
+[*] Localization Update: Turkish
+Full changes: https://github.com/fmd-project-team/FMD/compare/0.9.164.0...0.9.165.0
+
+0.9.164.0 (18.05.2019)
 [+] Added a bypass machanism for Cloudflare. The manual workaround is still possible, but not needed as much as before.
 [+] Added 3asqOrg [AR-SC] -> Thank you AbidZakaria
 [+] Added DarkskyProjects [ES-SC]
@@ -18,7 +63,7 @@ Changelog:
 [+] Added ManyToon [Webtoon] (Issue #125) -> Thank you AbidZakaria
 [+] Added PlotTwistNoFansub [ES-SC] -> Thank you rs3mk
 [-] Removed RawNeko [RAW] (Issue #135) -> You can transfer your favorites to IsekaiRaw when you updated the manga list
-[*] ComicExtra: Fixed getting chapter list (Isue #151) -> Thank you AbidZakaria
+[*] ComicExtra: Fixed getting chapter list (Issue #151) -> Thank you AbidZakaria
 [*] HentaiChanRu: Ported to Lua script; Fixed all
 [*] KomikCast: Fixed all (Issue #122) -> Thank you AbidZakaria
 [*] LeoManga: Ported to Lua script; Changed to new website -> Thank you AbidZakaria
@@ -47,8 +92,6 @@ Changelog:
 Full changes: https://github.com/fmd-project-team/FMD/compare/0.9.163.0...0.9.164.0
 
 0.9.163.0 (14.04.2019)
-[!] Report issues here: https://github.com/fmd-project-team/FMD/issues
-[!] Join us on Discord: https://discord.gg/cXKKgw3
 [+] Added MangaToon [Multilanguage] -> Thank you AbidZakaria
 [+] Added more date filters (6 months, 1-5 years, 10 years) (Partially implementation of Issue #78)
 [+] Added options to toggle the jump behavior for "Downloads" and "Favorites" tab (Issue #27, #95)
@@ -79,7 +122,6 @@ Full changes: https://github.com/fmd-project-team/FMD/compare/0.9.163.0...0.9.16
 Full changes: https://github.com/fmd-project-team/FMD/compare/0.9.162.0...0.9.163.0
 
 0.9.162.0 (07.04.2019)
-[!] Report issues here: https://github.com/fmd-project-team/FMD/issues
 [!] Join us on Discord: https://discord.gg/cXKKgw3
 [+] Added BacaManga [IN] -> Thank you AbidZakaria
 [+] Added KomikIndoWebId [IN]
@@ -109,7 +151,6 @@ Full changes: https://github.com/fmd-project-team/FMD/compare/0.9.161.0...0.9.16
 
 0.9.161.0 (02.04.2019)
 [!] Updater won't work because of some mistakes on my side. Please update manually. After that it should be working for further releases. Sorry.
-[!] Report issues here: https://github.com/fmd-project-team/FMD/issues
 [*] MangaPark: Fixed chapter download (Issue #9)
 [*] MangaParkOrg: Fixed chapter download (Issue #9)
 [*] ZeroScans: Fixed manga info (Issue #7)
@@ -122,7 +163,6 @@ Full changes: https://github.com/fmd-project-team/FMD/compare/0.9.160.0...0.9.16
 
 0.9.160.0 (31.03.2019)
 [!] This release is a fork of https://github.com/riderkick/FMD, which will be maintained by SDXC. More information: https://github.com/fmd-project-team/FMD/blob/master/README.md
-[!] Report issues here: https://github.com/fmd-project-team/FMD/issues
 [!] Troubleshooting, Cloudflare workarounds and developer infos can be found here: https://github.com/fmd-project-team/FMD/wiki
 [+] Added ScanOP [FR]
 [-] Removed DejameProbar [ES]

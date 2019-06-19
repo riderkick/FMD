@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"Last-Translator: Lucas Martin <codedeep@hotmail.com>\n"
-"PO-Revision-Date: 2012-10-02 20:21+0100\n"
+"Last-Translator: Lucas Martin <codedeep@hotmail.com> & lordzidiousback (AKA LZB) <lordzidiousback@gmail.com>\n"
+"PO-Revision-Date: 2019-06-10 20:21+0100\n"
 "Language-Team: \n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -184,7 +184,7 @@ msgstr "Tecla numérica %d"
 
 #: lclstrconsts.ifsvk_pause
 msgid "Pause key"
-msgstr "Tecla Pause"
+msgstr "Tecla Pausa"
 
 #: lclstrconsts.ifsvk_print
 msgid "Print"
@@ -289,7 +289,7 @@ msgstr "Agua"
 
 #: lclstrconsts.rsascannothaveasparent
 msgid "Class %s cannot have %s as parent."
-msgstr ""
+msgstr "Una Clase %s no puede tenerse a si mismo %s como padre."
 
 #: lclstrconsts.rsbackgroundcolorcaption
 msgid "Desktop"
@@ -362,7 +362,7 @@ msgstr "El control de clase '%s' no puede tener al control de clase '%s' como hi
 
 #: lclstrconsts.rscontrolhasnoparentformorframe
 msgid "Control '%s' has no parent form or frame"
-msgstr ""
+msgstr "Control %s no tiene un formulario padre o marco "
 
 #: lclstrconsts.rscontrolhasnoparentwindow
 msgid "Control '%s' has no parent window"
@@ -419,11 +419,11 @@ msgstr "Anclado"
 
 #: lclstrconsts.rsdocopy
 msgid "Copy"
-msgstr ""
+msgstr "Copiar"
 
 #: lclstrconsts.rsdopaste
 msgid "Paste"
-msgstr ""
+msgstr "Pegar"
 
 #: lclstrconsts.rsduplicateiconformat
 msgid "Duplicate icon format."
@@ -1049,7 +1049,7 @@ msgstr "Enviar"
 
 #: lclstrconsts.rspressoktoignoreandriskdatacorruptionpressaborttok
 msgid "%s%sPress OK to ignore and risk data corruption.%sPress Abort to kill the program."
-msgstr ""
+msgstr "%s%sPresionar OK para ignorar y ahi riesgo de perdida de datos.%sPresionar Abortar para cerrar el programa."
 
 #: lclstrconsts.rspriorrecordhint
 msgctxt "lclstrconsts.rspriorrecordhint"
@@ -1330,7 +1330,7 @@ msgstr "No se puede establecer el foco en una ventana desactivada o invisible"
 
 #: lclstrconsts.scannotsetdesigntimeppi
 msgid "Cannot set design time PPI."
-msgstr ""
+msgstr "No se puede esignar el tiempo de PPI."
 
 #: lclstrconsts.sduplicatemenus
 msgid "Duplicate menus"

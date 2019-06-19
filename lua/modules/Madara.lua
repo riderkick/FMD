@@ -50,11 +50,17 @@ function Modules.Madara()
           src = src:gsub('https://cdn.shortpixel.ai/client/q_glossy,ret_img/', '')
           task.pagelinks.add(src)
         end
-      elseif module.website == 'IsekaiRaw' or module.website == 'ManyToon' or module.website == 'PocketAngelScan' or module.website == 'Toonily' then
-        x.xpathstringall('//div[contains(@class, "page-break")]/img/@data-src', task.pagelinks)
       else
         x.xpathstringall('//div[contains(@class, "page-break")]/img/@src', task.pagelinks)
       end
+	
+	  if task.pagelinks.count == 0 or task.pagelinks.count == 1 then
+		x.xpathstringall('//div[contains(@class, "page-break")]/img/@data-src', task.pagelinks)
+		if task.pagelinks.count == 0 or task.pagelinks.count == 1 then
+			x.xpathstringall('//*[@class="wp-manga-chapter-img webpexpress-processed"]/@src', task.pagelinks)
+		end
+	  end
+	  
       return true
     end
     return false
@@ -140,25 +146,37 @@ function Init()
   
   cat = 'English'
   AddWebsiteModule('IsekaiScan', 'http://isekaiscan.com', cat)
-  
+  AddWebsiteModule('MangaLike', 'https://mangalike.net', cat)
+  AddWebsiteModule('MangaZukiOnline', 'https://www.mangazuki.online', cat)
+	
   cat = 'English-Scanlation'
   AddWebsiteModule('TrashScanlations', 'https://trashscanlations.com', cat)
   AddWebsiteModule('ZeroScans', 'https://zeroscans.com', cat)
   AddWebsiteModule('ChibiManga','http://www.cmreader.info', cat)
+  AddWebsiteModule('ZinManga','https://zinmanga.com', cat)
+  AddWebsiteModule('SiXiangScans','http://www.sixiangscans.com', cat)
+  AddWebsiteModule('NinjaScans', 'https://ninjascans.com/', cat)
+  AddWebsiteModule('ReadManhua', 'https://readmanhua.net', cat)
   
   cat = 'Indonesian'
   AddWebsiteModule('MangaYosh', 'https://mangayosh.com', cat)
   AddWebsiteModule('KomikGo', 'https://komikgo.com', cat)
+  AddWebsiteModule('KlikManga', 'https://klikmanga.com', cat)
   
   cat = 'H-Sites'
   AddWebsiteModule('ManhwaHentai', 'https://manhwahentai.com', cat)
-  
+  AddWebsiteModule('ManhwaHand', 'https://manhwahand.com', cat)
+  AddWebsiteModule('DoujinYosh', 'https://doujinyosh.com', cat)
+
   cat = 'Spanish-Scanlation'
   AddWebsiteModule('GodsRealmScan', 'https://godsrealmscan.com', cat)
   AddWebsiteModule('DarkskyProjects', 'https://darkskyprojects.org', cat) 
   AddWebsiteModule('LeviatanScans', 'https://leviatanscans.com', cat)
   AddWebsiteModule('PlotTwistNoFansub', 'https://www.plot-twistnf-scan.tk', cat)
-  
+  AddWebsiteModule('KnightNoFansub', 'https://knightnofansub.com/', cat)
+  AddWebsiteModule('HunterFansubScan', 'https://hunterfansubscan.com', cat)
+  AddWebsiteModule('ZManga', 'https://zmanga.org', cat)	
+	
   cat = 'Webcomics'
   AddWebsiteModule('ManyToon', 'https://manytoon.com', cat)
   AddWebsiteModule('PocketAngelScan', 'https://pocketangelscans.com', cat)
@@ -166,5 +184,6 @@ function Init()
   
   cat = 'Arabic-Scanlation'
   AddWebsiteModule('3asqOrg', 'https://3asq.org', cat)
+  AddWebsiteModule('MangaArab', 'https://mangaarab.com', cat)
   
 end

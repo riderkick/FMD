@@ -1395,7 +1395,7 @@ begin
   Logger.Send(Self.ClassName+'.CloseNow, backup favorites');
   FavoriteManager.Backup;
   Logger.Send(Self.ClassName+'.CloseNow, cleaning up dynamic HTTP settings');
-  Modules.ClearDynamicHTTPSettings;
+  Modules.ClearCloudflareBypassSettings;
   Logger.Send(Self.ClassName+'.CloseNow, backup all data to file');
   SaveOptions;
   SaveFormInformation;

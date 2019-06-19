@@ -527,6 +527,10 @@ msgstr "Key:"
 msgid "Use Google DCP"
 msgstr "Use Google DCP"
 
+#: mangarock.rs_mangarock_country
+msgid "Country (change this if some manga or chapters are missing):"
+msgstr "Country (change this if some manga or chapters are missing):"
+
 #: mangadex.rs_showalllang
 msgctxt "mangadex.rs_showalllang"
 msgid "Show all language"
@@ -1691,8 +1695,8 @@ msgid "Password"
 msgstr "Password"
 
 #: tmainform.lboptionpdfquality.caption
-msgid "PDF compression level"
-msgstr "PDF compression level"
+msgid "PDF Quality Level"
+msgstr "PDF Quality Level"
 
 #: tmainform.lboptionpdfquality.hint
 msgctxt "TMAINFORM.LBOPTIONPDFQUALITY.HINT"

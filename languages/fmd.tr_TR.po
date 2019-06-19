@@ -535,6 +535,10 @@ msgstr "Anahtar:"
 msgid "Use Google DCP"
 msgstr "Google DCP kullan"
 
+#: mangarock.rs_mangarock_country
+msgid "Country (change this if some manga or chapters are missing):"
+msgstr "Ülke (eğer bazı mangalar ya da bölümler eksikse bunu değiştirin)"
+
 #: mangadex.rs_showalllang
 msgctxt "mangadex.rs_showalllang"
 msgid "Show all language"
@@ -1713,8 +1717,8 @@ msgid "Password"
 msgstr "Şifre"
 
 #: tmainform.lboptionpdfquality.caption
-msgid "PDF compression level"
-msgstr "PDF sıkıştırma seviyesi"
+msgid "PDF Quality Level"
+msgstr "PDF Kalite Seviyesi"
 
 #: tmainform.lboptionpdfquality.hint
 msgctxt "TMAINFORM.LBOPTIONPDFQUALITY.HINT"
