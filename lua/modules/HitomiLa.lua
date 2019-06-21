@@ -28,43 +28,50 @@ function getinfo()
 end
 
 function getpagenumber()
-  task.pagelinks.clear()
+  local subdomain, galleryid, prefix, s, x, v = nil
+  local isfixed, iswebp = false
+  
   if http.get(MaybeFillHost(module.rooturl, url)) then
-	local subdomain = nil
-	local isfixed = 0
-    local galleryid = tonumber(ReplaceRegExpr('(?i)^.*reader/(\\d+).*$', url, '$1'))
-	local prefix = string.char(97 + (galleryid % 2)) .. 'a.'
-    if galleryid ~= nil then
-      subdomain = prefix ..domain
-    end
-    local x=TXQuery.Create(http.Document)
-    local v=x.xpath('//div[@class="img-url"]')
-    for i=1,v.count do
-      local s=v.get(i).toString
-      if subdomain ~= nil then
-        s=s:gsub('//[^/]+/', '//'..subdomain..'/')
-      end
+	  galleryid = tonumber(ReplaceRegExpr('(?i)^.*reader/(\\d+).*$', url, '$1'))
+	  prefix = string.char(97 + (galleryid % 2)) .. 'a.'
+    if galleryid ~= nil then subdomain = prefix .. domain end
+    x = TXQuery.Create(http.Document)
+    v = x.xpath('//div[@class="img-url"]')
+    for i = 1, v.count do
+      s = v.get(i).tostring
+      if subdomain ~= nil then s = s:gsub('//[^/]+/', '//' .. subdomain .. '/') end
       s = set_https(s)
-	  
-	  if isfixed == 0 then
-	    if http.get(s) then
-	      err=TXQuery.Create(http.Document)
-		  e = err.xpathstring('//center/h1')
-		  if e == '403 Forbidden' then
-		    prefix = string.char(97 + (galleryid % 2) - 1) .. 'a.'
-		    subdomain = prefix ..domain
-		    s=v.get(i).toString
-		    s=s:gsub('//[^/]+/', '//'..subdomain..'/')
-		    s = set_https(s)
-		  end
-		  isfixed = 1
-		end
-	  end
+      
+	    if isfixed == false then
+        http.reset()
+        http.headers.values['Pragma'] = 'no-cache'
+        http.headers.values['Cache-Control'] = 'no-cache'
+        http.headers.values['Referer'] = MaybeFillHost(module.rooturl, url)
+	      if http.get(s) then
+	        err = TXQuery.Create(http.Document)
+	    	  e = err.xpathstring('//center/h1')
+	  	    if e == '403 Forbidden' then
+	  	      prefix = string.char(97 + (galleryid % 2) + 1) .. 'a.'
+	  	      subdomain = prefix .. domain
+	  	      s = v.get(i).tostring
+	  	      s = s:gsub('//[^/]+/', '//' .. subdomain .. '/')
+	  	      s = set_https(s)
+	  	    end
+	  	    isfixed = true
+	  	  end
+	    end
       task.pagelinks.add(s)
     end
   else
     return false
   end
+  return true
+end
+
+function BeforeDownloadImage()
+  http.headers.values['Pragma'] = 'no-cache'
+  http.headers.values['Cache-Control'] = 'no-cache'
+  http.headers.values['Referer'] = MaybeFillHost(module.rooturl, url)
   return true
 end
 
@@ -90,9 +97,9 @@ function Init()
   m.website = 'HitomiLa'
   m.rooturl = 'https://'..domain
   m.category = 'H-Sites'
-  m.lastupdated = 'March 29, 2019'
   m.sortedlist=true
   m.ongetinfo='getinfo'
   m.ongetpagenumber='getpagenumber'
   m.ongetnameandlink='getnameandlink'
+  m.OnBeforeDownloadImage = 'BeforeDownloadImage'
 end
