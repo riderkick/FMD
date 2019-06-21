@@ -34,7 +34,6 @@ uses
   SundayWebEvery,
   TonariNoYoungJump,
   YoungAceUp,
-  NewType,
   Comico,
   Shogakukan,
   // Adult
