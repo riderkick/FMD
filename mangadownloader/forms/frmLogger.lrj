@@ -1,0 +1,6 @@
+{"version":1,"strings":[
+{"hash":119198672,"name":"tformlogger.ckstayontop.caption","sourcebytes":[83,116,97,121,32,111,110,32,116,111,112],"value":"Stay on top"},
+{"hash":158511444,"name":"tformlogger.lbloglimit.caption","sourcebytes":[76,111,103,32,108,105,109,105,116],"value":"Log limit"},
+{"hash":4860802,"name":"tformlogger.btnclearlog.caption","sourcebytes":[67,108,101,97,114],"value":"Clear"},
+{"hash":304761,"name":"tformlogger.micopy.caption","sourcebytes":[67,111,112,121],"value":"Copy"}
+]}

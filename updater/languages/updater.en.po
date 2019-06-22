@@ -9,11 +9,11 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: en\n"
-"X-Generator: Poedit 1.7.6\n"
+"X-Generator: Poedit 1.8.8\n"
 
 #: tfrmmain.caption
 msgid "Free Manga Downloader - Updater"
-msgstr "Free Manga Downloader - Updater"
+msgstr ""
 
 #: tfrmmain.lbfilesize.caption
 msgid "File size"
@@ -26,6 +26,10 @@ msgstr "Waiting..."
 #: tfrmmain.lbtransferrate.caption
 msgid "Transfer rate"
 msgstr "Transfer rate"
+
+#: tfrmmessage.caption
+msgid "Help"
+msgstr "Help"
 
 #: umain.rs_7znotfound
 msgid "Can't extract file because 7za.exe not found!"
@@ -54,32 +58,6 @@ msgstr "Failed loading page!"
 #: umain.rs_filenotfound
 msgid "File not found!"
 msgstr "File not found!"
-
-#: umain.rs_filenotfound_mfdatalink
-#| msgid ""
-#| "File not found!\n"
-#| "This site probably have been added to unofficial build.\n"
-#| "\n"
-#| "Remedy:\n"
-#| "Build you manga list from scratch or download manually from this link:\n"
-#| "%s\n"
-#| "Link copied to clipboard!\n"
-msgid ""
-"File not found!\n"
-"This site probably have been added to unofficial build.\n"
-"\n"
-"Remedy:\n"
-"Build you manga list from scratch or download manually from this link:\n"
-"%s\n"
-"Link copied to clipboard!\n"
-msgstr ""
-"File not found!\n"
-"This site probably have been added to unofficial build.\n"
-"\n"
-"Remedy:\n"
-"Build you manga list from scratch or download manually from this link:\n"
-"%s\n"
-"Link copied to clipboard!\n"
 
 #: umain.rs_finished
 msgid "Finished."

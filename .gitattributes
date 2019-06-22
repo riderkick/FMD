@@ -1,5 +1,10 @@
-*.txt	eol=crlf
-*.pas	eol=lf
-*.lpr	eol=lf
-*.lpi	eol=lf
-*.po	eol=lf
+# Autodetect text files
+* text=auto
+
+# Text files
+*.txt	text
+*.pas	text
+*.lfm	text
+*.lpr	text
+*.lpi	text
+*.po	text

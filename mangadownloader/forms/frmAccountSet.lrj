@@ -1,0 +1,10 @@
+{"version":1,"strings":[
+{"hash":127560724,"name":"taccountsetform.caption","sourcebytes":[65,99,99,111,117,110,116],"value":"Account"},
+{"hash":164185077,"name":"taccountsetform.label2.caption","sourcebytes":[85,115,101,114,110,97,109,101],"value":"Username"},
+{"hash":145417188,"name":"taccountsetform.label3.caption","sourcebytes":[80,97,115,115,119,111,114,100],"value":"Password"},
+{"hash":164185077,"name":"taccountsetform.edusername.texthint","sourcebytes":[85,115,101,114,110,97,109,101],"value":"Username"},
+{"hash":145417188,"name":"taccountsetform.edpassword.texthint","sourcebytes":[80,97,115,115,119,111,114,100],"value":"Password"},
+{"hash":22827444,"name":"taccountsetform.ckshowpassword.caption","sourcebytes":[83,104,111,119,32,112,97,115,115,119,111,114,100],"value":"Show password"},
+{"hash":1371,"name":"taccountsetform.btok.caption","sourcebytes":[79,107],"value":"Ok"},
+{"hash":77089212,"name":"taccountsetform.btcancel.caption","sourcebytes":[67,97,110,99,101,108],"value":"Cancel"}
+]}

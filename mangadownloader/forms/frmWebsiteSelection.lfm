@@ -1,0 +1,48 @@
+object WebsiteSelectionForm: TWebsiteSelectionForm
+  Left = 202
+  Height = 75
+  Top = 182
+  Width = 310
+  BorderStyle = bsDialog
+  Caption = 'Select a website'
+  ChildSizing.LeftRightSpacing = 10
+  ChildSizing.TopBottomSpacing = 10
+  ChildSizing.HorizontalSpacing = 6
+  ChildSizing.VerticalSpacing = 6
+  ClientHeight = 75
+  ClientWidth = 310
+  Position = poMainFormCenter
+  LCLVersion = '1.7'
+  Visible = False
+  object cbWebsites: TComboBox
+    Left = 10
+    Height = 23
+    Top = 10
+    Width = 290
+    Align = alTop
+    AutoComplete = True
+    AutoCompleteText = [cbactEnabled, cbactEndOfLineComplete, cbactSearchAscending]
+    ItemHeight = 15
+    TabOrder = 0
+  end
+  object btOk: TBitBtn
+    AnchorSideLeft.Control = cbWebsites
+    AnchorSideLeft.Side = asrCenter
+    AnchorSideTop.Control = cbWebsites
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = cbWebsites
+    AnchorSideRight.Side = asrCenter
+    AnchorSideBottom.Side = asrBottom
+    Left = 124
+    Height = 26
+    Top = 41
+    Width = 62
+    Anchors = [akLeft, akBottom]
+    AutoSize = True
+    Default = True
+    DefaultCaption = True
+    Kind = bkOK
+    ModalResult = 1
+    TabOrder = 1
+  end
+end

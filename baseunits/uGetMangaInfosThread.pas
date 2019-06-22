@@ -16,103 +16,116 @@ unit uGetMangaInfosThread;
 interface
 
 uses
-  SysUtils, Graphics, Dialogs, uBaseUnit, uData, uFMDThread;
+  SysUtils, Graphics, Dialogs, uBaseUnit, uData, FMDOptions, BaseThread,
+  VirtualTrees;
 
 type
 
   { TGetMangaInfosThread }
 
-  TGetMangaInfosThread = class(TFMDThread)
+  TGetMangaInfosThread = class(TBaseThread)
   protected
-    FMangaListPos: Integer;
+    FMangaListNode: PVirtualNode;
     FCover: TPicture;
     FTitle, FWebsite, FLink: String;
     FInfo: TMangaInformation;
     FNumChapter: Cardinal;
     // Return TRUE if we can load manga cover.
-    FIsHasMangaCover,
+    FIsHasMangaCover: Boolean;
     // Flush this thread, means that the result will not be shown.
-    FIsFlushed: Boolean;
-
     procedure Execute; override;
-    procedure DoGetInfos;
-
+    procedure MainThreadSyncInfos;
     procedure MainThreadShowInfos;
     procedure MainThreadShowCover;
     procedure MainThreadShowCannotGetInfo;
   public
     constructor Create;
     destructor Destroy; override;
-
     property Title: String read FTitle write FTitle;
     property Website: String read FWebsite write FWebsite;
     property Link: String read FLink write FLink;
-    property IsFlushed: Boolean read FIsFlushed write FIsFlushed;
-    property MangaListPos: Integer read FMangaListPos write FMangaListPos;
+    property MangaListNode: PVirtualNode read FMangaListNode write FMangaListNode;
   end;
 
 implementation
 
 uses
-  frmMain;
+  frmMain, WebsiteModules, FMDVars;
 
-procedure TGetMangaInfosThread.DoGetInfos;
+procedure TGetMangaInfosThread.MainThreadSyncInfos;
+begin
+  FInfo.SyncInfoToData(DataProcess);
+  dataProcess.Commit;
+end;
+
+procedure TGetMangaInfosThread.Execute;
 
   function GetMangaInfo: Boolean;
   var
-    filterPos: Cardinal;
     infob: byte;
+    data: PMangaInfoData;
   begin
     Result := False;
     try
       FInfo.mangaInfo.website := Website;
       FInfo.mangaInfo.link := Link;
-      if (FMangaListPos >= 0) and
+      FInfo.mangaInfo.title := Title;
+      FInfo.ModuleId := Modules.LocateModule(Website);
+      data := MainForm.vtMangaList.GetNodeData(FMangaListNode);
+      if Assigned(FMangaListNode) and (MainForm.cbSelectManga.ItemIndex<>-1) and
         (website = MainForm.cbSelectManga.Items[MainForm.cbSelectManga.ItemIndex]) then
       begin
-        filterPos := MainForm.dataProcess.GetPos(FMangaListPos);
-        FInfo.mangaInfo.title := MainForm.dataProcess.Param[filterPos, DATA_PARAM_NAME];
-        FInfo.mangaInfo.link := MainForm.dataProcess.Param[filterPos, DATA_PARAM_LINK];
-        FInfo.mangaInfo.authors := MainForm.dataProcess.Param[filterPos, DATA_PARAM_AUTHORS];
-        FInfo.mangaInfo.artists := MainForm.dataProcess.Param[filterPos, DATA_PARAM_ARTISTS];
-        FInfo.mangaInfo.status := MainForm.dataProcess.Param[filterPos, DATA_PARAM_STATUS];
-        FInfo.mangaInfo.summary := MainForm.dataProcess.Param[filterPos, DATA_PARAM_SUMMARY];
-        FInfo.mangaInfo.numChapter := StrToIntDef(MainForm.dataProcess.Param[filterPos, DATA_PARAM_NUMCHAPTER], 0);
-        FNumChapter := StrToIntDef(MainForm.dataProcess.Param[filterPos, DATA_PARAM_NUMCHAPTER], 0);
-        if SitesWithoutInformation(website) or
-          (website = WebsiteRoots[EHENTAI_ID, 0]) then
-          FInfo.mangaInfo.genres := MainForm.dataProcess.Param[filterPos, DATA_PARAM_GENRES];
+        if FInfo.mangaInfo.title = '' then
+          FInfo.mangaInfo.title := data^.title;
+        FInfo.mangaInfo.link := data^.link;
+        FInfo.mangaInfo.authors := data^.authors;
+        FInfo.mangaInfo.artists := data^.artists;
+        FInfo.mangaInfo.status := data^.status;
+        FInfo.mangaInfo.summary := data^.summary;
+        FInfo.mangaInfo.numChapter := data^.numchapter;
+        FInfo.mangaInfo.genres := data^.genres;
+        FNumChapter := data^.numchapter;
       end;
-
-      FInfo.isGenerateFolderChapterName := MainForm.cbOptionGenerateChapterName.Checked;
-      FInfo.isRemoveUnicode := MainForm.cbOptionPathConvert.Checked;
+      FInfo.isGenerateFolderChapterName := OptionGenerateMangaFolder;
+      FInfo.isRemoveUnicode := OptionChangeUnicodeCharacter;
 
       infob := INFORMATION_NOT_FOUND;
-      infob := FInfo.GetInfoFromURL(Website, Link, 2);
 
-      if Self.Terminated then Exit;
+      //wait if there is concurrent connection limit
+      if Modules.MaxConnectionLimit[FInfo.ModuleId] > 0 then
+      begin
+        while not Modules.CanCreateConnection(FInfo.ModuleId) do
+          Sleep(SOCKHEARTBEATRATE);
+        Modules.IncActiveConnectionCount(FInfo.ModuleId);
+      end;
+
+      infob := FInfo.GetInfoFromURL(Website, Link);
+
+      if Terminated or isExiting then Exit;
       if infob <> NO_ERROR then Exit;
 
-      if FMangaListPos >= 0 then
+      //set back if title changed
+      if (FInfo.mangaInfo.title <> '') and (FInfo.mangaInfo.title <> FTitle) then
+        FTitle := FInfo.mangaInfo.title;
+
+      if Assigned(data) then
       begin
-        if website = MainForm.cbSelectManga.Items[MainForm.cbSelectManga.ItemIndex] then
+        if dataProcess.WebsiteLoaded(Website) then
         begin
           if SitesWithoutInformation(website) then
           begin
             if FInfo.mangaInfo.authors = '' then
-              FInfo.mangaInfo.authors :=
-                MainForm.DataProcess.Param[filterPos, DATA_PARAM_AUTHORS];
+              FInfo.mangaInfo.authors := data^.authors;
             if FInfo.mangaInfo.artists = '' then
-              FInfo.mangaInfo.artists :=
-                MainForm.DataProcess.Param[filterPos, DATA_PARAM_ARTISTS];
+              FInfo.mangaInfo.artists := data^.artists;
             if FInfo.mangaInfo.genres = '' then
-              FInfo.mangaInfo.genres :=
-                MainForm.DataProcess.Param[filterPos, DATA_PARAM_GENRES];
+              FInfo.mangaInfo.genres := data^.genres;
             if FInfo.mangaInfo.summary = '' then
-              FInfo.mangaInfo.summary :=
-                MainForm.DataProcess.Param[filterPos, DATA_PARAM_SUMMARY];
+              FInfo.mangaInfo.summary := data^.summary;
           end;
-          FInfo.SyncInfoToData(MainForm.DataProcess, filterPos);
+
+          if not (Terminated or isExiting) then
+            Synchronize(MainThreadSyncInfos);
         end;
       end;
       Result := True;
@@ -123,37 +136,31 @@ procedure TGetMangaInfosThread.DoGetInfos;
   end;
 
 begin
-  if MainForm.cbSelectManga.ItemIndex < 0 then
-    Exit;
   try
-    INIAdvanced.Reload;
     if not GetMangaInfo then
     begin
-      if not Self.Terminated then
+      if not (Terminated or isExiting) then
         Synchronize(MainThreadShowCannotGetInfo);
     end
     else
     begin
+      if Terminated or isExiting then Exit;
       Synchronize(MainThreadShowInfos);
       FCover.Clear;
       // If there's cover then we will load it to the TPicture component.
       if OptionEnableLoadCover and (Trim(FInfo.mangaInfo.coverLink) <> '') then
-        FIsHasMangaCover := GetPage(FInfo.FHTTP, TObject(FCover), FInfo.mangaInfo.coverLink, 3)
-      else
-        FIsHasMangaCover := False;
-      Synchronize(MainThreadShowCover);
+        try
+          FInfo.FHTTP.Document.Clear;
+          if FInfo.FHTTP.GET(FInfo.mangaInfo.coverLink) then
+          begin
+            FCover.LoadFromStream(FInfo.FHTTP.Document);
+            FIsHasMangaCover := True;
+          end;
+        except
+        end;
+      if not (Terminated or isExiting) then
+        Synchronize(MainThreadShowCover);
     end;
-  except
-    on E: Exception do
-      MainForm.ExceptionHandler(Self, E);
-  end;
-end;
-
-procedure TGetMangaInfosThread.Execute;
-begin
-  MainForm.isGetMangaInfos := True;
-  try
-    DoGetInfos;
   except
     on E: Exception do
       MainForm.ExceptionHandler(Self, E);
@@ -162,84 +169,69 @@ end;
 
 procedure TGetMangaInfosThread.MainThreadShowCannotGetInfo;
 begin
-  if IsFlushed then
-    Exit;
-  try
-    MessageDlg('', RS_DlgCannotGetMangaInfo,
-      mtInformation, [mbYes], 0);
-    MainForm.rmInformation.Clear;
-    MainForm.itAnimate.Enabled := False;
-    MainForm.pbWait.Visible := False;
-    MainForm.imCover.Picture.Assign(nil);
-  except
-    on E: Exception do
-      MainForm.ExceptionHandler(Self, E);
-  end;
+  MessageDlg('', RS_DlgCannotGetMangaInfo,
+    mtInformation, [mbYes], 0);
+  MainForm.rmInformation.Clear;
+  MainForm.tmAnimateMangaInfo.Enabled := False;
+  MainForm.pbWait.Visible := False;
+  MainForm.imCover.Picture.Assign(nil);
 end;
 
 procedure TGetMangaInfosThread.MainThreadShowInfos;
+var node: PVirtualNode;
 begin
-  if IsFlushed then Exit;
-  try
-    TransferMangaInfo(MainForm.mangaInfo, FInfo.mangaInfo);
-    if (Website = MainForm.cbSelectManga.Text) and
-      (FMangaListPos > -1) then
-    begin
-      if (FInfo.mangaInfo.title <> FTitle) or
-        (FInfo.mangaInfo.numChapter <> FNumChapter) then
+  TransferMangaInfo(mangaInfo, FInfo.mangaInfo);
+  with MainForm do begin
+    if Assigned(FMangaListNode) and dataProcess.WebsiteLoaded(Website) then
       begin
-        FTitle := FInfo.mangaInfo.title;
-        with MainForm.vtMangaList do
-        begin
-          ReinitNode(RootNode, True);
-          Repaint;
+        vtMangaList.BeginUpdate;
+        dataProcess.Refresh(dataProcess.Filtered);
+        vtMangaList.ReinitNode(FMangaListNode, False);
+        if dataProcess.Filtered then begin
+          node := vtMangaList.GetNextVisible(FMangaListNode, False);
+          while Assigned(node) do begin
+            vtMangaList.ReinitNode(node, False);
+            node := vtMangaList.GetNextVisible(node, False);
+          end;
+          vtMangaList.RootNodeCount := dataProcess.RecordCount;
+          MainForm.UpdateVtMangaListFilterStatus;
         end;
+        vtMangaList.EndUpdate;
       end;
-    end;
-    MainForm.ShowInformation(FTitle, FWebsite, FLink);
-  except
-    on E: Exception do
-      MainForm.ExceptionHandler(Self, E);
+    ShowInformation;
   end;
 end;
 
 procedure TGetMangaInfosThread.MainThreadShowCover;
 begin
-  if IsFlushed then
-    Exit;
-  try
-    MainForm.itAnimate.Enabled := False;
-    MainForm.pbWait.Visible := False;
-    if FIsHasMangaCover then
-    begin
-      try
-        MainForm.imCover.Picture.Assign(FCover);
-      except
-        on E: Exception do ;
-      end;
-      FCover.Clear;
+  MainForm.tmAnimateMangaInfo.Enabled := False;
+  MainForm.pbWait.Visible := False;
+  if FIsHasMangaCover then
+  begin
+    try
+      MainForm.imCover.Picture.Assign(FCover);
+    except
+      on E: Exception do ;
     end;
-  except
-    on E: Exception do
-      MainForm.ExceptionHandler(Self, E);
+    FCover.Clear;
   end;
 end;
 
 constructor TGetMangaInfosThread.Create;
 begin
   inherited Create(True);
-  FIsFlushed := False;
   FInfo := TMangaInformation.Create(Self);
   FCover := MainForm.mangaCover;
-  FMangaListPos := -1;
+  FIsHasMangaCover := False;
+  FMangaListNode := nil;
 end;
 
 destructor TGetMangaInfosThread.Destroy;
 begin
-  FInfo.Free;
+  Modules.DecActiveConnectionCount(FInfo.ModuleId);
+  GetInfosThread := nil;
   FCover := nil;
-  if not IsFlushed then
-    MainForm.isGetMangaInfos := False;
+  FInfo.Free;
   inherited Destroy;
 end;
 

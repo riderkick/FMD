@@ -1,16 +1,101 @@
 msgid ""
+msgstr "Content-Type: text/plain; charset=UTF-8"
+
+#: dbupdater.rs_buttoncancel
+msgctxt "dbupdater.rs_buttoncancel"
+msgid "Abort"
+msgstr "Hentikan"
+
+#: dbupdater.rs_downloading
+msgid "Downloading %s"
+msgstr "Mengunduh %d"
+
+#: dbupdater.rs_extracting
+msgid "Extracting %s"
+msgstr "Mengekstrak %s"
+
+#: dbupdater.rs_faileddownload
+msgid "%s: %d %s"
+msgstr "%s: %d %s"
+
+#: dbupdater.rs_failedextract
+msgid "%s: failed to extract, exitstatus = %d"
+msgstr "%s: gagal mengekstrak, kode = %d"
+
+#: dbupdater.rs_faileditems
+msgid ""
+"Failed to finish:\n"
+"\n"
+"%s\n"
 msgstr ""
-"Content-Type: text/plain; charset=UTF-8\n"
-"Project-Id-Version: \n"
-"POT-Creation-Date: \n"
-"PO-Revision-Date: \n"
-"Last-Translator: \n"
-"Language-Team: Cholif\n"
-"MIME-Version: 1.0\n"
-"Content-Transfer-Encoding: 8bit\n"
-"Language: id_ID\n"
-"X-Generator: Poedit 1.8.1\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Gagal menyelesaikan:\n"
+"\n"
+"%s\n"
+
+#: dbupdater.rs_faileditemstitle
+msgctxt "dbupdater.rs_faileditemstitle"
+msgid "Failed"
+msgstr "Gagal"
+
+#: dbupdater.rs_failedtosave
+msgid "%s: failed to save"
+msgstr "%s: gagal menyimpan"
+
+#: dbupdater.rs_missingzipexe
+msgid "%s: Missing %s"
+msgstr "%s: Tidak ditemukan %s"
+
+#: ehentai.rs_downloadoriginalimage
+msgid "Download original image(require ExHentai account)"
+msgstr "Unduh gambar asli(membutuhkan akun ExHentai)"
+
+#: ehentai.rs_settingsimagesize
+msgid "Image size:"
+msgstr "Ukuran gambar:"
+
+#: ehentai.rs_settingsimagesizeitems
+msgid ""
+"Auto\n"
+"780x\n"
+"980x\n"
+"1280x\n"
+"1600x\n"
+"2400x\n"
+"Original\n"
+msgstr ""
+"Otomatis\n"
+"780x\n"
+"980x\n"
+"1280x\n"
+"1600x\n"
+"2400x\n"
+"Asli\n"
+
+#: frmaccountmanager.rs_accountdeleteconfirmation
+msgid "Are you sure you want to delete this account?"
+msgstr "Apakah anda yakin ingin menghapus akun ini?"
+
+#: frmaccountmanager.rs_checking
+msgid "Checking"
+msgstr "Memeriksa"
+
+#: frmaccountmanager.rs_invalid
+msgctxt "frmaccountmanager.rs_invalid"
+msgid "Invalid"
+msgstr "Tidak valid"
+
+#: frmaccountmanager.rs_unknown
+msgid "Unknown"
+msgstr "Tidak diketahui"
+
+#: frmaccountmanager.rs_valid
+msgctxt "frmaccountmanager.rs_valid"
+msgid "OK"
+msgstr "OK"
+
+#: frmaccountset.rs_cantbeempty
+msgid "Username or password can't be empty!"
+msgstr "Nama user atau kata kunci tidak boleh kosong!"
 
 #: frmimportfavorites.rs_importcompleted
 msgid "Import completed."
@@ -19,6 +104,81 @@ msgstr "Selesai mengimpor."
 #: frmimportfavorites.rs_listunimportedcaption
 msgid "List of unimported manga"
 msgstr "Daftar komik yang tidak bisa di-impor"
+
+#: frmluamodulesupdater.rs_checking
+msgctxt "frmluamodulesupdater.rs_checking"
+msgid "Checking..."
+msgstr "Memeriksa..."
+
+#: frmluamodulesupdater.rs_checkupdate
+msgctxt "frmluamodulesupdater.rs_checkupdate"
+msgid "Check update"
+msgstr "Periksa pembaruan"
+
+#: frmluamodulesupdater.rs_finishchecking
+msgid "Finish checking"
+msgstr "Selesai memeriksa"
+
+#: frmluamodulesupdater.rs_finishdownload
+msgid "Finish download"
+msgstr "Selesai mengunduh"
+
+#: frmluamodulesupdater.rs_modulesupdatedrestart
+msgid ""
+"Modules updated, restart now?\n"
+"\n"
+"%s\n"
+msgstr ""
+"Modul sudah diperbarui, muat ulang sekarang?\n"
+"\n"
+"%s\n"
+
+#: frmluamodulesupdater.rs_modulesupdatedtitle
+msgid "Modules updated!"
+msgstr "Modul diperbarui!"
+
+#: frmluamodulesupdater.rs_newupdatefoundlostchanges
+msgid ""
+"Modules update found, any local changes will be lost, procced?\n"
+"\n"
+"%s\n"
+msgstr ""
+"Pembaruan modul ditemukan, perubahan lokal akan ditimpa, lanjutkan?\n"
+"\n"
+"%s\n"
+
+#: frmluamodulesupdater.rs_newupdatefoundtitle
+msgid "Modules update found!"
+msgstr "Pembaruan modul ditemukan!"
+
+#: frmluamodulesupdater.rs_startdownloading
+msgid "Downloading..."
+msgstr "Mengunduh..."
+
+#: frmluamodulesupdater.rs_statusdelete
+msgctxt "frmluamodulesupdater.rs_statusdelete"
+msgid "%s DELETE*"
+msgstr "%s DIHAPUS*"
+
+#: frmluamodulesupdater.rs_statusfailed
+msgctxt "frmluamodulesupdater.rs_statusfailed"
+msgid "%s FAILED*"
+msgstr "%s GAGAL*"
+
+#: frmluamodulesupdater.rs_statusnew
+msgctxt "frmluamodulesupdater.rs_statusnew"
+msgid "%s NEW*"
+msgstr "%s BARU*"
+
+#: frmluamodulesupdater.rs_statusredownloaded
+msgctxt "frmluamodulesupdater.rs_statusredownloaded"
+msgid "%s REDOWNLOAD*"
+msgstr "%s DOWNLOADULANG*"
+
+#: frmluamodulesupdater.rs_statusupdate
+msgctxt "frmluamodulesupdater.rs_statusupdate"
+msgid "%s UPDATE*"
+msgstr "%s PEMBARUAN*"
 
 #: frmmain.rs_alldownloads
 msgid "All downloads"
@@ -35,6 +195,7 @@ msgid "Cancel"
 msgstr "Batal"
 
 #: frmmain.rs_checking
+msgctxt "frmmain.rs_checking"
 msgid "Checking..."
 msgstr "Memeriksa..."
 
@@ -45,6 +206,10 @@ msgstr "Tidak dapat terhubung ke server."
 #: frmmain.rs_dlgcannotgetmangainfo
 msgid "Cannot get manga info. Please check your internet connection and try it again."
 msgstr "Tidak bisa mendapatkan informasi komik. Silakan periksa koneksi internet Anda dan coba lagi."
+
+#: frmmain.rs_dlgdownloadcount
+msgid "Download count:"
+msgstr "Jumlah unduhan:"
 
 #: frmmain.rs_dlgmangalistselect
 msgid "You must choose at least 1 manga website!"
@@ -62,9 +227,18 @@ msgstr "Apakah Anda yakin Anda ingin menghapus kesukaan ini?"
 msgid "Are you sure you want to delete all finished tasks?"
 msgstr "Apakah Anda yakin Anda ingin menghapus semua unduhan yang sudah selesai?"
 
+#: frmmain.rs_dlgremoveitem
+msgid "Are you sure you want to delete this item(s)?"
+msgstr "Apakah Anda yakin ingin menghapus data ini?"
+
 #: frmmain.rs_dlgremovetask
 msgid "Are you sure you want to delete the task(s)?"
 msgstr "Apakah Anda yakin ingin menghapus unduhan ini?"
+
+#: frmmain.rs_dlgsplitdownload
+msgctxt "frmmain.rs_dlgsplitdownload"
+msgid "Split download"
+msgstr "Pecah unduhan"
 
 #: frmmain.rs_dlgtitleexistindllist
 msgid ""
@@ -112,6 +286,10 @@ msgstr ""
 "Bersambung\n"
 "<tidak ada>\n"
 
+#: frmmain.rs_fmdalreadyrunning
+msgid "Free Manga Downloader already running!"
+msgstr "Free Manga Downloader sudah berjalan!"
+
 #: frmmain.rs_hintfavoriteproblem
 msgid ""
 "There is a problem with this data!\n"
@@ -153,8 +331,9 @@ msgid "Title:"
 msgstr "Judul:"
 
 #: frmmain.rs_infowebsite
+msgctxt "frmmain.rs_infowebsite"
 msgid "Website:"
-msgstr "Situs web:"
+msgstr "Situs:"
 
 #: frmmain.rs_inprogress
 msgid "In progress"
@@ -189,6 +368,11 @@ msgstr "Mode: Tampilkan semua (%d)"
 msgid "Mode: Filtered (%d)"
 msgstr "Mode: Disaring (%d)"
 
+#: frmmain.rs_modesearching
+msgctxt "frmmain.rs_modesearching"
+msgid "Mode: Searching..."
+msgstr "Mode: Mencari..."
+
 #: frmmain.rs_onemonth
 msgid "One month"
 msgstr "Satu bulan"
@@ -197,15 +381,29 @@ msgstr "Satu bulan"
 msgid "One week"
 msgstr "Satu minggu"
 
+#: frmmain.rs_optioncompress
+msgid ""
+"None\n"
+"ZIP\n"
+"CBZ\n"
+"PDF\n"
+"EPUB\n"
+msgstr ""
+"Tidak ada\n"
+"ZIP\n"
+"CBZ\n"
+"PDF\n"
+"EPUB\n"
+
 #: frmmain.rs_optionfmddoitems
 msgid ""
-"Do nothing\n"
-"Exit FMD\n"
+"Nothing\n"
+"Exit\n"
 "Shutdown\n"
 "Hibernate\n"
 msgstr ""
 "Tidak ada\n"
-"Tutup FMD\n"
+"Keluar\n"
 "Matikan komputer\n"
 "Tidurkan komputer\n"
 
@@ -226,6 +424,32 @@ msgstr "Path ke perangkat lunak (misalnya C:\\MangaDownloader)"
 msgid "Today"
 msgstr "Hari ini"
 
+#: frmmain.rs_webpconvertto
+msgid ""
+"WebP\n"
+"PNG\n"
+"JPEG\n"
+msgstr ""
+"WebP\n"
+"PNG\n"
+"JPEG\n"
+
+#: frmmain.rs_webppnglevel
+msgid ""
+"None\n"
+"Fastest\n"
+"Default\n"
+"Maximum\n"
+msgstr ""
+"None\n"
+"Fastest\n"
+"Default\n"
+"Maximum\n"
+
+#: frmmain.rs_wronginput
+msgid "Invalid input!"
+msgstr "Input salah!"
+
 #: frmmain.rs_yesterday
 msgid "Yesterday"
 msgstr "Kemarin"
@@ -242,9 +466,211 @@ msgstr "Komputer akan dihibernasi dalam %d detik"
 msgid "System will shutdown in %d second."
 msgstr "Komputer akan dimatikan dalam %d detik"
 
+#: frmtransferfavorites.rs_all
+msgctxt "frmtransferfavorites.rs_all"
+msgid "All"
+msgstr "Semua"
+
+#: frmtransferfavorites.rs_invalid
+msgctxt "frmtransferfavorites.rs_invalid"
+msgid "Invalid"
+msgstr "Tidak valid"
+
+#: frmtransferfavorites.rs_valid
+msgctxt "frmtransferfavorites.rs_valid"
+msgid "Valid"
+msgstr "Valid"
+
+#: kissmanga.rs_kissmanga_initvector
+msgid "Initialization Vector:"
+msgstr "Initialization Vector:"
+
+#: kissmanga.rs_kissmanga_key
+msgid "Key:"
+msgstr "Key:"
+
+#: kissmanga.rs_kissmanga_usegoogledcp
+msgid "Use Google DCP"
+msgstr "Gunakan Google DCP"
+
+#: mangadex.rs_showalllang
+msgctxt "mangadex.rs_showalllang"
+msgid "Show all language"
+msgstr "Tampilkan semua bahasa"
+
+#: mangadex.rs_showscangroup
+msgctxt "mangadex.rs_showscangroup"
+msgid "Show scanlation group"
+msgstr "Tampilkan nama grup scan"
+
+#: mangafox.rs_removewatermark
+msgid "Remove watermark"
+msgstr "Hapus watermark"
+
+#: mangafox.rs_saveaspng
+msgid "Save as PNG"
+msgstr "Simpan sebagai PNG"
+
+#: selfupdater.rs_buttoncancel
+msgctxt "selfupdater.rs_buttoncancel"
+msgid "Abort"
+msgstr "Hentikan"
+
+#: selfupdater.rs_downloading
+msgid "Downloading new version %s"
+msgstr "Mengunduh versi baru %s"
+
+#: selfupdater.rs_faileddownload
+msgid ""
+"Failed to download new version %s\n"
+"\n"
+"%d %s\n"
+msgstr ""
+"Gagal mengunduh versi baru %s\n"
+"\n"
+"%d %s\n"
+
+#: selfupdater.rs_failedextract
+msgid "Failed to extract %s, exitstatus = %d"
+msgstr "Gagal mengekstrak %s, kode = %d"
+
+#: selfupdater.rs_failedtitle
+msgctxt "selfupdater.rs_failedtitle"
+msgid "Failed"
+msgstr "Gagal"
+
+#: selfupdater.rs_failedtosave
+msgid "Failed to save %s"
+msgstr "Gagal menyimpan %s"
+
+#: selfupdater.rs_finishrestart
+msgid "Download update package finished, restart to proceed?"
+msgstr "Pembaruan selesai diunduh, memuat ulang sekarang?"
+
+#: selfupdater.rs_finishrestarttitle
+msgid "Download finished"
+msgstr "Unduhan selesai"
+
+#: selfupdater.rs_missingfile
+msgctxt "selfupdater.rs_missingfile"
+msgid "Missing %s"
+msgstr "Tidak ditemukan %s"
+
+#: taccountmanagerform.btedit.caption
+msgctxt "taccountmanagerform.btedit.caption"
+msgid "Edit"
+msgstr "Ubah"
+
+#: taccountmanagerform.btrefresh.caption
+msgid "Refresh"
+msgstr "Segarkan"
+
+#: taccountmanagerform.caption
+msgid "AccountManagerForm"
+msgstr "AccountManagerForm"
+
+#: taccountmanagerform.vtaccountlist.header.columns[1].text
+msgctxt "taccountmanagerform.vtaccountlist.header.columns[1].text"
+msgid "Website"
+msgstr "Situs"
+
+#: taccountmanagerform.vtaccountlist.header.columns[2].text
+msgctxt "taccountmanagerform.vtaccountlist.header.columns[2].text"
+msgid "Username"
+msgstr "Nama user"
+
+#: taccountmanagerform.vtaccountlist.header.columns[3].text
+msgctxt "taccountmanagerform.vtaccountlist.header.columns[3].text"
+msgid "Status"
+msgstr "Status"
+
+#: taccountsetform.btcancel.caption
+msgctxt "taccountsetform.btcancel.caption"
+msgid "Cancel"
+msgstr "Batal"
+
+#: taccountsetform.btok.caption
+msgid "Ok"
+msgstr "Ok"
+
+#: taccountsetform.caption
+msgid "Account"
+msgstr "Akun"
+
+#: taccountsetform.ckshowpassword.caption
+msgid "Show password"
+msgstr "Tampilkan kata kunci"
+
+#: taccountsetform.edpassword.texthint
+msgctxt "taccountsetform.edpassword.texthint"
+msgid "Password"
+msgstr "Kata kunci"
+
+#: taccountsetform.edusername.texthint
+msgctxt "taccountsetform.edusername.texthint"
+msgid "Username"
+msgstr "Nama user"
+
+#: taccountsetform.label2.caption
+msgctxt "taccountsetform.label2.caption"
+msgid "Username"
+msgstr "Nama user"
+
+#: taccountsetform.label3.caption
+msgctxt "taccountsetform.label3.caption"
+msgid "Password"
+msgstr "Kata kunci"
+
+#: tcustomcolorform.caption
+msgid "CustomColorForm"
+msgstr "CustomColorForm"
+
+#: tcustomcolorform.tsbasiclist.caption
+msgid "Basic list"
+msgstr "Semua daftar"
+
+#: tcustomcolorform.tschapterlist.caption
+msgid "Chapter list"
+msgstr "Daftar bab"
+
+#: tcustomcolorform.tsfavoritelist.caption
+msgid "Favorite list"
+msgstr "Daftar kesukaan"
+
+#: tcustomcolorform.tsmangalist.caption
+msgid "Manga list"
+msgstr "Daftar komik"
+
+#: tformdroptarget.miaddtofavorites.caption
+msgctxt "tformdroptarget.miaddtofavorites.caption"
+msgid "Add to favorites"
+msgstr "Tambahkan ke kesukaan"
+
 #: tformdroptarget.miclose.caption
 msgid "&Close"
 msgstr "&Tutup"
+
+#: tformdroptarget.midownloadall.caption
+msgctxt "tformdroptarget.midownloadall.caption"
+msgid "Download all"
+msgstr "Unduh semua"
+
+#: tformlogger.btnclearlog.caption
+msgid "Clear"
+msgstr "Bersihkan"
+
+#: tformlogger.ckstayontop.caption
+msgid "Stay on top"
+msgstr "Tetap di atas"
+
+#: tformlogger.lbloglimit.caption
+msgid "Log limit"
+msgstr "Batasi log"
+
+#: tformlogger.micopy.caption
+msgctxt "tformlogger.micopy.caption"
+msgid "Copy"
+msgstr "Copy"
 
 #: timportfavorites.btcancel.caption
 msgctxt "timportfavorites.btcancel.caption"
@@ -256,16 +682,12 @@ msgctxt "timportfavorites.btimport.caption"
 msgid "&OK"
 msgstr "&OK"
 
-#: timportfavorites.caption
-msgid "Import list ..."
-msgstr "Impor daftar ..."
-
 #: timportfavorites.cbsoftware.text
 msgid "Domdomsoft Manga Downloader"
 msgstr "Domdomsoft Manga Downloader"
 
-#: timportfavorites.edpath.text
-msgctxt "timportfavorites.edpath.text"
+#: timportfavorites.edpath.texthint
+msgctxt "timportfavorites.edpath.texthint"
 msgid "Path to the software (e.g. C:\\MangaDownloader)"
 msgstr "Path ke perangkat lunak (misalnya C:\\MangaDownloader)"
 
@@ -273,23 +695,58 @@ msgstr "Path ke perangkat lunak (misalnya C:\\MangaDownloader)"
 msgid "Software:"
 msgstr "Perangkat lunak:"
 
+#: tluamodulesupdaterform.btcheckupdate.caption
+msgctxt "tluamodulesupdaterform.btcheckupdate.caption"
+msgid "Check update"
+msgstr "Periksa pembaruan"
+
+#: tluamodulesupdaterform.ckautorestart.caption
+msgid "Auto restart"
+msgstr "Otomatis memuat ulang"
+
+#: tluamodulesupdaterform.ckshowupdatewarning.caption
+msgid "Show update warning"
+msgstr "Tampilkan peringatan pembaruan"
+
+#: tluamodulesupdaterform.vtluamodulesrepos.header.columns[0].text
+msgid "Filename"
+msgstr "Nama"
+
+#: tluamodulesupdaterform.vtluamodulesrepos.header.columns[1].text
+msgid "Last modified"
+msgstr "Terakhir diperbarui"
+
+#: tluamodulesupdaterform.vtluamodulesrepos.header.columns[2].text
+msgid "Last message"
+msgstr "Pesan terakhir"
+
 #: tmainform.btabortupdatelist.hint
 msgid "Abort update list"
-msgstr "Batalkan pembaruan daftar komik"
+msgstr "Hentikan pembaruan daftar komik"
 
 #: tmainform.btaddtofavorites.caption
+msgctxt "tmainform.btaddtofavorites.caption"
 msgid "Add to favorites"
 msgstr "Tambahkan ke kesukaan"
 
-#: tmainform.btcheckversion.caption
-msgctxt "tmainform.btcheckversion.caption"
-msgid "Check for new version"
-msgstr "Periksa versi baru"
+#: tmainform.btchecklatestversion.caption
+msgctxt "tmainform.btchecklatestversion.caption"
+msgid "Check for latest version"
+msgstr "Periksa versi terbaru"
+
+#: tmainform.btclearlogfile.caption
+msgid "Clear log file"
+msgstr "Bersihkan berkas log"
 
 #: tmainform.btdownload.caption
 msgctxt "tmainform.btdownload.caption"
 msgid "Download"
 msgstr "Unduh"
+
+#: tmainform.btdownloadsplit.hint
+msgctxt "tmainform.btdownloadsplit.hint"
+msgid "Split download"
+msgstr "Pecah unduhan"
 
 #: tmainform.btfavoriteschecknewchapter.caption
 msgctxt "tmainform.btfavoriteschecknewchapter.caption"
@@ -309,13 +766,17 @@ msgstr "Saring"
 msgid "Reset value"
 msgstr "Atur Ulang"
 
+#: tmainform.btopenlog.caption
+msgid "Open log"
+msgstr "Buka log"
+
 #: tmainform.btoptionapply.caption
 msgid "Apply"
 msgstr "Terapkan"
 
 #: tmainform.btreadonline.caption
 msgid "Read online"
-msgstr "Baca online"
+msgstr "Baca daring"
 
 #: tmainform.btremovefilterlarge.caption
 msgctxt "TMAINFORM.BTREMOVEFILTERLARGE.CAPTION"
@@ -337,7 +798,6 @@ msgid "Visit my blog"
 msgstr "Kunjungi blog"
 
 #: tmainform.caption
-msgctxt "tmainform.caption"
 msgid "Free Manga Downloader"
 msgstr "Free Manga Downloader"
 
@@ -353,25 +813,45 @@ msgstr "<none>"
 msgid "Search only new manga"
 msgstr "Cari hanya komik baru"
 
-#: tmainform.cboptionautocheckfavstartup.caption
-msgid "Automatic check for new chapter at startup"
-msgstr "Otomatis periksa bab baru saat program dimulai"
-
-#: tmainform.cboptionautocheckupdate.caption
-msgid "Check for new version "
-msgstr "Periksa versi baru"
-
-#: tmainform.cboptionautodlfav.caption
+#: tmainform.cboptionautocheckfavdownload.caption
+msgctxt "tmainform.cboptionautocheckfavdownload.caption"
 msgid "Automatic download after finish checking"
 msgstr "Otomatis mengunduh setelah selesai memeriksa"
 
-#: tmainform.cboptionautonumberchapter.caption
-msgid "Auto number chapter"
-msgstr "Otomatis nomor bab"
+#: tmainform.cboptionautocheckfavinterval.caption
+msgid "Auto check for new chapter in an interval"
+msgstr "Otomatis periksa bab baru dalam interval"
 
-#: tmainform.cboptionautoremovecompletedmanga.caption
+#: tmainform.cboptionautocheckfavremovecompletedmanga.caption
+msgctxt "tmainform.cboptionautocheckfavremovecompletedmanga.caption"
 msgid "Automatic remove completed manga from Favorites"
 msgstr "Otomatis hapus komik yang sudah tamat dari daftar kesukaan"
+
+#: tmainform.cboptionautocheckfavstartup.caption
+msgid "Auto check for new chapter at startup"
+msgstr "Otomatis periksa bab baru saat program dimulai"
+
+#: tmainform.cboptionautochecklatestversion.caption
+msgctxt "tmainform.cboptionautochecklatestversion.caption"
+msgid "Auto check for latest version "
+msgstr "Otomatis periksa versi terbaru"
+
+#: tmainform.cboptionautoopenfavstartup.caption
+msgid "Open Favorites at startup"
+msgstr "Buka Kesukaan saat program dimulai"
+
+#: tmainform.cboptionchangeunicodecharacter.caption
+msgctxt "tmainform.cboptionchangeunicodecharacter.caption"
+msgid "Replace all unicode character with"
+msgstr "Ubah semua simbol unicode menjadi"
+
+#: tmainform.cboptionchangeunicodecharacter.hint
+msgid "Enable this if you have problem with unicode character in path."
+msgstr "Aktifkan pilihan ini jika anda mengalami masalah dengan karakter unicode pada path."
+
+#: tmainform.cboptiondeletecompletedtasksonclose.caption
+msgid "Delete completed tasks on close"
+msgstr "Hapus unduhan yang selesai saat ditutup"
 
 #: tmainform.cboptiondigitchapter.caption
 msgid "Chapter"
@@ -385,11 +865,12 @@ msgstr "Volume"
 msgid "Enable load manga cover"
 msgstr "Aktifkan sampul komik"
 
-#: tmainform.cboptiongeneratechaptername.caption
-msgid "Generate chapter folder with chapter name"
-msgstr "Buat folder dengan nama bab"
+#: tmainform.cboptiongeneratechapterfolder.caption
+msgid "Auto generate chapter folder"
+msgstr "Buat otomatis folder bab"
 
-#: tmainform.cboptiongeneratemangafoldername.caption
+#: tmainform.cboptiongeneratemangafolder.caption
+msgctxt "tmainform.cboptiongeneratemangafolder.caption"
 msgid "Auto generate folder based on manga's name"
 msgstr "Buat otomatis folder berdasarkan nama komik"
 
@@ -397,9 +878,9 @@ msgstr "Buat otomatis folder berdasarkan nama komik"
 msgid "Enable live search (slow on long list)"
 msgstr "Aktifkan pencarian langsung (lambat dengan daftar yang panjang)"
 
-#: tmainform.cboptionmangafoxremovewatermarks.caption
-msgid "[Mangafox] Remove watermarks (Beware! Experimental!)"
-msgstr "[Mangafox] Menghapus Watermark (Waspadalah! Eksperimental!)"
+#: tmainform.cboptionminimizeonstart.caption
+msgid "Minimize on start"
+msgstr "Kecilkan ke penampan saat dimulai"
 
 #: tmainform.cboptionminimizetotray.caption
 msgid "Minimize to tray"
@@ -409,29 +890,37 @@ msgstr "Perkecil ke penampan"
 msgid "Permit only one FMD running"
 msgstr "Hanya ijinkan satu FMD berjalan"
 
-#: tmainform.cboptionpathconvert.caption
-msgid "Change all all unicode symbols to \"_\" (choose this when you have problem with unicode path)"
-msgstr "Ubah semua simbol unicode menjadi \"_\" (pilih ini ketika Anda memiliki masalah dengan lokasi unicode)"
-
 #: tmainform.cboptionproxytype.text
 msgid "HTTP"
 msgstr "HTTP"
 
-#: tmainform.cboptionshowalllang.caption
-msgid "[Batoto] Show All Language"
-msgstr "[Batoto] Tampilkan semua bahasa"
+#: tmainform.cboptionremovemanganamefromchapter.caption
+msgid "Remove manga name from chapter"
+msgstr "Hapus nama komik dari bab"
 
-#: tmainform.cboptionshowbatotosg.caption
-msgid "[Batoto] Show scan group name"
-msgstr "[Batoto] Tampilkan nama grup scan"
+#: tmainform.cboptionshowballoonhint.caption
+msgid "Show balloon hint"
+msgstr "Tampilkan balon pemberitahuan"
 
 #: tmainform.cboptionshowdeletetaskdialog.caption
 msgid "Delete task/favorite"
 msgstr "Hapus unduhan/kesukaan"
 
+#: tmainform.cboptionshowdownloadmangalistdialog.caption
+msgid "Download manga list if empty"
+msgstr "Unduh daftar komik jika kosong"
+
 #: tmainform.cboptionshowdownloadtoolbar.caption
 msgid "Show downloads toolbar"
 msgstr "Tampilkan toolbar unduhan"
+
+#: tmainform.cboptionshowdownloadtoolbardeleteall.caption
+msgid "Show \"Delete all completed tasks\" in downloads toolbar"
+msgstr "Tampilkan \"Hapus semua unduhan selesai\" di toolbar unduhan"
+
+#: tmainform.cboptionshowdownloadtoolbarleft.caption
+msgid "Show left downloads toolbar"
+msgstr "Tampilkan toolbar kiri"
 
 #: tmainform.cboptionshowquitdialog.caption
 msgid "Exit FMD"
@@ -449,6 +938,11 @@ msgstr "Menghapus duplikat data lokal saat memperbarui daftar komik"
 msgid "Use proxy"
 msgstr "Gunakan proxy"
 
+#: tmainform.cbpngcompressionlevel.text
+msgctxt "tmainform.cbpngcompressionlevel.text"
+msgid "Fastest"
+msgstr "Paling cepat"
+
 #: tmainform.cbsearchfromallsites.caption
 msgid "Search in all manga sites"
 msgstr "Cari di semua situs komik"
@@ -461,9 +955,19 @@ msgstr "Untuk situs komik yang lain, silahkan pilih di Pengaturan->Situs komik"
 msgid "Regular Expression"
 msgstr "Regular Expression"
 
+#: tmainform.cbwebpsaveas.text
+msgctxt "tmainform.cbwebpsaveas.text"
+msgid "PNG"
+msgstr "PNG"
+
 #: tmainform.ckdroptarget.caption
+msgctxt "tmainform.ckdroptarget.caption"
 msgid "Show Drop Box"
 msgstr "Tampilkan kotak unduh"
+
+#: tmainform.ckenablelogging.caption
+msgid "Enable logging"
+msgstr "Aktifkan logging"
 
 #: tmainform.ckfilteraction.caption
 msgid "Action"
@@ -781,9 +1285,28 @@ msgstr "Yuri"
 msgid "This work usually involves intimate relationships between women."
 msgstr "Biasanya melibatkan hubungan yang intim antara sesama perempuan."
 
+#: tmainform.ckoptionsalwaysstarttaskfromfailedchapters.caption
+msgctxt "tmainform.ckoptionsalwaysstarttaskfromfailedchapters.caption"
+msgid "Always start task from failed chapters"
+msgstr "Selalu mulai undudah dari bab yang gagal"
+
+#: tmainform.ckpngsaveasjpeg.caption
+msgid "Save PNG as JPEG"
+msgstr "Simpan PNG sebagai JPEG"
+
 #: tmainform.edcustomgenres.texthint
 msgid "Input custom genres, separated by comma"
 msgstr "Masukan genre pilihan, dipisahkan dengan koma"
+
+#: tmainform.eddownloadssearch.texthint
+msgctxt "tmainform.eddownloadssearch.texthint"
+msgid "Search downloads..."
+msgstr "Cari unduhan..."
+
+#: tmainform.edfavoritessearch.texthint
+msgctxt "tmainform.edfavoritessearch.texthint"
+msgid "Search favorites..."
+msgstr "Cari kesukaan..."
 
 #: tmainform.edfilterartists.texthint
 msgctxt "tmainform.edfilterartists.texthint"
@@ -795,6 +1318,11 @@ msgctxt "tmainform.edfilterauthors.texthint"
 msgid "Author"
 msgstr "Penulis"
 
+#: tmainform.edfiltermangainfochapters.texthint
+msgctxt "tmainform.edfiltermangainfochapters.texthint"
+msgid "Filter"
+msgstr "Saring"
+
 #: tmainform.edfiltersummary.texthint
 msgid "Part of summary"
 msgstr "Bagian dari ringkasan"
@@ -804,7 +1332,13 @@ msgctxt "tmainform.edfiltertitle.texthint"
 msgid "Title"
 msgstr "Judul"
 
-#: tmainform.edoptioncustomrename.texthint
+#: tmainform.edmangalistsearch.texthint
+msgctxt "tmainform.edmangalistsearch.texthint"
+msgid "Search title..."
+msgstr "Cari nama komik..."
+
+#: tmainform.edoptionchaptercustomrename.texthint
+msgctxt "tmainform.edoptionchaptercustomrename.texthint"
 msgid "Custom rename"
 msgstr "Ubah nama kustom"
 
@@ -822,17 +1356,23 @@ msgctxt "tmainform.edoptionexternalpath.texthint"
 msgid "External program path"
 msgstr "Parameter program"
 
+#: tmainform.edoptionfilenamecustomrename.texthint
+msgctxt "tmainform.edoptionfilenamecustomrename.texthint"
+msgid "Custom rename"
+msgstr "Ubah nama kustom"
+
 #: tmainform.edoptionhost.texthint
 msgid "Proxy host/IP"
 msgstr "Host/IP"
 
+#: tmainform.edoptionmangacustomrename.texthint
+msgctxt "tmainform.edoptionmangacustomrename.texthint"
+msgid "Custom rename"
+msgstr "Ubah nama kustom"
+
 #: tmainform.edoptionpass.texthint
 msgid "Proxy password"
 msgstr "Kata kunci"
-
-#: tmainform.edoptionport.texthint
-msgid "Proxy Port"
-msgstr "Port"
 
 #: tmainform.edoptionuser.texthint
 msgid "Proxy username"
@@ -843,11 +1383,6 @@ msgctxt "tmainform.edsaveto.texthint"
 msgid "Save to"
 msgstr "Lokasi penyimpanan"
 
-#: tmainform.edsearch.texthint
-msgctxt "tmainform.edsearch.texthint"
-msgid "Search title..."
-msgstr "Cari nama komik..."
-
 #: tmainform.edurl.texthint
 msgid "Input URL here"
 msgstr "Masukkan URL disini"
@@ -855,11 +1390,19 @@ msgstr "Masukkan URL disini"
 #: tmainform.edwebsitessearch.texthint
 msgctxt "tmainform.edwebsitessearch.texthint"
 msgid "Search website..."
-msgstr "Cari situs web..."
+msgstr "Cari situs..."
+
+#: tmainform.gbdialogs.caption
+msgid "Show dialog confirmation for"
+msgstr "Tampilkan dialog konfirmasi untuk"
 
 #: tmainform.gbdroptarget.caption
 msgid "Drop Box"
 msgstr "Kotak unduh"
+
+#: tmainform.gbimageconversion.caption
+msgid "Image Conversion"
+msgstr "Konversi gambar"
 
 #: tmainform.gboptionexternal.caption
 msgid "External program"
@@ -914,7 +1457,7 @@ msgid ""
 "\n"
 "Custom Genres:\n"
 "- Separate multiple genres with ','.\n"
-"- Exclude a genre by placing ''!'' at the beginning of a genre.\n"
+"- Exclude a genre by placing '!' or '-' at the beginning of a genre.\n"
 "- Example: Adventure,!Ecchi,Comedy.\n"
 msgstr ""
 "Genre: \n"
@@ -924,7 +1467,7 @@ msgstr ""
 "\n"
 "Genre pilihan: \n"
 "- Pisahkan beberapa genre dengan ','. \n"
-"- Kecualikan genre dengan menempatkan ''!'' pada permulaan genre. \n"
+"- Kecualikan genre dengan menempatkan  '!' atau '-' pada permulaan genre. \n"
 "- Contoh: petualangan,! Ecchi, komedi.\n"
 
 #: tmainform.lbfilterstatus.caption
@@ -941,29 +1484,35 @@ msgctxt "tmainform.lbfiltertitle.caption"
 msgid "Title"
 msgstr "Judul"
 
-#: tmainform.lbmode.caption
-msgid "Mode: Show all manga"
-msgstr "Mode: Tampilkan semua komik"
+#: tmainform.lbjpegquality.caption
+msgid "JPEG quality"
+msgstr "Kualitas JPEG"
 
-#: tmainform.lboptionautocheckminutes.caption
-msgctxt "tmainform.lboptionautocheckminutes.caption"
+#: tmainform.lblogfilename.caption
+msgid "Log file:"
+msgstr "Berkas log:"
+
+#: tmainform.lbmode.caption
+msgid "Mode: Show all (0)"
+msgstr "Mode: Tampilkan semua (0)"
+
+#: tmainform.lboptionautocheckfavintervalminutes.caption
+msgctxt "tmainform.lboptionautocheckfavintervalminutes.caption"
 msgid "Auto check for new chapter every %d minutes"
 msgstr "Otomatis periksa bab baru setiap %d menit"
 
-#: tmainform.lboptionconnectiontimeout.caption
-msgid "Connection timeout (seconds)"
-msgstr "Batas waktu koneksi (detik)"
+#: tmainform.lboptionchaptercustomrename.caption
+msgctxt "tmainform.lboptionchaptercustomrename.caption"
+msgid "Chapter name:"
+msgstr "Nama bab:"
 
-#: tmainform.lboptioncustomrename.caption
-msgid "Chapter folder name:"
-msgstr "Nama folder:"
-
-#: tmainform.lboptioncustomrenamehint.caption
-msgctxt "TMAINFORM.LBOPTIONCUSTOMRENAMEHINT.CAPTION"
+#: tmainform.lboptionchaptercustomrenamehint.caption
+msgctxt "tmainform.lboptionchaptercustomrenamehint.caption"
 msgid "[?]"
 msgstr "[?]"
 
-#: tmainform.lboptioncustomrenamehint.hint
+#: tmainform.lboptionchaptercustomrenamehint.hint
+msgctxt "tmainform.lboptionchaptercustomrenamehint.hint"
 msgid ""
 "%WEBSITE% : Website name\n"
 "%MANGA% : Manga title\n"
@@ -983,20 +1532,11 @@ msgstr ""
 "%NUMBERING% : Penomoran\n"
 "\n"
 "Catatan:\n"
-"Nama folder harus memiliki setidaknya %CHAPTER% atau %NUMBERING%.\n"
+"Nama bab setidaknya harus memiliki %CHAPTER% atau %NUMBERING%.\n"
 
-#: tmainform.lboptioncustomrenamehint1.caption
-msgctxt "TMAINFORM.LBOPTIONCUSTOMRENAMEHINT1.CAPTION"
-msgid "[?]"
-msgstr "[?]"
-
-#: tmainform.lboptioncustomrenamehint1.hint
-msgid "100: FlateEncode (lossless), lower: DCTEncode (lossy)"
-msgstr "100 = FlateEncode (lossless), lebih rendah = DCTEncode (lossy)"
-
-#: tmainform.lboptiondialogs.caption
-msgid "Show dialog confirmation for:"
-msgstr "Tampilkan dialog konfirmasi untuk:"
+#: tmainform.lboptionconnectiontimeout.caption
+msgid "Connection timeout (seconds)"
+msgstr "Batas waktu koneksi (detik)"
 
 #: tmainform.lboptionexternal.caption
 msgid "Open manga by using external program:"
@@ -1011,6 +1551,33 @@ msgctxt "tmainform.lboptionexternalparamshint.caption"
 msgid "[?]"
 msgstr "[?]"
 
+#: tmainform.lboptionfilenamecustomrename.caption
+msgid "Filename:"
+msgstr "Nama File:"
+
+#: tmainform.lboptionfilenamecustomrenamehint.caption
+msgctxt "tmainform.lboptionfilenamecustomrenamehint.caption"
+msgid "[?]"
+msgstr "[?]"
+
+#: tmainform.lboptionfilenamecustomrenamehint.hint
+msgid ""
+"%WEBSITE% : Website name\n"
+"%MANGA% : Manga title\n"
+"%CHAPTER% : Chapter title\n"
+"%FILENAME% : Filename\n"
+"\n"
+"Note:\n"
+"Filename must have at least %FILENAME%\n"
+msgstr ""
+"%WEBSITE% : Nama situs\n"
+"%MANGA% : Judul komik\n"
+"%CHAPTER% : Judul bab\n"
+"%FILENAME% : Nama file\n"
+"\n"
+"Note:\n"
+"Nama file setidaknya harus memiliki %FILENAME%\n"
+
 #: tmainform.lboptionhost.caption
 msgid "Host"
 msgstr "Host"
@@ -1023,23 +1590,52 @@ msgstr "Bahasa:"
 msgid "After download finish:"
 msgstr "Tugas setelah unduhan selesai:"
 
+#: tmainform.lboptionmangacustomrename.caption
+msgctxt "tmainform.lboptionmangacustomrename.caption"
+msgid "Manga folder name:"
+msgstr "Nama folder komik:"
+
+#: tmainform.lboptionmangacustomrenamehint.caption
+msgctxt "tmainform.lboptionmangacustomrenamehint.caption"
+msgid "[?]"
+msgstr "[?]"
+
+#: tmainform.lboptionmangacustomrenamehint.hint
+msgid ""
+"%WEBSITE% : Website name\n"
+"%MANGA% : Manga title\n"
+"%AUTHOR% : Author\n"
+"%ARTIST% : Artist\n"
+"\n"
+"Note:\n"
+"Manga folder name must have at least %MANGA%.\n"
+msgstr ""
+"%WEBSITE% : Nama situs\n"
+"%MANGA% : Judul komik\n"
+"%AUTHOR% : Penulis\n"
+"%ARTIST% : Seniman\n"
+"\n"
+"Catatan:\n"
+"Nama folder komik setidaknya harus meiliki %MANGA%\n"
+
 #: tmainform.lboptionmaxparallel.caption
-msgid "Number of downloaded tasks at the same time (Max: 8)"
-msgstr "Jumlah unduhan aktif pada waktu yang sama (Max: 8)"
+msgid "Number of downloaded tasks at the same time"
+msgstr "Jumlah unduhan aktif pada waktu yang sama"
 
 #: tmainform.lboptionmaxretry.caption
-msgid "Number of retry times if tasks have download problems (0 = always retry)"
-msgstr "Jumlah pengulangan jika unduhan memiliki masalah (0 = selalu coba lagi)"
+msgid "Number of retry times if tasks have download problems (-1 = always retry)"
+msgstr "Jumlah pengulangan jika unduhan memiliki masalah (-1 = selalu coba lagi)"
 
 #: tmainform.lboptionmaxthread.caption
-msgid "Number of downloaded files per task at the same time (Max: 32)"
-msgstr "Jumlah koneksi per unduhan pada waktu yang sama (Max: 32)"
+msgid "Number of downloaded files per task at the same time"
+msgstr "Jumlah koneksi per unduhan pada waktu yang sama"
 
 #: tmainform.lboptionnewmangatime.caption
 msgid "New manga based on  it's update time (days)"
 msgstr "Komik baru berdasarkan waktu pembaruan (hari)"
 
 #: tmainform.lboptionpass.caption
+msgctxt "tmainform.lboptionpass.caption"
 msgid "Password"
 msgstr "Kata kunci"
 
@@ -1051,6 +1647,11 @@ msgstr "Tingkat kompresi PDF"
 msgctxt "TMAINFORM.LBOPTIONPDFQUALITY.HINT"
 msgid "100 = FlateEncode (lossless), lower = DCTEncode (lossy)"
 msgstr "100 = FlateEncode (lossless), lebih rendah = DCTEncode (lossy)"
+
+#: tmainform.lboptionpdfqualityhint.caption
+msgctxt "tmainform.lboptionpdfqualityhint.caption"
+msgid "[?]"
+msgstr "[?]"
 
 #: tmainform.lboptionport.caption
 msgid "Port"
@@ -1064,13 +1665,27 @@ msgstr "Tipe"
 msgid "Rename  digits"
 msgstr "Ganti nama digit"
 
+#: tmainform.lboptionretryfailedtask.caption
+msgid "Number of retry times if task failed"
+msgstr "Jumlah pengulangan pada tugas unduhan yang memiliki masalah"
+
 #: tmainform.lboptionuser.caption
+msgctxt "tmainform.lboptionuser.caption"
 msgid "Username"
 msgstr "Nama user"
+
+#: tmainform.lbpngcompressionlevel.caption
+msgctxt "tmainform.lbpngcompressionlevel.caption"
+msgid "PNG Compression level"
+msgstr "Level kompresi PNG"
 
 #: tmainform.lbsaveto.caption
 msgid "Save to:"
 msgstr "Lokasi penyimpanan:"
+
+#: tmainform.lbwebpsaveas.caption
+msgid "Save WebP as"
+msgstr "Simpan WebP sebagai"
 
 #: tmainform.medturldelete.caption
 msgctxt "TMAINFORM.MEDTURLDELETE.CAPTION"
@@ -1078,6 +1693,7 @@ msgid "Delete"
 msgstr "Hapus"
 
 #: tmainform.medurlcopy.caption
+msgctxt "tmainform.medurlcopy.caption"
 msgid "Copy"
 msgstr "Salin"
 
@@ -1101,7 +1717,17 @@ msgstr "Pilih semua"
 msgid "Undo"
 msgstr "Urungkan"
 
+#: tmainform.miabortsilentthread.caption
+msgctxt "tmainform.miabortsilentthread.caption"
+msgid "Abort"
+msgstr "Hentikan"
+
+#: tmainform.michapterlistascending.caption
+msgid "Ascending"
+msgstr "Menaik"
+
 #: tmainform.michapterlistcheckall.caption
+msgctxt "tmainform.michapterlistcheckall.caption"
 msgid "Check all"
 msgstr "Centang semua"
 
@@ -1109,11 +1735,25 @@ msgstr "Centang semua"
 msgid "Check selected"
 msgstr "Centang yang dipilih"
 
+#: tmainform.michapterlistdescending.caption
+msgid "Descending"
+msgstr "Menurun"
+
+#: tmainform.michapterlistfilter.caption
+msgctxt "tmainform.michapterlistfilter.caption"
+msgid "Filter"
+msgstr "Saring"
+
+#: tmainform.michapterlisthidedownloaded.caption
+msgid "Hide downloaded chapters"
+msgstr "Sembunyikan bab terunduh"
+
 #: tmainform.michapterlisthighlight.caption
-msgid "Highlight download chapters"
+msgid "Highlight downloaded chapters"
 msgstr "Sorot bab terunduh"
 
 #: tmainform.michapterlistuncheckall.caption
+msgctxt "tmainform.michapterlistuncheckall.caption"
 msgid "Uncheck all"
 msgstr "Hapus semua centang"
 
@@ -1138,6 +1778,20 @@ msgstr "Daftar saja"
 #: tmainform.midownloaddeletetaskdata.caption
 msgid "Task + Data"
 msgstr "Daftar dan data"
+
+#: tmainform.midownloaddeletetaskdatafavorite.caption
+msgid "Task + Data + Favorite"
+msgstr "Daftar, data dan kesukaan"
+
+#: tmainform.midownloaddisable.caption
+msgctxt "tmainform.midownloaddisable.caption"
+msgid "Disable"
+msgstr "Matikan"
+
+#: tmainform.midownloadenable.caption
+msgctxt "tmainform.midownloadenable.caption"
+msgid "Enable"
+msgstr "Nyalakan"
 
 #: tmainform.midownloadmergecompleted.caption
 msgid "Merge completed tasks"
@@ -1184,10 +1838,20 @@ msgctxt "TMAINFORM.MIFAVORITESDELETE.CAPTION"
 msgid "Delete"
 msgstr "Hapus"
 
+#: tmainform.mifavoritesdisable.caption
+msgctxt "tmainform.mifavoritesdisable.caption"
+msgid "Disable"
+msgstr "Matikan"
+
 #: tmainform.mifavoritesdownloadall.caption
 msgctxt "tmainform.mifavoritesdownloadall.caption"
 msgid "Download all"
 msgstr "Unduh semua"
+
+#: tmainform.mifavoritesenable.caption
+msgctxt "tmainform.mifavoritesenable.caption"
+msgid "Enable"
+msgstr "Nyalakan"
 
 #: tmainform.mifavoritesopenfolder.caption
 msgctxt "TMAINFORM.MIFAVORITESOPENFOLDER.CAPTION"
@@ -1199,9 +1863,18 @@ msgctxt "TMAINFORM.MIFAVORITESOPENWITH.CAPTION"
 msgid "Open ..."
 msgstr "Buka ..."
 
+#: tmainform.mifavoritesrename.caption
+msgid "Rename"
+msgstr "Ubah nama"
+
 #: tmainform.mifavoritesstopchecknewchapter.caption
 msgid "Stop check for new chapter"
 msgstr "Berhenti periksa bab baru"
+
+#: tmainform.mifavoritestransferwebsite.caption
+msgctxt "tmainform.mifavoritestransferwebsite.caption"
+msgid "Transfer website"
+msgstr "Transfer website"
 
 #: tmainform.mifavoritesviewinfos.caption
 msgctxt "TMAINFORM.MIFAVORITESVIEWINFOS.CAPTION"
@@ -1216,6 +1889,11 @@ msgstr "Sorot komik baru"
 msgid "Add to Favorites"
 msgstr "Tambahkan ke kesukaan"
 
+#: tmainform.mimangalistdelete.caption
+msgctxt "tmainform.mimangalistdelete.caption"
+msgid "Delete"
+msgstr "Hapus"
+
 #: tmainform.mimangalistdownloadall.caption
 msgctxt "TMAINFORM.MIMANGALISTDOWNLOADALL.CAPTION"
 msgid "Download all"
@@ -1225,9 +1903,66 @@ msgstr "Unduh semua"
 msgid "View manga infos"
 msgstr "Lihat informasi komik"
 
+#: tmainform.mitrayafterdownloadfinish.caption
+msgid "After download finish"
+msgstr "Setelah download selesai"
+
+#: tmainform.mitrayexit.caption
+msgctxt "tmainform.mitrayexit.caption"
+msgid "Exit"
+msgstr "Keluar"
+
+#: tmainform.mitrayfinishexit.caption
+msgctxt "tmainform.mitrayfinishexit.caption"
+msgid "Exit"
+msgstr "Keluar"
+
+#: tmainform.mitrayfinishhibernate.caption
+msgid "Hibernate"
+msgstr "Tidurkan komputer"
+
+#: tmainform.mitrayfinishnothing.caption
+msgid "Nothing"
+msgstr "TIdak ada"
+
+#: tmainform.mitrayfinishshutdown.caption
+msgid "Shutdown"
+msgstr "Matikan komputer"
+
+#: tmainform.mitrayrestore.caption
+msgid "Restore"
+msgstr "Pulihkan"
+
+#: tmainform.mitrayresumeall.caption
+msgid "Resume all"
+msgstr "Lanjutkan semua"
+
+#: tmainform.mitrayshowdropbox.caption
+msgctxt "tmainform.mitrayshowdropbox.caption"
+msgid "Show Drop Box"
+msgstr "Tampilkan kotak unduh"
+
+#: tmainform.mitraystopall.caption
+msgid "Stop all"
+msgstr "Hentikan semua"
+
 #: tmainform.mndownload1click.caption
 msgid "Download all lists from server at once"
 msgstr "Unduh semua daftar dari server"
+
+#: tmainform.mnfiltergenreallcheck.caption
+msgctxt "tmainform.mnfiltergenreallcheck.caption"
+msgid "Check all"
+msgstr "Centang semua"
+
+#: tmainform.mnfiltergenreallindeterminate.caption
+msgid "Indeterminate all"
+msgstr "Semua tak tentu"
+
+#: tmainform.mnfiltergenrealluncheck.caption
+msgctxt "tmainform.mnfiltergenrealluncheck.caption"
+msgid "Uncheck all"
+msgstr "Hapus semua centang"
 
 #: tmainform.mnupdate1click.caption
 msgid "Update all lists at once"
@@ -1276,6 +2011,22 @@ msgstr "Lanjutkan semua"
 msgid "Stop All"
 msgstr "Hentikan semua"
 
+#: tmainform.tbmidownloadmovebottom.hint
+msgid "Move selected item(s) to bottom"
+msgstr "Pindahkan item-item terpilih ke paling bawah"
+
+#: tmainform.tbmidownloadmovedown.hint
+msgid "Move selected item(s) down"
+msgstr "Pindahkan item-item terpilih ke bawah"
+
+#: tmainform.tbmidownloadmovetop.hint
+msgid "Move selected item(s) to top"
+msgstr "Pindahkan item-item terpilih ke paling atas"
+
+#: tmainform.tbmidownloadmoveup.hint
+msgid "Move selected item(s) up"
+msgstr "Pindahkan item-item terpilih ke atas"
+
 #: tmainform.tbwebsitescollapseall.caption
 msgid "Collapse All"
 msgstr "Lipat semua"
@@ -1288,49 +2039,67 @@ msgstr "Bentangkan semua"
 msgid "About"
 msgstr "Tentang"
 
+#: tmainform.tsabouttext.caption
+msgid "About FMD"
+msgstr "Tentang FMD"
+
+#: tmainform.tsaccounts.caption
+msgid "Accounts"
+msgstr "Akun"
+
+#: tmainform.tschangelogtext.caption
+msgid "Changelog"
+msgstr "Catatan perubahan"
+
 #: tmainform.tsconnections.caption
 msgid "Connections"
 msgstr "Koneksi"
+
+#: tmainform.tscustomcolor.caption
+msgid "Custom color"
+msgstr "Kustomisasi warna"
 
 #: tmainform.tsdialogs.caption
 msgid "Dialogs"
 msgstr "Dialog"
 
 #: tmainform.tsdownload.caption
+msgctxt "tmainform.tsdownload.caption"
 msgid "Downloads"
 msgstr "Unduhan"
-
-#: tmainform.tsdownloadfilter.caption
-msgid ">>"
-msgstr ">>"
 
 #: tmainform.tsfavorites.caption
 msgctxt "tmainform.tsfavorites.caption"
 msgid "Favorites"
 msgstr "Kesukaan"
 
-#: tmainform.tsfilter.caption
-msgctxt "tmainform.tsfilter.caption"
-msgid "Filter"
-msgstr "Saring"
-
 #: tmainform.tsgeneral.caption
 msgid "General"
 msgstr "Umum"
+
+#: tmainform.tsinfofilteradv.caption
+msgctxt "tmainform.tsinfofilteradv.caption"
+msgid "Filter"
+msgstr "Saring"
+
+#: tmainform.tsinfomanga.caption
+msgid "Info"
+msgstr "Info"
 
 #: tmainform.tsinformation.caption
 msgid "Manga Info"
 msgstr "Informasi Komik"
 
-#: tmainform.tsmangalist.caption
-msgid "Manga List"
-msgstr "Daftar Komik"
+#: tmainform.tslog.caption
+msgid "Log"
+msgstr "Log"
 
 #: tmainform.tsmisc.caption
 msgid "Misc"
 msgstr "Lain-lain"
 
 #: tmainform.tsoption.caption
+msgctxt "tmainform.tsoption.caption"
 msgid "Options"
 msgstr "Pengaturan"
 
@@ -1347,9 +2116,28 @@ msgstr "Pembaruan"
 msgid "View"
 msgstr "Tampilan"
 
+#: tmainform.tswebsiteadvanced.caption
+msgid "Advanced"
+msgstr "Lanjutan"
+
+#: tmainform.tswebsitemodules.caption
+msgid "Modules"
+msgstr "Modul"
+
+#: tmainform.tswebsiteoptions.caption
+msgctxt "tmainform.tswebsiteoptions.caption"
+msgid "Options"
+msgstr "Pengaturan"
+
 #: tmainform.tswebsites.caption
+msgctxt "tmainform.tswebsites.caption"
 msgid "Websites"
-msgstr "Situs web"
+msgstr "Situs"
+
+#: tmainform.tswebsiteselection.caption
+msgctxt "tmainform.tswebsiteselection.caption"
+msgid "Websites"
+msgstr "Situs"
 
 #: tmainform.vtdownload.header.columns[0].text
 msgid "Manga"
@@ -1372,7 +2160,7 @@ msgstr "Kecepatan"
 #: tmainform.vtdownload.header.columns[4].text
 msgctxt "tmainform.vtdownload.header.columns[4].text"
 msgid "Website"
-msgstr "Situs web"
+msgstr "Situs"
 
 #: tmainform.vtdownload.header.columns[5].text
 msgctxt "tmainform.vtdownload.header.columns[5].text"
@@ -1400,7 +2188,7 @@ msgstr "Bab saat ini"
 #: tmainform.vtfavorites.header.columns[3].text
 msgctxt "TMAINFORM.VTFAVORITES.HEADER.COLUMNS[3].TEXT"
 msgid "Website"
-msgstr "Situs web"
+msgstr "Situs"
 
 #: tmainform.vtfavorites.header.columns[4].text
 msgctxt "TMAINFORM.VTFAVORITES.HEADER.COLUMNS[4].TEXT"
@@ -1422,22 +2210,70 @@ msgctxt "tnewchapter.btqueue.caption"
 msgid "&Add to queue"
 msgstr "&Tambahkan ke antrian"
 
-#: tnewchapter.caption
-msgid "New Chapter Notification"
-msgstr "Pemberitahuan bab baru"
+#: tselectdirectoryform.btok.caption
+msgctxt "tselectdirectoryform.btok.caption"
+msgid "OK"
+msgstr "OK"
+
+#: tselectdirectoryform.caption
+msgid "Select directory"
+msgstr "Pilih direktori"
 
 #: tshutdowncounterform.btabort.caption
 msgid "&Abort"
-msgstr "&Batalkan"
+msgstr "&Hentikan"
 
 #: tshutdowncounterform.btnow.caption
 msgid "&Now"
 msgstr "&Sekarang"
 
-#: tshutdowncounterform.caption
-msgctxt "tshutdowncounterform.caption"
-msgid "Free Manga Downloader"
-msgstr "Free Manga Downloader"
+#: ttransferfavoritesform.btcancel.caption
+msgctxt "ttransferfavoritesform.btcancel.caption"
+msgid "Cancel"
+msgstr "Batal"
+
+#: ttransferfavoritesform.btok.caption
+msgctxt "ttransferfavoritesform.btok.caption"
+msgid "OK"
+msgstr "OK"
+
+#: ttransferfavoritesform.caption
+msgid "Transfer Favorites"
+msgstr "Transfer kesukaan"
+
+#: ttransferfavoritesform.ckcleardownloadedchapters.caption
+msgid "Clear downloaded chapter list and reload from server"
+msgstr "Bersihkan daftr bab terunduh dan muat ulang dari server"
+
+#: ttransferfavoritesform.lbtransferto.caption
+msgctxt "ttransferfavoritesform.lbtransferto.caption"
+msgid "Transfer to"
+msgstr "Transfer ke"
+
+#: ttransferfavoritesform.rball.caption
+msgctxt "ttransferfavoritesform.rball.caption"
+msgid "All"
+msgstr "Semua"
+
+#: ttransferfavoritesform.rbinvalid.caption
+msgctxt "ttransferfavoritesform.rbinvalid.caption"
+msgid "Invalid"
+msgstr "Tidak valid"
+
+#: ttransferfavoritesform.rbvalid.caption
+msgctxt "ttransferfavoritesform.rbvalid.caption"
+msgid "Valid"
+msgstr "Valid"
+
+#: ttransferfavoritesform.vtfavs.header.columns[1].text
+msgctxt "ttransferfavoritesform.vtfavs.header.columns[1].text"
+msgid "Title"
+msgstr "Judul"
+
+#: ttransferfavoritesform.vtfavs.header.columns[2].text
+msgctxt "ttransferfavoritesform.vtfavs.header.columns[2].text"
+msgid "Website"
+msgstr "Situs"
 
 #: tupdatedialogform.btnlater.caption
 msgid "&Later"
@@ -1447,10 +2283,6 @@ msgstr "&Nanti saja"
 msgid "&Update"
 msgstr "&Perbarui"
 
-#: tupdatedialogform.caption
-msgid "New Version Found"
-msgstr "Versi baru ditemukan"
-
 #: tupdatedialogform.lbmessage.caption
 msgid ""
 "New version found! Do you want to update now?\n"
@@ -1459,21 +2291,138 @@ msgstr ""
 "Versi baru ditemukan! Apakah Anda ingin memperbarui sekarang? \n"
 "FMD akan ditutup untuk menyelesaikan update.\n"
 
+#: twebsiteoptionadvancedform.menuitem1.caption
+msgctxt "twebsiteoptionadvancedform.menuitem1.caption"
+msgid "Add"
+msgstr "Tambah"
+
+#: twebsiteoptionadvancedform.menuitem2.caption
+msgctxt "twebsiteoptionadvancedform.menuitem2.caption"
+msgid "Edit"
+msgstr "Ubah"
+
+#: twebsiteoptionadvancedform.menuitem4.caption
+msgctxt "twebsiteoptionadvancedform.menuitem4.caption"
+msgid "Delete"
+msgstr "Hapus"
+
+#: twebsiteoptionadvancedform.tscookies.caption
+msgctxt "twebsiteoptionadvancedform.tscookies.caption"
+msgid "Cookies"
+msgstr "Cookies"
+
+#: twebsiteoptionadvancedform.tsdirectorypagenumber.caption
+msgid "Directory page number"
+msgstr "Jumlah halaman directory"
+
+#: twebsiteoptionadvancedform.tsdownloads.caption
+msgctxt "twebsiteoptionadvancedform.tsdownloads.caption"
+msgid "Downloads"
+msgstr "Unduhan"
+
+#: twebsiteoptionadvancedform.tsmaxthreadspertask.caption
+msgid "Max threads per task"
+msgstr "Max jumlah threads per unduhan"
+
+#: twebsiteoptionadvancedform.tsnumberofthreads.caption
+msgid "Number of threads"
+msgstr "Jumlah threads"
+
+#: twebsiteoptionadvancedform.tsupdatelist.caption
+msgid "Update List"
+msgstr "Pembaruan daftar"
+
+#: twebsiteoptionadvancedform.tsuseragent.caption
+msgctxt "twebsiteoptionadvancedform.tsuseragent.caption"
+msgid "User Agent"
+msgstr "User Agent"
+
+#: twebsiteoptionadvancedform.vtcookies.header.columns[0].text
+msgctxt "twebsiteoptionadvancedform.vtcookies.header.columns[0].text"
+msgid "Website"
+msgstr "Situs"
+
+#: twebsiteoptionadvancedform.vtcookies.header.columns[1].text
+msgctxt "twebsiteoptionadvancedform.vtcookies.header.columns[1].text"
+msgid "Cookies"
+msgstr "Cookies"
+
+#: twebsiteoptionadvancedform.vtdownloadmaxthreadspertask.header.columns[0].text
+msgctxt "twebsiteoptionadvancedform.vtdownloadmaxthreadspertask.header.columns[0].text"
+msgid "Website"
+msgstr "Situs"
+
+#: twebsiteoptionadvancedform.vtdownloadmaxthreadspertask.header.columns[1].text
+msgctxt "twebsiteoptionadvancedform.vtdownloadmaxthreadspertask.header.columns[1].text"
+msgid "Value"
+msgstr "Nilai"
+
+#: twebsiteoptionadvancedform.vtupdatelistdirectorypagenumber.header.columns[0].text
+msgctxt "twebsiteoptionadvancedform.vtupdatelistdirectorypagenumber.header.columns[0].text"
+msgid "Website"
+msgstr "Situs"
+
+#: twebsiteoptionadvancedform.vtupdatelistdirectorypagenumber.header.columns[1].text
+msgctxt "twebsiteoptionadvancedform.vtupdatelistdirectorypagenumber.header.columns[1].text"
+msgid "Value"
+msgstr "Nilai"
+
+#: twebsiteoptionadvancedform.vtupdatelistnumberofthreads.header.columns[0].text
+msgctxt "twebsiteoptionadvancedform.vtupdatelistnumberofthreads.header.columns[0].text"
+msgid "Website"
+msgstr "Situs"
+
+#: twebsiteoptionadvancedform.vtupdatelistnumberofthreads.header.columns[1].text
+msgctxt "twebsiteoptionadvancedform.vtupdatelistnumberofthreads.header.columns[1].text"
+msgid "Value"
+msgstr "Nilai"
+
+#: twebsiteoptionadvancedform.vtuseragent.header.columns[0].text
+msgctxt "twebsiteoptionadvancedform.vtuseragent.header.columns[0].text"
+msgid "Website"
+msgstr "Situs"
+
+#: twebsiteoptionadvancedform.vtuseragent.header.columns[1].text
+msgctxt "twebsiteoptionadvancedform.vtuseragent.header.columns[1].text"
+msgid "User Agent"
+msgstr "User Agent"
+
+#: twebsiteselectionform.caption
+msgid "Select a website"
+msgstr "Pilih situs"
+
+#: twebsitesettingsform.caption
+msgid "WebsiteSettingsForm"
+msgstr "WebsiteSettingsForm"
+
+#: twebsitesettingsform.edsearch.texthint
+msgid "Website name"
+msgstr "Nama situs"
+
+#: twebsitesettingsform.edsearchproperty.texthint
+msgid "Setting name"
+msgstr "Nama pengaturan"
+
 #: udownloadsmanager.rs_compressing
 msgid "Compressing..."
 msgstr "Mengompresi..."
+
+#: udownloadsmanager.rs_disabled
+msgid "Disabled"
+msgstr "Dimatikan"
 
 #: udownloadsmanager.rs_downloading
 msgid "Downloading"
 msgstr "Mengunduh"
 
 #: udownloadsmanager.rs_failed
+msgctxt "udownloadsmanager.rs_failed"
 msgid "Failed"
 msgstr "Gagal"
 
-#: udownloadsmanager.rs_failedtocreatedirtoolong
-msgid "Failed to create dir! Too long?"
-msgstr "Gagal membuat folder! Terlalu panjang?"
+#: udownloadsmanager.rs_failedtocreatedir
+msgid "Failed to create directory!"
+msgstr "Gagal membuat direktori!"
 
 #: udownloadsmanager.rs_failedtryresumetask
 msgid "Failed, try resuming this task!"

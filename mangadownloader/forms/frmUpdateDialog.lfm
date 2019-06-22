@@ -5,19 +5,21 @@ object UpdateDialogForm: TUpdateDialogForm
   Width = 488
   BorderIcons = [biSystemMenu]
   Caption = 'New Version Found'
-  ChildSizing.LeftRightSpacing = 6
-  ChildSizing.TopBottomSpacing = 6
+  ChildSizing.LeftRightSpacing = 8
+  ChildSizing.TopBottomSpacing = 8
+  ChildSizing.HorizontalSpacing = 6
+  ChildSizing.VerticalSpacing = 6
   ClientHeight = 420
   ClientWidth = 488
   Position = poOwnerFormCenter
-  LCLVersion = '1.5'
+  LCLVersion = '1.7'
+  Visible = False
   object mmLog: TMemo
-    Left = 6
+    Left = 8
     Height = 336
-    Top = 46
-    Width = 476
+    Top = 44
+    Width = 472
     Align = alClient
-    BorderSpacing.Bottom = 6
     Font.CharSet = ANSI_CHARSET
     Font.Height = -13
     Font.Name = 'Courier New'
@@ -33,33 +35,34 @@ object UpdateDialogForm: TUpdateDialogForm
     WordWrap = False
   end
   object lbMessage: TLabel
-    Left = 6
+    Left = 8
     Height = 30
-    Top = 6
-    Width = 476
+    Top = 8
+    Width = 472
     Align = alTop
-    BorderSpacing.Bottom = 10
     Caption = 'New version found! Do you want to update now?'#13#10'FMD will be closed to finish the update.'
     ParentColor = False
   end
   object pnBottom: TPanel
-    Left = 6
+    Left = 8
     Height = 26
-    Top = 388
-    Width = 476
+    Top = 386
+    Width = 472
     Align = alBottom
     AutoSize = True
     BevelOuter = bvNone
     ChildSizing.HorizontalSpacing = 6
+    ChildSizing.VerticalSpacing = 6
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 2
     ClientHeight = 26
-    ClientWidth = 476
+    ClientWidth = 472
     TabOrder = 1
     object btnUpdate: TBitBtn
-      Left = 78
+      Left = 0
       Height = 26
       Top = 0
       Width = 84
-      Align = alLeft
       AutoSize = True
       Caption = '&Update'
       Default = True
@@ -103,11 +106,10 @@ object UpdateDialogForm: TUpdateDialogForm
       TabOrder = 0
     end
     object btnLater: TBitBtn
-      Left = 0
+      Left = 90
       Height = 26
       Top = 0
       Width = 72
-      Align = alLeft
       AutoSize = True
       Caption = '&Later'
       Glyph.Data = {

@@ -1,0 +1,9 @@
+object CustomOptionForm: TCustomOptionForm
+  Left = 281
+  Height = 240
+  Top = 68
+  Width = 320
+  Caption = 'CustomOptionForm'
+  OnCreate = FormCreate
+  LCLVersion = '1.8.0.6'
+end

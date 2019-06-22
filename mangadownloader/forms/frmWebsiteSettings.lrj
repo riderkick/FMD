@@ -1,0 +1,5 @@
+{"version":1,"strings":[
+{"hash":63106205,"name":"twebsitesettingsform.caption","sourcebytes":[87,101,98,115,105,116,101,83,101,116,116,105,110,103,115,70,111,114,109],"value":"WebsiteSettingsForm"},
+{"hash":263118389,"name":"twebsitesettingsform.edsearch.texthint","sourcebytes":[87,101,98,115,105,116,101,32,110,97,109,101],"value":"Website name"},
+{"hash":17562933,"name":"twebsitesettingsform.edsearchproperty.texthint","sourcebytes":[83,101,116,116,105,110,103,32,110,97,109,101],"value":"Setting name"}
+]}

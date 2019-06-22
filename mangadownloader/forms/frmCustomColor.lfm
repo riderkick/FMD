@@ -1,0 +1,181 @@
+object CustomColorForm: TCustomColorForm
+  Left = 295
+  Height = 352
+  Top = 191
+  Width = 535
+  Caption = 'CustomColorForm'
+  ChildSizing.HorizontalSpacing = 4
+  ChildSizing.VerticalSpacing = 4
+  ClientHeight = 352
+  ClientWidth = 535
+  OnCreate = FormCreate
+  LCLVersion = '1.7'
+  object CBColors: TColorBox
+    AnchorSideRight.Control = btColors
+    Left = 363
+    Height = 22
+    Top = 22
+    Width = 136
+    Style = [cbStandardColors, cbExtendedColors, cbSystemColors, cbIncludeNone, cbCustomColor, cbPrettyNames]
+    Anchors = [akTop, akRight]
+    ItemHeight = 16
+    OnChange = CBColorsChange
+    TabOrder = 1
+  end
+  object btColors: TColorButton
+    AnchorSideLeft.Control = CBColors
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = CBColors
+    AnchorSideBottom.Control = CBColors
+    AnchorSideBottom.Side = asrBottom
+    Left = 503
+    Height = 22
+    Top = 22
+    Width = 24
+    Anchors = [akTop, akRight, akBottom]
+    BorderWidth = 2
+    ButtonColorSize = 16
+    ButtonColor = clBlack
+    OnColorChanged = btColorsColorChanged
+  end
+  object pcCustomColorList: TPageControl
+    AnchorSideRight.Control = CBColors
+    Left = 0
+    Height = 352
+    Top = 0
+    Width = 359
+    ActivePage = tsBasicList
+    Align = alLeft
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    TabIndex = 0
+    TabOrder = 0
+    object tsBasicList: TTabSheet
+      Caption = 'Basic list'
+      ClientHeight = 324
+      ClientWidth = 351
+      object VTBasicList: TVirtualStringTree
+        Left = 0
+        Height = 324
+        Top = 0
+        Width = 351
+        Align = alClient
+        Color = clWindow
+        Colors.DropTargetBorderColor = clHotLight
+        Colors.FocusedSelectionBorderColor = clHotLight
+        Colors.SelectionRectangleBorderColor = clHotLight
+        Colors.UnfocusedSelectionBorderColor = clBtnShadow
+        DefaultText = 'Node'
+        Header.AutoSizeIndex = -1
+        Header.Columns = <>
+        Header.DefaultHeight = 17
+        Header.MainColumn = -1
+        TabOrder = 0
+        TextMargin = 0
+        TreeOptions.MiscOptions = [toAcceptOLEDrop, toFullRepaintOnResize, toGridExtensions, toInitOnSave, toToggleOnDblClick, toWheelPanning, toEditOnClick]
+        TreeOptions.PaintOptions = [toHideFocusRect, toShowButtons, toShowDropmark, toThemeAware, toUseBlendedImages]
+        TreeOptions.SelectionOptions = [toFullRowSelect]
+        OnBeforeCellPaint = VTBasicListBeforeCellPaint
+        OnDrawText = VTBasicListDrawText
+        OnFocusChanged = VTBasicListFocusChanged
+        OnGetText = VTBasicListGetText
+        OnPaintText = VTBasicListPaintText
+      end
+    end
+    object tsMangaList: TTabSheet
+      Caption = 'Manga list'
+      ClientHeight = 324
+      ClientWidth = 351
+      object VTMangaList: TVirtualStringTree
+        Left = 0
+        Height = 324
+        Top = 0
+        Width = 351
+        Align = alClient
+        Color = clWindow
+        Colors.DropTargetBorderColor = clHotLight
+        Colors.FocusedSelectionBorderColor = clHotLight
+        Colors.SelectionRectangleBorderColor = clHotLight
+        Colors.UnfocusedSelectionBorderColor = clBtnShadow
+        DefaultText = 'Node'
+        Header.AutoSizeIndex = 0
+        Header.Columns = <>
+        Header.DefaultHeight = 17
+        Header.MainColumn = -1
+        TabOrder = 0
+        TextMargin = 0
+        TreeOptions.MiscOptions = [toAcceptOLEDrop, toFullRepaintOnResize, toGridExtensions, toInitOnSave, toToggleOnDblClick, toWheelPanning, toEditOnClick]
+        TreeOptions.PaintOptions = [toHideFocusRect, toShowButtons, toShowDropmark, toThemeAware, toUseBlendedImages]
+        TreeOptions.SelectionOptions = [toFullRowSelect]
+        OnBeforeCellPaint = VTBasicListBeforeCellPaint
+        OnDrawText = VTBasicListDrawText
+        OnFocusChanged = VTBasicListFocusChanged
+        OnGetText = VTBasicListGetText
+        OnPaintText = VTBasicListPaintText
+      end
+    end
+    object tsFavoriteList: TTabSheet
+      Caption = 'Favorite list'
+      ClientHeight = 324
+      ClientWidth = 351
+      object VTFavoriteList: TVirtualStringTree
+        Left = 0
+        Height = 324
+        Top = 0
+        Width = 351
+        Align = alClient
+        Color = clWindow
+        Colors.DropTargetBorderColor = clHotLight
+        Colors.FocusedSelectionBorderColor = clHotLight
+        Colors.SelectionRectangleBorderColor = clHotLight
+        Colors.UnfocusedSelectionBorderColor = clBtnShadow
+        DefaultText = 'Node'
+        Header.AutoSizeIndex = 0
+        Header.Columns = <>
+        Header.DefaultHeight = 17
+        Header.MainColumn = -1
+        TabOrder = 0
+        TextMargin = 0
+        TreeOptions.MiscOptions = [toAcceptOLEDrop, toFullRepaintOnResize, toGridExtensions, toInitOnSave, toToggleOnDblClick, toWheelPanning, toEditOnClick]
+        TreeOptions.PaintOptions = [toHideFocusRect, toShowButtons, toShowDropmark, toThemeAware, toUseBlendedImages]
+        TreeOptions.SelectionOptions = [toFullRowSelect]
+        OnBeforeCellPaint = VTBasicListBeforeCellPaint
+        OnDrawText = VTBasicListDrawText
+        OnFocusChanged = VTBasicListFocusChanged
+        OnGetText = VTBasicListGetText
+        OnPaintText = VTBasicListPaintText
+      end
+    end
+    object tsChapterList: TTabSheet
+      Caption = 'Chapter list'
+      ClientHeight = 324
+      ClientWidth = 351
+      object VTChapterList: TVirtualStringTree
+        Left = 0
+        Height = 324
+        Top = 0
+        Width = 351
+        Align = alClient
+        Color = clWindow
+        Colors.DropTargetBorderColor = clHotLight
+        Colors.FocusedSelectionBorderColor = clHotLight
+        Colors.SelectionRectangleBorderColor = clHotLight
+        Colors.UnfocusedSelectionBorderColor = clBtnShadow
+        DefaultText = 'Node'
+        Header.AutoSizeIndex = 0
+        Header.Columns = <>
+        Header.DefaultHeight = 17
+        Header.MainColumn = -1
+        TabOrder = 0
+        TextMargin = 0
+        TreeOptions.MiscOptions = [toAcceptOLEDrop, toFullRepaintOnResize, toGridExtensions, toInitOnSave, toToggleOnDblClick, toWheelPanning, toEditOnClick]
+        TreeOptions.PaintOptions = [toHideFocusRect, toShowButtons, toShowDropmark, toThemeAware, toUseBlendedImages]
+        TreeOptions.SelectionOptions = [toFullRowSelect]
+        OnBeforeCellPaint = VTBasicListBeforeCellPaint
+        OnDrawText = VTBasicListDrawText
+        OnFocusChanged = VTBasicListFocusChanged
+        OnGetText = VTBasicListGetText
+        OnPaintText = VTBasicListPaintText
+      end
+    end
+  end
+end

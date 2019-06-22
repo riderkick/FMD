@@ -1,0 +1,7 @@
+{"version":1,"strings":[
+{"hash":164667949,"name":"tcustomcolorform.caption","sourcebytes":[67,117,115,116,111,109,67,111,108,111,114,70,111,114,109],"value":"CustomColorForm"},
+{"hash":257144884,"name":"tcustomcolorform.tsbasiclist.caption","sourcebytes":[66,97,115,105,99,32,108,105,115,116],"value":"Basic list"},
+{"hash":221522148,"name":"tcustomcolorform.tsmangalist.caption","sourcebytes":[77,97,110,103,97,32,108,105,115,116],"value":"Manga list"},
+{"hash":117201380,"name":"tcustomcolorform.tsfavoritelist.caption","sourcebytes":[70,97,118,111,114,105,116,101,32,108,105,115,116],"value":"Favorite list"},
+{"hash":148485892,"name":"tcustomcolorform.tschapterlist.caption","sourcebytes":[67,104,97,112,116,101,114,32,108,105,115,116],"value":"Chapter list"}
+]}

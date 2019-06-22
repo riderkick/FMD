@@ -6,46 +6,50 @@ object NewChapter: TNewChapter
   BorderIcons = []
   BorderStyle = bsSizeToolWin
   Caption = 'New Chapter Notification'
-  ChildSizing.LeftRightSpacing = 6
-  ChildSizing.TopBottomSpacing = 6
+  ChildSizing.LeftRightSpacing = 8
+  ChildSizing.TopBottomSpacing = 8
+  ChildSizing.HorizontalSpacing = 6
+  ChildSizing.VerticalSpacing = 6
   ClientHeight = 290
   ClientWidth = 394
   OnCreate = FormCreate
   Position = poDesktopCenter
-  LCLVersion = '1.5'
-  object mmMemo: TMemo
-    Left = 6
-    Height = 235
-    Top = 17
-    Width = 382
-    Align = alClient
-    BorderSpacing.Bottom = 6
-    ReadOnly = True
-    ScrollBars = ssAutoBoth
-    TabOrder = 0
-  end
+  LCLVersion = '1.7'
+  Visible = False
   object lbNotification: TLabel
-    Left = 6
+    Left = 8
     Height = 1
-    Top = 6
-    Width = 382
+    Top = 8
+    Width = 378
     Align = alTop
-    BorderSpacing.Bottom = 10
     Font.Style = [fsBold]
     ParentColor = False
     ParentFont = False
   end
+  object mmMemo: TMemo
+    Left = 8
+    Height = 235
+    Top = 15
+    Width = 378
+    Align = alClient
+    ReadOnly = True
+    ScrollBars = ssAutoBoth
+    TabOrder = 0
+  end
   object pnBottom: TPanel
-    Left = 6
+    Left = 8
     Height = 26
-    Top = 258
-    Width = 382
+    Top = 256
+    Width = 378
     Align = alBottom
     AutoSize = True
     BevelOuter = bvNone
     ChildSizing.HorizontalSpacing = 6
+    ChildSizing.VerticalSpacing = 6
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 4
     ClientHeight = 26
-    ClientWidth = 382
+    ClientWidth = 378
     TabOrder = 1
     object btDownload: TBitBtn
       Left = 0
@@ -142,10 +146,10 @@ object NewChapter: TNewChapter
       }
       ModalResult = 4
       OnClick = btQueueClick
-      TabOrder = 2
+      TabOrder = 1
     end
     object btCancel: TBitBtn
-      Left = 300
+      Left = 296
       Height = 26
       Top = 0
       Width = 82
@@ -190,7 +194,7 @@ object NewChapter: TNewChapter
       }
       ModalResult = 2
       OnClick = btCancelClick
-      TabOrder = 1
+      TabOrder = 2
     end
   end
 end
