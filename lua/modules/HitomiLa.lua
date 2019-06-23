@@ -12,9 +12,7 @@ function getinfo()
   mangainfo.url=MaybeFillHost(module.RootURL, url)
   if http.get(mangainfo.url) then
     local x=TXQuery.Create(http.document)
-    if mangainfo.title == '' then
-      mangainfo.title = x.xpathstring('//div[starts-with(@class,"gallery")]/h1')
-    end
+    mangainfo.title = x.xpathstring('//div[starts-with(@class,"gallery")]/h1')
     mangainfo.coverlink=MaybeFillHost(module.RootURL, x.xpathstring('//div[@class="cover"]//img/@src'))
     mangainfo.coverlink = set_https(mangainfo.coverlink)
     mangainfo.authors=x.xpathstringall('//div[starts-with(@class,"gallery")]/h2/ul/li/a')
@@ -84,7 +82,7 @@ function getnameandlink()
         local b1,b2,b3,b4=s:byte(i),s:byte(i+1),s:byte(i+2),s:byte(i+3)
         local n = b4 + (b3 << 8) + (b2 << 16) + (b1 << 24)
         links.add('https://'..domain..'/galleries/'..n..'.html')
-        names.add('')
+        names.add(n)
       end
       return no_error
     end
@@ -97,7 +95,6 @@ function Init()
   m.website = 'HitomiLa'
   m.rooturl = 'https://'..domain
   m.category = 'H-Sites'
-  m.sortedlist=true
   m.ongetinfo='getinfo'
   m.ongetpagenumber='getpagenumber'
   m.ongetnameandlink='getnameandlink'
