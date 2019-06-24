@@ -1,20 +1,14 @@
 msgid ""
 msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
-"Project-Id-Version: \n"
-"POT-Creation-Date: \n"
-"PO-Revision-Date: \n"
-"Language-Team: \n"
-"MIME-Version: 1.0\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.2.1\n"
-"Last-Translator: \n"
+"Language-Team: Stella, proofread by Mereck\n"
+"Last-Translator: Stella\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"Language: fr\n"
+"Language: fr_FR\n"
 
 #: tfrmmain.caption
 msgid "Free Manga Downloader - Updater"
-msgstr "Free Manga Downloader - MAJ"
+msgstr "Free Manga Downloader - Outil de mise à jour"
 
 #: tfrmmain.lbfilesize.caption
 msgid "File size"
@@ -22,11 +16,11 @@ msgstr "Taille du fichier"
 
 #: tfrmmain.lbstatus.caption
 msgid "Waiting..."
-msgstr "Attendre..."
+msgstr "Veuillez patienter..."
 
 #: tfrmmain.lbtransferrate.caption
 msgid "Transfer rate"
-msgstr "Débit transfert"
+msgstr "Vitesse"
 
 #: tfrmmessage.caption
 msgid "Help"
@@ -34,39 +28,39 @@ msgstr "Aide"
 
 #: umain.rs_7znotfound
 msgid "Can't extract file because 7za.exe not found!"
-msgstr "Extraction impossible 7za.exe non trouvé!"
+msgstr "Extraction du fichier impossible car 7za.exe est introuvable !"
 
 #: umain.rs_anerroroccured
 msgid "An error occured when trying to download file."
-msgstr "Erreur à la tentative de téléchargement."
+msgstr "Une erreur s'est produite lors du téléchargement du fichier."
 
 #: umain.rs_downloading
 msgid "Downloading [%s]..."
-msgstr "Téléchargement [%s]..."
+msgstr "Téléchargement de [%s]..."
 
 #: umain.rs_errorcheckantivirus
 msgid "Error saving file, check your AntiVirus!"
-msgstr "Erreur pendant la sauvegarde, vérifier votre Antivirus!"
+msgstr "Erreur lors de l'enregistrement du fichier, veuillez vérifier votre antivirus !"
 
 #: umain.rs_faileddownloadpage
 msgid "Failed downloading file!"
-msgstr "Echec téléchargement du fichier!"
+msgstr "Échec du téléchargement du fichier !"
 
 #: umain.rs_failedloadpage
 msgid "Failed loading page!"
-msgstr "Echec au chargement de la page!"
+msgstr "Échec du chargement de la page !"
 
 #: umain.rs_filenotfound
 msgid "File not found!"
-msgstr "Fichier non trouvé!"
+msgstr "Fichier introuvable !"
 
 #: umain.rs_finished
 msgid "Finished."
-msgstr "Terminée."
+msgstr "Terminé."
 
 #: umain.rs_invalidurl
 msgid "Invalid URL!"
-msgstr "URL invalide!"
+msgstr "Adresse URL invalide !"
 
 #: umain.rs_loadingpage
 msgid "Loading page..."
@@ -90,11 +84,11 @@ msgstr "Nouvelle tentative de chargement de la page[%d]..."
 
 #: umain.rs_savefile
 msgid "Saving file... "
-msgstr "Sauvegarde du fichier… "
+msgstr "Enregistrement du fichier... "
 
 #: umain.rs_servererror
 msgid "Server response error!"
-msgstr "Réponse du serveur : erreur!"
+msgstr "Erreur de réponse du serveur !"
 
 #: umain.rs_unknown
 msgid "(unknown)"
@@ -102,8 +96,9 @@ msgstr "(inconnu)"
 
 #: umain.rs_unpackfile
 msgid "Unpacking file [%s]..."
-msgstr "Décompression du fichier [%s]..."
+msgstr "Extraction du fichier [%s]..."
 
 #: umain.rs_waitmainapp
 msgid "Waiting main app to close..."
-msgstr "En attente que l'application principale se ferme..."
+msgstr "En attente de la fermeture de l'application principale..."
+
