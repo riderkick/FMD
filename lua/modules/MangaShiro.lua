@@ -17,6 +17,7 @@ function getinfo()
       or module.website == 'Kiryuu'
       or module.website == 'MangaIndoNet'
       or module.website == 'KomikIndo'
+	  or module.website == 'MaidMangaID'
     then
       mangainfo.title=x.xpathstring('//h1[@itemprop="headline"]')
       local img = x.xpathstring('//div[@itemprop="image"]/img/@data-lazy-src')
@@ -25,13 +26,27 @@ function getinfo()
       end
       mangainfo.coverlink=MaybeFillHost(module.RootURL, img)
       mangainfo.authors=x.xpathstring('//div[@class="listinfo"]//li[starts-with(.,"Author")]/substring-after(.,":")')
+	  if mangainfo.authors == '' then
+		mangainfo.authors=x.xpathstring('//*[@class="anf"]//li[starts-with(.,"Author")]/substring-after(.,":")')
+	  end
       mangainfo.genres=x.xpathstringall('//div[contains(@class,"animeinfo")]/div[@class="gnr"]/a')
+	  if mangainfo.genres == '' then
+		mangainfo.genres=x.xpathstringall('//div[@class="gnr"]/a')
+	  end
       mangainfo.status=MangaInfoStatusIfPos(x.xpathstring('//div[@class="listinfo"]//li[starts-with(.,"Status")]'))
+	  if mangainfo.status == '' then
+		mangainfo.status=MangaInfoStatusIfPos(x.xpathstring('//*[@class="anf"]//li[starts-with(.,"Status")]/substring-after(.,":")'))
+	  end
       mangainfo.summary=x.xpathstring('//*[@class="desc"]/string-join(.//text(),"")')
+	  if mangainfo.summary == '' then
+		mangainfo.summary=x.xpathstringall('//*[@class="sinopsis"]/string-join(.//text(),"")')
+	  end
       mangainfo.chapterlinks.clear()
       mangainfo.chapternames.clear()
       if module.website == 'Kiryuu' then
         x.xpathhrefall('//li//span[@class="leftoff"]/a', mangainfo.chapterlinks, mangainfo.chapternames)
+	  elseif module.website == 'MaidMangaID' then
+	    x.xpathhrefall('//div[@class="bxcl"]//li//*[@class="lchx"]/a', mangainfo.chapterlinks, mangainfo.chapternames)
       else
         x.xpathhrefall('//div[@class="bxcl"]//li//div[@class="lch"]/a', mangainfo.chapterlinks, mangainfo.chapternames)
       end
@@ -203,6 +218,7 @@ function getnameandlink()
     ['Mangacan'] =  '/daftar-komik-manga-bahasa-indonesia.html',
     ['MangaIndo'] = '/manga-list-201902-v052/',
 	['MangaCeng'] = '/manga/?list',
+	['MaidMangaID'] = '/manga-list/?list',
   }
   local dirurl = '/manga-list/'
   if dirs[module.website] ~= nil then
@@ -213,7 +229,7 @@ function getnameandlink()
       TXQuery.Create(http.document).xpathhrefall('//*[@class="daftarkomik"]//a',links,names)
     elseif module.website == 'WestManga' or module.website == 'MangaKita' or module.website == 'Kyuroku' or module.website == 'KazeManga' then
       TXQuery.Create(http.document).xpathhrefall('//*[@class="jdlbar"]//a',links,names)
-    elseif module.website == 'KomikCast' or module.website == 'BacaManga' then
+    elseif module.website == 'KomikCast' or module.website == 'BacaManga' or module.website == 'MaidMangaID' then
       TXQuery.Create(http.document).xpathhrefall('//*[@class="soralist"]//a',links,names)
     elseif module.website == 'Komiku' or module.website == 'OtakuIndo' then
       TXQuery.Create(http.document).xpathhrefall('//*[@id="a-z"]//h4/a',links,names)
@@ -263,4 +279,5 @@ function Init()
   AddWebsiteModule('MangaIndo', 'https://mangaindo.web.id')
   AddWebsiteModule('KomikMama', 'https://komikmama.net')
   AddWebsiteModule('MangaCeng', 'https://mangaceng.com')
+  AddWebsiteModule('MaidMangaID', 'https://www.maid.my.id')
 end
