@@ -188,5 +188,6 @@ function Init()
   cat = 'Arabic-Scanlation'
   AddWebsiteModule('3asqOrg', 'https://3asq.org', cat)
   AddWebsiteModule('MangaArab', 'https://mangaarab.com', cat)
+  AddWebsiteModule('AzoraManga', 'https://www.azoramanga.com', cat)
   
 end
