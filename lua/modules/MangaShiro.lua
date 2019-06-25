@@ -17,7 +17,7 @@ function getinfo()
       or module.website == 'Kiryuu'
       or module.website == 'MangaIndoNet'
       or module.website == 'KomikIndo'
-	  or module.website == 'Maid'
+	  or module.website == 'MaidMangaID'
     then
       mangainfo.title=x.xpathstring('//h1[@itemprop="headline"]')
       local img = x.xpathstring('//div[@itemprop="image"]/img/@data-lazy-src')
@@ -45,7 +45,7 @@ function getinfo()
       mangainfo.chapternames.clear()
       if module.website == 'Kiryuu' then
         x.xpathhrefall('//li//span[@class="leftoff"]/a', mangainfo.chapterlinks, mangainfo.chapternames)
-	  elseif module.website == 'Maid' then
+	  elseif module.website == 'MaidMangaID' then
 	    x.xpathhrefall('//div[@class="bxcl"]//li//*[@class="lchx"]/a', mangainfo.chapterlinks, mangainfo.chapternames)
       else
         x.xpathhrefall('//div[@class="bxcl"]//li//div[@class="lch"]/a', mangainfo.chapterlinks, mangainfo.chapternames)
@@ -218,7 +218,7 @@ function getnameandlink()
     ['Mangacan'] =  '/daftar-komik-manga-bahasa-indonesia.html',
     ['MangaIndo'] = '/manga-list-201902-v052/',
 	['MangaCeng'] = '/manga/?list',
-	['Maid'] = '/manga-list/?list',
+	['MaidMangaID'] = '/manga-list/?list',
   }
   local dirurl = '/manga-list/'
   if dirs[module.website] ~= nil then
@@ -229,7 +229,7 @@ function getnameandlink()
       TXQuery.Create(http.document).xpathhrefall('//*[@class="daftarkomik"]//a',links,names)
     elseif module.website == 'WestManga' or module.website == 'MangaKita' or module.website == 'Kyuroku' or module.website == 'KazeManga' then
       TXQuery.Create(http.document).xpathhrefall('//*[@class="jdlbar"]//a',links,names)
-    elseif module.website == 'KomikCast' or module.website == 'BacaManga' or module.website == 'Maid' then
+    elseif module.website == 'KomikCast' or module.website == 'BacaManga' or module.website == 'MaidMangaID' then
       TXQuery.Create(http.document).xpathhrefall('//*[@class="soralist"]//a',links,names)
     elseif module.website == 'Komiku' or module.website == 'OtakuIndo' then
       TXQuery.Create(http.document).xpathhrefall('//*[@id="a-z"]//h4/a',links,names)
@@ -279,5 +279,5 @@ function Init()
   AddWebsiteModule('MangaIndo', 'https://mangaindo.web.id')
   AddWebsiteModule('KomikMama', 'https://komikmama.net')
   AddWebsiteModule('MangaCeng', 'https://mangaceng.com')
-  AddWebsiteModule('Maid', 'https://www.maid.my.id')
+  AddWebsiteModule('MaidMangaID', 'https://www.maid.my.id')
 end
