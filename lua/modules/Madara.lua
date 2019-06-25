@@ -167,7 +167,6 @@ function Init()
   AddWebsiteModule('KlikManga', 'https://klikmanga.com', cat)
   
   cat = 'H-Sites'
-  AddWebsiteModule('ManhwaHentai', 'https://manhwahentai.com', cat)
   AddWebsiteModule('ManhwaHand', 'https://manhwahand.com', cat)
   AddWebsiteModule('DoujinYosh', 'https://doujinyosh.com', cat)
 
