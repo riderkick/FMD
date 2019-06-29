@@ -132,6 +132,13 @@ function getnameandlink()
   return createInstance():getnameandlink()
 end
 
+function BeforeDownloadImage()
+  http.headers.values['referer'] = module.rooturl
+  return true
+end
+
+-------------------------------------------------------------------------------
+
 function AddWebsiteModule(name, url, category)
   local m = NewModule()
   m.website = name
@@ -140,6 +147,7 @@ function AddWebsiteModule(name, url, category)
   m.ongetinfo='getinfo'
   m.ongetpagenumber='getpagenumber'
   m.ongetnameandlink='getnameandlink'
+  m.OnBeforeDownloadImage = 'BeforeDownloadImage'
   return m
 end
 
