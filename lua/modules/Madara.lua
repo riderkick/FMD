@@ -42,7 +42,7 @@ function Modules.Madara()
     end
     if http.get(aurl) then
       local x = TXQuery.Create(http.Document)
-      if module.website == 'MangaYosh' then
+      if module.website == 'MangaYosh' or module.website == 'ManhwaHentai' then
         v = x.xpath('//div[contains(@class, "page-break")]/img')
         for i = 1, v.count do
           v1 = v.get(i)
@@ -177,6 +177,7 @@ function Init()
   cat = 'H-Sites'
   AddWebsiteModule('ManhwaHand', 'https://manhwahand.com', cat)
   AddWebsiteModule('DoujinYosh', 'https://doujinyosh.com', cat)
+  AddWebsiteModule('ManhwaHentai', 'http://manhwahentai.site', cat)
 
   cat = 'Spanish-Scanlation'
   AddWebsiteModule('GodsRealmScan', 'https://godsrealmscan.com', cat)
