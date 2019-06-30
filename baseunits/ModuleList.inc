@@ -41,5 +41,4 @@ uses
   EHentai,
   Luscious,
   EightMuses,
-  HentaiCafe,
   Hentai2Read;
