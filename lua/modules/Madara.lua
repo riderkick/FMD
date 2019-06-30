@@ -42,7 +42,7 @@ function Modules.Madara()
     end
     if http.get(aurl) then
       local x = TXQuery.Create(http.Document)
-      if module.website == 'MangaYosh' then
+      if module.website == 'MangaYosh' or module.website == 'ManhwaHentai' then
         v = x.xpath('//div[contains(@class, "page-break")]/img')
         for i = 1, v.count do
           v1 = v.get(i)
@@ -132,6 +132,13 @@ function getnameandlink()
   return createInstance():getnameandlink()
 end
 
+function BeforeDownloadImage()
+  http.headers.values['referer'] = module.rooturl
+  return true
+end
+
+-------------------------------------------------------------------------------
+
 function AddWebsiteModule(name, url, category)
   local m = NewModule()
   m.website = name
@@ -140,6 +147,7 @@ function AddWebsiteModule(name, url, category)
   m.ongetinfo='getinfo'
   m.ongetpagenumber='getpagenumber'
   m.ongetnameandlink='getnameandlink'
+  m.OnBeforeDownloadImage = 'BeforeDownloadImage'
   return m
 end
 
@@ -169,6 +177,7 @@ function Init()
   cat = 'H-Sites'
   AddWebsiteModule('ManhwaHand', 'https://manhwahand.com', cat)
   AddWebsiteModule('DoujinYosh', 'https://doujinyosh.com', cat)
+  AddWebsiteModule('ManhwaHentai', 'http://manhwahentai.site', cat)
 
   cat = 'Spanish-Scanlation'
   AddWebsiteModule('GodsRealmScan', 'https://godsrealmscan.com', cat)
