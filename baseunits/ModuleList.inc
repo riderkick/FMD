@@ -14,7 +14,6 @@ uses
   WebtoonTr,
   KuManga,
   SenManga,
-  MangaInn,
   GoodManga,
   MangaZuki,
   ReadMangaToday,
