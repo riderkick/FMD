@@ -14,7 +14,6 @@ uses
   WebtoonTr,
   KuManga,
   SenManga,
-  MangaInn,
   GoodManga,
   MangaZuki,
   ReadMangaToday,
@@ -41,5 +40,4 @@ uses
   EHentai,
   Luscious,
   EightMuses,
-  HentaiCafe,
   Hentai2Read;
