@@ -109,7 +109,6 @@ function AddWebsiteModule(name, url, category)
   m.Website               = name
   m.RootURL               = url
   m.Category              = category
-  m.FavoriteAvailable     = false
   m.TotalDirectory        = AlphaList:len()
   m.OnGetInfo             = 'GetInfo'
   m.OnGetNameAndLink      = 'GetNameAndLink'
