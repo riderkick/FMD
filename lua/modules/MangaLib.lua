@@ -27,13 +27,12 @@ function getpagenumber()
   task.pagelinks.clear()
   if http.get(MaybeFillHost(module.rooturl,url)) then
     local x=TXQuery.Create(http.Document)
-    local v=string.match(x.xpathstring('//script[contains(., "window.__info")]/text()'), 'window.__info =(.*)')
-    x=TXQuery.Create(v)
-    local imgbaseurl=buildimageurl(x)
-    v=x.xpath('json(*).pages()')
+    local imgbaseurl=buildimageurl(TXQuery.Create(string.match(x.xpathstring('//script[contains(., "window.__info")]/text()'), 'window.__info =(.*);')))
+    local p=TXQuery.Create(DecodeBase64(StreamToString(http.document):match('<span class="pp"><!%-%-(.-)%-%-></span>'):gsub('^%s*(.-)%s*$', '%1')))
+    local v=p.xpath('json(*)()')
     for i=1,v.count do
       local v1=v.get(i)
-      task.pagelinks.add(imgbaseurl..x.xpathstring('page_image', v1))
+      task.pagelinks.add(imgbaseurl..x.xpathstring('u', v1))
     end
     return true
   else
@@ -78,7 +77,6 @@ function Init()
   m.website = 'MangaLib'
   m.rooturl = 'https://mangalib.me'
   m.category = 'Russian'
-  m.lastupdated='May 4, 2019'
   m.ongetinfo='getinfo'
   m.ongetpagenumber='getpagenumber'
   m.ongetnameandlink='getnameandlink'

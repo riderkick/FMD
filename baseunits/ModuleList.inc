@@ -14,7 +14,6 @@ uses
   WebtoonTr,
   KuManga,
   SenManga,
-  MangaInn,
   GoodManga,
   MangaZuki,
   ReadMangaToday,
@@ -34,7 +33,6 @@ uses
   SundayWebEvery,
   TonariNoYoungJump,
   YoungAceUp,
-  NewType,
   Comico,
   Shogakukan,
   // Adult
@@ -42,5 +40,4 @@ uses
   EHentai,
   Luscious,
   EightMuses,
-  HentaiCafe,
   Hentai2Read;
