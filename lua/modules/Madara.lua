@@ -26,7 +26,7 @@ function Modules.Madara()
       mangainfo.artists=x.xpathstringall('//div[@class="artist-content"]/a')
       mangainfo.genres=x.xpathstringall('//div[@class="genres-content"]/a')
       mangainfo.status = MangaInfoStatusIfPos(x.xpathstring('//div[@class="summary-heading" and contains(h5, "Status")]/following-sibling::div/div/a'))
-      mangainfo.summary=x.xpathstring('//div[contains(@class,"summary__content")]/*')
+      mangainfo.summary=x.xpathstring('//div[contains(@class,"description-summary")]/string-join(.//text(),"")')
       if module.website == 'DoujinYosh' or module.website == 'MangaYosh' then
         local v = x.xpath('//li[@class="wp-manga-chapter"]/a')
         for i = 1, v.count do
@@ -151,6 +151,7 @@ function AddWebsiteModule(name, url, category)
   local m = NewModule()
   m.website = name
   m.rooturl = url
+  m.lastupdated='July 10, 2019'
   m.category = category
   m.ongetinfo='getinfo'
   m.ongetpagenumber='getpagenumber'
