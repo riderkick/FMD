@@ -1322,13 +1322,13 @@ msgstr "Berisi kejadian yang mengakibatkan kerugian besar dan kemalangan."
 
 #: tmainform.ckfilterweebtons.caption
 msgctxt "tmainform.ckfilterweebtons.caption"
-msgid "Weebtoons"
-msgstr "Weebtoons"
+msgid "Webtoons"
+msgstr "Webtoons"
 
 #: tmainform.ckfilterweebtons.hint
 msgctxt "tmainform.ckfilterweebtons.hint"
-msgid "Weebtoons"
-msgstr "Weebtoons"
+msgid "Webtoons"
+msgstr "Webtoons"
 
 #: tmainform.ckfilteryaoi.caption
 msgid "Yaoi"

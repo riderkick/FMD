@@ -1333,12 +1333,12 @@ msgstr "Büyük kayıpların ya da talihsizliklerin olduğu olaylar içerir."
 
 #: tmainform.ckfilterweebtons.caption
 msgctxt "tmainform.ckfilterweebtons.caption"
-msgid "Weebtoons"
+msgid "Webtoons"
 msgstr "Webtoonlar"
 
 #: tmainform.ckfilterweebtons.hint
 msgctxt "tmainform.ckfilterweebtons.hint"
-msgid "Weebtoons"
+msgid "Webtoons"
 msgstr "Webtoonlar"
 
 #: tmainform.ckfilteryaoi.caption

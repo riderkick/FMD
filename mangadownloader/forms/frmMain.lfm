@@ -2169,11 +2169,11 @@ object MainForm: TMainForm
                   object ckFilterWeebtons: TCheckBox
                     Left = 499
                     Height = 19
-                    Hint = 'Weebtoons'
+                    Hint = 'Webtoons'
                     Top = 115
                     Width = 117
                     AllowGrayed = True
-                    Caption = 'Weebtoons'
+                    Caption = 'Webtoons'
                     ParentFont = False
                     ParentShowHint = False
                     PopupMenu = pmFilterGenreAll

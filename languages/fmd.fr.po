@@ -1394,12 +1394,12 @@ msgstr ""
 
 #: tmainform.ckfilterweebtons.caption
 msgctxt "tmainform.ckfilterweebtons.caption"
-msgid "Weebtoons"
+msgid "Webtoons"
 msgstr "Webtoons"
 
 #: tmainform.ckfilterweebtons.hint
 msgctxt "tmainform.ckfilterweebtons.hint"
-msgid "Weebtoons"
+msgid "Webtoons"
 msgstr ""
 "Webtoons :\n"
 "Caractérise les productions sud-coréennes, publiées sur internet, en opposition aux mangas traditionnellement associés au Japon."

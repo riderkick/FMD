@@ -1320,12 +1320,12 @@ msgstr "Содержит события, приводящие к большим 
 
 #: tmainform.ckfilterweebtons.caption
 msgctxt "tmainform.ckfilterweebtons.caption"
-msgid "Weebtoons"
+msgid "Webtoons"
 msgstr "Вебкомиксы"
 
 #: tmainform.ckfilterweebtons.hint
 msgctxt "tmainform.ckfilterweebtons.hint"
-msgid "Weebtoons"
+msgid "Webtoons"
 msgstr "Вебкомиксы"
 
 #: tmainform.ckfilteryaoi.caption
