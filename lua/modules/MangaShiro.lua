@@ -187,6 +187,7 @@ function getnameandlink()
     ['MangaIndo'] = '/manga-list-201902-v052/',
 	['MangaCeng'] = '/manga/?list',
 	['MaidMangaID'] = '/manga-list/?list',
+	['KOMIKAV'] = '/manga/?list',
   }
   local dirurl = '/manga-list/'
   if dirs[module.website] ~= nil then
@@ -211,7 +212,7 @@ function AddWebsiteModule(site, url, cat)
   m.category=cat
   m.website=site
   m.rooturl=url
-  m.lastupdated='July 10, 2019'
+  m.lastupdated='July 19, 2019'
   m.ongetinfo='getinfo'
   m.ongetpagenumber='getpagenumber'
   m.ongetnameandlink='getnameandlink'
@@ -241,4 +242,5 @@ local cat = 'Indonesian'
 	AddWebsiteModule('KomikMama', 'https://komikmama.net', cat)
 	AddWebsiteModule('MangaCeng', 'https://mangaceng.com', cat)
 	AddWebsiteModule('MaidMangaID', 'https://www.maid.my.id', cat)
+	AddWebsiteModule('KOMIKAV', 'https://komikav.com/', cat)
 end
