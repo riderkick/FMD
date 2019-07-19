@@ -242,5 +242,5 @@ local cat = 'Indonesian'
 	AddWebsiteModule('KomikMama', 'https://komikmama.net', cat)
 	AddWebsiteModule('MangaCeng', 'https://mangaceng.com', cat)
 	AddWebsiteModule('MaidMangaID', 'https://www.maid.my.id', cat)
-	AddWebsiteModule('KOMIKAV', 'https://komikav.com/', cat)
+	AddWebsiteModule('KomikAV', 'https://komikav.com/', cat)
 end
