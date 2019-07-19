@@ -445,7 +445,7 @@ begin
   
   if Settings.CloudflareBypass.BypassLock then Sleep(6000);
   
-  if not Settings.CloudflareBypass.DisableCloudflareBypass and FCloudflareEnabled and ((Settings.CloudflareBypass.Cookies = '') or (Settings.CloudflareBypass.UserAgent = '')) then
+  if OptionEnableCloudflareBypass and not Settings.CloudflareBypass.DisableCloudflareBypass and FCloudflareEnabled and ((Settings.CloudflareBypass.Cookies = '') or (Settings.CloudflareBypass.UserAgent = '')) then
   begin
     Settings.CloudflareBypass.BypassLock := True;
     Logger.Send('Running cf_bypass for website: [' + Website + ']');
@@ -482,7 +482,7 @@ begin
         DeleteFile(CONFIG_FOLDER + 'cf_bypass-' + Website + '.txt');
       end;
     end
-    else
+    else if OptionAutomaticallyDisableCloudflareBypass then
       Settings.CloudflareBypass.DisableCloudflareBypass := True;
     
     Settings.CloudflareBypass.BypassLock := False;

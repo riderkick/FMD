@@ -73,6 +73,8 @@ type
     cbUseRegExpr: TCheckBox;
     cbOptionProxyType: TComboBox;
     cbOptionOneInstanceOnly: TCheckBox;
+    ckOptionAutomaticallyDisableCloudflareBypass: TCheckBox;
+    ckOptionEnableCloudflareBypass: TCheckBox;
     ckPNGSaveAsJPEG: TCheckBox;
     ckOptionsAlwaysStartTaskFromFailedChapters: TCheckBox;
     ckEnableLogging: TCheckBox;
@@ -91,6 +93,7 @@ type
     edURL: TEditButton;
     edWebsitesSearch: TEditButton;
     gbImageConversion: TGroupBox;
+    gbOptionsCloudflareBypass: TGroupBox;
     IconDLLeft: TImageList;
     lbPNGCompressionLevel: TLabel;
     lbJPEGQuality: TLabel;
@@ -4885,6 +4888,8 @@ begin
     seOptionConnectionTimeout.Value := ReadInteger('connections', 'ConnectionTimeout', OptionConnectionTimeout);
     seOptionRetryFailedTask.Value := ReadInteger('connections', 'NumberOfAutoRetryFailedTask', OptionRetryFailedTask);
     ckOptionsAlwaysStartTaskFromFailedChapters.Checked := ReadBool('connections', 'AlwaysStartFromFailedChapters', OptionAlwaysStartTaskFromFailedChapters);
+	ckOptionEnableCloudflareBypass.Checked := ReadBool('connections', 'OptionEnableCloudflareBypass', OptionEnableCloudflareBypass);
+    ckOptionAutomaticallyDisableCloudflareBypass.Checked := ReadBool('connections', 'OptionAutomaticallyDisableCloudflareBypass', OptionAutomaticallyDisableCloudflareBypass);
 
     // proxy
     cbOptionUseProxy.Checked := ReadBool('connections', 'UseProxy', False);
@@ -4998,7 +5003,9 @@ begin
       WriteInteger('connections', 'ConnectionTimeout', seOptionConnectionTimeout.Value);
       WriteInteger('connections', 'NumberOfAutoRetryFailedTask', seOptionRetryFailedTask.Value);
       WriteBool('connections', 'AlwaysRetruFailedChaptersOnStart', ckOptionsAlwaysStartTaskFromFailedChapters.Checked);
-
+	  WriteBool('connections', 'OptionEnableCloudflareBypass', ckOptionEnableCloudflareBypass.Checked);
+	  WriteBool('connections', 'OptionAutomaticallyDisableCloudflareBypass', ckOptionAutomaticallyDisableCloudflareBypass.Checked);
+	  
       // proxy
       WriteBool('connections', 'UseProxy', cbOptionUseProxy.Checked);
       WriteString('connections', 'ProxyType', cbOptionProxyType.Text);
@@ -5165,6 +5172,8 @@ begin
     SetDefaultTimeoutAndApply(OptionConnectionTimeout * 1000);
     OptionRetryFailedTask := seOptionRetryFailedTask.Value;
     OptionAlwaysStartTaskFromFailedChapters := ckOptionsAlwaysStartTaskFromFailedChapters.Checked;
+	OptionEnableCloudflareBypass := ckOptionEnableCloudflareBypass.Checked;
+	OptionAutomaticallyDisableCloudflareBypass := ckOptionAutomaticallyDisableCloudflareBypass.Checked;
 
     // proxy
     if cbOptionUseProxy.Checked then

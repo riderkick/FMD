@@ -216,7 +216,7 @@ object MainForm: TMainForm
                 end
                 object tbSeparator1: TToolButton
                   Left = 153
-                  Height = 25
+                  Height = 5
                   Top = 0
                   Style = tbsDivider
                   Visible = False
@@ -2644,11 +2644,11 @@ object MainForm: TMainForm
         Height = 470
         Top = 4
         Width = 845
-        ActivePage = tsView
+        ActivePage = tsConnections
         Align = alTop
         Anchors = [akTop, akLeft, akRight, akBottom]
         ParentFont = False
-        TabIndex = 1
+        TabIndex = 2
         TabOrder = 0
         object tsGeneral: TTabSheet
           Caption = 'General'
@@ -3098,8 +3098,8 @@ object MainForm: TMainForm
             Height = 442
             Top = 0
             Width = 837
-            HorzScrollBar.Page = 455
-            VertScrollBar.Page = 334
+            HorzScrollBar.Page = 459
+            VertScrollBar.Page = 418
             Align = alClient
             BorderStyle = bsNone
             ChildSizing.LeftRightSpacing = 4
@@ -3443,6 +3443,41 @@ object MainForm: TMainForm
               Caption = 'Always start task from failed chapters'
               TabOrder = 5
             end
+            object gbOptionsCloudflareBypass: TGroupBox
+              Left = 4
+              Height = 74
+              Top = 336
+              Width = 451
+              AutoSize = True
+              BorderSpacing.InnerBorder = 6
+              Caption = 'Cloudflare Bypass (global settings)'
+              ClientHeight = 54
+              ClientWidth = 447
+              TabOrder = 8
+              object ckOptionEnableCloudflareBypass: TCheckBox
+                Left = 6
+                Height = 19
+                Top = 4
+                Width = 152
+                BorderSpacing.Left = 6
+                BorderSpacing.Top = 4
+                Caption = 'Enable Cloudflare Bypass'
+                Checked = True
+                State = cbChecked
+                TabOrder = 0
+              end
+              object ckOptionAutomaticallyDisableCloudflareBypass: TCheckBox
+                AnchorSideLeft.Control = ckOptionEnableCloudflareBypass
+                AnchorSideTop.Control = ckOptionEnableCloudflareBypass
+                AnchorSideTop.Side = asrBottom
+                Left = 6
+                Height = 19
+                Top = 23
+                Width = 429
+                Caption = 'Automatically disable Cloudflare Bypass for websites on error or if not needed'
+                TabOrder = 1
+              end
+            end
           end
         end
         object tsSaveTo: TTabSheet
@@ -3454,7 +3489,7 @@ object MainForm: TMainForm
             Height = 442
             Top = 0
             Width = 837
-            HorzScrollBar.Page = 198
+            HorzScrollBar.Page = 194
             VertScrollBar.Page = 442
             Align = alClient
             BorderStyle = bsNone
@@ -3797,7 +3832,7 @@ object MainForm: TMainForm
               AnchorSideLeft.Control = lbOptionPDFQuality
               AnchorSideLeft.Side = asrBottom
               AnchorSideTop.Control = lbOptionPDFQuality
-              Left = 181
+              Left = 154
               Height = 15
               Top = 122
               Width = 13
@@ -3837,7 +3872,7 @@ object MainForm: TMainForm
               Height = 15
               Hint = '100 = FlateEncode (lossless), lower = DCTEncode (lossy)'
               Top = 122
-              Width = 119
+              Width = 92
               BorderSpacing.Left = 4
               Caption = 'PDF Quality Level'
               Enabled = False
