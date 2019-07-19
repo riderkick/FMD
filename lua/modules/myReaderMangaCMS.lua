@@ -24,7 +24,7 @@ function Modules.myReaderMangaCMS()
       mangainfo.status = MangaInfoStatusIfPos(x.XPathString('//dt[.=("Status","Estado","Statut")]/following-sibling::dd[1]'))
       mangainfo.authors = x.XPathStringAll('//dt[.=("Author(s)","Yazar & Çizer:","Autor(es)","Auteur(s)")]/following-sibling::dd[1]/string-join(*,", ")')
       mangainfo.artists = x.XPathStringAll('//dt[.=("Artist(s)","Artiste(s)")]/following-sibling::dd[1]/string-join(*,", ")')
-      mangainfo.genres = x.XPathStringAll('//dt[.=("Categories","Kategoriler:","Categorías","Catégories")]/following-sibling::dd[1]/string-join(*,", ")')
+      mangainfo.genres = x.XPathStringAll('//dt[.=("Categories","Kategoriler:","Categorías","Catégories","Kategori")]/following-sibling::dd[1]/string-join(*,", ")')
       mangainfo.summary = x.XPathString('//div[@class="well"]/p')
       local v = x.Xpath('//ul[@class="chapters"]/li/*[self::h5 or self::h3]')
       for i = 1, v.Count do
@@ -132,6 +132,7 @@ function Modules.KomikGue()
     local x=TXQuery.Create(http.document)
     mangainfo.artists = x.XPathStringAll('//dt[.="Artist(s)"]/following-sibling::dd[1]')
     mangainfo.summary = x.XPathString('//div[@class="well"]/div')
+    mangainfo.genres = x.XPathStringAll('//dt[.=("Categories","Kategoriler:","Categorías","Catégories","Kategori","Genre")]/following-sibling::dd[1]/string-join(*,", ")')
     local v = x.xpath('//div[@class="chapter-wrapper"]/table//td[@class="chapter"]/a')
     for i = 1, v.Count do
       local v2 = v.Get(i)
@@ -197,7 +198,7 @@ function AddWebsiteModule(name, url, cat)
   m.category = cat
   m.website = name
   m.rooturl = url
-  m.lastupdated='April 04, 2019'
+  m.lastupdated='July 10, 2019'
   m.ongetnameandlink = 'getnameandlink'
   m.ongetinfo = 'getinfo'
   m.ongetpagenumber = 'getpagenumber'
@@ -231,7 +232,6 @@ function Init()
   AddWebsiteModule('HatigarmScans', 'https://www.hatigarmscans.net', c)
 
   c='Spanish-Scanlation'
-  AddWebsiteModule('DarkSkyScan', 'https://darkskyprojects.org', c);
   AddWebsiteModule('CoYuHi', 'http://www.universoyuri.com', c);
   AddWebsiteModule('SOSScanlation', 'https://sosscanlation.com', c);
   
