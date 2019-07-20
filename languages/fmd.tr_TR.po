@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: tr\n"
-"X-Generator: Poedit 2.2.1\n"
+"X-Generator: Poedit 2.2.3\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
@@ -2663,12 +2663,12 @@ msgstr "Liste güncelleniyor"
 
 #: tmainform.ckoptionautomaticallydisablecloudflarebypass.caption
 msgid "Automatically disable Cloudflare Bypass for websites on error or if not needed"
-msgstr ""
+msgstr "Cloudflare Bypass'ı gerekmediği zaman ya da hata olduğunda otomatik olarak devredışı bırak"
 
 #: tmainform.ckoptionenablecloudflarebypass.caption
 msgid "Enable Cloudflare Bypass"
-msgstr ""
+msgstr "Cloudflare Bypass'ı Etkinleştir"
 
 #: tmainform.gboptionscloudflarebypass.caption
 msgid "Cloudflare Bypass (global settings)"
-msgstr ""
+msgstr "Cloudflare Bypass (genel ayarlar)"
