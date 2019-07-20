@@ -57,7 +57,7 @@ msgstr "%s: Tidak ditemukan %s"
 
 #: ehentai.rs_downloadoriginalimage
 msgid "Download original image(require ExHentai account)"
-msgstr "Unduh gambar asli(membutuhkan akun ExHentai)"
+msgstr "Unduh gambar asli(memerlukan akun ExHentai)"
 
 #: ehentai.rs_settingsimagesize
 msgid "Image size:"
@@ -647,7 +647,7 @@ msgstr "Tampilkan kata sandi"
 #: taccountsetform.edpassword.texthint
 msgctxt "taccountsetform.edpassword.texthint"
 msgid "Password"
-msgstr "kata sandi"
+msgstr "Kata sandi"
 
 #: taccountsetform.edusername.texthint
 msgctxt "taccountsetform.edusername.texthint"
@@ -662,7 +662,7 @@ msgstr "Nama pengguna"
 #: taccountsetform.label3.caption
 msgctxt "taccountsetform.label3.caption"
 msgid "Password"
-msgstr "kata sandi"
+msgstr "Kata sandi"
 
 #: tcustomcolorform.caption
 #, fuzzy
@@ -993,7 +993,7 @@ msgstr "Urutkan daftar unduhan saat menambahkan unduhan baru"
 
 #: tmainform.cboptionupdatelistnomangainfo.caption
 msgid "Don't load manga information when updating list (filter will be not work!)"
-msgstr "Tidak perlu memuat informasi komik saat memutakhirkan daftar (saringan tidak akan bekerja!)"
+msgstr "Jangan memuat informasi komik saat memutakhirkan daftar (saringan tidak akan bekerja!)"
 
 #: tmainform.cboptionupdatelistremoveduplicatelocaldata.caption
 msgid "Remove duplicate local data when updating manga list"
@@ -1437,7 +1437,7 @@ msgstr "Ubah nama pilihan"
 
 #: tmainform.edoptionpass.texthint
 msgid "Proxy password"
-msgstr "kata sandi"
+msgstr "Kata sandi"
 
 #: tmainform.edoptionuser.texthint
 msgid "Proxy username"
@@ -1702,7 +1702,7 @@ msgstr "Komik baru berdasarkan waktu pemutakhiran (hari)"
 #: tmainform.lboptionpass.caption
 msgctxt "tmainform.lboptionpass.caption"
 msgid "Password"
-msgstr "kata sandi"
+msgstr "Kata sandi"
 
 #: tmainform.lboptionpdfquality.caption
 msgid "PDF Quality Level"
@@ -1851,12 +1851,12 @@ msgstr "Daftar, data, dan kesukaan"
 #: tmainform.midownloaddisable.caption
 msgctxt "tmainform.midownloaddisable.caption"
 msgid "Disable"
-msgstr "Matikan"
+msgstr "Nonaktifkan"
 
 #: tmainform.midownloadenable.caption
 msgctxt "tmainform.midownloadenable.caption"
 msgid "Enable"
-msgstr "Nyalakan"
+msgstr "Aktifkan"
 
 #: tmainform.midownloadmergecompleted.caption
 msgid "Merge completed tasks"
@@ -1906,7 +1906,7 @@ msgstr "Hapus"
 #: tmainform.mifavoritesdisable.caption
 msgctxt "tmainform.mifavoritesdisable.caption"
 msgid "Disable"
-msgstr "Matikan"
+msgstr "Nonaktifkan"
 
 #: tmainform.mifavoritesdownloadall.caption
 msgctxt "tmainform.mifavoritesdownloadall.caption"
@@ -1916,7 +1916,7 @@ msgstr "Unduh semua"
 #: tmainform.mifavoritesenable.caption
 msgctxt "tmainform.mifavoritesenable.caption"
 msgid "Enable"
-msgstr "Nyalakan"
+msgstr "Aktifkan"
 
 #: tmainform.mifavoritesopenfolder.caption
 msgctxt "TMAINFORM.MIFAVORITESOPENFOLDER.CAPTION"
@@ -2650,12 +2650,12 @@ msgstr "Memutakhirkan daftar"
 
 #: tmainform.ckoptionautomaticallydisablecloudflarebypass.caption
 msgid "Automatically disable Cloudflare Bypass for websites on error or if not needed"
-msgstr ""
+msgstr "Nonaktifkan Cloudflare Bypass otomatis untuk situs yang terjadi galat atau tidak diperlukan"
 
 #: tmainform.ckoptionenablecloudflarebypass.caption
 msgid "Enable Cloudflare Bypass"
-msgstr ""
+msgstr "Aktifkan Cloudflare Bypass"
 
 #: tmainform.gboptionscloudflarebypass.caption
 msgid "Cloudflare Bypass (global settings)"
-msgstr ""
+msgstr "Cloudflare Bypass (pengaturan global)"
