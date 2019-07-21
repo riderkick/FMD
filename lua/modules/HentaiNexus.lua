@@ -8,6 +8,9 @@ function getinfo()
     mangainfo.coverlink = x.xpathstring('//figure[@class="image"][1]/img/@src')
     mangainfo.artists = x.xpathstring('//table[@class="view-page-details"]//a[contains(@href, "=artist:")]/text()')
     mangainfo.title = '[' .. mangainfo.artists .. '] ' .. x.xpathstring('//h1[@class="title"]/text()') .. ' (' .. x.xpathstring('//table[@class="view-page-details"]//a[contains(@href, "=publisher:")]/text()') .. ')'
+    mangainfo.genres = x.xpathstringall('//table[@class="view-page-details"]//a[contains(@href, "=tag:")]/text()')
+    mangainfo.authors = x.xpathstring('//table[@class="view-page-details"]//a[contains(@href, "=publisher:")]/text()')
+    mangainfo.status = 0
     mangainfo.chapterlinks.add(url)
     mangainfo.chapternames.add(mangainfo.title)
     

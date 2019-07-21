@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: tr\n"
-"X-Generator: Poedit 2.2.1\n"
+"X-Generator: Poedit 2.2.3\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
@@ -1333,12 +1333,12 @@ msgstr "Büyük kayıpların ya da talihsizliklerin olduğu olaylar içerir."
 
 #: tmainform.ckfilterweebtons.caption
 msgctxt "tmainform.ckfilterweebtons.caption"
-msgid "Weebtoons"
+msgid "Webtoons"
 msgstr "Webtoonlar"
 
 #: tmainform.ckfilterweebtons.hint
 msgctxt "tmainform.ckfilterweebtons.hint"
-msgid "Weebtoons"
+msgid "Webtoons"
 msgstr "Webtoonlar"
 
 #: tmainform.ckfilteryaoi.caption
@@ -2660,3 +2660,15 @@ msgstr "Veri eşitleniyor"
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr "Liste güncelleniyor"
+
+#: tmainform.ckoptionautomaticallydisablecloudflarebypass.caption
+msgid "Automatically disable Cloudflare Bypass for websites on error or if not needed"
+msgstr "Cloudflare Bypass'ı gerekmediği zaman ya da hata olduğunda otomatik olarak devredışı bırak"
+
+#: tmainform.ckoptionenablecloudflarebypass.caption
+msgid "Enable Cloudflare Bypass"
+msgstr "Cloudflare Bypass'ı Etkinleştir"
+
+#: tmainform.gboptionscloudflarebypass.caption
+msgid "Cloudflare Bypass (global settings)"
+msgstr "Cloudflare Bypass (genel ayarlar)"

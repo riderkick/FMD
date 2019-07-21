@@ -1363,13 +1363,13 @@ msgstr "Περιέχει γεγονότα που οδήγησαν σε μεγά�
 
 #: tmainform.ckfilterweebtons.caption
 msgctxt "tmainform.ckfilterweebtons.caption"
-msgid "Weebtoons"
-msgstr "Weebtoons"
+msgid "Webtoons"
+msgstr "Webtoons"
 
 #: tmainform.ckfilterweebtons.hint
 msgctxt "tmainform.ckfilterweebtons.hint"
-msgid "Weebtoons"
-msgstr "Weebtoons"
+msgid "Webtoons"
+msgstr "Webtoons"
 
 #: tmainform.ckfilteryaoi.caption
 msgid "Yaoi"
@@ -2692,3 +2692,14 @@ msgstr "Συγχρονισμός δεδομένων"
 msgid "Updating list"
 msgstr "Ενημέρωση λίστας"
 
+#: tmainform.ckoptionautomaticallydisablecloudflarebypass.caption
+msgid "Automatically disable Cloudflare Bypass for websites on error or if not needed"
+msgstr ""
+
+#: tmainform.ckoptionenablecloudflarebypass.caption
+msgid "Enable Cloudflare Bypass"
+msgstr ""
+
+#: tmainform.gboptionscloudflarebypass.caption
+msgid "Cloudflare Bypass (global settings)"
+msgstr ""

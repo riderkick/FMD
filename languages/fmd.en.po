@@ -1316,13 +1316,13 @@ msgstr "Contains events resulting in great loss and misfortune."
 
 #: tmainform.ckfilterweebtons.caption
 msgctxt "tmainform.ckfilterweebtons.caption"
-msgid "Weebtoons"
-msgstr "Weebtoons"
+msgid "Webtoons"
+msgstr "Webtoons"
 
 #: tmainform.ckfilterweebtons.hint
 msgctxt "tmainform.ckfilterweebtons.hint"
-msgid "Weebtoons"
-msgstr "Weebtoons"
+msgid "Webtoons"
+msgstr "Webtoons"
 
 #: tmainform.ckfilteryaoi.caption
 msgid "Yaoi"
@@ -2638,3 +2638,14 @@ msgstr "Synchronizing data"
 msgid "Updating list"
 msgstr "Updating list"
 
+#: tmainform.ckoptionautomaticallydisablecloudflarebypass.caption
+msgid "Automatically disable Cloudflare Bypass for websites on error or if not needed"
+msgstr "Automatically disable Cloudflare Bypass for websites on error or if not needed"
+
+#: tmainform.ckoptionenablecloudflarebypass.caption
+msgid "Enable Cloudflare Bypass"
+msgstr "Enable Cloudflare Bypass"
+
+#: tmainform.gboptionscloudflarebypass.caption
+msgid "Cloudflare Bypass (global settings)"
+msgstr "Cloudflare Bypass (global settings)"

@@ -26,8 +26,19 @@ function Modules.Madara()
       mangainfo.artists=x.xpathstringall('//div[@class="artist-content"]/a')
       mangainfo.genres=x.xpathstringall('//div[@class="genres-content"]/a')
       mangainfo.status = MangaInfoStatusIfPos(x.xpathstring('//div[@class="summary-heading" and contains(h5, "Status")]/following-sibling::div/div/a'))
-      mangainfo.summary=x.xpathstring('//div[contains(@class,"summary__content")]/*')
-      x.XPathHREFAll('//li[@class="wp-manga-chapter"]/a', mangainfo.chapterlinks, mangainfo.chapternames)
+      mangainfo.summary=x.xpathstring('//div[contains(@class,"description-summary")]/string-join(.//text(),"")')
+      if module.website == 'DoujinYosh' or module.website == 'MangaYosh' then
+        local v = x.xpath('//li[@class="wp-manga-chapter"]/a')
+        for i = 1, v.count do
+          local v1 = v.get(i)
+          local link = url..'/'..v1.toString..'/?style=list'
+                link = string.gsub(link, ' ', '-')
+          mangainfo.chapternames.Add(v1.toString);
+          mangainfo.chapterlinks.Add(link);
+        end
+      else
+        x.XPathHREFAll('//li[@class="wp-manga-chapter"]/a', mangainfo.chapterlinks, mangainfo.chapternames)
+      end
       InvertStrings(mangainfo.chapterlinks,mangainfo.chapternames)
       return no_error
     end
@@ -42,7 +53,7 @@ function Modules.Madara()
     end
     if http.get(aurl) then
       local x = TXQuery.Create(http.Document)
-      if module.website == 'MangaYosh' or module.website == 'ManhwaHentai' then
+      if module.website == 'ManhwaHentai' then
         v = x.xpath('//div[contains(@class, "page-break")]/img')
         for i = 1, v.count do
           v1 = v.get(i)
@@ -56,14 +67,12 @@ function Modules.Madara()
       if task.pagelinks.count == 0 then
         x.xpathstringall('//div[@class="entry-content"]//picture/img/@src', task.pagelinks)
       end
-	
-	  if task.pagelinks.count == 0 or task.pagelinks.count == 1 then
-		x.xpathstringall('//div[contains(@class, "page-break")]/img/@data-src', task.pagelinks)
-		if task.pagelinks.count == 0 or task.pagelinks.count == 1 then
-			x.xpathstringall('//*[@class="wp-manga-chapter-img webpexpress-processed"]/@src', task.pagelinks)
-		end
-	  end
-	  
+  	  if task.pagelinks.count < 1 then
+  		  x.xpathstringall('//div[contains(@class, "page-break")]/img/@data-src', task.pagelinks)
+  	  end
+      if task.pagelinks.count < 1 then
+        x.xpathstringall('//*[@class="wp-manga-chapter-img webpexpress-processed"]/@src', task.pagelinks)
+      end
       return true
     end
     return false
@@ -106,7 +115,6 @@ function Modules.ChibiManga()
   
   return ChibiManga
 end
-
 -------------------------------------------------------------------------------
 
 function createInstance()
@@ -143,6 +151,7 @@ function AddWebsiteModule(name, url, category)
   local m = NewModule()
   m.website = name
   m.rooturl = url
+  m.lastupdated='July 10, 2019'
   m.category = category
   m.ongetinfo='getinfo'
   m.ongetpagenumber='getpagenumber'

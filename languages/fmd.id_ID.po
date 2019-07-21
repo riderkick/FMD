@@ -57,7 +57,7 @@ msgstr "%s: Tidak ditemukan %s"
 
 #: ehentai.rs_downloadoriginalimage
 msgid "Download original image(require ExHentai account)"
-msgstr "Unduh gambar asli(membutuhkan akun ExHentai)"
+msgstr "Unduh gambar asli(memerlukan akun ExHentai)"
 
 #: ehentai.rs_settingsimagesize
 msgid "Image size:"
@@ -105,7 +105,7 @@ msgstr "Oke"
 
 #: frmaccountset.rs_cantbeempty
 msgid "Username or password can't be empty!"
-msgstr "Nama pengguna atau kata kunci tidak boleh kosong!"
+msgstr "Nama pengguna atau kata sandi tidak boleh kosong!"
 
 #: frmimportfavorites.rs_importcompleted
 msgid "Import completed."
@@ -642,12 +642,12 @@ msgstr "Akun"
 
 #: taccountsetform.ckshowpassword.caption
 msgid "Show password"
-msgstr "Tampilkan kata kunci"
+msgstr "Tampilkan kata sandi"
 
 #: taccountsetform.edpassword.texthint
 msgctxt "taccountsetform.edpassword.texthint"
 msgid "Password"
-msgstr "Kata kunci"
+msgstr "Kata sandi"
 
 #: taccountsetform.edusername.texthint
 msgctxt "taccountsetform.edusername.texthint"
@@ -662,7 +662,7 @@ msgstr "Nama pengguna"
 #: taccountsetform.label3.caption
 msgctxt "taccountsetform.label3.caption"
 msgid "Password"
-msgstr "Kata kunci"
+msgstr "Kata sandi"
 
 #: tcustomcolorform.caption
 #, fuzzy
@@ -699,6 +699,10 @@ msgctxt "tformdroptarget.midownloadall.caption"
 msgid "Download all"
 msgstr "Unduh semua"
 
+#: tformlogger.caption
+msgid "Log"
+msgstr "Pencatatan"
+
 #: tformlogger.btnclearlog.caption
 msgid "Clear"
 msgstr "Bersihkan"
@@ -709,7 +713,7 @@ msgstr "Tetap di atas"
 
 #: tformlogger.lbloglimit.caption
 msgid "Log limit"
-msgstr "Batasi log"
+msgstr "Batasi pencatatan"
 
 #: tformlogger.micopy.caption
 msgctxt "tformlogger.micopy.caption"
@@ -784,7 +788,7 @@ msgstr "Periksa versi mutakhir"
 
 #: tmainform.btclearlogfile.caption
 msgid "Clear log file"
-msgstr "Bersihkan berkas log"
+msgstr "Bersihkan berkas pencatatan"
 
 #: tmainform.btdownload.caption
 msgctxt "tmainform.btdownload.caption"
@@ -816,7 +820,7 @@ msgstr "Atur Ulang"
 
 #: tmainform.btopenlog.caption
 msgid "Open log"
-msgstr "Buka log"
+msgstr "Buka pencatatan"
 
 #: tmainform.btoptionapply.caption
 msgid "Apply"
@@ -989,7 +993,7 @@ msgstr "Urutkan daftar unduhan saat menambahkan unduhan baru"
 
 #: tmainform.cboptionupdatelistnomangainfo.caption
 msgid "Don't load manga information when updating list (filter will be not work!)"
-msgstr "Tidak perlu memuat informasi komik saat memutakhirkan daftar (saringan tidak akan bekerja!)"
+msgstr "Jangan memuat informasi komik saat memutakhirkan daftar (saringan tidak akan bekerja!)"
 
 #: tmainform.cboptionupdatelistremoveduplicatelocaldata.caption
 msgid "Remove duplicate local data when updating manga list"
@@ -1028,7 +1032,7 @@ msgstr "Tampilkan kotak unduh"
 
 #: tmainform.ckenablelogging.caption
 msgid "Enable logging"
-msgstr "Aktifkan logging"
+msgstr "Aktifkan pencatatan"
 
 #: tmainform.ckfilteraction.caption
 msgid "Action"
@@ -1322,13 +1326,13 @@ msgstr "Berisi kejadian yang mengakibatkan kerugian besar dan kemalangan."
 
 #: tmainform.ckfilterweebtons.caption
 msgctxt "tmainform.ckfilterweebtons.caption"
-msgid "Weebtoons"
-msgstr "Weebtoons"
+msgid "Webtoons"
+msgstr "Webtoons"
 
 #: tmainform.ckfilterweebtons.hint
 msgctxt "tmainform.ckfilterweebtons.hint"
-msgid "Weebtoons"
-msgstr "Weebtoons"
+msgid "Webtoons"
+msgstr "Webtoons"
 
 #: tmainform.ckfilteryaoi.caption
 msgid "Yaoi"
@@ -1433,7 +1437,7 @@ msgstr "Ubah nama pilihan"
 
 #: tmainform.edoptionpass.texthint
 msgid "Proxy password"
-msgstr "Kata kunci"
+msgstr "Kata sandi"
 
 #: tmainform.edoptionuser.texthint
 msgid "Proxy username"
@@ -1551,7 +1555,7 @@ msgstr "Kualitas JPEG"
 
 #: tmainform.lblogfilename.caption
 msgid "Log file:"
-msgstr "Berkas log:"
+msgstr "Berkas pencatatan:"
 
 #: tmainform.lbmode.caption
 msgid "Mode: Show all (0)"
@@ -1698,7 +1702,7 @@ msgstr "Komik baru berdasarkan waktu pemutakhiran (hari)"
 #: tmainform.lboptionpass.caption
 msgctxt "tmainform.lboptionpass.caption"
 msgid "Password"
-msgstr "Kata kunci"
+msgstr "Kata sandi"
 
 #: tmainform.lboptionpdfquality.caption
 msgid "PDF Quality Level"
@@ -1847,12 +1851,12 @@ msgstr "Daftar, data, dan kesukaan"
 #: tmainform.midownloaddisable.caption
 msgctxt "tmainform.midownloaddisable.caption"
 msgid "Disable"
-msgstr "Matikan"
+msgstr "Nonaktifkan"
 
 #: tmainform.midownloadenable.caption
 msgctxt "tmainform.midownloadenable.caption"
 msgid "Enable"
-msgstr "Nyalakan"
+msgstr "Aktifkan"
 
 #: tmainform.midownloadmergecompleted.caption
 msgid "Merge completed tasks"
@@ -1902,7 +1906,7 @@ msgstr "Hapus"
 #: tmainform.mifavoritesdisable.caption
 msgctxt "tmainform.mifavoritesdisable.caption"
 msgid "Disable"
-msgstr "Matikan"
+msgstr "Nonaktifkan"
 
 #: tmainform.mifavoritesdownloadall.caption
 msgctxt "tmainform.mifavoritesdownloadall.caption"
@@ -1912,7 +1916,7 @@ msgstr "Unduh semua"
 #: tmainform.mifavoritesenable.caption
 msgctxt "tmainform.mifavoritesenable.caption"
 msgid "Enable"
-msgstr "Nyalakan"
+msgstr "Aktifkan"
 
 #: tmainform.mifavoritesopenfolder.caption
 msgctxt "TMAINFORM.MIFAVORITESOPENFOLDER.CAPTION"
@@ -2074,19 +2078,19 @@ msgstr "Hentikan semua"
 
 #: tmainform.tbmidownloadmovebottom.hint
 msgid "Move selected item(s) to bottom"
-msgstr "Pindahkan data terpilih ke paling bawah"
+msgstr "Pindahkan entri terpilih ke paling bawah"
 
 #: tmainform.tbmidownloadmovedown.hint
 msgid "Move selected item(s) down"
-msgstr "Pindahkan data terpilih ke bawah"
+msgstr "Pindahkan entri terpilih ke bawah"
 
 #: tmainform.tbmidownloadmovetop.hint
 msgid "Move selected item(s) to top"
-msgstr "Pindahkan data terpilih ke paling atas"
+msgstr "Pindahkan entri terpilih ke paling atas"
 
 #: tmainform.tbmidownloadmoveup.hint
 msgid "Move selected item(s) up"
-msgstr "Pindahkan data terpilih ke atas"
+msgstr "Pindahkan entri terpilih ke atas"
 
 #: tmainform.tbwebsitescollapseall.caption
 msgid "Collapse All"
@@ -2161,7 +2165,7 @@ msgstr "Informasi Komik"
 
 #: tmainform.tslog.caption
 msgid "Log"
-msgstr "Log"
+msgstr "Pencatatan"
 
 #: tmainform.tsmisc.caption
 msgid "Misc"
@@ -2643,3 +2647,15 @@ msgstr "Sinkronisasi data"
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr "Memutakhirkan daftar"
+
+#: tmainform.ckoptionautomaticallydisablecloudflarebypass.caption
+msgid "Automatically disable Cloudflare Bypass for websites on error or if not needed"
+msgstr "Nonaktifkan Cloudflare Bypass otomatis untuk situs yang terjadi galat atau tidak diperlukan"
+
+#: tmainform.ckoptionenablecloudflarebypass.caption
+msgid "Enable Cloudflare Bypass"
+msgstr "Aktifkan Cloudflare Bypass"
+
+#: tmainform.gboptionscloudflarebypass.caption
+msgid "Cloudflare Bypass (global settings)"
+msgstr "Cloudflare Bypass (pengaturan global)"

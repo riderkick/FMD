@@ -13,7 +13,7 @@ local LuaDebug   = require 'Modules.LuaDebugging'
 
 local AlphaList = '#abcdefghijklmnopqrstuvwxyz'
 local DirectoryPagination = '/manga-list/'
-local AllPages = '/all-pages'
+local LoadAllImages = '/all-pages'
 
 
 ----------------------------------------------------------------------------------------------------
@@ -60,8 +60,8 @@ function GetNameAndLink()
   if not http.Get(u) then return net_problem end
   
   x = TXQuery.Create(http.Document)
-  updatelist.CurrentDirectoryPageNumber = 1
   x.XPathHREFAll('//ul[contains(@class, "manga-list")]/li/a', links, names)
+  updatelist.CurrentDirectoryPageNumber = 1
   
   --[[Debug]] LuaDebug.PrintMangaDirectoryEntries(module.CurrentDirectoryIndex + 1)
   
@@ -72,7 +72,7 @@ end
 -- Get the page count for the current chapter.
 function GetPageNumber()
   local s, x = nil
-  local u = MaybeFillHost(module.RootURL, url) .. AllPages
+  local u = MaybeFillHost(module.RootURL, url) .. LoadAllImages
   
   --[[Debug]] LuaDebug.WriteLogWithHeader('GetPageNumber', 'url ->  ' .. u)
   if not http.Get(u) then return net_problem end
@@ -109,7 +109,6 @@ function AddWebsiteModule(name, url, category)
   m.Website               = name
   m.RootURL               = url
   m.Category              = category
-  m.FavoriteAvailable     = false
   m.TotalDirectory        = AlphaList:len()
   m.OnGetInfo             = 'GetInfo'
   m.OnGetNameAndLink      = 'GetNameAndLink'

@@ -152,6 +152,8 @@ var
   OptionConnectionTimeout: Integer = 30;
   OptionRetryFailedTask: Integer = 1;
   OptionAlwaysStartTaskFromFailedChapters: Boolean = True;
+  OptionEnableCloudflareBypass: Boolean = True;
+  OptionAutomaticallyDisableCloudflareBypass: Boolean = False;
 
   // view
   OptionEnableLoadCover: Boolean = False;

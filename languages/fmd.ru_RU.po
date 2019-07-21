@@ -1320,12 +1320,12 @@ msgstr "Содержит события, приводящие к большим 
 
 #: tmainform.ckfilterweebtons.caption
 msgctxt "tmainform.ckfilterweebtons.caption"
-msgid "Weebtoons"
+msgid "Webtoons"
 msgstr "Вебкомиксы"
 
 #: tmainform.ckfilterweebtons.hint
 msgctxt "tmainform.ckfilterweebtons.hint"
-msgid "Weebtoons"
+msgid "Webtoons"
 msgstr "Вебкомиксы"
 
 #: tmainform.ckfilteryaoi.caption
@@ -2641,3 +2641,15 @@ msgstr "Синхронизацияе данных"
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
 msgstr "Обновление списка"
+
+#: tmainform.ckoptionautomaticallydisablecloudflarebypass.caption
+msgid "Automatically disable Cloudflare Bypass for websites on error or if not needed"
+msgstr ""
+
+#: tmainform.ckoptionenablecloudflarebypass.caption
+msgid "Enable Cloudflare Bypass"
+msgstr ""
+
+#: tmainform.gboptionscloudflarebypass.caption
+msgid "Cloudflare Bypass (global settings)"
+msgstr ""
