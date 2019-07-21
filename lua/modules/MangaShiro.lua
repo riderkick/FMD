@@ -5,6 +5,7 @@ function getinfo()
     mangainfo.title     = getTitle(x)
     mangainfo.coverlink = MaybeFillHost(module.RootURL, getCover(x))
     mangainfo.authors   = getAuthors(x)
+    mangainfo.artists	= getArtists(x)
     mangainfo.genres    = getGenres(x)
     mangainfo.status    = MangaInfoStatusIfPos(getStatus(x))
     mangainfo.summary   = getSummary(x)
@@ -61,6 +62,12 @@ function getAuthors(x)
   return authors
 end
 
+function getArtists(x)
+  local artists = ''
+  if artists == '' then artists = x.xpathstringall('//div[@class="spe"]//span[starts-with(.,"Artist")]/substring-after(.,":")') end
+  return artists
+end
+
 function getGenres(x)
   local genre = ''
   if genre == '' then genre = x.xpathstringall('//div[@class="spe"]//span[starts-with(.,"Genres:")]/substring-after(.,":")') end
@@ -108,13 +115,11 @@ end
 
 function getMangas(x)
   if module.website == 'Ngomik' then
-	  --x.xpathhrefall('//div[contains(@class, "bxcl")]//li//*[contains(@class,"lch")]/a', mangainfo.chapterlinks, mangainfo.chapternames)
 	  local v = x.xpath('//div[contains(@class, "bxcl")]//li//*[contains(@class,"lch")]/a')
 		for i = 1, v.count do
 		  local v1 = v.get(i)
 		  local name = v1.getAttribute('href')
 		  mangainfo.chapternames.Add(name:gsub(module.rooturl..'/',''))
-		  --mangainfo.chapternames.Add(x.xpathstring('./string-join(//text(),"")/', v1))
 		  mangainfo.chapterlinks.Add(v1.getAttribute('href'));
 		end
   else
@@ -195,27 +200,29 @@ end
 function getnameandlink()
   local dirs = {
     ['MangaShiro'] = '/daftar-manga/?list',
+    ['MangaKita'] = '/manga-list/',
     ['KomikStation'] = '/manga/?list',
-    ['KomikCast'] = '/daftar-komik/?list',
     ['MangaKid'] = '/manga-lists/',
-    ['Kiryuu'] = '/manga-lists/?list',
-    ['Komiku'] = '/daftar-komik/',
-    ['OtakuIndo'] = '/daftar-komik/',
+    ['KomikCast'] = '/daftar-komik/?list',
     ['WestManga'] = '/manga-list/?list',
+    ['Kiryuu'] = '/manga-lists/?list',
     ['Kyuroku'] = '/manga/?list',
     ['BacaManga'] = '/manga/?list',
     ['PecintaKomik'] = '/daftar-manga/?list',
     ['MangaIndoNet'] = '/manga-list/?list',
     ['KomikIndo'] = '/manga-list/?list',
-    ['KomikMama'] = '/manga-list/?list',
-    ['KazeManga'] = '/manga-list/?list',
     ['KomikIndoWebId'] = '/daftar-manga/?list',
+    ['Komiku'] = '/daftar-komik/',
+    ['OtakuIndo'] = '/daftar-komik/',
+    ['KazeManga'] = '/manga-list/?list',
     ['Mangacan'] =  '/daftar-komik-manga-bahasa-indonesia.html',
     ['MangaIndo'] = '/manga-list-201902-v052/',
+    ['KomikMama'] = '/manga-list/?list',
     ['MangaCeng'] = '/manga/?list',
     ['MaidMangaID'] = '/manga-list/?list',
     ['KomikAV'] = '/manga/?list',
-	['Ngomik'] = '/daftar-manga/?list',
+    ['KoMBatch'] = '/manga-list/',
+    ['Ngomik'] = '/daftar-manga/?list',
   }
   local dirurl = '/manga-list/'
   if dirs[module.website] ~= nil then
@@ -223,7 +230,7 @@ function getnameandlink()
   end
   if http.get(module.rooturl..dirurl) then
     local x=TXQuery.Create(http.document) 
-	if module.website == 'ngomik' then
+	if module.website == 'Ngomik' then
 		local v=x.xpath('//*[@class="series"]')
 		for i=1,v.count do
 			local v1=v.get(i)
