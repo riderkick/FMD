@@ -729,6 +729,7 @@ type
 
     // fill edSaveTo with default path
     procedure FillSaveTo;
+	procedure OverrideSaveTo(const AWebsite: String);
 
     // View manga information
     procedure ViewMangaInfo(const ALink, AWebsite, ATitle, ASaveTo: String;
@@ -2451,6 +2452,7 @@ begin
   if mangaInfo.title <> '' then
   begin
     // save to
+	OverrideSaveTo(mangaInfo.website);
     s := edSaveTo.Text;
     if OptionGenerateMangaFolder then
       s := AppendPathDelim(s) + CustomRename(
@@ -3427,7 +3429,7 @@ begin
             end;
             Break;
           end;
-
+		  
       if AllowedToCreate then
         SilentThreadManager.Add(MD_DownloadAll, data^.website, data^.title, data^.link);
       xNode := vtMangaList.GetNextSelected(xNode);
@@ -4709,6 +4711,15 @@ begin
   edSaveTo.Text := LastUserPickedSaveTo;
 end;
 
+procedure TMainForm.OverrideSaveTo(const AWebsite: String);
+var
+  p: String;
+begin
+  p := Modules.Module[Modules.LocateModule(AWebsite)].Settings.OverrideSettings.SaveToPath;
+  if p <> '' then
+    edSaveTo.Text := p;
+end;
+
 procedure TMainForm.ViewMangaInfo(const ALink, AWebsite, ATitle, ASaveTo: String;
   const ASender: TObject; const AMangaListNode: PVirtualNode);
 var
@@ -4747,7 +4758,11 @@ begin
   edSaveTo.Text := ASaveTo;
   LastViewMangaInfoSender := ASender;
   if edSaveTo.Text = '' then
-    FillSaveTo;
+	FillSaveTo;
+  
+  if (LastViewMangaInfoSender <> miDownloadViewMangaInfo) and (LastViewMangaInfoSender <> miFavoritesViewInfos) then
+    OverrideSaveTo(AWebsite);
+  
 
   DisableAddToFavorites(AWebsite);
   //check if manga already in FavoriteManager list
