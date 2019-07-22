@@ -227,6 +227,7 @@ function getnameandlink()
     ['KomikAV'] = '/manga/?list',
     ['KoMBatch'] = '/manga-list/',
     ['Ngomik'] = '/daftar-manga/?list',
+    ['MangaPus'] = '/manga/?list',
   }
   local dirurl = '/manga-list/'
   if dirs[module.website] ~= nil then
@@ -310,4 +311,5 @@ local cat = 'Indonesian'
   AddWebsiteModule('KomikAV', 'https://komikav.com', cat)
   AddWebsiteModule('KoMBatch', 'https://kombatch.com', cat)
   AddWebsiteModule('Ngomik', 'https://ngomik.in', cat)
+  AddWebsiteModule('MangaPus', 'https://mangapus.com', cat)
 end
