@@ -624,6 +624,7 @@ type
     procedure vtFavoritesBeforeCellPaint(Sender: TBaseVirtualTree;
       TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
       CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
+    procedure vtFavoritesChange(Sender: TBaseVirtualTree; Node: PVirtualNode);
     procedure vtFavoritesColumnDblClick(Sender: TBaseVirtualTree;
       Column: TColumnIndex; Shift: TShiftState);
     procedure vtFavoritesDragDrop(Sender: TBaseVirtualTree; Source: TObject;
@@ -3501,7 +3502,20 @@ end;
 procedure TMainForm.pcMainChange(Sender: TObject);
 begin
   if pcMain.ActivePage = tsFavorites then
-    vtFavorites.Repaint
+  begin
+    vtFavorites.Repaint;
+	if vtFavorites.SelectedCount > 0 then
+      sbMain.Panels[0].Text := Format(RS_Selected, [vtFavorites.SelectedCount])
+    else
+      sbMain.Panels[0].Text := ''
+  end
+  else if pcMain.ActivePage = tsInformation then
+  begin
+    if vtMangaList.SelectedCount > 0 then
+      sbMain.Panels[0].Text := Format(RS_Selected, [vtMangaList.SelectedCount])
+    else
+      sbMain.Panels[0].Text := ''
+  end
   else if pcMain.ActivePage = tsOption then
     LoadOptions;
 end;
@@ -4220,6 +4234,15 @@ begin
     else
       Brush.Color := C;
   end;
+end;
+
+procedure TMainForm.vtFavoritesChange(Sender: TBaseVirtualTree;
+  Node: PVirtualNode);
+begin
+  if vtFavorites.SelectedCount > 0 then
+    sbMain.Panels[0].Text := Format(RS_Selected, [vtFavorites.SelectedCount])
+  else
+    sbMain.Panels[0].Text := '';
 end;
 
 procedure TMainForm.vtFavoritesColumnDblClick(Sender: TBaseVirtualTree;
