@@ -5,7 +5,7 @@ function getinfo()
     mangainfo.title     = getTitle(x)
     mangainfo.coverlink = MaybeFillHost(module.RootURL, getCover(x))
     mangainfo.authors   = getAuthors(x)
-    mangainfo.artists	= getArtists(x)
+    mangainfo.artists   = getArtists(x)
     mangainfo.genres    = getGenres(x)
     mangainfo.status    = MangaInfoStatusIfPos(getStatus(x))
     mangainfo.summary   = getSummary(x)
@@ -115,55 +115,58 @@ end
 
 function getMangas(x)
   if module.website == 'Ngomik' then
-	  local v = x.xpath('//div[contains(@class, "bxcl")]//li//*[contains(@class,"lch")]/a')
-		for i = 1, v.count do
-		  local v1 = v.get(i)
-		  local name = v1.getAttribute('href')
-		  mangainfo.chapternames.Add(name:gsub(module.rooturl..'/',''))
-		  mangainfo.chapterlinks.Add(v1.getAttribute('href'));
-		end
+    local v = x.xpath('//div[contains(@class, "bxcl")]//li//*[contains(@class,"lch")]/a')
+    for i = 1, v.count do
+      local v1 = v.get(i)
+      local name = v1.getAttribute('href')
+      mangainfo.chapternames.Add(name:gsub(module.rooturl..'/',''))
+      mangainfo.chapterlinks.Add(v1.getAttribute('href'));
+    end
   else
-	  if mangainfo.chapterlinks.count < 1 then x.xpathhrefall('//li//span[@class="leftoff"]/a', mangainfo.chapterlinks, mangainfo.chapternames) end
-	  if mangainfo.chapterlinks.count < 1 then x.xpathhrefall('//div[@class="bxcl"]//li//*[@class="lchx"]/a', mangainfo.chapterlinks, mangainfo.chapternames) end
-	  if mangainfo.chapterlinks.count < 1 then x.xpathhrefall('//div[@class="bxcl"]//li//div[@class="lch"]/a', mangainfo.chapterlinks, mangainfo.chapternames) end
-	  if mangainfo.chapterlinks.count < 1 then x.xpathhrefall('//div[@class="bxcl nobn"]//li//div[@class="lch"]/a', mangainfo.chapterlinks, mangainfo.chapternames) end
-	  if mangainfo.chapterlinks.count < 1 then x.xpathhrefall('//ul[@class="lcp_catlist"]//li/a', mangainfo.chapterlinks, mangainfo.chapternames) end
-	  if mangainfo.chapterlinks.count < 1 then x.xpathhrefall('//div[contains(@class, "bxcl")]//li//*[contains(@class,"lchx")]/a', mangainfo.chapterlinks, mangainfo.chapternames) end
-	  if mangainfo.chapterlinks.count < 1 then x.xpathhrefall('//div[contains(@class, "lchx")]//li//*[contains(@class,"bxcl")]/a', mangainfo.chapterlinks, mangainfo.chapternames) end
-	  if mangainfo.chapterlinks.count < 1 or module.website == 'Mangacan' then
-	  local v = x.xpath('//table[@class="updates"]//td/a')
-		for i = 1, v.count do
-		  local v1 = v.get(i)
-		  local s = v1.getAttribute('href')
-		  s = string.gsub(s, '-1.htm', '.htm')
-		  mangainfo.chapternames.Add(Trim(SeparateLeft(v1.toString, '')));
-		  mangainfo.chapterlinks.Add(s);
-		end
-	  end
-	  if mangainfo.chapterlinks.count < 1 or module.website == 'Komiku' or module.website == 'OtakuIndo' then
-	  local v = x.xpath('//table[@class="chapter"]//td/a')
-		for i = 1, v.count do
-		  local v1 = v.get(i)
-		  mangainfo.chapternames.Add(v1.toString);
-		  mangainfo.chapterlinks.Add(v1.getAttribute('href'));
-		end
-	  end
-	  if mangainfo.chapterlinks.count < 1 or module.website == 'MangaKita' then
-	  local v = x.xpath('//div[@class="list chapter-list"]//div/span/a')
-		for i = 1, v.count do
-		  local v1 = v.get(i)
-		  local s = v1.toString
-		  local l = v1.getAttribute('href')
-		  local title = l
-		  if s < 'Download PDF' then
-			title = title:gsub('mangakita.net', ''):gsub('https:', '')
-			title = title:gsub('/', ''):gsub('-', ' ')
-			mangainfo.chapternames.Add(title);
-			mangainfo.chapterlinks.Add(l);
-		  end
-		end
-	  end
-	end
+    if mangainfo.chapterlinks.count < 1 then x.xpathhrefall('//li//span[@class="leftoff"]/a', mangainfo.chapterlinks, mangainfo.chapternames) end
+    if mangainfo.chapterlinks.count < 1 then x.xpathhrefall('//div[@class="bxcl"]//li//*[@class="lchx"]/a', mangainfo.chapterlinks, mangainfo.chapternames) end
+    if mangainfo.chapterlinks.count < 1 then x.xpathhrefall('//div[@class="bxcl"]//li//div[@class="lch"]/a', mangainfo.chapterlinks, mangainfo.chapternames) end
+    if mangainfo.chapterlinks.count < 1 then x.xpathhrefall('//div[@class="bxcl nobn"]//li//div[@class="lch"]/a', mangainfo.chapterlinks, mangainfo.chapternames) end
+    if mangainfo.chapterlinks.count < 1 then x.xpathhrefall('//ul[@class="lcp_catlist"]//li/a', mangainfo.chapterlinks, mangainfo.chapternames) end
+    if mangainfo.chapterlinks.count < 1 then x.xpathhrefall('//div[contains(@class, "bxcl")]//li//*[contains(@class,"lchx")]/a', mangainfo.chapterlinks, mangainfo.chapternames) end
+    if mangainfo.chapterlinks.count < 1 then x.xpathhrefall('//div[contains(@class, "lchx")]//li//*[contains(@class,"bxcl")]/a', mangainfo.chapterlinks, mangainfo.chapternames) end
+    
+    if mangainfo.chapterlinks.count < 1 or module.website == 'Mangacan' then
+      local v = x.xpath('//table[@class="updates"]//td/a')
+      for i = 1, v.count do
+        local v1 = v.get(i)
+        local s = v1.getAttribute('href')
+        s = string.gsub(s, '-1.htm', '.htm')
+        mangainfo.chapternames.Add(Trim(SeparateLeft(v1.toString, '')));
+        mangainfo.chapterlinks.Add(s);
+      end
+    end
+    
+    if mangainfo.chapterlinks.count < 1 or module.website == 'Komiku' or module.website == 'OtakuIndo' then
+      local v = x.xpath('//table[@class="chapter"]//td/a')
+      for i = 1, v.count do
+        local v1 = v.get(i)
+        mangainfo.chapternames.Add(v1.toString);
+        mangainfo.chapterlinks.Add(v1.getAttribute('href'));
+      end
+    end
+    
+    if mangainfo.chapterlinks.count < 1 or module.website == 'MangaKita' then
+      local v = x.xpath('//div[@class="list chapter-list"]//div/span/a')
+      for i = 1, v.count do
+        local v1 = v.get(i)
+        local s = v1.toString
+        local l = v1.getAttribute('href')
+        local title = l
+        if s < 'Download PDF' then
+        title = title:gsub('mangakita.net', ''):gsub('https:', '')
+        title = title:gsub('/', ''):gsub('-', ' ')
+        mangainfo.chapternames.Add(title);
+        mangainfo.chapterlinks.Add(l);
+        end
+      end
+    end
+  end
 end
 
 function getpagenumber()
@@ -176,21 +179,22 @@ function getpagenumber()
     if task.pagelinks.count < 1 then TXQuery.Create(http.Document).xpathstringall('//*[@id="readerareaimg"]//img/@src', task.pagelinks) end
     if task.pagelinks.count < 1 then TXQuery.Create(http.Document).xpathstringall('//*[@id="imgholder"]//img/@src', task.pagelinks) end
     if task.pagelinks.count < 1 then TXQuery.Create(http.Document).xpathstringall('//*[@class="entry-content"]//img/@src', task.pagelinks) end
-	if task.pagelinks.count < 1 or module.website == 'KoMBatch' then 
-	    local link = MaybeFillHost(module.rooturl,url)
-		      link = link:gsub('/manga', '/api/chapter')
-		if http.get(link) then
-			x=TXQuery.Create(http.document)
-			x.parsehtml(http.document)
-			local v=x.xpath('json(*).images()')
-			  for i=1,v.count do
-				local v1=v.get(i)
-			    task.pagelinks.add(v1.toString)
-			  end
-		else
-		   return false
-		end
-	end
+    
+    if task.pagelinks.count < 1 or module.website == 'KoMBatch' then 
+      local link = MaybeFillHost(module.rooturl,url)
+      link = link:gsub('/manga', '/api/chapter')
+      if http.get(link) then
+        x=TXQuery.Create(http.document)
+        x.parsehtml(http.document)
+        local v=x.xpath('json(*).images()')
+        for i=1,v.count do
+          local v1=v.get(i)
+          task.pagelinks.add(v1.toString)
+        end
+      else
+        return false
+      end
+    end
     return true
   else
     return false
@@ -230,47 +234,39 @@ function getnameandlink()
   end
   if http.get(module.rooturl..dirurl) then
     local x=TXQuery.Create(http.document) 
-	if module.website == 'Ngomik' then
-		local v=x.xpath('//*[@class="series"]')
-		for i=1,v.count do
-			local v1=v.get(i)
-			names.add(x.xpathstring('./text()', v1))
-		    links.add(v1.getAttribute('href'))
-		end
-	else
-		if links.count < 1 then x.xpathhrefall('//*[@class="daftarkomik"]//a',links,names) end
-		if links.count < 1 then x.xpathhrefall('//*[@class="jdlbar"]//a',links,names) end	
-		if links.count < 1 then x.xpathhrefall('//*[@class="blix"]//a',links,names) end
-		if links.count < 1 then x.xpathhrefall('//*[@class="soralist"]//a',links,names) end
-		if links.count < 1 then x.xpathhrefall('//*[@id="a-z"]//h4/a',links,names) end
-		if links.count < 1 then x.xpathhrefall('//*[@class="manga-list"]/a',links,names) end
-		if links.count < 1 or module.website == 'KoMBatch' then 
-			local pages = 1
-			local p = 1
-			while p <= pages do
-			  if p > 1 then
-				if http.get(module.rooturl..dirurl..'?page=' .. tostring(p)) then
-				  x=TXQuery.Create(http.document)
-				else
-				  break
-				end
-			  end
-			  if p == pages then
-				local pg = x.XPathString('//*[contains(@class, "pagination")]//li[last()-1]/a/substring-after(@href, "?page=")')
-				if pg ~= '' then pages = tonumber(pg) end
-			  end
-			  local v=x.xpath('//*[contains(@class, "trending")]//*[contains(@class, "box_trending")]')
-			  for i=1,v.count do
-				local v1=v.get(i)
-				local title = x.xpathstring('.//*[contains(@class, "_2dU-m")]/text()', v1)
-				local link = x.xpathstring('.//*[contains(@class, "_2dU-m")]/@href', v1)
-					  names.add(title)
-					  links.add(link)
-			  end
-			  p = p + 1
-			end
-		end
-	end
+    if links.count < 1 then x.xpathhrefall('//*[@class="daftarkomik"]//a',links,names) end
+    if links.count < 1 then x.xpathhrefall('//*[@class="jdlbar"]//a',links,names) end  
+    if links.count < 1 then x.xpathhrefall('//*[@class="blix"]//a',links,names) end
+    if links.count < 1 then x.xpathhrefall('//*[@class="soralist"]//a',links,names) end
+    if links.count < 1 then x.xpathhrefall('//*[@id="a-z"]//h4/a',links,names) end
+    if links.count < 1 then x.xpathhrefall('//*[@class="manga-list"]/a',links,names) end
+    
+    if links.count < 1 or module.website == 'KoMBatch' then 
+      local pages = 1
+      local p = 1
+      while p <= pages do
+        if p > 1 then
+          if http.get(module.rooturl..dirurl..'?page=' .. tostring(p)) then
+            x=TXQuery.Create(http.document)
+          else
+            break
+          end
+        end
+        if p == pages then
+          local pg = x.XPathString('//*[contains(@class, "pagination")]//li[last()-1]/a/substring-after(@href, "?page=")')
+          if pg ~= '' then pages = tonumber(pg) end
+        end
+        local v=x.xpath('//*[contains(@class, "trending")]//*[contains(@class, "box_trending")]')
+        for i=1,v.count do
+          local v1=v.get(i)
+          local title = x.xpathstring('.//*[contains(@class, "_2dU-m")]/text()', v1)
+          local link = x.xpathstring('.//*[contains(@class, "_2dU-m")]/@href', v1)
+          names.add(title)
+          links.add(link)
+        end
+        p = p + 1
+      end
+    end
     return no_error
   else
     return net_problem
