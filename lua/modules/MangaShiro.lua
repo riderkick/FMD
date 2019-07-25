@@ -1,3 +1,11 @@
+local hex_to_char = function(x)
+  return string.char(tonumber(x, 16))
+end
+
+local unescape = function(url)
+  return url:gsub("%%(%x%x)", hex_to_char)
+end
+
 function getinfo()
   mangainfo.url=MaybeFillHost(module.RootURL, url)
   if http.get(mangainfo.url) then
@@ -173,26 +181,35 @@ function getpagenumber()
   task.pagenumber=0
   task.pagelinks.clear()
   if http.get(MaybeFillHost(module.rooturl,url)) then
-    if task.pagelinks.count < 1 then TXQuery.Create(http.Document).xpathstringall('//*[@id="readerarea"]/div//img/@src', task.pagelinks) end    
-    if task.pagelinks.count < 1 then TXQuery.Create(http.Document).xpathstringall('//*[@id="readerarea"]//a/@href', task.pagelinks) end
-    if task.pagelinks.count < 1 then TXQuery.Create(http.Document).xpathstringall('//*[@id="readerarea"]//img/@src', task.pagelinks) end
-    if task.pagelinks.count < 1 then TXQuery.Create(http.Document).xpathstringall('//*[@id="readerareaimg"]//img/@src', task.pagelinks) end
-    if task.pagelinks.count < 1 then TXQuery.Create(http.Document).xpathstringall('//*[@id="imgholder"]//img/@src', task.pagelinks) end
-    if task.pagelinks.count < 1 then TXQuery.Create(http.Document).xpathstringall('//*[@class="entry-content"]//img/@src', task.pagelinks) end
-    
-    if task.pagelinks.count < 1 or module.website == 'KoMBatch' then 
-      local link = MaybeFillHost(module.rooturl,url)
-      link = link:gsub('/manga', '/api/chapter')
-      if http.get(link) then
-        x=TXQuery.Create(http.document)
-        x.parsehtml(http.document)
-        local v=x.xpath('json(*).images()')
-        for i=1,v.count do
-          local v1=v.get(i)
-          task.pagelinks.add(v1.toString)
+    if module.website == 'BacaManga' then
+      local x = TXQuery.Create(http.Document)
+      local s = x.xpathstring('//script[contains(., "bm_content")]')
+            s = GetBetween('var bm_content = atob("', '");', s)
+            s = unescape(DecodeBase64(s))
+            s = s:gsub('+', ' ')
+            x.parsehtml(s)
+            x.xpathstringall('//*[@class="chapimage"]/@src', task.pagelinks)
+    else
+      if task.pagelinks.count < 1 then TXQuery.Create(http.Document).xpathstringall('//*[@id="readerarea"]/div//img/@src', task.pagelinks) end    
+      if task.pagelinks.count < 1 then TXQuery.Create(http.Document).xpathstringall('//*[@id="readerarea"]//a/@href', task.pagelinks) end
+      if task.pagelinks.count < 1 then TXQuery.Create(http.Document).xpathstringall('//*[@id="readerarea"]//img/@src', task.pagelinks) end
+      if task.pagelinks.count < 1 then TXQuery.Create(http.Document).xpathstringall('//*[@id="readerareaimg"]//img/@src', task.pagelinks) end
+      if task.pagelinks.count < 1 then TXQuery.Create(http.Document).xpathstringall('//*[@id="imgholder"]//img/@src', task.pagelinks) end
+      if task.pagelinks.count < 1 then TXQuery.Create(http.Document).xpathstringall('//*[@class="entry-content"]//img/@src', task.pagelinks) end
+      if task.pagelinks.count < 1 or module.website == 'KoMBatch' then 
+        local link = MaybeFillHost(module.rooturl,url)
+        link = link:gsub('/manga', '/api/chapter')
+        if http.get(link) then
+          x=TXQuery.Create(http.document)
+          x.parsehtml(http.document)
+          local v=x.xpath('json(*).images()')
+          for i=1,v.count do
+            local v1=v.get(i)
+            task.pagelinks.add(v1.toString)
+          end
+        else
+          return false
         end
-      else
-        return false
       end
     end
     return true
