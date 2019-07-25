@@ -37,49 +37,64 @@ function getinfo()
       'return jn:object(object(("chapter_id", $k)), $c($k))')
     for i = 1, chapters.count do
       local v1 = chapters.get(i)
-      local lang = x.xpathstring('lang_code', v1)
-      local ts = tonumber(x.xpathstring('timestamp', v1))
-      if (selLang == 0 or lang == selLangId) and (ts <= os.time()) then
-        mangainfo.chapterlinks.add('/chapter/' .. x.xpathstring('chapter_id', v1))
+      
+      if not IgnoreChaptersByGroupId(x.xpathstring('group_id', v1)) then
         
-        local s = ''
-        local vol = x.xpathstring('volume', v1)
-        local ch = x.xpathstring('chapter', v1)
-        if vol ~= '' then s = s .. string.format('Vol. %s', vol); end
-        if s ~= '' then s = s .. ' '; end
-        if ch ~= '' then s = s .. string.format('Ch. %s', ch); end
-        
-        local title = x.xpathstring('title', v1)
-        if title ~= '' then
-          if s ~= '' then s = s .. ' - '; end
-          s = s .. title
-        end
-        
-        if selLang == 0 then
-          s = string.format('%s [%s]', s, getlang(lang))
-        end
-        
-        if module.getoption('luashowscangroup') then
-          local group = x.xpathstring('group_name', v1)
-          local group2 = x.xpathstring('group_name_2', v1)
-          local group3 = x.xpathstring('group_name_3', v1)
-          if group2:len() > 0 and group2 ~= 'null' then
-            group = group .. ' | ' .. group2
+        local lang = x.xpathstring('lang_code', v1)
+        local ts = tonumber(x.xpathstring('timestamp', v1))
+        if (selLang == 0 or lang == selLangId) and (ts <= os.time()) then
+          mangainfo.chapterlinks.add('/chapter/' .. x.xpathstring('chapter_id', v1))
+          
+          local s = ''
+          local vol = x.xpathstring('volume', v1)
+          local ch = x.xpathstring('chapter', v1)
+          if vol ~= '' then s = s .. string.format('Vol. %s', vol); end
+          if s ~= '' then s = s .. ' '; end
+          if ch ~= '' then s = s .. string.format('Ch. %s', ch); end
+          
+          local title = x.xpathstring('title', v1)
+          if title ~= '' then
+            if s ~= '' then s = s .. ' - '; end
+            s = s .. title
           end
-          if group3:len() > 0 and group3 ~= 'null' then
-            group = group .. ' | ' .. group3
+          
+          if selLang == 0 then
+            s = string.format('%s [%s]', s, getlang(lang))
           end
-          s = string.format('%s [%s]', s, group)
+          
+          if module.getoption('luashowscangroup') then
+            local group = x.xpathstring('group_name', v1)
+            local group2 = x.xpathstring('group_name_2', v1)
+            local group3 = x.xpathstring('group_name_3', v1)
+            if group2:len() > 0 and group2 ~= 'null' then
+              group = group .. ' | ' .. group2
+            end
+            if group3:len() > 0 and group3 ~= 'null' then
+              group = group .. ' | ' .. group3
+            end
+            s = string.format('%s [%s]', s, group)
+          end
+          
+          mangainfo.chapternames.add(s)
         end
-        
-        mangainfo.chapternames.add(s)
       end
     end
-    
     InvertStrings(mangainfo.chapterlinks,mangainfo.chapternames)
     return no_error
   else
     return net_problem
+  end
+end
+
+function IgnoreChaptersByGroupId(id)
+  local groups = {
+    ["9097"] = "MangaPlus"
+  }
+  
+  if groups[id] ~= nil then
+    return true
+  else
+    return false
   end
 end
 
@@ -319,7 +334,6 @@ function Init()
   m.category='English'
   m.website='MangaDex'
   m.rooturl='https://mangadex.org'
-  m.lastupdated='February 28, 2018'
   m.ongetinfo='getinfo'
   m.ongetpagenumber='getpagenumber'
   m.ongetnameandlink='getnameandlink'
