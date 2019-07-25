@@ -4590,7 +4590,6 @@ end;
 
 procedure TMainForm.vtFavoritesFilterRefresh;
 begin
-  // MEI
   with FavoriteManager do
   begin
       rbFavoritesShowAll.Caption := Format('%s (%d)', [RS_FavoritesShowAll, Count]);
