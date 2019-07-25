@@ -95,6 +95,8 @@ type
     FSortColumn: Integer;
     FSortDirection, FIsAuto, FIsRunning: Boolean;
     function GetFavoritesCount: Integer; inline;
+    function GetEnabledFavoritesCount: Integer; inline;
+    function GetDisabledFavoritesCount: Integer; inline;
     function GetFavorite(const Index: Integer): TFavoriteContainer;
     function ConvertToDB: Boolean;
   public
@@ -144,6 +146,8 @@ type
     procedure LockRelease;
 
     property Count: Integer read GetFavoritesCount;
+    property CountEnabled: Integer read GetEnabledFavoritesCount;
+    property CountDisabled: Integer read GetDisabledFavoritesCount;
     property SortDirection: Boolean read FSortDirection write FSortDirection;
     property SortColumn: Integer read FSortColumn write FSortColumn;
     property isAuto: Boolean read FIsAuto write FIsAuto;
@@ -518,6 +522,32 @@ end;
 function TFavoriteManager.GetFavoritesCount: Integer;
 begin
   Result := Items.Count;
+end;
+
+function TFavoriteManager.GetEnabledFavoritesCount: Integer;
+var
+  i: Integer;
+  j: Integer;
+begin
+  j := 0;
+  for i := 0 to Items.Count - 1 do
+  begin
+    if Items[i].FEnabled then j := j + 1;
+  end;
+  Result := j;
+end;
+
+function TFavoriteManager.GetDisabledFavoritesCount: Integer;
+var
+  i: Integer;
+  j: Integer;
+begin
+  j := 0;
+  for i := 0 to Items.Count - 1 do
+  begin
+    if not Items[i].FEnabled then j := j + 1;
+  end;
+  Result := j;
 end;
 
 function TFavoriteManager.GetFavorite(const Index: Integer): TFavoriteContainer;

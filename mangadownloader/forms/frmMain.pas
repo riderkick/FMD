@@ -724,6 +724,8 @@ type
     // download task filters
     procedure tvDownloadFilterRefresh(const ResourceChanged: Boolean = False);
     procedure vtDownloadUpdateFilters(const RefreshTree: Boolean = True);
+    
+    procedure vtFavoritesFilterRefresh;
 
     procedure AddChapterNameToList;
 
@@ -951,6 +953,9 @@ resourcestring
   RS_InfoSummary = 'Summary:';
   RS_FMDAlreadyRunning = 'Free Manga Downloader already running!';
   RS_ModeSearching = 'Mode: Searching...';
+  RS_FavoritesShowAll = 'All';
+  RS_FavoritesShowEnabled = 'Enabled';
+  RS_FavoritesShowDisabled = 'Disabled';
 
 implementation
 
@@ -4583,6 +4588,17 @@ begin
     TCheckBox(pnGenres.Controls[i]).State := cbGrayed;
 end;
 
+procedure TMainForm.vtFavoritesFilterRefresh;
+begin
+  // MEI
+  with FavoriteManager do
+  begin
+      rbFavoritesShowAll.Caption := Format('%s (%d)', [RS_FavoritesShowAll, Count]);
+      rbFavoritesShowEnabled.Caption := Format('%s (%d)', [RS_FavoritesShowEnabled, CountEnabled]);
+      rbFavoritesShowDisabled.Caption := Format('%s (%d)', [RS_FavoritesShowDisabled, CountDisabled]);
+  end;
+end;
+
 procedure TMainForm.tvDownloadFilterRefresh(const ResourceChanged: Boolean);
 begin
   // update download filter treeview
@@ -5652,6 +5668,7 @@ begin
     vtFavorites.BeginUpdate;
     vtFavorites.RootNodeCount := FavoriteManager.Count;
     vtFavorites.EndUpdate;
+    vtFavoritesFilterRefresh;
   end;
 end;
 
