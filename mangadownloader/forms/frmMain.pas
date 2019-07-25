@@ -5668,6 +5668,13 @@ begin
     vtFavorites.RootNodeCount := FavoriteManager.Count;
     vtFavorites.EndUpdate;
     vtFavoritesFilterRefresh;
+    
+    if rbFavoritesShowAll.Checked then
+      rbFavoritesShowAllChange(nil)
+    else if rbFavoritesShowEnabled.Checked then
+      rbFavoritesShowEnabledChange(nil)
+    else
+      rbFavoritesShowDisabledChange(nil);
   end;
 end;
 
