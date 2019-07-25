@@ -401,6 +401,7 @@ type
 
 // VT extras
 procedure SearchOnVT(Tree: TVirtualStringTree; Key: String; Column: Integer = 0);
+procedure SearchOnlyVisibleOnVT(Tree: TVirtualStringTree; Key: String; Column: Integer = 0);
 
 // Remove Unicode
 function ReplaceUnicodeChar(const S, ReplaceStr: String): String;
@@ -781,6 +782,51 @@ begin
         if not (vsVisible in node^.States) then
           Tree.IsVisible[node] := True;
         node := Tree.GetNext(node);
+      end;
+    end;
+  finally
+    Tree.EndUpdate;
+  end;
+end;
+
+procedure SearchOnlyVisibleOnVT(Tree: TVirtualStringTree; Key: String; Column: Integer);
+var
+  s: String;
+  node, xnode: PVirtualNode;
+  v: Boolean;
+begin
+  if Tree.TotalCount = 0 then
+    Exit;
+  s := AnsiUpperCase(Key);
+  Tree.BeginUpdate;
+  try
+    node := Tree.GetFirstVisible();
+    if s <> '' then
+    begin
+      while node <> nil do
+      begin
+        v := Pos(s, AnsiUpperCase(Tree.Text[node, Column])) <> 0;
+        Tree.IsVisible[node] := v;
+        if v then
+        begin
+          xnode := node^.Parent;
+          while (xnode <> nil)  and (xnode <> Tree.RootNode) do
+          begin
+            if not (vsVisible in xnode^.States) then
+              Tree.IsVisible[xnode] := True;
+            xnode := xnode^.Parent;
+          end;
+        end;
+        node := Tree.GetNextVisible(node);
+      end;
+    end
+    else
+    begin
+      while node <> nil do
+      begin
+        if not (vsVisible in node^.States) then
+          Tree.IsVisible[node] := True;
+        node := Tree.GetNextVisible(node);
       end;
     end;
   finally

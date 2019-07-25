@@ -1627,6 +1627,9 @@ begin
       vtFavorites.EndUpdate;
       btFavoritesCheckNewChapter.Enabled := True;
     end;
+    
+    if edFavoritesSearch.Text <> '' then
+      SearchOnVT(vtFavorites, edFavoritesSearch.Text, 1);
   end;
 end;
 
@@ -1648,6 +1651,9 @@ begin
           
 	      node := vtFavorites.GetNext(node);
       end;
+      
+      if edFavoritesSearch.Text <> '' then
+        SearchOnlyVisibleOnVT(vtFavorites, edFavoritesSearch.Text, 1);
     finally
       vtFavorites.EndUpdate;
       btFavoritesCheckNewChapter.Enabled := False;
@@ -1673,6 +1679,9 @@ begin
           
 	      node := vtFavorites.GetNext(node);
       end;
+      
+      if edFavoritesSearch.Text <> '' then
+        SearchOnlyVisibleOnVT(vtFavorites, edFavoritesSearch.Text, 1);
     finally
       vtFavorites.EndUpdate;
       btFavoritesCheckNewChapter.Enabled := False;
@@ -2901,11 +2910,18 @@ end;
 procedure TMainForm.edFavoritesSearchButtonClick(Sender: TObject);
 begin
   edFavoritesSearch.Clear;
+  
+  if rbFavoritesShowAll.Checked then
+    rbFavoritesShowAllChange(nil)
+  else if rbFavoritesShowEnabled.Checked then
+    rbFavoritesShowEnabledChange(nil)
+  else
+    rbFavoritesShowDisabledChange(nil);
 end;
 
 procedure TMainForm.edFavoritesSearchChange(Sender: TObject);
 begin
-  SearchOnVT(vtFavorites, edFavoritesSearch.Text, 1);
+  SearchOnlyVisibleOnVT(vtFavorites, edFavoritesSearch.Text, 1);
 end;
 
 procedure TMainForm.edFilterMangaInfoChaptersButtonClick(Sender: TObject);
