@@ -338,6 +338,9 @@ begin
     btFavoritesCheckNewChapter.Width :=
       btFavoritesCheckNewChapter.Width - btCancelFavoritesCheck.Width - 6;
     btFavoritesCheckNewChapter.Caption := RS_Checking;
+    rbFavoritesShowAll.Enabled := False;
+    rbFavoritesShowDisabled.Enabled := False;
+    rbFavoritesShowEnabled.Enabled := False;
   end;
 end;
 
@@ -349,6 +352,9 @@ begin
     btFavoritesCheckNewChapter.Width := btFavoritesCheckNewChapter.Width +
       btCancelFavoritesCheck.Width + 6;
     btFavoritesCheckNewChapter.Caption := RS_BtnCheckFavorites;
+    rbFavoritesShowAll.Enabled := True;
+    rbFavoritesShowDisabled.Enabled := True;
+    rbFavoritesShowEnabled.Enabled := True;
     vtFavorites.Repaint;
     if OptionAutoCheckFavInterval and (not tmCheckFavorites.Enabled) then
       tmCheckFavorites.Enabled := True;

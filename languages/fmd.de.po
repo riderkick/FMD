@@ -2661,3 +2661,16 @@ msgstr "Aktiviere Cloudflare Bypass"
 #: tmainform.gboptionscloudflarebypass.caption
 msgid "Cloudflare Bypass (global settings)"
 msgstr "Cloudflare Bypass (Globale Einstellungen)"
+
+#: tmainform.rbfavoritesshowall.caption
+msgctxt "tmainform.rbfavoritesshowall.caption"
+msgid "All"
+msgstr "Alle"
+
+#: tmainform.rbfavoritesshowdisabled.caption
+msgid "Disabled"
+msgstr "Deaktiviert"
+
+#: tmainform.rbfavoritesshowenabled.caption
+msgid "Enabled"
+msgstr "Aktiviert"

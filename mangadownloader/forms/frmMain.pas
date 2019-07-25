@@ -154,6 +154,9 @@ type
     pmSbMain: TPopupMenu;
     pmFilterGenreAll: TPopupMenu;
     pmTray: TPopupMenu;
+    rbFavoritesShowDisabled: TRadioButton;
+    rbFavoritesShowEnabled: TRadioButton;
+    rbFavoritesShowAll: TRadioButton;
     sbSaveTo: TScrollBox;
     sbWebsiteOptions: TScrollBox;
     btDownloadSplit: TSpeedButton;
@@ -499,6 +502,9 @@ type
     procedure miFavoritesEnableClick(Sender: TObject);
     procedure miFavoritesRenameClick(Sender: TObject);
     procedure miFavoritesTransferWebsiteClick(Sender: TObject);
+    procedure rbFavoritesShowAllChange(Sender: TObject);
+    procedure rbFavoritesShowDisabledChange(Sender: TObject);
+    procedure rbFavoritesShowEnabledChange(Sender: TObject);
     procedure tbmiDownloadMoveBottomClick(Sender: TObject);
     procedure tbmiDownloadMoveDownClick(Sender: TObject);
     procedure tbmiDownloadMoveTopClick(Sender: TObject);
@@ -1600,6 +1606,77 @@ begin
     end;
   finally
     Free;
+  end;
+end;
+
+procedure TMainForm.rbFavoritesShowAllChange(Sender: TObject);
+var
+  node: PVirtualNode;
+begin
+  if rbFavoritesShowAll.Checked then
+  begin
+    try
+      vtFavorites.BeginUpdate;
+      node := vtFavorites.GetFirst();
+      while Assigned(node) do
+      begin
+        vtFavorites.IsVisible[node] := True;
+	      node := vtFavorites.GetNext(node);
+      end;
+    finally
+      vtFavorites.EndUpdate;
+      btFavoritesCheckNewChapter.Enabled := True;
+    end;
+  end;
+end;
+
+procedure TMainForm.rbFavoritesShowDisabledChange(Sender: TObject);
+var
+  node: PVirtualNode;
+begin
+  if rbFavoritesShowDisabled.Checked then
+  begin
+    try
+      vtFavorites.BeginUpdate;
+      node := vtFavorites.GetFirst();
+      while Assigned(node) do
+      begin
+        if FavoriteManager[node^.Index].Enabled then
+          vtFavorites.IsVisible[node] := False
+        else
+          vtFavorites.IsVisible[node] := True;
+          
+	      node := vtFavorites.GetNext(node);
+      end;
+    finally
+      vtFavorites.EndUpdate;
+      btFavoritesCheckNewChapter.Enabled := False;
+    end;
+  end;
+end;
+
+procedure TMainForm.rbFavoritesShowEnabledChange(Sender: TObject);
+var
+  node: PVirtualNode;
+begin
+  if rbFavoritesShowEnabled.Checked then
+  begin
+    try
+      vtFavorites.BeginUpdate;
+      node := vtFavorites.GetFirst();
+      while Assigned(node) do
+      begin
+        if FavoriteManager[node^.Index].Enabled then
+          vtFavorites.IsVisible[node] := True
+        else
+          vtFavorites.IsVisible[node] := False;
+          
+	      node := vtFavorites.GetNext(node);
+      end;
+    finally
+      vtFavorites.EndUpdate;
+      btFavoritesCheckNewChapter.Enabled := False;
+    end;
   end;
 end;
 

@@ -2634,6 +2634,48 @@ object MainForm: TMainForm
         TabOrder = 0
         TextHint = 'Search favorites...'
       end
+      object rbFavoritesShowAll: TRadioButton
+        AnchorSideLeft.Control = btCancelFavoritesCheck
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = btCancelFavoritesCheck
+        Left = 361
+        Height = 19
+        Top = 5
+        Width = 34
+        BorderSpacing.Left = 20
+        BorderSpacing.Top = 3
+        Caption = 'All'
+        Checked = True
+        OnChange = rbFavoritesShowAllChange
+        TabOrder = 4
+        TabStop = True
+      end
+      object rbFavoritesShowEnabled: TRadioButton
+        AnchorSideLeft.Control = rbFavoritesShowAll
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = rbFavoritesShowAll
+        Left = 405
+        Height = 19
+        Top = 5
+        Width = 62
+        BorderSpacing.Left = 10
+        Caption = 'Enabled'
+        OnChange = rbFavoritesShowEnabledChange
+        TabOrder = 5
+      end
+      object rbFavoritesShowDisabled: TRadioButton
+        AnchorSideLeft.Control = rbFavoritesShowEnabled
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = rbFavoritesShowEnabled
+        Left = 477
+        Height = 19
+        Top = 5
+        Width = 65
+        BorderSpacing.Left = 10
+        Caption = 'Disabled'
+        OnChange = rbFavoritesShowDisabledChange
+        TabOrder = 6
+      end
     end
     object tsOption: TTabSheet
       Caption = 'Options'
