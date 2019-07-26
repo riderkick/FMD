@@ -4,10 +4,56 @@ https://github.com/fmd-project-team/FMD
 Changelog:
 ([!] Important, [+] Addition, [-] Removal, [*] Fix/Change, [?] Feedback needed)
 
-0.9.165.0 (10.06.2019)
+0.9.166.0 (26.07.2019)
 [!] Report issues here: https://github.com/fmd-project-team/FMD/issues
-[!] Check website status here: https://github.com/fmd-project-team/FMD/wiki/Supported-Websites-(WIP)
 [!] Join us on Discord: https://discord.gg/cXKKgw3
+[+] Added global options for Cloudflare Bypass.
+[+] Added new advanced website setting to override the default "save to" path per website (Issue #246)
+[+] Added a simple filter for favorites (show all, enabled or disabled) (Issue #203)
+[+] Added new Lua module for debugging and statistics. Will be integrated into the other scripts in the future.
+[+] Added 11Toon [RAW] (Issue #295) -> Thank you AbidZakaria
+[+] Added AzoraManga [AR-SC] (Issue #281) -> Thank you AbidZakaria
+[+] Added HanaScans [RAW] (Issue #270) -> Thank you AbidZakaria
+[+] Added HunterFansubScan [ES-SC] -> Thank you rs3mk
+[+] Added KoMBatch [ID] (Issue #355) -> Thank you AbidZakaria
+[+] Added MaidMangaID [ID] (Issue #276) -> Thank you AbidZakaria
+[+] Added Ngomik [ID] (Issue #113) -> Thank you AbidZakaria
+[+] Added NinjaScans [EN-SC] (Issue #247) -> Thank you ElectroShade
+[+] Added ReadManhua [EN-SC] (Issue #258) -> Thank you AbidZakaria
+[+] Added Shoujohearts [EN-SC] (Issue #247) -> Thank you ElectroShade
+[-] Removed DarkSkyScans [ES-SC] (use DarkskyProjects instead)
+[-] Removed MangaArab [AR-SC] (Issue #293)
+[-] Removed WoweScans [EN-SC] (Issue #300)
+[*] BacaManga: Fixed chapter download (Issue #372) -> Thank you AbidZakaria
+[*] DoujinYosh: Fixed chapter download (Issue #329)
+[*] HentaiCafe: Ported to Lua script; Fixed chapter download (Issue #262)
+[*] HentaiNexus: Include genre in getting manga info (Issue #335)
+[*] HitomiLa: Fixed chapter download (Issue #287)
+[*] KazeManga: Changed url (Issue #316) -> Thank you AbidZakaria
+[*] Kyuroku: Fixed getting chapter list (Issue #253) -> Thank you AbidZakaria
+[*] MangaInn: Ported to Lua script; Fixed chapter download (Issue #303)
+[*] MangaKid: Changed url (Issue #317) -> Thank you AbidZakaria
+[*] MangaLib: Fixed chapter download (Issue #292)
+[*] MangaShiro (all websites): Fixed all (Issue #322, #331, #332)
+[*] MangaYosh: Fixed chapter download (Issue #329)
+[*] ManhwaHentai: Changed url; This website is a fake, origin website has closed down (Issue #314)
+[*] MerakiScans: Fixed chapter download (Issue #265) -> Thank you AbidZakaria
+[*] NewType: Ported to Lua script; Fixed all (Issue #141)
+[*] Toonkor: Fixed all (Issue #269) -> Thank you AbidZakaria
+[*] Tumangaonline: Fixed chapter download
+[*] WestManga: Fixed getting summary in manga info tab (Issue #268) -> Thank you AbidZakaria
+[*] ZManga: Moved to [ES-SC] -> Thank you rs3mk
+[*] (Module) Madara.lua: Fixed chapter download for all websites (Issue #310)
+[*] Current selection count in the Favorites tab will be shown in the status bar (Issue #202)
+[*] Fixed download list not sorting if entries are added from any part of FMD except from the favorites list (Issue #353)
+[*] Localitation Fix: Typo in all languages (Issue #344)
+[*] Localization Update: French
+[*] Localization Update: Indonesian
+[*] Localization Update: Spanish
+[*] Localization Update: Turkish
+Full changes: https://github.com/fmd-project-team/FMD/compare/0.9.165.0...0.9.166.0
+
+0.9.165.0 (10.06.2019)
 [!] We changed the website database server to a new github repository. We're still uploading more database files so some might be missing at first.
 [+] Added Localization: French -> Thank you jsoudeer
 [+] Added DoujinYosh [H-Sites] (Issue #230)
@@ -122,7 +168,6 @@ Full changes: https://github.com/fmd-project-team/FMD/compare/0.9.163.0...0.9.16
 Full changes: https://github.com/fmd-project-team/FMD/compare/0.9.162.0...0.9.163.0
 
 0.9.162.0 (07.04.2019)
-[!] Join us on Discord: https://discord.gg/cXKKgw3
 [+] Added BacaManga [IN] -> Thank you AbidZakaria
 [+] Added KomikIndoWebId [IN]
 [+] Added OtakuIndo [IN] -> Thank you AbidZakaria

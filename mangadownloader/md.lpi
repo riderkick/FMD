@@ -22,7 +22,7 @@
     <VersionInfo>
       <UseVersionInfo Value="True"/>
       <MinorVersionNr Value="9"/>
-      <RevisionNr Value="165"/>
+      <RevisionNr Value="166"/>
       <Attributes pvaPrivateBuild="True"/>
       <StringTable Comments="https://github.com/fmd-project-team/FMD" FileDescription="Free Manga Downloader" LegalCopyright="©2015-2019" OriginalFilename="fmd.exe" ProductName="Free Manga Downloader" ProductVersion="$BuildMode()" PrivateBuild="FMD Project Team"/>
     </VersionInfo>
