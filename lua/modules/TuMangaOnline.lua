@@ -40,14 +40,14 @@ function getinfo()
 end
 
 function getpagenumber()
-  http.headers.values['Referer'] = module.rooturl
-  if not http.get(MaybeFillHost(module.rooturl, url)) then return false; end
+  http.headers.values['Referer'] = module.rooturl:gsub('http://', 'https://')
+  if not http.get(MaybeFillHost(module.rooturl, url):gsub('http://', 'https://')) then return false; end
   local x = TXQuery.Create(http.Document)
   local u = x.xpathstring('//meta[@property="og:url"]/@content')
   if string.match(u, 'cascade') then
     u = string.gsub(u, '/cascade', '/paginated')
     print(u)
-    if not http.get(MaybeFillHost(module.rooturl, u)) then return false; end
+    if not http.get(MaybeFillHost(module.rooturl, u):gsub('http://', 'https://')) then return false; end
     x = TXQuery.Create(http.Document)
   end
   task.pagenumber = tonumber(x.xpathstring('(//select[@id="viewer-pages-select"])[1]/option[last()]/text()'))
@@ -58,8 +58,8 @@ function getpagenumber()
 end
 
 function getimageurl()
-  local s = MaybeFillHost(module.rooturl, task.pagecontainerlinks[workid])
-  http.headers.values['Referer'] = module.rooturl
+  local s = MaybeFillHost(module.rooturl, task.pagecontainerlinks[workid]):gsub('http://', 'https://')
+  http.headers.values['Referer'] = module.rooturl:gsub('http://', 'https://')
   if http.get(s) then
     task.pagelinks[workid] = TXQuery.Create(http.document).xpathstring('//img[@class="viewer-image"]/@src')
     
@@ -92,7 +92,7 @@ end
 function Init()
   local m = NewModule()
   m.website = 'Tumangaonline'
-  m.rooturl = 'https://tmofans.com'
+  m.rooturl = 'http://tmofans.com' -- Don't set to https because TMO set http for Cloudflare!
   m.category = 'Spanish'
   m.maxtasklimit = 1
   m.maxconnectionlimit = 1
