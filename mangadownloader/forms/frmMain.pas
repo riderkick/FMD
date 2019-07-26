@@ -2926,7 +2926,12 @@ end;
 
 procedure TMainForm.edFavoritesSearchChange(Sender: TObject);
 begin
-  SearchOnlyVisibleOnVT(vtFavorites, edFavoritesSearch.Text, 1);
+  if rbFavoritesShowAll.Checked then
+    SearchOnVT(vtFavorites, edFavoritesSearch.Text, 1)
+  else if rbFavoritesShowEnabled.Checked then
+    FavoriteManager.SearchEnabledOnVT(vtFavorites, edFavoritesSearch.Text)
+  else
+    FavoriteManager.SearchDisabledOnVT(vtFavorites, edFavoritesSearch.Text)
 end;
 
 procedure TMainForm.edFilterMangaInfoChaptersButtonClick(Sender: TObject);
