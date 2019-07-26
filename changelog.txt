@@ -4,9 +4,14 @@ https://github.com/fmd-project-team/FMD
 Changelog:
 ([!] Important, [+] Addition, [-] Removal, [*] Fix/Change, [?] Feedback needed)
 
-0.9.166.0 (26.07.2019)
+0.9.166.1 (26.07.2019)
 [!] Report issues here: https://github.com/fmd-project-team/FMD/issues
 [!] Join us on Discord: https://discord.gg/cXKKgw3
+[*] Hotfix: Fixed a problem with the favorites search.
+[*] MangaDex: Added a ignore list for chapters that are linked to external websites. The first group in the ignore list is MangaPlus.
+Full changes: https://github.com/fmd-project-team/FMD/compare/0.9.166.0...0.9.166.1
+
+0.9.166.0 (26.07.2019)
 [+] Added global options for Cloudflare Bypass.
 [+] Added new advanced website setting to override the default "save to" path per website (Issue #246)
 [+] Added a simple filter for favorites (show all, enabled or disabled) (Issue #203)
