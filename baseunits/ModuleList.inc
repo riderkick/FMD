@@ -26,7 +26,6 @@ uses
   MangaTube,
   Mangaf,
   MangaRock,
-  MangaWindow,
   TranslateWebtoon,
   // Raw Official
   SundayWebEvery,
