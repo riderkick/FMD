@@ -96,6 +96,8 @@ end
 ----------------------------------------------------------------------------------------------------
 
 function Init()
+  AddWebsiteModule('LeviatanScans', 'https://es.leviatanscans.com', 'Spanish-Scanlation')
+  AddWebsiteModule('LeviatanScansEN', 'https://leviatanscans.com', 'English-Scanlation')
   AddWebsiteModule('PsychoPlay', 'https://psychoplay.co', 'English-Scanlation')
 end
 
