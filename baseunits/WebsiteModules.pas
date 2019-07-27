@@ -474,7 +474,8 @@ begin
         begin
           cfs := '';
           readln(f, cfs);
-          if pos('cf_clearance', cfs) > 0 then Settings.CloudflareBypass.Cookies:=cfs;
+          if pos('__cfduid', cfs) > 0 then Settings.CloudflareBypass.Cookies:=cfs;
+          if pos('cf_clearance', cfs) > 0 then Settings.CloudflareBypass.Cookies:=Settings.CloudflareBypass.Cookies + ';' + cfs;
           if pos('user_agent', cfs) > 0 then Settings.CloudflareBypass.UserAgent:=StringReplace(cfs, 'user_agent=', '', [rfIgnoreCase]);
         end;
       finally
