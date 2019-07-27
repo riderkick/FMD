@@ -12,7 +12,6 @@ uses
   AcademyVN,
   Tsumino,
   WebtoonTr,
-  KuManga,
   SenManga,
   GoodManga,
   MangaZuki,
