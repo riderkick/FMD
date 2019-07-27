@@ -1,4 +1,12 @@
 ----------------------------------------------------------------------------------------------------
+-- Module Initialization
+----------------------------------------------------------------------------------------------------
+
+local _M = {}
+function Init() end
+
+
+----------------------------------------------------------------------------------------------------
 -- Scripting Parameters
 ----------------------------------------------------------------------------------------------------
 
@@ -11,7 +19,7 @@ local LuaDebug   = require 'Modules.LuaDebugging'
 -- Local Constants
 ----------------------------------------------------------------------------------------------------
 
-local DirectoryPagination = '/comics?page='
+DirectoryPagination = '/comics?page='
 
 
 ----------------------------------------------------------------------------------------------------
@@ -19,7 +27,7 @@ local DirectoryPagination = '/comics?page='
 ----------------------------------------------------------------------------------------------------
 
 -- Get info and chapter list for current manga.
-function GetInfo()
+function _M.GetInfo()
   local x = nil
   local u = MaybeFillHost(module.RootURL, url)
   
@@ -41,7 +49,7 @@ end
 
 
 -- Get the page count of the manga list of the current website.
-function GetDirectoryPageNumber()
+function _M.GetDirectoryPageNumber()
   local u = module.RootURL .. DirectoryPagination .. 1
   
   --[[Debug]] LuaDebug.WriteLogWithHeader('GetDirectoryPageNumber', 'url ->  ' .. u)
@@ -56,7 +64,7 @@ end
 
 
 -- Get links and names from the manga list of the current website.
-function GetNameAndLink()
+function _M.GetNameAndLink()
   local x = nil
   local u = module.RootURL .. DirectoryPagination .. IncStr(url)
   
@@ -73,7 +81,7 @@ end
 
 
 -- Get the page count for the current chapter.
-function GetPageNumber()
+function _M.GetPageNumber()
   local s, x = nil
   local u = MaybeFillHost(module.RootURL, url)
   
@@ -92,23 +100,7 @@ end
 
 
 ----------------------------------------------------------------------------------------------------
--- Module Initialization
+-- Module After-Initialization
 ----------------------------------------------------------------------------------------------------
 
-function Init()
-  AddWebsiteModule('LeviatanScans', 'https://es.leviatanscans.com', 'Spanish-Scanlation')
-  AddWebsiteModule('LeviatanScansEN', 'https://leviatanscans.com', 'English-Scanlation')
-  AddWebsiteModule('PsychoPlay', 'https://psychoplay.co', 'English-Scanlation')
-end
-
-function AddWebsiteModule(name, url, category)
-  local m = NewModule()
-  m.Website                  = name
-  m.RootURL                  = url
-  m.Category                 = category
-  m.OnGetInfo                = 'GetInfo'
-  m.OnGetDirectoryPageNumber = 'GetDirectoryPageNumber'
-  m.OnGetNameAndLink         = 'GetNameAndLink'
-  m.OnGetPageNumber          = 'GetPageNumber'
-  return m
-end
+return _M
