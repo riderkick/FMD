@@ -59,8 +59,7 @@ function Init()
   local m=NewModule()
   m.category='Portugues'
   m.website='UnionMangas'
-  m.rooturl='http://unionmangas.site'
-  m.lastupdated='April 6, 2018'
+  m.rooturl='http://unionmangas.top'
   m.ongetinfo='getinfo'
   m.ongetpagenumber='getpagenumber'
   m.ongetnameandlink='getnameandlink'
