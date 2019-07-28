@@ -2676,27 +2676,27 @@ msgstr "Cloudflare Bypass (genel ayarlar)"
 #: tmainform.rbfavoritesshowall.caption
 msgctxt "tmainform.rbfavoritesshowall.caption"
 msgid "All"
-msgstr ""
+msgstr "Tümü"
 
 #: tmainform.rbfavoritesshowdisabled.caption
 msgid "Disabled"
-msgstr ""
+msgstr "Pasifler"
 
 #: tmainform.rbfavoritesshowenabled.caption
 msgid "Enabled"
-msgstr ""
+msgstr "Aktifler"
 
 #: frmmain.rs_favoritesshowall
 msgctxt "frmmain.rs_favoritesshowall"
 msgid "All"
-msgstr ""
+msgstr "Tümü"
 
 #: frmmain.rs_favoritesshowdisabled
 msgctxt "frmmain.rs_favoritesshowdisabled"
 msgid "Disabled"
-msgstr ""
+msgstr "Pasifler"
 
 #: frmmain.rs_favoritesshowenabled
 msgctxt "frmmain.rs_favoritesshowenabled"
 msgid "Enabled"
-msgstr ""
+msgstr "Aktifler"
