@@ -188,7 +188,7 @@ function getpagenumber()
             s = unescape(DecodeBase64(s))
             s = s:gsub('+', ' ')
             x.parsehtml(s)
-            x.xpathstringall('//*[@class="chapimage"]/@src', task.pagelinks)
+            x.xpathstringall('//img/@src', task.pagelinks)
     else
       if task.pagelinks.count < 1 then TXQuery.Create(http.Document).xpathstringall('//*[@id="readerarea"]/div//img/@src', task.pagelinks) end    
       if task.pagelinks.count < 1 then TXQuery.Create(http.Document).xpathstringall('//*[@id="readerarea"]//a/@href', task.pagelinks) end
