@@ -1,4 +1,4 @@
-﻿local js = require 'modules.jsunpack'
+local js = require 'modules.jsunpack'
 local lz = require 'modules.lzstring'
 
 function getinfo()
@@ -50,6 +50,7 @@ function getpagenumber()
     local w = js.splitstr(lz.decompressFromBase64(GetBetween(",'", "'", s)), '|')
     s = js.unpack36(text, a, c, w)
     s = s:gsub('^var%s+.+=%s*{', '{'):gsub('||{};$', ''):gsub('"status":,', '')
+    s = GetBetween("SMH.imgData(", ").preInit();", s)
     x.parsehtml(s)
     local cid = x.xpathstring('json(*).cid')
     local md5 = x.xpathstring('json(*).sl.md5')
