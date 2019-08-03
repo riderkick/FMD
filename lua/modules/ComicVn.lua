@@ -52,9 +52,8 @@ end
 function Init()
   local m = NewModule()
   m.website = 'ComicVn'
-  m.rooturl = 'http://comicvn.net'
+  m.rooturl = 'https://beeng.net'
   m.category = 'Vietnamese'
-  m.lastupdated='March 7, 2018'
   m.ongetinfo='getinfo'
   m.ongetpagenumber='getpagenumber'
   m.ongetnameandlink='getnameandlink'
