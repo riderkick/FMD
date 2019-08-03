@@ -202,10 +202,10 @@ function getpagenumber()
         if http.get(link) then
           x=TXQuery.Create(http.document)
           x.parsehtml(http.document)
-          local v=x.xpath('json(*).images()')
+          local v=x.xpath('json(*).chapter.images()')
           for i=1,v.count do
             local v1=v.get(i)
-            task.pagelinks.add(v1.toString)
+            task.pagelinks.add(x.xpathstring('text', v1))
           end
         else
           return false
