@@ -9,7 +9,6 @@ uses
   MangaHome,
   MintMangaRU,
   MangaHubRU,
-  AcademyVN,
   Tsumino,
   WebtoonTr,
   SenManga,
