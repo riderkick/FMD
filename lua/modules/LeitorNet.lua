@@ -52,11 +52,12 @@ function getpagenumber()
   if http.get(MaybeFillHost(module.rooturl, url)) then
     x=TXQuery.Create(http.Document)
 	s=x.xpathstring('//script[contains(@src, "token=")]/@src')
-	local token = s:match('%?token=(%w+)&?')
+	local token = s:match('%&token=(%w+)&?')
 	local id = s:match('&id_release=(%w+)&?')
 	if http.get(module.rooturl .. string.format('/leitor/pages/%s.json?key=%s', id, token)) then
 	  x=TXQuery.Create(http.Document)
 	  x.xpathstringall('json(*).images()', task.pagelinks)
+    task.pagelinks[0] = MaybeFillHost(module.rooturl, task.pagelinks[0])
 	else
 	  return false
 	end
@@ -86,7 +87,6 @@ function Init()
   m.category='Portugues'
   m.website='LeitorNet'
   m.rooturl='https://leitor.net'
-  m.lastupdated='February 17, 2018'
   m.ongetinfo='getinfo'
   m.ongetpagenumber='getpagenumber'
   m.ongetnameandlink='getnameandlink'
