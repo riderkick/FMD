@@ -12,7 +12,6 @@ uses
   Tsumino,
   WebtoonTr,
   SenManga,
-  GoodManga,
   MangaZuki,
   ReadMangaToday,
   MangaOnlineBR,
