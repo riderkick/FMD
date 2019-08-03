@@ -135,6 +135,27 @@ function Modules.CopyPasteScanlation()
   
   return CopyPasteScanlation
 end
+
+function Modules.HentaiRead()
+  local HentaiRead = {}
+  setmetatable(HentaiRead, { __index = Modules.Madara() })
+  
+  function HentaiRead:getpagenumber()
+    task.pagelinks.clear()
+    if http.get(MaybeFillHost(module.rooturl, url)) then
+      local x = TXQuery.Create(http.Document)
+      local s = x.xpathstring('//script[contains(., "chapter_preloaded_images")]', task.pagelinks)
+      s = "["..GetBetween("[", "]", s).."]"
+      print(s)
+      x.parsehtml(s)
+      x.xpathstringall('json(*)()', task.pagelinks)
+      return true
+    end
+    return false
+  end
+  
+  return HentaiRead
+end
 -------------------------------------------------------------------------------
 
 function createInstance()
@@ -206,6 +227,7 @@ function Init()
   AddWebsiteModule('ManhwaHand', 'https://manhwahand.com', cat)
   AddWebsiteModule('DoujinYosh', 'https://doujinyosh.com', cat)
   AddWebsiteModule('ManhwaHentai', 'http://manhwahentai.site', cat)
+  AddWebsiteModule('HentaiRead', 'http://hentairead.com', cat)
 
   cat = 'Spanish-Scanlation'
   AddWebsiteModule('GodsRealmScan', 'https://godsrealmscan.com', cat)
