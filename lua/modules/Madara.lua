@@ -115,6 +115,26 @@ function Modules.ChibiManga()
   
   return ChibiManga
 end
+
+function Modules.CopyPasteScanlation()
+  local CopyPasteScanlation = {}
+  setmetatable(CopyPasteScanlation, { __index = Modules.Madara() })
+  
+  function CopyPasteScanlation:getpagenumber()
+    task.pagelinks.clear()
+    if http.get(MaybeFillHost(module.rooturl, url)) then
+      local x = TXQuery.Create(http.Document)
+      local s = x.xpathstring('//script[contains(., "chapter_preloaded_images")]', task.pagelinks)
+      s = "{"..GetBetween("{", "}", s).."}"
+      x.parsehtml(s)
+      x.xpathstringall('let $c := json(*) return for $k in jn:keys($c) return $c($k)', task.pagelinks)
+      return true
+    end
+    return false
+  end
+  
+  return CopyPasteScanlation
+end
 -------------------------------------------------------------------------------
 
 function createInstance()
