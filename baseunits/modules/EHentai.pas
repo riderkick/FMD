@@ -422,7 +422,7 @@ procedure RegisterModule;
 begin
   with AddWebsiteModule('E-Hentai', 'https://e-hentai.org') do
     AddOptionComboBox(@settingsimagesize, 'SettingsImageSize', @RS_SettingsImageSize, @RS_SettingsImageSizeItems);
-  with AddWebsiteModule('ExHentai', 'http://exhentai.org') do begin
+  with AddWebsiteModule('ExHentai', 'https://exhentai.org') do begin
     AccountSupport := True;
     OnLogin := @ExHentaiLogin;
   end;
