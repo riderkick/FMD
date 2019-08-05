@@ -13,8 +13,8 @@ local LuaDebug   = require 'Modules.LuaDebugging'
 
 local Template   = require 'Modules.Template-MangaReaderOnline'
 -- DirectoryParameters = '/'            --> Override template variable by uncommenting this line.
-XPathTokenStatus    = 'Estado'       --> Override template variable by uncommenting this line.
-XPathTokenGenres    = 'Categorías'   --> Override template variable by uncommenting this line.
+-- XPathTokenStatus    = 'Status'       --> Override template variable by uncommenting this line.
+-- XPathTokenGenres    = 'Categories'   --> Override template variable by uncommenting this line.
 
 
 ----------------------------------------------------------------------------------------------------
@@ -45,12 +45,20 @@ function GetPageNumber()
 end
 
 
+-- Prepare some things before downloading the images.
+function BeforeDownloadImage()
+  http.Headers.Values['Referer'] = module.RootURL
+  
+  return true
+end
+
+
 ----------------------------------------------------------------------------------------------------
 -- Module Initialization
 ----------------------------------------------------------------------------------------------------
 
 function Init()
-  AddWebsiteModule('LeoManga', 'https://leomanga.me', 'Spanish')
+  AddWebsiteModule('ZManga', 'https://zmanga.org', 'Spanish-Scanlation')
 end
 
 function AddWebsiteModule(name, url, category)
@@ -61,5 +69,6 @@ function AddWebsiteModule(name, url, category)
   m.OnGetInfo                = 'GetInfo'
   m.OnGetNameAndLink         = 'GetNameAndLink'
   m.OnGetPageNumber          = 'GetPageNumber'
+  m.OnBeforeDownloadImage    = 'BeforeDownloadImage'
   return m
 end

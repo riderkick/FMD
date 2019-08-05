@@ -235,7 +235,6 @@ function Init()
   AddWebsiteModule('PlotTwistNoFansub', 'https://www.plot-twistnf-scan.tk', cat)
   AddWebsiteModule('KnightNoFansub', 'https://knightnofansub.com', cat)
   AddWebsiteModule('HunterFansubScan', 'https://hunterfansubscan.com', cat)
-  AddWebsiteModule('ZManga', 'https://zmanga.org', cat)	
   AddWebsiteModule('CopyPasteScanlation', 'https://copypastescan.xyz', cat)
 	
   cat = 'Webcomics'
