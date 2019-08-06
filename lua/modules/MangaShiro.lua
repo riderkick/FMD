@@ -183,8 +183,8 @@ function getpagenumber()
   if http.get(MaybeFillHost(module.rooturl,url)) then
     if module.website == 'BacaManga' then
       local x = TXQuery.Create(http.Document)
-      local s = x.xpathstring('//script[contains(., "bm_content")]')
-            s = GetBetween('var bm_content = atob("', '");', s)
+      local s = x.xpathstring('//script[contains(., "atob")]')
+            s = GetBetween('atob("', '");', s)
             s = unescape(DecodeBase64(s))
             s = s:gsub('+', ' ')
             x.parsehtml(s)
