@@ -33,6 +33,7 @@ function getpagenumber()
   if http.get(u) then
     local x=TXQuery.Create(http.Document)
     x.xpathstringall('//img[@class="chapter-img"]/@data-original', task.pagelinks)
+	if module.website == 'Lhscans' or module.website == 'MangaHato' then task.pagecontainerlinks.text = u end
   else
     return false
   end
@@ -54,6 +55,11 @@ function getnameandlink()
   end
 end
 
+function BeforeDownloadImage()
+  if module.website == 'Lhscans' or module.website == 'MangaHato' then http.headers.values['Referer'] = task.pagecontainerlinks.text end
+  return true
+end
+
 function AddWebsiteModule(name, url, cat)
   local m = NewModule()
   m.category = cat
@@ -63,12 +69,13 @@ function AddWebsiteModule(name, url, cat)
   m.ongetinfo='getinfo'
   m.ongetpagenumber='getpagenumber'
   m.ongetnameandlink='getnameandlink'
+  m.onBeforeDownloadImage = 'BeforeDownloadImage'
   return m
 end
 
 function Init()
   local cat = 'Raw'
-  AddWebsiteModule('Lhscans', 'http://lhscan.net', cat)
+  AddWebsiteModule('Lhscans', 'https://lhscan.net', cat)
   AddWebsiteModule('HanaScan', 'https://hanascan.com', cat)
   AddWebsiteModule('MangaHato', 'https://mangahato.com', cat)
   
