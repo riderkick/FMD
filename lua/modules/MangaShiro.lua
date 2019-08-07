@@ -220,8 +220,7 @@ end
 
 function getnameandlink()
   local dirs = {
-    ['MangaShiro'] = '/daftar-manga/?list',
-    ['MangaKita'] = '/manga-list/',
+    ['MangaShiro'] = '/manga/?list',
     ['KomikStation'] = '/manga/?list',
     ['MangaKid'] = '/manga-lists/',
     ['KomikCast'] = '/daftar-komik/?list',
@@ -242,7 +241,6 @@ function getnameandlink()
     ['MangaCeng'] = '/manga/?list',
     ['MaidMangaID'] = '/manga-list/?list',
     ['KomikAV'] = '/manga/?list',
-    ['KoMBatch'] = '/manga-list/',
     ['Ngomik'] = '/daftar-manga/?list',
     ['MangaPus'] = '/manga/?list',
   }
@@ -304,7 +302,7 @@ end
 
 function Init()
 local cat = 'Indonesian'
-  AddWebsiteModule('MangaShiro', 'https://mangashiro.net', cat)
+  AddWebsiteModule('MangaShiro', 'https://mangashiro.org', cat)
   AddWebsiteModule('MangaKita', 'https://mangakita.net', cat)
   AddWebsiteModule('KomikStation', 'https://www.komikstation.com', cat)
   AddWebsiteModule('MangaKid', 'https://mgku.me', cat)
