@@ -58,6 +58,6 @@ end
 
 function Init()
   local cat = 'English-Scanlation'
-  AddWebsiteModule('ChampionScans', 'https://reader.championscans.com', cat)
+  AddWebsiteModule('ChampionScans', 'https://read.ptscans.com', cat)
   AddWebsiteModule('LetItGoScans', 'https://reader.letitgo.scans.today', cat)
 end
