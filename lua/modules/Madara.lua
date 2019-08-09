@@ -233,7 +233,7 @@ function Init()
   AddWebsiteModule('GodsRealmScan', 'https://godsrealmscan.com', cat)
   AddWebsiteModule('DarkskyProjects', 'https://darkskyprojects.org', cat) 
   AddWebsiteModule('PlotTwistNoFansub', 'https://www.plot-twistnf-scan.tk', cat)
-  AddWebsiteModule('KnightNoFansub', 'https://knightnofansub.com', cat)
+  AddWebsiteModule('KnightNoFansub', 'https://knightnofansub.site', cat)
   AddWebsiteModule('HunterFansubScan', 'https://hunterfansubscan.com', cat)
   AddWebsiteModule('CopyPasteScanlation', 'https://copypastescan.xyz', cat)
 	
