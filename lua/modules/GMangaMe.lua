@@ -67,9 +67,10 @@ function getpagenumber()
     local x = TXQuery.Create(http.Document);
     local s = x.xpathstring('//script[@type="application/json" and @class]')
     x.parsehtml(s)
+	local mediakey = x.xpathstring('json(*).globals.mediaKey')
     local pages = js.splitstr(x.xpathstring('json(*).readerDataAction.readerData.release.hq_pages'), '\r\n')
     for _, k in ipairs(pages) do
-      task.pagelinks.add(mediaUrl .. '/releases/' .. k)
+      task.pagelinks.add(mediaUrl .. '/releases/' .. k .. '?ak=' .. mediakey)
     end
     return true
   else
@@ -100,7 +101,6 @@ function Init()
   m.category='Arabic'
   m.website='GManga'
   m.rooturl='https://' .. domain
-  m.lastupdated='March 29, 2019'
   m.ongetinfo='getinfo'
   m.ongetpagenumber='getpagenumber'
   m.ongetnameandlink='getnameandlink'
