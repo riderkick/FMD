@@ -240,7 +240,7 @@ function Init()
   AddWebsiteModule('ZManga', 'https://zmanga.org', cat)
 	
   cat = 'Webcomics'
-  AddWebsiteModule('ManyToon', 'https://manytoon.com', cat)
+  AddWebsiteModule('ManyToon', 'https://manytoon.me', cat)
   AddWebsiteModule('PocketAngelScan', 'https://pocketangelscans.com', cat)
   AddWebsiteModule('Toonily', 'https://toonily.com', cat)
   
