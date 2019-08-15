@@ -27,6 +27,7 @@ end
 
 function getTitle(x)
   local title = ''
+  if title == '' then title = x.xpathstring('//*[@id="judul"]/h1') end
   if title == '' then title = x.xpathstring('//div[@class="infox"]/h1') end
   if title == '' then title = x.xpathstring('//h1[@itemprop="headline"]') end
   if title == '' then title = x.xpathstring('//h1[@itemprop="name"]') end
@@ -150,7 +151,7 @@ function getMangas(x)
       end
     end
     
-    if mangainfo.chapterlinks.count < 1 or module.website == 'Komiku' or module.website == 'OtakuIndo' then
+    if mangainfo.chapterlinks.count < 1 or module.website == 'Komiku' then
       local v = x.xpath('//table[@class="chapter"]//td/a')
       for i = 1, v.count do
         local v1 = v.get(i)
@@ -233,7 +234,6 @@ function getnameandlink()
     ['KomikIndo'] = '/manga-list/?list',
     ['KomikIndoWebId'] = '/daftar-manga/?list',
     ['Komiku'] = '/daftar-komik/',
-    ['OtakuIndo'] = '/daftar-komik/',
     ['KazeManga'] = '/manga-list/?list',
     ['Mangacan'] =  '/daftar-komik-manga-bahasa-indonesia.html',
     ['MangaIndo'] = '/manga-list-201902-v052/',
@@ -315,8 +315,7 @@ local cat = 'Indonesian'
   AddWebsiteModule('MangaIndoNet', 'https://mangaindo.net', cat)
   AddWebsiteModule('KomikIndo', 'https://komikindo.co', cat)
   AddWebsiteModule('KomikIndoWebId', 'https://www.komikindo.web.id', cat)
-  AddWebsiteModule('Komiku', 'https://komiku.co', cat)
-  AddWebsiteModule('OtakuIndo', 'https://otakuindo.co', cat)
+  AddWebsiteModule('Komiku', 'http://komiku.co', cat)
   AddWebsiteModule('KazeManga', 'https://kazemanga.web.id', cat)
   AddWebsiteModule('Mangacan', 'http://www.mangacanblog.com', cat)
   AddWebsiteModule('MangaIndo', 'https://mangaindo.web.id', cat)
