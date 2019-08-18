@@ -27,8 +27,8 @@ function Modules.Madara()
       mangainfo.genres=x.xpathstringall('//div[@class="genres-content"]/a')
       mangainfo.status = MangaInfoStatusIfPos(x.xpathstring('//div[@class="summary-heading" and contains(h5, "Status")]/following-sibling::div/div/a'))
       mangainfo.summary=x.xpathstring('//div[contains(@class,"description-summary")]/string-join(.//text(),"")')
-      if module.website == 'DoujinYosh' or module.website == 'MangaYosh' then
-        local v = x.xpath('//li[@class="wp-manga-chapter"]/a')
+      if module.website == 'DoujinYosh' or module.website == 'MangaYosh' or module.website == 'KIDzScan' then
+        local v = x.xpath('//li[contains(@class, "wp-manga-chapter")]/a')
         for i = 1, v.count do
           local v1 = v.get(i)
           local link = url..'/'..v1.toString..'/?style=list'
@@ -37,7 +37,7 @@ function Modules.Madara()
           mangainfo.chapterlinks.Add(link);
         end
       else
-        x.XPathHREFAll('//li[@class="wp-manga-chapter"]/a', mangainfo.chapterlinks, mangainfo.chapternames)
+        x.XPathHREFAll('//li[contains(@class, "wp-manga-chapter")]/a', mangainfo.chapterlinks, mangainfo.chapternames)
       end
       InvertStrings(mangainfo.chapterlinks,mangainfo.chapternames)
       return no_error
