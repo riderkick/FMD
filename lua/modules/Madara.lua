@@ -238,6 +238,7 @@ function Init()
   AddWebsiteModule('HunterFansubScan', 'https://hunterfansubscan.com', cat)
   AddWebsiteModule('CopyPasteScanlation', 'https://copypastescan.xyz', cat)
   AddWebsiteModule('ZManga', 'https://zmanga.org', cat)
+  AddWebsiteModule('KIDzScan', 'https://grafimanga.com', cat)
 	
   cat = 'Webcomics'
   AddWebsiteModule('ManyToon', 'https://manytoon.me', cat)
