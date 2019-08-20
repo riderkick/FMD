@@ -62,8 +62,7 @@ function Init()
   local m = NewModule()
   m.category = 'Raw'
   m.Website = 'Toonkor'
-  m.RootURL = 'https://toonkor.fit'
-  m.lastupdated='June 6, 2018'
+  m.RootURL = 'https://toonkor.guru'
   m.ongetinfo='getinfo'
   m.ongetpagenumber='getpagenumber'
   m.ongetnameandlink='getnameandlink'
