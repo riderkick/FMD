@@ -203,13 +203,16 @@ end
 function Init()
   local cat = 'Raw'
   AddWebsiteModule('IsekaiRaw', 'http://isekairaw.com', cat)
+  AddWebsiteModule('MangazukiClub', 'https://mangazuki.club', cat)
   
   cat = 'English'
   AddWebsiteModule('IsekaiScan', 'http://isekaiscan.com', cat)
   AddWebsiteModule('MangaLike', 'https://mangalike.net', cat)
   AddWebsiteModule('MangaZukiOnline', 'https://www.mangazuki.online', cat)
   AddWebsiteModule('MangaZukiSite', 'https://www.mangazuki.site', cat)
-	
+  AddWebsiteModule('MangaZukiMe', 'https://mangazuki.me', cat)
+  AddWebsiteModule('YomangaInfo', 'https://yomanga.info', cat)
+
   cat = 'English-Scanlation'
   AddWebsiteModule('TrashScanlations', 'https://trashscanlations.com', cat)
   AddWebsiteModule('ZeroScans', 'https://zeroscans.com', cat)
@@ -229,6 +232,7 @@ function Init()
   AddWebsiteModule('DoujinYosh', 'https://doujinyosh.com', cat)
   AddWebsiteModule('ManhwaHentai', 'https://manhwahentai.me', cat)
   AddWebsiteModule('HentaiRead', 'http://hentairead.com', cat)
+  AddWebsiteModule('ManhwaClub', 'https://manhwa.club', cat)
 
   cat = 'Spanish-Scanlation'
   AddWebsiteModule('GodsRealmScan', 'https://godsrealmscan.com', cat)
