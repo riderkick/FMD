@@ -211,7 +211,7 @@ function Init()
   AddWebsiteModule('MangaZukiOnline', 'https://www.mangazuki.online', cat)
   AddWebsiteModule('MangaZukiSite', 'https://www.mangazuki.site', cat)
   AddWebsiteModule('MangaZukiMe', 'https://mangazuki.me', cat)
-  AddWebsiteModule('YomangaInfo', 'https://yomanga.info', cat)
+  AddWebsiteModule('YoManga', 'https://yomanga.info', cat)
 
   cat = 'English-Scanlation'
   AddWebsiteModule('TrashScanlations', 'https://trashscanlations.com', cat)
