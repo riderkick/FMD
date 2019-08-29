@@ -394,31 +394,31 @@ msgstr "Una Semana"
 
 #: frmmain.rs_sixmonths
 msgid "Six months"
-msgstr "6 meses"
+msgstr "Seis Meses"
 
 #: frmmain.rs_oneyear
 msgid "One year"
-msgstr "Un año"
+msgstr "Un Año"
 
 #: frmmain.rs_twoyears
 msgid "Two years"
-msgstr "Dos años"
+msgstr "Dos Años"
 
 #: frmmain.rs_threeyears
 msgid "Three years"
-msgstr "Tres años"
+msgstr "Tres Años"
 
 #: frmmain.rs_fouryears
 msgid "Four years"
-msgstr "Cuatro años"
+msgstr "Cuatro Años"
 
 #: frmmain.rs_fiveyears
 msgid "Five years"
-msgstr "5 años"
+msgstr "Cinco Años"
 
 #: frmmain.rs_tenyears
 msgid "Ten years"
-msgstr "Dies años"
+msgstr "Diez Años"
 
 #: frmmain.rs_optioncompress
 #, fuzzy
@@ -2651,40 +2651,40 @@ msgstr "Actualizando Lista"
 
 #: tmainform.ckoptionautomaticallydisablecloudflarebypass.caption
 msgid "Automatically disable Cloudflare Bypass for websites on error or if not needed"
-msgstr ""
+msgstr "Deshabilitar Automáticamente Cloudflare Bypass para sitios web con error ó si no es necesitado"
 
 #: tmainform.ckoptionenablecloudflarebypass.caption
 msgid "Enable Cloudflare Bypass"
-msgstr ""
+msgstr "Habilitar Cloudflare Bypass"
 
 #: tmainform.gboptionscloudflarebypass.caption
 msgid "Cloudflare Bypass (global settings)"
-msgstr ""
+msgstr "Cloudflare Bypass (Ajustes Globales)"
 
 #: tmainform.rbfavoritesshowall.caption
 msgctxt "tmainform.rbfavoritesshowall.caption"
 msgid "All"
-msgstr ""
+msgstr "Todo"
 
 #: tmainform.rbfavoritesshowdisabled.caption
 msgid "Disabled"
-msgstr ""
+msgstr "Deshabilitado"
 
 #: tmainform.rbfavoritesshowenabled.caption
 msgid "Enabled"
-msgstr ""
+msgstr "Habilitado"
 
 #: frmmain.rs_favoritesshowall
 msgctxt "frmmain.rs_favoritesshowall"
 msgid "All"
-msgstr ""
+msgstr "Todo"
 
 #: frmmain.rs_favoritesshowdisabled
 msgctxt "frmmain.rs_favoritesshowdisabled"
 msgid "Disabled"
-msgstr ""
+msgstr "Deshabilitado"
 
 #: frmmain.rs_favoritesshowenabled
 msgctxt "frmmain.rs_favoritesshowenabled"
 msgid "Enabled"
-msgstr ""
+msgstr "Habilitado"
