@@ -2521,8 +2521,8 @@ begin
           CurrentDownloadChapterPtr:=0;
           SaveToDB(newdl);
         end;
-		if OptionSortDownloadsWhenAddingNewDownloadTasks then
-		  DLManager.Sort(DLManager.SortColumn);
+        if OptionSortDownloadsWhenAddingNewDownloadTasks then
+          DLManager.Sort(DLManager.SortColumn);
       end;
       DLManager.DownloadedChapters.Chapters[mangaInfo.website+mangaInfo.link]:=links.Text;
       FavoriteManager.AddToDownloadedChaptersList(mangaInfo.website,mangaInfo.link,links);
@@ -4067,7 +4067,9 @@ begin
       vtDownloadMoveItems(vtDownload.DropTargetNode^.Index, Mode);
   end
   else
+  begin
     AddSilentThread(frmDropTarget.GetDropURLs(DataObject), MD_DownloadAll);
+  end;
 end;
 
 procedure TMainForm.vtDownloadDragOver(Sender : TBaseVirtualTree;

@@ -1114,9 +1114,6 @@ end;
 constructor TTaskContainer.Create;
 begin
   inherited Create;
-  
-  if OptionSortDownloadsWhenAddingNewDownloadTasks then
-    DLManager.Sort(DLManager.SortColumn);
 	
   DlId := -1;
   InitCriticalSection(CS_Container);
