@@ -27,7 +27,6 @@ function getdirurl(website)
   local dirs = {
     ['Jaiminisbox'] = dirurlreader,
     ['DokiFansubs'] = dirurlreader,
-    ['AtelierDuNoir'] = dirurlreader,
     ['OneTimeScans'] = dirurlfoolslide,
     ['DejameProbar'] = dirurlslide,
     ['MenudoFansub'] = dirurlslide,
@@ -66,11 +65,7 @@ function getinfo()
     x = TXQuery.Create(http.document)
     mangainfo.coverlink = x.xpathstring('//div[@class="thumbnail" or contains(@class, "thumb")]/img/@src')
     if mangainfo.title == '' then
-      if module.website == 'AtelierDuNoir' then
-        mangainfo.title = x.xpathstring('//div[@class="section-headline"]//h3')
-      else
-        mangainfo.title = x.xpathstring('//h1[@class="title"]')
-      end
+      mangainfo.title = x.xpathstring('//h1[@class="title"]')
     end
     if Pos('emailprotected', mangainfo.title) > 0 then
       mangainfo.title = Trim(SeparateLeft(x.xpathstring('//title'), '::'))
@@ -188,14 +183,7 @@ function getnameandlink()
   if getWithCookie(s) then
     result = no_error
     local x = TXQuery.create(http.document)
-    if module.website == 'AtelierDuNoir' then
-      local v = x.xpath('//div[@class="caption"]')
-      for i = 1, v.count do
-        v1 = v.get(i)
-        links.add(x.xpathstring('div/a/@href', v1))
-        names.add(x.xpathstring('h4', v1))
-      end
-    elseif module.website == 'TwistedHelScans' then
+    if module.website == 'TwistedHelScans' then
       local v = x.xpath('//div[contains(@class, "series_card")]/a')
       for i = 1, v.count do
         local v1 = v.get(i)
@@ -214,7 +202,6 @@ function AddWebsiteModule(name, url, category)
   m.website = name
   m.rooturl = url
   m.category = category
-  m.lastupdated = 'June 11, 2019'
   m.ongetinfo = 'getinfo'
   m.OnTaskStart = 'taskstart'
   m.OnGetPageNumber = 'getpagenumber'
@@ -235,7 +222,6 @@ function Init()
   AddWebsiteModule('KireiCake', 'https://reader.kireicake.com', cat)
   AddWebsiteModule('HelveticaScans', 'http://helveticascans.com', cat)
   AddWebsiteModule('DokiFansubs', 'https://kobato.hologfx.com', cat)
-  AddWebsiteModule('AtelierDuNoir', 'http://atelierdunoir.org', cat)
   AddWebsiteModule('WorldThree', 'http://www.slide.world-three.org', cat)
   AddWebsiteModule('S2Scans', 'https://reader.s2smanga.com', cat)
   AddWebsiteModule('HotChocolateScans', 'http://hotchocolatescans.com', cat)
