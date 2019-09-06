@@ -191,6 +191,15 @@ function getpagenumber()
              s = s:gsub('+', ' ')
              x.parsehtml(s)
              x.xpathstringall('//img/@src', task.pagelinks)
+    elseif module.website == 'MangaShiro' then
+      local x = TXQuery.Create(http.Document)
+      local v=x.xpath('//*[@id="readerarea"]//a')
+        for i=1,v.count do
+        	local v1=v.get(i)
+            if string.find(v1.getAttribute('href'), "shironime.png") == nil then
+            	task.pagelinks.add(v1.getAttribute('href'))
+        	end
+        end
     else
       if task.pagelinks.count < 1 then TXQuery.Create(http.Document).xpathstringall('//*[@id="readerarea"]/div//img/@src', task.pagelinks) end    
       if task.pagelinks.count < 1 then TXQuery.Create(http.Document).xpathstringall('//*[@id="readerarea"]//a/@href', task.pagelinks) end
@@ -290,6 +299,12 @@ function getnameandlink()
   end
 end
 
+function BeforeDownloadImage()
+  http.Headers.Values['referer'] = module.RootURL
+  http.Headers.Values['Accept'] = 'image/webp,image/apng,image/*,*/*'   
+  return true
+end
+
 function AddWebsiteModule(site, url, cat)
   local m=NewModule()
   m.category=cat
@@ -298,6 +313,7 @@ function AddWebsiteModule(site, url, cat)
   m.ongetinfo='getinfo'
   m.ongetpagenumber='getpagenumber'
   m.ongetnameandlink='getnameandlink'
+  if site == 'MangaShiro' then m.OnBeforeDownloadImage = 'BeforeDownloadImage' end
   return m
 end
 

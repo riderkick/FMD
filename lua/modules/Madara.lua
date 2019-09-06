@@ -31,8 +31,13 @@ function Modules.Madara()
         local v = x.xpath('//li[contains(@class, "wp-manga-chapter")]/a')
         for i = 1, v.count do
           local v1 = v.get(i)
-          local link = url..'/'..v1.toString..'/?style=list'
-                link = string.gsub(link, ' ', '-')
+          local link = v1.getAttribute('href')
+                if  module.website == 'MangaYosh' then
+                  link = string.gsub(link, 'https://yosh.tranivson.me', module.rooturl)
+                else
+                  link = string.gsub(link, 'https://doujinyosh.bloghadi.me', module.rooturl)
+                end
+          print(link)
           mangainfo.chapternames.Add(v1.toString);
           mangainfo.chapterlinks.Add(link);
         end
