@@ -173,7 +173,6 @@ function AddWebsiteModule(name, url, category)
   m.website = name
   m.rooturl = url
   m.category = category
-  m.lastupdated = 'February 13, 2018'
   m.sortedlist = true
   m.OnGetInfo = 'getinfo'
   m.OnGetPageNumber = 'getpagenumber'
@@ -185,7 +184,6 @@ end
 
 function Init()
   local cat = 'English'
-  AddWebsiteModule('Authrone', 'http://www.authrone.com', cat)
   AddWebsiteModule('EyeOnManga', 'http://www.eyeonmanga.com', cat)
   AddWebsiteModule('MangaDeep', 'http://www.mangadeep.com', cat)
   AddWebsiteModule('Manga99', 'http://www.manga99.com', cat)
