@@ -1552,6 +1552,7 @@ begin
     Node := vtFavorites.GetNextSelected(Node);
   end;
   UpdateVtFavorites;
+  vtFavoritesFilterRefresh;
 end;
 
 procedure TMainForm.miFavoritesRenameClick(Sender: TObject);
@@ -2562,6 +2563,7 @@ begin
       mangaInfo.website, s, mangaInfo.link);
     vtFavorites.NodeDataSize := SizeOf(TFavoriteInfo);
     UpdateVtFavorites;
+    vtFavoritesFilterRefresh;
     btAddToFavorites.Enabled := False;
     if OptionShowFavoritesTabOnNewManga then
     begin
@@ -3144,6 +3146,7 @@ begin
   end;
   FavoriteManager.Backup;
   UpdateVtFavorites;
+  vtFavoritesFilterRefresh;
 end;
 
 procedure TMainForm.miFavoritesChangeCurrentChapterClick(Sender: TObject);
