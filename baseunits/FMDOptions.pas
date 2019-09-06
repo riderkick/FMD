@@ -160,6 +160,9 @@ var
   OptionShowBalloonHint: Boolean = True;
   OptionShowFavoritesTabOnNewManga: Boolean = False;
   OptionShowDownloadsTabOnNewTasks: Boolean = True;
+  
+  // favorites (context menu settings)
+  OptionDefaultAction: Integer = 0;
 
   // updates
   OptionAutoCheckLatestVersion: Boolean = True;

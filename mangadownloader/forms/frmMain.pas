@@ -106,6 +106,11 @@ type
     lbOptionMangaCustomRename: TLabel;
     MenuItem10: TMenuItem;
     MenuItem11: TMenuItem;
+    MenuItem12: TMenuItem;
+    miFavoritesDefaultAction: TMenuItem;
+    miFavoritesDefaultActionOpenFolder: TMenuItem;
+    miFavoritesDefaultActionShowInfo: TMenuItem;
+    miFavoritesDefaultActionCheckNewChapters: TMenuItem;
     miFavoritesRename: TMenuItem;
     miFavoritesTransferWebsite: TMenuItem;
     miFavoritesEnable: TMenuItem;
@@ -160,6 +165,7 @@ type
     sbSaveTo: TScrollBox;
     sbWebsiteOptions: TScrollBox;
     btDownloadSplit: TSpeedButton;
+    sbGeneralSettings: TScrollBox;
     seOptionRetryFailedTask: TSpinEdit;
     seJPEGQuality: TSpinEdit;
     tbWebsitesSelectAll: TToolButton;
@@ -219,7 +225,7 @@ type
     medtURLDelete: TMenuItem;
     MenuItem15: TMenuItem;
     medURLSelectAll: TMenuItem;
-    MenuItem17: TMenuItem;
+    miFavoritesDefaultActionRename: TMenuItem;
     medURLUndo: TMenuItem;
     miFavoritesDownloadAll: TMenuItem;
     miDownloadViewMangaInfo: TMenuItem;
@@ -499,6 +505,10 @@ type
     procedure FormDestroy(Sender: TObject);
     procedure FormWindowStateChange(Sender: TObject);
     procedure miChapterListAscendingClick(Sender: TObject);
+    procedure miFavoritesDefaultActionCheckNewChaptersClick(Sender: TObject);
+    procedure miFavoritesDefaultActionOpenFolderClick(Sender: TObject);
+    procedure miFavoritesDefaultActionRenameClick(Sender: TObject);
+    procedure miFavoritesDefaultActionShowInfoClick(Sender: TObject);
     procedure miFavoritesEnableClick(Sender: TObject);
     procedure miFavoritesRenameClick(Sender: TObject);
     procedure miFavoritesTransferWebsiteClick(Sender: TObject);
@@ -1298,6 +1308,8 @@ begin
     Interval := 100;
     Enabled := True;
   end;
+  
+  Caption := 'Free Manga Downloader (' + FMD_VERSION_STRING + ')';
 end;
 
 procedure TMainForm.FormClose(Sender: TObject; var CloseAction: TCloseAction);
@@ -1536,6 +1548,30 @@ begin
     clbChapterList.ClearSelection;
     clbChapterList.Repaint;
   end;
+end;
+
+procedure TMainForm.miFavoritesDefaultActionCheckNewChaptersClick(Sender: TObject);
+begin
+  OptionDefaultAction := 3;
+  configfile.WriteInteger('favorites', 'DefaultAction', 3);
+end;
+
+procedure TMainForm.miFavoritesDefaultActionOpenFolderClick(Sender: TObject);
+begin
+  OptionDefaultAction := 0;
+  configfile.WriteInteger('favorites', 'DefaultAction', 0);
+end;
+
+procedure TMainForm.miFavoritesDefaultActionRenameClick(Sender: TObject);
+begin
+  OptionDefaultAction := 2;
+  configfile.WriteInteger('favorites', 'DefaultAction', 2);
+end;
+
+procedure TMainForm.miFavoritesDefaultActionShowInfoClick(Sender: TObject);
+begin
+  OptionDefaultAction := 1;
+  configfile.WriteInteger('favorites', 'DefaultAction', 1);
 end;
 
 procedure TMainForm.miFavoritesEnableClick(Sender: TObject);
@@ -4359,7 +4395,16 @@ begin
   if Column = 4 then
     miFavoritesOpenFolderClick(Sender)
   else
-    miFavoritesOpenWithClick(Sender);
+    case OptionDefaultAction of
+      1:
+        miFavoritesViewInfosClick(Sender);
+      2:
+        miFavoritesRenameClick(Sender);
+      3:
+        miFavoritesCheckNewChapterClick(Sender);
+      else
+        miFavoritesOpenWithClick(Sender);
+    end;
 end;
 
 procedure TMainForm.vtFavoritesDragDrop(Sender: TBaseVirtualTree;
@@ -5036,6 +5081,18 @@ begin
     frmDropTarget.FLeft := ReadInteger('droptarget', 'Left', frmDropTarget.FLeft);
     rgDropTargetMode.ItemIndex := ReadInteger('droptarget', 'Mode', 0);
     tbDropTargetOpacity.Position := ReadInteger('droptarget', 'Opacity', 255);
+    
+    // favorites
+    case ReadInteger('favorites', 'DefaultAction', OptionDefaultAction) of
+      1:
+        miFavoritesDefaultActionShowInfo.Checked := True;
+      2:
+        miFavoritesDefaultActionRename.Checked := True;
+      3:
+        miFavoritesDefaultActionCheckNewChapters.Checked := True;
+      else
+        miFavoritesDefaultActionOpenFolder.Checked := True;
+    end;
 
     // connection
     seOptionMaxParallel.Value := ReadInteger('connections', 'NumberOfTasks', OptionMaxParallel);

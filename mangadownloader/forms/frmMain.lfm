@@ -37,10 +37,10 @@ object MainForm: TMainForm
     Height = 596
     Top = 8
     Width = 853
-    ActivePage = tsFavorites
+    ActivePage = tsDownload
     Align = alClient
     ParentFont = False
-    TabIndex = 2
+    TabIndex = 0
     TabOrder = 0
     OnChange = pcMainChange
     object tsDownload: TTabSheet
@@ -216,7 +216,7 @@ object MainForm: TMainForm
                 end
                 object tbSeparator1: TToolButton
                   Left = 153
-                  Height = 5
+                  Height = 25
                   Top = 0
                   Style = tbsDivider
                   Visible = False
@@ -2687,11 +2687,11 @@ object MainForm: TMainForm
         Height = 470
         Top = 4
         Width = 845
-        ActivePage = tsConnections
+        ActivePage = tsGeneral
         Align = alTop
         Anchors = [akTop, akLeft, akRight, akBottom]
         ParentFont = False
-        TabIndex = 2
+        TabIndex = 0
         TabOrder = 0
         object tsGeneral: TTabSheet
           Caption = 'General'
@@ -2701,275 +2701,286 @@ object MainForm: TMainForm
           ChildSizing.VerticalSpacing = 4
           ClientHeight = 442
           ClientWidth = 837
-          object cbOptionMinimizeToTray: TCheckBox
-            AnchorSideLeft.Control = seOptionNewMangaTime
-            AnchorSideTop.Control = cbOptionMinimizeOnStart
-            AnchorSideTop.Side = asrBottom
+          object sbGeneralSettings: TScrollBox
             Left = 4
-            Height = 19
-            Top = 182
-            Width = 106
-            Caption = 'Minimize to tray'
-            ParentFont = False
-            TabOrder = 4
-          end
-          object cbOptionOneInstanceOnly: TCheckBox
-            AnchorSideLeft.Control = cbOptionMinimizeToTray
-            AnchorSideTop.Control = cbOptionMinimizeToTray
-            AnchorSideTop.Side = asrBottom
-            Left = 4
-            Height = 19
-            Top = 205
-            Width = 177
-            Caption = 'Permit only one FMD running'
-            ParentFont = False
-            TabOrder = 5
-          end
-          object cbOptionLiveSearch: TCheckBox
-            AnchorSideLeft.Control = cbOptionOneInstanceOnly
-            AnchorSideTop.Control = cbOptionOneInstanceOnly
-            AnchorSideTop.Side = asrBottom
-            Left = 4
-            Height = 19
-            Top = 228
-            Width = 210
-            Caption = 'Enable live search (slow on long list)'
-            ParentFont = False
-            TabOrder = 6
-          end
-          object gbOptionExternal: TGroupBox
-            AnchorSideLeft.Control = cbOptionLiveSearch
-            AnchorSideTop.Control = cbOptionSortDownloadsWhenAddingNewDownloadTasks
-            AnchorSideTop.Side = asrBottom
-            Left = 4
-            Height = 118
-            Top = 313
-            Width = 826
-            Anchors = [akTop, akLeft, akRight]
-            BorderSpacing.Top = 20
-            Caption = 'External program'
+            Height = 426
+            Top = 8
+            Width = 829
+            HorzScrollBar.Page = 300
+            VertScrollBar.Page = 426
+            Align = alClient
+            BorderStyle = bsNone
             ChildSizing.LeftRightSpacing = 4
-            ChildSizing.TopBottomSpacing = 4
+            ChildSizing.TopBottomSpacing = 8
             ChildSizing.HorizontalSpacing = 4
             ChildSizing.VerticalSpacing = 4
-            ClientHeight = 98
-            ClientWidth = 822
-            ParentFont = False
-            TabOrder = 8
-            object lbOptionExternal: TLabel
+            ClientHeight = 426
+            ClientWidth = 812
+            TabOrder = 0
+            object gbOptionExternal: TGroupBox
+              AnchorSideTop.Side = asrBottom
+              Left = 4
+              Height = 118
+              Top = 313
+              Width = 650
+              Anchors = [akTop, akLeft, akRight]
+              BorderSpacing.Top = 20
+              Caption = 'External program'
+              ChildSizing.LeftRightSpacing = 4
+              ChildSizing.TopBottomSpacing = 4
+              ChildSizing.HorizontalSpacing = 4
+              ChildSizing.VerticalSpacing = 4
+              ClientHeight = 98
+              ClientWidth = 646
+              ParentFont = False
+              TabOrder = 0
+              object lbOptionExternal: TLabel
+                Left = 4
+                Height = 15
+                Top = 4
+                Width = 638
+                Align = alTop
+                Caption = 'Open manga by using external program:'
+                ParentColor = False
+              end
+              object lbOptionExternalParams: TLabel
+                Left = 4
+                Height = 15
+                Top = 50
+                Width = 638
+                Align = alTop
+                Caption = 'Parameters:'
+                ParentColor = False
+              end
+              object edOptionExternalParams: TEdit
+                AnchorSideLeft.Control = lbOptionExternalParams
+                AnchorSideTop.Control = lbOptionExternalParams
+                AnchorSideTop.Side = asrBottom
+                Left = 4
+                Height = 23
+                Top = 69
+                Width = 611
+                Anchors = [akTop, akLeft, akRight]
+                TabOrder = 1
+                TextHint = 'External program parameters'
+              end
+              object lbOptionExternalParamsHint: TLabel
+                AnchorSideLeft.Control = edOptionExternalParams
+                AnchorSideLeft.Side = asrBottom
+                AnchorSideTop.Control = edOptionExternalParams
+                AnchorSideTop.Side = asrCenter
+                Left = 619
+                Height = 15
+                Top = 73
+                Width = 13
+                Caption = '[?]'
+                Font.Color = clBlue
+                ParentColor = False
+                ParentFont = False
+                ParentShowHint = False
+                ShowHint = True
+              end
+              object edOptionExternalPath: TEditButton
+                Left = 4
+                Height = 23
+                Top = 23
+                Width = 638
+                Align = alTop
+                ButtonWidth = 23
+                Glyph.Data = {
+                  36040000424D3604000000000000360000002800000010000000100000000100
+                  2000000000000004000064000000640000000000000000000000000000000000
+                  0000002E45000064970000629300005E8E30005C8C7C005884950000001F0000
+                  001A0000001A0000001A0000001A0000001A0000001A00000011000000000000
+                  0000002E450000659950006497991C7AA9C052A5CDE0075477E225250A932B2B
+                  0C8A2D2D0D872D2D0D872D2D0D872D2D0D872D2D0D8723230B6A000000110000
+                  002400466A983590BDF269B8DDFA82CBECFF85CEEEFF4186A8FFE5E5E5FFE5E5
+                  E4FFFEFEFDFFFEFEFCFFFDFDFAFFFCFCF9FFFEFEF9FF3B3B1B88000000090000
+                  0012006699B288D0EFFF7FCAE9FF7FCAE9FF87D0EFFF4489ACFFE4E4E4FFE3E3
+                  E2FFFCFCFBFFFBFBF8FFFAFAF6FFF8F8F4FFFBFBF5FF4F4F2C7D000000000054
+                  7E00006FA7A48AD3F0FF82CDEBFF82CDEBFF8AD3F0FF468BAFFFE3E3E2FFE2E2
+                  E1FFFBFBF8FFFAFAF6FFF8F8F4FFF7F7F1FFFAFAF4FF58583276005782000073
+                  AC000073AC9E8ED6F2FF87D0EDFF87D0EDFF8ED6F2FF488FB2FFE2E2E1FFE1E1
+                  DFFFFAFAF6FFF8F8F4FFF7F7F1FFF5F5EFFFFAFAF2FF5D5D37740076B0000076
+                  B0000076B09B92DAF4FF8BD4F0FF8BD4F0FF92DAF4FF4C92B6FFE1E1DFFFE1E1
+                  DDFFF8F8F4FFF7F7F1FFF5F5EFFFF4F4ECFFF8F8EEFF62623C720078B4000078
+                  B4000078B49797DEF6FF90D8F2FF90D8F2FF97DEF6FF4F96B8FFE1E1DDFFDFDF
+                  DBFFF7F7F1FFF5F5EFFFF4F4ECFFF0F0E6FFF6F6E8FF67674070007BB800007B
+                  B800007BB8949BE1F7FF94DBF4FF94DBF4FF9BE1F7FF5299BCFFDFDFDBFFDEDE
+                  D9FFF5F5EFFFF4F4ECFFF0F0E6FFEBEBDDFFF3F3E3FF6C6C446E007DBB00007D
+                  BB00007DBB909EE5F9FF98DFF6FF98DFF6FF9EE5F9FF569CBFFFDEDED9FFDCDC
+                  D7FFF4F4ECFFF0F0E6FFEBEBDDFFE7E7D6FFF2F2E1FF7171486C007FBF00007F
+                  BF00007FBF8DA3E8FBFF9DE3F9FF9DE3F9FFA3E8FBFF589FC2FFDCDCD7FFDBDB
+                  D4FFF0F0E6FFEBEBDDFFA4A493FFA4A493FFA4A493FF4949257C0082C2000082
+                  C2000082C28AA6EBFCFFA1E6FBFFA1E6FBFFA6EBFCFF62A8C9FFDBDBD4FFD8D8
+                  CFFFEBEBDDFFE7E7D6FFB6B6A5FFFFFFFFFF79795069797950250084C5000084
+                  C5000084C587A9EEFDFFA4E9FCFFA4E9FCFFAAEFFDFF6DAFCDFFEDEDE4FFF4F4
+                  E7FFF4F4E3FFF2F2E1FFC2C2B1FF467F85B87C7C5225797950000085C8000085
+                  C8000085C885ADF1FFFFABEFFEFF94E2F8FF6EC8EDFF4397B9FF8EB7BAFF8EB7
+                  BAFF8EB7BAFF8EB7BAFF93BCBBFF1B84B0963E818E003D7F8C000087CA000087
+                  CA000087CA8388DBF4FF60C1E9FF5FBFEAFF80D3F4FF9CE3FDFFA2E6FFFFA2E6
+                  FFFFA2E6FFFFA2E6FFFFA6EAFFFF0087CA830087CA000087CA000087CB000087
+                  CB000088CC610088CC810088CC810088CC810088CC810088CC810088CC810088
+                  CC810088CC810088CC810088CC810088CC610087CB000087CB00
+                }
+                MaxLength = 0
+                NumGlyphs = 1
+                OnButtonClick = edOptionExternalPathButtonClick
+                PasswordChar = #0
+                TabOrder = 0
+                TextHint = 'External program path'
+              end
+            end
+            object cbOptionMinimizeToTray: TCheckBox
+              AnchorSideTop.Side = asrBottom
+              Left = 4
+              Height = 19
+              Top = 182
+              Width = 106
+              Caption = 'Minimize to tray'
+              ParentFont = False
+              TabOrder = 1
+            end
+            object cbOptionOneInstanceOnly: TCheckBox
+              AnchorSideLeft.Control = cbOptionMinimizeToTray
+              AnchorSideTop.Control = cbOptionMinimizeToTray
+              AnchorSideTop.Side = asrBottom
+              Left = 4
+              Height = 19
+              Top = 205
+              Width = 177
+              Caption = 'Permit only one FMD running'
+              ParentFont = False
+              TabOrder = 2
+            end
+            object cbOptionLiveSearch: TCheckBox
+              AnchorSideLeft.Control = cbOptionOneInstanceOnly
+              AnchorSideTop.Control = cbOptionOneInstanceOnly
+              AnchorSideTop.Side = asrBottom
+              Left = 4
+              Height = 19
+              Top = 228
+              Width = 210
+              Caption = 'Enable live search (slow on long list)'
+              ParentFont = False
+              TabOrder = 3
+            end
+            object lbOptionLanguage: TLabel
               Left = 4
               Height = 15
-              Top = 4
-              Width = 814
+              Top = 8
+              Width = 804
               Align = alTop
-              Caption = 'Open manga by using external program:'
+              Caption = 'Language:'
               ParentColor = False
             end
-            object lbOptionExternalParams: TLabel
-              Left = 4
-              Height = 15
-              Top = 50
-              Width = 814
-              Align = alTop
-              Caption = 'Parameters:'
-              ParentColor = False
-            end
-            object edOptionExternalParams: TEdit
-              AnchorSideLeft.Control = lbOptionExternalParams
-              AnchorSideTop.Control = lbOptionExternalParams
+            object cbLanguages: TComboBox
+              AnchorSideLeft.Control = lbOptionLanguage
+              AnchorSideTop.Control = lbOptionLanguage
               AnchorSideTop.Side = asrBottom
               Left = 4
               Height = 23
-              Top = 69
-              Width = 787
-              Anchors = [akTop, akLeft, akRight]
-              TabOrder = 1
-              TextHint = 'External program parameters'
-            end
-            object lbOptionExternalParamsHint: TLabel
-              AnchorSideLeft.Control = edOptionExternalParams
-              AnchorSideLeft.Side = asrBottom
-              AnchorSideTop.Control = edOptionExternalParams
-              AnchorSideTop.Side = asrCenter
-              Left = 795
-              Height = 15
-              Top = 73
-              Width = 13
-              Caption = '[?]'
-              Font.Color = clBlue
-              ParentColor = False
+              Top = 27
+              Width = 224
+              ItemHeight = 15
+              Items.Strings = (
+                'English'
+              )
               ParentFont = False
-              ParentShowHint = False
-              ShowHint = True
+              Style = csDropDownList
+              TabOrder = 4
             end
-            object edOptionExternalPath: TEditButton
+            object lbOptionLetFMDDo: TLabel
+              AnchorSideLeft.Control = cbLanguages
+              AnchorSideTop.Control = cbLanguages
+              AnchorSideTop.Side = asrBottom
+              Left = 4
+              Height = 15
+              Top = 54
+              Width = 117
+              Caption = 'After download finish:'
+              ParentColor = False
+            end
+            object cbOptionLetFMDDo: TComboBox
+              AnchorSideLeft.Control = lbOptionLetFMDDo
+              AnchorSideTop.Control = lbOptionLetFMDDo
+              AnchorSideTop.Side = asrBottom
               Left = 4
               Height = 23
-              Top = 23
-              Width = 814
-              Align = alTop
-              ButtonWidth = 23
-              Glyph.Data = {
-                36040000424D3604000000000000360000002800000010000000100000000100
-                2000000000000004000064000000640000000000000000000000000000000000
-                0000002E45000064970000629300005E8E30005C8C7C005884950000001F0000
-                001A0000001A0000001A0000001A0000001A0000001A00000011000000000000
-                0000002E450000659950006497991C7AA9C052A5CDE0075477E225250A932B2B
-                0C8A2D2D0D872D2D0D872D2D0D872D2D0D872D2D0D8723230B6A000000110000
-                002400466A983590BDF269B8DDFA82CBECFF85CEEEFF4186A8FFE5E5E5FFE5E5
-                E4FFFEFEFDFFFEFEFCFFFDFDFAFFFCFCF9FFFEFEF9FF3B3B1B88000000090000
-                0012006699B288D0EFFF7FCAE9FF7FCAE9FF87D0EFFF4489ACFFE4E4E4FFE3E3
-                E2FFFCFCFBFFFBFBF8FFFAFAF6FFF8F8F4FFFBFBF5FF4F4F2C7D000000000054
-                7E00006FA7A48AD3F0FF82CDEBFF82CDEBFF8AD3F0FF468BAFFFE3E3E2FFE2E2
-                E1FFFBFBF8FFFAFAF6FFF8F8F4FFF7F7F1FFFAFAF4FF58583276005782000073
-                AC000073AC9E8ED6F2FF87D0EDFF87D0EDFF8ED6F2FF488FB2FFE2E2E1FFE1E1
-                DFFFFAFAF6FFF8F8F4FFF7F7F1FFF5F5EFFFFAFAF2FF5D5D37740076B0000076
-                B0000076B09B92DAF4FF8BD4F0FF8BD4F0FF92DAF4FF4C92B6FFE1E1DFFFE1E1
-                DDFFF8F8F4FFF7F7F1FFF5F5EFFFF4F4ECFFF8F8EEFF62623C720078B4000078
-                B4000078B49797DEF6FF90D8F2FF90D8F2FF97DEF6FF4F96B8FFE1E1DDFFDFDF
-                DBFFF7F7F1FFF5F5EFFFF4F4ECFFF0F0E6FFF6F6E8FF67674070007BB800007B
-                B800007BB8949BE1F7FF94DBF4FF94DBF4FF9BE1F7FF5299BCFFDFDFDBFFDEDE
-                D9FFF5F5EFFFF4F4ECFFF0F0E6FFEBEBDDFFF3F3E3FF6C6C446E007DBB00007D
-                BB00007DBB909EE5F9FF98DFF6FF98DFF6FF9EE5F9FF569CBFFFDEDED9FFDCDC
-                D7FFF4F4ECFFF0F0E6FFEBEBDDFFE7E7D6FFF2F2E1FF7171486C007FBF00007F
-                BF00007FBF8DA3E8FBFF9DE3F9FF9DE3F9FFA3E8FBFF589FC2FFDCDCD7FFDBDB
-                D4FFF0F0E6FFEBEBDDFFA4A493FFA4A493FFA4A493FF4949257C0082C2000082
-                C2000082C28AA6EBFCFFA1E6FBFFA1E6FBFFA6EBFCFF62A8C9FFDBDBD4FFD8D8
-                CFFFEBEBDDFFE7E7D6FFB6B6A5FFFFFFFFFF79795069797950250084C5000084
-                C5000084C587A9EEFDFFA4E9FCFFA4E9FCFFAAEFFDFF6DAFCDFFEDEDE4FFF4F4
-                E7FFF4F4E3FFF2F2E1FFC2C2B1FF467F85B87C7C5225797950000085C8000085
-                C8000085C885ADF1FFFFABEFFEFF94E2F8FF6EC8EDFF4397B9FF8EB7BAFF8EB7
-                BAFF8EB7BAFF8EB7BAFF93BCBBFF1B84B0963E818E003D7F8C000087CA000087
-                CA000087CA8388DBF4FF60C1E9FF5FBFEAFF80D3F4FF9CE3FDFFA2E6FFFFA2E6
-                FFFFA2E6FFFFA2E6FFFFA6EAFFFF0087CA830087CA000087CA000087CB000087
-                CB000088CC610088CC810088CC810088CC810088CC810088CC810088CC810088
-                CC810088CC810088CC810088CC810088CC610087CB000087CB00
-              }
-              MaxLength = 0
-              NumGlyphs = 1
-              OnButtonClick = edOptionExternalPathButtonClick
-              PasswordChar = #0
-              TabOrder = 0
-              TextHint = 'External program path'
+              Top = 73
+              Width = 224
+              ItemHeight = 15
+              Items.Strings = (
+                'Do nothing'
+                'Exit FMD'
+                'Shutdown'
+                'Hibernate'
+              )
+              ParentFont = False
+              Style = csDropDownList
+              TabOrder = 5
             end
-          end
-          object lbOptionLanguage: TLabel
-            Left = 4
-            Height = 15
-            Top = 8
-            Width = 829
-            Align = alTop
-            Caption = 'Language:'
-            ParentColor = False
-          end
-          object cbLanguages: TComboBox
-            AnchorSideLeft.Control = lbOptionLanguage
-            AnchorSideTop.Control = lbOptionLanguage
-            AnchorSideTop.Side = asrBottom
-            Left = 4
-            Height = 23
-            Top = 27
-            Width = 224
-            ItemHeight = 15
-            Items.Strings = (
-              'English'
-            )
-            ParentFont = False
-            Style = csDropDownList
-            TabOrder = 0
-          end
-          object lbOptionLetFMDDo: TLabel
-            AnchorSideLeft.Control = cbLanguages
-            AnchorSideTop.Control = cbLanguages
-            AnchorSideTop.Side = asrBottom
-            Left = 4
-            Height = 15
-            Top = 54
-            Width = 117
-            Caption = 'After download finish:'
-            ParentColor = False
-          end
-          object cbOptionLetFMDDo: TComboBox
-            AnchorSideLeft.Control = lbOptionLetFMDDo
-            AnchorSideTop.Control = lbOptionLetFMDDo
-            AnchorSideTop.Side = asrBottom
-            Left = 4
-            Height = 23
-            Top = 73
-            Width = 224
-            ItemHeight = 15
-            Items.Strings = (
-              'Do nothing'
-              'Exit FMD'
-              'Shutdown'
-              'Hibernate'
-            )
-            ParentFont = False
-            Style = csDropDownList
-            TabOrder = 1
-          end
-          object seOptionNewMangaTime: TSpinEdit
-            AnchorSideLeft.Control = cbOptionLetFMDDo
-            AnchorSideTop.Control = cbOptionLetFMDDo
-            AnchorSideTop.Side = asrBottom
-            Left = 4
-            Height = 23
-            Top = 116
-            Width = 50
-            BorderSpacing.Top = 20
-            MaxValue = 365
-            MinValue = 1
-            ParentFont = False
-            TabOrder = 2
-            Value = 1
-          end
-          object lbOptionNewMangaTime: TLabel
-            AnchorSideLeft.Control = seOptionNewMangaTime
-            AnchorSideLeft.Side = asrBottom
-            AnchorSideTop.Control = seOptionNewMangaTime
-            AnchorSideTop.Side = asrCenter
-            Left = 58
-            Height = 15
-            Top = 120
-            Width = 238
-            Caption = 'New manga based on  it''s update time (days)'
-            ParentColor = False
-            ParentFont = False
-          end
-          object cbOptionMinimizeOnStart: TCheckBox
-            AnchorSideLeft.Control = seOptionNewMangaTime
-            AnchorSideTop.Control = seOptionNewMangaTime
-            AnchorSideTop.Side = asrBottom
-            Left = 4
-            Height = 19
-            Top = 159
-            Width = 112
-            BorderSpacing.Top = 20
-            Caption = 'Minimize on start'
-            ParentFont = False
-            TabOrder = 3
-          end
-          object cbOptionDeleteCompletedTasksOnClose: TCheckBox
-            AnchorSideLeft.Control = tsGeneral
-            AnchorSideTop.Control = cbOptionLiveSearch
-            AnchorSideTop.Side = asrBottom
-            Left = 4
-            Height = 19
-            Top = 251
-            Width = 189
-            Caption = 'Delete completed tasks on close'
-            TabOrder = 7
-          end
-          object cbOptionSortDownloadsWhenAddingNewDownloadTasks: TCheckBox
-            AnchorSideLeft.Control = tsGeneral
-            AnchorSideTop.Control = cbOptionDeleteCompletedTasksOnClose
-            AnchorSideTop.Side = asrBottom
-            Left = 4
-            Height = 19
-            Top = 274
-            Width = 285
-            Caption = 'Sort Downloads when adding new download tasks'
-            TabOrder = 9
+            object seOptionNewMangaTime: TSpinEdit
+              AnchorSideLeft.Control = cbOptionLetFMDDo
+              AnchorSideTop.Control = cbOptionLetFMDDo
+              AnchorSideTop.Side = asrBottom
+              Left = 4
+              Height = 23
+              Top = 116
+              Width = 50
+              BorderSpacing.Top = 20
+              MaxValue = 365
+              MinValue = 1
+              ParentFont = False
+              TabOrder = 6
+              Value = 1
+            end
+            object lbOptionNewMangaTime: TLabel
+              AnchorSideLeft.Control = seOptionNewMangaTime
+              AnchorSideLeft.Side = asrBottom
+              AnchorSideTop.Control = seOptionNewMangaTime
+              AnchorSideTop.Side = asrCenter
+              Left = 58
+              Height = 15
+              Top = 120
+              Width = 238
+              Caption = 'New manga based on  it''s update time (days)'
+              ParentColor = False
+              ParentFont = False
+            end
+            object cbOptionMinimizeOnStart: TCheckBox
+              AnchorSideLeft.Control = seOptionNewMangaTime
+              AnchorSideTop.Control = seOptionNewMangaTime
+              AnchorSideTop.Side = asrBottom
+              Left = 4
+              Height = 19
+              Top = 159
+              Width = 112
+              BorderSpacing.Top = 20
+              Caption = 'Minimize on start'
+              ParentFont = False
+              TabOrder = 7
+            end
+            object cbOptionDeleteCompletedTasksOnClose: TCheckBox
+              AnchorSideTop.Control = cbOptionLiveSearch
+              AnchorSideTop.Side = asrBottom
+              Left = 4
+              Height = 19
+              Top = 251
+              Width = 189
+              Caption = 'Delete completed tasks on close'
+              TabOrder = 8
+            end
+            object cbOptionSortDownloadsWhenAddingNewDownloadTasks: TCheckBox
+              AnchorSideTop.Control = cbOptionDeleteCompletedTasksOnClose
+              AnchorSideTop.Side = asrBottom
+              Left = 4
+              Height = 19
+              Top = 274
+              Width = 285
+              Caption = 'Sort Downloads when adding new download tasks'
+              TabOrder = 9
+            end
           end
         end
         object tsView: TTabSheet
@@ -3134,13 +3145,13 @@ object MainForm: TMainForm
         end
         object tsConnections: TTabSheet
           Caption = 'Connections'
-          ClientHeight = 442
-          ClientWidth = 837
+          ClientHeight = 802
+          ClientWidth = 1902
           object sbDownloadConnections: TScrollBox
             Left = 0
-            Height = 442
+            Height = 802
             Top = 0
-            Width = 837
+            Width = 1902
             HorzScrollBar.Page = 459
             VertScrollBar.Page = 418
             Align = alClient
@@ -3149,8 +3160,8 @@ object MainForm: TMainForm
             ChildSizing.TopBottomSpacing = 8
             ChildSizing.HorizontalSpacing = 4
             ChildSizing.VerticalSpacing = 4
-            ClientHeight = 442
-            ClientWidth = 837
+            ClientHeight = 802
+            ClientWidth = 1902
             TabOrder = 0
             object cbOptionUseProxy: TCheckBox
               AnchorSideLeft.Control = ckOptionsAlwaysStartTaskFromFailedChapters
@@ -3159,7 +3170,7 @@ object MainForm: TMainForm
               Left = 4
               Height = 19
               Top = 198
-              Width = 71
+              Width = 72
               BorderSpacing.Top = 20
               Caption = 'Use proxy'
               OnChange = cbOptionUseProxyChange
@@ -3173,7 +3184,7 @@ object MainForm: TMainForm
               Left = 4
               Height = 105
               Top = 221
-              Width = 426
+              Width = 425
               AutoSize = True
               Caption = 'Proxy config'
               ChildSizing.LeftRightSpacing = 4
@@ -3181,7 +3192,7 @@ object MainForm: TMainForm
               ChildSizing.HorizontalSpacing = 12
               ChildSizing.VerticalSpacing = 12
               ClientHeight = 85
-              ClientWidth = 422
+              ClientWidth = 421
               Enabled = False
               ParentFont = False
               TabOrder = 7
@@ -3203,7 +3214,7 @@ object MainForm: TMainForm
                 AnchorSideTop.Side = asrCenter
                 AnchorSideRight.Control = cbOptionProxyType
                 AnchorSideRight.Side = asrBottom
-                Left = 41
+                Left = 40
                 Height = 23
                 Top = 31
                 Width = 150
@@ -3220,7 +3231,7 @@ object MainForm: TMainForm
                 AnchorSideLeft.Control = cbOptionProxyType
                 AnchorSideLeft.Side = asrBottom
                 AnchorSideTop.Control = lbOptionHost
-                Left = 203
+                Left = 202
                 Height = 15
                 Top = 35
                 Width = 53
@@ -3232,7 +3243,7 @@ object MainForm: TMainForm
                 AnchorSideLeft.Side = asrBottom
                 AnchorSideTop.Control = lbOptionUser
                 AnchorSideTop.Side = asrCenter
-                Left = 268
+                Left = 267
                 Height = 23
                 Top = 31
                 Width = 150
@@ -3258,7 +3269,7 @@ object MainForm: TMainForm
                 AnchorSideLeft.Control = lbOptionUser
                 AnchorSideTop.Control = lbOptionUser
                 AnchorSideTop.Side = asrBottom
-                Left = 203
+                Left = 202
                 Height = 15
                 Top = 62
                 Width = 50
@@ -3271,7 +3282,7 @@ object MainForm: TMainForm
                 AnchorSideTop.Side = asrCenter
                 AnchorSideRight.Control = edOptionUser
                 AnchorSideRight.Side = asrBottom
-                Left = 268
+                Left = 267
                 Height = 23
                 Top = 58
                 Width = 150
@@ -3287,7 +3298,7 @@ object MainForm: TMainForm
                 Left = 4
                 Height = 15
                 Top = 8
-                Width = 25
+                Width = 24
                 Caption = 'Type'
                 ParentColor = False
               end
@@ -3296,7 +3307,7 @@ object MainForm: TMainForm
                 AnchorSideLeft.Side = asrBottom
                 AnchorSideTop.Control = lbOptionProxyType
                 AnchorSideTop.Side = asrCenter
-                Left = 41
+                Left = 40
                 Height = 23
                 Top = 4
                 Width = 150
@@ -3315,7 +3326,7 @@ object MainForm: TMainForm
                 AnchorSideLeft.Control = edOptionHost
                 AnchorSideTop.Control = lbOptionPort
                 AnchorSideTop.Side = asrCenter
-                Left = 41
+                Left = 40
                 Height = 23
                 Top = 58
                 Width = 67
@@ -5008,14 +5019,14 @@ object MainForm: TMainForm
     OnMoved = spMainSplitterMoved
   end
   object dlgSaveTo: TSelectDirectoryDialog
-    left = 648
-    top = 288
+    left = 376
+    top = 608
   end
   object pmDownload: TPopupMenu
     Images = IconList
     OnPopup = pmDownloadPopup
-    left = 592
-    top = 184
+    left = 528
+    top = 608
     object miDownloadStop: TMenuItem
       Caption = 'Stop'
       Enabled = False
@@ -5345,8 +5356,8 @@ object MainForm: TMainForm
     end
   end
   object pmChapterList: TPopupMenu
-    left = 592
-    top = 224
+    left = 504
+    top = 608
     object miChapterListCheckSelected: TMenuItem
       Caption = 'Check selected'
       OnClick = miChapterListCheckSelectedClick
@@ -5404,8 +5415,8 @@ object MainForm: TMainForm
   object pmFavorites: TPopupMenu
     Images = IconList
     OnPopup = pmFavoritesPopup
-    left = 520
-    top = 212
+    left = 600
+    top = 608
     object miFavoritesCheckNewChapter: TMenuItem
       Caption = 'Check for new chapter'
       Bitmap.Data = {
@@ -5727,12 +5738,47 @@ object MainForm: TMainForm
       ImageIndex = 11
       OnClick = miFavoritesOpenWithClick
     end
+    object MenuItem12: TMenuItem
+      Caption = '-'
+    end
+    object miFavoritesDefaultAction: TMenuItem
+      Caption = 'Default Action'
+      object miFavoritesDefaultActionOpenFolder: TMenuItem
+        AutoCheck = True
+        Caption = 'Open Folder'
+        Checked = True
+        GroupIndex = 25
+        RadioItem = True
+        OnClick = miFavoritesDefaultActionOpenFolderClick
+      end
+      object miFavoritesDefaultActionShowInfo: TMenuItem
+        AutoCheck = True
+        Caption = 'View Manga Info'
+        GroupIndex = 25
+        RadioItem = True
+        OnClick = miFavoritesDefaultActionShowInfoClick
+      end
+      object miFavoritesDefaultActionRename: TMenuItem
+        AutoCheck = True
+        Caption = 'Rename'
+        GroupIndex = 25
+        RadioItem = True
+        OnClick = miFavoritesDefaultActionRenameClick
+      end
+      object miFavoritesDefaultActionCheckNewChapters: TMenuItem
+        AutoCheck = True
+        Caption = 'Check for new Chapters'
+        GroupIndex = 25
+        RadioItem = True
+        OnClick = miFavoritesDefaultActionCheckNewChaptersClick
+      end
+    end
   end
   object pmMangaList: TPopupMenu
     Images = IconList
     OnPopup = pmMangaListPopup
-    left = 382
-    top = 238
+    left = 480
+    top = 608
     object miMangaListViewInfos: TMenuItem
       Caption = 'View manga infos'
       Bitmap.Data = {
@@ -5878,13 +5924,13 @@ object MainForm: TMainForm
     PopUpMenu = pmTray
     Hint = 'Free Manga Downloader'
     OnDblClick = TrayIconDblClick
-    left = 440
-    top = 224
+    left = 416
+    top = 608
   end
   object pmUpdate: TPopupMenu
     ParentBidiMode = False
-    left = 382
-    top = 110
+    left = 648
+    top = 608
     object mnUpdateList: TMenuItem
       Caption = 'Update manga list'
       OnClick = mnUpdateListClick
@@ -5906,8 +5952,7 @@ object MainForm: TMainForm
     end
   end
   object IconList: TImageList
-    left = 278
-    top = 102
+    top = 608
     Bitmap = {
       4C691900000010000000100000004F4F4F005050500052525200535353005454
       54155555553E555555555555556355555563555555555555553E545454155353
@@ -6713,8 +6758,8 @@ object MainForm: TMainForm
     }
   end
   object IconDL: TImageList
-    left = 278
-    top = 150
+    left = 24
+    top = 608
     Bitmap = {
       4C69090000001000000010000000FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
       FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
@@ -7010,8 +7055,8 @@ object MainForm: TMainForm
   object IconMed: TImageList
     Height = 48
     Width = 48
-    left = 328
-    top = 238
+    left = 72
+    top = 608
     Bitmap = {
       4C69010000003000000030000000FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
       FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
@@ -7305,8 +7350,8 @@ object MainForm: TMainForm
     }
   end
   object IconSmall: TImageList
-    left = 568
-    top = 304
+    left = 96
+    top = 608
     Bitmap = {
       4C69030000001000000010000000FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
       FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
@@ -7409,8 +7454,8 @@ object MainForm: TMainForm
   end
   object pmEditURL: TPopupMenu
     OnPopup = pmEditURLPopup
-    left = 592
-    top = 136
+    left = 552
+    top = 608
     object medURLUndo: TMenuItem
       Caption = 'Undo'
       OnClick = medURLUndoClick
@@ -7449,38 +7494,38 @@ object MainForm: TMainForm
   object appPropertiesMain: TApplicationProperties
     CaptureExceptions = False
     OnShowHint = appPropertiesMainShowHint
-    left = 392
-    top = 312
+    left = 336
+    top = 608
   end
   object tmExitCommand: TTimer
     Enabled = False
     OnTimer = tmExitCommandTimer
-    left = 648
-    top = 224
+    left = 208
+    top = 608
   end
   object TransferRateGraphList: TListChartSource
     DataPoints.Strings = (
       '1|0|?|'
     )
-    left = 504
-    top = 120
+    left = 296
+    top = 608
   end
   object TransferRateToolset: TChartToolset
-    left = 464
-    top = 120
+    left = 272
+    top = 608
   end
   object pmSbMain: TPopupMenu
     OnPopup = pmSbMainPopup
-    left = 480
-    top = 296
+    left = 456
+    top = 608
     object miAbortSilentThread: TMenuItem
       Caption = 'Abort'
       OnClick = miAbortSilentThreadClick
     end
   end
   object pmFilterGenreAll: TPopupMenu
-    left = 520
-    top = 168
+    left = 576
+    top = 608
     object mnFilterGenreAllCheck: TMenuItem
       Caption = 'Check all'
       OnClick = mnFilterGenreAllCheckClick
@@ -7496,8 +7541,8 @@ object MainForm: TMainForm
   end
   object pmTray: TPopupMenu
     OnPopup = pmTrayPopup
-    left = 384
-    top = 184
+    left = 624
+    top = 608
     object miTrayResumeAll: TMenuItem
       Caption = 'Resume all'
       OnClick = tbDownloadResumeAllClick
@@ -7561,35 +7606,35 @@ object MainForm: TMainForm
     Enabled = False
     Interval = 48
     OnTimer = tmAnimateMangaInfoTimer
-    left = 512
-    top = 264
+    left = 184
+    top = 608
   end
   object tmRefreshDownloadsInfo: TTimer
     Enabled = False
     OnTimer = tmRefreshDownloadsInfoTimer
     OnStartTimer = tmRefreshDownloadsInfoStartTimer
     OnStopTimer = tmRefreshDownloadsInfoStopTimer
-    left = 328
-    top = 176
+    left = 136
+    top = 608
   end
   object tmBackup: TTimer
     Interval = 120000
     OnTimer = tmBackupTimer
-    left = 664
-    top = 176
+    left = 232
+    top = 608
   end
   object tmCheckFavorites: TTimer
     Enabled = False
     Interval = 600000
     OnTimer = tmCheckFavoritesTimer
-    left = 328
-    top = 296
+    left = 160
+    top = 608
   end
   object IconDLLeft: TImageList
     Height = 24
     Width = 24
-    left = 272
-    top = 232
+    left = 48
+    top = 608
     Bitmap = {
       4C69040000001800000018000000FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
       FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
