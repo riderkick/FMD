@@ -2486,7 +2486,7 @@ msgstr "Mengompresi..."
 
 #: udownloadsmanager.rs_disabled
 msgid "Disabled"
-msgstr "Dimatikan"
+msgstr "Nonaktif"
 
 #: udownloadsmanager.rs_downloading
 msgid "Downloading"
@@ -2650,7 +2650,7 @@ msgstr "Memutakhirkan daftar"
 
 #: tmainform.ckoptionautomaticallydisablecloudflarebypass.caption
 msgid "Automatically disable Cloudflare Bypass for websites on error or if not needed"
-msgstr "Nonaktifkan Cloudflare Bypass otomatis untuk situs yang terjadi galat atau tidak diperlukan"
+msgstr "Nonaktifkan Cloudflare Bypass otomatis untuk situs yang terdapat galat atau tidak memerlukannya"
 
 #: tmainform.ckoptionenablecloudflarebypass.caption
 msgid "Enable Cloudflare Bypass"
@@ -2691,24 +2691,24 @@ msgstr "Aktif"
 #: tmainform.mifavoritesdefaultaction.caption
 msgctxt "tmainform.mifavoritesdefaultaction.caption"
 msgid "Default Action"
-msgstr "Default Action"
+msgstr "Tindakan asali"
 
 #: tmainform.mifavoritesdefaultactionchecknewchapters.caption
 msgctxt "tmainform.mifavoritesdefaultactionchecknewchapters.caption"
 msgid "Check for new Chapters"
-msgstr "Check for new Chapters"
+msgstr "Periksa bab baru"
 
 #: tmainform.mifavoritesdefaultactionopenfolder.caption
 msgctxt "tmainform.mifavoritesdefaultactionopenfolder.caption"
 msgid "Open Folder"
-msgstr "Open Folder"
+msgstr "Buka direktori"
 
 #: tmainform.mifavoritesdefaultactionrename.caption
 msgctxt "tmainform.mifavoritesdefaultactionrename.caption"
 msgid "Rename"
-msgstr "Rename"
+msgstr "Ubah nama"
 
 #: tmainform.mifavoritesdefaultactionshowinfo.caption
 msgctxt "tmainform.mifavoritesdefaultactionshowinfo.caption"
 msgid "View Manga Info"
-msgstr "View Manga Info"
+msgstr "Lihat informasi komik"
