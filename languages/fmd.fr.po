@@ -2724,65 +2724,65 @@ msgstr "Mise à jour de la liste"
 
 #: tmainform.ckoptionautomaticallydisablecloudflarebypass.caption
 msgid "Automatically disable Cloudflare Bypass for websites on error or if not needed"
-msgstr ""
+msgstr "Désactiver automatiquement le contournement de Cloudflare sur les sites lorsqu'il est inutile ou en cas d'erreur"
 
 #: tmainform.ckoptionenablecloudflarebypass.caption
 msgid "Enable Cloudflare Bypass"
-msgstr ""
+msgstr "Activer le contournement de la protection Cloudflare"
 
 #: tmainform.gboptionscloudflarebypass.caption
 msgid "Cloudflare Bypass (global settings)"
-msgstr ""
+msgstr "Contournement de Cloudflare (paramètres globaux)"
 
 #: tmainform.rbfavoritesshowall.caption
 msgctxt "tmainform.rbfavoritesshowall.caption"
 msgid "All"
-msgstr ""
+msgstr "Tous"
 
 #: tmainform.rbfavoritesshowdisabled.caption
 msgid "Disabled"
-msgstr ""
+msgstr "Désactivés"
 
 #: tmainform.rbfavoritesshowenabled.caption
 msgid "Enabled"
-msgstr ""
+msgstr "Activés"
 
 #: frmmain.rs_favoritesshowall
 msgctxt "frmmain.rs_favoritesshowall"
 msgid "All"
-msgstr ""
+msgstr "Tous"
 
 #: frmmain.rs_favoritesshowdisabled
 msgctxt "frmmain.rs_favoritesshowdisabled"
 msgid "Disabled"
-msgstr ""
+msgstr "Désactivés"
 
 #: frmmain.rs_favoritesshowenabled
 msgctxt "frmmain.rs_favoritesshowenabled"
 msgid "Enabled"
-msgstr ""
+msgstr "Activés"
 
 #: tmainform.mifavoritesdefaultaction.caption
 msgctxt "tmainform.mifavoritesdefaultaction.caption"
 msgid "Default Action"
-msgstr "Default Action"
+msgstr "Action par défaut"
 
 #: tmainform.mifavoritesdefaultactionchecknewchapters.caption
 msgctxt "tmainform.mifavoritesdefaultactionchecknewchapters.caption"
 msgid "Check for new Chapters"
-msgstr "Check for new Chapters"
+msgstr "Vérifier les nouveaux chapitres"
 
 #: tmainform.mifavoritesdefaultactionopenfolder.caption
 msgctxt "tmainform.mifavoritesdefaultactionopenfolder.caption"
 msgid "Open Folder"
-msgstr "Open Folder"
+msgstr "Ouvrir le dossier"
 
 #: tmainform.mifavoritesdefaultactionrename.caption
 msgctxt "tmainform.mifavoritesdefaultactionrename.caption"
 msgid "Rename"
-msgstr "Rename"
+msgstr "Renommer"
 
 #: tmainform.mifavoritesdefaultactionshowinfo.caption
 msgctxt "tmainform.mifavoritesdefaultactionshowinfo.caption"
 msgid "View Manga Info"
-msgstr "View Manga Info"
+msgstr "Informations sur le manga"
