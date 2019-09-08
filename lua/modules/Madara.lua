@@ -89,8 +89,13 @@ function Modules.Madara()
     if http.post(module.rooturl .. '/wp-admin/admin-ajax.php', q) then
       if http.headers.values['Content-Length'] == '0' then return no_error end
       local x = TXQuery.Create(http.Document)
-      if x.xpath('//div[contains(@class, "post-title")]/h5/a').count == 0 then return no_error end
-      x.XPathHREFAll('//div[contains(@class, "post-title")]/h5/a', links, names)
+      if module.website == 'MangaKomi' then
+		if x.xpath('//div[contains(@class, "post-title")]/h3/a').count == 0 then return no_error end
+		x.XPathHREFAll('//div[contains(@class, "post-title")]/h3/a', links, names)
+	  else
+		if x.xpath('//div[contains(@class, "post-title")]/h5/a').count == 0 then return no_error end
+		x.XPathHREFAll('//div[contains(@class, "post-title")]/h5/a', links, names)
+	  end
       updatelist.CurrentDirectoryPageNumber = updatelist.CurrentDirectoryPageNumber + 1
       return no_error
     else
@@ -212,7 +217,7 @@ function Init()
   
   cat = 'English'
   AddWebsiteModule('IsekaiScan', 'http://isekaiscan.com', cat)
-  AddWebsiteModule('MangaLike', 'https://mangalike.net', cat)
+  AddWebsiteModule('MangaKomi', 'https://mangakomi.com', cat)
   AddWebsiteModule('MangaZukiOnline', 'https://www.mangazuki.online', cat)
   AddWebsiteModule('MangaZukiSite', 'https://www.mangazuki.site', cat)
   AddWebsiteModule('MangaZukiMe', 'https://mangazuki.me', cat)
