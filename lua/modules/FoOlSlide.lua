@@ -27,7 +27,7 @@ function getdirurl(website)
   local dirs = {
     ['Jaiminisbox'] = dirurlreader,
     ['DokiFansubs'] = dirurlreader,
-    ['OneTimeScans'] = dirurlfoolslide,
+    ['OneTimeScans'] = dirurl,
     ['DejameProbar'] = dirurlslide,
     ['MenudoFansub'] = dirurlslide,
     ['SolitarioNoFansub'] = dirurlslide,
@@ -216,7 +216,7 @@ function Init()
   local cat = 'English-Scanlation'
   AddWebsiteModule('PowerManga', 'http://read.powermanga.org', cat)
   AddWebsiteModule('Shoujosense', 'http://reader.shoujosense.com', cat)
-  AddWebsiteModule('OneTimeScans', 'http://otscans.com', cat)
+  AddWebsiteModule('OneTimeScans', 'https://reader.otscans.com', cat)
   AddWebsiteModule('SenseScans', 'http://reader.sensescans.com', cat)
   AddWebsiteModule('Jaiminisbox', 'https://jaiminisbox.com', cat)
   AddWebsiteModule('KireiCake', 'https://reader.kireicake.com', cat)
