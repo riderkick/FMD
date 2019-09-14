@@ -3223,6 +3223,8 @@ begin
   if not Assigned(vtFavorites.FocusedNode) then
     Exit;
   s := '';
+  // TODO: For loop through selected nodes.
+  // TODO: Enable button for more than 1 selected node as well.
   with TSelectDirectoryForm.Create(Self) do try
     dePath.Directory := FavoriteManager.Items[vtFavorites.FocusedNode^.Index].FavoriteInfo.SaveTo;
     if ShowModal = mrOK then
@@ -5083,7 +5085,8 @@ begin
     tbDropTargetOpacity.Position := ReadInteger('droptarget', 'Opacity', 255);
     
     // favorites
-    case ReadInteger('favorites', 'DefaultAction', OptionDefaultAction) of
+    OptionDefaultAction := ReadInteger('favorites', 'DefaultAction', OptionDefaultAction);
+    case OptionDefaultAction of
       1:
         miFavoritesDefaultActionShowInfo.Checked := True;
       2:
