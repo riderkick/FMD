@@ -2712,3 +2712,11 @@ msgstr "Ubah nama"
 msgctxt "tmainform.mifavoritesdefaultactionshowinfo.caption"
 msgid "View Manga Info"
 msgstr "Lihat informasi komik"
+
+#: tselectdirectoryform.lbdescription.caption
+msgid ""
+"If you change multiple entries at once, the new paths will be constructed like this:\n"
+"\"{New_Path}\\{Manga_Title}\"\n"
+"\n"
+"Old folder structures will be ignored. However, if the only part you change is the drive letter (e.g. 'D:'), only the letter will be replaced. This only works for absolute paths, relative paths will be ignored.\n"
+msgstr ""
