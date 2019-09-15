@@ -5,13 +5,16 @@
 ## Download
 
 [![Latest release](https://img.shields.io/github/release/fmd-project-team/FMD.svg)](https://github.com/fmd-project-team/FMD/releases/latest)
-[![Download latest release (Win32)](https://img.shields.io/github/downloads/fmd-project-team/FMD/latest/fmd_0.9.166.1.7z.svg?label=Win32)](https://github.com/fmd-project-team/FMD/releases/download/0.9.166.1/fmd_0.9.166.1.7z)
-[![Download latest release (Win64)](https://img.shields.io/github/downloads/fmd-project-team/FMD/latest/fmd_0.9.166.1_Win64.7z.svg?label=Win64)](https://github.com/fmd-project-team/FMD/releases/download/0.9.166.1/fmd_0.9.166.1_Win64.7z)
+[![Download latest release (Win32)](https://img.shields.io/github/downloads/fmd-project-team/FMD/latest/fmd_0.9.167.0.7z.svg?label=Win32)](https://github.com/fmd-project-team/FMD/releases/download/0.9.167.0/fmd_0.9.167.0.7z)
+[![Download latest release (Win64)](https://img.shields.io/github/downloads/fmd-project-team/FMD/latest/fmd_0.9.167.0_Win64.7z.svg?label=Win64)](https://github.com/fmd-project-team/FMD/releases/download/0.9.167.0/fmd_0.9.167.0_Win64.7z)
 
 ## About FMD
 
-This is an active fork of the Free Manga Downloader which is a free open source application written in Object Pascal for managing and downloading manga from various websites. The source code was released under the GPLv2 license.
-
+This is an active fork of the Free Manga Downloader which is a free open source application written in Object Pascal for managing and downloading manga from various websites. The source code was released under the GPLv2 license.  
+  
+  
+[Supported Websites](https://github.com/fmd-project-team/FMD/wiki/Supported-Websites)  
+  
 ## Build instructions
 
 In order to build FMD from the source code, you must install the latest 1.8.x version of Lazarus (not 2.x.x) and Free Pascal Compiler:  
@@ -38,8 +41,8 @@ Some other external 3rd party tools and libraries are used:
 [![Lua](https://img.shields.io/badge/Lua-5.3-Blue.svg)](http://luabinaries.sourceforge.net/)  
 [![OpenSSL](https://img.shields.io/badge/OpenSSL-1.0.2n-Blue.svg)](https://www.openssl.org/)  
 [![SQLite](https://img.shields.io/badge/SQLite-3.22.0-Blue.svg)](https://www.sqlite.org/)  
-[![cfscrape](https://img.shields.io/badge/cfscrape-2.0.5-Blue.svg)](https://github.com/Anorov/cloudflare-scrape/) <sup>(Compiled with PyInstaller included in cf_bypass.exe)</sup>  
-[![Node.js](https://img.shields.io/badge/Node.js-12.1.0.0-Blue.svg)](https://nodejs.org/)  
+[![cfscrape](https://img.shields.io/badge/cfscrape-2.0.8-Blue.svg)](https://github.com/Anorov/cloudflare-scrape/) <sup>(Compiled with PyInstaller included in cf_bypass.exe)</sup>  
+[![Node.js](https://img.shields.io/badge/Node.js-12.8.0.0-Blue.svg)](https://nodejs.org/)  
 
 These tools and libraries are not part of the source. You have to either download pre-compiled binaries, compile them yourself or just copy them from the latest FMD releases.
 

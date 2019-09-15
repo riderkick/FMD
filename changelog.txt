@@ -4,9 +4,84 @@ https://github.com/fmd-project-team/FMD
 Changelog:
 ([!] Important, [+] Addition, [-] Removal, [*] Fix/Change, [?] Feedback needed)
 
-0.9.166.1 (26.07.2019)
+0.9.167.0 (15.09.2019)
 [!] Report issues here: https://github.com/fmd-project-team/FMD/issues
 [!] Join us on Discord: https://discord.gg/cXKKgw3
+[+] You can define a default action on double click in the favorites (open folder, show infos, rename or check new chapters)
+[+] You can now change the save-to path for multiple favorites (Issue #10)
+[+] Added CopyPasteScanlation [ES-SC] -> Thank you rs3mk
+[+] Added KIDzScan [ES-SC]
+[+] Added LeviatanScansEN [EN-SC] (Issue #361)
+[+] Added MangaHato [RAW]
+[+] Added MangaHost [PT] (Issue #448)
+[+] Added MangaKomi [EN] (Issue #463)
+[+] Added MangaReaderOnline [EN]
+[+] Added MangaTensei [EN] (Issue #188)
+[+] Added MangaWeek [EN]
+[+] Added MangaZukiSite [EN]
+[+] Added ManhwaScan [EN]
+[+] Added OneShotScans [Webcomics] (Issue #297) -> Thank you Slasar41
+[+] Added WoweScans [Webcomics] -> Thank you Slasar41
+[+] Added template script for websites based on AnyACG.
+[+] Added template script for websites based on Genkan.
+[+] Added template script for websites based on MangaReaderOnline.
+[+] AcademyVN: Ported to Lua script; Fixed url
+[-] Removed AtelierDuNoir [EN-SC]: Chapters are linked to MangaDex
+[-] Removed Authrone [EN]
+[-] Removed GoodManga [EN]: The url redirects to MangaReader
+[-] Removed MangaBB [EN]: The url redirects to MangaReader
+[-] Removed MangaLike [EN]: Moved to MangaKomi (Issue #463)
+[-] Removed OtakuIndo [ID]: Moved to Komiku (Issue #416)
+[-] Removed RawQQ [RAW]: Moved to HanaScan
+[-] Removed RawQV [RAW]: Moved to MangaHato (Issue #399)
+[*] AcQQCom: Fixed chapter download
+[*] BacaManga: Fixed chapter download (Issue #388) -> Thank you AbidZakaria
+[*] Batoto: Ported to Lua script
+[*] ChampionScans: Fixed url (Issue #411)
+[*] ComicoCoID: Fixed chapter download
+[*] ComicVn: Fixed url
+[*] CopyPasteScanlation: Fixed chapter download
+[*] DoujinYosh: Fixed chapter download (Issue #464) -> Thank you AbidZakaria
+[*] ExHentai: Fixed url
+[*] GManga: Fixed chapter download (Issue #365)
+[*] HeavenManga: Fixed url (Issue #463) -> Thank you AbidZakaria
+[*] HolyManga: Fixed url (Issue #463) -> Thank you AbidZakaria
+[*] Imgur: Fixed download and added more gallery info
+[*] KnightNoFansub: Fixed url (Issue #414)
+[*] KoMBatch: Fixed chapter download
+[*] Komiku: Fixed all (Issue #416) -> Thank you AbidZakaria
+[*] KuManga: Ported to Lua script; Fixed all (Issue #146)
+[*] LeitorNet: Fixed chapter download
+[*] LeoManga: Fixed all
+[*] LeviatanScans: Fixed all (Issue #361)
+[*] Lhscans: Fixed chapter download (Issue #491) -> Thank you AbidZakaria
+[*] MangaDex: Fixed downloading problems when title contained '<' or '>' (Issue #334)
+[*] MangaFreak: Fixed all (Issue #326) -> Thank you AbidZakaria
+[*] MangaShiro: Fixed url (Issue #405)
+[*] MangaWindow: Ported to Lua script
+[*] MangaYosh: Fixed chapter download (Issue #464) -> Thank you AbidZakaria
+[*] ManhuaGui: Fixed chapter download (Issue #386) -> Thank you AbidZakaria
+[*] ManhwaHentai: Fixed url
+[*] ManyToons: Fixed url (Issue #429)
+[*] OneTimeScans: Fixed url -> Thank you Slasar41
+[*] PsychoPlay: Ported to Lua script; Fixed all (Issue #343)
+[*] ReadComicsOnlineRU: Fixed all
+[*] Toonkor: Fixed url (Issue #447)
+[*] Tumangaonline: Set rooturl to http so cf_bypass works again (Issue #375)
+[*] UnionMangas: Fixed url (Issue #382)
+[*] ZManga: Fixed all (Issue #400)
+[*] Fixed performance problems on startup while sorting the download list (Issue #383)
+[*] Fixed favorites filter counter not updating correctly (Issue #423)
+[*] FMD version is now displayed in the window title.
+[*] cf_bypass: __cfduid cookie will be included as well because some websites load faster if the cookie is available.
+[*] cf_bypass: HTTP proxies are now supported.
+[*] Localization Update: French
+[*] Localization Update: Indonesian
+[*] Localization Update: Spanish
+[*] Localization Update: Turkish
+Full changes: https://github.com/fmd-project-team/FMD/compare/0.9.166.1...0.9.167.0
+
+0.9.166.1 (26.07.2019)
 [*] Hotfix: Fixed a problem with the favorites search.
 [*] MangaDex: Added a ignore list for chapters that are linked to external websites. The first group in the ignore list is MangaPlus.
 Full changes: https://github.com/fmd-project-team/FMD/compare/0.9.166.0...0.9.166.1
