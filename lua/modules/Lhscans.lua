@@ -32,7 +32,11 @@ function getpagenumber()
   local u = MaybeFillHost(module.rooturl, url)
   if http.get(u) then
     local x=TXQuery.Create(http.Document)
-    x.xpathstringall('//img[@class="chapter-img"]/@src', task.pagelinks)
+	if module.website == 'Lhscans' then
+		x.xpathstringall('//img[contains(@class, "chapter-img")]/@data-src', task.pagelinks)
+    	else
+    		x.xpathstringall('//img[@class="chapter-img"]/@src', task.pagelinks)
+	end
 	if module.website == 'Lhscans' or module.website == 'MangaHato' then task.pagecontainerlinks.text = u end
   else
     return false
