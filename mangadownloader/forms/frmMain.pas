@@ -3213,31 +3213,76 @@ end;
 procedure TMainForm.miFavoritesChangeSaveToClick(Sender: TObject);
 var
   s: String;
+  s1: String;
+  s2: String;
+  Node: PVirtualNode;
 begin
   if FavoriteManager.isRunning then
   begin
-    MessageDlg('', RS_DlgFavoritesCheckIsRunning,
-      mtInformation, [mbYes, mbNo], 0);
+    MessageDlg('', RS_DlgFavoritesCheckIsRunning, mtInformation, [mbYes, mbNo], 0);
     Exit;
   end;
-  if not Assigned(vtFavorites.FocusedNode) then
-    Exit;
+  if vtFavorites.SelectedCount = 0 then Exit;
   s := '';
-  // TODO: For loop through selected nodes.
-  // TODO: Enable button for more than 1 selected node as well.
-  with TSelectDirectoryForm.Create(Self) do try
-    dePath.Directory := FavoriteManager.Items[vtFavorites.FocusedNode^.Index].FavoriteInfo.SaveTo;
-    if ShowModal = mrOK then
-      s := dePath.Directory;
-  finally
-    Free;
-  end;
 
-  if s <> '' then
+  if (vtFavorites.SelectedCount = 1) and Assigned(vtFavorites.FocusedNode) then
   begin
-    FavoriteManager.Items[vtFavorites.FocusedNode^.Index].FavoriteInfo.SaveTo := s;
-    UpdateVtFavorites;
-    FavoriteManager.Backup;
+    with TSelectDirectoryForm.Create(Self) do try
+      dePath.Directory := FavoriteManager.Items[vtFavorites.FocusedNode^.Index].FavoriteInfo.SaveTo;
+      if ShowModal = mrOK then
+        s := dePath.Directory;
+      finally
+      Free;
+    end;
+    
+    if s <> '' then
+    begin
+      FavoriteManager.Items[vtFavorites.FocusedNode^.Index].FavoriteInfo.SaveTo := s;
+      UpdateVtFavorites;
+      FavoriteManager.Backup;
+    end;
+  end
+  else if (vtFavorites.SelectedCount > 1) then
+  begin
+    with TSelectDirectoryForm.Create(Self) do try
+      dePath.Directory := '';
+      if ShowModal = mrOK then
+        s := dePath.Directory;
+      finally
+      Free;
+    end;
+    
+    if s <> '' then
+    begin
+      Node := vtFavorites.GetFirstSelected();
+      while Assigned(Node) do
+      begin
+        s1 := '';
+        s2 := '';
+        if (length(s) = 2) and (pos(':', s) > 0) then
+        begin
+          s1 := FavoriteManager.Items[Node^.Index].FavoriteInfo.SaveTo;
+          s2 := s1;
+          if pos(':', s1) > 0 then
+          begin
+            s1 := Copy(s1, 0, 2);
+            FavoriteManager.Items[Node^.Index].FavoriteInfo.SaveTo := StringReplace(s2, s1, s, [rfIgnoreCase]);
+          end;
+        end
+        else
+        begin
+          s1 := Copy(s, length(s), 1);
+          s2 := FavoriteManager.Items[Node^.Index].FavoriteInfo.Title;
+          if s1 = '\' then
+            FavoriteManager.Items[Node^.Index].FavoriteInfo.SaveTo := s + s2
+          else
+            FavoriteManager.Items[Node^.Index].FavoriteInfo.SaveTo := s + '\' + s2;
+        end;
+        Node := vtFavorites.GetNextSelected(Node);
+      end;
+      UpdateVtFavorites;
+      FavoriteManager.Backup;
+    end;
   end;
 end;
 
@@ -3824,7 +3869,7 @@ begin
       miFavoritesViewInfos.Enabled := False;
       miFavoritesDownloadAll.Enabled := True;
       miFavoritesDelete.Enabled := True;
-      miFavoritesChangeSaveTo.Enabled := False;
+      miFavoritesChangeSaveTo.Enabled := True;
       miFavoritesOpenFolder.Enabled := False;
       miFavoritesOpenWith.Enabled := False;
       miFavoritesRename.Enabled := False;

@@ -387,6 +387,7 @@
         <Filename Value="forms\frmSelectDirectory.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="SelectDirectoryForm"/>
+        <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
       </Unit12>
       <Unit13>

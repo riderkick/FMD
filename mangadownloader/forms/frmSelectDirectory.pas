@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, EditBtn,
-  Buttons;
+  Buttons, StdCtrls;
 
 type
 
@@ -15,6 +15,7 @@ type
   TSelectDirectoryForm = class(TForm)
     btOK: TBitBtn;
     dePath: TDirectoryEdit;
+    lbDescription: TLabel;
   private
 
   public
