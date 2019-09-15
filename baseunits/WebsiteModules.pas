@@ -459,6 +459,10 @@ begin
       else
         AProcess.Parameters.Add(RootURL);
       AProcess.Parameters.Add(Website);
+      if (Settings.Enabled) and (Settings.HTTP.Proxy.ProxyType = ptHTTP) then
+        AProcess.Parameters.Add('http://' + Settings.HTTP.Proxy.ProxyHost + ':' + Settings.HTTP.Proxy.ProxyPort)
+      else if AHTTP.ProxyHost <> '' then
+        AProcess.Parameters.Add('http://' + AHTTP.ProxyHost + ':' + AHTTP.ProxyPort);
       AProcess.ShowWindow := swoHide;
       AProcess.Options := AProcess.Options + [poWaitOnExit, poUsePipes];
       AProcess.Execute;
