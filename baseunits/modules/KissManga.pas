@@ -14,7 +14,6 @@ implementation
 const
   kissmangadirurl = '/MangaList/Newest';
   readcomiconlinedirurl = '/ComicList/Newest';
-  kissdoujindirurl = '/HentaiList/NewDoujinshi';
 
 var
   kissmangaiv: String ='a5e8e2e9c2721be0a84ad660c472c1f3';
@@ -46,9 +45,7 @@ begin
   if Module.Website = 'KissManga' then
     s := s + kissmangadirurl
   else if Module.Website = 'ReadComicOnline' then
-    s := s + readcomiconlinedirurl
-  else if Module.Website = 'KissDoujin' then
-    s := s + kissdoujindirurl;
+    s := s + readcomiconlinedirurl;
   if GETWithCookie(MangaInfo.FHTTP, s, Module) then begin
     Result := NO_ERROR;
     with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
@@ -77,9 +74,7 @@ begin
   if Module.Website = 'KissManga' then
     s := s + kissmangadirurl
   else if Module.Website = 'ReadComicOnline' then
-    s := s + readcomiconlinedirurl
-  else if Module.Website = 'KissDoujin' then
-    s := s + kissdoujindirurl;
+    s := s + readcomiconlinedirurl;
   if AURL <> '0' then
     s := s + '?page=' + IncStr(AURL);
   if GETWithCookie(MangaInfo.FHTTP, s, Module) then begin
@@ -317,7 +312,6 @@ begin
     AddOptionCheckBox(@kissmangausegoogledcp,'UseGoogleDCP',@RS_KissManga_UseGoogleDCP);
   end;
   AddWebsiteModule('ReadComicOnline', 'http://readcomiconline.to', 'English');
-  AddWebsiteModule('KissDoujin', 'http://kissdoujin.com', 'H-Sites');
 end;
 
 initialization
