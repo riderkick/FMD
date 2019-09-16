@@ -184,7 +184,6 @@ end
 
 function Init()
   local cat = 'English'
-  AddWebsiteModule('EyeOnManga', 'http://www.eyeonmanga.com', cat)
   AddWebsiteModule('MangaDeep', 'http://www.mangadeep.com', cat)
   AddWebsiteModule('Manga99', 'http://www.manga99.com', cat)
   
