@@ -36,7 +36,6 @@ function getdirurl(website)
     ['HelveticaScans'] = dirurlhelvetica,
     ['RavensScans'] = dirurllector,
     ['NoraNoFansub'] = dirurllector,
-    ['HotChocolateScans'] = dirurlfsdir,
     ['AntisenseScans'] = dirurlonline,
     ['MangaichiScan'] = dirurlfsdir,
     ['Riceballicious'] = dirurlreaderlist,
@@ -224,7 +223,6 @@ function Init()
   AddWebsiteModule('FujoshiBitches', 'http://fujoshibitches.shounen-ai.net', cat)
   AddWebsiteModule('HelveticaScans', 'http://helveticascans.com', cat)
   AddWebsiteModule('HoshikuzuuScans', 'http://hoshiscans.shounen-ai.net', cat)
-  AddWebsiteModule('HotChocolateScans', 'http://hotchocolatescans.com', cat)
   AddWebsiteModule('IlluminatiManga', 'http://reader.manga-download.org', cat)
   AddWebsiteModule('Jaiminisbox', 'https://jaiminisbox.com', cat)
   AddWebsiteModule('KireiCake', 'https://reader.kireicake.com', cat)
