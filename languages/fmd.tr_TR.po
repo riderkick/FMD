@@ -2728,8 +2728,8 @@ msgstr "Manga Bilgisini Göster"
 
 #: tselectdirectoryform.lbdescription.caption
 msgid ""
-"If you change multiple entries at once, the new paths will be constructed like this:\n"
-"\"{New_Path}\\{Manga_Title}\"\n"
+"Eğer birden çok girdiyi tek seferde değiştirirseniz, yeni yollar şu şekilde oluşturulacaktır:\n"
+"\"{Yeni_Yol}\\{Manga_Başlığı}\"\n"
 "\n"
-"Old folder structures will be ignored. However, if the only part you change is the drive letter (e.g. 'D:'), only the letter will be replaced. This only works for absolute paths, relative paths will be ignored.\n"
+"Önceki klasör yapılanması gözardı edilecektir. Yine de, eğer değiştirdiğiniz kısım sadece sürücü harfiyse (örn. 'D:'), sadece harf değiştirilecektir. Bu sadece kesin yollarda çalışmaktadır, göreceli yollar gözardı edilecektir.\n"
 msgstr ""
