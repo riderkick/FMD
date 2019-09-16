@@ -14,6 +14,12 @@ function Modules.Madara()
     mangainfo.url=MaybeFillHost(module.RootURL, url)
     if http.get(mangainfo.url) then
       local x=TXQuery.Create(http.document)
+      
+      if module.website == 'NinjaScans' then
+        local fixedHtml = StreamToString(http.document):gsub('a href=(.-/)>', 'a href="%1">')
+        x.ParseHTML(fixedHtml)
+      end
+      
       mangainfo.title=x.xpathstringall('//div[@class="post-title"]/*[self::h1 or self::h2 or self::h3]/text()', '')
       if string.match(mangainfo.title:upper(), ' RAW$') ~= nil then
         mangainfo.title = mangainfo.title:sub(1, -5)
@@ -27,6 +33,7 @@ function Modules.Madara()
       mangainfo.genres=x.xpathstringall('//div[@class="genres-content"]/a')
       mangainfo.status = MangaInfoStatusIfPos(x.xpathstring('//div[@class="summary-heading" and contains(h5, "Status")]/following-sibling::div/div/a'))
       mangainfo.summary=x.xpathstring('//div[contains(@class,"description-summary")]/string-join(.//text(),"")')
+      
       if module.website == 'DoujinYosh' or module.website == 'MangaYosh' or module.website == 'KIDzScan' then
         local v = x.xpath('//li[contains(@class, "wp-manga-chapter")]/a')
         for i = 1, v.count do
