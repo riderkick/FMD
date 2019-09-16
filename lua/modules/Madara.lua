@@ -219,7 +219,6 @@ end
 
 function Init()
   local cat = 'Raw'
-  AddWebsiteModule('IsekaiRaw', 'http://isekairaw.com', cat)
   AddWebsiteModule('MangazukiClub', 'https://mangazuki.club', cat)
   
   cat = 'English'
