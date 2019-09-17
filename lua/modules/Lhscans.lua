@@ -33,9 +33,9 @@ function getpagenumber()
   if http.get(u) then
     local x=TXQuery.Create(http.Document)
 	if module.website == 'Lhscans' then
-		x.xpathstringall('//img[contains(@class, "chapter-img")]/@data-src', task.pagelinks)
+			x.xpathstringall('//img[contains(@class, "chapter-img")]/@data-src', task.pagelinks)
     	else
-    		x.xpathstringall('//img[@class="chapter-img"]/@src', task.pagelinks)
+    		x.xpathstringall('//img[contains(@class, "chapter-img")]/@src', task.pagelinks)
 	end
 	if module.website == 'Lhscans' or module.website == 'MangaHato' then task.pagecontainerlinks.text = u end
   else
@@ -82,6 +82,7 @@ function Init()
   AddWebsiteModule('Lhscans', 'https://lhscan.net', cat)
   AddWebsiteModule('HanaScan', 'https://hanascan.com', cat)
   AddWebsiteModule('MangaHato', 'https://mangahato.com', cat)
+  AddWebsiteModule('Manhwa18', 'https://manhwa18.com', cat)
   
   cat = 'English'
   AddWebsiteModule('MangaWeek', 'https://mangaweek.com', cat)
