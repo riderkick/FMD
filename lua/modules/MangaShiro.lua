@@ -252,7 +252,7 @@ function getnameandlink()
     ['MaidMangaID'] = '/manga-list/?list',
     ['KomikAV'] = '/manga/?list',
     ['Ngomik'] = '/daftar-manga/?list',
-    ['MangaPus'] = '/manga/?list',
+    ['MangaPus'] = '/manga-list/?list',
   }
   local dirurl = '/manga-list/'
   if dirs[module.website] ~= nil then
