@@ -37,6 +37,7 @@ function getdirurl(website)
     ['RavensScans'] = dirurllector,
     ['NoraNoFansub'] = dirurllector,
     ['AntisenseScans'] = dirurlonline,
+	['SenseScans'] = dirurlreader,
     ['MangaichiScan'] = dirurlfsdir,
     ['Riceballicious'] = dirurlreaderlist,
     ['Yuri-ism'] = dirurlslide,
@@ -234,7 +235,7 @@ function Init()
   AddWebsiteModule('RoseliaScanlations', 'http://reader.roseliascans.com', cat)
   AddWebsiteModule('S2Scans', 'https://reader.s2smanga.com', cat)
   AddWebsiteModule('SeaOtterScans', 'https://reader.seaotterscans.com', cat)
-  AddWebsiteModule('SenseScans', 'http://reader.sensescans.com', cat)
+  AddWebsiteModule('SenseScans', 'http://sensescans.com', cat)
   AddWebsiteModule('Shoujohearts', 'http://shoujohearts.com', cat)
   AddWebsiteModule('Shoujosense', 'http://reader.shoujosense.com', cat)
   AddWebsiteModule('SilentSkyScans', 'http://reader.silentsky-scans.net', cat)
