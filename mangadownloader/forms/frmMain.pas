@@ -3272,7 +3272,7 @@ begin
         else
         begin
           s1 := Copy(s, length(s), 1);
-          s2 := FavoriteManager.Items[Node^.Index].FavoriteInfo.Title;
+          s2 := RemoveSymbols(FavoriteManager.Items[Node^.Index].FavoriteInfo.Title);
           if s1 = '\' then
             FavoriteManager.Items[Node^.Index].FavoriteInfo.SaveTo := s + s2
           else
