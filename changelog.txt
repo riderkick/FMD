@@ -4,9 +4,34 @@ https://github.com/fmd-project-team/FMD
 Changelog:
 ([!] Important, [+] Addition, [-] Removal, [*] Fix/Change, [?] Feedback needed)
 
-0.9.167.0 (15.09.2019)
+0.9.167.1 (21.09.2019)
 [!] Report issues here: https://github.com/fmd-project-team/FMD/issues
 [!] Join us on Discord: https://discord.gg/cXKKgw3
+[+] Added Manhwa18 [RAW] (Issue #499) -> Thank you AbidZakaria
+[+] Added WakaScan [FR] -> Thank you Slasar41
+[-] Removed EyeOnManga [EN]
+[-] Removed HoduComics [RAW]
+[-] Removed HoshinoFansub [ES-SC]
+[-] Removed HotChocolateScans [EN-SC]
+[-] Removed HunterFansubScan [ES-SC]
+[-] Removed IMangaScans [EN-SC]
+[-] Removed IsekaiRaw [RAW]
+[-] Removed JokerFansub [ES-SC]
+[-] Removed KissDoujin [H-Sites]: Moved to 9hentai
+[*] JapScan: Fixed url (Issue #494)
+[*] HeavenManga: Fixed url (Issue #500) -> Thank you AbidZakaria
+[*] KlikManga: Fixed getting manga list -> Thank you Slasar41
+[*] MangaPus: Fixed getting manga list -> Thank you Slasar41
+[*] NinjaScans: Fixed getting chapter list (Issue #497)
+[*] SenseScans: Fixed url -> Thank you AbidZakaria
+[*] Toonily: Fixed getting manga list -> Thank you Slasar41
+[*] Fixed setting forbidden characters in save-to-path when changing multiple favorites (Issue #507)
+[*] Fixed downloads not sorting when checking for new chapters (Issue #383)
+[*] Localization Update: Indonesian
+[*] Localization Update: Turkish
+Full changes: https://github.com/fmd-project-team/FMD/compare/0.9.167.0...0.9.167.1
+
+0.9.167.0 (15.09.2019)
 [+] You can define a default action on double click in the favorites (open folder, show infos, rename or check new chapters)
 [+] You can now change the save-to path for multiple favorites (Issue #10)
 [+] Added CopyPasteScanlation [ES-SC] -> Thank you rs3mk
