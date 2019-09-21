@@ -256,7 +256,7 @@ function Init()
   cat = 'Spanish-Scanlation'
   AddWebsiteModule('GodsRealmScan', 'https://godsrealmscan.com', cat)
   AddWebsiteModule('DarkskyProjects', 'https://darkskyprojects.org', cat) 
-  AddWebsiteModule('PlotTwistNoFansub', 'https://www.plot-twistnf-scan.tk', cat)
+  AddWebsiteModule('PlotTwistNoFansub', 'https://www.plotwistscan.com', cat)
   AddWebsiteModule('KnightNoFansub', 'https://knightnofansub.site', cat)
   AddWebsiteModule('CopyPasteScanlation', 'https://copypastescan.xyz', cat)
   AddWebsiteModule('ZManga', 'https://zmanga.org', cat)
