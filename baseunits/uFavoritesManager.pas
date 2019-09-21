@@ -962,6 +962,8 @@ begin
           if LNCResult = ncrDownload then
           begin
             DLManager.CheckAndActiveTask;
+            if OptionSortDownloadsWhenAddingNewDownloadTasks then
+              DLManager.Sort(DLManager.SortColumn);
             if OptionShowDownloadsTabOnNewTasks then
               MainForm.pcMain.ActivePage := MainForm.tsDownload;
           end;
