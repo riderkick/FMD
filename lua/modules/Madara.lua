@@ -222,13 +222,13 @@ function Init()
   AddWebsiteModule('WakaScan', 'http://wakascan.com', cat)
   
   cat = 'Indonesian'
-  AddWebsiteModule('MangaYosh', 'https://mangayosh.com', cat)
+  AddWebsiteModule('MangaYosh', 'https://mangayosh.xyz', cat)
   AddWebsiteModule('KomikGo', 'https://komikgo.com', cat)
   AddWebsiteModule('KlikManga', 'https://klikmanga.com', cat)
   
   cat = 'H-Sites'
   AddWebsiteModule('ManhwaHand', 'https://manhwahand.com', cat)
-  AddWebsiteModule('DoujinYosh', 'https://doujinyosh.com', cat)
+  AddWebsiteModule('DoujinYosh', 'https://doujinyosh.xyz', cat)
   AddWebsiteModule('ManhwaHentai', 'https://manhwahentai.me', cat)
   AddWebsiteModule('HentaiRead', 'http://hentairead.com', cat)
   AddWebsiteModule('ManhwaClub', 'https://manhwa.club', cat)
