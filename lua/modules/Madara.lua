@@ -153,6 +153,26 @@ function Modules.HentaiRead()
   
   return HentaiRead
 end
+
+function Modules.OnManga()
+  local OnManga = {}
+  setmetatable(OnManga, { __index = Modules.Madara() })
+  
+  function OnManga:getpagenumber()
+    task.pagelinks.clear()
+    if http.get(MaybeFillHost(module.rooturl, url)) then
+      local x = TXQuery.Create(http.Document)
+      local s = x.xpathstring('//script[contains(., "chapter_preloaded_images")]', task.pagelinks)
+      s = "{"..GetBetween("{", "}", s).."}"
+      x.parsehtml(s)
+      x.xpathstringall('let $c := json(*) return for $k in jn:keys($c) return $c($k)', task.pagelinks)
+      return true
+    end
+    return false
+  end
+  
+  return OnManga
+end
 -------------------------------------------------------------------------------
 
 function createInstance()
@@ -208,6 +228,7 @@ function Init()
   AddWebsiteModule('MangaZukiSite', 'https://www.mangazuki.site', cat)
   AddWebsiteModule('MangaZukiMe', 'https://mangazuki.me', cat)
   AddWebsiteModule('YoManga', 'https://yomanga.info', cat)
+  AddWebsiteModule('OnManga', 'https://onmanga.com', cat)
 
   cat = 'English-Scanlation'
   AddWebsiteModule('TrashScanlations', 'https://trashscanlations.com', cat)
