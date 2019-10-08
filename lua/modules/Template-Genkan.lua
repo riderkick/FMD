@@ -90,7 +90,7 @@ function _M.GetPageNumber()
   
   x = TXQuery.Create(http.Document)
   x.ParseHTML(GetBetween('window.chapterPages = ', ';', x.XPathString('//script[contains(., "window.chapterPages = ")]')):gsub('\\/', '/'))
-  v = x.xpath('json(*)()')
+  v = x.XPath('json(*)()')
   for i = 1, v.Count do
     task.PageLinks.Add(MaybeFillHost(module.RootURL, v.Get(i).ToString))
   end
