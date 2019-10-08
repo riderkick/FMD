@@ -89,8 +89,13 @@ function _M.GetPageNumber()
   if not http.Get(u) then return net_problem end
   
   x = TXQuery.Create(http.Document)
-  x.ParseHTML(GetBetween('window.chapterPages = ', ';', x.XPathString('//script[contains(., "window.chapterPages = ")]')):gsub('\\/', '/'))
-  x.XPathStringAll('json(*)()', task.PageLinks)
+  local s = GetBetween('window.chapterPages = ', ';', x.XPathString('//script[contains(., "window.chapterPages = ")]')):gsub('\\/', '/')
+        x.ParseHTML(s)
+        local v=x.xpath('json(*)()')
+          for i=1,v.count do
+            local v1=v.get(i)
+            task.pagelinks.add(MaybeFillHost(module.RootURL, v1.toString))
+          end
   
   --[[Debug]] LuaDebug.PrintChapterPageLinks()
   --[[Debug]] LuaDebug.WriteStatistics('ChapterPages', task.PageLinks.Count .. '  (' .. u .. ')')
