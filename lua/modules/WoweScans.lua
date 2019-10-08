@@ -56,7 +56,7 @@ end
 ----------------------------------------------------------------------------------------------------
 
 function Init()
-  AddWebsiteModule('WoweScans', 'https://wowescans.co', 'Webcomics')
+  AddWebsiteModule('WoweScans', 'http://wowescans.co', 'Webcomics')
 end
 
 function AddWebsiteModule(name, url, category)
