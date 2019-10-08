@@ -82,7 +82,7 @@ end
 
 -- Get the page count for the current chapter.
 function _M.GetPageNumber()
-  local s, x = nil
+  local v, x = nil
   local u = MaybeFillHost(module.RootURL, url)
   
   --[[Debug]] LuaDebug.WriteLogWithHeader('GetPageNumber', 'url ->  ' .. u)
@@ -90,7 +90,10 @@ function _M.GetPageNumber()
   
   x = TXQuery.Create(http.Document)
   x.ParseHTML(GetBetween('window.chapterPages = ', ';', x.XPathString('//script[contains(., "window.chapterPages = ")]')):gsub('\\/', '/'))
-  x.XPathStringAll('json(*)()', task.PageLinks)
+  v = x.XPath('json(*)()')
+  for i = 1, v.Count do
+    task.PageLinks.Add(MaybeFillHost(module.RootURL, v.Get(i).ToString))
+  end
   
   --[[Debug]] LuaDebug.PrintChapterPageLinks()
   --[[Debug]] LuaDebug.WriteStatistics('ChapterPages', task.PageLinks.Count .. '  (' .. u .. ')')
