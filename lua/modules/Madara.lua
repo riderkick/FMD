@@ -31,8 +31,8 @@ function Modules.Madara()
       mangainfo.authors=x.xpathstringall('//div[@class="author-content"]/a')
       mangainfo.artists=x.xpathstringall('//div[@class="artist-content"]/a')
       mangainfo.genres=x.xpathstringall('//div[@class="genres-content"]/a')
-      mangainfo.status = MangaInfoStatusIfPos(x.xpathstring('//div[@class="summary-heading" and contains(h5, "Status")]/following-sibling::div/div/a'))
-      mangainfo.summary=x.xpathstring('//div[contains(@class,"description-summary")]/string-join(.//text(),"")')
+      mangainfo.status = MangaInfoStatusIfPos(x.xpathstring('//div[@class="summary-heading" and contains(h5, "Status")]/following-sibling::div'))
+      mangainfo.summary=x.xpathstring('//div[contains(@class,"description-summary")]//p')
       
       if module.website == 'DoujinYosh' or module.website == 'MangaYosh' or module.website == 'KIDzScan' then
         local v = x.xpath('//li[contains(@class, "wp-manga-chapter")]/a')
@@ -96,7 +96,7 @@ function Modules.Madara()
     if http.post(module.rooturl .. '/wp-admin/admin-ajax.php', q) then
       if http.headers.values['Content-Length'] == '0' then return no_error end
       local x = TXQuery.Create(http.Document)
-      if module.website == 'KlikManga' or module.website == 'MangaKomi' or module.website == 'Toonily' or module.website == 'WakaScan' then
+      if module.website == 'KlikManga' or module.website == 'MangaKomi' or module.website == 'PojokManga' or module.website == 'Toonily' or module.website == 'WakaScan' then
 	if x.xpath('//div[contains(@class, "post-title")]/h3/a').count == 0 then return no_error end
 	x.XPathHREFAll('//div[contains(@class, "post-title")]/h3/a', links, names)
       else
@@ -246,6 +246,7 @@ function Init()
   AddWebsiteModule('MangaYosh', 'https://mangayosh.xyz', cat)
   AddWebsiteModule('KomikGo', 'https://komikgo.com', cat)
   AddWebsiteModule('KlikManga', 'https://klikmanga.com', cat)
+  AddWebsiteModule('PojokManga', 'https://pojokmanga.com', cat)
   
   cat = 'H-Sites'
   AddWebsiteModule('ManhwaHand', 'https://manhwahand.com', cat)
