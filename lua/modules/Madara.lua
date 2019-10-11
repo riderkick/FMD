@@ -96,7 +96,7 @@ function Modules.Madara()
     if http.post(module.rooturl .. '/wp-admin/admin-ajax.php', q) then
       if http.headers.values['Content-Length'] == '0' then return no_error end
       local x = TXQuery.Create(http.Document)
-      if module.website == 'KlikManga' or module.website == 'MangaKomi' or module.website == 'PojokManga' or module.website == 'Toonily' or module.website == 'WakaScan' then
+      if module.website == 'KlikManga' or module.website == 'MangaKomi' or module.website == 'NinjaScans' or module.website == 'PojokManga' or module.website == 'Toonily' or module.website == 'WakaScan' then
 	if x.xpath('//div[contains(@class, "post-title")]/h3/a').count == 0 then return no_error end
 	x.XPathHREFAll('//div[contains(@class, "post-title")]/h3/a', links, names)
       else
