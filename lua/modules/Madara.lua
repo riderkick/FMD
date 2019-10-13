@@ -85,6 +85,9 @@ function Modules.Madara()
       if task.pagelinks.count < 1 then
         x.xpathstringall('//*[@class="wp-manga-chapter-img webpexpress-processed"]/@src', task.pagelinks)
       end
+      if task.pagelinks.count < 1 then
+        x.xpathstringall('//div[@class="reading-content"]//img/@src', task.pagelinks)
+      end
       return true
     end
     return false
@@ -96,7 +99,7 @@ function Modules.Madara()
     if http.post(module.rooturl .. '/wp-admin/admin-ajax.php', q) then
       if http.headers.values['Content-Length'] == '0' then return no_error end
       local x = TXQuery.Create(http.Document)
-      if module.website == 'KlikManga' or module.website == 'MangaKomi' or module.website == 'NinjaScans' or module.website == 'PojokManga' or module.website == 'Toonily' or module.website == 'WakaScan' then
+      if module.website == 'KlikManga' or module.website == 'MangaKomi' or module.website == 'ManhuaBox' or module.website == 'NinjaScans' or module.website == 'PojokManga' or module.website == 'ReadRawManga' or module.website == 'Toonily' or module.website == 'WakaScan' then
 	if x.xpath('//div[contains(@class, "post-title")]/h3/a').count == 0 then return no_error end
 	x.XPathHREFAll('//div[contains(@class, "post-title")]/h3/a', links, names)
       else
@@ -229,6 +232,7 @@ function Init()
   AddWebsiteModule('MangaZukiMe', 'https://mangazuki.me', cat)
   AddWebsiteModule('YoManga', 'https://yomanga.info', cat)
   AddWebsiteModule('OnManga', 'https://onmanga.com', cat)
+  AddWebsiteModule('ReadRawManga', 'https://www.readrawmanga.com', cat)
 
   cat = 'English-Scanlation'
   AddWebsiteModule('TrashScanlations', 'https://trashscanlations.com', cat)
@@ -269,6 +273,7 @@ function Init()
   AddWebsiteModule('ManyToon', 'https://manytoon.me', cat)
   AddWebsiteModule('PocketAngelScan', 'https://pocketangelscans.com', cat)
   AddWebsiteModule('Toonily', 'https://toonily.com', cat)
+  AddWebsiteModule('ManhuaBox', 'https://manhuabox.net', cat)
   
   cat = 'Arabic-Scanlation'
   AddWebsiteModule('3asqOrg', 'https://3asq.org', cat)
