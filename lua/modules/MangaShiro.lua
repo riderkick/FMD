@@ -346,5 +346,7 @@ local cat = 'Indonesian'
   AddWebsiteModule('Ngomik', 'https://ngomik.in', cat)
   AddWebsiteModule('MangaPus', 'https://mangapus.com', cat)
   AddWebsiteModule('Mangaseno', 'https://mangaseno.com', cat)
+  
+  cat = 'Webcomics'
   AddWebsiteModule('SekteKomik', 'http://sektekomik.com', cat)
 end
