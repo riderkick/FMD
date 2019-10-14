@@ -158,6 +158,7 @@ function Modules.ScanFR()
       mangainfo.chapterLinks.Add(v2.getAttribute('href'))
       mangainfo.chapterNames.Add(x.XPathString('normalize-space(.)', v2))
     end
+	InvertStrings(mangainfo.chapterLinks,mangainfo.chapterNames)
   end
   
   return ScanFR
@@ -236,6 +237,6 @@ function Init()
   AddWebsiteModule('SOSScanlation', 'https://sosscanlation.com', c);
   
   c='French'
-  AddWebsiteModule('ScanFR', 'https://www.scan-fr.io', c);
+  AddWebsiteModule('ScanFR', 'https://www.scan-fr.co', c);
   AddWebsiteModule('ScanOP', 'http://www.scan-op.com', c);
 end
