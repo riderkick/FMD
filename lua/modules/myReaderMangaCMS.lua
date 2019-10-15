@@ -22,8 +22,8 @@ function Modules.myReaderMangaCMS()
         end
       end
       mangainfo.status = MangaInfoStatusIfPos(x.XPathString('//dt[.=("Status","Estado","Statut")]/following-sibling::dd[1]'))
-      mangainfo.authors = x.XPathStringAll('//dt[.=("Author(s)","Yazar & Çizer:","Autor(es)","Auteur(s)")]/following-sibling::dd[1]/string-join(*,", ")')
-      mangainfo.artists = x.XPathStringAll('//dt[.=("Artist(s)","Artiste(s)")]/following-sibling::dd[1]/string-join(*,", ")')
+      mangainfo.authors = x.XPathStringAll('//dt[.=("Author(s)","Yazar & Çizer:","Autor(es)","Auteur(s)","Penulis(s)")]/following-sibling::dd[1]/string-join(*,", ")')
+      mangainfo.artists = x.XPathStringAll('//dt[.=("Artist(s)","Artiste(s)","Artis(s)")]/following-sibling::dd[1]/string-join(*,", ")')
       mangainfo.genres = x.XPathStringAll('//dt[.=("Categories","Kategoriler:","Categorías","Catégories","Kategori")]/following-sibling::dd[1]/string-join(*,", ")')
       mangainfo.summary = x.XPathString('//div[@class="well"]/p')
       local v = x.Xpath('//ul[@class="chapters"]/li/*[self::h5 or self::h3]')
@@ -216,7 +216,7 @@ function Init()
   AddWebsiteModule('Komikid', 'https://www.komikid.com', c);
   AddWebsiteModule('KomikGue', 'https://www.komikgue.com', c);
   AddWebsiteModule('KomikManga', 'https://komikmanga.com', c);
-  
+  AddWebsiteModule('MangaSusu', 'https://www.mangasusu.me', c)
   
   c='Raw'
   AddWebsiteModule('RawMangaUpdate', 'http://rawmangaupdate.com', c);
