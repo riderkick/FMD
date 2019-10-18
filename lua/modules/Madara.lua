@@ -99,7 +99,7 @@ function Modules.Madara()
     if http.post(module.rooturl .. '/wp-admin/admin-ajax.php', q) then
       if http.headers.values['Content-Length'] == '0' then return no_error end
       local x = TXQuery.Create(http.Document)
-      if module.website == 'KlikManga' or module.website == 'MangaKomi' or module.website == 'ManhuaBox' or module.website == 'NinjaScans' or module.website == 'PojokManga' or module.website == 'ReadRawManga' or module.website == 'Toonily' or module.website == 'WakaScan' then
+      if module.website == '3asqOrg' or module.website == 'ChibiManga' or module.website == 'GodsRealmScan' or module.website == 'HentaiRead' or module.website == 'HunterFansub' or module.website == 'KIDzScan' or module.website == 'KlikManga' or module.website == 'KomikGo' or module.website == 'MangaKomi' or module.website == 'MangaZukiOnline' or module.website == 'ManhuaBox' or module.website == 'NinjaScans' or module.website == 'PlotTwistNoFansub' or module.website == 'PojokManga' or module.website == 'ReadRawManga' or module.website == 'Toonily' or module.website == 'TopManhua' or module.website == 'WakaScan' or module.website == 'ZinManga' then
 	if x.xpath('//div[contains(@class, "post-title")]/h3/a').count == 0 then return no_error end
 	x.XPathHREFAll('//div[contains(@class, "post-title")]/h3/a', links, names)
       else
@@ -125,9 +125,9 @@ function Modules.ChibiManga()
     if http.get(MaybeFillHost(module.rooturl, url)) then
       local x = TXQuery.Create(http.Document)
       local s = x.xpathstring('//script[contains(., "chapter_preloaded_images")]', task.pagelinks)
-      s = "{"..GetBetween("{", "}", s).."}"
+      s = "["..GetBetween("[", "]", s).."]"
       x.parsehtml(s)
-      x.xpathstringall('let $c := json(*) return for $k in jn:keys($c) return $c($k)', task.pagelinks)
+      x.xpathstringall('json(*)()', task.pagelinks)
       return true
     end
     return false
@@ -146,7 +146,6 @@ function Modules.HentaiRead()
       local x = TXQuery.Create(http.Document)
       local s = x.xpathstring('//script[contains(., "chapter_preloaded_images")]', task.pagelinks)
       s = "["..GetBetween("[", "]", s).."]"
-      print(s)
       x.parsehtml(s)
       x.xpathstringall('json(*)()', task.pagelinks)
       return true
@@ -237,8 +236,8 @@ function Init()
   cat = 'English-Scanlation'
   AddWebsiteModule('TrashScanlations', 'https://trashscanlations.com', cat)
   AddWebsiteModule('ZeroScans', 'https://zeroscans.com', cat)
-  AddWebsiteModule('ChibiManga','http://www.cmreader.info', cat)
-  AddWebsiteModule('ZinManga','https://zinmanga.com', cat)
+  AddWebsiteModule('ChibiManga', 'http://www.cmreader.info', cat)
+  AddWebsiteModule('ZinManga', 'https://zinmanga.com', cat)
   AddWebsiteModule('SiXiangScans','http://www.sixiangscans.com', cat)
   AddWebsiteModule('NinjaScans', 'https://ninjascans.com', cat)
   AddWebsiteModule('ReadManhua', 'https://readmanhua.net', cat)
@@ -261,7 +260,7 @@ function Init()
 
   cat = 'Spanish-Scanlation'
   AddWebsiteModule('GodsRealmScan', 'https://godsrealmscan.com', cat)
-  AddWebsiteModule('DarkskyProjects', 'https://darkskyprojects.org', cat) 
+  AddWebsiteModule('DarkskyProjects', 'https://darkskyprojects.org', cat)
   AddWebsiteModule('PlotTwistNoFansub', 'https://www.plotwistscan.com', cat)
   AddWebsiteModule('KnightNoFansub', 'https://knightnofansub.site', cat)
   AddWebsiteModule('CopyPasteScanlation', 'https://copypastescan.xyz', cat)
@@ -274,6 +273,7 @@ function Init()
   AddWebsiteModule('PocketAngelScan', 'https://pocketangelscans.com', cat)
   AddWebsiteModule('Toonily', 'https://toonily.com', cat)
   AddWebsiteModule('ManhuaBox', 'https://manhuabox.net', cat)
+  AddWebsiteModule('TopManhua', 'https://topmanhua.com', cat)
   
   cat = 'Arabic-Scanlation'
   AddWebsiteModule('3asqOrg', 'https://3asq.org', cat)
