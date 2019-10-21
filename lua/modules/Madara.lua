@@ -257,8 +257,8 @@ function Init()
   AddWebsiteModule('ManhwaHentai', 'https://manhwahentai.me', cat)
   AddWebsiteModule('HentaiRead', 'http://hentairead.com', cat)
   AddWebsiteModule('ManhwaClub', 'https://manhwa.club', cat)
-  AddWebsiteModule('NManhwa', 'https://nmanhwa.com/', cat)
-  AddWebsiteModule('ManyToonCom', 'https://manytoon.com/', cat)
+  AddWebsiteModule('NManhwa', 'https://nmanhwa.com', cat)
+  AddWebsiteModule('ManyToonCom', 'https://manytoon.com', cat)
 
   cat = 'Spanish-Scanlation'
   AddWebsiteModule('GodsRealmScan', 'https://godsrealmscan.com', cat)
