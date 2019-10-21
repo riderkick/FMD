@@ -5,12 +5,9 @@ function getinfo()
     mangainfo.title=x.xpathstring('//h1')
     if module.website == 'NHentai' then
        mangainfo.coverlink=x.xpathstring('//*[@id="cover"]//img/@data-src')
-    else
-       mangainfo.coverlink=x.xpathstring('//*[@id="cover"]//img/@src')
-    end
-    if module.website == 'NHentai' then
        mangainfo.artists=x.xpathstringall('//*[@id="tags"]//a[contains(@href,"/artist/")]/text()')
     else
+       mangainfo.coverlink=x.xpathstring('//*[@id="cover"]//img/@src')
        mangainfo.artists=x.xpathstringall('//*[@id="tags"]//a[contains(@href,"/artists/")]/text()')
     end
     mangainfo.genres=x.xpathstringall('//*[@id="tags"]//a/text()')
