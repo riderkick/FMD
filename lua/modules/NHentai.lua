@@ -3,9 +3,18 @@ function getinfo()
   if http.get(mangainfo.url) then
     x=TXQuery.Create(http.document)	
     mangainfo.title=x.xpathstring('//h1')
-    mangainfo.coverlink=x.xpathstring('//*[@id="cover"]//img/@data-src')
-    mangainfo.artists=x.xpathstringall('//*[@id="tags"]//a[contains(@href,"/artist/")]/text()')
+    if module.website == 'NHentai' then
+       mangainfo.coverlink=x.xpathstring('//*[@id="cover"]//img/@data-src')
+    else
+       mangainfo.coverlink=x.xpathstring('//*[@id="cover"]//img/@src')
+    end
+    if module.website == 'NHentai' then
+       mangainfo.artists=x.xpathstringall('//*[@id="tags"]//a[contains(@href,"/artist/")]/text()')
+    else
+       mangainfo.artists=x.xpathstringall('//*[@id="tags"]//a[contains(@href,"/artists/")]/text()')
+    end
     mangainfo.genres=x.xpathstringall('//*[@id="tags"]//a/text()')
+    mangainfo.summary=x.xpathstring('//div[contains(@class, "drop-discription")]/p/text()')
     mangainfo.chapterlinks.add(url)
     mangainfo.chapternames.add(mangainfo.title)
     return no_error
@@ -42,15 +51,21 @@ function getnameandlink()
   end
 end
 
-function Init()
-  m=NewModule()
-  m.category='H-Sites'
-  m.website='NHentai'
-  m.rooturl='https://nhentai.net'
-  m.lastupdated='February 17, 2018'
+function AddWebsiteModule(name, url, cat)
+  local m=NewModule()
+  m.category=cat
+  m.website=name
+  m.rooturl=url
   m.ongetinfo='getinfo'
   m.ongetpagenumber='getpagenumber'
   m.ongetdirectorypagenumber='getdirectorypagenumber'
   m.ongetnameandlink='getnameandlink'
   m.sortedlist=true
+  return m
+end
+
+function Init()
+local cat = 'H-Sites'
+  AddWebsiteModule('NHentai', 'https://nhentai.net', cat)
+  AddWebsiteModule('HentaiHand', 'https://hentaihand.com', cat)
 end
