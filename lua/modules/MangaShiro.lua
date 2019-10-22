@@ -321,7 +321,7 @@ end
 
 function Init()
 local cat = 'Indonesian'
-  AddWebsiteModule('MangaShiro', 'https://mangashiro.org', cat)
+  AddWebsiteModule('MangaShiro', 'https://mangashiro.co', cat)
   AddWebsiteModule('MangaKita', 'https://mangakita.net', cat)
   AddWebsiteModule('KomikStation', 'https://www.komikstation.com', cat)
   AddWebsiteModule('MangaKid', 'https://mgku.me', cat)
