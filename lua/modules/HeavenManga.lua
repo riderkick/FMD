@@ -86,6 +86,6 @@ function AddWebsiteModule(name, url)
 end
 
 function Init()
-  AddWebsiteModule('HeavenManga', 'http://ww4.heavenmanga.org')
-  AddWebsiteModule('HolyManga', 'http://ww6.holymanga.net')
+  AddWebsiteModule('HeavenManga', 'http://ww5.heavenmanga.org')
+  AddWebsiteModule('HolyManga', 'http://ww7.holymanga.net')
 end
