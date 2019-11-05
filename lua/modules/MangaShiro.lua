@@ -68,6 +68,7 @@ function getAuthors(x)
   if authors == '' then authors = x.xpathstring('//div[@class="listinfo"]//li[starts-with(.,"Pengarang")]/substring-after(.," ")') end
   if authors == '' then authors = x.xpathstring('//span[@id="m-author"]') end
   if authors == '' then authors = x.xpathstring('//ul[@class="baru"]/li[2][starts-with(.,"Mangaka")]/substring-after(.,":")') end
+  if authors == '' then authors = x.xpathstring('//table[@class="listinfo"]//tr[contains(th, "Author")]/following-sibling::td') end
   return authors
 end
 
@@ -112,6 +113,7 @@ end
 
 function getSummary(x)
   local summary = ''
+  if summary == '' then summary = x.xpathstring('//*[@class="desc"]/p[1]/string-join(.//text(),"")') end
   if summary == '' then summary = x.xpathstring('//*[@class="desc"]/string-join(.//text(),"")') end
   if summary == '' then summary = x.xpathstring('//*[@class="sinopsis"]/string-join(.//text(),"")') end
   if summary == '' then summary = x.xpathstring('//*[@id="m-synopsis"]/string-join(.//text(),"")') end
@@ -256,6 +258,7 @@ function getnameandlink()
     ['Mangaseno'] = '/manga-list/?list',
     ['SekteKomik'] = '/manga/?list',
     ['BaekjinScans'] = '/manga/?list',
+    ['Mangakyo'] = '/daftar-manga/?list',    
   }
   local dirurl = '/manga-list/'
   if dirs[module.website] ~= nil then
@@ -347,6 +350,7 @@ local cat = 'Indonesian'
   AddWebsiteModule('Ngomik', 'https://ngomik.in', cat)
   AddWebsiteModule('MangaPus', 'https://mangapus.com', cat)
   AddWebsiteModule('Mangaseno', 'https://mangaseno.com', cat)
+  AddWebsiteModule('Mangakyo', 'https://www.mangakyo.com', cat)
   
   cat = 'Webcomics'
   AddWebsiteModule('SekteKomik', 'http://sektekomik.com', cat)
