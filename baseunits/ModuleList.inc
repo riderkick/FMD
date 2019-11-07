@@ -7,7 +7,6 @@ uses
   RawSenManga,
   KissManga,
   MangaHome,
-  MintMangaRU,
   MangaHubRU,
   Tsumino,
   WebtoonTr,
