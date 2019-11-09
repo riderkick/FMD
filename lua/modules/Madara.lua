@@ -48,6 +48,8 @@ function Modules.Madara()
           mangainfo.chapternames.Add(v1.toString);
           mangainfo.chapterlinks.Add(link);
         end
+      elseif module.website == 'PlotTwistNoFansub' then
+        x.XPathHREFAll('//li[contains(@class, "wp-manga-chapter")]//a', mangainfo.chapterlinks, mangainfo.chapternames)
       else
         x.XPathHREFAll('//li[contains(@class, "wp-manga-chapter")]/a', mangainfo.chapterlinks, mangainfo.chapternames)
       end
