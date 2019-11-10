@@ -271,7 +271,7 @@ function Init()
   AddWebsiteModule('ZManga', 'https://zmanga.org', cat)
   AddWebsiteModule('KIDzScan', 'https://grafimanga.com', cat)
   AddWebsiteModule('HunterFansub', 'https://hunterfansub.com', cat)
-  AddWebsiteModule('SDLGFansub', 'https://www.sdlg-fansub.tk/', cat)
+  AddWebsiteModule('SDLGFansub', 'https://www.sdlg-fansub.tk', cat)
 	
   cat = 'Webcomics'
   AddWebsiteModule('ManyToon', 'https://manytoon.me', cat)
