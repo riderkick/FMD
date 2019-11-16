@@ -188,7 +188,7 @@ function getpagenumber()
       local x = TXQuery.Create(http.Document)
       local s = x.xpathstring('//div[contains(@id, "readerarea")]')
       local id = GetBetween('atob(', ');', s) 
-             s = GetBetween('/var '..id..' = "', '";', s)
+             s = GetBetween('*/var '..id..' = "', '";', s)
              s = unescape(DecodeBase64(s))
              s = s:gsub('+', ' ')
              x.parsehtml(s)
@@ -200,6 +200,15 @@ function getpagenumber()
         	local v1=v.get(i)
             if string.find(v1.getAttribute('href'), "shironime.png") == nil then
             	task.pagelinks.add(v1.getAttribute('href'))
+        	end
+        end
+	elseif module.website == 'Kiryuu' then
+      local x = TXQuery.Create(http.Document)
+      local v=x.xpath('//*[@id="readerarea"]//img')
+        for i=1,v.count do
+        	local v1=v.get(i)
+            if string.find(v1.getAttribute('src'), ".filerun.thumbnails") == nil then
+            	task.pagelinks.add(v1.getAttribute('src'))
         	end
         end
     else
