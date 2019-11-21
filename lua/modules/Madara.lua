@@ -272,6 +272,7 @@ function Init()
   AddWebsiteModule('KIDzScan', 'https://grafimanga.com', cat)
   AddWebsiteModule('HunterFansub', 'https://hunterfansub.com', cat)
   AddWebsiteModule('SDLGFansub', 'https://www.sdlg-fansub.tk', cat)
+  AddWebsiteModule('ArtemisNF', 'https://artemisnf.com', cat)
 	
   cat = 'Webcomics'
   AddWebsiteModule('ManyToon', 'https://manytoon.me', cat)
