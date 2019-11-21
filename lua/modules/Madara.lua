@@ -24,6 +24,9 @@ function Modules.Madara()
       if string.match(mangainfo.title:upper(), ' RAW$') ~= nil then
         mangainfo.title = mangainfo.title:sub(1, -5)
       end
+      if module.website == 'ArtemisNF' then
+        mangainfo.title=x.xpathstringall('//div[@class="post-title post-sigle-title"]/*[self::h1 or self::h2 or self::h3]/text()', '')
+      end
       mangainfo.coverlink=x.xpathstring('//div[@class="summary_image"]//img/@data-src')
       if mangainfo.coverlink == '' then
         mangainfo.coverlink=x.xpathstring('//div[@class="summary_image"]//img/@src')
@@ -272,6 +275,7 @@ function Init()
   AddWebsiteModule('KIDzScan', 'https://grafimanga.com', cat)
   AddWebsiteModule('HunterFansub', 'https://hunterfansub.com', cat)
   AddWebsiteModule('SDLGFansub', 'https://www.sdlg-fansub.tk', cat)
+  AddWebsiteModule('ArtemisNF', 'https://artemisnf.com', cat)
 	
   cat = 'Webcomics'
   AddWebsiteModule('ManyToon', 'https://manytoon.me', cat)
