@@ -2,7 +2,9 @@ function getinfo()
   mangainfo.url=MaybeFillHost(module.RootURL, url)
   if http.get(mangainfo.url) then
     local x=TXQuery.Create(http.document)
-    if mangainfo.title == '' then
+    if module.website == 'Manhwa18' then
+      mangainfo.title = x.xpathstring('//div[@class="container"]//li[3]//span')
+    else
       mangainfo.title = Trim(SeparateLeft(x.XPathString('//title'), '- Raw'))
     end
     mangainfo.coverlink = MaybeFillHost(module.rooturl, x.xpathstring('//img[@class="thumbnail"]/@src'))
@@ -32,12 +34,21 @@ function getpagenumber()
   local u = MaybeFillHost(module.rooturl, url)
   if http.get(u) then
     local x=TXQuery.Create(http.Document)
-	if module.website == 'Lhscans' then
-			x.xpathstringall('//img[contains(@class, "chapter-img")]/@data-src', task.pagelinks)
-    	else
-    		x.xpathstringall('//img[contains(@class, "chapter-img")]/@src', task.pagelinks)
-	end
-	if module.website == 'Lhscans' or module.website == 'MangaHato' then task.pagecontainerlinks.text = u end
+    if module.website == 'Lhscans' then
+      x.xpathstringall('//img[contains(@class, "chapter-img")]/@data-src', task.pagelinks)
+    elseif module.website == 'Manhwa18' then
+      local v = x.xpath('//img[contains(@class, "chapter-img")]/@src')
+      for i = 1, v.count do
+        local s = v.get(i).toString;
+        s = s:gsub('app/', 'https://manhwa18.com/app/'):gsub('https://manhwa18.net/https://manhwa18.com', 'https://manhwa18.net')
+        if string.find(s, ".iff") == nil then
+          task.pagelinks.add(s)
+        end
+      end
+    else
+      x.xpathstringall('//img[contains(@class, "chapter-img")]/@src', task.pagelinks)
+    end
+    if module.website == 'Lhscans' or module.website == 'MangaHato' then task.pagecontainerlinks.text = u end
   else
     return false
   end
