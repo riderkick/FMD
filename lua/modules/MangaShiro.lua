@@ -207,7 +207,14 @@ function getpagenumber()
       local v=x.xpath('//*[@id="readerarea"]//img')
         for i=1,v.count do
         	local v1=v.get(i)
-            if string.find(v1.getAttribute('src'), ".filerun.thumbnails") == nil then
+            if string.find(v1.getAttribute('src'), ".filerun.") == nil and
+               string.find(v1.getAttribute('src'), ",0.jpg") == nil and
+               string.find(v1.getAttribute('src'), ",5.jpg") == nil and
+               string.find(v1.getAttribute('src'), ".5.jpg") == nil and
+               string.find(v1.getAttribute('src'), "00.jpg") == nil and
+               string.find(v1.getAttribute('src'), "z10.jpg") == nil and
+               string.find(v1.getAttribute('src'), "Komeng.jpg") == nil and
+               string.find(v1.getAttribute('src'), "ZZ.jpg") == nil then
             	task.pagelinks.add(v1.getAttribute('src'))
         	end
         end
