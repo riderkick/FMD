@@ -26,10 +26,10 @@ function getpagenumber()
   if http.get(MaybeFillHost(module.rooturl, url)) then
     local x=TXQuery.Create(http.Document)
     if module.website == 'HentaiFox' then
-      local v = x.xpath('//*[@class="gallery_thumb"]//img/@data-src')
+      local v = x.xpath('//*[@class="gallery_thumb"]//img/@src')
       for i = 1, v.count do
         local s = v.get(i).toString;
-        s = s:gsub('//t\\.(.+\\d+)t\\.', '%1.')
+        s = s:gsub('t.jpg', '.jpg')
         task.pagelinks.add(s)
       end
     else
