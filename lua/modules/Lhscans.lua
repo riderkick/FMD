@@ -34,9 +34,7 @@ function getpagenumber()
   local u = MaybeFillHost(module.rooturl, url)
   if http.get(u) then
     local x=TXQuery.Create(http.Document)
-    if module.website == 'Lhscans' then
-      x.xpathstringall('//img[contains(@class, "chapter-img")]/@data-src', task.pagelinks)
-    elseif module.website == 'Manhwa18' then
+    if module.website == 'Manhwa18' then
       local v = x.xpath('//img[contains(@class, "chapter-img")]/@src')
       for i = 1, v.count do
         local s = v.get(i).toString;
