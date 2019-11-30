@@ -1,11 +1,3 @@
-local hex_to_char = function(x)
-  return string.char(tonumber(x, 16))
-end
-
-local unescape = function(url)
-  return url:gsub("%%(%x%x)", hex_to_char)
-end
-
 function getinfo()
   mangainfo.url=MaybeFillHost(module.RootURL, url)
   if http.get(mangainfo.url) then
@@ -186,27 +178,27 @@ function getpagenumber()
   if http.get(MaybeFillHost(module.rooturl,url)) then
     if module.website == 'BacaManga' then
       local x = TXQuery.Create(http.Document)
-      local s = x.xpathstring('//div[contains(@id, "readerarea")]')
-      local id = GetBetween('atob(', ');', s) 
-             s = GetBetween('var[2] '..id..' = "', '";', s)
-             s = unescape(DecodeBase64(s))
-             s = s:gsub('+', ' ')
-             x.parsehtml(s)
-             x.xpathstringall('//img/@src', task.pagelinks)
+      local s = x.xpathstring('*')
+      local id = GetBetween('=window[_', ');', s) 
+            id = string.sub(id, 75 , string.len(id))
+            id = string.sub(id, 0 , string.len(id) - 3)
+            s = DecodeBase64(id)
+            x.parsehtml(s)
+            x.xpathstringall('json(*)()', task.pagelinks)
     elseif module.website == 'MangaShiro' then
       local x = TXQuery.Create(http.Document)
       local v=x.xpath('//*[@id="readerarea"]//a')
         for i=1,v.count do
-        	local v1=v.get(i)
+            local v1=v.get(i)
             if string.find(v1.getAttribute('href'), "shironime.png") == nil then
-            	task.pagelinks.add(v1.getAttribute('href'))
-        	end
+                task.pagelinks.add(v1.getAttribute('href'))
+            end
         end
-	elseif module.website == 'Kiryuu' then
+    elseif module.website == 'Kiryuu' then
       local x = TXQuery.Create(http.Document)
       local v=x.xpath('//*[@id="readerarea"]//img')
         for i=1,v.count do
-        	local v1=v.get(i)
+            local v1=v.get(i)
             if string.find(v1.getAttribute('src'), ".filerun.") == nil and
                string.find(v1.getAttribute('src'), ",0.jpg") == nil and
                string.find(v1.getAttribute('src'), ",5.jpg") == nil and
@@ -215,8 +207,8 @@ function getpagenumber()
                string.find(v1.getAttribute('src'), "z10.jpg") == nil and
                string.find(v1.getAttribute('src'), "Komeng.jpg") == nil and
                string.find(v1.getAttribute('src'), "ZZ.jpg") == nil then
-            	task.pagelinks.add(v1.getAttribute('src'))
-        	end
+                task.pagelinks.add(v1.getAttribute('src'))
+            end
         end
     else
       if task.pagelinks.count < 1 then TXQuery.Create(http.Document).xpathstringall('//*[@id="readerarea"]/div//img/@src', task.pagelinks) end    
