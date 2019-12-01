@@ -104,12 +104,12 @@ function Modules.Madara()
     if http.post(module.rooturl .. '/wp-admin/admin-ajax.php', q) then
       if http.headers.values['Content-Length'] == '0' then return no_error end
       local x = TXQuery.Create(http.Document)
-      if module.website == '3asqOrg' or module.website == 'ChibiManga' or module.website == 'GodsRealmScan' or module.website == 'HentaiRead' or module.website == 'HunterFansub' or module.website == 'KIDzScan' or module.website == 'KlikManga' or module.website == 'KomikGo' or module.website == 'MangaKomi' or module.website == 'MangaZukiOnline' or module.website == 'ManhuaBox' or module.website == 'NManhwa' or module.website == 'NinjaScans' or module.website == 'PlotTwistNoFansub' or module.website == 'PojokManga' or module.website == 'ReadRawManga' or module.website == 'Toonily' or module.website == 'TopManhua' or module.website == 'WakaScan' or module.website == 'ZinManga' then
-	if x.xpath('//div[contains(@class, "post-title")]/h3/a').count == 0 then return no_error end
-	x.XPathHREFAll('//div[contains(@class, "post-title")]/h3/a', links, names)
+      if module.website == '3asqOrg' or module.website == 'AdonisFansub' or module.website == 'ChibiManga' or module.website == 'GodsRealmScan' or module.website == 'HentaiRead' or module.website == 'HunterFansub' or module.website == 'KIDzScan' or module.website == 'KlikManga' or module.website == 'KomikGo' or module.website == 'MangaKomi' or module.website == 'MangaZukiOnline' or module.website == 'ManhuaBox' or module.website == 'NManhwa' or module.website == 'NinjaScans' or module.website == 'PlotTwistNoFansub' or module.website == 'PojokManga' or module.website == 'ReadRawManga' or module.website == 'Toonily' or module.website == 'TopManhua' or module.website == 'Wakamics' or module.website == 'WakaScan' or module.website == 'ZinManga' then
+        if x.xpath('//div[contains(@class, "post-title")]/h3/a').count == 0 then return no_error end
+        x.XPathHREFAll('//div[contains(@class, "post-title")]/h3/a', links, names)
       else
-	if x.xpath('//div[contains(@class, "post-title")]/h5/a').count == 0 then return no_error end
-	x.XPathHREFAll('//div[contains(@class, "post-title")]/h5/a', links, names)
+        if x.xpath('//div[contains(@class, "post-title")]/h5/a').count == 0 then return no_error end
+        x.XPathHREFAll('//div[contains(@class, "post-title")]/h5/a', links, names)
       end
       updatelist.CurrentDirectoryPageNumber = updatelist.CurrentDirectoryPageNumber + 1
       return no_error
@@ -283,9 +283,12 @@ function Init()
   AddWebsiteModule('Toonily', 'https://toonily.com', cat)
   AddWebsiteModule('ManhuaBox', 'https://manhuabox.net', cat)
   AddWebsiteModule('TopManhua', 'https://topmanhua.com', cat)
+  AddWebsiteModule('Wakamics', 'https://wakamics.com', cat)
   
   cat = 'Arabic-Scanlation'
   AddWebsiteModule('3asqOrg', 'https://3asq.org', cat)
   AddWebsiteModule('AzoraManga', 'https://www.azoramanga.com', cat)
   
+  cat = 'Turkish'
+  AddWebsiteModule('AdonisFansub', 'https://manga.adonisfansub.com', cat)
 end
