@@ -179,11 +179,7 @@ function getpagenumber()
     if module.website == 'BacaManga' then
       local x = TXQuery.Create(http.Document)
       local s = x.xpathstring('*')
-      local id = GetBetween('=window[_', ');', s)
-            id = string.sub(id, 75 , string.len(id))
-            id = string.sub(id, 0 , string.len(id) - 2)
-            s = DecodeBase64(id)
-            x.parsehtml(s)
+            x.parsehtml(DecodeBase64(GetBetween("(atob(", "),", s)))
             x.xpathstringall('json(*)()', task.pagelinks)
     elseif module.website == 'MangaShiro' then
       local x = TXQuery.Create(http.Document)
