@@ -216,7 +216,7 @@ function Init()
   AddWebsiteModule('Komikid', 'https://www.komikid.com', c);
   AddWebsiteModule('KomikGue', 'https://www.komikgue.com', c);
   AddWebsiteModule('KomikManga', 'https://komikmanga.com', c);
-  AddWebsiteModule('MangaSusu', 'https://www.mangasusu.me', c)
+  AddWebsiteModule('MangaSusu', 'https://www.mangasusu.info', c)
   
   c='Raw'
   AddWebsiteModule('RawMangaUpdate', 'http://rawmangaupdate.com', c);
