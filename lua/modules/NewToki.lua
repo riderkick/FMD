@@ -54,7 +54,7 @@ end
 function Init()
 	local m=NewModule()
   	m.category='Webcomics'
-  	m.website='NewToki34'
+  	m.website='NewToki'
   	m.rooturl='https://newtoki34.com'
   	m.ongetinfo='getinfo'
   	m.ongetpagenumber='getpagenumber'
