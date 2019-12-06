@@ -51,6 +51,7 @@ function getpagenumber()
   if not http.Get(u) then return net_problem end
   x = TXQuery.Create(http.Document)
   x.xpathstringall('//*[contains(@class, "mb-3")]/img/@data-src', task.pagelinks)
+  if task.pagelinks.count < 1 then x.xpathstringall('//*[contains(@class, "img-fluid not-lazy")]/@data-src', task.pagelinks) end
   LuaDebug.PrintMangaDirectoryEntries(IncStr(url))
   return no_error
 end
