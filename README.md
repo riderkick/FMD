@@ -5,8 +5,8 @@
 ## Download
 
 [![Latest release](https://img.shields.io/github/release/fmd-project-team/FMD.svg)](https://github.com/fmd-project-team/FMD/releases/latest)
-[![Download latest release (Win32)](https://img.shields.io/github/downloads/fmd-project-team/FMD/latest/fmd_0.9.167.1.7z.svg?label=Win32)](https://github.com/fmd-project-team/FMD/releases/download/0.9.167.1/fmd_0.9.167.1.7z)
-[![Download latest release (Win64)](https://img.shields.io/github/downloads/fmd-project-team/FMD/latest/fmd_0.9.167.1_Win64.7z.svg?label=Win64)](https://github.com/fmd-project-team/FMD/releases/download/0.9.167.1/fmd_0.9.167.1_Win64.7z)
+[![Download latest release (Win32)](https://img.shields.io/github/downloads/fmd-project-team/FMD/latest/fmd_0.9.167.2.7z.svg?label=Win32)](https://github.com/fmd-project-team/FMD/releases/download/0.9.167.2/fmd_0.9.167.2.7z)
+[![Download latest release (Win64)](https://img.shields.io/github/downloads/fmd-project-team/FMD/latest/fmd_0.9.167.2_Win64.7z.svg?label=Win64)](https://github.com/fmd-project-team/FMD/releases/download/0.9.167.2/fmd_0.9.167.2_Win64.7z)
 
 ## About FMD
 
@@ -41,7 +41,7 @@ Some other external 3rd party tools and libraries are used:
 [![Lua](https://img.shields.io/badge/Lua-5.3-Blue.svg)](http://luabinaries.sourceforge.net/)  
 [![OpenSSL](https://img.shields.io/badge/OpenSSL-1.0.2n-Blue.svg)](https://www.openssl.org/)  
 [![SQLite](https://img.shields.io/badge/SQLite-3.22.0-Blue.svg)](https://www.sqlite.org/)  
-[![cfscrape](https://img.shields.io/badge/cfscrape-2.0.8-Blue.svg)](https://github.com/Anorov/cloudflare-scrape/) <sup>(Compiled with PyInstaller included in cf_bypass.exe)</sup>  
+[![cfscrape](https://img.shields.io/badge/cfscrape-2.0.8.1-Blue.svg)](https://github.com/Anorov/cloudflare-scrape/) <sup>(Compiled with PyInstaller included in cf_bypass.exe)</sup>  
 [![Node.js](https://img.shields.io/badge/Node.js-12.8.0.0-Blue.svg)](https://nodejs.org/)  
 
 These tools and libraries are not part of the source. You have to either download pre-compiled binaries, compile them yourself or just copy them from the latest FMD releases.

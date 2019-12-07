@@ -4,9 +4,61 @@ https://github.com/fmd-project-team/FMD
 Changelog:
 ([!] Important, [+] Addition, [-] Removal, [*] Fix/Change, [?] Feedback needed)
 
-0.9.167.1 (21.09.2019)
+0.9.167.2 (07.12.2019)
 [!] Report issues here: https://github.com/fmd-project-team/FMD/issues
 [!] Join us on Discord: https://discord.gg/cXKKgw3
+[+] Added AdonisFansub [TR] -> Thank you Slasar41
+[+] Added ArtemisNF [ES-SC] -> Thank you rs3mk
+[+] Added BaekjinScans [Webcomics] -> Thank you Slasar41
+[+] Added HunterFansub [ES-SC] -> Thank you rs3mk
+[+] Added Mangakyo [ID] -> Thank you Slasar41
+[+] Added Mangaseno [ID] -> Thank you Slasar41
+[+] Added MangaSusu [ID] -> Thank you Slasar41
+[+] Added ManhuaBox [Webcomics] -> Thank you Slasar41
+[+] Added ManhuaID [Webcomics] -> Thank you Slasar41
+[+] Added NewToki34 [Webcomics] -> Thank you excalibur1010
+[+] Added OnManga [EN] -> Thank you Slasar41
+[+] Added PojokManga [ID] -> Thank you Slasar41
+[+] Added RawDevart [RAW] -> Thank you excalibur1010
+[+] Added ReadRawManga [EN] -> Thank you Slasar41
+[+] Added SekteKomik [Webcomics] -> Thank you Slasar41
+[+] Added SDLGFansub [ES-SC] -> Thank you rs3mk
+[+] Added TopManhua [Webcomics] -> Thank you Slasar41
+[+] Added Wakamics [Webcomics] -> Thank you Slasar41
+[+] Added template script for websites based on NineManga.
+[+] Added template script for websites based on ReadMangaRU.
+[*] BacaManga: Fixed chapter download (Issue #533) -> Thank you Slasar41
+[*] ChibiManga: Fixed chapter download (Issue #565) -> Thank you Slasar41
+[*] CopyPasteScanlation: Fixed chapter download -> Thank you Slasar41
+[*] DoujinYosh: Fixed url (Issue #521) -> Thank you Slasar41
+[*] HeavenManga: Fixed url (Issue #541) -> Thank you Slasar41
+[*] HentaiFox: Fixed all (Issue #623) -> Thank you Slasar41
+[*] HolyManga: Fixed url (Issue #541) -> Thank you Slasar41
+[*] Kiryuu: Improved ads filter -> Thank you Slasar41/AbidZakaria
+[*] LeviatanScans: Fixed chapter download (Issue #539) -> Thank you Slasar41
+[*] Lhscans: Fixed chapter download (Issue #647) -> Thank you Slasar41
+[*] MangaShiro: Fixed url (Issue #582) -> Thank you Slasar41
+[*] MangaYosh: Fixed url (Issue #521) -> Thank you Slasar41
+[*] Manhwa18: Fixed all (Issue #509) -> Thank you Slasar41
+[*] MintMangaRU: Ported to Lua script; Fixed all (Issue #572)
+[*] NineManga: Ported to Lua script; Fixed all (Issue #594)
+[*] NineMangaBR: Ported to Lua script; Fixed all (Issue #594)
+[*] NineMangaDE: Ported to Lua script; Fixed all (Issue #594)
+[*] NineMangaES: Ported to Lua script; Fixed all (Issue #594)
+[*] NineMangaIT: Ported to Lua script; Fixed all (Issue #594)
+[*] NineMangaRU: Ported to Lua script; Fixed all (Issue #594)
+[*] NinjaScans: Fixed getting manga info (Issue #478) -> Thank you Slasar41
+[*] NManhwa: Fixed getting chapter list -> Thank you Slasar41
+[*] PlotTwistNoFansub: Fixed getting chapter list -> Thank you Slasar41
+[*] ReadMangaRU: Ported to Lua script; Fixed all (Issue #572)
+[*] SelfMangaRU: Ported to Lua script; Fixed all (Issue #572)
+[*] ScanFR: Fixed url (Issue #561)
+[*] SubManga: Fixed all (Issue #529) -> Thank you Slasar41
+[*] Toonkor: Fixed url (Issue #657)
+[*] Fixed cf_bypass -> Big thanks to alzamer2 who fixed the thirdparty python script (cfscrape)!
+Full changes: https://github.com/fmd-project-team/FMD/compare/0.9.167.1...0.9.167.2
+
+0.9.167.1 (21.09.2019)
 [+] Added Manhwa18 [RAW] (Issue #499) -> Thank you AbidZakaria
 [+] Added WakaScan [FR] -> Thank you Slasar41
 [-] Removed EyeOnManga [EN]
