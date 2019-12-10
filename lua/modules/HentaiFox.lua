@@ -26,11 +26,10 @@ function getpagenumber()
   if http.get(MaybeFillHost(module.rooturl, url)) then
     local x=TXQuery.Create(http.Document)
     if module.website == 'HentaiFox' then
-      local v = x.xpath('//*[@class="gallery_thumb"]//img/@src')
-      for i = 1, v.count do
-        local s = v.get(i).toString;
-        s = s:gsub('t.jpg', '.jpg')
-        task.pagelinks.add(s)
+      local galleryId = x.xpathstring('//a[@class="g_button"]/@href'):match('/.-/(%d+)/')
+      task.pagenumber = tonumber(x.xpathstring('//span[@class="i_text pages" and contains(., "Pages")]/substring-after(.,": ")'))
+      for i = 1, task.pagenumber do
+        task.PageContainerLinks.Add(MaybeFillHost(module.RootURL, '/g/' .. galleryId .. '/' .. i))
       end
     else
       local v = x.xpath('//*[@class="gallery"]//img/@data-src')
@@ -62,11 +61,20 @@ function getdirectorypagenumber()
   end
 end
 
+function getimageurl()
+  local u = MaybeFillHost(module.RootURL, task.PageContainerLinks[workid])
+  if http.Get(u) then
+    task.PageLinks[workid] = TXQuery.Create(http.document).XPathString('//div[@class="full_image"]//img/@src')
+    return true
+  end
+  return false
+end
+
 function getnameandlink()
   if http.get(module.rooturl .. '/pag/' .. IncStr(url) .. '/') then
     local x = TXQuery.Create(http.Document)
     if module.website == 'HentaiFox' then
-      x.xpathhrefall('//*[@class="lc_galleries"]//*[contains(@class,"caption")]//a', links, names)
+      x.xpathhrefall('//*[@class="lc_galleries"]//*[@class="caption"]//a', links, names)
     else
       x.xpathhrefall('//*[@class="preview_item"]/*[@class="caption"]/a', links, names)
     end
@@ -86,6 +94,7 @@ function AddWebsiteModule(name, url)
   m.ongetpagenumber='getpagenumber'
   m.ongetnameandlink='getnameandlink'
   m.ongetdirectorypagenumber = 'getdirectorypagenumber'
+  m.ongetimageurl = 'getimageurl'
   return m
 end
 
