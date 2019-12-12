@@ -21,7 +21,29 @@ local Template   = require 'Modules.Template-Genkan'
 
 -- Get info and chapter list for current manga.
 function GetInfo()
-  Template.GetInfo()
+  local x = nil
+  local u = MaybeFillHost(module.RootURL, url)
+  
+  --[[Debug]] LuaDebug.WriteLogWithHeader('GetInfo', 'url ->  ' .. u)
+  if not http.Get(u) then return net_problem end
+  
+  x = TXQuery.Create(http.Document)
+  mangainfo.Title     = x.XPathString('//meta[@property="og:title"]/@content')
+  mangainfo.CoverLink = x.XPathString('//meta[@property="og:image"]/@content')
+  mangainfo.Summary   = x.XPathString('//meta[@property="og:description"]/@content')
+  
+  local v = x.XPath('//a[contains(@class, "item-author")]')
+  local n = x.XPath('//span[contains(@class, "text-muted")]')
+  for i = 1, v.Count do
+    local v1 = v.Get(i)
+    local n1 = n.Get(i)
+    mangainfo.ChapterNames.Add('Chapter ' .. n1.toString .. ' - ' .. v1.toString)
+    mangainfo.ChapterLinks.Add(v1.getAttribute('href'))
+  end
+  InvertStrings(mangainfo.ChapterLinks, mangainfo.ChapterNames)
+  
+  --[[Debug]] LuaDebug.PrintMangaInfo()
+  --[[Debug]] LuaDebug.WriteStatistics('Chapters', mangainfo.ChapterLinks.Count .. '  (' .. mangainfo.Title .. ')')
   
   return no_error
 end
