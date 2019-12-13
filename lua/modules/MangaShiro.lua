@@ -207,6 +207,7 @@ function getpagenumber()
             end
         end
     else
+      if task.pagelinks.count < 1 then TXQuery.Create(http.Document).xpathstringall('//*[@id="readerarea"]/p/img/@src', task.pagelinks) end
       if task.pagelinks.count < 1 then TXQuery.Create(http.Document).xpathstringall('//*[@id="readerarea"]/div//img/@src', task.pagelinks) end    
       if task.pagelinks.count < 1 then TXQuery.Create(http.Document).xpathstringall('//*[@id="readerarea"]//a/@href', task.pagelinks) end
       if task.pagelinks.count < 1 then TXQuery.Create(http.Document).xpathstringall('//*[@id="readerarea"]//img/@src', task.pagelinks) end
@@ -262,7 +263,8 @@ function getnameandlink()
     ['Mangaseno'] = '/manga-list/?list',
     ['SekteKomik'] = '/manga/?list',
     ['BaekjinScans'] = '/manga/?list',
-    ['Mangakyo'] = '/daftar-manga/?list',    
+    ['Mangakyo'] = '/daftar-manga/?list',
+    ['MataKomik'] = '/manga/?list',
   }
   local dirurl = '/manga-list/'
   if dirs[module.website] ~= nil then
@@ -355,6 +357,7 @@ local cat = 'Indonesian'
   AddWebsiteModule('MangaPus', 'https://mangapus.com', cat)
   AddWebsiteModule('Mangaseno', 'https://mangaseno.com', cat)
   AddWebsiteModule('Mangakyo', 'https://www.mangakyo.com', cat)
+  AddWebsiteModule('MataKomik', 'https://matakomik.com', cat)
   
   cat = 'Webcomics'
   AddWebsiteModule('SekteKomik', 'http://sektekomik.com', cat)
