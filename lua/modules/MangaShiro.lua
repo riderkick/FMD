@@ -20,6 +20,7 @@ end
 function getTitle(x)
   local title = ''
   if title == '' then title = x.xpathstring('//*[@id="judul"]/h1') end
+  if title == '' then title = x.xpathstring('//*[@id="judul_komik"]/h1') end
   if title == '' then title = x.xpathstring('//div[@class="infox"]/h1') end
   if title == '' then title = x.xpathstring('//h1[@itemprop="headline"]') end
   if title == '' then title = x.xpathstring('//h1[@itemprop="name"]') end
@@ -105,6 +106,7 @@ end
 
 function getSummary(x)
   local summary = ''
+  if summary == '' then summary = x.xpathstring('//div[@class="sinopsis"]/p') end
   if summary == '' then summary = x.xpathstring('//*[@class="desc"]/p[1]/string-join(.//text(),"")') end
   if summary == '' then summary = x.xpathstring('//*[@class="desc"]/string-join(.//text(),"")') end
   if summary == '' then summary = x.xpathstring('//*[@class="sinopsis"]/string-join(.//text(),"")') end
@@ -146,7 +148,7 @@ function getMangas(x)
     end
     
     if mangainfo.chapterlinks.count < 1 or module.website == 'Komiku' then
-      local v = x.xpath('//table[@class="chapter"]//td/a')
+      local v = x.xpath('//table[@class="chapter"]//td[1]/a')
       for i = 1, v.count do
         local v1 = v.get(i)
         mangainfo.chapternames.Add(v1.toString);
@@ -179,7 +181,7 @@ function getpagenumber()
     if module.website == 'BacaManga' then
       local x = TXQuery.Create(http.Document)
       local s = x.xpathstring('*')
-            x.parsehtml(DecodeBase64(GetBetween("(atob(", "),", s)))
+            x.parsehtml(DecodeBase64(GetBetween('](atob(', ')),', s)))
             x.xpathstringall('json(*)()', task.pagelinks)
     elseif module.website == 'MangaShiro' then
       local x = TXQuery.Create(http.Document)
