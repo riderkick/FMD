@@ -28,7 +28,7 @@ DirectoryPagination = '/comics?page='
 
 -- Get info and chapter list for current manga.
 function _M.GetInfo()
-  local x = nil
+  local n, v, x = nil
   local u = MaybeFillHost(module.RootURL, url)
   
   --[[Debug]] LuaDebug.WriteLogWithHeader('GetInfo', 'url ->  ' .. u)
@@ -38,7 +38,13 @@ function _M.GetInfo()
   mangainfo.Title     = x.XPathString('//meta[@property="og:title"]/@content')
   mangainfo.CoverLink = x.XPathString('//meta[@property="og:image"]/@content')
   mangainfo.Summary   = x.XPathString('//meta[@property="og:description"]/@content')
-  x.XPathHREFAll('//a[contains(@class, "item-author")]', mangainfo.ChapterLinks, mangainfo.ChapterNames)
+  
+  v = x.XPath('//a[contains(@class, "item-author")]')
+  n = x.XPath('//span[contains(@class, "text-muted")]')
+  for i = 1, v.Count do
+    mangainfo.ChapterNames.Add('Chapter ' .. n.Get(i).ToString .. ' - ' .. v.Get(i).ToString)
+    mangainfo.ChapterLinks.Add(v.Get(i).GetAttribute('href'))
+  end
   InvertStrings(mangainfo.ChapterLinks, mangainfo.ChapterNames)
   
   --[[Debug]] LuaDebug.PrintMangaInfo()
