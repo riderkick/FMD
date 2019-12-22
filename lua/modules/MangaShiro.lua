@@ -29,7 +29,7 @@ function getTitle(x)
   if title == '' then title = x.xpathstring('//h2[@class="entry-title"]') end
   if title == '' then title = x.xpathstring('//h1') end
   if title == '' then title = x.xpathstring('//h2') end
-  title = title:gsub('Bahasa Indonesia$', ''):gsub(' Indonesia|Baca"', ''):gsub('Bahasa Indonesia', ''):gsub('Komik', '')
+  title = title:gsub('Bahasa Indonesia$', ''):gsub(' Indonesia|Baca"', ''):gsub('Bahasa Indonesia', ''):gsub('Komik', ''):gsub(' Raw', '')
   title = title:gsub('Manga', ''):gsub('Indonesia', ''):gsub('Baca', ''):gsub('bahasa', ''):gsub('indonesia', ''):gsub('can', ''):gsub('|', '')
   title = title:gsub(string.gsub(module.website, 'https://', ''), '')
   return title
@@ -51,6 +51,7 @@ end
 
 function getAuthors(x)
   local authors = ''
+  if authors == '' then authors = x.xpathstring('//li[starts-with(.,"Komikus")]/b') end
   if authors == '' then authors = x.xpathstring('//div[@class="listinfo"]//li[starts-with(.,"Author")]/substring-after(.,":")') end
   if authors == '' then authors = x.xpathstring('//span[@class="details"]//div[starts-with(.,"Author")]/substring-after(.,":")') end
   if authors == '' then authors = x.xpathstring('//div[@class="preview"]//li[starts-with(.,"Komikus")]/substring-after(.,":")') end
@@ -107,7 +108,6 @@ end
 function getSummary(x)
   local summary = ''
   if summary == '' then summary = x.xpathstring('//div[@class="sinopsis"]/p') end
-  if summary == '' then summary = x.xpathstring('//*[@class="desc"]/p[1]/string-join(.//text(),"")') end
   if summary == '' then summary = x.xpathstring('//*[@class="desc"]/string-join(.//text(),"")') end
   if summary == '' then summary = x.xpathstring('//*[@class="sinopsis"]/string-join(.//text(),"")') end
   if summary == '' then summary = x.xpathstring('//*[@id="m-synopsis"]/string-join(.//text(),"")') end
@@ -267,6 +267,7 @@ function getnameandlink()
     ['BaekjinScans'] = '/manga/?list',
     ['Mangakyo'] = '/daftar-manga/?list',
     ['MataKomik'] = '/manga/?list',
+    ['Rawkuma'] = '/manga/?list',
   }
   local dirurl = '/manga-list/'
   if dirs[module.website] ~= nil then
@@ -364,4 +365,7 @@ local cat = 'Indonesian'
   cat = 'Webcomics'
   AddWebsiteModule('SekteKomik', 'http://sektekomik.com', cat)
   AddWebsiteModule('BaekjinScans', 'https://baekjinscans.xyz', cat)
+  
+  cat = 'Raw'
+  AddWebsiteModule('Rawkuma', 'https://rawkuma.com', cat)
 end
