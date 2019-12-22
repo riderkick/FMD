@@ -26,12 +26,20 @@ function Modules.Madara()
       end
       if module.website == 'ArtemisNF' then
         mangainfo.title=x.xpathstringall('//div[@class="post-title post-sigle-title"]/*[self::h1 or self::h2 or self::h3]/text()', '')
+      elseif module.website == 'GetManhwa' then
+	    mangainfo.title=x.xpathstringall('//div[@class="post-title-dpage"]/h3')
       end
       mangainfo.coverlink=x.xpathstring('//div[@class="summary_image"]//img/@data-src')
       if mangainfo.coverlink == '' then
         mangainfo.coverlink=x.xpathstring('//div[@class="summary_image"]//img/@src')
       end
+      if module.website == 'GetManhwa' then
+        mangainfo.coverlink=x.xpathstring('//div[@class="my_profile-manga"]/@style'):match('background%-image:url%((.-)%)')
+      end
       mangainfo.authors=x.xpathstringall('//div[@class="author-content"]/a')
+      if mangainfo.authors == '' then
+        mangainfo.authors=x.xpathstringall('//div[@class="summary-heading-creator"]/a')
+      end
       mangainfo.artists=x.xpathstringall('//div[@class="artist-content"]/a')
       mangainfo.genres=x.xpathstringall('//div[@class="genres-content"]/a')
       mangainfo.status = MangaInfoStatusIfPos(x.xpathstring('//div[@class="summary-heading" and contains(h5, "Status")]/following-sibling::div'))
@@ -285,6 +293,7 @@ function Init()
   AddWebsiteModule('ManhuaBox', 'https://manhuabox.net', cat)
   AddWebsiteModule('TopManhua', 'https://topmanhua.com', cat)
   AddWebsiteModule('Wakamics', 'https://wakamics.com', cat)
+  AddWebsiteModule('GetManhwa', 'https://getmanhwa.co', cat)
   
   cat = 'Arabic-Scanlation'
   AddWebsiteModule('3asqOrg', 'https://3asq.org', cat)
