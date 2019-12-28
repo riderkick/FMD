@@ -711,74 +711,76 @@ begin
   begin
     FReposUp.LoadFromRemote(FHTTP);
     if FHTTP.GET(MODULES_URL2) then
+    begin
       FReposUp.LoadFromRemoteHTML(FHTTP);
-  end;
 
-  if not Terminated then
-  begin
-    // check
-    FRepos := FOwner.Repos.Clone;
-    foundupdate := SyncRepos(FRepos, FReposUp);
-
-    // look for missing local files and previously failed download
-    for i := 0 to FRepos.Items.Count - 1 do
-    begin
-      m := FRepos[i];
-      if m.flag = fFailedDownload then
-         foundupdate := True
-      else
-      if (not (m.flag in [fNew, fUpdate])) and
-        (not FileExists(LUA_WEBSITEMODULE_FOLDER + m.name)) then
+      if (FReposUp.Count<>0) and not Terminated then
       begin
-        m.flag := fFailedDownload;
-        foundupdate := True;
-      end;
-      case m.flag of
-        fNew: FStatusList.Add(Format(RS_StatusNew, [m.name]));
-        fUpdate: FStatusList.Add(Format(RS_StatusUpdate, [m.name]));
-        fDelete: FStatusList.Add(Format(RS_StatusDelete, [m.name]));
-        fFailedDownload: FStatusList.Add(Format(RS_StatusFailed, [m.name]));
+        // check
+        FRepos := FOwner.Repos.Clone;
+        foundupdate := SyncRepos(FRepos, FReposUp);
+
+        // look for missing local files and previously failed download
+        for i := 0 to FRepos.Items.Count - 1 do
+        begin
+          m := FRepos[i];
+          if m.flag = fFailedDownload then
+             foundupdate := True
+          else
+          if (not (m.flag in [fNew, fUpdate])) and
+            (not FileExists(LUA_WEBSITEMODULE_FOLDER + m.name)) then
+          begin
+            m.flag := fFailedDownload;
+            foundupdate := True;
+          end;
+          case m.flag of
+            fNew: FStatusList.Add(Format(RS_StatusNew, [m.name]));
+            fUpdate: FStatusList.Add(Format(RS_StatusUpdate, [m.name]));
+            fDelete: FStatusList.Add(Format(RS_StatusDelete, [m.name]));
+            fFailedDownload: FStatusList.Add(Format(RS_StatusFailed, [m.name]));
+          end;
+        end;
+
+        Synchronize(@SyncFinishChecking);
+
+        if foundupdate and (not Terminated) then
+        begin
+          if OptionModulesUpdaterShowUpdateWarning then
+            Synchronize(@SyncAskToProceed)
+          else
+          begin
+            FProceed := True;
+            Sleep(1500); // delay to show the update status
+          end;
+          if FProceed then
+            Download;
+        end;
+
+        // cleanup
+        i := 0;
+        imax := FRepos.Items.Count;
+        while i < imax do
+        begin
+          m := FRepos[i];
+          if m.flag = fDeleted then
+          begin
+            FRepos.Items.Delete(i);
+            Dec(imax);
+          end
+          else
+          begin
+            if m.flag in [fNew, fUpdate, fFailedDownload] then
+              m.flag := fFailedDownload
+            else
+              m.flag := fNone;
+            Inc(i);
+          end;
+        end;
+        trepos := FMainRepos;
+        FMainRepos := FRepos;
+        FRepos := trepos;
       end;
     end;
-
-    Synchronize(@SyncFinishChecking);
-
-    if foundupdate and (not Terminated) then
-    begin
-      if OptionModulesUpdaterShowUpdateWarning then
-        Synchronize(@SyncAskToProceed)
-      else
-      begin
-        FProceed := True;
-        Sleep(1500); // delay to show the update status
-      end;
-      if FProceed then
-        Download;
-    end;
-
-    // cleanup
-    i := 0;
-    imax := FRepos.Items.Count;
-    while i < imax do
-    begin
-      m := FRepos[i];
-      if m.flag = fDeleted then
-      begin
-        FRepos.Items.Delete(i);
-        Dec(imax);
-      end
-      else
-      begin
-        if m.flag in [fNew, fUpdate, fFailedDownload] then
-          m.flag := fFailedDownload
-        else
-          m.flag := fNone;
-        Inc(i);
-      end;
-    end;
-    trepos := FMainRepos;
-    FMainRepos := FRepos;
-    FRepos := trepos;
   end;
 
   if not Terminated then
