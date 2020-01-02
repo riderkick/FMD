@@ -2,20 +2,20 @@ function getinfo()
   mangainfo.url=MaybeFillHost(module.RootURL, url)
   if http.get(mangainfo.url) then
     local x=TXQuery.Create(http.document)
-	if module.website == 'HeavenManga' then
-		mangainfo.title=x.xpathstring('//div[@class="info"]/h1')
-		mangainfo.coverlink=MaybeFillHost(module.RootURL, x.xpathstring('//div[@class="comic-info"]/div/img/@src'))
-		mangainfo.authors=x.xpathstringall('//div[@class="info"]//div[@class="author"]/a')
-		mangainfo.genres=x.xpathstringall('//div[@class="info"]//div[@class="genre"]/a')
-		mangainfo.status = MangaInfoStatusIfPos(x.xpathstring('//div[@class="info"]//div[@class="update"]/span[last()]'))
-  else
-		mangainfo.title=x.xpathstring('//div[@class="comic-info"]/div/h1')
-		mangainfo.coverlink=MaybeFillHost(module.RootURL, x.xpathstring('//div[@class="comic-info"]/div/img/@src'))
-		mangainfo.authors=x.xpathstringall('//div[@class="comic-info"]//div[@class="author"]/a')
-		mangainfo.genres=x.xpathstringall('//div[@class="comic-info"]//div[@class="genre"]/a')
-		mangainfo.status = MangaInfoStatusIfPos(x.xpathstring('//div[@class="comic-info"]//div[@class="update"]/span[last()]'))
-	end
-	mangainfo.summary=x.xpathstring('//div[@class="comic-description"]/p')
+    if module.website == 'HeavenManga' then
+      mangainfo.title=x.xpathstring('//div[@class="info"]/h1')
+      mangainfo.coverlink=MaybeFillHost(module.RootURL, x.xpathstring('//div[@class="comic-info"]/div/img/@src'))
+      mangainfo.authors=x.xpathstringall('//div[@class="info"]//div[@class="author"]/a')
+      mangainfo.genres=x.xpathstringall('//div[@class="info"]//div[@class="genre"]/a')
+      mangainfo.status = MangaInfoStatusIfPos(x.xpathstring('//div[@class="info"]//div[@class="update"]/span[last()]'))
+    else
+      mangainfo.title=x.xpathstring('//div[@class="comic-info"]/div/h1')
+      mangainfo.coverlink=MaybeFillHost(module.RootURL, x.xpathstring('//div[@class="comic-info"]/div/img/@src'))
+      mangainfo.authors=x.xpathstringall('//div[@class="comic-info"]//div[@class="author"]/a')
+      mangainfo.genres=x.xpathstringall('//div[@class="comic-info"]//div[@class="genre"]/a')
+      mangainfo.status = MangaInfoStatusIfPos(x.xpathstring('//div[@class="comic-info"]//div[@class="update"]/span[last()]'))
+    end
+    mangainfo.summary=x.xpathstring('//div[@class="comic-description"]/p')
     local pages = tonumber(x.xpathstring('(//div[@class="pagination"]/a[contains(@class, "page-numbers")])[last()]/substring-after(@href, "/page-")'))
     if pages == nil then pages = 1 end
     local p = 1
@@ -86,6 +86,6 @@ function AddWebsiteModule(name, url)
 end
 
 function Init()
-  AddWebsiteModule('HeavenManga', 'http://ww6.heavenmanga.org')
-  AddWebsiteModule('HolyManga', 'http://ww8.holymanga.net')
+  AddWebsiteModule('HeavenManga', 'http://ww7.heavenmanga.org')
+  AddWebsiteModule('HolyManga', 'http://ww9.holymanga.net')
 end
