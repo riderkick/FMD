@@ -1,17 +1,25 @@
 function getinfo()
-  mangainfo.url=MaybeFillHost(module.RootURL, url)
+  if url:find('/chapters') then
+    mangainfo.url=MaybeFillHost(module.RootURL, url)
+  else
+    mangainfo.url=MaybeFillHost(module.RootURL, url..'/chapters'):gsub('.html', '')
+  end
   if http.get(mangainfo.url) then
     local x=TXQuery.Create(http.document)
     if mangainfo.title == '' then
-      mangainfo.title=x.xpathstring('css("h1.manga-title")')
+      mangainfo.title=x.xpathstring('//h1')
     end
-    mangainfo.coverlink=MaybeFillHost(module.RootURL, x.xpathstring('css("img.detail-cover")/@src'))
-    mangainfo.authors=x.xpathstringall('//*[@itemprop="author" and contains(span, "Author")]/a')
-    mangainfo.artists=x.xpathstringall('//*[@itemprop="author" and contains(span, "Artist")]/a')
-    mangainfo.genres=x.xpathstringall('//*[contains(span, "Genres")]/a')
-    mangainfo.status=MangaInfoStatusIfPos(x.xpathstring('css(".status-tag")'))
-    mangainfo.summary=x.xpathstring('css(".summary-box")/span[@itemprop]')
-    x.xpathhreftitleall('css("ul.detail-chlist > a")', mangainfo.chapterlinks, mangainfo.chapternames)
+    mangainfo.coverlink=x.xpathstring('//img[@itemprop="image"]/@src')
+    mangainfo.authors=x.xpathstringall('//td[@class="bookside-general-type"]//div[@itemprop="author" and contains(span, "Author")]/a/span')
+    mangainfo.artists=x.xpathstringall('//td[@class="bookside-general-type"]//div[@itemprop="author" and contains(span, "Artist")]/a/span')
+    mangainfo.genres=x.xpathstringall('//td[@class="bookside-general-type"]//div[contains(span, "Genres")]/a/span')
+    local n = x.xpath('//span[@class="chp-title"]')
+    local v = x.xpath('//ul[contains(@class, "chapter-list")]/a')
+    for i = 1, v.count do
+      local v1 = v.get(i)
+      mangainfo.chapternames.Add(n.get(i).toString)
+      mangainfo.chapterlinks.Add(v.get(i).getAttribute('href'))
+    end
     InvertStrings(mangainfo.chapterlinks,mangainfo.chapternames)
     return no_error
   else
@@ -21,10 +29,10 @@ end
 
 function getpagenumber()
   task.pagelinks.clear()
-  task.pagenumber = 0
   if http.get(MaybeFillHost(module.rooturl, url)) then
     local x=TXQuery.Create(http.Document)
-    task.pagenumber = x.xpathcount('(//div[contains(@class, "mangaread-pagenav")])[1]/select[@class="sl-page"]/option')
+    x.xpathstringall('(//select[@class="sl-page"])[last()]/option/@value', task.pagecontainerlinks)
+    task.pagenumber = task.pagecontainerlinks.count
   else
     return false
   end
@@ -35,12 +43,16 @@ function getnameandlink()
   local s = string.format("/category/index_%s.html?sort=name", IncStr(url))
   if http.get(module.rooturl .. s) then
     local x = TXQuery.Create(http.Document)
-    local p=x.xpathstring('//div[@class="page-nav"]/a[last()-1]')
+    local p=x.xpathstring('//div[@class="page-all-num"]/substring-after(.,"All ")')
     p = tonumber(p)
     if p ~= nil then
       updatelist.CurrentDirectoryPageNumber = p
     end
-    x.XPathHREFAll('css("p.title > a")', links, names)
+    local v = x.XPath('//div[contains(@class, "manga-list")]//div[@class="manga-item"]//td[2]/a[1]')
+    for i = 1, v.Count do
+      links.Add(v.Get(i).GetAttribute('href'):gsub('.html', '') .. '/chapters')
+      names.Add(x.XPathString('div', v.Get(i)))
+    end
     return no_error
   else
     return net_problem
@@ -48,11 +60,9 @@ function getnameandlink()
 end
 
 function getimageurl()
-  local s = MaybeFillHost(module.RootURL, url)
-  s = string.format('%s-%s.html', s:gsub('/$', ''), IncStr(workid))
-  if http.GET(s) then
-    local x = TXQuery.Create(http.Document)        
-    task.pagelinks[workid] = x.xpathstring('css("img.manga_pic")/@src')
+  local s = MaybeFillHost(module.RootURL, task.pagecontainerlinks[workid])
+  if http.GET(s) then      
+    task.pagelinks[workid] = TXQuery.Create(http.Document).xpathstring('//img[contains(@class,"manga_pic")]/@src')
     return true
   else
     return false
