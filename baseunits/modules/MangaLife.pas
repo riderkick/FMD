@@ -138,7 +138,6 @@ procedure RegisterModule;
   end;
 
 begin
-  AddWebsiteModule('MangaLife', 'http://mangalife.us');
   AddWebsiteModule('MangaSee', 'http://mangaseeonline.us');
 end;
 
