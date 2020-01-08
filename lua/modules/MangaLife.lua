@@ -82,7 +82,7 @@ end
 
 -- Get the page count for the current chapter.
 function GetPageNumber()
-  local chpnum, partnum, host, name, pages, s, x = nil
+  local chpnum, partnum, dir, host, name, pages, s, x = nil
   local u = MaybeFillHost(module.RootURL, url)
   
   --[[Debug]] LuaDebug.WriteLogWithHeader('GetPageNumber', 'url ->  ' .. u)
@@ -94,8 +94,10 @@ function GetPageNumber()
   x.ParseHTML(GetBetween('vm.CurChapter = ', ';', x.XPathString('//script[contains(., "vm.CurChapter = ")]')))
   pages = tonumber(x.XPathString('json(*).Page'))
   chpnum, partnum = x.XPathString('json(*).Chapter'):match('%d(%d%d%d%d)(%d)')
+  dir = x.XPathString('json(*).Directory')
   
-  if partnum ~= "0" then chpnum = chpnum .. '.' .. partnum end
+  if partnum ~= '0' then chpnum = chpnum .. '.' .. partnum end
+  if dir ~= '' then chpnum = dir .. '/' .. chpnum end
   
   for i = 1, pages do
     task.PageLinks.Add(host .. '/manga/' .. name .. '/' .. chpnum .. '-' .. string.format('%03d', i) .. '.png')
