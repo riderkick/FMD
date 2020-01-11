@@ -63,7 +63,7 @@ function Init()
   m=NewModule()
   m.category='H-Sites'
   m.website='TMOHentai'
-  m.rooturl='https://tmohentai.com'
+  m.rooturl='https://www.tmohentai.com'
   m.lastupdated='May 20, 2019'
   m.ongetinfo='getinfo'
   m.ongetpagenumber='getpagenumber'
