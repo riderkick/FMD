@@ -26,6 +26,9 @@ local Template   = require 'Modules.Template-MangaReaderOnline'
 -- Get info and chapter list for current manga.
 function GetInfo()
   Template.GetInfo()
+  if mangainfo.CoverLink:match('^//') ~= nil then
+    mangainfo.CoverLink = 'https:' .. mangainfo.CoverLink
+  end
   
   return no_error
 end
@@ -52,7 +55,7 @@ end
 ----------------------------------------------------------------------------------------------------
 
 function Init()
-  AddWebsiteModule('ReadComicsOnlineRU', 'https://readcomicsonline.ru', 'English')
+  AddWebsiteModule('FallenAngelsScans', 'https://manga.fascans.com', 'English-Scanlation')
 end
 
 function AddWebsiteModule(name, url, category)

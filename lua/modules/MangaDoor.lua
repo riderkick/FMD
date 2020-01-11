@@ -13,10 +13,10 @@ local LuaDebug   = require 'Modules.LuaDebugging'
 
 local Template   = require 'Modules.Template-MangaReaderOnline'
 -- DirectoryParameters = '/'            --> Override template variable by uncommenting this line.
--- XPathTokenStatus    = 'Status'       --> Override template variable by uncommenting this line.
--- XPathTokenAuthors   = 'Author(s)'    --> Override template variable by uncommenting this line.
+XPathTokenStatus    = 'Estado'
+XPathTokenAuthors   = 'Autor(es)'
 -- XPathTokenArtists   = 'Artist(s)'    --> Override template variable by uncommenting this line.
--- XPathTokenGenres    = 'Categories'   --> Override template variable by uncommenting this line.
+XPathTokenGenres    = 'Categorías'
 
 
 ----------------------------------------------------------------------------------------------------
@@ -26,6 +26,15 @@ local Template   = require 'Modules.Template-MangaReaderOnline'
 -- Get info and chapter list for current manga.
 function GetInfo()
   Template.GetInfo()
+  local x = nil
+  local u = MaybeFillHost(module.RootURL, url)
+  
+  --[[Debug]] LuaDebug.WriteLogWithHeader('GetInfo', 'url ->  ' .. u)
+  if not http.Get(u) then return net_problem end
+  
+  x = TXQuery.Create(http.Document)
+  mangainfo.Status    = MangaInfoStatusIfPos(x.XPathString('//dt[text()="' .. XPathTokenStatus .. '"]/following-sibling::dd[1]/span'), 'En curso', 'Completa')
+  mangainfo.Artists   = x.XPathString('//dt[text()="' .. XPathTokenArtists .. '"]/following-sibling::dd[1]')
   
   return no_error
 end
@@ -52,7 +61,7 @@ end
 ----------------------------------------------------------------------------------------------------
 
 function Init()
-  AddWebsiteModule('ReadComicsOnlineRU', 'https://readcomicsonline.ru', 'English')
+  AddWebsiteModule('MangaDoor', 'http://mangadoor.com', 'Spanish')
 end
 
 function AddWebsiteModule(name, url, category)

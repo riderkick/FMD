@@ -21,6 +21,8 @@ local LuaDebug   = require 'Modules.LuaDebugging'
 
 DirectoryParameters = '/changeMangaList?type=text'
 XPathTokenStatus    = 'Status'
+XPathTokenAuthors   = 'Author(s)'
+XPathTokenArtists   = 'Artist(s)'
 XPathTokenGenres    = 'Categories'
 
 
@@ -30,7 +32,7 @@ XPathTokenGenres    = 'Categories'
 
 -- Get info and chapter list for current manga.
 function _M.GetInfo()
-  local x = nil
+  local v, x = nil
   local u = MaybeFillHost(module.RootURL, url)
   
   --[[Debug]] LuaDebug.WriteLogWithHeader('GetInfo', 'url ->  ' .. u)
@@ -40,11 +42,16 @@ function _M.GetInfo()
   mangainfo.Title     = x.XPathString('(//div[contains(@class, "container")]//h2)[1]')
   mangainfo.CoverLink = x.XPathString('//div[@class="boxed"]/img/@src')
   mangainfo.Status    = MangaInfoStatusIfPos(x.XPathString('//dt[text()="' .. XPathTokenStatus .. '"]/following-sibling::dd[1]/span'), 'Ongoing', 'Complete')
-  mangainfo.Authors   = x.XPathStringAll('//dt[text()="Author(s)"]/following-sibling::dd[1]/a')
-  mangainfo.Artists   = x.XPathStringAll('//dt[text()="Artist(s)"]/following-sibling::dd[1]/a')
+  mangainfo.Authors   = x.XPathStringAll('//dt[text()="' .. XPathTokenAuthors .. '"]/following-sibling::dd[1]/a')
+  mangainfo.Artists   = x.XPathStringAll('//dt[text()="' .. XPathTokenArtists .. '"]/following-sibling::dd[1]/a')
   mangainfo.Genres    = x.XPathStringAll('//dt[text()="' .. XPathTokenGenres .. '"]/following-sibling::dd[1]/a')
   mangainfo.Summary   = x.XPathString('//div[contains(@class, "well")]/p')
-  x.XPathHREFAll('//ul[@class="chapters"]/li/h5/a', mangainfo.ChapterLinks, mangainfo.ChapterNames)
+  
+  v = x.XPath('//ul[@class="chapters"]/li/*[self::h5 or self::h3]')
+  for i = 1, v.Count do
+    mangainfo.ChapterLinks.Add(x.XPathString('a/@href', v.Get(i)))
+    mangainfo.ChapterNames.Add(x.XPathString('normalize-space(.)', v.Get(i)))
+  end
   InvertStrings(mangainfo.ChapterLinks, mangainfo.ChapterNames)
   
   --[[Debug]] LuaDebug.PrintMangaInfo()
@@ -63,11 +70,7 @@ function _M.GetNameAndLink()
   if not http.Get(u) then return net_problem end
   
   x = TXQuery.Create(http.Document)
-  v = x.XPath('//a[@class="alpha-link"]')
-  for i = 1, v.Count do
-    links.Add(v.Get(i).GetAttribute('href'))
-    names.Add(x.XPathString('h6', v.Get(i)))
-  end
+  x.XPathHREFAll('//li/a', links, names)
   
   --[[Debug]] LuaDebug.PrintMangaDirectoryEntries(1)
   
@@ -85,6 +88,9 @@ function _M.GetPageNumber()
   
   x = TXQuery.Create(http.Document)
   x.XPathStringAll('//div[@id="all"]//img/@data-src', task.PageLinks)
+  if task.PageLinks.Count == 0 then
+    x.XPathStringAll('//div[@id="all"]//img/@src', task.PageLinks)
+  end
   
   --[[Debug]] LuaDebug.PrintChapterPageLinks()
   --[[Debug]] LuaDebug.WriteStatistics('ChapterPages', task.PageLinks.Count .. '  (' .. u .. ')')

@@ -52,7 +52,7 @@ end
 ----------------------------------------------------------------------------------------------------
 
 function Init()
-  AddWebsiteModule('ReadComicsOnlineRU', 'https://readcomicsonline.ru', 'English')
+  AddWebsiteModule('MangaSusu', 'https://www.mangasusu.mobi', 'Indonesian')
 end
 
 function AddWebsiteModule(name, url, category)

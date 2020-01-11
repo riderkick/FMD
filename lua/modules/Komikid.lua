@@ -52,7 +52,7 @@ end
 ----------------------------------------------------------------------------------------------------
 
 function Init()
-  AddWebsiteModule('ReadComicsOnlineRU', 'https://readcomicsonline.ru', 'English')
+  AddWebsiteModule('Komikid', 'https://www.komikid.com', 'Indonesian')
 end
 
 function AddWebsiteModule(name, url, category)

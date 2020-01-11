@@ -16,7 +16,7 @@ local Template   = require 'Modules.Template-MangaReaderOnline'
 -- XPathTokenStatus    = 'Status'       --> Override template variable by uncommenting this line.
 -- XPathTokenAuthors   = 'Author(s)'    --> Override template variable by uncommenting this line.
 -- XPathTokenArtists   = 'Artist(s)'    --> Override template variable by uncommenting this line.
--- XPathTokenGenres    = 'Categories'   --> Override template variable by uncommenting this line.
+XPathTokenGenres    = 'Genre'
 
 
 ----------------------------------------------------------------------------------------------------
@@ -26,6 +26,28 @@ local Template   = require 'Modules.Template-MangaReaderOnline'
 -- Get info and chapter list for current manga.
 function GetInfo()
   Template.GetInfo()
+  local v, x = nil
+  local u = MaybeFillHost(module.RootURL, url)
+  
+  --[[Debug]] LuaDebug.WriteLogWithHeader('GetInfo', 'url ->  ' .. u)
+  if not http.Get(u) then return net_problem end
+  
+  x = TXQuery.Create(http.Document)
+  mangainfo.Title     = x.XPathString('(//div[contains(@class, "container")]//h1)[1]')
+  mangainfo.Status    = MangaInfoStatusIfPos(x.XPathString('//dt[text()="' .. XPathTokenStatus .. '"]/following-sibling::dd[1]//span'), 'Ongoing', 'Complete')
+  mangainfo.Authors   = x.XPathStringAll('//dt[text()="' .. XPathTokenAuthors .. '"]/following-sibling::dd[1]//a')
+  mangainfo.Artists   = x.XPathString('//dt[text()="' .. XPathTokenArtists .. '"]/following-sibling::dd[1]')
+  mangainfo.Summary   = x.XPathString('//div[contains(@class, "well")]/div')
+  
+  v = x.XPath('//div[@class="chapter-wrapper"]/table//td[@class="chapter"]/a')
+  for i = 1, v.Count do
+    mangainfo.ChapterLinks.Add(v.Get(i).GetAttribute('href'))
+    mangainfo.ChapterNames.Add(x.XPathString('normalize-space(.)', v.Get(i)))
+  end
+  InvertStrings(mangainfo.ChapterLinks, mangainfo.ChapterNames)
+  
+  --[[Debug]] LuaDebug.PrintMangaInfo()
+  --[[Debug]] LuaDebug.WriteStatistics('Chapters', mangainfo.ChapterLinks.Count .. '  (' .. mangainfo.Title .. ')')
   
   return no_error
 end
@@ -52,7 +74,7 @@ end
 ----------------------------------------------------------------------------------------------------
 
 function Init()
-  AddWebsiteModule('ReadComicsOnlineRU', 'https://readcomicsonline.ru', 'English')
+  AddWebsiteModule('KomikGue', 'http://www.komikgue.com', 'Indonesian')
 end
 
 function AddWebsiteModule(name, url, category)

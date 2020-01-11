@@ -14,9 +14,9 @@ local LuaDebug   = require 'Modules.LuaDebugging'
 local Template   = require 'Modules.Template-MangaReaderOnline'
 -- DirectoryParameters = '/'            --> Override template variable by uncommenting this line.
 -- XPathTokenStatus    = 'Status'       --> Override template variable by uncommenting this line.
--- XPathTokenAuthors   = 'Author(s)'    --> Override template variable by uncommenting this line.
+XPathTokenAuthors   = 'Pengarang'
 -- XPathTokenArtists   = 'Artist(s)'    --> Override template variable by uncommenting this line.
--- XPathTokenGenres    = 'Categories'   --> Override template variable by uncommenting this line.
+XPathTokenGenres    = 'Kategori'
 
 
 ----------------------------------------------------------------------------------------------------
@@ -52,7 +52,7 @@ end
 ----------------------------------------------------------------------------------------------------
 
 function Init()
-  AddWebsiteModule('ReadComicsOnlineRU', 'https://readcomicsonline.ru', 'English')
+  AddWebsiteModule('KomikManga', 'https://komikmanga.com', 'Indonesian')
 end
 
 function AddWebsiteModule(name, url, category)
