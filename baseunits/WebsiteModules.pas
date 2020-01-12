@@ -280,7 +280,6 @@ type
 
     procedure LoadFromFile;
     procedure SaveToFile;
-    procedure ClearCloudflareBypassSettings;
   end;
 
 var
@@ -297,6 +296,7 @@ function CleanOptionName(const S: String): String;
 
 implementation
 
+uses
 {$I ModuleList.inc}
 
 var
@@ -329,7 +329,7 @@ begin
   if FCloudflareEnabled = AValue then Exit;
   FCloudflareEnabled := AValue;
   if FCloudflareEnabled then
-    FCloudflareCF := TCFProps.Create
+    FCloudflareCF := TCFProps.Create(self)
   else
   begin
     FCloudflareCF.Free;
@@ -435,104 +435,26 @@ var
   f: TextFile;
   cfs: String;
 begin
+  //todo: replace it with website challenges, there is more than cloudflare
   CheckCloudflareEnabled(AHTTP);
-  if RESET_CF_VALUES then
+  if not Settings.Enabled then exit;
+  with Settings.HTTP do
   begin
-    Settings.CloudflareBypass.Cookies := '';
-    Settings.CloudflareBypass.UserAgent := '';
-    RESET_CF_VALUES := False;
-  end;
-  
-  if Settings.CloudflareBypass.BypassLock then Sleep(6000);
-  
-  if OptionEnableCloudflareBypass and not Settings.CloudflareBypass.DisableCloudflareBypass and FCloudflareEnabled and ((Settings.CloudflareBypass.Cookies = '') or (Settings.CloudflareBypass.UserAgent = '')) then
-  begin
-    Settings.CloudflareBypass.BypassLock := True;
-    Logger.Send('Running cf_bypass for website: [' + Website + ']');
-    AProcess := TProcess.Create(nil);
-    try
-      AProcess.InheritHandles := False;
-      AProcess.CurrentDirectory := FMD_DIRECTORY;
-      AProcess.Executable := CURRENT_CF_BYPASS_EXE;
-      if pos('http', Settings.CloudflareBypass.BypassURL) > 0 then
-        AProcess.Parameters.Add(Settings.CloudflareBypass.BypassURL)
-      else
-        AProcess.Parameters.Add(RootURL);
-      AProcess.Parameters.Add(Website);
-      if (Settings.Enabled) and (Settings.HTTP.Proxy.ProxyType = ptHTTP) then
-        AProcess.Parameters.Add('http://' + Settings.HTTP.Proxy.ProxyHost + ':' + Settings.HTTP.Proxy.ProxyPort)
-      else if AHTTP.ProxyHost <> '' then
-        AProcess.Parameters.Add('http://' + AHTTP.ProxyHost + ':' + AHTTP.ProxyPort);
-      AProcess.ShowWindow := swoHide;
-      AProcess.Options := AProcess.Options + [poWaitOnExit, poUsePipes];
-      AProcess.Execute;
-    finally
-      AProcess.Free;
-    end;
-    if FileExists(CONFIG_FOLDER + 'cf_bypass-' + Website + '.txt') then
+    if Cookies<>'' then
+      AHTTP.Cookies.Text:=Cookies;
+    if UserAgent<>'' then
+      AHTTP.UserAgent:=UserAgent;
+    with Proxy do
     begin
-      AssignFile(f, CONFIG_FOLDER + 'cf_bypass-' + Website + '.txt');
-      try
-        reset(f);
-        while not eof(f) do
-        begin
-          cfs := '';
-          readln(f, cfs);
-          if pos('__cfduid', cfs) > 0 then Settings.CloudflareBypass.Cookies:=cfs;
-          if pos('cf_clearance', cfs) > 0 then Settings.CloudflareBypass.Cookies:=Settings.CloudflareBypass.Cookies + ';' + cfs;
-          if pos('user_agent', cfs) > 0 then Settings.CloudflareBypass.UserAgent:=StringReplace(cfs, 'user_agent=', '', [rfIgnoreCase]);
-        end;
-      finally
-        CloseFile(f);
-        DeleteFile(CONFIG_FOLDER + 'cf_bypass-' + Website + '.txt');
+      s:='';
+      case Proxy.ProxyType of
+        ptDirect:AHTTP.SetNoProxy;
+        ptHTTP:s:='HTTP';
+        ptSOCKS4:s:='SOCKS4';
+        ptSOCKS5:s:='SOCKS5';
       end;
-    end
-    else if OptionAutomaticallyDisableCloudflareBypass then
-      Settings.CloudflareBypass.DisableCloudflareBypass := True;
-    
-    Settings.CloudflareBypass.BypassLock := False;
-  end;
-  
-  if Settings.Enabled then
-  begin
-    with Settings.HTTP do
-    begin
-      if Cookies<>'' then
-      begin
-        AHTTP.Cookies.Text:=Cookies;
-        if pos('cf_clearance=', Cookies) = 0 then
-          AHTTP.Cookies.Text:=AHTTP.Cookies.Text + ';' + Settings.CloudflareBypass.Cookies;
-      end
-      else
-        AHTTP.Cookies.Text:=Settings.CloudflareBypass.Cookies;
-        
-      if UserAgent<>'' then
-        AHTTP.UserAgent:=UserAgent
-      else
-        AHTTP.UserAgent:=Settings.CloudflareBypass.UserAgent;
-      
-      with Proxy do
-      begin
-        s:='';
-        case Proxy.ProxyType of
-          ptDirect:AHTTP.SetNoProxy;
-          ptHTTP:s:='HTTP';
-          ptSOCKS4:s:='SOCKS4';
-          ptSOCKS5:s:='SOCKS5';
-        end;
-        if s<>'' then
-          AHTTP.SetProxy(s,ProxyHost,ProxyPort,ProxyUsername,ProxyPassword);
-      end;
-    end;
-  end
-  else
-  begin
-    with Settings.CloudflareBypass do
-    begin
-      if UserAgent<>'' then
-        AHTTP.UserAgent:=UserAgent;
-      if Cookies<>'' then
-        AHTTP.Cookies.Text:=Cookies;
+      if s<>'' then
+        AHTTP.SetProxy(s,ProxyHost,ProxyPort,ProxyUsername,ProxyPassword);
     end;
   end;
 end;
@@ -1104,18 +1026,6 @@ begin
     ja.Free;
     js.Free;
   end;
-end;
-
-procedure TWebsiteModules.ClearCloudflareBypassSettings;
-var
-  i: Integer;
-begin
-  for i:=0 to FModuleList.Count-1 do
-    with FModuleList[i] do
-    begin
-      Settings.CloudflareBypass.Cookies:='';
-      Settings.CloudflareBypass.UserAgent:='';
-    end;
 end;
 
 function TWebsiteModules.GetModule(const ModuleId: Integer): TModuleContainer;

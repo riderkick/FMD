@@ -73,8 +73,6 @@ type
     cbUseRegExpr: TCheckBox;
     cbOptionProxyType: TComboBox;
     cbOptionOneInstanceOnly: TCheckBox;
-    ckOptionAutomaticallyDisableCloudflareBypass: TCheckBox;
-    ckOptionEnableCloudflareBypass: TCheckBox;
     ckPNGSaveAsJPEG: TCheckBox;
     ckOptionsAlwaysStartTaskFromFailedChapters: TCheckBox;
     ckEnableLogging: TCheckBox;
@@ -93,7 +91,6 @@ type
     edURL: TEditButton;
     edWebsitesSearch: TEditButton;
     gbImageConversion: TGroupBox;
-    gbOptionsCloudflareBypass: TGroupBox;
     IconDLLeft: TImageList;
     lbPNGCompressionLevel: TLabel;
     lbJPEGQuality: TLabel;
@@ -181,6 +178,7 @@ type
     tsinfoFilterAdv: TTabSheet;
     tsCustomColor: TTabSheet;
     tsLog: TTabSheet;
+    tmStartup: TTimer;
     tmAnimateMangaInfo: TTimer;
     tmBackup: TTimer;
     tmCheckFavorites: TTimer;
@@ -1302,7 +1300,8 @@ begin
   CollectLanguagesFromFiles;
   ApplyLanguage;
 
-  with TTimer.Create(nil) do
+  tmStartup:=TTimer.Create(self);
+  with tmStartup do
   begin
     OnTimer := @tmStartupTimer;
     Interval := 100;
@@ -1423,7 +1422,6 @@ begin
   Logger.Send(Self.ClassName+'.CloseNow, backup favorites');
   FavoriteManager.Backup;
   Logger.Send(Self.ClassName+'.CloseNow, cleaning up dynamic HTTP settings');
-  Modules.ClearCloudflareBypassSettings;
   Logger.Send(Self.ClassName+'.CloseNow, backup all data to file');
   SaveOptions;
   SaveFormInformation;
@@ -1982,8 +1980,8 @@ end;
 procedure TMainForm.tmStartupTimer(Sender: TObject);
 begin
   try
-    if Sender is TTimer then
-      TTimer(Sender).Free;
+    if Sender=tmStartup then
+      FreeAndNil(tmStartup);
 
     //load lua modules
     ScanLuaWebsiteModulesFile;
@@ -5149,9 +5147,6 @@ begin
     seOptionConnectionTimeout.Value := ReadInteger('connections', 'ConnectionTimeout', OptionConnectionTimeout);
     seOptionRetryFailedTask.Value := ReadInteger('connections', 'NumberOfAutoRetryFailedTask', OptionRetryFailedTask);
     ckOptionsAlwaysStartTaskFromFailedChapters.Checked := ReadBool('connections', 'AlwaysStartFromFailedChapters', OptionAlwaysStartTaskFromFailedChapters);
-	ckOptionEnableCloudflareBypass.Checked := ReadBool('connections', 'OptionEnableCloudflareBypass', OptionEnableCloudflareBypass);
-    ckOptionAutomaticallyDisableCloudflareBypass.Checked := ReadBool('connections', 'OptionAutomaticallyDisableCloudflareBypass', OptionAutomaticallyDisableCloudflareBypass);
-
     // proxy
     cbOptionUseProxy.Checked := ReadBool('connections', 'UseProxy', False);
     cbOptionProxyType.Text := ReadString('connections', 'ProxyType', 'HTTP');
@@ -5264,8 +5259,6 @@ begin
       WriteInteger('connections', 'ConnectionTimeout', seOptionConnectionTimeout.Value);
       WriteInteger('connections', 'NumberOfAutoRetryFailedTask', seOptionRetryFailedTask.Value);
       WriteBool('connections', 'AlwaysRetruFailedChaptersOnStart', ckOptionsAlwaysStartTaskFromFailedChapters.Checked);
-	  WriteBool('connections', 'OptionEnableCloudflareBypass', ckOptionEnableCloudflareBypass.Checked);
-	  WriteBool('connections', 'OptionAutomaticallyDisableCloudflareBypass', ckOptionAutomaticallyDisableCloudflareBypass.Checked);
 	  
       // proxy
       WriteBool('connections', 'UseProxy', cbOptionUseProxy.Checked);
@@ -5433,8 +5426,6 @@ begin
     SetDefaultTimeoutAndApply(OptionConnectionTimeout * 1000);
     OptionRetryFailedTask := seOptionRetryFailedTask.Value;
     OptionAlwaysStartTaskFromFailedChapters := ckOptionsAlwaysStartTaskFromFailedChapters.Checked;
-	OptionEnableCloudflareBypass := ckOptionEnableCloudflareBypass.Checked;
-	OptionAutomaticallyDisableCloudflareBypass := ckOptionAutomaticallyDisableCloudflareBypass.Checked;
 
     // proxy
     if cbOptionUseProxy.Checked then

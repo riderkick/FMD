@@ -261,8 +261,6 @@ const
 var
   // Sites var
   BROWSER_INVERT: Boolean = False;
-  RESET_CF_VALUES: Boolean = False;
-
   //------------------------------------------
 
   Genre: array [0..37] of String;

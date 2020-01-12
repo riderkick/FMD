@@ -43,26 +43,6 @@ type
     property Proxy: TProxySettings read FProxy write FProxy;
   end;
   
-  { TCloudflareBypass }
-  
-  TCloudflareBypass = class
-  private
-    FDisableCloudflareBypass: Boolean;
-    FCloudflareCookies: String;
-    FCloudflareUserAgent: String;
-    FBypassLock: Boolean;
-    FBypassUrl: String;
-  public
-    constructor Create;
-    destructor Destroy; override;
-    property BypassLock: Boolean read FBypassLock write FBypassLock;
-  published
-    property DisableCloudflareBypass: Boolean read FDisableCloudflareBypass write FDisableCloudflareBypass;
-    property Cookies: String read FCloudflareCookies write FCloudflareCookies;
-    property UserAgent: String read FCloudflareUserAgent write FCloudflareUserAgent;
-    property BypassURL: String read FBypassUrl write FBypassUrl;
-  end;
-  
   { TOverrideSettings }
   
   TOverrideSettings = class
@@ -81,8 +61,7 @@ type
   private
     FEnabled: Boolean;
     FHTTP: THTTPSettings;
-    FCloudflareBypass: TCloudflareBypass;
-	FOverrideSettings: TOverrideSettings;
+    FOverrideSettings: TOverrideSettings;
     FMaxConnectionLimit: Integer;
     FMaxTaskLimit: Integer;
     FMaxThreadPerTaskLimit: Integer;
@@ -99,7 +78,6 @@ type
     property UpdateListNumberOfThread: Integer read FUpdateListNumberOfThread write FUpdateListNumberOfThread default 0;
     property UpdateListDirectoryPageNumber: Integer read FUpdateListDirectoryPageNumber write FUpdateListDirectoryPageNumber default 0;
     property HTTP: THTTPSettings read FHTTP write FHTTP;
-    property CloudflareBypass: TCloudflareBypass read FCloudflareBypass write FCloudflareBypass;
     property OverrideSettings: TOverrideSettings read FOverrideSettings write FOverrideSettings;
   end;
 
@@ -115,18 +93,6 @@ end;
 destructor THTTPSettings.Destroy;
 begin
   Proxy.Free;
-  inherited Destroy;
-end;
-
-{ TCloudflareBypass }
-
-constructor TCloudflareBypass.Create;
-begin
-  
-end;
-
-destructor TCloudflareBypass.Destroy;
-begin
   inherited Destroy;
 end;
 
@@ -147,14 +113,12 @@ end;
 constructor TWebsiteModuleSettings.Create;
 begin
   HTTP:=THTTPSettings.Create;
-  CloudflareBypass:=TCloudflareBypass.Create;
   OverrideSettings:=TOverrideSettings.Create;
 end;
 
 destructor TWebsiteModuleSettings.Destroy;
 begin
   HTTP.Free;
-  CloudflareBypass.Free;
   OverrideSettings.Free;
   inherited Destroy;
 end;

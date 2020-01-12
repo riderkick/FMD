@@ -304,14 +304,14 @@ procedure RegisterModule;
   end;
 
 begin
-  with AddWebsiteModule('KissManga', 'http://kissmanga.com', 'English') do
+  with AddWebsiteModule('KissManga', 'https://kissmanga.com', 'English') do
   begin
     OnGetPageNumber := @KissMangaGetPageNumber;
     AddOptionEdit(@kissmangakey,'Key',@RS_KissManga_Key);
     AddOptionEdit(@kissmangaiv,'IV',@RS_KissManga_InitVector);
     AddOptionCheckBox(@kissmangausegoogledcp,'UseGoogleDCP',@RS_KissManga_UseGoogleDCP);
   end;
-  AddWebsiteModule('ReadComicOnline', 'http://readcomiconline.to', 'English');
+  AddWebsiteModule('ReadComicOnline', 'https://readcomiconline.to', 'English');
 end;
 
 initialization
