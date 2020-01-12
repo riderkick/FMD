@@ -117,7 +117,7 @@ function Modules.Madara()
     if http.post(module.rooturl .. '/wp-admin/admin-ajax.php', q) then
       if http.headers.values['Content-Length'] == '0' then return no_error end
       local x = TXQuery.Create(http.Document)
-      if module.website == '3asqOrg' or module.website == 'AdonisFansub' or module.website == 'ChibiManga' or module.website == 'GodsRealmScan' or module.website == 'HentaiRead' or module.website == 'Hiperdex' or module.website == 'HunterFansub' or module.website == 'KIDzScan' or module.website == 'KlikManga' or module.website == 'KomikGo' or module.website == 'MangaKomi' or module.website == 'Mangalek' or module.website == 'Mangareceh' or module.website == 'MangaZukiOnline' or module.website == 'ManhuaBox' or module.website == 'NManhwa' or module.website == 'NinjaScans' or module.website == 'PlotTwistNoFansub' or module.website == 'PojokManga' or module.website == 'ReadRawManga' or module.website == 'Toonily' or module.website == 'TopManhua' or module.website == 'Wakamics' or module.website == 'WakaScan' or module.website == 'ZinManga' then
+      if module.website == '3asqOrg' or module.website == 'AdonisFansub' or module.website == 'ChibiManga' or module.website == 'DoujinYosh' or module.website == 'GodsRealmScan' or module.website == 'HentaiRead' or module.website == 'Hiperdex' or module.website == 'HunterFansub' or module.website == 'KIDzScan' or module.website == 'KlikManga' or module.website == 'KomikGo' or module.website == 'MangaKomi' or module.website == 'Mangalek' or module.website == 'Mangareceh' or module.website == 'MangaZukiOnline' or module.website == 'ManhuaBox' or module.website == 'NManhwa' or module.website == 'NinjaScans' or module.website == 'PlotTwistNoFansub' or module.website == 'PojokManga' or module.website == 'ReadRawManga' or module.website == 'Toonily' or module.website == 'TopManhua' or module.website == 'Wakamics' or module.website == 'WakaScan' or module.website == 'ZinManga' then
         if x.xpath('//div[contains(@class, "post-title")]/h3/a').count == 0 then return no_error end
         x.XPathHREFAll('//div[contains(@class, "post-title")]/h3/a', links, names)
       else
@@ -272,7 +272,7 @@ function Init()
   
   cat = 'H-Sites'
   AddWebsiteModule('ManhwaHand', 'https://manhwahand.com', cat)
-  AddWebsiteModule('DoujinYosh', 'https://doujinyosh.xyz', cat)
+  AddWebsiteModule('DoujinYosh', 'https://doujinyosh.fun', cat)
   AddWebsiteModule('ManhwaHentai', 'https://manhwahentai.me', cat)
   AddWebsiteModule('HentaiRead', 'http://hentairead.com', cat)
   AddWebsiteModule('ManhwaClub', 'https://manhwa.club', cat)
