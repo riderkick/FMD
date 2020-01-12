@@ -96,6 +96,9 @@ var
   LUA_WEBSITEMODULE_FOLDER,
   LUA_WEBSITEMODULE_FILE: String;
 
+  // dll
+  OpenSSLVersion:String='';
+
   // ini files
   revisionfile,
   updatesfile: TIniFile;

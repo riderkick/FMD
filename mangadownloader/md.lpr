@@ -28,10 +28,25 @@ var
   i: Integer;
   p: String;
 
-  {$ifdef windows}
+{$ifdef windows}
   evpathlen: Integer;
   evpath: String;
+
+type
+  TOpenSSLVersion=function (t:integer):PAnsiChar;cdecl;
+
+var
+  _OpenSSLVersion:TOpenSSLVersion=nil;
+
+const
+  {$ifdef win64}
+  OpenSSLDLLSSLName='libssl-1_1-x64.dll';
+  OpenSSLDLLUtilName='libcrypto-1_1-x64.dll';
+  {$else}
+  OpenSSLDLLSSLName='libssl-1_1.dll';
+  OpenSSLDLLUtilName='libcrypto-1_1.dll';
   {$endif}
+{$endif}
 
 {$R *.res}
 
@@ -89,7 +104,7 @@ begin
       DeleteFileUTF8(trcfile);
     SetHeapTraceOutput(trcfile);
     {$ENDIF DEBUGLEAKS}
-  Application.Title:='Free Manga Downloader';
+    Application.Title:='Free Manga Downloader';
     RequireDerivedFormResource := True;
     Logger.Enabled := False;
     InitSimpleExceptionHandler(LogFileName);
@@ -111,12 +126,33 @@ begin
       end;
     end;
 
+    //sqlite
     if FileExists(FMD_DIRECTORY + Sqlite3Lib) then
       SQLiteDefaultLibrary := FMD_DIRECTORY + Sqlite3Lib;
-    if FileExists(FMD_DIRECTORY + DLLSSLName) then
-      DLLSSLName := FMD_DIRECTORY + DLLSSLName;
-    if FileExists(FMD_DIRECTORY + DLLUtilName) then
-      DLLUtilName := FMD_DIRECTORY + DLLUtilName;
+    {$ifdef windows}
+    //openssl
+    if IsSSLloaded then
+      DestroySSLInterface;
+    if FileExists(FMD_DIRECTORY+OpenSSLDLLSSLName) and FileExists(FMD_DIRECTORY+OpenSSLDLLUtilName) then
+    begin
+      DLLSSLName:=FMD_DIRECTORY+OpenSSLDLLSSLName;
+      DLLUtilName:=FMD_DIRECTORY+OpenSSLDLLUtilName;
+      if InitSSLInterface then
+        _OpenSSLVersion:=TOpenSSLVersion(GetProcAddress(SSLUtilHandle,PChar('OpenSSL_version')));
+      if Assigned(_OpenSSLVersion) then
+        OpenSSLVersion:=PAnsiChar(_OpenSSLVersion(0));
+    end else
+    if FileExists(FMD_DIRECTORY+DLLSSLName) and FileExists(FMD_DIRECTORY+DLLUtilName) then
+    begin
+      DLLSSLName:=FMD_DIRECTORY+DLLSSLName;
+      DLLUtilName:=FMD_DIRECTORY+DLLUtilName;
+      if InitSSLInterface then
+        OpenSSLVersion:=SSLeayversion(0);
+    end;
+    if not IsSSLloaded then
+      InitSSLInterface;
+    {$endif}
+    //webp
     if FileExists(FMD_DIRECTORY + DLLWebPName) then
       DLLWebPName := FMD_DIRECTORY + DLLWebPName;
 
