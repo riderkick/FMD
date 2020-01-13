@@ -769,7 +769,7 @@ object MainForm: TMainForm
                 Height = 524
                 Top = 4
                 Width = 632
-                HorzScrollBar.Page = 308
+                HorzScrollBar.Page = 305
                 VertScrollBar.Page = 401
                 Align = alClient
                 Anchors = [akRight, akBottom]
@@ -845,24 +845,6 @@ object MainForm: TMainForm
                     TabOrder = 0
                     TextHint = 'Input URL here'
                   end
-                  object rmInformation: TRichMemo
-                    AnchorSideLeft.Control = pnThumbContainer
-                    AnchorSideLeft.Side = asrBottom
-                    AnchorSideTop.Control = edURL
-                    AnchorSideTop.Side = asrBottom
-                    AnchorSideRight.Control = edURL
-                    AnchorSideRight.Side = asrBottom
-                    Left = 158
-                    Height = 216
-                    Top = 27
-                    Width = 474
-                    Anchors = [akTop, akLeft, akRight, akBottom]
-                    HideSelection = False
-                    ReadOnly = True
-                    ScrollBars = ssAutoVertical
-                    TabOrder = 2
-                    ZoomFactor = 1
-                  end
                   object btDonate: TImage
                     Cursor = crHandPoint
                     Left = 28
@@ -874,38 +856,76 @@ object MainForm: TMainForm
                     Stretch = True
                     Visible = False
                   end
-                  object pnThumbContainer: TPanel
-                    AnchorSideLeft.Control = edURL
-                    AnchorSideTop.Control = edURL
-                    AnchorSideTop.Side = asrBottom
+                  object pnInfos: TPanel
                     Left = 0
-                    Height = 216
+                    Height = 221
                     Top = 27
-                    Width = 154
+                    Width = 632
+                    Align = alClient
                     BevelOuter = bvNone
-                    BorderStyle = bsSingle
-                    ClientHeight = 212
-                    ClientWidth = 150
-                    Color = clWhite
-                    ParentColor = False
+                    ClientHeight = 221
+                    ClientWidth = 632
                     TabOrder = 1
-                    object imCover: TImage
+                    object pnThumbContainer: TPanel
                       Left = 0
-                      Height = 212
+                      Height = 221
                       Top = 0
                       Width = 150
-                      AntialiasingMode = amOn
-                      Align = alClient
-                      Center = True
-                      Proportional = True
-                      Stretch = True
+                      Align = alLeft
+                      BevelOuter = bvNone
+                      ClientHeight = 221
+                      ClientWidth = 150
+                      Color = clWhite
+                      ParentColor = False
+                      TabOrder = 0
+                      object pnThumb: TPanel
+                        Left = 0
+                        Height = 221
+                        Top = 0
+                        Width = 150
+                        Align = alClient
+                        BevelOuter = bvNone
+                        BorderStyle = bsSingle
+                        ClientHeight = 217
+                        ClientWidth = 146
+                        TabOrder = 0
+                        object imCover: TImage
+                          Left = 0
+                          Height = 217
+                          Top = 0
+                          Width = 146
+                          AntialiasingMode = amOn
+                          Align = alClient
+                          AutoSize = True
+                          Proportional = True
+                          Stretch = True
+                        end
+                        object pbWait: TPaintBox
+                          Left = 0
+                          Height = 217
+                          Top = 0
+                          Width = 146
+                          Align = alClient
+                        end
+                      end
                     end
-                    object pbWait: TPaintBox
-                      Left = 0
-                      Height = 212
+                    object rmInformation: TRichMemo
+                      Left = 155
+                      Height = 221
                       Top = 0
-                      Width = 150
+                      Width = 477
                       Align = alClient
+                      HideSelection = False
+                      ReadOnly = True
+                      ScrollBars = ssAutoVertical
+                      TabOrder = 1
+                      ZoomFactor = 1
+                    end
+                    object spThumb: TSplitter
+                      Left = 150
+                      Height = 221
+                      Top = 0
+                      Width = 5
                     end
                   end
                 end

@@ -137,6 +137,8 @@ type
     miChapterListHideDownloaded: TMenuItem;
     miAbortSilentThread: TMenuItem;
     mmChangelog: TMemo;
+    pnThumb: TPanel;
+    pnInfos: TPanel;
     pnDownloadList: TPanel;
     pnAboutComp: TPanel;
     pcInfo: TPageControl;
@@ -165,6 +167,7 @@ type
     sbGeneralSettings: TScrollBox;
     seOptionRetryFailedTask: TSpinEdit;
     seJPEGQuality: TSpinEdit;
+    spThumb: TSplitter;
     tbWebsitesSelectAll: TToolButton;
     tbWebsitesUnselectAll: TToolButton;
     tsAccounts: TTabSheet;
