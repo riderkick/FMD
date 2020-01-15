@@ -495,6 +495,10 @@ begin
     Header.Options:=Header.Options+[hoHotTrack];
     {$if VTMajorVersion < 5}
     TreeOptions.PaintOptions:=TreeOptions.PaintOptions+[toUseExplorerTheme,toHotTrack];
+    {$else}
+    // todo: vtv 5 (r62558) still missing glyph in toUseExplorerTheme,
+    // we can custom draw later, or wait for the fix
+    TreeOptions.PaintOptions:=TreeOptions.PaintOptions+[toHotTrack]-[toUseExplorerTheme];
     {$endif}
 
     // save original event
