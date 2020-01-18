@@ -1,7 +1,11 @@
 -- Filled in to get url for comic info
 local infoURL = 'http://apiwap.vcomic.com/wbcomic/comic/comic_show?comic_id=%s&_request_from=pc'
+-- Filled in to get cover url
 local coverURL = 'https://img.manhua.weibo.com/%s'
+-- Filled in to get chapter url
 local chapterURL = 'http://apiwap.vcomic.com/wbcomic/comic/comic_play?chapter_id=%s&_request_from=pc'
+-- Filled in to get series page url
+local seriesURL = 'http://manhua.weibo.com/c/%s'
 
 function GetInfo()
 	mangainfo.url = MaybeFillHost(module.rooturl,url)
@@ -56,7 +60,7 @@ function GetNameAndLink()
 		local x = TXQuery.Create(http.Document)
 		local list = x.XPath('json(*).data.data()')
 		for i = 1, list.count do
-			links.add('http://manhua.weibo.com/c/' .. x.XPathString('comic_id',list.get(i)))
+			links.add(string.format(seriesURL,x.XPathString('comic_id',list.get(i))))
 			names.add(x.XPathString('comic_name',list.get(i)))
 		end
 	else
