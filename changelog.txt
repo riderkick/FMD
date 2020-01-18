@@ -4,9 +4,39 @@ https://github.com/fmd-project-team/FMD
 Changelog:
 ([!] Important, [+] Addition, [-] Removal, [*] Fix/Change, [?] Feedback needed)
 
-0.9.167.2 (07.12.2019)
+0.9.168.0 (18.01.2020)
 [!] Report issues here: https://github.com/fmd-project-team/FMD/issues
 [!] Join us on Discord: https://discord.gg/cXKKgw3
+[+] Added GetManhwa [Webcomics]
+[+] Added Hiperdex [H-Sites]
+[+] Added KomikGoCoID [ID]
+[+] Added LewdManhwa [H-Sites]
+[+] Added MangaZukiWhatStatus [EN]
+[+] Added Mangalek [AR]
+[+] Added Mangareceh [ID]
+[+] Added MataKomik [ID]
+[+] Added ProjectTime [EN-SC]
+[+] Added Rawkuma [RAW]
+[+] Added TvYManga [ES]
+[-] Removed ChampionScans [EN-SC] (use ProjectTime instead)
+[*] DoujinYosh: Fixed all (Issue #728)
+[*] HeavenManga: Fixed url (Issue #703)
+[*] HentaiFox: Fixed chapter download (Issue #658)
+[*] HolyManga: Fixed url (Issue #703)
+[*] Imgur: Fixed getting info (Issue #650)
+[*] Komiku: Fixed getting manga info
+[*] MangaLife: Ported to Lua script; Fixed all
+[*] MangaNelo: Fixed all (Issue #691)
+[*] MangaSusu: Fixed all (Issue #725)
+[*] NiAdd: Fixed all
+[*] ZeroScans: Fixed getting manga info (Issue #674)
+[*] Fixed lua modules getting removed when there is no connection or when checking for module updates fails. -> Thank you dazedcat19
+[*] Fixed built-in cloudflare bypass code. With this fix, cf_bypass has been removed as it is not needed anymore. -> Thank you dazedcat19
+[*] Fixed WebP support for manga covers. -> Thank you dazedcat19
+[*] Updated all packages, components and other thirdparty libraries -> Thank you dazedcat19
+Full changes: https://github.com/fmd-project-team/FMD/compare/0.9.167.2...0.9.168.0
+
+0.9.167.2 (07.12.2019)
 [+] Added AdonisFansub [TR] -> Thank you Slasar41
 [+] Added ArtemisNF [ES-SC] -> Thank you rs3mk
 [+] Added BaekjinScans [Webcomics] -> Thank you Slasar41

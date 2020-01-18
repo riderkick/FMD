@@ -22,10 +22,9 @@
     <VersionInfo>
       <UseVersionInfo Value="True"/>
       <MinorVersionNr Value="9"/>
-      <RevisionNr Value="167"/>
-      <BuildNr Value="2"/>
+      <RevisionNr Value="168"/>
       <Attributes pvaPrivateBuild="True"/>
-      <StringTable Comments="https://github.com/fmd-project-team/FMD" FileDescription="Free Manga Downloader" LegalCopyright="©2015-2019" OriginalFilename="fmd.exe" ProductName="Free Manga Downloader" ProductVersion="$BuildMode()" PrivateBuild="FMD Project Team"/>
+      <StringTable Comments="https://github.com/fmd-project-team/FMD" FileDescription="Free Manga Downloader" LegalCopyright="©2015-2020" OriginalFilename="fmd.exe" ProductName="Free Manga Downloader" ProductVersion="$BuildMode()" PrivateBuild="FMD Project Team"/>
     </VersionInfo>
     <BuildModes Count="6">
       <Item1 Name="Win32" Default="True"/>
@@ -272,35 +271,34 @@
     </RunParams>
     <RequiredPackages Count="10">
       <Item1>
-        <PackageName Value="RunTimeTypeInfoControls"/>
+        <PackageName Value="LCL"/>
       </Item1>
       <Item2>
-        <PackageName Value="LazControls"/>
+        <PackageName Value="RunTimeTypeInfoControls"/>
       </Item2>
       <Item3>
-        <PackageName Value="LCL"/>
+        <PackageName Value="LazControls"/>
       </Item3>
       <Item4>
         <PackageName Value="TAChartLazarusPkg"/>
       </Item4>
       <Item5>
-        <PackageName Value="richmemopackage"/>
+        <PackageName Value="virtualtreeview_package"/>
       </Item5>
       <Item6>
-        <PackageName Value="virtualtreeview_package"/>
+        <PackageName Value="laz_synapse"/>
       </Item6>
       <Item7>
-        <PackageName Value="multiloglaz"/>
+        <PackageName Value="richmemopackage"/>
       </Item7>
       <Item8>
-        <PackageName Value="laz_synapse"/>
+        <PackageName Value="multiloglaz"/>
       </Item8>
       <Item9>
         <PackageName Value="dcpcrypt"/>
       </Item9>
       <Item10>
         <PackageName Value="internettools"/>
-        <DefaultFilename Value="..\3rd\internettools\internettools.lpk" Prefer="True"/>
       </Item10>
     </RequiredPackages>
     <Units Count="18">
