@@ -14,7 +14,11 @@ function GetInfo()
 	if http.get(string.format(infoURL,id)) then
 		local x = TXQuery.Create(http.Document)
 		mangainfo.title = x.XPathString('json(*)/data/comic/name')
-		mangainfo.coverLink = string.format(coverURL, x.XPathString('json(*)/data/comic/hcover'))
+		if(x.XPathString('json(*)/data/comic/hcover') ~= '') then
+			mangainfo.coverLink = string.format(coverURL, x.XPathString('json(*)/data/comic/hcover'))
+		else
+			mangainfo.coverLink = x.XPathString('json(*)/data/comic/cover')
+		end
 		mangainfo.authors = x.XPathString('json(*)/data/comic/sina_nickname')
 		mangainfo.summary = x.XPathString('json(*)/data/comic/description')
 		
@@ -68,7 +72,7 @@ function GetNameAndLink()
 	end
 end
 
-
+function GetDirectoryPageNumber()
 	if(http.get'(https://apiwap.vcomic.com/wbcomic/comic/filter_result?page_num=1&rows_num=10000&cate_id=0&end_status=0&comic_pay_status=0&order=comic_read_num&_request_from=pc') then
 		local x = TXQuery.Create(http.Document)
 		page = tonumber(x.XPathString('json(*).data.data.rows_total'))
