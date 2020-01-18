@@ -96,15 +96,13 @@ begin
         Free;
       end;
 
-    Logger.ThreadSafe := True;
-
     {$IFDEF DEBUGLEAKS}
     trcfile := FMD_DIRECTORY + FMD_EXENAME + '.trc';
     if FileExistsUTF8(trcfile) then
       DeleteFileUTF8(trcfile);
     SetHeapTraceOutput(trcfile);
     {$ENDIF DEBUGLEAKS}
-    Application.Title:='Free Manga Downloader';
+  Application.Title := 'Free Manga Downloader';
     RequireDerivedFormResource := True;
     Logger.Enabled := False;
     InitSimpleExceptionHandler(LogFileName);
