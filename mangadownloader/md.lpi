@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
   <ProjectOptions>
-    <Version Value="11"/>
+    <Version Value="12"/>
     <PathDelim Value="\"/>
     <General>
+      <Flags>
+        <CompatibilityMode Value="True"/>
+      </Flags>
       <SessionStorage Value="InProjectDir"/>
-      <MainUnit Value="0"/>
       <Title Value="Free Manga Downloader"/>
       <Scaled Value="True"/>
       <ResourceType Value="res"/>
@@ -194,6 +196,7 @@
           <Other>
             <ExecuteAfter>
               <Command Value="cmd.exe /c copy /y languages\*.po ..\bin\$(TargetCPU)-$(TargetOS)\languages\"/>
+              <CompileReasons Compile="False" Run="False"/>
             </ExecuteAfter>
           </Other>
         </CompilerOptions>
@@ -242,7 +245,8 @@
           </Linking>
           <Other>
             <ExecuteAfter>
-              <Command Value="cmd.exe /c copy /y languages\*.po ..\bin\languages\"/>
+              <Command Value="cmd.exe /c copy /y languages\*.po ..\bin\$(TargetCPU)-$(TargetOS)\languages\"/>
+              <CompileReasons Compile="False" Run="False"/>
             </ExecuteAfter>
           </Other>
         </CompilerOptions>
@@ -254,9 +258,9 @@
         <Item4 ID="534084266787" Targets="#project" Modes="Win64 Debug Leaks,Win32 Debug Leaks" Value="-dDEBUGLEAKS -dDEVBUILD -WC"/>
         <Item5 ID="951904047630" Targets="#project" Value="-uUSE_FLRE_WITH_CACHE -dUSE_SOROKINS_REGEX -uUSE_BBFLRE_UNICODE -dUSE_BBFULL_UNICODE"/>
         <Item6 ID="140379931701" Targets="#project" Value="-Fi..\3rd\BESEN\src -Fi..\3rd\internettools\data -Fu..\3rd\BESEN\src -Fu..\3rd\internettools\data -Fu..\3rd\internettools\internet -Fu..\3rd\internettools\system -Fu..\3rd\internettools\import\flre\src"/>
-        <Item7 ID="403646715137" Targets="BESENPkg,internettools" Modes="Win32 Debug Leaks,Win64 Debug Leaks,Win64 Debug,Win32 Debug,Win32,Win64" Value="-CX -O3 -Xs -XX -g- -Os"/>
-        <Item8 ID="127282585717" Targets="internettools" Modes="Win32,Win64,Win32 Debug,Win64 Debug,Win64 Debug Leaks,Win32 Debug Leaks" Value="-uUSE_FLRE_WITH_CACHE -dUSE_SOROKINS_REGEX -uUSE_BBFLRE_UNICODE -dUSE_BBFULL_UNICODE"/>
-        <Item9 ID="939088584661" Targets="LazControls,TAChartLazarusPkg" Modes="Win64 Debug,Win32 Debug,Win64,Win32,Win32 Debug Leaks,Win64 Debug Leaks" Value="-CX -O3 -Xs -XX -g- -Os"/>
+        <Item7 ID="127282585717" Targets="internettools" Modes="Win32,Win64,Win32 Debug,Win64 Debug,Win64 Debug Leaks,Win32 Debug Leaks" Value="-uUSE_FLRE_WITH_CACHE -dUSE_SOROKINS_REGEX -uUSE_BBFLRE_UNICODE -dUSE_BBFULL_UNICODE"/>
+        <Item8 ID="403646715137" Targets="internettools" Value="-O3 -CX -XX -g- -Xs"/>
+        <Item9 ID="939088584661" Targets="LazControls,TAChartLazarusPkg" Value="-O3 -CX -XX -g- -Xs"/>
       </SharedMatrixOptions>
     </BuildModes>
     <PublishOptions>

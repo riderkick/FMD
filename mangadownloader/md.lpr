@@ -51,6 +51,9 @@ const
 {$R *.res}
 
 begin
+  Application.Title:='Free Manga Downloader';
+  RequireDerivedFormResource := True;
+
   if CheckInstance then
   begin
     with TSimpleIPCClient.Create(nil) do
@@ -102,8 +105,7 @@ begin
       DeleteFileUTF8(trcfile);
     SetHeapTraceOutput(trcfile);
     {$ENDIF DEBUGLEAKS}
-  Application.Title := 'Free Manga Downloader';
-    RequireDerivedFormResource := True;
+
     Logger.Enabled := False;
     InitSimpleExceptionHandler(LogFileName);
     if EnableLogging then
