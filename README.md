@@ -5,8 +5,8 @@
 ## Download
 
 [![Latest release](https://img.shields.io/github/release/fmd-project-team/FMD.svg)](https://github.com/fmd-project-team/FMD/releases/latest)
-[![Download latest release (Win32)](https://img.shields.io/github/downloads/fmd-project-team/FMD/latest/fmd_0.9.168.0.7z.svg?label=Win32)](https://github.com/fmd-project-team/FMD/releases/download/0.9.168.0/fmd_0.9.168.0.7z)
-[![Download latest release (Win64)](https://img.shields.io/github/downloads/fmd-project-team/FMD/latest/fmd_0.9.168.0_Win64.7z.svg?label=Win64)](https://github.com/fmd-project-team/FMD/releases/download/0.9.168.0/fmd_0.9.168.0_Win64.7z)
+[![Download latest release (Win32)](https://img.shields.io/github/downloads/fmd-project-team/FMD/latest/fmd_0.9.168.1.7z.svg?label=Win32)](https://github.com/fmd-project-team/FMD/releases/download/0.9.168.1/fmd_0.9.168.1.7z)
+[![Download latest release (Win64)](https://img.shields.io/github/downloads/fmd-project-team/FMD/latest/fmd_0.9.168.1_Win64.7z.svg?label=Win64)](https://github.com/fmd-project-team/FMD/releases/download/0.9.168.1/fmd_0.9.168.1_Win64.7z)
 
 ## About FMD
 
@@ -27,8 +27,8 @@ The following packages and components are used for building FMD:
 ![RichMemo (18.01.2020)](https://img.shields.io/badge/RichMemo-OPM%20(18.01.2020)-Blue.svg)  
 ![LCL Extensions 0.6.1](https://img.shields.io/badge/LCL%20Extensions-OPM%20(0.6.1)-Blue.svg) <sup>(Compile before "Virtual TreeView")</sup>  
 ![Virtual TreeView 5.5.3.1](https://img.shields.io/badge/Virtual%20TreeView-OPM%20(5.5.3.1)-Blue.svg)  
-![MultiLog 0.6.0.0](https://img.shields.io/badge/MultiLog-OPM%20(0.6.0.0)-Blue.svg)  
-![InternetTools (18.01.2020)](https://img.shields.io/badge/InternetTools-OPM%20(18.01.2020)-Blue.svg)  
+[![MultiLog (02.12.2019)](https://img.shields.io/badge/MultiLog-git%20master%20commit%20fd700fa5343c1b0e08063f88a1e6761036b10efc%20(02.12.2019)-Blue.svg)](https://github.com/blikblum/multilog)  
+[![InternetTools (19.01.2020)](https://img.shields.io/badge/InternetTools-git%20master%20commit%20b834f9a3699e7d01bbd0cfafa8c4f7f75cff274d%20(19.01.2020)-Blue.svg)](https://github.com/benibela/internettools)  
   
 After everything is installed, open the file `md.lpi` by using Lazarus IDE.  
 Make sure to add `ssl_openssl` to the uses list of `Synapse` and compile the package again.  

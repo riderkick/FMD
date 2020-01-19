@@ -51,7 +51,7 @@ const
 {$R *.res}
 
 begin
-  Application.Title:='Free Manga Downloader';
+  Application.Title := 'Free Manga Downloader';
   RequireDerivedFormResource:=True;
 
   if CheckInstance then
