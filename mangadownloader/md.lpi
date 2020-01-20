@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
   <ProjectOptions>
-    <Version Value="11"/>
+    <Version Value="12"/>
     <PathDelim Value="\"/>
     <General>
+      <Flags>
+        <CompatibilityMode Value="True"/>
+      </Flags>
       <SessionStorage Value="InProjectDir"/>
-      <MainUnit Value="0"/>
       <Title Value="Free Manga Downloader"/>
       <Scaled Value="True"/>
       <ResourceType Value="res"/>
@@ -250,7 +252,7 @@
           </Other>
         </CompilerOptions>
       </Item6>
-      <SharedMatrixOptions Count="9">
+      <SharedMatrixOptions Count="7">
         <Item1 ID="285210846225" Targets="#project" Modes="Win32 Debug Leaks,Win64 Debug Leaks,Win64 Debug,Win32 Debug,Win64,Win32" Value="-Fu..\baseunits -Fu..\baseunits\animatedgifs -Fu..\baseunits\SimpleException -Fu..\baseunits\modules -Fu..\baseunits\extras -Fuforms"/>
         <Item2 ID="465017374973" Targets="#project" Modes="Win32,Win64 Debug Leaks,Win32 Debug Leaks,Win64 Debug,Win32 Debug,Win64" Value="-dMANGADOWNLOADER -dDOWNLOADER -dSELFUPDATE -dMULTILOG"/>
         <Item3 ID="729045573668" Targets="#project" Modes="Win32 Debug Leaks,Win64 Debug Leaks,Win32,Win64,Win32 Debug,Win64 Debug" Value="-Fu..\baseunits\lua -Fu..\baseunits\pcre"/>
@@ -258,8 +260,6 @@
         <Item5 ID="951904047630" Targets="#project" Value="-uUSE_FLRE_WITH_CACHE -dUSE_SOROKINS_REGEX -uUSE_BBFLRE_UNICODE -dUSE_BBFULL_UNICODE"/>
         <Item6 ID="140379931701" Targets="#project" Value="-Fi..\3rd\BESEN\src -Fi..\3rd\internettools\data -Fu..\3rd\BESEN\src -Fu..\3rd\internettools\data -Fu..\3rd\internettools\internet -Fu..\3rd\internettools\system -Fu..\3rd\internettools\import\flre\src"/>
         <Item7 ID="127282585717" Targets="internettools" Modes="Win32,Win64,Win32 Debug,Win64 Debug,Win64 Debug Leaks,Win32 Debug Leaks" Value="-uUSE_FLRE_WITH_CACHE -dUSE_SOROKINS_REGEX -uUSE_BBFLRE_UNICODE -dUSE_BBFULL_UNICODE"/>
-        <Item8 ID="403646715137" Targets="internettools" Value="-O3 -CX -XX -g- -Xs"/>
-        <Item9 ID="939088584661" Targets="LazControls,TAChartLazarusPkg" Value="-O3 -CX -XX -g- -Xs"/>
       </SharedMatrixOptions>
     </BuildModes>
     <PublishOptions>
