@@ -493,12 +493,12 @@ begin
       Color := clWindow;
     LineStyle:=lsDotted;
     Header.Options:=Header.Options+[hoHotTrack];
-    {$if VTMajorVersion < 5}
-    TreeOptions.PaintOptions:=TreeOptions.PaintOptions+[toUseExplorerTheme,toHotTrack];
-    {$else}
+    {$if VTMajorVersion = 5}
     // todo: vtv 5 (r62558) still missing glyph in toUseExplorerTheme,
     // we can custom draw later, or wait for the fix
-    TreeOptions.PaintOptions:=TreeOptions.PaintOptions+[toHotTrack]-[toUseExplorerTheme];
+    TreeOptions.PaintOptions:=TreeOptions.PaintOptions-[toUseExplorerTheme];
+    {$else}
+    TreeOptions.PaintOptions:=TreeOptions.PaintOptions+[toUseExplorerTheme];
     {$endif}
 
     // save original event
@@ -509,7 +509,11 @@ begin
     // set custom event
     OnPaintText := @VTOnPaintText;
     OnBeforeCellPaint := @VTOnBeforeCellPaint;
+    {$if VTMajorVersion = 5}
+    // todo: bugs on vtv 5
+    {$else}
     OnPaintBackground := @VTOnPaintBackground;
+    {$endif}
   end;
 end;
 
