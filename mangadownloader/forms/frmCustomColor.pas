@@ -84,11 +84,7 @@ type
     VT: VirtualTrees.TVirtualStringTree;
     PaintText: TVTPaintText;
     BeforeCellPaint: TVTBeforeCellPaintEvent;
-    {$if VTMajorVersion = 5}
-    AfterPaint: TVTPaintEvent;
-    {$else}
     PaintBackground: TVTBackgroundPaintEvent;
-    {$endif}
   end;
 
   { TVTApplyList }
@@ -103,12 +99,8 @@ type
       TextType: TVSTTextType);
     procedure VTOnBeforeCellPaint(Sender: TBaseVirtualTree; TargetCanvas: TCanvas; Node: PVirtualNode;
       Column: TColumnIndex; CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
-    {$if VTMajorVersion = 5}
-    procedure VTOnAfterPaint(Sender: TBaseVirtualTree; TargetCanvas: TCanvas);
-    {$else}
     procedure VTOnPaintBackground(Sender: TBaseVirtualTree; TargetCanvas: TCanvas; const R: TRect;
       var Handled: Boolean);
-    {$endif}
   private
     procedure InstallCustomColors(Index: Integer);
     function GetItems(Index: Integer): VirtualTrees.TVirtualStringTree;
@@ -425,91 +417,7 @@ begin
   end;
 end;
 
-{$if VTMajorVersion = 5}
-procedure TVTApplyList.VTOnAfterPaint(Sender: TBaseVirtualTree;
-  TargetCanvas: TCanvas);
-var
-  R,AColumnRect:TRect;
-  i:Integer;
-  node: PVirtualNode;
-
-  function getColumnDisplayRect(columnIndex:Integer; setOffset:Boolean=True): TRect;
-  begin
-    Result:=TVirtualStringTree(Sender).Header.Columns[i].GetRect;
-    if setOffset then
-      Result.Offset(TVirtualStringTree(Sender).OffsetX,0);
-    Dec(Result.Right);
-    Result.Top:=R.Top;
-    Result.Bottom:=R.Bottom;
-  end;
-
-begin
-  with VirtualTrees.TVirtualStringTree(Sender) do
-  begin
-    R:=ClientRect;
-    if (Header.Columns.Count<>0) and (hoVisible in Header.Options) then
-      R.Offset(0,Header.Height);
-    if VisibleCount<>0 then
-    begin
-      node:=GetLastVisible();
-      if Assigned(node) then
-        R.Top:=GetDisplayRect(node,-1,false).Bottom;
-    end;
-    if R.Height=0 then Exit;
-
-    // draw background
-    TargetCanvas.Brush.Color := Color;
-    TargetCanvas.FillRect(R);
-
-    if Header.Columns.Count=0 then Exit;
-
-    // draw vertgridline for each column
-    i := Header.Columns.GetFirstVisibleColumn();
-    while i <> InvalidColumn do
-    begin
-      AColumnRect:=getColumnDisplayRect(i);
-      if toShowVertGridLines in TreeOptions.PaintOptions then
-      begin
-        TargetCanvas.Pen.Color := Colors.GridLineColor;
-        TargetCanvas.Line(AColumnRect.Right, AColumnRect.Top, AColumnRect.Right, AColumnRect.Bottom);
-      end;
-
-      // draw sorted column
-      if (i = Header.SortColumn) and (CL_BSSortedColumn <> clNone) then
-      begin
-        TargetCanvas.Brush.Color :=
-          BlendColor(CL_BSSortedColumn, TargetCanvas.Brush.Color, SelectionBlendFactor);
-        TargetCanvas.FillRect(AColumnRect);
-        TargetCanvas.Pen.Color := CL_BSSortedColumn;
-        TargetCanvas.Line(AColumnRect.Left, AColumnRect.Top, AColumnRect.Left, AColumnRect.Bottom);
-        TargetCanvas.Line(AColumnRect.Right - 1, AColumnRect.Top, AColumnRect.Right - 1,
-          AColumnRect.Bottom);
-      end;
-      i := Header.Columns.GetNextVisibleColumn(i);
-    end;
-
-    // draw fixed column on top of others
-    TargetCanvas.Brush.Color := Color;
-    TargetCanvas.Pen.Color := Colors.GridLineColor;
-    i := Header.Columns.GetFirstVisibleColumn();
-    while i <> InvalidColumn do
-    begin
-      if coFixed in Header.Columns[i].Options then
-      begin
-        AColumnRect:=getColumnDisplayRect(i,false);
-        TargetCanvas.FillRect(AColumnRect);
-        if toShowVertGridLines in TreeOptions.PaintOptions then
-          TargetCanvas.Line(AColumnRect.Right, AColumnRect.Top, AColumnRect.Right, AColumnRect.Bottom);
-      end;
-      i := Header.Columns.GetNextVisibleColumn(i);
-    end;
-  end;
-
-  if Assigned(FVTList[Sender.Tag].AfterPaint) then
-    FVTList[Sender.Tag].AfterPaint(Sender, TargetCanvas);
-end;
-
-{$else}
+{$if VTMajorVersion < 5}
 procedure TVTApplyList.VTOnPaintBackground(Sender: TBaseVirtualTree;
   TargetCanvas: TCanvas; const R: TRect; var Handled: Boolean);
 var
@@ -575,6 +483,107 @@ begin
   if Assigned(FVTList[Sender.Tag].PaintBackground) then
     FVTList[Sender.Tag].PaintBackground(Sender, TargetCanvas, R, Handled);
 end;
+
+{$else}
+procedure TVTApplyList.VTOnPaintBackground(Sender: TBaseVirtualTree;
+  TargetCanvas: TCanvas; const R: TRect; var Handled: Boolean);
+var
+  aRect,aColumnRect:TRect;
+  i,j,fixedColumnsCount,fixedColumnsWidth:Integer;
+  isFixedColumnsRect:Boolean;
+
+  procedure paintVertGridline(const orect:TRect);
+  begin
+    with VirtualTrees.TVirtualStringTree(Sender) do begin
+      TargetCanvas.Pen.Color:=Colors.GridLineColor;
+      if LineStyle=lsDotted then
+        TargetCanvas.Pen.Style:=psDot
+      else
+        TargetCanvas.Pen.Style:=psSolid;
+      TargetCanvas.Line(orect.Right,orect.Top,orect.Right,orect.Bottom);
+    end;
+  end;
+
+  procedure paintSortedColumn(const orect:TRect);
+  begin
+    with VirtualTrees.TVirtualStringTree(Sender) do begin
+      if CL_BSSortedColumn=clNone then Exit;
+      TargetCanvas.Brush.Color:=BlendColor(CL_BSSortedColumn,TargetCanvas.Brush.Color,SelectionBlendFactor);
+      TargetCanvas.FillRect(orect);
+      TargetCanvas.Pen.Style:=psSolid;
+      TargetCanvas.Pen.Color:=CL_BSSortedColumn;
+      TargetCanvas.Line(orect.Left,orect.Top,orect.Left,orect.Bottom);
+      TargetCanvas.Line(orect.Right-1,orect.Top,orect.Right-1,orect.Bottom);
+    end;
+  end;
+
+begin
+  with VirtualTrees.TVirtualStringTree(Sender) do
+  begin
+    // draw background
+    TargetCanvas.Brush.Style:=bsSolid;
+    TargetCanvas.Brush.Color:=Color;
+    TargetCanvas.FillRect(R);
+    Handled:=True;
+
+    if Header.Columns.Count=0 then Exit;
+
+    fixedColumnsCount:=0;
+    fixedColumnsWidth:=0; // fixed columns width
+    for i:=0 to Header.Columns.Count-1 do
+      if Header.Columns[I].Options*[coVisible,coFixed]=[coVisible,coFixed] then begin
+        Inc(fixedColumnsCount);
+        Inc(fixedColumnsWidth,Header.Columns[I].Width);
+      end;
+
+    isFixedColumnsRect:=R.Width=fixedColumnsWidth;
+    aRect:=R;
+
+    if not isFixedColumnsRect then //non fixed columns
+    begin
+      // get offset display rect
+      aRect.Left:=aRect.Left-(ClientRect.Width-aRect.Width);
+
+      // paint vertgridline for each column
+      i:=Header.Columns.GetFirstVisibleColumn();
+      while i<>InvalidColumn do
+      begin
+        aColumnRect:=aRect;
+        Inc(aColumnRect.Left,Header.Columns[i].Left);
+        aColumnRect.Right:=AColumnRect.Left+(Header.Columns[i].Width-1);
+        if toShowVertGridLines in TreeOptions.PaintOptions then
+          paintVertGridline(aColumnRect);
+        // paint sorted column
+        if i=Header.SortColumn then
+          paintSortedColumn(aColumnRect);
+        i:=Header.Columns.GetNextVisibleColumn(i);
+      end;
+    end;
+
+    //if isPaintFixedColumns then
+    begin
+      // fixed columns always on the left regardless of its column order
+      j:=Header.Columns.GetFirstVisibleColumn();
+      for i:=0 to fixedColumnsCount-1 do begin
+        AColumnRect:=aRect;
+        if isFixedColumnsRect then
+          aColumnRect.Left:=Header.Columns[i].Left
+        else
+          Inc(AColumnRect.Left,Header.Columns[i].Left);
+        aColumnRect.Right:=aColumnRect.Left+(Header.Columns[i].Width-1);
+        if toShowVertGridLines in TreeOptions.PaintOptions then
+          paintVertGridline(aColumnRect);
+        // fixed sorted column
+        if i=Header.SortColumn then
+          paintSortedColumn(aColumnRect);
+        j:=Header.Columns.GetNextVisibleColumn(j);
+      end;
+    end;
+  end;
+
+  if Assigned(FVTList[Sender.Tag].PaintBackground) then
+    FVTList[Sender.Tag].PaintBackground(Sender,TargetCanvas,R,Handled);
+end;
 {$endif}
 
 procedure TVTApplyList.InstallCustomColors(Index: Integer);
@@ -585,35 +594,28 @@ begin
     LineStyle := lsSolid;
     if Color = clDefault then
       Color := clWindow;
-    LineStyle:=lsDotted;
     Header.Options:=Header.Options+[hoHotTrack];
-    {$if VTMajorVersion = 5}
-    // todo: vtv 5 (r62558) still missing glyph in toUseExplorerTheme,
-    // we can custom draw later, or wait for the fix
-    TreeOptions.PaintOptions:=TreeOptions.PaintOptions-[toUseExplorerTheme];
-    {$else}
-    TreeOptions.PaintOptions:=TreeOptions.PaintOptions+[toUseExplorerTheme];
-    {$endif}
+    with TreeOptions do begin
+      {$if VTMajorVersion < 5}
+      PaintOptions:=PaintOptions+[toUseExplorerTheme];
+      {$else}
+      // todo: vtv 5 (r62558) still missing glyph in toUseExplorerTheme,
+      // we can custom draw later, or wait for the fix
+      PaintOptions:=PaintOptions-[toUseExplorerTheme];
+      {$endif}
+      if toShowVertGridLines in PaintOptions then
+        PaintOptions:=PaintOptions+[toFullVertGridLines];
+    end;
 
     // save original event
     PaintText := OnPaintText;
     BeforeCellPaint := OnBeforeCellPaint;
-    {$if VTMajorVersion = 5}
-    AfterPaint:=OnAfterPaint;
-    {$else}
     PaintBackground := OnPaintBackground;
-    {$endif}
 
     // set custom event
     OnPaintText := @VTOnPaintText;
     OnBeforeCellPaint := @VTOnBeforeCellPaint;
-    {$if VTMajorVersion = 5}
-    // todo: a bit flickering
-    // move back to paintbackground and count displayrect by scroll offset
-    OnAfterPaint:=@VTOnAfterPaint;
-    {$else}
     OnPaintBackground := @VTOnPaintBackground;
-    {$endif}
   end;
 end;
 
