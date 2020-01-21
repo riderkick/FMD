@@ -349,15 +349,16 @@ end;
 procedure DoRestartFMD;
 var
   p: TProcessUTF8;
-  i: Integer;
 begin
   p := TProcessUTF8.Create(nil);
   try
     p.InheritHandles := False;
     p.CurrentDirectory := ExtractFilePath(Application.ExeName);
     p.Executable := Application.ExeName;
-    for i := 1 to ParamCount do
-      p.Parameters.Add(ParamStrUTF8(i));
+    p.Parameters.AddStrings(AppParams);
+    {$ifdef windows}
+    p.Parameters.Add('--dorestart-handle='+IntToStr(Integer(Application.Handle)));
+    {$endif}
     p.Execute;
   finally
     p.Free;
