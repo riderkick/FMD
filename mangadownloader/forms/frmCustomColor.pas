@@ -175,7 +175,7 @@ begin
     Add('UnfocusedSelectionColor', clBtnFace);
     Add('UnfocusedSelectionBorderColor', clBtnShadow);
     Add('NormalTextColor', clWindowText);
-    Add('FocusedSelectionTextColor', clWindowText);
+    Add('FocusedSelectionTextColor', clHighlightText);
     Add('UnfocusedSelectionTextColor', clWindowText);
     Add('OddColor', CL_BSOdd);
     Add('EvenColor', CL_BSEven);
@@ -603,6 +603,7 @@ begin
       // we can custom draw later, or wait for the fix
       PaintOptions:=PaintOptions-[toUseExplorerTheme];
       {$endif}
+      PaintOptions:=PaintOptions+[toHotTrack];
       if toShowVertGridLines in PaintOptions then
         PaintOptions:=PaintOptions+[toFullVertGridLines];
     end;
