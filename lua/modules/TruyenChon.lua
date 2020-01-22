@@ -1,6 +1,7 @@
-﻿local dirurl = {
+local dirurl = {
   ['TruyenChon'] = '/the-loai?status=-1&sort=15&page=%s',
-  ['NetTruyen'] = '/tim-truyen?status=-1&sort=15&page=%s'
+  ['NetTruyen'] = '/tim-truyen?status=-1&sort=15&page=%s',
+  ['MangaNT'] = '/genres?status=-1&sort=15&page=%s'
 }
 
 function getinfo()
@@ -12,7 +13,13 @@ function getinfo()
     end
     mangainfo.coverlink = MaybeFillHost(module.rooturl, x.xpathstring('//div[contains(@class, "col-image")]/img/@src'))
     mangainfo.status = MangaInfoStatusIfPos(x.xpathstring('//li[contains(@class, "status")]/p[2]'), 'Đang tiến hành', 'Hoàn thành')
+    if mangainfo.status == '' then
+      mangainfo.status = MangaInfoStatusIfPos(x.xpathstring('//p[contains(., "status")]/following-sibling::p'))
+    end
     mangainfo.authors=x.xpathstring('//li[contains(@class, "author")]/p[2]')
+    if mangainfo.authors == '' then
+      mangainfo.authors=x.xpathstringall('//p[contains(., "Author(s)")]/following-sibling::p/a')
+    end
     mangainfo.artists=x.xpathstring('//h4[starts-with(./label,"Artista")]/substring-after(.,":")')
     mangainfo.genres=x.xpathstringall('//li[contains(@class, "kind")]/p[2]/a')
     mangainfo.summary=x.xpathstring('//div[@class="detail-content"]/p')
@@ -57,12 +64,11 @@ function getdirectorypagenumber()
   end
 end
 
-function AddWebsiteModule(name, url)
+function AddWebsiteModule(name, url, category)
   local m=NewModule()
-  m.category='Vietnamese'
+  m.category=category
   m.website=name
   m.rooturl=url
-  m.lastupdated='June 15, 2018'
   m.sortedlist = true
   m.ongetinfo='getinfo'
   m.ongetpagenumber='getpagenumber'
@@ -72,6 +78,10 @@ function AddWebsiteModule(name, url)
 end
 
 function Init()
-  AddWebsiteModule('TruyenChon', 'http://truyenchon.com')
-  AddWebsiteModule('NetTruyen', 'http://www.nettruyen.com')
+  local cat = 'Vietnamese'
+  AddWebsiteModule('TruyenChon', 'http://truyenchon.com', cat)
+  AddWebsiteModule('NetTruyen', 'http://www.nettruyen.com', cat)
+  
+  cat = 'English'
+  AddWebsiteModule('MangaNT', 'https://mangant.com', cat)
 end
