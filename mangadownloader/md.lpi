@@ -193,8 +193,8 @@
             </Debugging>
           </Linking>
           <Other>
-            <CustomOptions Value="-dDEBUGLEAKS
--dDEVBUILD"/>
+            <CustomOptions Value="-dDEVBUILD
+-dDEBUGLEAKS"/>
             <OtherDefines Count="2">
               <Define0 Value="DEBUGLEAKS"/>
               <Define1 Value="DEVBUILD"/>

@@ -4,6 +4,14 @@ https://github.com/fmd-project-team/FMD
 Changelog:
 ([!] Important, [+] Addition, [-] Removal, [*] Fix/Change, [?] Feedback needed)
 
+1.0.0.0 (27.01.2020)
+[*] Fixed FMD sometimes won't restart after modules update
+[*] Fixed memory leaks
+[+] Added MangaNT[EN]
+[*] Ported MangaReader/MangaPanda to lua
+[*] Various changes and bug fixes
+Full changes: https://github.com/fmd-project-team/FMD/compare/0.9.168.0...1.0.0.0
+
 0.9.168.1 (19.01.2020)
 [!] Report issues here: https://github.com/fmd-project-team/FMD/issues
 [!] Join us on Discord: https://discord.gg/cXKKgw3
