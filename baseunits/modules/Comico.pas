@@ -47,8 +47,6 @@ end;
 function GetChapterPageNumber(const MangaInfo: TMangaInformation; var Page: Integer;
   const AURL: String; const Module: TModuleContainer): Integer;
 var
-  v: IXQValue;
-  s: String;
   url: String;
 begin
   Result := NET_PROBLEM;

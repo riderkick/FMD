@@ -8,7 +8,6 @@ unit uBaseUnit;
 
 {$mode objfpc}{$H+}
 {$MACRO ON}
-{$DEFINE DOWNLOADER}
 
 interface
 
@@ -642,7 +641,7 @@ procedure SendLogException(const AText: String; AException: Exception); inline;
 implementation
 
 uses
-  {$IFDEF DOWNLOADER}WebsiteModules, webp, FPWriteJPEG;{$ENDIF}
+  WebsiteModules, webp, FPWriteJPEG;
 
 {$IFDEF WINDOWS}
 // thanks Leledumbo for the code
@@ -1062,11 +1061,7 @@ var
   i: Integer;
 begin
   OutArray.BeginUpdate;
-  {$IF (FPC_FULLVERSION >= 30101)}
   P := TJSONParser.Create(Trim(S), [joUTF8]);
-  {$ELSE}
-  P := TJSONParser.Create(Trim(S), True);
-  {$ENDIF}
   try
     D := P.Parse;
     try

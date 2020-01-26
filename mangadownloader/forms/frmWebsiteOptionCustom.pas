@@ -209,7 +209,7 @@ end;
 function TCustomOptionForm.AddOptionItem(const AOptionItemType: TWebsiteOptionType;
   const AName, ACaption, AGroup, AGroupCaption: String): TWinControl;
 var
-  i, j: Integer;
+  i: Integer;
   compparent: TWinControl;
   compparentsibling, compsibling: TControl;
   lcomp, lcompcaption, lgroup, lgroupcaption: String;

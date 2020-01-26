@@ -31,6 +31,7 @@
 unit SimpleException;
 
 {$mode objfpc}{$H+}
+{$define MULTILOG}
 
 interface
 

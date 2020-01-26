@@ -7,7 +7,6 @@
 unit uData;
 
 {$mode objfpc}{$H+}
-{$DEFINE DOWNLOADER}
 
 // This unit contains all necessary functions for data processing
 

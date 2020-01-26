@@ -72,7 +72,6 @@ var
   s, key, cid: string;
   query: TXQueryEngineHTML;
   page: Integer;
-  v: IXQValue;
   lst: TStringList;
 begin
   Result := False;

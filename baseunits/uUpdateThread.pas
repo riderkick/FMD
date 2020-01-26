@@ -47,10 +47,6 @@ type
     procedure SetCurrentDirectoryPageNumber(AValue: Integer);
   protected
     procedure Execute; override;
-    {$IFNDEF DOWNLOADER}
-    procedure ConsoleReport;
-    procedure SaveCurrentDatabase;
-    {$ENDIF}
     procedure MainThreadStatusRepaint;
     procedure MainThreadShowGetting;
     procedure MainThreadEndGetting;

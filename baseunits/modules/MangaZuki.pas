@@ -48,9 +48,6 @@ end;
 
 function GetInfo(const MangaInfo: TMangaInformation;
   const AURL: String; const Module: TModuleContainer): Integer;
-var
-  v: IXQValue;
-  s: String;
 begin
   Result := NET_PROBLEM;
   with MangaInfo.mangaInfo, MangaInfo.FHTTP do

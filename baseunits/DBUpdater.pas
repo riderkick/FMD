@@ -250,7 +250,7 @@ end;
 
 procedure TDBUpdaterThread.Execute;
 var
-  currentfilename, lurl: String;
+  currentfilename: String;
   cont: Boolean;
   used: Boolean;
 begin
@@ -263,7 +263,6 @@ begin
     try
       FCurrentName := Items[FCurrentId];
       Synchronize(@SyncStartDownload);
-      lurl := GetDBURL(FCurrentName);
       if FHTTP.GET(GetDBURL(FCurrentName)) and (FHTTP.ResultCode < 300) then
       begin
         cont := True;

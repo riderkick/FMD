@@ -499,7 +499,7 @@ var
 
   function SetLang(const lang: string; appname: string = ''): Boolean;
   function SetLangByIndex(const Index: Integer): Boolean;
-  function GetDefaultLang: string;
+  function GetDefaultLang: string; inline;
 
 implementation
 
@@ -768,11 +768,7 @@ end;
 
 function GetDefaultLang: string;
 begin
-  {$IF FPC_FULLVERSION >= 20701}
-  Result := LCLTranslator.GetDefaultLang;
-  {$ELSE}
-  Result := '';
-  {$ENDIF}
+  Result := LCLTranslator.SetDefaultLang('');
 end;
 
 initialization

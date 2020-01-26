@@ -82,12 +82,10 @@ function GetPageNumber(const DownloadThread: TDownloadThread;
   const AURL: String; const Module: TModuleContainer): Boolean;
 var
   source: TStringList;
-  i, j, bi, bv: Integer;
+  i: Integer;
   key: String;
-  v, x: IXQValue;
   data: IXQValue;
   regx: TRegExpr;
-  s: String;
 begin
   Result := False;
   if DownloadThread = nil then Exit;

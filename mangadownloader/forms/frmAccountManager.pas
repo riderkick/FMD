@@ -223,12 +223,10 @@ procedure TAccountManagerForm.vtAccountListHeaderClick(Sender: TVTHeader;
   HitInfo: TVTHeaderHitInfo);
 var
   Column: TColumnIndex;
-  Button: TMouseButton;
 {$endif}
 begin
   {$if VTMajorVersion >= 5}
   Column := HitInfo.Column;
-  Button := HitInfo.Button;
   {$endif}
   if Sender.SortColumn <> Column then
     Sender.SortColumn := Column

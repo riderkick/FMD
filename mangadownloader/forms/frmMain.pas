@@ -2659,29 +2659,9 @@ procedure TMainForm.btUpdateListClick(Sender: TObject);
 var
   button: TControl;
   lowerLeft: TPoint;
-  {$IFNDEF SELFUPDATE}
-  i: Cardinal;
-  {$ENDIF}
 begin
-  {$IFDEF SELFUPDATE}
   pmUpdate.Items[0].Enabled := True;
   pmUpdate.Items[3].Enabled := True;
-  {$ELSE}
-  if dataProcess.Title.Count = 0 then
-    pmUpdate.Items[0].Enabled := False
-  else
-    pmUpdate.Items[0].Enabled := True;
-
-  pmUpdate.Items[3].Enabled := True;
-  for i := 0 to cbSelectManga.Items.Count - 1 do
-  begin
-    if not (FileExistsUTF8(DATA_FOLDER + cbSelectManga.Items.Strings[i] + DATA_EXT)) then
-    begin
-      pmUpdate.Items[3].Enabled := False;
-      Break;
-    end;
-  end;
-  {$ENDIF}
   if Sender is TControl then
   begin
     button := TControl(Sender);
@@ -3398,16 +3378,11 @@ var
 begin
   if (not isUpdating) then
   begin
-    {$IFNDEF SELFUPDATE}
-    if dataProcess.Title.Count > 0 then
-    {$ENDIF}
-    begin
-      isUpdating := True;
-      updateList := TUpdateListManagerThread.Create;
-      for i := 0 to cbSelectManga.Items.Count - 1 do
-        updateList.websites.Add(cbSelectManga.Items[i]);
-      updateList.Start;
-    end;
+    isUpdating := True;
+    updateList := TUpdateListManagerThread.Create;
+    for i := 0 to cbSelectManga.Items.Count - 1 do
+      updateList.websites.Add(cbSelectManga.Items[i]);
+    updateList.Start;
   end
   else
   begin
@@ -3453,16 +3428,11 @@ var
 begin
   if (not isUpdating) then
   begin
-    {$IFNDEF SELFUPDATE}
-    if dataProcess.Title.Count > 0 then
-    {$ENDIF}
-    begin
-      isUpdating := True;
-      updateList := TUpdateListManagerThread.Create;
-      updateList.numberOfThreads := 4;
-      updateList.websites.Add(cbSelectManga.Items[cbSelectManga.ItemIndex]);
-      updateList.Start;
-    end;
+    isUpdating := True;
+    updateList := TUpdateListManagerThread.Create;
+    updateList.numberOfThreads := 4;
+    updateList.websites.Add(cbSelectManga.Items[cbSelectManga.ItemIndex]);
+    updateList.Start;
   end
   else
   begin

@@ -431,9 +431,6 @@ end;
 procedure TModuleContainer.PrepareHTTP(const AHTTP: THTTPSendThread);
 var
   s: String;
-  AProcess: TProcess;
-  f: TextFile;
-  cfs: String;
 begin
   //todo: replace it with website challenges, there is more than cloudflare
   CheckCloudflareEnabled(AHTTP);

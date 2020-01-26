@@ -2,8 +2,6 @@ program md;
 
 {$mode objfpc}{$H+}
 
-{$DEFINE MANGADOWNLOADER}
-
 uses
  {$IFDEF UNIX} {$IFDEF UseCThreads}
   cthreads,
