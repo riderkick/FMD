@@ -975,7 +975,8 @@ implementation
 uses
   frmImportFavorites, frmShutdownCounter, frmSelectDirectory,
   frmWebsiteSettings, WebsiteModules, FMDVars, RegExpr, sqlite3dyn, Clipbrd,
-  ssl_openssl_lib, LazFileUtils, LazUTF8, webp, DBUpdater, LuaWebsiteModules;
+  ssl_openssl_lib, LazFileUtils, LazUTF8, webp, DBUpdater, pcre2, pcre2lib,
+  LuaWebsiteModules;
 
 var
   // thread for open db
@@ -2382,6 +2383,7 @@ begin
   AddToAboutStatus('OpenSSL Version', OpenSSLVersion);
   if WebPLibHandle = 0 then InitWebPModule;
   if WebPLibHandle <> 0 then try AddToAboutStatus('WebP Version', WebPGetVersion); except end;
+  if PCRE2LibHandle <> 0 then try AddToAboutStatus('PCRE Version', PCRE2Version); except end;
 end;
 
 procedure TMainForm.AddToAboutStatus(const ACaption, AValue: String);
