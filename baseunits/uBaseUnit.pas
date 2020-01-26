@@ -22,7 +22,7 @@ uses
   strutils, dateutils, variants, base64, fpjson, jsonparser, jsonscanner,
   fgl, RegExpr, synautil, httpsend, blcksock, ssl_openssl,
   synacode, MultiLog, FPimage, GZIPUtils, uMisc, httpsendthread, FMDOptions,
-  simplehtmltreeparser, xquery, xquery_json, ImgInfos, NaturalSortUnit,
+  ImgInfos, NaturalSortUnit,
   MemBitmap, FPWritePNG, zstream, FPReadPNG, VirtualTrees;
 
 const
@@ -431,13 +431,6 @@ function EncodeCriticalURLElements(const URL: String): String;
 
 //JSON
 procedure ParseJSONArray(const S, Path: String; var OutArray: TStringList);
-
-// XPath / CSS Selector
-procedure ParseHTMLTree(var tp: TTreeParser; const S: String);
-function SelectXPathString(Expression: String; TP: TTreeParser): String;
-function SelectXPathIX(Expression: String; TP: TTreeParser): IXQValue;
-function SelectCSSString(Expression: String; TP: TTreeParser): String;
-function SelectCSSIX(Expression: String; TP: TTreeParser): IXQValue;
 
 //convert charset to utf8
 function ConvertCharsetToUTF8(S: String): String; overload;
@@ -1091,65 +1084,6 @@ begin
     P.Free;
   end;
   OutArray.EndUpdate;
-end;
-
-procedure ParseHTMLTree(var tp: TTreeParser; const S: String);
-begin
-  if tp = nil then tp := TTreeParser.Create;
-  with tp do begin
-    parsingModel := pmHTML;
-    repairMissingStartTags := True;
-    repairMissingEndTags := True;
-    trimText := False;
-    readComments := False;
-    readProcessingInstructions := False;
-    autoDetectHTMLEncoding := False;
-    if S <> '' then parseTree(S);
-  end;
-end;
-
-function SelectXPathString(Expression: String; TP: TTreeParser): String;
-begin
-  Result := '';
-  if TP = nil then Exit;
-  if TP.getLastTree = nil then Exit;
-  try
-    Result := TXQueryEngine.evaluateStaticXPath3(Expression, TP.getLastTree).toString;
-  except
-  end;
-end;
-
-function SelectXPathIX(Expression: String; TP: TTreeParser): IXQValue;
-begin
-  Result := xqvalue();
-  if TP = nil then Exit;
-  if TP.getLastTree = nil then Exit;
-  try
-    Result := TXQueryEngine.evaluateStaticXPath3(Expression, TP.getLastTree);
-  except
-  end;
-end;
-
-function SelectCSSString(Expression: String; TP: TTreeParser): String;
-begin
-  Result := '';
-  if TP = nil then Exit;
-  if TP.getLastTree = nil then Exit;
-  try
-    Result := TXQueryEngine.evaluateStaticCSS3(Expression, TP.getLastTree).toString;
-  except
-  end;
-end;
-
-function SelectCSSIX(Expression: String; TP: TTreeParser): IXQValue;
-begin
-  Result := xqvalue();
-  if TP = nil then Exit;
-  if TP.getLastTree = nil then Exit;
-  try
-    Result := TXQueryEngine.evaluateStaticCSS3(Expression, TP.getLastTree);
-  except
-  end;
 end;
 
 function ConvertCharsetToUTF8(S: String): String;
