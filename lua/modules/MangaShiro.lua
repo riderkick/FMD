@@ -251,7 +251,7 @@ function getnameandlink()
     ['PecintaKomik'] = '/daftar-manga/?list',
     ['MangaIndoNet'] = '/manga-list/?list',
     ['KomikIndo'] = '/manga-list/?list',
-    ['KomikIndoWebId'] = '/daftar-manga/?list',
+    ['KomikIndoWebId'] = '/daftar-komik/',
     ['Komiku'] = '/daftar-komik/',
     ['KazeManga'] = '/manga-list/?list',
     ['Mangacan'] =  '/daftar-komik-manga-bahasa-indonesia.html',
@@ -260,7 +260,7 @@ function getnameandlink()
     ['MangaCeng'] = '/manga/?list',
     ['MaidMangaID'] = '/manga-list/?list',
     ['KomikAV'] = '/manga/?list',
-    ['Ngomik'] = '/daftar-manga/?list',
+    ['Ngomik'] = '/daftar-komik/?list',
     ['MangaPus'] = '/manga-list/?list',
     ['Mangaseno'] = '/manga-list/?list',
     ['SekteKomik'] = '/manga/?list',
@@ -283,7 +283,7 @@ function getnameandlink()
     if links.count < 1 then x.xpathhrefall('//*[@id="a-z"]//h4/a',links,names) end
     if links.count < 1 then x.xpathhrefall('//*[@class="manga-list"]/a',links,names) end
     
-    if links.count < 1 or module.website == 'KoMBatch' then 
+    if links.count < 1 or module.website == 'KoMBatch' then
       local pages = 1
       local p = 1
       while p <= pages do
@@ -309,6 +309,7 @@ function getnameandlink()
         p = p + 1
       end
     end
+    if links.count < 1 or module.website == 'Mangacan' then x.xpathhrefall('//*[@class="blix"]/ul//a',links,names) end
     return no_error
   else
     return net_problem
