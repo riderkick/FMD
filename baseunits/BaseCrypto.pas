@@ -168,12 +168,13 @@ end;
 
 function MD5Hex(const s: String): String;
 var
-  h: array[0 .. 15] of Byte;
+  h: TBytes;
 begin
   with TDCP_md5.Create(nil) do
     try
       Init;
       UpdateStr(s);
+      SetLength(h, 16);
       Final(h);
     finally
       Free;

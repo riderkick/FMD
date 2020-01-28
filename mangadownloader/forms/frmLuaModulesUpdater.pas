@@ -49,8 +49,8 @@ type
     procedure Add(const I: TLuaModuleRepo); overload;
     procedure LoadFromRemote(const AHTTP: THTTPSendThread);
     procedure LoadFromRemoteHTML(const AHTTP: THTTPSendThread);
-    procedure LoadFromFile(const AFilename: String);
-    procedure SaveToFile(const AFilename: String);
+    procedure LoadFromFile(const AFileName: String);
+    procedure SaveToFile(const AFileName: String);
     procedure Sort;
     function Clone: TLuaModulesRepos;
     property Count: Integer read GetCount;
@@ -322,7 +322,7 @@ begin
   Sort;
 end;
 
-procedure TLuaModulesRepos.LoadFromFile(const AFilename: String);
+procedure TLuaModulesRepos.LoadFromFile(const AFileName: String);
 var
   f: TFileStream;
   j: TJSONParser;
@@ -331,11 +331,11 @@ var
   i: Integer;
   m: TLuaModuleRepo;
 begin
-  if not FileExists(AFilename) then
+  if not FileExists(AFileName) then
     Exit;
 
   a := nil;
-  f := TFileStream.Create(AFilename, fmOpenRead or fmShareDenyWrite);
+  f := TFileStream.Create(AFileName, fmOpenRead or fmShareDenyWrite);
   try
     j := TJSONParser.Create(f, [joUTF8]);
     try
@@ -370,13 +370,13 @@ begin
   Sort;
 end;
 
-procedure TLuaModulesRepos.SaveToFile(const AFilename: String);
+procedure TLuaModulesRepos.SaveToFile(const AFileName: String);
 var
   a: TJSONArray;
   o: TJSONObject;
   i: Integer;
   m: TLuaModuleRepo;
-  f: TFileStream;
+  f: TMemoryStream;
 begin
   a := TJSONArray.Create;
   try
@@ -394,11 +394,12 @@ begin
       a.Add(o);
     end;
 
-    if FileExists(AFilename) then
-      DeleteFile(AFilename);
-    f := TFileStream.Create(AFilename, fmCreate);
+    if FileExists(AFileName) then
+      DeleteFile(AFileName);
+    f := TMemoryStream.Create;
     try
       a.DumpJSON(f);
+      f.SaveToFile(AFileName);
     finally
       f.Free;
     end;

@@ -983,7 +983,7 @@ var
   i, j: Integer;
   js: TJSONStreamer;
   ja: TJSONArray;
-  fs: TFileStream;
+  fs: TMemoryStream;
   jo: TJSONObject;
   jo2: TJSONObject;
 begin
@@ -1013,9 +1013,10 @@ begin
         if Account<>nil then
           jo.Add('Account',js.ObjectToJSON(Account));
       end;
-    fs:=TFileStream.Create(MODULES_FILE,fmCreate);
+    fs:=TMemoryStream.Create;
     try
       ja.DumpJSON(fs);
+      fs.SaveToFile(MODULES_FILE);
     finally
       fs.Free;
     end;
