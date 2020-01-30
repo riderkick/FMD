@@ -1438,12 +1438,33 @@ begin
     EnterCriticalSection(CS_Task);
     isRunningBackup := True;
     for i := 0 to Items.Count - 1 do
-      Items[i].SaveToDB(i);
+      with Items[i] do
+        FDownloadsDB.InternalUpdate(DlId,
+          FEnabled,
+          i,
+          Integer(Status),
+          CurrentDownloadChapterPtr,
+          PageNumber,
+          CurrentPageNumber,
+          Website,
+          DownloadInfo.Link,
+          DownloadInfo.Title,
+          DownloadInfo.Status,
+          DownloadInfo.Progress,
+          DownloadInfo.SaveTo,
+          DownloadInfo.DateTime,
+          ChapterLinks.Text,
+          ChapterName.Text,
+          PageLinks.Text,
+          PageContainerLinks.Text,
+          FileNames.Text,
+          CustomFileName,
+          ChaptersStatus.Text);
     FDownloadsDB.Commit;
+    isRunningBackup := False;
   finally
     LeaveCriticalSection(CS_Task);
   end;
-  isRunningBackup := False;
 end;
 
 procedure TDownloadManager.GetDownloadedChaptersState(const Alink: String;

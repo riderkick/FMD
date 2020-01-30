@@ -184,7 +184,6 @@ type
     tsLog: TTabSheet;
     tmStartup: TTimer;
     tmAnimateMangaInfo: TTimer;
-    tmBackup: TTimer;
     tmCheckFavorites: TTimer;
     tmRefreshDownloadsInfo: TTimer;
     tsWebsiteAdvanced: TTabSheet;
@@ -682,7 +681,6 @@ type
       var NodeDataSize: Integer);
     procedure vtMangaListGetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
       Column: TColumnIndex; TextType: TVSTTextType; var CellText: String);
-    procedure tmBackupTimer(Sender: TObject);
     procedure vtMangaListInitNode(Sender: TBaseVirtualTree; ParentNode,
       Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
     procedure vtOptionMangaSiteSelectionFreeNode(Sender : TBaseVirtualTree;
@@ -1427,7 +1425,7 @@ begin
   end;
 
   Logger.Send(Self.ClassName+'.CloseNow, disabling all timer');
-  tmBackup.Enabled := False;
+  Timer1Hour.Enabled := False;
   tmRefreshDownloadsInfo.Enabled := False;
   tmCheckFavorites.Enabled := False;
   tmAnimateMangaInfo.Enabled := False;
@@ -6156,14 +6154,6 @@ end;
 procedure TMainForm.ExceptionHandler(Sender: TObject; E: Exception);
 begin
   SimpleException.ExceptionHandle(Sender, E);
-end;
-
-procedure TMainForm.tmBackupTimer(Sender: TObject);
-begin
-  if not DLManager.isRunningBackup then
-    DLManager.Backup;
-  if not FavoriteManager.isRunning then
-    FavoriteManager.Backup;
 end;
 
 procedure TMainForm.vtMangaListInitNode(Sender: TBaseVirtualTree; ParentNode,

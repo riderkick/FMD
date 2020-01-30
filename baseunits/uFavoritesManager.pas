@@ -1216,7 +1216,8 @@ begin
     try
       EnterCriticalsection(CS_Favorites);
       for i := 0 to Items.Count - 1 do
-        Items[i].SaveToDB(i);
+        with Items[i], FavoriteInfo do
+          FFavoritesDB.InternalUpdate(i,FEnabled,Website,Link,Title,CurrentChapter,DownloadedChapterList,SaveTo);
       FFavoritesDB.Commit;
     finally
       LeaveCriticalsection(CS_Favorites);
