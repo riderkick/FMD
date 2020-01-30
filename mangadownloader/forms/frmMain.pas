@@ -11,6 +11,7 @@ unit frmMain;
 interface
 
 uses
+  LCLVersion,
   {$ifdef windows}
   ActiveX, windows,
   {$else}
@@ -716,6 +717,10 @@ type
     gifWaiting: TAnimatedGif;
     gifWaitingRect: TRect;
 
+    // timer schedule
+    Timer1Hour: TTimer;
+
+    procedure OnTimer1Hour(Sender:TObject);
 
     // embed form
     procedure EmbedForm(const AForm: TForm; const AParent: TWinControl);
@@ -976,7 +981,7 @@ uses
   frmImportFavorites, frmShutdownCounter, frmSelectDirectory,
   frmWebsiteSettings, WebsiteModules, FMDVars, RegExpr, sqlite3dyn, Clipbrd,
   ssl_openssl_lib, LazFileUtils, LazUTF8, webp, DBUpdater, pcre2, pcre2lib,
-  LuaWebsiteModules;
+  LuaWebsiteModules, uBackupSettings;
 
 var
   // thread for open db
@@ -1311,7 +1316,15 @@ begin
     Interval := 100;
     Enabled := True;
   end;
-  
+
+  Timer1Hour:=TTimer.Create(Self);
+  with Timer1Hour do
+  begin
+    OnTimer:=@OnTimer1Hour;
+    Interval:=1000*60*60;
+    Enabled:=True;
+  end;
+
   Caption := 'Free Manga Downloader (' + FMD_VERSION_STRING + ')';
 end;
 
@@ -2024,6 +2037,8 @@ begin
     FavoriteManager.CheckForNewChapter;
   end;
   DLManager.CheckAndActiveTaskAtStartup;
+
+  DoBackupToday;
 end;
 
 procedure TMainForm.medURLCutClick(Sender: TObject);
@@ -2693,6 +2708,11 @@ begin
   if Length(ChapterList) > 0 then
     for i := Low(ChapterList) to High(ChapterList) do
       ChapterList[i].Downloaded := False;
+end;
+
+procedure TMainForm.OnTimer1Hour(Sender: TObject);
+begin
+  DoBackupToday;
 end;
 
 procedure TMainForm.EmbedForm(const AForm: TForm; const AParent: TWinControl);
