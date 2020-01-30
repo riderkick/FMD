@@ -1338,6 +1338,7 @@ begin
       Exit;
     end;
   end;
+  WindowState := wsMinimized;
   CloseNow;
   CloseAction := caFree;
 end;

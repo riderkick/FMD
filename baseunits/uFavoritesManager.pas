@@ -1170,8 +1170,6 @@ begin
 end;
 
 procedure TFavoriteManager.Restore;
-var
-  t: TFavoriteContainer;
 begin
   if not FFavoritesDB.Connection.Connected then Exit;
   if FFavoritesDB.OpenTable(False) then
@@ -1182,21 +1180,19 @@ begin
         FFavoritesDB.Table.First;
         while not FFavoritesDB.Table.EOF do
         begin
-          t := TFavoriteContainer.Create;
-          with t, FavoriteInfo, FFavoritesDB.Table do
+          with Items[Items.Add(TFavoriteContainer.Create)], FFavoritesDB.Table do
             begin
-              Manager               := Self;
-              Status                := STATUS_IDLE;
-              Enabled               := Fields[f_enabled].AsBoolean;
-              Website               := Fields[f_website].AsString;
-              t.Website             := Website;
-              Link                  := Fields[f_link].AsString;
-              Title                 := Fields[f_title].AsString;
-              CurrentChapter        := Fields[f_currentchapter].AsString;
-              DownloadedChapterList := Fields[f_downloadedchapterlist].AsString;
-              SaveTo                := Fields[f_saveto].AsString;
+              Manager                            := Self;
+              Status                             := STATUS_IDLE;
+              Enabled                            := Fields[f_enabled].AsBoolean;
+              FavoriteInfo.Website               := Fields[f_website].AsString;
+              Website                            := FavoriteInfo.Website;
+              FavoriteInfo.Link                  := Fields[f_link].AsString;
+              FavoriteInfo.Title                 := Fields[f_title].AsString;
+              FavoriteInfo.CurrentChapter        := Fields[f_currentchapter].AsString;
+              FavoriteInfo.DownloadedChapterList := Fields[f_downloadedchapterlist].AsString;
+              FavoriteInfo.SaveTo                := Fields[f_saveto].AsString;
             end;
-          Items.Add(t);
           FFavoritesDB.Table.Next;
         end;
       finally

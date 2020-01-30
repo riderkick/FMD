@@ -1389,8 +1389,7 @@ begin
         FDownloadsDB.Table.First;
         while not FDownloadsDB.Table.EOF do
         begin
-          Items.Add(TTaskContainer.Create);
-          with Items.Last, FDownloadsDB.Table do
+          with Items[Items.Add(TTaskContainer.Create)], FDownloadsDB.Table do
           begin
             Manager := Self;
             DlId                      := Fields[f_dlid].AsInteger;
