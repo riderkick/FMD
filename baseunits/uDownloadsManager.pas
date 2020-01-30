@@ -118,7 +118,8 @@ type
   private
     FWebsite: String;
     FStatus: TDownloadStatusType;
-    FEnabled: Boolean;
+    FEnabled,
+    FisFinishStored: Boolean;
     procedure SetEnabled(AValue: Boolean);
     procedure SetStatus(AValue: TDownloadStatusType);
     procedure SetWebsite(AValue: String);
@@ -1386,6 +1387,7 @@ begin
     if FDownloadsDB.RecordCount = 0 then Exit;
     EnterCriticalsection(CS_Task);
       try
+        FDownloadsDB.Table.Last; //load all to memory
         FDownloadsDB.Table.First;
         while not FDownloadsDB.Table.EOF do
         begin
@@ -1395,6 +1397,7 @@ begin
             DlId                      := Fields[f_dlid].AsInteger;
             Enabled                   := Fields[f_enabled].AsBoolean;
             Status                    := TDownloadStatusType(Fields[f_taskstatus].AsInteger);
+            FisFinishStored           := Status = STATUS_FINISH;
             CurrentDownloadChapterPtr := Fields[f_chapterptr].AsInteger;
             PageNumber                := Fields[f_numberofpages].AsInteger;
             CurrentPageNumber         := Fields[f_currentpage].AsInteger;
@@ -1437,28 +1440,32 @@ begin
     EnterCriticalSection(CS_Task);
     isRunningBackup := True;
     for i := 0 to Items.Count - 1 do
-      with Items[i] do
-        FDownloadsDB.InternalUpdate(DlId,
-          FEnabled,
-          i,
-          Integer(Status),
-          CurrentDownloadChapterPtr,
-          PageNumber,
-          CurrentPageNumber,
-          Website,
-          DownloadInfo.Link,
-          DownloadInfo.Title,
-          DownloadInfo.Status,
-          DownloadInfo.Progress,
-          DownloadInfo.SaveTo,
-          DownloadInfo.DateTime,
-          ChapterLinks.Text,
-          ChapterName.Text,
-          PageLinks.Text,
-          PageContainerLinks.Text,
-          FileNames.Text,
-          CustomFileName,
-          ChaptersStatus.Text);
+      with Items[i] do begin
+        if FisFinishStored then
+          FDownloadsDB.InternalUpdateFinishStored(DlId,i,Enabled)
+        else
+          FDownloadsDB.InternalUpdate(DlId,
+            FEnabled,
+            i,
+            Integer(Status),
+            CurrentDownloadChapterPtr,
+            PageNumber,
+            CurrentPageNumber,
+            Website,
+            DownloadInfo.Link,
+            DownloadInfo.Title,
+            DownloadInfo.Status,
+            DownloadInfo.Progress,
+            DownloadInfo.SaveTo,
+            DownloadInfo.DateTime,
+            ChapterLinks.Text,
+            ChapterName.Text,
+            PageLinks.Text,
+            PageContainerLinks.Text,
+            FileNames.Text,
+            CustomFileName,
+            ChaptersStatus.Text);
+      end;
     FDownloadsDB.Commit;
     isRunningBackup := False;
   finally

@@ -32,6 +32,7 @@ type
       const Awebsite,Alink,Atitle,Astatus,Aprogress,Asaveto:String;
       const Adatetime:TDateTime;
       const Achapterslinks,Achaptersnames,Apagelinks,Apagecontainerlinks,Afilenames,Acustomfilenames,Achaptersstatus:String); inline;
+    procedure InternalUpdateFinishStored(const Adlid,AOrder:Integer;const Aenabled:Boolean);
     function Add(
       var Adlid:Integer;
       const Aenabled:Boolean;
@@ -200,6 +201,14 @@ begin
     '"filenames"=' +          QuotedStr(Afilenames) + ', ' +
     '"customfilenames"=' +    QuotedStr(Acustomfilenames) + ', ' +
     '"chaptersstatus"=' +     QuotedStr(Achaptersstatus) +
+    ' WHERE "dlid"=' + QuotedStr(Adlid));
+end;
+
+procedure TDownloadsDB.InternalUpdateFinishStored(const Adlid,AOrder:Integer;const Aenabled:Boolean);
+begin
+  Connection.ExecuteDirect('UPDATE "downloads" SET ' +
+    '"enabled"=' +            QuotedStr(Aenabled) + ', ' +
+    '"order"=' +              QuotedStr(Aorder) +
     ' WHERE "dlid"=' + QuotedStr(Adlid));
 end;
 

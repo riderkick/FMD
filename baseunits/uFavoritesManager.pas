@@ -1177,6 +1177,7 @@ begin
       if FFavoritesDB.Table.RecordCount = 0 then Exit;
       EnterCriticalsection(CS_Favorites);
       try
+        FFavoritesDB.Table.Last; //load all to memory
         FFavoritesDB.Table.First;
         while not FFavoritesDB.Table.EOF do
         begin

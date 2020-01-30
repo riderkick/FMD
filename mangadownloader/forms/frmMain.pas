@@ -1480,9 +1480,9 @@ begin
   FreeAndNil(mangaCover);
 
   if isNormalExit then
-    Logger.Send(QuotedStrd(Application.Title)+' exit normally [PID:'+IntToStr(GetProcessID)+'] [HANDLE:'+IntToStr(GetCurrentProcess)+']')
+    Logger.Send(QuotedStrd(Application.Title)+' exit normally [PID:'+IntToStr(GetProcessID)+']'{$ifdef windows}+'[HANDLE:'+IntToStr(Integer(Application.Handle))+']'){$ifend}
   else
-    Logger.SendWarning(QuotedStrd(Application.Title)+' doesn''t exit normally [PID:'+IntToStr(GetProcessID)+'] [HANDLE:'+IntToStr(GetCurrentProcess)+']');
+    Logger.SendWarning(QuotedStrd(Application.Title)+' doesn''t exit normally [PID:'+IntToStr(GetProcessID)+']'{$ifdef windows}+' [HANDLE:'+IntToStr(Integer(Application.Handle))+']'{$ifend});
 
   if OptionRestartFMD then
     DoRestartFMD;
@@ -2017,11 +2017,15 @@ begin
   end;
 
   //restore everything after all modules loaded
+  logger.send('dlmanager.restore start');
   DLManager.Restore;
   UpdateVtDownload;
+  logger.send('dlmanager.restore finish');
 
+  logger.send('fvmanager.restore start');
   FavoriteManager.Restore;
   UpdateVtFavorites;
+  logger.send('fvmanager.restore finish');
 
   if cbSelectManga.ItemIndex > -1 then
     OpenDataDB(cbSelectManga.Items[cbSelectManga.ItemIndex]);
