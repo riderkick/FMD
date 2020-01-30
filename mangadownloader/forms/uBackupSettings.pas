@@ -36,12 +36,11 @@ begin
     blist:=TStringList.Create;
     try
       blist.Sorted:=False;
-      FindAllFiles(blist,BACKUP_FOLDER,'*.'+BACKUP_FILE_EXT,False,faAnyFile);
+      FindAllFiles(blist,BACKUP_FOLDER,BACKUP_FILE_PREFIX+'*.'+BACKUP_FILE_EXT,False,faAnyFile);
       blist.Sort;
-      if blist.Count>BackupLimit then
-        for i:=0 to blist.Count-1-BackupLimit do begin
+      if blist.Count>BackupLimit-1 then
+        for i:=0 to blist.Count-BackupLimit do
           DeleteFile(blist[i]);
-        end;
     finally
       blist.Free;
     end;
