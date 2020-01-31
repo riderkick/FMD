@@ -1328,7 +1328,6 @@ end;
 
 procedure TMainForm.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 begin
-  Logger.Send(Self.ClassName+'.FormClose');
   if cbOptionShowQuitDialog.Checked and (DoAfterFMD = DO_NOTHING) and (not OptionRestartFMD) then
   begin
     if MessageDlg('', RS_DlgQuit, mtConfirmation, [mbYes, mbNo], 0) <> mrYes then
@@ -1338,6 +1337,7 @@ begin
       Exit;
     end;
   end;
+  Logger.Send(Self.ClassName+'.FormClose');
   Hide;
   CloseNow;
   CloseAction := caFree;
@@ -1354,78 +1354,29 @@ begin
     windows.SetWindowLongPtr(Self.Handle, GWL_WNDPROC, PtrInt(PrevWndProc));
   {$endif}
   if FavoriteManager.isRunning then
-  begin
-    Logger.Send(Self.ClassName+'.CloseNow, terminating check favorites threads');
     FavoriteManager.StopChekForNewChapter(True);
-    Logger.Send(Self.ClassName+'.CloseNow, check favorites threads terminated');
-  end;
   if SilentThreadManager.Count > 0 then
-  begin
-    Logger.Send(Self.ClassName+'.CloseNow, terminating silentthreads');
     SilentThreadManager.StopAll(True);
-    Logger.Send(Self.ClassName+'.CloseNow, silentthreads terminated');
-  end;
   if DLManager.ItemsActiveTask.Count > 0 then
-  begin
-    Logger.Send(Self.ClassName+'.CloseNow, terminating downloads threads');
     DLManager.StopAllDownloadTasksForExit;
-    Logger.Send(Self.ClassName+'.CloseNow, downlads threads terminated');
-  end;
-  //Terminating all threads and wait for it
-  if Assigned(CheckUpdateThread) then
-  begin
-    Logger.Send(Self.ClassName+'.CloseNow, terminating CheckUpdateThread');
-    CheckUpdateThread.Terminate;
-    CheckUpdateThread.WaitFor;
-    Logger.Send(Self.ClassName+'.CloseNow, CheckUpdateThread terminated');
-  end;
-  if Assigned(SearchDBThread) then
-  begin
-    Logger.Send(Self.ClassName+'.CloseNow, terminating SearchDBThread');
-    SearchDBThread.Terminate;
-    SearchDBThread.WaitFor;
-    Logger.Send(Self.ClassName+'.CloseNow, SearchDBThread terminated');
-  end;
-  if Assigned(OpenDBThread) then
-  begin
-    Logger.Send(Self.ClassName+'.CloseNow, terminating OpenDBThread');
-    OpenDBThread.Terminate;
-    OpenDBThread.WaitFor;
-    Logger.Send(Self.ClassName+'.CloseNow, OpenDBThread terminated');
-  end;
-  if Assigned(GetInfosThread) then
-  begin
-    Logger.Send(Self.ClassName+'.CloseNow, terminating GetInfosThread');
-    try
-      GetInfosThread.Terminate;
-      GetInfosThread.WaitFor;
-    except
-    end;
-    Logger.Send(Self.ClassName+'.CloseNow, GetInfosThread terminated');
-  end;
-  if isUpdating then
-  begin
-    Logger.Send(Self.ClassName+'.CloseNow, terminating UpdateListThread');
-    updateList.Terminate;
-    updateList.WaitFor;
-    Logger.Send(Self.ClassName+'.CloseNow, UpdateListThread terminated');
-  end;
-  if Assigned(DBUpdaterThread) then
-  begin
-    Logger.Send(Self.ClassName+'.CloseNow, terminating DBUpdaterThread');
-    DBUpdaterThread.Terminate;
-    DBUpdaterThread.WaitFor;
-    Logger.Send(Self.ClassName+'.CloseNow, DBUpdaterThread terminated');
-  end;
-  if Assigned(SelfUpdaterThread) then
-  begin
-    Logger.Send(Self.ClassName+'.CloseNow, terminating SelfUpdaterThread');
-    SelfUpdaterThread.Terminate;
-    SelfUpdaterThread.WaitFor;
-    Logger.Send(Self.ClassName+'.CloseNow, SelfUpdaterThread terminated');
-  end;
 
-  Logger.Send(Self.ClassName+'.CloseNow, disabling all timer');
+  //Terminating all threads and wait for it
+  if Assigned(CheckUpdateThread) then CheckUpdateThread.Terminate;
+  if Assigned(SearchDBThread) then SearchDBThread.Terminate;
+  if Assigned(OpenDBThread) then OpenDBThread.Terminate;
+  if Assigned(GetInfosThread) then try GetInfosThread.Terminate; except end;
+  if isUpdating then updateList.Terminate;
+  if Assigned(DBUpdaterThread) then DBUpdaterThread.Terminate;
+  if Assigned(SelfUpdaterThread) then SelfUpdaterThread.Terminate;
+
+  if Assigned(CheckUpdateThread) then CheckUpdateThread.WaitFor;
+  if Assigned(SearchDBThread) then SearchDBThread.WaitFor;
+  if Assigned(OpenDBThread) then OpenDBThread.WaitFor;
+  if Assigned(GetInfosThread) then GetInfosThread.WaitFor;
+  if isUpdating then updateList.WaitFor;
+  if Assigned(DBUpdaterThread) then DBUpdaterThread.WaitFor;
+  if Assigned(SelfUpdaterThread) then SelfUpdaterThread.WaitFor;
+
   Timer1Hour.Enabled := False;
   tmRefreshDownloadsInfo.Enabled := False;
   tmCheckFavorites.Enabled := False;
@@ -1433,16 +1384,11 @@ begin
   tmExitCommand.Enabled := False;
 
   //Backup data
-  Logger.Send(Self.ClassName+'.CloseNow, backup downloads');
   DLManager.Backup;
-  Logger.Send(Self.ClassName+'.CloseNow, backup favorites');
   FavoriteManager.Backup;
-  Logger.Send(Self.ClassName+'.CloseNow, cleaning up dynamic HTTP settings');
-  Logger.Send(Self.ClassName+'.CloseNow, backup all data to file');
   SaveOptions;
   SaveFormInformation;
 
-  Logger.Send(Self.ClassName+'.CloseNow, close other forms');
   //embed form
   if Assigned(AccountManagerForm) then
     AccountManagerForm.Close;
@@ -1452,7 +1398,6 @@ begin
 
   if FMDInstance <> nil then
   begin
-    Logger.Send(Self.ClassName+'.CloseNow, stop ipc server');
     FMDInstance.StopServer;
     FreeAndNil(FMDInstance);
   end;
@@ -1461,18 +1406,11 @@ end;
 
 procedure TMainForm.FormDestroy(Sender: TObject);
 begin
-  Logger.Send(Self.ClassName+'.FormDestroy, freeing all objects');
-  RemoveVT(vtMangaList);
-  RemoveVT(clbChapterList);
-  RemoveVT(vtDownload);
-  RemoveVT(vtFavorites);
-  RemoveVT(vtOptionMangaSiteSelection);
-
   SetLength(ChapterList, 0);
   FreeAndNil(mangaInfo);
 
-  FreeAndNil(DLManager);
   FreeAndNil(SilentThreadManager);
+  FreeAndNil(DLManager);
   FreeAndNil(FavoriteManager);
   FreeAndNil(dataProcess);
 
@@ -2017,15 +1955,11 @@ begin
   end;
 
   //restore everything after all modules loaded
-  logger.send('dlmanager.restore start');
   DLManager.Restore;
   UpdateVtDownload;
-  logger.send('dlmanager.restore finish');
 
-  logger.send('fvmanager.restore start');
   FavoriteManager.Restore;
   UpdateVtFavorites;
-  logger.send('fvmanager.restore finish');
 
   if cbSelectManga.ItemIndex > -1 then
     OpenDataDB(cbSelectManga.Items[cbSelectManga.ItemIndex]);

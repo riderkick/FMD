@@ -1316,12 +1316,11 @@ begin
 end;
 
 destructor TDownloadManager.Destroy;
+var
+  i: Integer;
 begin
-  while Items.Count > 0 do
-  begin
-    Items.Last.Free;
-    Items.Remove(Items.Last);
-  end;
+  for i:=0 to Items.Count-1 do
+    Items[i].Free;
   Items.Free;
   ItemsActiveTask.Free;
   DownloadedChapters.Free;

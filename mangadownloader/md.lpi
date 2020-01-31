@@ -64,6 +64,12 @@
               </Win32>
             </Options>
           </Linking>
+          <Other>
+            <OtherDefines Count="2">
+              <Define0 Value="DEBUGLEAKS"/>
+              <Define1 Value="DEVBUILD"/>
+            </OtherDefines>
+          </Other>
         </CompilerOptions>
       </Item2>
       <Item3 Name="Win32 Debug">
