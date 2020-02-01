@@ -117,13 +117,8 @@ function Modules.Madara()
     if http.post(module.rooturl .. '/wp-admin/admin-ajax.php', q) then
       if http.headers.values['Content-Length'] == '0' then return no_error end
       local x = TXQuery.Create(http.Document)
-      if module.website == '3asqOrg' or module.website == 'AdonisFansub' or module.website == 'ChibiManga' or module.website == 'DoujinYosh' or module.website == 'GodsRealmScan' or module.website == 'HentaiRead' or module.website == 'Hiperdex' or module.website == 'HunterFansub' or module.website == 'KIDzScan' or module.website == 'KlikManga' or module.website == 'KnightNoFansub' or module.website == 'KomikGo' or module.website == 'MangaKomi' or module.website == 'Mangalek' or module.website == 'Mangareceh' or module.website == 'MangaYosh' or module.website == 'MangaZukiOnline' or module.website == 'ManhuaBox' or module.website == 'NManhwa' or module.website == 'NinjaScans' or module.website == 'PlotTwistNoFansub' or module.website == 'PojokManga' or module.website == 'ReadRawManga' or module.website == 'Toonily' or module.website == 'TopManhua' or module.website == 'Wakamics' or module.website == 'WakaScan' or module.website == 'ZinManga' then
-        if x.xpath('//div[contains(@class, "post-title")]/h3/a').count == 0 then return no_error end
-        x.XPathHREFAll('//div[contains(@class, "post-title")]/h3/a', links, names)
-      else
-        if x.xpath('//div[contains(@class, "post-title")]/h5/a').count == 0 then return no_error end
-        x.XPathHREFAll('//div[contains(@class, "post-title")]/h5/a', links, names)
-      end
+      if x.xpath('//div[contains(@class, "post-title")]/*[self::h5 or self::h3]/a').count == 0 then return no_error end
+      x.XPathHREFAll('//div[contains(@class, "post-title")]/*[self::h5 or self::h3]/a', links, names)
       updatelist.CurrentDirectoryPageNumber = updatelist.CurrentDirectoryPageNumber + 1
       return no_error
     else
@@ -300,6 +295,8 @@ function Init()
   AddWebsiteModule('TopManhua', 'https://topmanhua.com', cat)
   AddWebsiteModule('Wakamics', 'https://wakamics.com', cat)
   AddWebsiteModule('GetManhwa', 'https://getmanhwa.co', cat)
+  AddWebsiteModule('Manhuas', 'https://manhuas.net', cat)
+  AddWebsiteModule('MixedManga', 'https://mixedmanga.com', cat)
   
   cat = 'Arabic-Scanlation'
   AddWebsiteModule('3asqOrg', 'https://3asq.org', cat)

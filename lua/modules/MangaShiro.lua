@@ -37,6 +37,7 @@ end
 
 function getCover(x)
   local img = ''
+  if img == '' then img = x.xpathstring('//div[@class="thumb"]/img/@data-src') end
   if img == '' then img = x.xpathstring('//div[@class="thumb"]/img/@src') end
   if img == '' then img = x.xpathstring('//div[@class="imgdesc"]/img/@src') end
   if img == '' then img = x.xpathstring('//div[contains(@class,"leftImage")]/img/@src') end
@@ -51,6 +52,7 @@ end
 
 function getAuthors(x)
   local authors = ''
+  if authors == '' then authors = x.xpathstring('//div[@class="spe"]//span[starts-with(.,"المؤلف")]/substring-after(.,":")') end
   if authors == '' then authors = x.xpathstring('//li[starts-with(.,"Komikus")]/b') end
   if authors == '' then authors = x.xpathstring('//div[@class="listinfo"]//li[starts-with(.,"Author")]/substring-after(.,":")') end
   if authors == '' then authors = x.xpathstring('//span[@class="details"]//div[starts-with(.,"Author")]/substring-after(.,":")') end
@@ -74,6 +76,7 @@ end
 
 function getGenres(x)
   local genre = ''
+  if genre == '' then genre = x.xpathstringall('//div[@class="spe"]//span[contains(.,"التصنيفات")]/a') end
   if genre == '' then genre = x.xpathstringall('//div[@class="spe"]//span[starts-with(.,"Genres:")]/substring-after(.,":")') end
   if genre == '' then genre = x.xpathstringall('//div[contains(@class,"animeinfo")]/div[@class="gnr"]/a') end
   if genre == '' then genre = x.xpathstringall('//div[@class="gnr"]/a') end
@@ -92,6 +95,7 @@ end
 
 function getStatus(x)
   local status = ''
+  if status == '' then status = x.xpathstring('//div[@class="spe"]//span[starts-with(.,"الحالة")]/substring-after(.,":")') end
   if status == '' then status = x.xpathstring('//div[@class="spe"]//span[starts-with(.,"Status:")]/substring-after(.,":")') end
   if status == '' then status = x.xpathstring('//div[@class="listinfo"]//li[starts-with(.,"Status")]/substring-after(.," ")') end
   if status == '' then status = x.xpathstring('//*[@class="anf"]//li[starts-with(.,"Status")]/substring-after(.,":")') end
@@ -208,6 +212,7 @@ function getpagenumber()
                 task.pagelinks.add(v1.getAttribute('src'))
             end
         end
+    elseif module.website == 'SWATManga' then TXQuery.Create(http.Document).xpathstringall('//*[@id="readerarea"]/p/img/@data-src', task.pagelinks)
     else
       if task.pagelinks.count < 1 then TXQuery.Create(http.Document).xpathstringall('//*[@id="readerarea"]/p/img/@src', task.pagelinks) end
       if task.pagelinks.count < 1 then TXQuery.Create(http.Document).xpathstringall('//*[@id="readerarea"]/div//img/@src', task.pagelinks) end    
@@ -269,6 +274,7 @@ function getnameandlink()
     ['MataKomik'] = '/manga/?list',
     ['Rawkuma'] = '/manga/?list',
     ['KomikGoCoID'] = '/manga/?list',
+    ['MangaSWAT'] = '/manga/?list'
   }
   local dirurl = '/manga-list/'
   if dirs[module.website] ~= nil then
@@ -371,4 +377,7 @@ local cat = 'Indonesian'
   
   cat = 'Raw'
   AddWebsiteModule('Rawkuma', 'https://rawkuma.com', cat)
+  
+  cat = 'Arabic'
+  AddWebsiteModule('MangaSWAT', 'https://mangaswat.com', cat)
 end
