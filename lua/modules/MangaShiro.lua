@@ -212,7 +212,7 @@ function getpagenumber()
                 task.pagelinks.add(v1.getAttribute('src'))
             end
         end
-    elseif module.website == 'SWATManga' then TXQuery.Create(http.Document).xpathstringall('//*[@id="readerarea"]/p/img/@data-src', task.pagelinks)
+    elseif module.website == 'MangaSWAT' then TXQuery.Create(http.Document).xpathstringall('//*[@id="readerarea"]/p/img/@data-src', task.pagelinks)
     else
       if task.pagelinks.count < 1 then TXQuery.Create(http.Document).xpathstringall('//*[@id="readerarea"]/p/img/@src', task.pagelinks) end
       if task.pagelinks.count < 1 then TXQuery.Create(http.Document).xpathstringall('//*[@id="readerarea"]/div//img/@src', task.pagelinks) end    
