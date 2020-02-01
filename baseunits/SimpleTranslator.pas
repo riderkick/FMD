@@ -26,7 +26,7 @@ interface
 
 uses
   Classes, SysUtils, strutils, gettext, LazFileUtils, LazUTF8, LCLTranslator,
-  Translations, LResources, Forms;
+  Translations, LResources, Forms, LCLVersion;
 
 type
   TLanguageItem = record
@@ -768,7 +768,11 @@ end;
 
 function GetDefaultLang: string;
 begin
+  {$if lcl_fullversion > 2000600}
   Result := LCLTranslator.SetDefaultLang('');
+  {$else}
+  Result := LCLTranslator.GetDefaultLang;
+  {$ifend}
 end;
 
 initialization
