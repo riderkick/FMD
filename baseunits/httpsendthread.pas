@@ -86,7 +86,7 @@ type
     procedure SetNoProxy;
     procedure SetDefaultProxy;
     procedure Reset;
-    procedure SaveDocumentToFile(const AFileName: String; const TryOriginalFileName: Boolean = False);
+    procedure SaveDocumentToFile(const AFileName: String; const ATryOriginalFileName: Boolean = False; const ALastModified: TDateTime = -1);
     property Timeout: Integer read FTimeout write SetTimeout;
     property RetryCount: Integer read FRetryCount write FRetryCount;
     property GZip: Boolean read FGZip write FGZip;
@@ -753,17 +753,21 @@ begin
 end;
 
 procedure THTTPSendThread.SaveDocumentToFile(const AFileName: String;
-  const TryOriginalFileName: Boolean);
+  const ATryOriginalFileName: Boolean; const ALastModified: TDateTime);
 var
   f: String;
+  d: TDateTime;
 begin
+  d := ALastModified;
+  if d = -1 then
+    d := GetLastModified;
   f := '';
-  if TryOriginalFileName then
+  if ATryOriginalFileName then
     f := GetOriginalFileName;
   if f = '' then f := AFileName;
   Document.SaveToFile(f);
   if FileExists(AFileName) then
-    FileSetDate(AFileName, DateTimeToFileDate(GetLastModified));
+    FileSetDate(AFileName, DateTimeToFileDate(d));
 end;
 
 initialization
