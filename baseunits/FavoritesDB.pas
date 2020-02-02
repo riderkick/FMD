@@ -13,12 +13,9 @@ type
 
   TFavoritesDB = class(TSQliteData)
   private
-    FNFEnabled: Boolean;
     FCommitCount: Integer;
     FAutoCommitCount: Integer;
     procedure SetAutoCommitCount(AValue: Integer);
-  protected
-    function ConvertNewTableIF: Boolean; override;
   public
     constructor Create(const AFilename: String);
     procedure InternalUpdate(const AOrder:Integer;const AEnabled:Boolean;
@@ -29,7 +26,6 @@ type
       const AWebsite,ALink,ATitle,ACurrentChapter,ADownloadedChapterList,ASaveTo:String):Boolean;
     procedure Delete(const AWebsite, ALink: String);
     procedure Commit; override;
-    function Open: Boolean;
     procedure Close; override;
     property AutoCommitCount: Integer read FAutoCommitCount write SetAutoCommitCount;
   end;
@@ -55,16 +51,9 @@ begin
   FAutoCommitCount := AValue;
 end;
 
-function TFavoritesDB.ConvertNewTableIF: Boolean;
-begin
-  Result := Table.Fields.Count < 9;
-  FNFEnabled := Table.Fields.Count = 8;
-end;
-
 constructor TFavoritesDB.Create(const AFilename: String);
 begin
   inherited Create;
-  FNFEnabled := False;
   FCommitCount := 0;
   FAutoCommitCount := 500;
   Filename := AFilename;
@@ -161,19 +150,6 @@ begin
         SendLogException(ClassName + '.Commit failed! Rollback!', E);
       end;
   end;
-end;
-
-function TFavoritesDB.Open: Boolean;
-begin
-  Result := inherited Open(True, False);
-  if FNFEnabled then
-    try
-      Connection.ExecuteDirect('UPDATE "favorites" SET "enabled"=''1''');
-      Transaction.Commit;
-    finally
-      FNFEnabled := False;
-    end;
-  CloseTable;
 end;
 
 procedure TFavoritesDB.Close;
