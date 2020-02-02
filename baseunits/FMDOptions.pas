@@ -221,7 +221,7 @@ procedure DoRestartFMD;
 
 implementation
 
-uses FMDVars, UTF8Process;
+uses FMDVars, process, UTF8Process;
 
 { TIniFileRun }
 
@@ -359,8 +359,9 @@ begin
   p := TProcessUTF8.Create(nil);
   try
     p.InheritHandles := False;
-    p.CurrentDirectory := ExtractFilePath(Application.ExeName);
+    p.CurrentDirectory := FMD_DIRECTORY;
     p.Executable := Application.ExeName;
+    p.Options := p.Options + [poNewConsole];
     p.Parameters.AddStrings(AppParams);
     {$ifdef windows}
     p.Parameters.Add('--dorestart-handle='+IntToStr(Integer(Application.Handle)));
