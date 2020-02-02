@@ -8,6 +8,7 @@ Changelog:
 [+] Added auto backup settings everyday, max 7 backups
 [*] Fixed slowing down on long download/favorite list
 [*] Various performance improvement
+[*] Various changes and bug fixes
 Full changes: https://github.com/fmd-project-team/FMD/compare/0.9.168.0...1.1.0.0
 
 1.0.0.0 (27.01.2020)
