@@ -77,6 +77,8 @@ type
     function POST(const URL: String; const POSTData: String = ''; const Response: TObject = nil): Boolean;
     function XHR(const URL: String; const Response: TObject = nil): Boolean;
     function GetCookies: String;
+    function GetLastModified: TDateTime;
+    function GetOriginalFileName: String;
     function ThreadTerminated: Boolean;
     procedure RemoveCookie(const CookieName: String);
     procedure SetProxy(const ProxyType, Host, Port, User, Pass: String);
@@ -84,6 +86,7 @@ type
     procedure SetNoProxy;
     procedure SetDefaultProxy;
     procedure Reset;
+    procedure SaveDocumentToFile(const AFileName: String; const TryOriginalFileName: Boolean = False);
     property Timeout: Integer read FTimeout write SetTimeout;
     property RetryCount: Integer read FRetryCount write FRetryCount;
     property GZip: Boolean read FGZip write FGZip;
@@ -619,6 +622,26 @@ begin
     end;
 end;
 
+function THTTPSendThread.GetLastModified: TDateTime;
+var
+  s: String;
+begin
+  Result := Now;
+  s := Trim(Headers.Values['last-modified']);
+  if s <> '' then
+    Result := DecodeRfcDateTime(s);
+end;
+
+function THTTPSendThread.GetOriginalFileName: String;
+var
+  s: String;
+begin
+  Result := '';
+  s := Headers.Values['content-disposition'];
+  if s <> '' then
+    Result := GetBetween('filename="', '"', s);
+end;
+
 function THTTPSendThread.ThreadTerminated: Boolean;
 begin
   if Assigned(FOwner) then
@@ -727,6 +750,20 @@ begin
   Headers.Values['Accept-Charset'] := ' utf8';
   Headers.Values['Accept-Language'] := ' en-US,en;q=0.8';
   if FGZip then Headers.Values['Accept-Encoding'] := ' gzip, deflate';
+end;
+
+procedure THTTPSendThread.SaveDocumentToFile(const AFileName: String;
+  const TryOriginalFileName: Boolean);
+var
+  f: String;
+begin
+  f := '';
+  if TryOriginalFileName then
+    f := GetOriginalFileName;
+  if f = '' then f := AFileName;
+  Document.SaveToFile(f);
+  if FileExists(AFileName) then
+    FileSetDate(AFileName, DateTimeToFileDate(GetLastModified));
 end;
 
 initialization
