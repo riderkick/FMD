@@ -443,7 +443,7 @@ begin
         c := DeleteFile(f);
       if c then
       begin
-        FHTTP.Document.SaveToFile(f);
+        FHTTP.SaveDocumentToFile(f, False, FModule.last_modified);
         if FileExists(f) then
         begin
           case FModule.oflag of
