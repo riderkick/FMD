@@ -389,31 +389,44 @@ procedure TVTApplyList.VTOnBeforeCellPaint(Sender: TBaseVirtualTree;
 var
   isSortedColumn: Boolean;
 begin
-  with VirtualTrees.TVirtualStringTree(Sender), TargetCanvas do
+  with VirtualTrees.TVirtualStringTree(Sender) do
   begin
     if CellPaintMode = cpmPaint then
     begin
       if odd(Node^.Index) then
-        Brush.Color := CL_BSOdd
+        TargetCanvas.Brush.Color := CL_BSOdd
       else
-        Brush.Color := CL_BSEven;
+        TargetCanvas.Brush.Color := CL_BSEven;
       isSortedColumn := (Header.SortColumn <> -1) and (Header.SortColumn = Column);
-      if (not isSortedColumn) and (Brush.Color <> clNone) then
-        FillRect(CellRect);
+      if (not isSortedColumn) and (TargetCanvas.Brush.Color <> clNone) then
+        TargetCanvas.FillRect(CellRect);
     end;
 
     if Assigned(FVTList[Sender.Tag].BeforeCellPaint) then
       FVTList[Sender.Tag].BeforeCellPaint(Sender, TargetCanvas, Node, Column, CellPaintMode,
         CellRect, ContentRect);
 
-    if isSortedColumn and (CellPaintMode = cpmPaint) and (CL_BSSortedColumn <> clNone) then
+    if not (CellPaintMode = cpmPaint) then Exit;
+
+    if isSortedColumn and (CL_BSSortedColumn <> clNone) then
     begin
-      Brush.Color := BlendColor(CL_BSSortedColumn, Brush.Color, SelectionBlendFactor);
-      FillRect(CellRect);
-      Pen.Color := CL_BSSortedColumn;
-      Line(CellRect.Left, CellRect.Top, CellRect.Left, CellRect.Bottom);
-      Line(CellRect.Right - 1, CellRect.Top, CellRect.Right - 1, CellRect.Bottom);
+      TargetCanvas.Brush.Color := BlendColor(CL_BSSortedColumn, TargetCanvas.Brush.Color, SelectionBlendFactor);
+      TargetCanvas.FillRect(CellRect);
+      TargetCanvas.Pen.Color := CL_BSSortedColumn;
+      TargetCanvas.Line(CellRect.Left, CellRect.Top, CellRect.Left, CellRect.Bottom);
+      TargetCanvas.Line(CellRect.Right - 1, CellRect.Top, CellRect.Right - 1, CellRect.Bottom);
     end;
+    {$if VTMajorVersion >= 5}
+    if Node = HotNode then begin
+      TargetCanvas.Brush.Style := bsSolid;
+      TargetCanvas.Brush.Color := BlendColor(Colors.FocusedSelectionColor, TargetCanvas.Brush.Color, SelectionBlendFactor);
+      TargetCanvas.Pen.Style := psSolid;
+      TargetCanvas.Pen.Width := 1;
+      TargetCanvas.Pen.Color := BlendColor(Colors.FocusedSelectionBorderColor, TargetCanvas.Pen.Color, SelectionBlendFactor);
+      TargetCanvas.FillRect(CellRect);
+      TargetCanvas.Font.Color := clRed;
+    end;
+    {$ifend}
   end;
 end;
 
