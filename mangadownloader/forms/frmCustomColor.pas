@@ -421,10 +421,8 @@ begin
       TargetCanvas.Brush.Style := bsSolid;
       TargetCanvas.Brush.Color := BlendColor(Colors.FocusedSelectionColor, TargetCanvas.Brush.Color, SelectionBlendFactor);
       TargetCanvas.Pen.Style := psSolid;
-      TargetCanvas.Pen.Width := 1;
       TargetCanvas.Pen.Color := BlendColor(Colors.FocusedSelectionBorderColor, TargetCanvas.Pen.Color, SelectionBlendFactor);
-      TargetCanvas.FillRect(CellRect);
-      TargetCanvas.Font.Color := clRed;
+      TargetCanvas.Rectangle(CellRect);
     end;
     {$ifend}
   end;
@@ -610,13 +608,13 @@ begin
     Header.Options:=Header.Options+[hoHotTrack];
     with TreeOptions do begin
       {$if VTMajorVersion < 5}
-      PaintOptions:=PaintOptions+[toUseExplorerTheme];
+      PaintOptions:=PaintOptions+[toUseExplorerTheme,toHotTrack];
       {$else}
       // todo: vtv 5 (r62558) still missing glyph in toUseExplorerTheme,
       // we can custom draw later, or wait for the fix
-      PaintOptions:=PaintOptions-[toUseExplorerTheme];
+      PaintOptions:=PaintOptions-[toUseExplorerTheme,toHotTrack];
+      MiscOptions:=MiscOptions+[toCheckSupport]; //without toHotTrack or toCheckSupport focus not invalidated
       {$endif}
-      PaintOptions:=PaintOptions+[toHotTrack];
       if toShowVertGridLines in PaintOptions then
         PaintOptions:=PaintOptions+[toFullVertGridLines];
     end;
