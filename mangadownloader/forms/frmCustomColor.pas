@@ -387,7 +387,10 @@ procedure TVTApplyList.VTOnBeforeCellPaint(Sender: TBaseVirtualTree;
   TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
   CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
 var
-  isSortedColumn: Boolean;
+  isSortedColumn: Boolean = False;
+  {$if VTMajorVersion >= 5}
+  CRect: TRect;
+  {$ifend}
 begin
   with VirtualTrees.TVirtualStringTree(Sender) do
   begin
@@ -421,8 +424,15 @@ begin
       TargetCanvas.Brush.Style := bsSolid;
       TargetCanvas.Brush.Color := BlendColor(Colors.FocusedSelectionColor, TargetCanvas.Brush.Color, SelectionBlendFactor);
       TargetCanvas.Pen.Style := psSolid;
-      TargetCanvas.Pen.Color := BlendColor(Colors.FocusedSelectionBorderColor, TargetCanvas.Pen.Color, SelectionBlendFactor);
-      TargetCanvas.Rectangle(CellRect);
+      TargetCanvas.Pen.Color := BlendColor(Colors.FocusedSelectionBorderColor, TargetCanvas.Brush.Color, SelectionBlendFactor);
+      if toFullRowSelect in TreeOptions.SelectionOptions then
+        TargetCanvas.Rectangle(CellRect)
+      else begin
+        CRect:=GetDisplayRect(Node,Column,True);
+        CRect.Top:=ContentRect.Top;
+        CRect.Bottom:=ContentRect.Bottom;
+        TargetCanvas.Rectangle(CRect);
+      end;
     end;
     {$ifend}
   end;
