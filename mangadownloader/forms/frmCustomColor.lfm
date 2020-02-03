@@ -9,7 +9,7 @@ object CustomColorForm: TCustomColorForm
   ClientHeight = 352
   ClientWidth = 535
   OnCreate = FormCreate
-  LCLVersion = '2.0.6.0'
+  LCLVersion = '2.1.0.0'
   object CBColors: TColorBox
     AnchorSideRight.Control = btColors
     Left = 363
