@@ -625,12 +625,7 @@ type
       var Ghosted: Boolean; var ImageIndex: Integer);
     procedure vtDownloadGetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
       Column: TColumnIndex; TextType: TVSTTextType; var CellText: String);
-    {$if VTMajorVersion < 5}
-    procedure vtDownloadHeaderClick(Sender: TVTHeader; Column: TColumnIndex;
-      Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
-    {$else}
     procedure vtDownloadHeaderClick(Sender: TVTHeader; HitInfo: TVTHeaderHitInfo);
-    {$endif}
     procedure vtDownloadKeyAction(Sender: TBaseVirtualTree; var CharCode: Word;
       var Shift: TShiftState; var DoDefault: Boolean);
     procedure vtDownloadKeyDown(Sender : TObject; var Key : Word;
@@ -658,12 +653,7 @@ type
       var Ghosted: Boolean; var ImageIndex: Integer);
     procedure vtFavoritesGetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
       Column: TColumnIndex; TextType: TVSTTextType; var CellText: String);
-    {$if VTMajorVersion < 5}
-    procedure vtFavoritesHeaderClick(Sender: TVTHeader; Column: TColumnIndex;
-      Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
-    {$else}
     procedure vtFavoritesHeaderClick(Sender: TVTHeader; HitInfo: TVTHeaderHitInfo);
-    {$endif}
     procedure vtFavoritesPaintText(Sender: TBaseVirtualTree;
       const TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
       TextType: TVSTTextType);
@@ -4250,30 +4240,17 @@ begin
     end;
 end;
 
-{$if VTMajorVersion < 5}
-procedure TMainForm.vtDownloadHeaderClick(Sender: TVTHeader;
-  Column: TColumnIndex; Button: TMouseButton; Shift: TShiftState; X, Y: Integer
-  );
-{$else}
 procedure TMainForm.vtDownloadHeaderClick(Sender: TVTHeader; HitInfo: TVTHeaderHitInfo);
-var
-  Column: TColumnIndex;
-  Button: TMouseButton;
-{$endif}
 begin
-  {$if VTMajorVersion >= 5}
-  Column := HitInfo.Column;
-  Button := HitInfo.Button;
-  {$endif}
-  if Button <> mbLeft then Exit;
-  if (Column = 2) or (Column = 3) then Exit;
-  if DLManager.SortColumn = Column then
+  if HitInfo.Button <> mbLeft then Exit;
+  if (HitInfo.Column = 2) or (HitInfo.Column = 3) then Exit;
+  if DLManager.SortColumn = HitInfo.Column then
     DLManager.SortDirection := not DLManager.SortDirection;
-  DLManager.SortColumn := Column;
+  DLManager.SortColumn := HitInfo.Column;
   vtDownload.Header.SortDirection := TSortDirection(DLManager.SortDirection);
-  vtDownload.Header.SortColumn := Column;
+  vtDownload.Header.SortColumn := HitInfo.Column;
   if DLManager.Count > 1 then
-    DLManager.Sort(Column);
+    DLManager.Sort(HitInfo.Column);
   UpdateVtDownload;
 end;
 
@@ -4461,33 +4438,20 @@ begin
     end;
 end;
 
-{$if VTMajorVersion < 5}
-procedure TMainForm.vtFavoritesHeaderClick(Sender: TVTHeader;
-  Column: TColumnIndex; Button: TMouseButton; Shift: TShiftState; X, Y: Integer
-  );
-{$else}
 procedure TMainForm.vtFavoritesHeaderClick(Sender: TVTHeader; HitInfo: TVTHeaderHitInfo);
-var
-  Column: TColumnIndex;
-  Button: TMouseButton;
-{$endif}
 begin
-  {$if VTMajorVersion >= 5}
-  Column := HitInfo.Column;
-  Button := HitInfo.Button;
-  {$endif}
-  if Button <> mbLeft then Exit;
+  if HitInfo.Button <> mbLeft then Exit;
   if FavoriteManager.isRunning then Exit;
-  if Column = 0 then Exit;
+  if HitInfo.Column = 0 then Exit;
   FavoriteManager.isRunning := True;
-  if FavoriteManager.SortColumn = Column then
+  if FavoriteManager.SortColumn = HitInfo.Column then
     FavoriteManager.sortDirection := not FavoriteManager.sortDirection
   else
-    FavoriteManager.SortColumn := Column;
-  vtFavorites.Header.SortColumn := Column;
+    FavoriteManager.SortColumn := HitInfo.Column;
+  vtFavorites.Header.SortColumn := HitInfo.Column;
   vtFavorites.Header.SortDirection := TSortDirection(FavoriteManager.sortDirection);
   if FavoriteManager.Count > 1 then
-    FavoriteManager.Sort(Column);
+    FavoriteManager.Sort(HitInfo.Column);
   UpdateVtFavorites;
   FavoriteManager.isRunning := False;
 end;
@@ -5705,14 +5669,12 @@ begin
     vtFavorites.RootNodeCount := FavoriteManager.Count;
     vtFavorites.EndUpdate;
     vtFavoritesFilterRefresh;
-    
-    if rbFavoritesShowAll.Checked then
-      rbFavoritesShowAllChange(nil)
-    else if rbFavoritesShowEnabled.Checked then
-      rbFavoritesShowEnabledChange(nil)
-    else
-      rbFavoritesShowDisabledChange(nil);
   end;
+
+  if rbFavoritesShowEnabled.Checked then
+    rbFavoritesShowEnabledChange(rbFavoritesShowEnabled)
+  else if rbFavoritesShowDisabled.Checked then
+    rbFavoritesShowDisabledChange(rbFavoritesShowDisabled);
 end;
 
 procedure TMainForm.UpdateVtMangaListFilterStatus;
