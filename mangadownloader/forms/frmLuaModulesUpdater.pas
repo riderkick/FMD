@@ -85,12 +85,7 @@ type
     procedure vtLuaModulesReposGetText(Sender: TBaseVirtualTree;
       Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType;
       var CellText: String);
-    {$if VTMajorVersion < 5}
-    procedure vtLuaModulesReposHeaderClick(Sender: TVTHeader; Column: TColumnIndex;
-      Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
-    {$else}
     procedure vtLuaModulesReposHeaderClick(Sender: TVTHeader; HitInfo: TVTHeaderHitInfo);
-    {$endif}
   private
     FListCS: TRTLCriticalSection;
     FListDirty: Boolean;
@@ -938,21 +933,11 @@ begin
   end;
 end;
 
-{$if VTMajorVersion < 5}
-procedure TLuaModulesUpdaterForm.vtLuaModulesReposHeaderClick(Sender: TVTHeader;
-  Column: TColumnIndex; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
-{$else}
 procedure TLuaModulesUpdaterForm.vtLuaModulesReposHeaderClick(Sender: TVTHeader;
   HitInfo: TVTHeaderHitInfo);
-var
-  Column: TColumnIndex;
-{$endif}
 begin
-  {$if VTMajorVersion >= 5}
-  Column := HitInfo.Column;
-  {$endif}
-  if Sender.SortColumn <> Column then
-    Sender.SortColumn := Column
+  if Sender.SortColumn <> HitInfo.Column then
+    Sender.SortColumn := HitInfo.Column
   else
   if Sender.SortDirection = sdAscending then
     Sender.SortDirection := sdDescending
