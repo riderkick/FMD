@@ -246,6 +246,7 @@ function Init()
   AddWebsiteModule('YoManga', 'https://yomanga.info', cat)
   AddWebsiteModule('OnManga', 'https://onmanga.com', cat)
   AddWebsiteModule('ReadRawManga', 'https://www.readrawmanga.com', cat)
+  AddWebsiteModule('MangaStreamCC', 'https://www.mangastream.cc', cat)
 
   cat = 'English-Scanlation'
   AddWebsiteModule('TrashScanlations', 'https://trashscanlations.com', cat)
