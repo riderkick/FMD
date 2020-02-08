@@ -267,7 +267,7 @@ function getpagenumber()
   delay()
   if http.get(MaybeFillHost(module.rooturl,'/api/chapter/'..chapterid)) then
     local x=TXQuery.Create(http.Document)
-    x.ParseHTML(StreamToString(http.Document):gsub('<', ''):gsub('>', ''))
+    x.ParseHTML(StreamToString(http.Document):gsub('<', ''):gsub('>', ''):gsub('&quot;', ''))
     local hash = x.xpathstring('json(*).hash')
     local srv = x.xpathstring('json(*).server')
     local v = x.xpath('json(*).page_array()')
