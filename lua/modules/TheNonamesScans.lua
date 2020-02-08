@@ -56,7 +56,7 @@ end
 ----------------------------------------------------------------------------------------------------
 
 function Init()
-  AddWebsiteModule('TheNonamesScans', 'https://the-nonames.com/', 'English-Scanlation')
+  AddWebsiteModule('TheNonamesScans', 'https://the-nonames.com', 'English-Scanlation')
 end
 
 function AddWebsiteModule(name, url, category)
