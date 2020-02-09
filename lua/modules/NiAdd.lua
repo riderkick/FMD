@@ -1,3 +1,49 @@
+function getauthors()
+  if module.website == 'NiAddRU' then
+    return "Авторы"
+  else
+    return "Aut"
+  end
+end
+
+function getartists()
+  if module.website == 'NiAddRU' then
+    return "Исполнитель"
+  elseif module.website == 'NiAddDE' then
+    return "Künstler"
+  else
+    return "Art"
+  end
+end
+
+function getgenres()
+  if module.website == 'NiAddES' or module.website == 'NiAddBR' then
+    return "Géneros"
+  elseif module.website == 'NiAddIT' then
+    return "generi"
+  elseif module.website == 'NiAddRU' then
+    return "Жанры"
+  else
+    return "Genres"
+  end
+end
+
+function getdirpagenumber()
+  if module.website == 'NiAddES' or module.website == 'NiAddBR' then
+    return "Todos"
+  elseif module.website == 'NiAddIT' then
+    return "tutti"
+  elseif module.website == 'NiAddRU' then
+    return "все"
+  elseif module.website == 'NiAddDE' then
+    return "alle"
+  elseif module.website == 'NiAddFR' then
+    return "Tous"
+  else
+    return "All"
+  end
+end
+
 function getinfo()
   if url:find('/chapters') then
     mangainfo.url=MaybeFillHost(module.RootURL, url)
@@ -10,9 +56,9 @@ function getinfo()
       mangainfo.title=x.xpathstring('//h1')
     end
     mangainfo.coverlink=x.xpathstring('//img[@itemprop="image"]/@src')
-    mangainfo.authors=x.xpathstringall('//td[@class="bookside-general-type"]//div[@itemprop="author" and contains(span, "Author")]/a/span')
-    mangainfo.artists=x.xpathstringall('//td[@class="bookside-general-type"]//div[@itemprop="author" and contains(span, "Artist")]/a/span')
-    mangainfo.genres=x.xpathstringall('//td[@class="bookside-general-type"]//div[contains(span, "Genres")]/a/span')
+    mangainfo.authors=x.xpathstringall('//td[@class="bookside-general-type"]//div[@itemprop="author" and contains(span, "'..getauthors()..'")]/a/span')
+    mangainfo.artists=x.xpathstringall('//td[@class="bookside-general-type"]//div[@itemprop="author" and contains(span, "'..getartists()..'")]/a/span')
+    mangainfo.genres=x.xpathstringall('//td[@class="bookside-general-type"]//div[contains(span, "'..getgenres()..'")]/a/span')
     local n = x.xpath('//span[@class="chp-title"]')
     local v = x.xpath('//ul[contains(@class, "chapter-list")]/a')
     for i = 1, v.count do
@@ -43,7 +89,7 @@ function getnameandlink()
   local s = string.format("/category/index_%s.html?sort=name", IncStr(url))
   if http.get(module.rooturl .. s) then
     local x = TXQuery.Create(http.Document)
-    local p=x.xpathstring('//div[@class="page-all-num"]/substring-after(.,"All ")')
+    local p=x.xpathstring('//div[@class="page-all-num"]/substring-after(.,"'..getdirpagenumber()..' ")')
     p = tonumber(p)
     if p ~= nil then
       updatelist.CurrentDirectoryPageNumber = p
@@ -69,17 +115,36 @@ function getimageurl()
   end
 end
 
-function AddWebsiteModule(name, url, cat)
-  local m = NewModule()
-  m.website = name
-  m.rooturl = url
-  m.category = cat
+function AddWebsiteModule(name, url, category)
+  local m=NewModule()
+  m.website=name
+  m.rooturl=url
+  m.category=category
   m.ongetinfo='getinfo'
   m.ongetpagenumber='getpagenumber'
   m.ongetnameandlink='getnameandlink'
-  m.ongetimageurl = 'getimageurl'
+  m.ongetimageurl='getimageurl'
 end
 
 function Init()
-  AddWebsiteModule('NiAdd', 'https://www.niadd.com', 'English')
+local cat = 'English'
+  AddWebsiteModule('NiAdd', 'https://www.niadd.com', cat)
+  
+  cat = 'Spanish'
+  AddWebsiteModule('NiAddES', 'https://es.niadd.com', cat)
+  
+  cat = 'Italian'
+  AddWebsiteModule('NiAddIT', 'https://it.niadd.com', cat)
+  
+  cat = 'Russian'
+  AddWebsiteModule('NiAddRU', 'https://ru.niadd.com', cat)
+  
+  cat = 'Portugues'
+  AddWebsiteModule('NiAddBR', 'https://br.niadd.com', cat)
+  
+  cat = 'German'
+  AddWebsiteModule('NiAddDE', 'https://de.niadd.com', cat)
+  
+  cat = 'French'
+  AddWebsiteModule('NiAddFR', 'https://fr.niadd.com', cat)
 end 
