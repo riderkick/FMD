@@ -299,6 +299,7 @@ function Init()
   AddWebsiteModule('Manhuas', 'https://manhuas.net', cat)
   AddWebsiteModule('MixedManga', 'https://mixedmanga.com', cat)
   AddWebsiteModule('MangaTX', 'https://mangatx.com', cat)
+  AddWebsiteModule('NightComic', 'http://nightcomic.com', cat)
   
   cat = 'Arabic-Scanlation'
   AddWebsiteModule('3asqOrg', 'https://3asq.org', cat)
