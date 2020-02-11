@@ -361,12 +361,16 @@ begin
     p.InheritHandles := False;
     p.CurrentDirectory := FMD_DIRECTORY;
     p.Executable := Application.ExeName;
-    p.Options := p.Options + [poNewConsole];
+    p.Options := [];
+    p.InheritHandles := False;
     p.Parameters.AddStrings(AppParams);
     {$ifdef windows}
     p.Parameters.Add('--dorestart-handle='+IntToStr(Integer(Application.Handle)));
-    {$endif}
+    {$ifend}
     p.Execute;
+    // make sure it's running
+    while not p.Running do
+      sleep(100);
   finally
     p.Free;
   end;
