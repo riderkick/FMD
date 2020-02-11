@@ -141,20 +141,16 @@ function BeforeDownloadImage()
 end
 
 function getnameandlink()
-  if http.get(module.rooturl) then
-    local x = TXQuery.Create(http.Document)
-    if http.get('https://ltn.'..domain..'/index-all.nozomi') then
-      local s = StreamToString(http.document)
-      for i=1,s:len(),4 do
-        local b1,b2,b3,b4=s:byte(i),s:byte(i+1),s:byte(i+2),s:byte(i+3)
-        local n = b4 + (b3 << 8) + (b2 << 16) + (b1 << 24)
-        links.add('https://'..domain..'/galleries/'..n..'.html')
-        names.add(n)
-      end
-      return no_error
-    end
-  end
-  return net_problem
+	if not http.get('https://ltn.'..domain..'/index-all.nozomi') then return net_problem end
+	local s = StreamToString(http.document)
+	-- number in uint32 little-endian	
+	local n
+	for i=1,s:len(),4 do
+		n = s:byte(i+3) + (s:byte(i+2) << 8) + (s:byte(i+1) << 16) + (s:byte(i) << 24)
+		links.add('https://'..domain..'/galleries/'..n..'.html')
+		names.add(n)
+	end
+	return no_error
 end
 
 function Init()
