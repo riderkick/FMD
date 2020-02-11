@@ -9,20 +9,22 @@ function set_https(s)
 end
 
 function getinfo()
-  mangainfo.url=MaybeFillHost(module.RootURL, url)
-  if http.get(mangainfo.url) then
-    local x=TXQuery.Create(http.document)
-    mangainfo.title = x.xpathstring('//div[starts-with(@class,"gallery")]/h1')
-    mangainfo.coverlink=MaybeFillHost(module.RootURL, x.xpathstring('//div[@class="cover"]//img/@src'))
-    mangainfo.coverlink = set_https(mangainfo.coverlink)
-    mangainfo.authors=x.xpathstringall('//div[starts-with(@class,"gallery")]/h2/ul/li/a')
-    mangainfo.genres=x.xpathstringall('//div[@class="gallery-info"]/table//tr/td//a')
-    mangainfo.chapterlinks.add(x.xpathstring('//div[contains(@class,"cover-column")]/a/@href'))
-    mangainfo.chapternames.add(mangainfo.title)
-    return no_error
-  else
-    return net_problem
-  end
+	mangainfo.url=MaybeFillHost(module.RootURL, url)
+	if not http.get(mangainfo.url) then return net_problem end
+	local x=TXQuery.create(http.document)
+	if x.xpathstring('//title'):lower()=='redirect' then
+		if http.get(x.xpathstring('//a/@href')) then
+			x.parsehtml(http.document)
+		else return net_problem end
+	end
+	mangainfo.title = x.xpathstring('//div[starts-with(@class,"gallery")]/h1')
+	mangainfo.coverlink=MaybeFillHost(module.rooturl, x.xpathstring('//div[@class="cover"]//img/@src'))
+	mangainfo.coverlink = set_https(mangainfo.coverlink)
+	mangainfo.authors=x.xpathstringall('//div[starts-with(@class,"gallery")]/h2/ul/li/a')
+	mangainfo.genres=x.xpathstringall('//div[@class="gallery-info"]/table//tr/td//a')
+	mangainfo.chapterlinks.add(x.xpathstring('//div[contains(@class,"cover-column")]/a/@href'))
+	mangainfo.chapternames.add(mangainfo.title)
+	return no_error
 end
 
 ----------------------------------------------------------------------------------------------
