@@ -441,6 +441,10 @@ function Base64Decode(const s: String): String; overload;
 function Base64Encode(const TheStream: TStream): Boolean ; overload;
 function Base64Decode(const TheStream: TStream): Boolean ; overload;
 
+// basic encrypt/decrypt string
+function EncryptString(const s:String):String;
+function DecryptString(const s:String):String;
+
 // StringUtils
 function PadZero(const S: String; ATotalWidth: Integer = 3;
   PadAll: Boolean = False; StripZero: Boolean = False): String;
@@ -641,7 +645,7 @@ procedure SendLogException(const AText: String; AException: Exception); inline;
 implementation
 
 uses
-  WebsiteModules, webp, FPWriteJPEG;
+  WebsiteModules, webp, DCPrijndael, DCPsha512, FPWriteJPEG;
 
 {$IFDEF WINDOWS}
 // thanks Leledumbo for the code
@@ -1711,6 +1715,41 @@ begin
     Decoder.Free;
   finally
     InStream.Free;
+  end;
+end;
+
+const
+  EncryptKey='B74945FB50E84FD58BF9FEAB8E4BEA6B';
+
+function EncryptString(const s:string):string;
+var
+  aes: TDCP_rijndael;
+begin
+  result:='';
+  if s='' then exit;
+  aes:=TDCP_rijndael.Create(nil);
+  try
+     aes.InitStr(EncryptKey,TDCP_sha512);
+     Result:=aes.EncryptString(s);
+  finally
+    aes.burn;
+    aes.free;
+  end;
+end;
+
+function DecryptString(const s:string):string;
+var
+  aes: TDCP_rijndael;
+begin
+  result:='';
+  if s='' then exit;
+  aes:=TDCP_rijndael.Create(nil);
+  try
+     aes.InitStr(EncryptKey,TDCP_sha512);
+     result:=aes.DecryptString(s);
+  finally
+    aes.burn;
+    aes.free;
   end;
 end;
 
