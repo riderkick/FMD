@@ -51,8 +51,8 @@ end;
 
 function http_getcookies(L: Plua_State): Integer; cdecl;
 begin
-  Result := 0;
-  TUserData(luaClassGetObject(L)).GetCookies;
+  lua_pushstring(L, TUserData(luaClassGetObject(L)).GetCookies);
+  Result := 1;
 end;
 
 function http_threadterminated(L: Plua_State): Integer; cdecl;
