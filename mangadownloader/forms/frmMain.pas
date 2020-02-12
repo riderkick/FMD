@@ -5046,9 +5046,9 @@ begin
     cbOptionUseProxy.Checked := ReadBool('connections', 'UseProxy', False);
     cbOptionProxyType.Text := ReadString('connections', 'ProxyType', 'HTTP');
     edOptionHost.Text := ReadString('connections', 'Host', '');
-    edOptionPass.Text := ReadString('connections', 'Pass', '');
     edOptionPort.Text := ReadString('connections', 'Port', '');
-    edOptionUser.Text := ReadString('connections', 'User', '');
+    edOptionUser.Text := DecryptString(ReadString('connections', 'User', ''));
+    edOptionPass.Text := DecryptString(ReadString('connections', 'Pass', ''));
 
     // saveto
     edOptionDefaultPath.Text := ReadString('saveto', 'SaveTo', DEFAULT_PATH);
@@ -5159,9 +5159,9 @@ begin
       WriteBool('connections', 'UseProxy', cbOptionUseProxy.Checked);
       WriteString('connections', 'ProxyType', cbOptionProxyType.Text);
       WriteString('connections', 'Host', edOptionHost.Text);
-      WriteString('connections', 'Pass', edOptionPass.Text);
       WriteString('connections', 'Port', edOptionPort.Text);
-      WriteString('connections', 'User', edOptionUser.Text);
+      WriteString('connections', 'User', EncryptString(edOptionUser.Text));
+      WriteString('connections', 'Pass', EncryptString(edOptionPass.Text));
 
       // saveto
       if Trim(edOptionDefaultPath.Text) = '' then
