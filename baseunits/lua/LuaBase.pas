@@ -24,7 +24,7 @@ implementation
 
 uses
   LuaStrings, LuaBaseUnit, LuaRegExpr, LuaPCRE2, LuaSynaUtil, LuaSynaCode, MultiLog,
-  LuaCrypto, LuaImagePuzzle, LuaDuktape, LuaCriticalSection;
+  LuaCrypto, LuaImagePuzzle, LuaDuktape, LuaCriticalSection, LuaLogger;
 
 function luabase_print(L: Plua_State): Integer; cdecl;
 var
@@ -58,6 +58,7 @@ begin
   luaSynaCodeRegister(L);
   luaCryptoRegister(L);
   luaDuktapeRegister(L);
+  luaLoggerRegister(L);
 
   luaClassRegisterAll(L);
 end;
