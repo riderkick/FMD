@@ -145,6 +145,18 @@ begin
   Result := 1;
 end;
 
+function lua_encryptstring(L: Plua_State): Integer; cdecl;
+begin
+  lua_pushstring(L, EncryptString(lua_tostring(L, 1)));
+  Result := 1;
+end;
+
+function lua_decryptstring(L: Plua_State): Integer; cdecl;
+begin
+  lua_pushstring(L, DecryptString(lua_tostring(L, 1)));
+  Result := 1;
+end;
+
 procedure luaBaseUnitRegister(L: Plua_State);
 begin
   luaPushFunctionGlobal(L, 'Pos', @lua_pos);
@@ -165,6 +177,8 @@ begin
   luaPushFunctionGlobal(L, 'Round', @lua_round);
   luaPushFunctionGlobal(L, 'TrimStrings', @lua_trimstrings);
   luaPushFunctionGlobal(L, 'GetCurrentTime', @lua_getcurrenttime);
+  luaPushFunctionGlobal(L, 'EncryptString', @lua_encryptstring);
+  luaPushFunctionGlobal(L, 'DecryptString', @lua_decryptstring);
 end;
 
 end.
