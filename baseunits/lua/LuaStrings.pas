@@ -87,6 +87,31 @@ begin
   TUserData(luaClassGetObject(L)).Strings[lua_tointeger(L, 1)] := lua_tostring(L, 2);
 end;
 
+function strings_getdelimitedtext(L: Plua_State): Integer; cdecl;
+begin
+  lua_pushstring(L, TUserData(luaClassGetObject(L)).DelimitedText);
+  Result := 1;
+end;
+
+function strings_setdelimitedtext(L: Plua_State): Integer; cdecl;
+begin
+  TUserData(luaClassGetObject(L)).DelimitedText := lua_tostring(L, 1);
+  Result := 0;
+end;
+
+function strings_getdelimiter(L: Plua_State): Integer; cdecl;
+begin
+  lua_pushstring(L, PAnsiChar(
+    String(TUserData(luaClassGetObject(L)).Delimiter)));
+  Result := 1;
+end;
+
+function strings_setdelimiter(L: Plua_State): Integer; cdecl;
+begin
+  Result := 0;
+  TUserData(luaClassGetObject(L)).Delimiter := String(lua_tostring(L, 1))[1];
+end;
+
 function strings_namevalueseparatorget(L: Plua_State): Integer; cdecl;
 begin
   lua_pushstring(L, PAnsiChar(
@@ -172,12 +197,13 @@ const
     (name: 'IndexOfName'; func: @strings_indexofname),
     (name: nil; func: nil)
     );
-  props: packed array[0..4] of lual_Reg_prop = (
+  props: packed array[0..6] of lual_Reg_prop = (
     (name: 'Text'; funcget: @strings_gettext; funcset: @strings_settext),
     (name: 'CommaText'; funcget: @strings_getcommatext; funcset: @strings_setcommatext),
     (name: 'Count'; funcget: @strings_getcount; funcset: nil),
-    (name: 'NameValueSeparator'; funcget: @strings_namevalueseparatorget;
-    funcset: @strings_namevalueseparatorset),
+    (name: 'DelimitedText'; funcget: @strings_getdelimitedtext; funcset: @strings_setdelimitedtext),
+    (name: 'Delimiter'; funcget: @strings_getdelimiter; funcset: @strings_setdelimiter),
+    (name: 'NameValueSeparator'; funcget: @strings_namevalueseparatorget; funcset: @strings_namevalueseparatorset),
     (name: nil; funcget: nil; funcset: nil)
     );
   arrprops: packed array[0..2] of lual_Reg_prop = (
