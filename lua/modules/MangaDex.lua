@@ -1,5 +1,6 @@
 function getinfo()
   mangainfo.url=MaybeFillHost(module.rooturl,url)
+  setLoginCookies(module, http)
   http.cookies.values['mangadex_h_toggle'] = '1'
   local id = url:match('title/(%d+)')
   if id == nil then id = url:match('manga/(%d+)'); end
@@ -262,6 +263,7 @@ function findlang(lang)
 end
 
 function getpagenumber()
+  setLoginCookies(module, http)
   http.cookies.values['mangadex_h_toggle'] = '1'
   local chapterid = url:match('chapter/(%d+)')
   delay()
@@ -331,6 +333,72 @@ function delay()
   module.storage['lastDelay'] = tostring(GetCurrentTime())
 end
 
+function getFormData(formData)
+	local t=tostring(os.time())
+	local b=string.rep('-',39-t:len())..t
+	local crlf=string.char(13)..string.char(10)
+	local r=''
+	for k,v in pairs(formData) do
+		r=r..'--'..b..crlf..
+			'Content-Disposition: form-data; name="'..k..'"'..crlf..
+			crlf..
+			v..crlf
+	end
+	r=r..'--'..b..'--'..crlf
+	return 'multipart/form-data; boundary='..b,r
+end
+
+function setLoginCookies(module, http)
+  if module.account.enabled and (module.account.status==asValid) then
+    http.cookies.text=module.account.cookies
+  end
+end
+
+function Login()
+	module.account.status=asChecking
+	local login_url=module.rooturl..'/login'
+	if not http.GET(login_url) then
+		module.account.status=asUnknown
+		return false
+	end
+	local login_post_url=TXQuery.Create(http.document).xpathstring('//form[@id="login_form"]/@action') or ''
+	if login_post_url=='' then
+		module.account.status=asUnknown
+		return false
+	end
+	login_post_url=module.rooturl..login_post_url:gsub('&nojs=1','')
+	http.reset()
+	
+	http.headers.values['Origin']= ' '..module.rooturl
+	http.headers.values['Referer']= ' '..login_url
+	http.headers.values['Accept']=' */*'
+	http.headers.values['X-Requested-With']=' XMLHttpRequest'
+	
+	local post_data
+	http.mimetype,post_data=getFormData({
+		login_username=EncodeURLElement(module.account.username),
+		login_password=EncodeURLElement(module.account.password),
+		two_factor='',
+		remember_me='1'})
+
+	http.POST(login_post_url,post_data)
+	if http.resultcode==200 then
+		if http.cookies.values['mangadex_rememberme_token']~='' then
+			local s='mangadex_rememberme_token='..http.cookies.values['mangadex_rememberme_token']
+			-- if http.cookies.values['mangadex_session']~='' then
+				-- s=s..'; mangadex_session='..http.cookies.values['mangadex_session']
+			-- end
+			module.account.cookies=s
+			module.account.status=asValid
+		else
+			module.account.status=asInvalid
+		end
+	else
+		module.account.status=asUnknown
+	end
+	return true
+end
+
 function Init()
   m=NewModule()
   m.category='English'
@@ -347,6 +415,9 @@ function Init()
   m.addoptionspinedit('luainterval', 'Min. interval between requests (ms)', 1000)
   m.addoptionspinedit('luadelay', 'Delay (ms)', 1000)
   m.addoptioncheckbox('luashowscangroup', 'Show scanlation group', false)
+  
+  m.AccountSupport=true
+  m.OnLogin='Login'
   
   local items = 'All'
   local t = getlanglist()
