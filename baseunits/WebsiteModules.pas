@@ -967,7 +967,11 @@ begin
             begin
               jo2:=jo.Get('Account',TJSONObject(nil));
               if jo2<>nil then
+              begin
                 jd.JSONToObject(jo2,Account);
+                if Account.Status=asChecking then
+                  Account.Status:=asUnknown;
+              end;
             end;
             ja.Delete(j);
           end;
