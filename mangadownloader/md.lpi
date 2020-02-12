@@ -25,6 +25,7 @@
       <UseVersionInfo Value="True"/>
       <MajorVersionNr Value="1"/>
       <MinorVersionNr Value="1"/>
+      <RevisionNr Value="1"/>
       <Attributes pvaPrivateBuild="True"/>
       <StringTable Comments="https://github.com/fmd-project-team/FMD" FileDescription="Free Manga Downloader" LegalCopyright="©2015-2020" OriginalFilename="fmd.exe" ProductName="Free Manga Downloader" ProductVersion="$BuildMode()" PrivateBuild="FMD Project Team"/>
     </VersionInfo>
@@ -467,6 +468,10 @@
       <CompilerMessages>
         <IgnoredMessages idx5028="True"/>
       </CompilerMessages>
+      <OtherDefines Count="2">
+        <Define0 Value="DEBUGLEAKS"/>
+        <Define1 Value="DEVBUILD"/>
+      </OtherDefines>
     </Other>
   </CompilerOptions>
   <Debugging>
