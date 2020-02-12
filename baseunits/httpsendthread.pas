@@ -425,6 +425,7 @@ begin
   Protocol := '1.1';
   Headers.NameValueSeparator := ':';
   Cookies.NameValueSeparator := '=';
+  Cookies.Delimiter := ';';
   FGZip := True;
   FFollowRedirection := True;
   FAllowServerErrorResponse := False;
