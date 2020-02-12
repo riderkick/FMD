@@ -24,7 +24,7 @@ implementation
 
 uses
   LuaStrings, LuaBaseUnit, LuaRegExpr, LuaPCRE2, LuaSynaUtil, LuaSynaCode, MultiLog,
-  LuaCrypto, LuaImagePuzzle, LuaDuktape;
+  LuaCrypto, LuaImagePuzzle, LuaDuktape, LuaCriticalSection;
 
 function luabase_print(L: Plua_State): Integer; cdecl;
 var
