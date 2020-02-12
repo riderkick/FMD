@@ -896,6 +896,7 @@ begin
     luaClassAddStringProperty(L, MetaTable, 'Password', @Password);
     luaClassAddStringProperty(L, MetaTable, 'Cookies', @Cookies);
     luaClassAddIntegerProperty(L, MetaTable, 'Status', @Status);
+    luaClassAddObject(L, MetaTable, Guardian, 'Guardian');
   end;
 end;
 
