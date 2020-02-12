@@ -12,7 +12,7 @@ interface
 uses
   Classes, SysUtils, fgl, uData, uDownloadsManager, FMDOptions, httpsendthread,
   WebsiteModulesSettings, Process, Multilog, LazLogger, Cloudflare, RegExpr, fpjson, jsonparser,
-  jsonscanner, fpjsonrtti, uBaseUnit;
+  jsonscanner, fpjsonrtti, uBaseUnit, syncobjs;
 
 const
   MODULE_NOT_FOUND = -1;
@@ -78,6 +78,10 @@ type
     FPassword: String;
     FStatus: TAccountStatus;
     FUsername: String;
+  public
+    Guardian: TCriticalSection;
+    constructor Create;
+    destructor Destroy; override;
   published
     property Enabled: Boolean read FEnabled write FEnabled;
     property Username: String read FUsername write FUsername;
@@ -320,6 +324,19 @@ begin
       Delete(Result, i, 1)
     else
       Inc(i);
+end;
+
+{ TWebsiteModuleAccount }
+
+constructor TWebsiteModuleAccount.Create;
+begin
+  Guardian := TCriticalSection.Create;
+end;
+
+destructor TWebsiteModuleAccount.Destroy;
+begin
+  Guardian.Free;
+  inherited Destroy;
 end;
 
 { TModuleContainer }
