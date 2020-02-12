@@ -421,7 +421,10 @@ begin
 
     if isSortedColumn and (CL_BSSortedColumn <> clNone) then
     begin
-      TargetCanvas.Brush.Color := BlendColor(TargetCanvas.Brush.Color,CL_BSSortedColumn,SelectionBlendFactor);
+      if vsSelected in Node^.States then
+        TargetCanvas.Brush.Color := BlendColor(TargetCanvas.Brush.Color,CL_BSSortedColumn,200)
+      else
+        TargetCanvas.Brush.Color := BlendColor(TargetCanvas.Brush.Color,CL_BSSortedColumn,SelectionBlendFactor);
       TargetCanvas.FillRect(CellRect);
     end;
 
@@ -433,7 +436,10 @@ begin
     end;
 
     if Node = HotNode then begin
-      TargetCanvas.Brush.Color := BlendColor(Colors.FocusedSelectionColor, TargetCanvas.Brush.Color, SelectionBlendFactor);
+      if isSortedColumn then
+        TargetCanvas.Brush.Color := BlendColor(Colors.FocusedSelectionColor, TargetCanvas.Brush.Color, 100)
+      else
+        TargetCanvas.Brush.Color := BlendColor(Colors.FocusedSelectionColor, TargetCanvas.Brush.Color, SelectionBlendFactor);
       TargetCanvas.FillRect(CRect);
     end;
   end;
