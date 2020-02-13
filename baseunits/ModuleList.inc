@@ -25,5 +25,4 @@ TonariNoYoungJump,
 TranslateWebtoon,
 Tsumino,
 WPAdultSiteSkins,
-WebtoonTr,
-YoungAceUp;
+WebtoonTr;
