@@ -117,6 +117,7 @@ begin
   begin
     Parent := FormMain;
     SimplePanel := False;
+    SizeGrip := False;
     with Panels.Add do        // panel for progress bar
       Width := 100;
     Panels.Add;               // panel for progress text
@@ -150,8 +151,10 @@ begin
     Parent := FStatusBar;
     Align := alNone;
     AutoSize := True;
-    Caption := RS_ButtonCancel;
-    ShowCaption := True;
+    //Caption := RS_ButtonCancel;
+    //ShowCaption := True;
+    Images := FormMain.IconList;
+    ImageIndex := 24;
     Flat := True;
     Anchors := [akTop, akRight, akBottom];
     AnchorSideTop.Control := FStatusBar;
