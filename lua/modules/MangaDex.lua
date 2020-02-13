@@ -376,8 +376,8 @@ function Login()
 	
 	local post_data
 	http.mimetype,post_data=getFormData({
-		login_username=EncodeURLElement(module.account.username),
-		login_password=EncodeURLElement(module.account.password),
+		login_username=module.account.username,
+		login_password=module.account.password,
 		two_factor='',
 		remember_me='1'})
 
