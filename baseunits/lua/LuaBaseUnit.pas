@@ -163,6 +163,50 @@ begin
   Result := 1;
 end;
 
+function lua_Base64Encode(L: Plua_State): Integer; cdecl;
+var
+  obj: TObject;
+begin
+  Result := 0;
+  if lua_isstring(L, 1) then
+  begin
+    lua_pushstring(L, Base64Encode(String(lua_tostring(L, 1))));
+    Result := 1;
+  end
+  else
+  if lua_isuserdata(L, 1) then
+  begin
+    obj := TObject(luaGetUserData(L, 1));
+    if obj is TStream then
+    begin
+       lua_pushboolean(L, Base64Encode(TStream(obj)));
+       Result := 1;
+    end;
+  end;
+end;
+
+function lua_Base64Decode(L: Plua_State): Integer; cdecl;
+var
+  obj: TObject;
+begin
+  Result := 0;
+  if lua_isstring(L, 1) then
+  begin
+    lua_pushstring(L, Base64Decode(String(lua_tostring(L, 1))));
+    Result := 1;
+  end
+  else
+  if lua_isuserdata(L, 1) then
+  begin
+    obj := TObject(luaGetUserData(L, 1));
+    if obj is TStream then
+    begin
+       lua_pushboolean(L, Base64Decode(TStream(obj)));
+       Result := 1;
+    end;
+  end;
+end;
+
 procedure luaBaseUnitRegister(L: Plua_State);
 begin
   luaPushFunctionGlobal(L, 'Pos', @lua_pos);
@@ -186,6 +230,8 @@ begin
   luaPushFunctionGlobal(L, 'GetCurrentTime', @lua_getcurrenttime);
   luaPushFunctionGlobal(L, 'EncryptString', @lua_encryptstring);
   luaPushFunctionGlobal(L, 'DecryptString', @lua_decryptstring);
+  luaPushFunctionGlobal(L, 'Base64Encode', @lua_Base64Encode);
+  luaPushFunctionGlobal(L, 'Base64Decode', @lua_Base64Decode);
 end;
 
 end.
