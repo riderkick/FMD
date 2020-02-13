@@ -29,7 +29,6 @@ function GetInfo()
   local x = nil
   local u = MaybeFillHost(module.RootURL, url)
   
-  --[[Debug]] LuaDebug.WriteLogWithHeader('GetInfo', 'url ->  ' .. u)
   if not http.Get(u) then return net_problem end
   
   x = TXQuery.Create(http.Document)

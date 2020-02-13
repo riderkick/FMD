@@ -13,8 +13,10 @@ local LuaDebug   = require 'Modules.LuaDebugging'
 
 local Template   = require 'Modules.Template-MangaReaderOnline'
 -- DirectoryParameters = '/'            --> Override template variable by uncommenting this line.
-XPathTokenStatus    = 'Estado'       --> Override template variable by uncommenting this line.
-XPathTokenGenres    = 'Categorías'   --> Override template variable by uncommenting this line.
+XPathTokenStatus    = 'Estado'
+-- XPathTokenAuthors   = 'Author(s)'    --> Override template variable by uncommenting this line.
+-- XPathTokenArtists   = 'Artist(s)'    --> Override template variable by uncommenting this line.
+XPathTokenGenres    = 'Categorías:'
 
 
 ----------------------------------------------------------------------------------------------------
@@ -24,6 +26,20 @@ XPathTokenGenres    = 'Categorías'   --> Override template variable by uncommen
 -- Get info and chapter list for current manga.
 function GetInfo()
   Template.GetInfo()
+  local x = nil
+  local u = MaybeFillHost(module.RootURL, url)
+  
+  if not http.Get(u) then return net_problem end
+  
+  x = TXQuery.Create(http.Document)
+  mangainfo.Title     = x.XPathString('(//section[contains(@class, "container")]//h3)[1]'):gsub('%(Manga%)', '')
+  mangainfo.CoverLink = x.XPathString('//div[@class="list-group"]//img/@src')
+  mangainfo.Status    = MangaInfoStatusIfPos(x.XPathString('normalize-space(//div[@class="content-wrapper"]//span[contains(b, "' .. XPathTokenStatus .. '")])'):gsub('Estado: ', ''), 'Ongoing', 'Complete')
+  mangainfo.Genres    = x.XPathStringAll('//b[text()="' .. XPathTokenGenres .. '"]/following-sibling::a')
+  mangainfo.Summary   = x.XPathString('normalize-space(//div[@class="content-wrapper"]//span[contains(b, "Resumen")])'):gsub('Resumen Resumen: ', '')
+  
+  x.XPathHREFAll('//table[contains(@class, "table")]//a', mangainfo.ChapterLinks, mangainfo.ChapterNames)
+  InvertStrings(mangainfo.ChapterLinks, mangainfo.ChapterNames)
   
   return no_error
 end

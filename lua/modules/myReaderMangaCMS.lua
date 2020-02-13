@@ -74,50 +74,6 @@ function Modules.myReaderMangaCMS()
   return myReaderMangaCMS
 end
 
-function Modules.GodsRealmScan()
-  local GodsRealmScan = {}
-  setmetatable(GodsRealmScan, { __index = Modules.myReaderMangaCMS() })
-  
-  function GodsRealmScan:getdirurl()
-    return '/public' .. Modules.myReaderMangaCMS().getdirurl()
-  end
-  
-  return GodsRealmScan
-end
-
-function Modules.MangaDenizi()
-  local MangaDenizi = {}
-  setmetatable(MangaDenizi, { __index = Modules.myReaderMangaCMS() })
-  
-  function MangaDenizi:getinfo()
-    Modules.myReaderMangaCMS().getinfo()
-    local x=TXQuery.Create(http.document)
-    mangainfo.status = MangaInfoStatusIfPos(x.XPathString('//dt[.="Durum:"]/following-sibling::dd[1]'), 'Devam Ediyor', 'Tamamlandı')
-  end
-  
-  return MangaDenizi
-end
-
-function Modules.ScanFR()
-  local ScanFR = {}
-  setmetatable(ScanFR, { __index = Modules.myReaderMangaCMS() })
-  
-  function ScanFR:getinfo()
-    Modules.myReaderMangaCMS().getinfo()
-    local x=TXQuery.Create(http.document)
-	local v = x.xpath('//div[@class="col-lg-12"]//ul[@class="chapterszz"]/li/h5/a')
-	for i = 1, v.Count do
-      local v2 = v.Get(i)
-      mangainfo.chapterLinks.Add(v2.getAttribute('href'))
-      mangainfo.chapterNames.Add(x.XPathString('normalize-space(.)', v2))
-    end
-	InvertStrings(mangainfo.chapterLinks,mangainfo.chapterNames)
-  end
-  
-  return ScanFR
-end
-
-
 -------------------------------------------------------------------------------
 
 function createInstance()
@@ -164,18 +120,9 @@ function Init()
   AddWebsiteModule('MangAs', 'https://mangas.pw', c);
   
   c='Raw'
-  AddWebsiteModule('RawMangaUpdate', 'http://rawmangaupdate.com', c);
   AddWebsiteModule('MangaRawOnline', 'http://mangaraw.online', c);
   AddWebsiteModule('RawMangaSite', 'https://rawmanga.site', c);
-  
-  c='Turkish'
-  AddWebsiteModule('MangaDenizi', 'http://www.mangadenizi.com', c);
-  AddWebsiteModule('MangaVadisi', 'http://manga-v2.mangavadisi.org', c);
 
   c='Spanish-Scanlation'
   AddWebsiteModule('SOSScanlation', 'https://sosscanlation.com', c);
-  
-  c='French'
-  AddWebsiteModule('ScanFR', 'https://www.scan-fr.co', c);
-  AddWebsiteModule('ScanOP', 'http://www.scan-op.com', c);
 end

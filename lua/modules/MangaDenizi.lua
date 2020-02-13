@@ -13,10 +13,10 @@ local LuaDebug   = require 'Modules.LuaDebugging'
 
 local Template   = require 'Modules.Template-MangaReaderOnline'
 -- DirectoryParameters = '/'            --> Override template variable by uncommenting this line.
--- XPathTokenStatus    = 'Status'       --> Override template variable by uncommenting this line.
--- XPathTokenAuthors   = 'Author(s)'    --> Override template variable by uncommenting this line.
--- XPathTokenArtists   = 'Artist(s)'    --> Override template variable by uncommenting this line.
-XPathTokenGenres    = 'Genre'
+XPathTokenStatus    = 'Durum:'
+XPathTokenAuthors   = 'Yazar & Çizer:'
+XPathTokenArtists   = 'Sanatçı:'
+XPathTokenGenres    = 'Kategoriler:'
 
 
 ----------------------------------------------------------------------------------------------------
@@ -26,24 +26,16 @@ XPathTokenGenres    = 'Genre'
 -- Get info and chapter list for current manga.
 function GetInfo()
   Template.GetInfo()
-  local v, x = nil
+  local x = nil
   local u = MaybeFillHost(module.RootURL, url)
-
+  
   if not http.Get(u) then return net_problem end
   
   x = TXQuery.Create(http.Document)
-  mangainfo.Title     = x.XPathString('(//div[contains(@class, "container")]//h1)[1]')
-  mangainfo.Status    = MangaInfoStatusIfPos(x.XPathString('//dt[text()="' .. XPathTokenStatus .. '"]/following-sibling::dd[1]//span'), 'Ongoing', 'Complete')
-  mangainfo.Authors   = x.XPathStringAll('//dt[text()="' .. XPathTokenAuthors .. '"]/following-sibling::dd[1]//a')
-  mangainfo.Artists   = x.XPathString('//dt[text()="' .. XPathTokenArtists .. '"]/following-sibling::dd[1]')
-  mangainfo.Summary   = x.XPathString('//div[contains(@class, "well")]/div')
-  
-  v = x.XPath('//div[@class="chapter-wrapper"]/table//td[@class="chapter"]/a')
-  for i = 1, v.Count do
-    mangainfo.ChapterLinks.Add(v.Get(i).GetAttribute('href'))
-    mangainfo.ChapterNames.Add(x.XPathString('normalize-space(.)', v.Get(i)))
-  end
-  InvertStrings(mangainfo.ChapterLinks, mangainfo.ChapterNames)
+  mangainfo.Status    = MangaInfoStatusIfPos(x.XPathString('//dt[text()="' .. XPathTokenStatus .. '"]/following-sibling::dd[1]/span'), 'Devam Ediyor', 'Tamamlandı')
+  mangainfo.Authors   = x.XPathStringAll('//dt[text()="' .. XPathTokenAuthors .. '"]/following-sibling::dd[1]/a')
+  mangainfo.Artists   = x.XPathStringAll('//dt[text()="' .. XPathTokenArtists .. '"]/following-sibling::dd[1]/a')
+  mangainfo.Genres    = x.XPathStringAll('//dt[text()="' .. XPathTokenGenres .. '"]/following-sibling::dd[1]/a')
   
   return no_error
 end
@@ -70,7 +62,7 @@ end
 ----------------------------------------------------------------------------------------------------
 
 function Init()
-  AddWebsiteModule('KomikGue', 'http://www.komikgue.com', 'Indonesian')
+  AddWebsiteModule('MangaDenizi', 'https://www.mangadenizi.com', 'Turkish')
 end
 
 function AddWebsiteModule(name, url, category)
