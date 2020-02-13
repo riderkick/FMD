@@ -31,7 +31,7 @@ end
 
 function Init()
 	m=NewModule()
-	m.category='English'
+	-- m.category='English'
 	m.website='MangaDexToday'
 	m.rooturl='http://mangadex.today'
 	m.ongetinfo='GetInfo'
