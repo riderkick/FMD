@@ -127,6 +127,12 @@ begin
     Result := 0;
 end;
 
+function lua_stringtostream(L: Plua_State): Integer; cdecl;
+begin
+  Result := 0;
+  StringToStream(lua_tostring(L, 1), TStream(luaGetUserData(L, 2)));
+end;
+
 function lua_round(L: Plua_State): Integer; cdecl;
 begin
   lua_pushinteger(L, round(lua_tonumber(L, 1)));
@@ -174,6 +180,7 @@ begin
   luaPushFunctionGlobal(L, 'URLDecode', @lua_urldecode);
   luaPushFunctionGlobal(L, 'IncStr', @lua_incstr);
   luaPushFunctionGlobal(L, 'StreamToString', @lua_streamtostring);
+  luaPushFunctionGlobal(L, 'StringToStream', @lua_stringtostream);
   luaPushFunctionGlobal(L, 'Round', @lua_round);
   luaPushFunctionGlobal(L, 'TrimStrings', @lua_trimstrings);
   luaPushFunctionGlobal(L, 'GetCurrentTime', @lua_getcurrenttime);
