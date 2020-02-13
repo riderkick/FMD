@@ -1151,10 +1151,19 @@ begin
 end;
 
 procedure StringToStream(const S: String; Stream: TStream);
+var
+  sm: TStringStream;
 begin
   Stream.Position := 0;
   Stream.Size := 0;
-  Stream.WriteAnsiString(s);;
+  sm := nil;
+  try
+    sm := TStringStream.Create(S);
+    Stream.CopyFrom(sm, sm.Size);
+  except
+  end;
+  if Assigned(sm) then
+    sm.Free;
 end;
 
 function GetRightValue(const Name, s: String): String;
