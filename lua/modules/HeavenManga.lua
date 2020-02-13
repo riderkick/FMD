@@ -87,5 +87,5 @@ end
 
 function Init()
   AddWebsiteModule('HeavenManga', 'http://ww7.heavenmanga.org')
-  AddWebsiteModule('HolyManga', 'http://ww9.holymanga.net')
+  AddWebsiteModule('HolyManga', 'http://w11.holymanga.net')
 end
