@@ -111,6 +111,7 @@ type
     procedure AddOption(const AOptionType: TWebsiteOptionType;
       const ABindValue: Pointer; const AName: String; const ACaption: PString; const AItems: PString = nil);
   public
+    Guardian: TCriticalSection;
     Tag: Integer;
     TagPtr: Pointer;
     Website: String;
@@ -395,6 +396,7 @@ end;
 
 constructor TModuleContainer.Create;
 begin
+  Guardian := TCriticalSection.Create;
   FSettings := TWebsiteModuleSettings.Create;
   FID := -1;
   ActiveTaskCount := 0;
@@ -418,6 +420,7 @@ begin
   if Assigned(FAccount) then
     FAccount.Free;
   FSettings.Free;
+  Guardian.Free;
   inherited Destroy;
 end;
 
