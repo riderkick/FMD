@@ -136,8 +136,8 @@ implementation
 
 uses
   FMDOptions, FileUtil, MultiLog, LuaClass, LuaBase, LuaMangaInfo, LuaHTTPSend,
-  LuaXQuery, LuaUtils, LuaDownloadTask, LuaUpdateListManager, LuaStrings, uData,
-  uDownloadsManager, xquery, httpsendthread, FMDVars;
+  LuaXQuery, LuaUtils, LuaDownloadTask, LuaUpdateListManager, LuaStrings,
+  LuaCriticalSection, uData, uDownloadsManager, xquery, httpsendthread, FMDVars;
 
 threadvar
   TempModules:TLuaWebsiteModules;
@@ -896,7 +896,7 @@ begin
     luaClassAddStringProperty(L, MetaTable, 'Password', @Password);
     luaClassAddStringProperty(L, MetaTable, 'Cookies', @Cookies);
     luaClassAddIntegerProperty(L, MetaTable, 'Status', @Status);
-    luaClassAddObject(L, MetaTable, Guardian, 'Guardian');
+    luaClassAddObject(L, MetaTable, Guardian, 'Guardian', @luaCriticalSectionAddMetaTable);
   end;
 end;
 
@@ -905,6 +905,7 @@ procedure luaWebsiteModuleAddMetaTable(L: Plua_State; Obj: Pointer;
 begin
   with TLuaWebsiteModule(Obj) do
   begin
+    luaClassAddObject(L, MetaTable, Module.Guardian, 'Guardian', @luaCriticalSectionAddMetaTable);
     luaClassAddStringProperty(L, MetaTable, 'Website', @Module.Website);
     luaClassAddStringProperty(L, MetaTable, 'RootURL', @Module.RootURL);
     luaClassAddStringProperty(L, MetaTable, 'Category', @Module.Category);
