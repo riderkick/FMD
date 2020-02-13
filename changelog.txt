@@ -4,6 +4,10 @@ https://github.com/fmd-project-team/FMD
 Changelog:
 ([!] Important, [+] Addition, [-] Removal, [*] Fix/Change, [?] Feedback needed)
 
+1.1.2.0 (13.02.2020)
+[*] Hotfix update
+Full changes: https://github.com/fmd-project-team/FMD/compare/1.1.1.0...1.1.2.0
+
 1.1.1.0 (12.02.2020)
 [*] Website account and proxy user/pass now encrypted in file,
     it will break your previous data, backup them first
