@@ -197,6 +197,7 @@ var
   CL_BSOdd: TColor = clBtnFace;
   CL_BSEven: TColor = clWindow;
   CL_BSSortedColumn: TColor = $F8E6D6;
+  CL_BSEnabledWebsiteSettings: TColor = clYellow;
 
   //mangalist color
   CL_MNNewManga: TColor = $FDC594;

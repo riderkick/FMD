@@ -180,6 +180,7 @@ begin
     Add('OddColor', CL_BSOdd);
     Add('EvenColor', CL_BSEven);
     Add('SortedColumnColor', CL_BSSortedColumn);
+    Add('EnableWebsiteSettings', CL_BSEnabledWebsiteSettings);
   end;
 
   MangaListColors := TColorItems.Create;
@@ -261,6 +262,7 @@ begin
   CL_BSOdd := BasicListColors[19];
   CL_BSEven := BasicListColors[20];
   CL_BSSortedColumn := BasicListColors[21];
+  CL_BSEnabledWebsiteSettings := BasicListColors[22];
 
   //mangalist
   CL_MNNewManga := MangaListColors[0];

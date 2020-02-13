@@ -8,7 +8,7 @@ object WebsiteSettingsForm: TWebsiteSettingsForm
   ClientWidth = 572
   OnCreate = FormCreate
   OnDestroy = FormDestroy
-  LCLVersion = '1.8.0.6'
+  LCLVersion = '2.1.0.0'
   object spMain: TPairSplitter
     Left = 0
     Height = 461
@@ -35,10 +35,12 @@ object WebsiteSettingsForm: TWebsiteSettingsForm
         Header.AutoSizeIndex = 0
         Header.Columns = <>
         Header.DefaultHeight = 17
+        Header.Height = 17
         Header.MainColumn = -1
         TabOrder = 1
         TreeOptions.PaintOptions = [toHideFocusRect, toShowButtons, toShowDropmark, toThemeAware, toUseBlendedImages]
         TreeOptions.SelectionOptions = [toFullRowSelect]
+        OnBeforeCellPaint = vtWebsiteBeforeCellPaint
         OnCompareNodes = vtWebsiteCompareNodes
         OnFocusChanged = vtWebsiteFocusChanged
         OnGetText = vtWebsiteGetText
