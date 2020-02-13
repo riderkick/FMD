@@ -462,7 +462,8 @@ function ShortenString(const S: String; const MaxWidth: Integer;
 
 function TitleCase(const S: string): string;
 function StringReplaceBrackets(const S, OldPattern, NewPattern: String; Flags: TReplaceFlags): String;
-function StreamToString(const Stream: TStream): String; inline;
+function StreamToString(const Stream: TStream): String;
+procedure StringToStream(const S: String; Stream: TStream);
 function GetRightValue(const Name, s: String): String;
 function QuotedStr(const S: Integer): String; overload; inline;
 function QuotedStrD(const S: String): String; overload; inline;
@@ -1149,6 +1150,13 @@ begin
   Stream.Position := p;
 end;
 
+procedure StringToStream(const S: String; Stream: TStream);
+begin
+  Stream.Position := 0;
+  Stream.Size := 0;
+  Stream.WriteAnsiString(s);;
+end;
+
 function GetRightValue(const Name, s: String): String;
 var
   i: Integer;
@@ -1721,7 +1729,7 @@ end;
 const
   EncryptKey='B74945FB50E84FD58BF9FEAB8E4BEA6B';
 
-function EncryptString(const s:string):string;
+function EncryptString(const s: String): String;
 var
   aes: TDCP_rijndael;
 begin
@@ -1737,7 +1745,7 @@ begin
   end;
 end;
 
-function DecryptString(const s:string):string;
+function DecryptString(const s: String): String;
 var
   aes: TDCP_rijndael;
 begin
