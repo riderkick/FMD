@@ -1314,6 +1314,8 @@ begin
   end;
 
   Caption := 'Free Manga Downloader (' + FMD_VERSION_STRING + ')';
+  if LuaWebsiteModules.AlwaysLoadLuaFromFile then
+    Caption := Caption + ' --lua-dofile';
 end;
 
 procedure TMainForm.FormClose(Sender: TObject; var CloseAction: TCloseAction);
