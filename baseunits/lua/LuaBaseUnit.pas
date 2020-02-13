@@ -16,19 +16,19 @@ uses
 
 function lua_pos(L: Plua_State): Integer; cdecl;
 begin
-  lua_pushinteger(L, Pos(lua_tostring(L, 1), lua_tostring(L, 2)));
+  lua_pushinteger(L, Pos(luaGetString(L, 1), luaGetString(L, 2)));
   Result := 1;
 end;
 
 function lua_trim(L: Plua_State): Integer; cdecl;
 begin
-  lua_pushstring(L, Trim(lua_tostring(L, 1)));
+  lua_pushstring(L, Trim(luaGetString(L, 1)));
   Result := 1;
 end;
 
 function lua_maybefillhost(L: Plua_State): Integer; cdecl;
 begin
-  lua_pushstring(L, MaybeFillHost(lua_tostring(L, 1), lua_tostring(L, 2)));
+  lua_pushstring(L, MaybeFillHost(luaGetString(L, 1), luaGetString(L, 2)));
   Result := 1;
 end;
 
@@ -44,10 +44,10 @@ end;
 function lua_mangainfostatusifpos(L: Plua_State): Integer; cdecl;
 begin
   case lua_gettop(L) of
-    3: lua_pushstring(L, MangaInfoStatusIfPos(lua_tostring(L, 1),
-        lua_tostring(L, 2), lua_tostring(L, 3)));
-    2: lua_pushstring(L, MangaInfoStatusIfPos(lua_tostring(L, 1), lua_tostring(L, 2)));
-    1: lua_pushstring(L, MangaInfoStatusIfPos(lua_tostring(L, 1)));
+    3: lua_pushstring(L, MangaInfoStatusIfPos(luaGetString(L, 1),
+        luaGetString(L, 2), luaGetString(L, 3)));
+    2: lua_pushstring(L, MangaInfoStatusIfPos(luaGetString(L, 1), luaGetString(L, 2)));
+    1: lua_pushstring(L, MangaInfoStatusIfPos(luaGetString(L, 1)));
     else
       Exit(0);
   end;
@@ -56,49 +56,49 @@ end;
 
 function lua_appendurldelim(L: Plua_State): Integer; cdecl;
 begin
-  lua_pushstring(L, AppendURLDelim(lua_tostring(L, 1)));
+  lua_pushstring(L, AppendURLDelim(luaGetString(L, 1)));
   Result := 1;
 end;
 
 function lua_removeurldelim(L: Plua_State): Integer; cdecl;
 begin
-  lua_pushstring(L, RemoveURLDelim(lua_tostring(L, 1)));
+  lua_pushstring(L, RemoveURLDelim(luaGetString(L, 1)));
   Result := 1;
 end;
 
 function lua_appendurldelimleft(L: Plua_State): Integer; cdecl;
 begin
-  lua_pushstring(L, AppendURLDelimLeft(lua_tostring(L, 1)));
+  lua_pushstring(L, AppendURLDelimLeft(luaGetString(L, 1)));
   Result := 1;
 end;
 
 function lua_removeurldelimleft(L: Plua_State): Integer; cdecl;
 begin
-  lua_pushstring(L, RemoveURLDelimLeft(lua_tostring(L, 1)));
+  lua_pushstring(L, RemoveURLDelimLeft(luaGetString(L, 1)));
   Result := 1;
 end;
 
 function lua_regexprgetmatch(L: Plua_State): Integer; cdecl;
 begin
-  lua_pushstring(L, RegExprGetMatch(lua_tostring(L, 1), lua_tostring(L, 2), lua_tointeger(L, 3)));
+  lua_pushstring(L, RegExprGetMatch(luaGetString(L, 1), luaGetString(L, 2), lua_tointeger(L, 3)));
   Result := 1;
 end;
 
 function lua_htmldecode(L: Plua_State): Integer; cdecl;
 begin
-  lua_pushstring(L, HTMLDecode(lua_tostring(L, 1)));
+  lua_pushstring(L, HTMLDecode(luaGetString(L, 1)));
   Result := 1;
 end;
 
 function lua_htmlencode(L: Plua_State): Integer; cdecl;
 begin
-  lua_pushstring(L, EscapeHTML(lua_tostring(L, 1)));
+  lua_pushstring(L, EscapeHTML(luaGetString(L, 1)));
   Result := 1;
 end;
 
 function lua_urldecode(L: Plua_State): Integer; cdecl;
 begin
-  lua_pushstring(L, URLDecode(lua_tostring(L, 1)));
+  lua_pushstring(L, URLDecode(luaGetString(L, 1)));
   Result := 1;
 end;
 
@@ -112,7 +112,7 @@ begin
   if lua_isinteger(L, 1) then
     lua_pushstring(L, IncStr(lua_tointeger(L, 1), n))
   else
-    lua_pushstring(L, IncStr(lua_tostring(L, 1), n));
+    lua_pushstring(L, IncStr(luaGetString(L, 1), n));
   Result := 1;
 end;
 
@@ -130,7 +130,7 @@ end;
 function lua_stringtostream(L: Plua_State): Integer; cdecl;
 begin
   Result := 0;
-  StringToStream(lua_tostring(L, 1), TStream(luaGetUserData(L, 2)));
+  StringToStream(luaGetString(L, 1), TStream(luaGetUserData(L, 2)));
 end;
 
 function lua_round(L: Plua_State): Integer; cdecl;
@@ -153,13 +153,13 @@ end;
 
 function lua_encryptstring(L: Plua_State): Integer; cdecl;
 begin
-  lua_pushstring(L, EncryptString(lua_tostring(L, 1)));
+  lua_pushstring(L, EncryptString(luaGetString(L, 1)));
   Result := 1;
 end;
 
 function lua_decryptstring(L: Plua_State): Integer; cdecl;
 begin
-  lua_pushstring(L, DecryptString(lua_tostring(L, 1)));
+  lua_pushstring(L, DecryptString(luaGetString(L, 1)));
   Result := 1;
 end;
 
@@ -170,7 +170,7 @@ begin
   Result := 0;
   if lua_isstring(L, 1) then
   begin
-    lua_pushstring(L, Base64Encode(String(lua_tostring(L, 1))));
+    lua_pushstring(L, Base64Encode(String(luaGetString(L, 1))));
     Result := 1;
   end
   else
@@ -192,7 +192,7 @@ begin
   Result := 0;
   if lua_isstring(L, 1) then
   begin
-    lua_pushstring(L, Base64Decode(String(lua_tostring(L, 1))));
+    lua_pushstring(L, Base64Decode(String(luaGetString(L, 1))));
     Result := 1;
   end
   else

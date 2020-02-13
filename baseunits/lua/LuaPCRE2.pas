@@ -12,20 +12,20 @@ procedure luaPCRE2Register(L: Plua_State);
 implementation
 
 uses
-  pcre2, LuaClass;
+  pcre2, LuaClass, LuaUtils;
 
 function re_match(L: Plua_State): Integer; cdecl;
 begin
-  lua_pushboolean(L, PCRE2Match(lua_tostring(L, 1), lua_tostring(L, 2)));
+  lua_pushboolean(L, PCRE2Match(luaGetString(L, 1), luaGetString(L, 2)));
   Result := 1;
 end;
 
 function re_replace(L: Plua_State): Integer; cdecl;
 begin
   if lua_gettop(L)=4 then
-    lua_pushstring(L, PCRE2Replace(lua_tostring(L, 1), lua_tostring(L, 2), lua_tostring(L, 3),lua_toboolean(L,4)))
+    lua_pushstring(L, PCRE2Replace(luaGetString(L, 1), luaGetString(L, 2), luaGetString(L, 3),lua_toboolean(L,4)))
   else
-    lua_pushstring(L, PCRE2Replace(lua_tostring(L, 1), lua_tostring(L, 2), lua_tostring(L, 3)));
+    lua_pushstring(L, PCRE2Replace(luaGetString(L, 1), luaGetString(L, 2), luaGetString(L, 3)));
   Result := 1;
 end;
 

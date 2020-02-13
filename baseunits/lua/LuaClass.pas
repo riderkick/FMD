@@ -95,7 +95,7 @@ begin
     Exit;
 
   lua_getmetatable(L, 1); // 1 should be userdata
-  lua_pushstring(L, AnsiLowerCase(lua_tostring(L, 2)));  // 2 should be the key
+  lua_pushstring(L, AnsiLowerCase(luaGetString(L, 2)));  // 2 should be the key
   lua_rawget(L, -2); // get metatable[key]
 
   if lua_istable(L, -1) then
@@ -127,7 +127,7 @@ begin
     Exit(0);
 
   lua_getmetatable(L, 1);
-  lua_pushstring(L, AnsiLowerCase(lua_tostring(L, 2)));
+  lua_pushstring(L, AnsiLowerCase(luaGetString(L, 2)));
   lua_rawget(L, -2);
 
   if lua_istable(L, -1) then
@@ -161,7 +161,7 @@ function __indexarray(L: Plua_State): Integer; cdecl;
 begin
   Result := 1;
 
-  if lua_tostring(L, 2) = '__get' then
+  if luaGetString(L, 2) = '__get' then
   begin
     lua_pushvalue(L, 1);
     Exit;
@@ -177,7 +177,7 @@ function __newindexarray(L: Plua_State): Integer; cdecl;
 begin
   Result := 1;
 
-  if lua_tostring(L, 2) = '__set' then
+  if luaGetString(L, 2) = '__set' then
   begin
     lua_pushvalue(L, 1);
     Exit;
@@ -438,7 +438,7 @@ end;
 function luaclass_string_set(L: Plua_State): Integer; cdecl;
 begin
   Result := 0;
-  String(luaClassGetClosure(L)^) := lua_tostring(L, -1);
+  String(luaClassGetClosure(L)^) := luaGetString(L, -1);
 end;
 
 function luaclass_int_get(L: Plua_State): Integer; cdecl;

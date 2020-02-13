@@ -16,13 +16,13 @@ uses
 
 function re_exec(L: Plua_State): Integer; cdecl;
 begin
-  lua_pushboolean(L, ExecRegExpr(lua_tostring(L, 1), lua_tostring(L, 2)));
+  lua_pushboolean(L, ExecRegExpr(luaGetString(L, 1), luaGetString(L, 2)));
   Result := 1;
 end;
 
 function re_replace(L: Plua_State): Integer; cdecl;
 begin
-  lua_pushstring(L, ReplaceRegExpr(lua_tostring(L, 1), lua_tostring(L, 2), lua_tostring(L, 3), True));
+  lua_pushstring(L, ReplaceRegExpr(luaGetString(L, 1), luaGetString(L, 2), luaGetString(L, 3), True));
   Result := 1;
 end;
 

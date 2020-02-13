@@ -159,7 +159,7 @@ begin
       Result := lua_toboolean(l, -1);
     except
       on E: Exception do
-        Logger.SendError(E.Message + ': ' + lua_tostring(l, -1));
+        Logger.SendError(E.Message + ': ' + luaGetString(L, -1));
     end;
     lua_close(l);
   end;
@@ -182,7 +182,7 @@ begin
       Result := lua_toboolean(l, -1);
     except
       on E: Exception do
-        Logger.SendError(E.Message + ': ' + lua_tostring(l, -1));
+        Logger.SendError(E.Message + ': ' + luaGetString(L, -1));
     end;
     lua_close(l);
   end;
@@ -212,7 +212,7 @@ begin
         Page := lua_tointeger(l, -1);
     except
       on E: Exception do
-        Logger.SendError(E.Message + ': ' + lua_tostring(l, -1));
+        Logger.SendError(E.Message + ': ' + luaGetString(L, -1));
     end;
     lua_close(l);
   end;
@@ -242,7 +242,7 @@ begin
       Result := lua_tointeger(L, -1);
     except
       on E: Exception do
-        Logger.SendError(E.Message + ': ' + lua_tostring(l, -1));
+        Logger.SendError(E.Message + ': ' + luaGetString(L, -1));
     end;
     lua_close(l);
   end;
@@ -268,7 +268,7 @@ begin
       Result := lua_tointeger(L, -1);
     except
       on E: Exception do
-        Logger.SendError(E.Message + ': ' + lua_tostring(l, -1));
+        Logger.SendError(E.Message + ': ' + luaGetString(L, -1));
     end;
     lua_close(l);
   end;
@@ -291,7 +291,7 @@ begin
       Result := lua_toboolean(l, -1);
     except
       on E: Exception do
-        Logger.SendError(E.Message + ': ' + lua_tostring(l, -1));
+        Logger.SendError(E.Message + ': ' + luaGetString(L, -1));
     end;
     lua_close(l);
   end;
@@ -317,7 +317,7 @@ begin
       Result := lua_toboolean(l, -1);
     except
       on E: Exception do
-        Logger.SendError(E.Message + ': ' + lua_tostring(l, -1));
+        Logger.SendError(E.Message + ': ' + luaGetString(L, -1));
     end;
     lua_close(l);
   end;
@@ -344,7 +344,7 @@ begin
       Result := lua_toboolean(l, -1);
     except
       on E: Exception do
-        Logger.SendError(E.Message + ': ' + lua_tostring(l, -1));
+        Logger.SendError(E.Message + ': ' + luaGetString(L, -1));
     end;
     lua_close(l);
   end;
@@ -371,7 +371,7 @@ begin
       Result := lua_toboolean(l, -1);
     except
       on E: Exception do
-        Logger.SendError(E.Message + ': ' + lua_tostring(l, -1));
+        Logger.SendError(E.Message + ': ' + luaGetString(L, -1));
     end;
     lua_close(l);
   end;
@@ -398,7 +398,7 @@ begin
       Result := lua_toboolean(l, -1);
     except
       on E: Exception do
-        Logger.SendError(E.Message + ': ' + lua_tostring(l, -1));
+        Logger.SendError(E.Message + ': ' + luaGetString(L, -1));
     end;
     lua_close(l);
   end;
@@ -421,10 +421,10 @@ begin
 
       LuaDoMe(l);
       LuaCallFunction(l, OnSaveImage);
-      Result := lua_tostring(l, -1);
+      Result := luaGetString(L, -1);
     except
       on E: Exception do
-        Logger.SendError(E.Message + ': ' + lua_tostring(l, -1));
+        Logger.SendError(E.Message + ': ' + luaGetString(L, -1));
     end;
     lua_close(l);
   end;
@@ -447,7 +447,7 @@ begin
       Result := lua_toboolean(l, -1);
     except
       on E: Exception do
-        Logger.SendError(E.Message + ': ' + lua_tostring(l, -1));
+        Logger.SendError(E.Message + ': ' + luaGetString(L, -1));
     end;
     lua_close(l);
   end;
@@ -470,7 +470,7 @@ begin
       Result := lua_toboolean(l, -1);
     except
       on E: Exception do
-        Logger.SendError(E.Message + ': ' + lua_tostring(l, -1));
+        Logger.SendError(E.Message + ': ' + luaGetString(L, -1));
     end;
     lua_close(l);
   end;
@@ -511,7 +511,7 @@ begin
       end;
     except
       on E: Exception do
-        Logger.SendError(E.Message + ': ' + lua_tostring(L, -1));
+        Logger.SendError(E.Message + ': ' + luaGetString(L, -1));
     end;
   finally
     lua_close(l);
@@ -798,28 +798,28 @@ function lua_addoptioncheckbox(L: Plua_State): Integer; cdecl;
 begin
   Result := 0;
   TLuaWebsiteModule(luaClassGetObject(L)).AddOptionCheckBox(
-    lua_tostring(L, 1), lua_tostring(L, 2), lua_toboolean(L, 3));
+    luaGetString(L, 1), luaGetString(L, 2), lua_toboolean(L, 3));
 end;
 
 function lua_addoptionedit(L: Plua_State): Integer; cdecl;
 begin
   Result := 0;
   TLuaWebsiteModule(luaClassGetObject(L)).AddOptionEdit(
-    lua_tostring(L, 1), lua_tostring(L, 2), lua_tostring(L, 3));
+    luaGetString(L, 1), luaGetString(L, 2), luaGetString(L, 3));
 end;
 
 function lua_addoptionspinedit(L: Plua_State): Integer; cdecl;
 begin
   Result := 0;
   TLuaWebsiteModule(luaClassGetObject(L)).AddOptionSpinEdit(
-    lua_tostring(L, 1), lua_tostring(L, 2), lua_tointeger(L, 3));
+    luaGetString(L, 1), luaGetString(L, 2), lua_tointeger(L, 3));
 end;
 
 function lua_addoptioncombobox(L: Plua_State): Integer; cdecl;
 begin
   Result := 0;
   TLuaWebsiteModule(luaClassGetObject(L)).AddOptionComboBox(
-    lua_tostring(L, 1), lua_tostring(L, 2), lua_tostring(L, 3), lua_tointeger(L, 4));
+    luaGetString(L, 1), luaGetString(L, 2), luaGetString(L, 3), lua_tointeger(L, 4));
 end;
 
 function lua_gettotaldirectory(L: Plua_State): Integer; cdecl;
@@ -841,7 +841,7 @@ var
   o: TObject;
 begin
   m := TLuaWebsiteModule(luaClassGetObject(L));
-  i:=m.Options.IndexOf(lua_tostring(L, 1));
+  i:=m.Options.IndexOf(luaGetString(L, 1));
   Result := 1;
   if i = -1 then
     lua_pushnil(L)

@@ -21,7 +21,7 @@ procedure luaIXQValuePush(L: Plua_State; Obj: TLuaIXQValue); inline;
 implementation
 
 uses
-  LuaClass;
+  LuaClass, LuaUtils;
 
 type
   TUserData = TLuaIXQValue;
@@ -42,7 +42,7 @@ end;
 function ixqvalue_getattribute(L: Plua_State): Integer; cdecl;
 begin
   lua_pushstring(L, TUserData(luaClassGetObject(L)).FIXQValue.toNode.getAttribute(
-    lua_tostring(L, 1)));
+    luaGetString(L, 1)));
   Result := 1;
 end;
 

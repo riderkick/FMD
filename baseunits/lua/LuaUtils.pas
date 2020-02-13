@@ -145,7 +145,7 @@ begin
     Result := 'userdata: ' + hexStr(lua_touserdata(L, Idx))
   else
   if lua_isstring(L, Idx) then
-    Result := 'string: ' + lua_tostring(L, Idx)
+    Result := 'string: ' + luaGetString(L, Idx)
   else
   if lua_isinteger(L, Idx) then
     Result := 'integer: ' + IntToStr(lua_tointeger(L, Idx))

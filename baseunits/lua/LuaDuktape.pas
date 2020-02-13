@@ -15,7 +15,7 @@ uses JSUtils, LuaUtils;
 
 function lua_execjs(L: Plua_State): Integer; cdecl;
 begin
-  lua_pushstring(L, ExecJS(lua_tostring(L, 1)));
+  lua_pushstring(L, ExecJS(luaGetString(L, 1)));
   Result := 1;
 end;
 

@@ -16,25 +16,25 @@ uses
 
 function crypto_hextostr(L: Plua_State): Integer; cdecl;
 begin
-  lua_pushstring(L, HexToStr(lua_tostring(L, 1)));
+  lua_pushstring(L, HexToStr(luaGetString(L, 1)));
   Result := 1;
 end;
 
 function crypto_strtohexstr(L: Plua_State): Integer; cdecl;
 begin
-  lua_pushstring(L, StrToHexStr(lua_tostring(L, 1)));
+  lua_pushstring(L, StrToHexStr(luaGetString(L, 1)));
   Result := 1;
 end;
 
 function crypto_md5hex(L: Plua_State): Integer; cdecl;
 begin
-  lua_pushstring(L, MD5Hex(lua_tostring(L, 1)));
+  lua_pushstring(L, MD5Hex(luaGetString(L, 1)));
   Result := 1;
 end;
 
 function crypto_aesdecryptcbc(L: Plua_State): Integer; cdecl;
 begin
-  lua_pushstring(L, AESDecryptCBC(lua_tostring(L, 1), lua_tostring(L, 2), lua_tostring(L, 3)));
+  lua_pushstring(L, AESDecryptCBC(luaGetString(L, 1), luaGetString(L, 2), luaGetString(L, 3)));
   Result := 1;
 end;
 

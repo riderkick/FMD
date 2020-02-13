@@ -23,7 +23,7 @@ begin
   if lua_gettop(L) = 1 then
   begin
     if lua_isstring(L, 1) then
-      luaXQueryPush(L, TXQueryEngineHTML.Create(lua_tostring(L, 1)), '', True)
+      luaXQueryPush(L, TXQueryEngineHTML.Create(luaGetString(L, 1)), '', True)
     else
     if lua_isuserdata(L, 1) then
       luaXQueryPush(L, TXQueryEngineHTML.Create(TStream(luaGetUserData(L, 1))),
@@ -41,7 +41,7 @@ begin
   Result := 0;
   u := TUserData(luaClassGetObject(L));
   if lua_isstring(L, 1) then
-    u.ParseHTML(lua_tostring(L, 1))
+    u.ParseHTML(luaGetString(L, 1))
   else
   if lua_isuserdata(L, 1) then
     u.ParseHTML(TStream(luaGetUserData(L, 1)));
@@ -54,9 +54,9 @@ var
 begin
   u := TUserData(luaClassGetObject(L));
   if lua_gettop(L) = 2 then
-    x := u.XPath(lua_tostring(L, 1), TLuaIXQValue(luaGetUserData(L, 2)).FIXQValue)
+    x := u.XPath(luaGetString(L, 1), TLuaIXQValue(luaGetUserData(L, 2)).FIXQValue)
   else
-    x := u.XPath(lua_tostring(L, 1));
+    x := u.XPath(luaGetString(L, 1));
   luaIXQValuePush(L, TLuaIXQValue.Create(x));
   Result := 1;
 end;
@@ -67,10 +67,10 @@ var
 begin
   u := TUserData(luaClassGetObject(L));
   if lua_gettop(L) = 2 then
-    lua_pushstring(L, u.XPathString(lua_tostring(L, 1),
+    lua_pushstring(L, u.XPathString(luaGetString(L, 1),
       TLuaIXQValue(luaGetUserData(L, 2)).FIXQValue))
   else
-    lua_pushstring(L, u.XPathString(lua_tostring(L, 1)));
+    lua_pushstring(L, u.XPathString(luaGetString(L, 1)));
   Result := 1;
 end;
 
@@ -82,33 +82,33 @@ begin
   u := TUserData(luaClassGetObject(L));
   case lua_gettop(L) of
     1: begin
-         lua_pushstring(L, u.XPathStringAll(lua_tostring(L, 1)));
+         lua_pushstring(L, u.XPathStringAll(luaGetString(L, 1)));
          Result := 1;
        end;
     2: begin
          if lua_isstring(L, 2) then
          begin
-           lua_pushstring(L, u.XPathStringAll(lua_tostring(L, 1), lua_tostring(L, 2)));
+           lua_pushstring(L, u.XPathStringAll(luaGetString(L, 1), luaGetString(L, 2)));
            Result := 1;
          end
          else
          if lua_isuserdata(L, 2) then
          begin
-           u.XPathStringAll(lua_tostring(L, 1), TStrings(luaGetUserData(L, 2)));
+           u.XPathStringAll(luaGetString(L, 1), TStrings(luaGetUserData(L, 2)));
            Result := 0;
          end;
        end;
     3: begin
          if lua_isstring(L, 2) then
          begin
-           lua_pushstring(L, u.XPathStringAll(lua_tostring(L, 1), lua_tostring(L, 2),
+           lua_pushstring(L, u.XPathStringAll(luaGetString(L, 1), luaGetString(L, 2),
              TLuaIXQValue(luaGetUserData(L, 3)).FIXQValue));
            Result := 1;
          end
          else
          if lua_isuserdata(L, 2) then
          begin
-           u.XPathStringAll(lua_tostring(L, 1), TStrings(luaGetUserData(L, 2)),
+           u.XPathStringAll(luaGetString(L, 1), TStrings(luaGetUserData(L, 2)),
              TLuaIXQValue(luaGetUserData(L, 3)).FIXQValue);
            Result := 0;
          end;
@@ -122,9 +122,9 @@ var
 begin
   u := TUserData(luaClassGetObject(L));
   case lua_gettop(L) of
-    3: u.XPathHREFAll(lua_tostring(L, 1), TStrings(luaGetUserData(L, 2)),
+    3: u.XPathHREFAll(luaGetString(L, 1), TStrings(luaGetUserData(L, 2)),
         TStrings(luaGetUserData(L, 3)));
-    4: u.XPathHREFAll(lua_tostring(L, 1), TStrings(luaGetUserData(L, 2)),
+    4: u.XPathHREFAll(luaGetString(L, 1), TStrings(luaGetUserData(L, 2)),
         TStrings(luaGetUserData(L, 3)), TLuaIXQValue(luaGetUserData(L, 4)).FIXQValue)
   end;
   Result := 0;
@@ -136,9 +136,9 @@ var
 begin
   u := TUserData(luaClassGetObject(L));
   case lua_gettop(L) of
-    3: u.XPathHREFtitleAll(lua_tostring(L, 1), TStrings(luaGetUserData(L, 2)),
+    3: u.XPathHREFtitleAll(luaGetString(L, 1), TStrings(luaGetUserData(L, 2)),
         TStrings(luaGetUserData(L, 3)));
-    4: u.XPathHREFtitleAll(lua_tostring(L, 1), TStrings(luaGetUserData(L, 2)),
+    4: u.XPathHREFtitleAll(luaGetString(L, 1), TStrings(luaGetUserData(L, 2)),
         TStrings(luaGetUserData(L, 3)), TLuaIXQValue(luaGetUserData(L, 4)).FIXQValue)
   end;
   Result := 0;
@@ -150,10 +150,10 @@ var
 begin
   u := TUserData(luaClassGetObject(L));
   if lua_gettop(L) = 2 then
-    lua_pushinteger(L, u.XPathCount(lua_tostring(L, 1),
+    lua_pushinteger(L, u.XPathCount(luaGetString(L, 1),
       TLuaIXQValue(luaGetUserData(L, 2)).FIXQValue))
   else
-    lua_pushinteger(L, u.XPathCount(lua_tostring(L, 1)));
+    lua_pushinteger(L, u.XPathCount(luaGetString(L, 1)));
   Result := 1;
 end;
 

@@ -12,24 +12,24 @@ procedure luaLoggerRegister(L: Plua_State);
 implementation
 
 uses
-  MultiLog, LuaClass;
+  MultiLog, LuaClass, LuaUtils;
 
 function logger_send(L: Plua_State): Integer; cdecl;
 begin
   Result := 0;
-  Logger.Send(lua_tostring(L, 1));
+  Logger.Send(luaGetString(L, 1));
 end;
 
 function logger_sendwarning(L: Plua_State): Integer; cdecl;
 begin
   Result := 0;
-  Logger.SendWarning(lua_tostring(L, 1));
+  Logger.SendWarning(luaGetString(L, 1));
 end;
 
 function logger_senderror(L: Plua_State): Integer; cdecl;
 begin
   Result := 0;
-  Logger.SendError(lua_tostring(L, 1));
+  Logger.SendError(luaGetString(L, 1));
 end;
 
 const
