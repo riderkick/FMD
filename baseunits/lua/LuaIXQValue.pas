@@ -46,6 +46,12 @@ begin
   Result := 1;
 end;
 
+function ixqvalue_getproperty(L: Plua_State): Integer; cdecl;
+begin
+  luaIXQValuePush(L, TUserData.Create(TUserData(luaClassGetObject(L)).FIXQValue.getProperty(luaGetString(L, 1))));
+  Result := 1;
+end;
+
 function ixqvalue_innerHTML(L: Plua_State): Integer; cdecl;
 begin
   lua_pushstring(L, TUserData(luaClassGetObject(L)).FIXQValue.toNode.innerHTML());
@@ -77,9 +83,10 @@ begin
 end;
 
 const
-  methods: packed array [0..5] of luaL_Reg = (
-    (name: 'GetAttribute'; func: @ixqvalue_getattribute),
-    (name: 'Get'; func: @ixqvalue_get),
+  methods: packed array [0..6] of luaL_Reg = (
+    (name: 'get'; func: @ixqvalue_get),
+    (name: 'getAttribute'; func: @ixqvalue_getattribute),
+    (name: 'getProperty'; func: @ixqvalue_getproperty),
     (name: 'innerHTML'; func: @ixqvalue_innerHTML),
     (name: 'outerHTML'; func: @ixqvalue_outerHTML),
     (name: 'innerText'; func: @ixqvalue_innerText),
