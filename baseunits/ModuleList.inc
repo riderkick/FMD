@@ -21,5 +21,4 @@ Tapas,
 TonariNoYoungJump,
 TranslateWebtoon,
 Tsumino,
-WPAdultSiteSkins,
-WebtoonTr;
+WPAdultSiteSkins;
