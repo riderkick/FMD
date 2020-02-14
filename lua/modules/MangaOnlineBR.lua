@@ -20,15 +20,12 @@ function GetInfo()
 		mangainfo.summary   = x.xpathstring('//p[.="Sinopse"]/following-sibling::p')
 		mangainfo.status    = MangaInfoStatusIfPos(x.xpathstring('//*[@class="texto-left"]/ul/li[starts-with(.,"Status")]'), 'Em Publicação', '')
 		
-		local v, vi, i, j, s, z, zi = x.xpath('//*[@id="volumes-capitulos"]//*[@class="texto"]')
-		for i = 1, v.count do
-			vi = v.get(i)
-			s = x.xpathstring('p[1]', vi)
-			z = x.xpath('p[2]//a', vi)
-			for j = 1, z.count do
-				zi = z.get(j)
-				mangainfo.chapterlinks.add(zi.getattribute('href'))
-				mangainfo.chapternames.add(s .. ' Capitulo ' .. zi.tostring)
+		local v, w, s
+		for _, v in ipairs(x.xpathi('//*[@id="volumes-capitulos"]//*[@class="texto"]')) do
+			s = x.xpathstring('p[1]', v)
+			for _, w in ipairs(x.xpathi('p[2]//a', v)) do
+				mangainfo.chapterlinks.add(w.getattribute('href'))
+				mangainfo.chapternames.add(s .. ' Capitulo ' .. w.tostring)
 			end
 		end
 		InvertStrings(mangainfo.chapterlinks, mangainfo.chapternames)
