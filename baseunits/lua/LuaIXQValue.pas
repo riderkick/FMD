@@ -46,6 +46,24 @@ begin
   Result := 1;
 end;
 
+function ixqvalue_innerHTML(L: Plua_State): Integer; cdecl;
+begin
+  lua_pushstring(L, TUserData(luaClassGetObject(L)).FIXQValue.toNode.innerHTML());
+  Result := 1;
+end;
+
+function ixqvalue_outerHTML(L: Plua_State): Integer; cdecl;
+begin
+  lua_pushstring(L, TUserData(luaClassGetObject(L)).FIXQValue.toNode.outerHTML());
+  Result := 1;
+end;
+
+function ixqvalue_innerText(L: Plua_State): Integer; cdecl;
+begin
+  lua_pushstring(L, TUserData(luaClassGetObject(L)).FIXQValue.toNode.innerText());
+  Result := 1;
+end;
+
 function ixqvalue_count(L: Plua_State): Integer; cdecl;
 begin
   lua_pushinteger(L, TUserData(luaClassGetObject(L)).FIXQValue.Count);
@@ -59,9 +77,12 @@ begin
 end;
 
 const
-  methods: packed array [0..2] of luaL_Reg = (
+  methods: packed array [0..5] of luaL_Reg = (
     (name: 'GetAttribute'; func: @ixqvalue_getattribute),
     (name: 'Get'; func: @ixqvalue_get),
+    (name: 'innerHTML'; func: @ixqvalue_innerHTML),
+    (name: 'outerHTML'; func: @ixqvalue_outerHTML),
+    (name: 'innerText'; func: @ixqvalue_innerText),
     (name: nil; func: nil)
     );
   props: packed array [0..2] of luaL_Reg_prop = (
