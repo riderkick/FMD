@@ -116,7 +116,7 @@ begin
     luaClassAddObject(L, MetaTable, Cookies, 'Cookies');
     luaClassAddStringProperty(L, MetaTable, 'MimeType', @TUserData(Obj).MimeType);
     luaClassAddStringProperty(L, MetaTable, 'UserAgent', @TUserData(Obj).UserAgent);
-    luaClassAddUserData(L, MetaTable, TUserData(Obj).Document, 'Document');
+    luaClassAddObject(L, MetaTable, TUserData(Obj).Document, 'Document');
   end;
 end;
 
