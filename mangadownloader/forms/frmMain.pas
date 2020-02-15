@@ -5772,13 +5772,8 @@ procedure TMainForm.SaveFormInformation;
       WriteInteger(name, 'SortDirection', Integer(SortDirection));
       for i := 0 to Columns.Count - 1 do
       begin
-        {$if LCL_FullVersion >= 1080000}
         WriteInteger(name, 'Column' + IntToStr(i) + 'Width', ScaleFontTo96(Columns[i].Width));
-        WriteInteger(name, 'Column' + IntToStr(i) + 'Position', ScaleFontTo96(Columns[i].Position));
-        {$else}
-        WriteInteger(name, 'Column' + IntToStr(i) + 'Width', Columns[i].Width);
         WriteInteger(name, 'Column' + IntToStr(i) + 'Position', Columns[i].Position);
-        {$ifend}
       end;
     end;
   end;
