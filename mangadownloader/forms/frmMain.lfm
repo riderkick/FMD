@@ -2707,11 +2707,11 @@ object MainForm: TMainForm
         Height = 470
         Top = 4
         Width = 845
-        ActivePage = tsWebsites
+        ActivePage = tsGeneral
         Align = alTop
         Anchors = [akTop, akLeft, akRight, akBottom]
         ParentFont = False
-        TabIndex = 6
+        TabIndex = 0
         TabOrder = 0
         object tsGeneral: TTabSheet
           Caption = 'General'
@@ -3307,10 +3307,12 @@ object MainForm: TMainForm
                 Top = 58
                 Width = 150
                 Anchors = [akTop, akLeft, akRight]
+                EchoMode = emPassword
                 Font.CharSet = ANSI_CHARSET
                 Font.Height = -12
                 Font.Name = 'Default'
                 ParentFont = False
+                PasswordChar = '*'
                 TabOrder = 4
                 TextHint = 'Proxy password'
               end
