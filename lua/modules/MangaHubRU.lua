@@ -43,7 +43,7 @@ function GetPageNumber()
 		if s ~= '' then
 			x.parsehtml(s)
 			for _, v in ipairs(x.xpathi('json(*)()("src")')) do
-				task.pagelinks.add((MaybeFillHost(module.rooturl, v.tostring:gsub('^//', 'https://')))
+				task.pagelinks.add(MaybeFillHost(module.rooturl, v.tostring:gsub('^//', 'https://')))
 			end
 		end
 		return true
