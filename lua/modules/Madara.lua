@@ -310,4 +310,6 @@ function Init()
   
   cat = 'Arabic'
   AddWebsiteModule('Mangalek', 'https://mangalek.com/', cat)
+  AddWebsiteModule('MangaAction', 'https://manga-action.com', cat)
+  AddWebsiteModule('NijiTranslations', 'https://niji-translations.com', cat)
 end
