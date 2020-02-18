@@ -42,7 +42,11 @@ function Modules.Madara()
       end
       mangainfo.artists=x.xpathstringall('//div[@class="artist-content"]/a')
       mangainfo.genres=x.xpathstringall('//div[@class="genres-content"]/a')
-      mangainfo.status = MangaInfoStatusIfPos(x.xpathstring('//div[@class="summary-heading" and contains(h5, "Status")]/following-sibling::div'))
+      if module.website == 'ATMSubs' then
+        mangainfo.status = MangaInfoStatusIfPos(x.xpathstring('//div[@class="summary-heading" and contains(h5, "Statut")]/following-sibling::div'), 'En Cours', 'Complete')
+      else
+        mangainfo.status = MangaInfoStatusIfPos(x.xpathstring('//div[@class="summary-heading" and contains(h5, "Status")]/following-sibling::div'))
+      end
       if module.website == 'Mangareceh' then
         mangainfo.summary=x.xpathstring('//div[contains(@class,"description-summary")]//p[2]')
       else
@@ -258,6 +262,7 @@ function Init()
   
   cat = 'French'
   AddWebsiteModule('WakaScan', 'http://wakascan.com', cat)
+  AddWebsiteModule('ATMSubs', 'https://atm-subs.fr', cat)
   
   cat = 'Indonesian'
   AddWebsiteModule('MangaYosh', 'https://mangayosh.xyz', cat)
@@ -280,7 +285,7 @@ function Init()
   AddWebsiteModule('GodsRealmScan', 'https://godsrealmscan.com', cat)
   AddWebsiteModule('DarkskyProjects', 'https://darkskyprojects.org', cat)
   AddWebsiteModule('PlotTwistNoFansub', 'https://www.plotwistscan.com', cat)
-  AddWebsiteModule('KnightNoFansub', 'https://knightnoscanlation.com/', cat)
+  AddWebsiteModule('KnightNoFansub', 'https://knightnoscanlation.com', cat)
   AddWebsiteModule('CopyPasteScanlation', 'https://copypastescan.xyz', cat)
   AddWebsiteModule('ZManga', 'https://zmanga.org', cat)
   AddWebsiteModule('KIDzScan', 'https://grafimanga.com', cat)
@@ -309,7 +314,7 @@ function Init()
   AddWebsiteModule('AdonisFansub', 'https://manga.adonisfansub.com', cat)
   
   cat = 'Arabic'
-  AddWebsiteModule('Mangalek', 'https://mangalek.com/', cat)
+  AddWebsiteModule('Mangalek', 'https://mangalek.com', cat)
   AddWebsiteModule('MangaAction', 'https://manga-action.com', cat)
   AddWebsiteModule('NijiTranslations', 'https://niji-translations.com', cat)
 end
