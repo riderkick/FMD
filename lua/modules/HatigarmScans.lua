@@ -11,12 +11,8 @@ local LuaDebug   = require 'Modules.LuaDebugging'
 -- Local Constants
 ----------------------------------------------------------------------------------------------------
 
-local Template   = require 'Modules.Template-MangaReaderOnline'
--- DirectoryParameters = '/'            --> Override template variable by uncommenting this line.
--- XPathTokenStatus    = 'Status'       --> Override template variable by uncommenting this line.
--- XPathTokenAuthors   = 'Author(s)'    --> Override template variable by uncommenting this line.
--- XPathTokenArtists   = 'Artist(s)'    --> Override template variable by uncommenting this line.
--- XPathTokenGenres    = 'Categories'   --> Override template variable by uncommenting this line.
+local Template   = require 'Modules.Template-Genkan'
+-- DirectoryPagination = '/'   --> Override template variable by uncommenting this line.
 
 
 ----------------------------------------------------------------------------------------------------
@@ -26,6 +22,14 @@ local Template   = require 'Modules.Template-MangaReaderOnline'
 -- Get info and chapter list for current manga.
 function GetInfo()
   Template.GetInfo()
+  
+  return no_error
+end
+
+
+-- Get the page count of the manga list of the current website.
+function GetDirectoryPageNumber()
+  Template.GetDirectoryPageNumber()
   
   return no_error
 end
@@ -52,7 +56,7 @@ end
 ----------------------------------------------------------------------------------------------------
 
 function Init()
-  AddWebsiteModule('HatigarmScans', 'https://www.hatigarmscans.net', 'English-Scanlation')
+  AddWebsiteModule('HatigarmScans', 'https://hatigarmscanz.net', 'English-Scanlation')
 end
 
 function AddWebsiteModule(name, url, category)
@@ -61,6 +65,7 @@ function AddWebsiteModule(name, url, category)
   m.RootURL                  = url
   m.Category                 = category
   m.OnGetInfo                = 'GetInfo'
+  m.OnGetDirectoryPageNumber = 'GetDirectoryPageNumber'
   m.OnGetNameAndLink         = 'GetNameAndLink'
   m.OnGetPageNumber          = 'GetPageNumber'
   return m
