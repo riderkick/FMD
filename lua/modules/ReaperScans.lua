@@ -11,7 +11,7 @@ local LuaDebug   = require 'LuaDebugging'
 -- Local Constants
 ----------------------------------------------------------------------------------------------------
 
-local Template   = require 'Modules.Template-Genkan'
+local Template   = require 'templates.Genkan'
 -- DirectoryPagination = '/'   --> Override template variable by uncommenting this line.
 
 

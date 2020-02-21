@@ -11,7 +11,7 @@ local LuaDebug   = require 'LuaDebugging'
 -- Local Constants
 ----------------------------------------------------------------------------------------------------
 
-local Template   = require 'Modules.Template-MangaReaderOnline'
+local Template   = require 'templates.MangaReaderOnline'
 -- DirectoryParameters = '/'            --> Override template variable by uncommenting this line.
 XPathTokenStatus    = 'Estado'
 -- XPathTokenAuthors   = 'Author(s)'    --> Override template variable by uncommenting this line.

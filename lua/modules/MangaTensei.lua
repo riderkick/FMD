@@ -11,7 +11,7 @@ local LuaDebug   = require 'LuaDebugging'
 -- Local Constants
 ----------------------------------------------------------------------------------------------------
 
-local Template   = require 'Modules.Template-AnyACG'
+local Template   = require 'templates.AnyACG'
 -- DirectoryPagination = '/'   --> Override template variable by uncommenting this line.
 
 

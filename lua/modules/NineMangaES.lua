@@ -11,7 +11,7 @@ local LuaDebug   = require 'LuaDebugging'
 -- Local Constants
 ----------------------------------------------------------------------------------------------------
 
-local Template   = require 'Modules.Template-NineManga'
+local Template   = require 'templates.NineManga'
 -- DirectoryPagination = '/'            --> Override template variable by uncommenting this line.
 -- DirectorySuffix     = ''             --> Override template variable by uncommenting this line.
 -- MangaInfoParameters = ''             --> Override template variable by uncommenting this line.

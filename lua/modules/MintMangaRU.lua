@@ -11,7 +11,7 @@ local LuaDebug   = require 'LuaDebugging'
 -- Local Constants
 ----------------------------------------------------------------------------------------------------
 
-local Template   = require 'Modules.Template-ReadMangaRU'
+local Template   = require 'templates.ReadMangaRU'
 -- DirectoryPagination = '/'            --> Override template variable by uncommenting this line.
 -- DirectoryOffset     = 0              --> Override template variable by uncommenting this line.
 
