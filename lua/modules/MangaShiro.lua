@@ -47,6 +47,7 @@ function getCover(x)
   if img == '' then img = x.xpathstring('//div[@id="m-cover"]/img/@src') end
   if img == '' then img = x.xpathstring('//div[@itemprop="image"]/img/@data-lazy-src') end
   if img == '' then img = x.xpathstring('//div[@class="img"]/img[@itemprop="image"]/@src') end
+  if img == '' then img = x.xpathstring('//div[@class="ims"]/img/@src') end
   return img
 end
 
@@ -65,6 +66,7 @@ function getAuthors(x)
   if authors == '' then authors = x.xpathstring('//span[@id="m-author"]') end
   if authors == '' then authors = x.xpathstring('//ul[@class="baru"]/li[2][starts-with(.,"Mangaka")]/substring-after(.,":")') end
   if authors == '' then authors = x.xpathstring('//table[@class="listinfo"]//tr[contains(th, "Author")]/following-sibling::td') end
+  if authors == '' then authors = x.xpathstring('//tr[contains(td, "Komikus")]//following-sibling::td') end
   return authors
 end
 
@@ -105,6 +107,7 @@ function getStatus(x)
   if status == '' then status = x.xpathstring('//div[@class="preview"]//li[starts-with(.,"Tanggal Rilis")]/substring-after(.,"-")') end
   if status == '' then status = x.xpathstring('//span[@class="details"]//div[starts-with(.,"Status")]') end
   if status == '' then status = x.xpathstring('//ul[@class="baru"]/li[3]') end
+  if status == '' then status = x.xpathstring('//tr[contains(td, "Status")]//following-sibling::td') end
   status = status:gsub('Finished', 'Completed')
   return status
 end
@@ -118,6 +121,7 @@ function getSummary(x)
   if summary == '' then summary = x.xpathstring('//*[@class="sin"]/p') end
   if summary == '' then summary = x.xpathstring('//*[@class="description"]/string-join(.//text(),"")') end
   if summary == '' then summary = x.xpathstring('//div[contains(@class,"animeinfo")]/div[@class="rm"]/span/string-join(.//text(),"")') end
+  if summary == '' then summary = x.xpathstring('//*[@class="jds"]/p') end
   summary = summary:gsub('.fb_iframe_widget_fluid_desktop iframe', ''):gsub('width: 100%% !important;', ''):gsub('{', ''):gsub('}', '')
   return summary
 end
@@ -215,12 +219,14 @@ function getpagenumber()
     elseif module.website == 'MangaSWAT' then TXQuery.Create(http.Document).xpathstringall('//*[@id="readerarea"]/p/img/@data-src', task.pagelinks)
     else
       if task.pagelinks.count < 1 then TXQuery.Create(http.Document).xpathstringall('//*[@id="readerarea"]/p/img/@src', task.pagelinks) end
+      if task.pagelinks.count < 1 then TXQuery.Create(http.Document).xpathstringall('//*[@id="readerarea"]/p//img/@src', task.pagelinks) end
       if task.pagelinks.count < 1 then TXQuery.Create(http.Document).xpathstringall('//*[@id="readerarea"]/div//img/@src', task.pagelinks) end    
       if task.pagelinks.count < 1 then TXQuery.Create(http.Document).xpathstringall('//*[@id="readerarea"]//a/@href', task.pagelinks) end
       if task.pagelinks.count < 1 then TXQuery.Create(http.Document).xpathstringall('//*[@id="readerarea"]//img/@src', task.pagelinks) end
       if task.pagelinks.count < 1 then TXQuery.Create(http.Document).xpathstringall('//*[@id="readerareaimg"]//img/@src', task.pagelinks) end
       if task.pagelinks.count < 1 then TXQuery.Create(http.Document).xpathstringall('//*[@id="imgholder"]//img/@src', task.pagelinks) end
       if task.pagelinks.count < 1 then TXQuery.Create(http.Document).xpathstringall('//*[@class="entry-content"]//img/@src', task.pagelinks) end
+      if task.pagelinks.count < 1 then TXQuery.Create(http.Document).xpathstringall('//*[contains(@class, "part")]/img/@src', task.pagelinks) end
       if task.pagelinks.count < 1 or module.website == 'KoMBatch' then 
         local link = MaybeFillHost(module.rooturl,url)
         link = link:gsub('/manga', '/api/chapter')
@@ -355,7 +361,7 @@ local cat = 'Indonesian'
   AddWebsiteModule('MangaIndoNet', 'https://mangaindo.net', cat)
   AddWebsiteModule('KomikIndo', 'https://komikindo.co', cat)
   AddWebsiteModule('KomikIndoWebId', 'https://www.komikindo.web.id', cat)
-  AddWebsiteModule('Komiku', 'http://komiku.co', cat)
+  AddWebsiteModule('Komiku', 'https://komiku.co', cat)
   AddWebsiteModule('KazeManga', 'https://kazemanga.web.id', cat)
   AddWebsiteModule('Mangacan', 'http://www.mangacanblog.com', cat)
   AddWebsiteModule('MangaIndo', 'https://mangaindo.web.id', cat)
