@@ -103,7 +103,7 @@ function getpagenumber()
   end
 end
 
-local js = require 'modules.jsunpack'
+local js = require 'utils.jsunpack'
 function downloadimage()
   if url:match('%.xml') == nil then return http.get(url); end
   http.cookies.text = task.pagecontainerlinks.text

@@ -1,5 +1,5 @@
-local js = require 'modules.jsunpack'
-local lz = require 'modules.lzstring'
+local js = require 'utils.jsunpack'
+local lz = require 'utils.lzstring'
 
 function getinfo()
   mangainfo.url=MaybeFillHost(module.RootURL, url)

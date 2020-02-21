@@ -38,7 +38,7 @@ function urlencode(str)
   return str    
 end
 
-local js = require 'modules.jsunpack'
+local js = require 'utils.jsunpack'
 function gettext(s)
   s = SeparateRight(s, "}('")
   local text = SeparateLeft(s, "',")

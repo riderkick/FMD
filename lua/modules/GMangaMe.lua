@@ -62,7 +62,7 @@ function getinfo()
 end
 
 function getpagenumber()
-  local js = require 'modules.jsunpack'
+  local js = require 'utils.jsunpack'
   if http.get(MaybeFillHost(module.rooturl,url)) then
     local x = TXQuery.Create(http.Document);
     local s = x.xpathstring('//script[@type="application/json" and @class]')
