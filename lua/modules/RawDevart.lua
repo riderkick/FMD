@@ -1,4 +1,4 @@
-local LuaDebug   = require 'Modules.LuaDebugging'
+local LuaDebug   = require 'LuaDebugging'
 
 function getinfo()
 	local x = nil
