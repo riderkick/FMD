@@ -1,3 +1,4 @@
-VERSION=1.1.4.0
-WIN32=https://github.com/fmd-project-team/FMD/releases/download/1.1.4.0/fmd_1.1.4.0_Win32.7z
-WIN64=https://github.com/fmd-project-team/FMD/releases/download/1.1.4.0/fmd_1.1.4.0_Win64.7z
+; automatically build with make_release_win.bat
+WIN32=https://github.com/fmd-project-team/FMD/releases/download/1.2.0.0/fmd_1.2.0.0_i386-win32.7z
+WIN64=https://github.com/fmd-project-team/FMD/releases/download/1.2.0.0/fmd_1.2.0.0_x86_64-win64.7z
+VERSION=1.2.0.0

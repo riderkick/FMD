@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
   Buttons, Menus, ExtCtrls, VirtualTrees, synautil, httpsendthread, BaseThread,
-  XQueryEngineHTML, fpjson, jsonparser, jsonscanner, dateutils;
+  XQueryEngineHTML, GitHubRepo, fpjson, jsonparser, jsonscanner, dateutils;
 
 type
 
@@ -22,14 +22,13 @@ type
   TLuaModuleRepo = class
     name: String;
     sha: String;
-    size: Integer;
-    download_url: String;
     last_modified: TDateTime;
     last_message: String;
     flag: TLuaModuleRepoFlag;
     oflag: TLuaModuleRepoFlag;
     function Clone: TLuaModuleRepo;
     function SyncTo(const t: TLuaModuleRepo): Boolean;
+    constructor Create;
   end;
 
   { TLuaModulesRepos }
@@ -39,6 +38,7 @@ type
     function GetCount: Integer; inline;
     function GetRepo(const AIndex: Integer): TLuaModuleRepo; inline;
   public
+    last_commit: String;
     Items: TStringList;
 
     constructor Create;
@@ -47,8 +47,6 @@ type
     procedure Clear; inline;
     function Add(const AName: String): TLuaModuleRepo; overload;
     procedure Add(const I: TLuaModuleRepo); overload;
-    procedure LoadFromRemote(const AHTTP: THTTPSendThread);
-    procedure LoadFromRemoteHTML(const AHTTP: THTTPSendThread);
     procedure LoadFromFile(const AFileName: String);
     procedure SaveToFile(const AFileName: String);
     procedure Sort;
@@ -116,8 +114,8 @@ type
 
   TCheckUpdateThread = class(TBaseThread)
   private
+    FGitHubRepo: TGitHubRepo;
     FOwner: TLuaModulesUpdaterForm;
-    FHTTP: THTTPSendThread;
     FReposUp: TLuaModulesRepos;
     FRepos: TLuaModulesRepos;
     FMainRepos: TLuaModulesRepos;
@@ -126,6 +124,7 @@ type
     FDownloadedCount: Integer;
     FProceed: Boolean;
     FStatusList: TStringList;
+    Flast_commit: String;
     procedure RemoveThread(const T: TDownloadThread);
     procedure AddThread(const T: TDownloadThread);
   protected
@@ -137,6 +136,7 @@ type
     procedure SyncFinal;
     function SyncRepos(const ARepos, AReposUp: TLuaModulesRepos): Boolean;
     procedure Download;
+    procedure DoSync;
     procedure Execute; override;
   public
     constructor Create(const AOwner: TLuaModulesUpdaterForm);
@@ -165,7 +165,7 @@ resourcestring
 
 implementation
 
-uses frmCustomColor, FMDOptions;
+uses frmCustomColor, frmDialogYesNo, FMDOptions, LazFileUtils;
 
 const
   // RFC 3339 - ISO 8601
@@ -193,9 +193,6 @@ begin
   Result := TLuaModuleRepo.Create;
   Result.name := name;
   Result.sha := sha;
-  Result.sha := sha;
-  Result.size := size;
-  Result.download_url := download_url;
   Result.last_modified := last_modified;
   Result.last_message := last_message;
   Result.flag := flag;
@@ -210,12 +207,16 @@ begin
   if sha <> t.sha then
   begin
     t.sha := sha;
-	t.download_url := download_url;
     t.last_modified := last_modified;
     t.last_message := last_message;
     t.oflag := t.flag;
     t.flag := fUpdate;
   end;
+end;
+
+constructor TLuaModuleRepo.Create;
+begin
+  last_modified := Now;
 end;
 
 { TLuaModulesRepos }
@@ -261,106 +262,51 @@ begin
   Items.AddObject(I.name, I);
 end;
 
-procedure TLuaModulesRepos.LoadFromRemote(const AHTTP: THTTPSendThread);
-var
-  j: TJSONParser;
-  a: TJSONArray;
-  i: Integer;
-  o: TJSONObject;
-  m: TLuaModuleRepo;
-begin
-  Clear;
-
-  a := nil;
-  j := TJSONParser.Create(AHTTP.Document, [joUTF8]);
-  try
-    a := TJSONArray(j.Parse);
-  finally
-    j.Free;
-  end;
-  if a = nil then
-    Exit;
-
-  try
-    for i := 0 to a.Count - 1 do
-    begin
-      o := TJSONObject(a.Items[i]);
-      m := Add(o.Get('name', ''));
-      m.sha := o.Get('sha', '');
-      m.download_url := o.Get('download_url', '');
-      m.size := o.Get('size', 0);
-    end;
-  finally
-    a.Free;
-  end;
-end;
-
-procedure TLuaModulesRepos.LoadFromRemoteHTML(const AHTTP: THTTPSendThread);
-var
-  v: IXQValue;
-  i: Integer;
-begin
-  with TXQueryEngineHTML.Create(AHTTP.Document) do
-    try
-      v := XPath('//table[starts-with(@class,"files")]//tr[@class="js-navigation-item"]');
-      if v.Count = Count then
-        for i := 1 to v.Count do
-          with Repo[i - 1] do
-          begin
-            last_message := XPathString('./td[@class="message"]/span/a/@title', v.get(i));
-            last_modified := JSONToDateTime(
-              XPathString('./td[@class="age"]/span/time-ago/@datetime', v.get(i)));
-          end;
-    finally
-      Free;
-    end;
-  Sort;
-end;
-
 procedure TLuaModulesRepos.LoadFromFile(const AFileName: String);
 var
   f: TFileStream;
   j: TJSONParser;
   a: TJSONArray;
-  o: TJSONObject;
+  d, o: TJSONObject;
   i: Integer;
   m: TLuaModuleRepo;
 begin
   if not FileExists(AFileName) then
     Exit;
 
-  a := nil;
+  d := nil;
   f := TFileStream.Create(AFileName, fmOpenRead or fmShareDenyWrite);
   try
     j := TJSONParser.Create(f, [joUTF8]);
     try
-      a := TJSONArray(j.Parse);
+      d := TJSONObject(j.Parse);
     finally
       j.Free;
     end;
   finally
     f.Free;
   end;
-  if a = nil then
-    Exit;
+
+  if d = nil then Exit;
   try
     Self.Clear;
-    for i := 0 to a.Count - 1 do
-    begin
-      o := TJSONObject(a.Items[i]);
-      m := Add(o.Get('name', ''));
-      m.sha := o.Get('sha', '');
-      m.download_url := o.Get('download_url', '');
-      m.size := o.Get('size', 0);
-      m.last_modified := JSONToDateTime(o.Get('last_modified', ''));
-      m.last_message := o.Get('last_message', '');
-      m.flag := TLuaModuleRepoFlag(o.Get('flag', 0));
-      if (m.flag <> fFailedDownload) and
-        (not FileExists(LUA_WEBSITEMODULE_FOLDER + m.name)) then
-        m.flag := fFailedDownload;
-    end;
+    last_commit := d.Get('last_commit', '');
+    a:=d.Get('files', TJSONArray(nil));
+    if Assigned(a) then
+      for i := 0 to a.Count - 1 do
+      begin
+        o := TJSONObject(a.Items[i]);
+        m := Add(o.Get('name', ''));
+        m.sha := o.Get('sha', '');
+        m.last_modified := JSONToDateTime(o.Get('last_modified', ''));
+        m.last_message := o.Get('last_message', '');
+        m.flag := TLuaModuleRepoFlag(o.Get('flag', 0));
+        if (m.flag <> fFailedDownload) and
+          (not FileExists(LUA_REPO_FOLDER + TrimFilename(m.name))) then
+          m.flag := fFailedDownload;
+      end;
   finally
-    a.Free;
+    d.Free;
   end;
   Sort;
 end;
@@ -368,38 +314,39 @@ end;
 procedure TLuaModulesRepos.SaveToFile(const AFileName: String);
 var
   a: TJSONArray;
-  o: TJSONObject;
+  d, o: TJSONObject;
   i: Integer;
   m: TLuaModuleRepo;
   f: TMemoryStream;
 begin
-  a := TJSONArray.Create;
+  d := TJSONObject.Create;
   try
+    d.Add('last_commit', last_commit);
+    a := TJSONArray.Create;
     for i := 0 to Items.Count - 1 do
     begin
       o := TJSONObject.Create;
       m := Repo[i];
       o.Add('name', m.name);
       o.Add('sha', m.sha);
-      o.Add('download_url', m.download_url);
-      o.Add('size', m.size);
       o.Add('last_modified', DateTimeToJSON(m.last_modified));
       o.Add('last_message', m.last_message);
       o.Add('flag', Integer(m.flag));
       a.Add(o);
     end;
+    d.Add('files', a);
 
     if FileExists(AFileName) then
       DeleteFile(AFileName);
     f := TMemoryStream.Create;
     try
-      a.DumpJSON(f);
+      d.DumpJSON(f);
       f.SaveToFile(AFileName);
     finally
       f.Free;
     end;
   finally
-    a.Free;
+    d.Free;
   end;
 end;
 
@@ -414,6 +361,7 @@ var
   i: Integer;
 begin
   Result := TLuaModulesRepos.Create;
+  Result.last_commit := last_commit;
   for i := 0 to Items.Count - 1 do
     Result.Items.AddObject(Items[i], Repo[i].Clone);
 end;
@@ -428,17 +376,20 @@ begin
   FModule.oflag := FModule.flag;
   FModule.flag := fDownloading;
   FOwner.FOwner.ListDirty;
-  if FHTTP.GET(FModule.download_url) then
+  //if FHTTP.GET(FModule.download_url) then
+  if FHTTP.GET(FOwner.FGitHubRepo.GetDownloadURL(FModule.name)) then
   begin
-    if ForceDirectories(LUA_WEBSITEMODULE_FOLDER) then
+    if ForceDirectories(LUA_REPO_FOLDER) then
     begin
-      f := LUA_WEBSITEMODULE_FOLDER + FModule.name;
+      f := LUA_REPO_FOLDER + TrimFilename(FModule.name);
       c := True;
       if FileExists(f) then
         c := DeleteFile(f);
+      c := ForceDirectories(ExtractFileDir(f));
       if c then
       begin
         FHTTP.SaveDocumentToFile(f, False, FModule.last_modified);
+        //FHTTP.SaveDocumentToFile(f);
         if FileExists(f) then
         begin
           case FModule.oflag of
@@ -520,9 +471,14 @@ end;
 
 procedure TCheckUpdateThread.SyncAskToProceed;
 begin
-  FProceed := MessageDlg(RS_NewUpdateFoundTitle,
-    Format(RS_NewUpdateFoundLostChanges, [Trim(FStatusList.Text)]),
-    mtWarning, mbYesNo, 0) = mrYes;
+  with TfrmDialogYN.Create(nil) do
+    try
+      Caption := RS_NewUpdateFoundTitle;
+      mMessages.Lines.Text := Format(RS_NewUpdateFoundLostChanges, [Trim(FStatusList.Text)]);
+      FProceed := ShowModal = mrYes;
+    finally
+      free;
+    end;
 end;
 
 procedure TCheckUpdateThread.SyncStartDownload;
@@ -536,6 +492,8 @@ begin
 end;
 
 procedure TCheckUpdateThread.SyncFinal;
+var
+  yesRestart: Boolean;
 begin
   FOwner.btCheckUpdateTerminate.Visible := False;
   FOwner.btCheckUpdate.Caption := RS_CheckUpdate;
@@ -546,10 +504,29 @@ begin
       FOwner.vtLuaModulesRepos.BeginUpdate;
       FOwner.Repos := FMainRepos;
       FOwner.ReinitList;
-      FMainRepos.SaveToFile(LUA_WEBSITEMODULE_FILE);
+      FMainRepos.SaveToFile(LUA_REPO_FILE);
     finally
       FOwner.vtLuaModulesRepos.EndUpdate;
     end;
+
+  if not Terminated then
+  begin
+    if (FDownloadedCount <> 0) then
+    begin
+      yesRestart := OptionModulesUpdaterAutoRestart;
+      if not yesRestart then
+        with TfrmDialogYN.Create(FOwner) do
+          try
+            Caption := RS_ModulesUpdatedTitle;
+            mMessages.Lines.Text := Format(RS_ModulesUpdatedRestart, [Trim(FStatusList.Text)]);
+            yesRestart := ShowModal = mrYes;
+          finally
+            free;
+          end;
+      if yesRestart then
+        RestartFMD;
+    end;
+  end;
 end;
 
 function TCheckUpdateThread.SyncRepos(const ARepos, AReposUp: TLuaModulesRepos): Boolean;
@@ -630,6 +607,7 @@ begin
       Inc(i);
     end;
   end;
+  ARepos.last_commit := AReposUp.last_commit;
   if inew <> 0 then
     ARepos.Items.Sort;
   Result := inew + iupdate <> 0;
@@ -644,21 +622,27 @@ begin
   Synchronize(@SyncStartDownload);
 
   FStatusList.Clear;
+
+  // do delete first
+  for i:=0 to FRepos.Items.Count-1 do
+  begin
+    if FRepos[i].flag=fDelete then
+    begin
+      m:=FRepos[i];
+      f := LUA_REPO_FOLDER + TrimFilename(m.name);
+      if FileExists(f) and DeleteFile(f) then
+      begin
+        AddStatus(Format(RS_StatusDelete, [m.name]));
+        m.flag := fDeleted;
+      end;
+    end;
+  end;
+
   i := 0;
   imax := FRepos.Items.Count;
   while i < imax do
   begin
     m := FRepos[i];
-    if m.flag = fDelete then
-    begin
-      f := LUA_WEBSITEMODULE_FOLDER + m.name;
-      if FileExists(f) then
-        DeleteFile(f);
-      AddStatus(Format(RS_StatusDelete, [m.name]));
-      m.flag := fDeleted;
-      Inc(i);
-    end
-    else
     if not (m.flag in [fNew, fUpdate, fFailedDownload]) then
       Inc(i)
     else
@@ -694,101 +678,167 @@ begin
   Synchronize(@SyncFinishDownload);
 end;
 
-procedure TCheckUpdateThread.Execute;
+procedure TCheckUpdateThread.DoSync;
 var
   foundupdate: Boolean;
   i, imax: Integer;
   m: TLuaModuleRepo;
   trepos: TLuaModulesRepos;
-begin
-  Synchronize(@SyncStartChecking);
-  FReposUp := TLuaModulesRepos.Create;
-  if FHTTP.GET(MODULES_URL) then
+  tree: TJSONArray;
+
+  procedure LoadReposUp(const ATree: TJSONArray; const APath: String);
+  var
+    treeItem: Integer;
+    treeObject: TJSONObject;
+    treeArray: TJSONArray;
+    aItem: TLuaModuleRepo;
   begin
-    FReposUp.LoadFromRemote(FHTTP);
-    if FHTTP.GET(MODULES_URL2) then
+    for treeItem:=0 to ATree.Count-1 do
     begin
-      FReposUp.LoadFromRemoteHTML(FHTTP);
-
-      if (FReposUp.Count<>0) and not Terminated then
+      treeObject:= TJSONObject(ATree[treeItem]);
+      treeArray := nil;
+      try
+        treeArray := TJSONArray(treeObject.GetPath('object.entries'));
+      except
+      end;
+      if Assigned(treeArray) then
       begin
-        // check
-        FRepos := FOwner.Repos.Clone;
-        foundupdate := SyncRepos(FRepos, FReposUp);
-
-        // look for missing local files and previously failed download
-        for i := 0 to FRepos.Items.Count - 1 do
-        begin
-          m := FRepos[i];
-          if m.flag = fFailedDownload then
-             foundupdate := True
-          else
-          if (not (m.flag in [fNew, fUpdate])) and
-            (not FileExists(LUA_WEBSITEMODULE_FOLDER + m.name)) then
-          begin
-            m.flag := fFailedDownload;
-            foundupdate := True;
-          end;
-          case m.flag of
-            fNew: FStatusList.Add(Format(RS_StatusNew, [m.name]));
-            fUpdate: FStatusList.Add(Format(RS_StatusUpdate, [m.name]));
-            fDelete: FStatusList.Add(Format(RS_StatusDelete, [m.name]));
-            fFailedDownload: FStatusList.Add(Format(RS_StatusFailed, [m.name]));
-          end;
-        end;
-
-        Synchronize(@SyncFinishChecking);
-
-        if foundupdate and (not Terminated) then
-        begin
-          if OptionModulesUpdaterShowUpdateWarning then
-            Synchronize(@SyncAskToProceed)
-          else
-          begin
-            FProceed := True;
-            Sleep(1500); // delay to show the update status
-          end;
-          if FProceed then
-            Download;
-        end;
-
-        // cleanup
-        i := 0;
-        imax := FRepos.Items.Count;
-        while i < imax do
-        begin
-          m := FRepos[i];
-          if m.flag = fDeleted then
-          begin
-            FRepos.Items.Delete(i);
-            Dec(imax);
-          end
-          else
-          begin
-            if m.flag in [fNew, fUpdate, fFailedDownload] then
-              m.flag := fFailedDownload
-            else
-              m.flag := fNone;
-            Inc(i);
-          end;
-        end;
-        trepos := FMainRepos;
-        FMainRepos := FRepos;
-        FRepos := trepos;
+        LoadReposUp(treeArray, APath+treeObject.Get('name','')+'/');
+      end
+      else
+      begin
+        aItem := FReposUp.Add(APath+treeObject.Get('name', ''));
+        aitem.sha := treeObject.Get('oid', '');
       end;
     end;
   end;
 
+  procedure LoadReposProps;
+  var
+    ulist: TStringList;
+    aItem: Integer;
+    props: TJSONObject;
+    d: TJSONArray;
+  begin
+    ulist:=TStringList.Create;
+    try
+      for aItem:=0 to FRepos.Items.Count-1 do
+        if FRepos[aItem].flag in [fNew, fUpdate, fFailedDownload] then
+          ulist.AddObject(FRepos[aItem].name, FRepos[aItem]);
+      props:=FGitHubRepo.GetProps(ulist);
+      if Assigned(props) then
+      begin
+        for aItem:=0 to ulist.Count-1 do
+        begin
+          m := TLuaModuleRepo(ulist.Objects[aItem]);
+          try
+            d:=TJSONArray(props.GetPath('p'+IntToStr(aItem)+'.nodes'));
+            m.last_message := TJSONObject(d[0]).Get('message','');
+            m.last_modified := JSONToDateTime(TJSONObject(d[0]).Get('committedDate',''));
+          except
+          end;
+        end;
+      end;
+    finally
+      ulist.free;
+    end;
+  end;
+
+begin
+  FRepos := FOwner.Repos.Clone;
+  Flast_commit:=FGitHubRepo.GetLastCommit;
+  if (Flast_commit<>'') and (Flast_commit<>FRepos.last_commit) then
+  begin
+    // only load new tree with different last_commit
+    tree:=FGitHubRepo.GetTree;
+    if Assigned(tree) then
+    begin
+      FReposUp := TLuaModulesRepos.Create;
+      FReposUp.last_commit := Flast_commit;
+      LoadReposUp(tree,'');
+      FReposUp.Sort;
+    end;
+  end;
+
+  if FReposUp=nil then FReposUp:=FRepos.Clone;
+  if (FReposUp.Count<>0) and not Terminated then
+  begin
+    // check
+    foundupdate := SyncRepos(FRepos, FReposUp);
+
+    // look for missing local files and previously failed download
+    for i := 0 to FRepos.Items.Count - 1 do
+    begin
+      m := FRepos[i];
+      if m.flag = fFailedDownload then
+         foundupdate := True
+      else
+      if (not (m.flag in [fNew, fUpdate])) and
+        (not FileExists(LUA_REPO_FOLDER + TrimFilename(m.name))) then
+      begin
+        m.flag := fFailedDownload;
+        if not foundupdate then foundupdate := True;
+      end;
+      case m.flag of
+        fNew: FStatusList.Add(Format(RS_StatusNew, [m.name]));
+        fUpdate: FStatusList.Add(Format(RS_StatusUpdate, [m.name]));
+        fDelete: FStatusList.Add(Format(RS_StatusDelete, [m.name]));
+        fFailedDownload: FStatusList.Add(Format(RS_StatusFailed, [m.name]));
+      end;
+    end;
+
+    // get properties
+    if foundupdate and (not Terminated) then
+      LoadReposProps;
+
+    Synchronize(@SyncFinishChecking);
+
+    if foundupdate and (not Terminated) then
+    begin
+      if OptionModulesUpdaterShowUpdateWarning then
+        Synchronize(@SyncAskToProceed)
+      else
+      begin
+        FProceed := True;
+        Sleep(1500); // delay to show the update status
+      end;
+      if FProceed then
+        Download;
+    end;
+
+    // cleanup
+    i := 0;
+    imax := FRepos.Items.Count;
+    while i < imax do
+    begin
+      m := FRepos[i];
+      if m.flag = fDeleted then
+      begin
+        FRepos.Items.Delete(i);
+        Dec(imax);
+      end
+      else
+      begin
+        if m.flag in [fNew, fUpdate, fFailedDownload] then
+          m.flag := fFailedDownload
+        else
+          m.flag := fNone;
+        Inc(i);
+      end;
+    end;
+    trepos := FMainRepos;
+    FMainRepos := FRepos;
+    FRepos := trepos;
+  end;
+end;
+
+procedure TCheckUpdateThread.Execute;
+begin
+  Synchronize(@SyncStartChecking);
+  DoSync;
   if not Terminated then
     Sleep(1000);
   Synchronize(@SyncFinal);
-
-  if not Terminated then
-    if (FDownloadedCount <> 0) and (OptionModulesUpdaterAutoRestart or
-      (MessageDlg(RS_ModulesUpdatedTitle,
-      Format(RS_ModulesUpdatedRestart, [Trim(FStatusList.Text)]),
-      mtConfirmation, mbYesNo, 0) = mrYes)) then
-        RestartFMD;
 end;
 
 constructor TCheckUpdateThread.Create(const AOwner: TLuaModulesUpdaterForm);
@@ -796,10 +846,10 @@ begin
   inherited Create(False);
   InitCriticalSection(FThreadsCS);
   FOwner := AOwner;
-  FHTTP := THTTPSendThread.Create(Self);
   FThreads := TFPList.Create;
   FDownloadedCount := 0;
   FStatusList := TStringList.Create;
+  FGitHubRepo := TGitHubRepo.Create(BASE_FILE, Self);
 end;
 
 destructor TCheckUpdateThread.Destroy;
@@ -810,7 +860,7 @@ begin
     FReposUp.Free;
   FStatusList.Free;
   FThreads.Free;
-  FHTTP.Free;
+  FGitHubRepo.Free;
   DoneCriticalsection(FThreadsCS);
   inherited Destroy;
 end;
@@ -922,15 +972,17 @@ end;
 
 procedure TLuaModulesUpdaterForm.vtLuaModulesReposGetText(Sender: TBaseVirtualTree;
   Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType; var CellText: String);
+var
+  xNode: PLuaModuleRepo;
 begin
-  with PLuaModuleRepo(Sender.GetNodeData(Node))^ do
-  begin
-    case Column of
-      0: CellText := name;
-      1: CellText := DateTimeToStr(last_modified);
-      2: CellText := last_message;
-    end;
-  end;
+  xNode := Sender.GetNodeData(Node);
+  if Assigned(xNode) then
+    with xNode^ do
+      case Column of
+        0: CellText := name;
+        1: CellText := DateTimeToStr(last_modified);
+        2: CellText := last_message;
+      end;
 end;
 
 procedure TLuaModulesUpdaterForm.vtLuaModulesReposHeaderClick(Sender: TVTHeader;
@@ -958,7 +1010,7 @@ end;
 
 procedure TLuaModulesUpdaterForm.LoadLocalRepos;
 begin
-  Repos.LoadFromFile(LUA_WEBSITEMODULE_FILE);
+  Repos.LoadFromFile(LUA_REPO_FILE);
   ReinitList(False);
 end;
 
@@ -980,3 +1032,4 @@ begin
 end;
 
 end.
+

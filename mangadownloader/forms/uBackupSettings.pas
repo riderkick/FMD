@@ -68,7 +68,7 @@ begin
     Parameters.Add(CleanPath(CONFIG_FILE));
     Parameters.Add(CleanPath(ACCOUNTS_FILE));
     Parameters.Add(CleanPath(MODULES_FILE));
-    Parameters.Add(CleanPath(LUA_WEBSITEMODULE_FILE));
+    Parameters.Add(CleanPath(LUA_REPO_FILE));
     Parameters.Add(CleanPath(WORK_FILEDB));
     Parameters.Add(CleanPath(DOWNLOADEDCHAPTERSDB_FILE));
     Parameters.Add(CleanPath(FAVORITESDB_FILE));

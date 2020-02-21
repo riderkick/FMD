@@ -23,11 +23,8 @@
     </i18n>
     <VersionInfo>
       <UseVersionInfo Value="True"/>
-      <AutoIncrementBuild Value="True"/>
       <MajorVersionNr Value="1"/>
-      <MinorVersionNr Value="1"/>
-      <RevisionNr Value="5"/>
-      <BuildNr Value="234"/>
+      <MinorVersionNr Value="2"/>
       <Attributes pvaPrivateBuild="True"/>
       <StringTable Comments="https://github.com/fmd-project-team/FMD" FileDescription="Free Manga Downloader" LegalCopyright="©2015-2020" OriginalFilename="fmd.exe" ProductName="Free Manga Downloader" ProductVersion="$BuildMode()" PrivateBuild="FMD Project Team"/>
     </VersionInfo>
@@ -308,7 +305,7 @@
         <PackageName Value="internettools"/>
       </Item10>
     </RequiredPackages>
-    <Units Count="19">
+    <Units Count="20">
       <Unit0>
         <Filename Value="md.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -430,6 +427,13 @@
         <Filename Value="forms\uBackupSettings.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit18>
+      <Unit19>
+        <Filename Value="forms\frmDialogYesNo.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmDialogYN"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit19>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

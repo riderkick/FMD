@@ -97,7 +97,8 @@ var
   EXTRAS_FOLDER,
   MANGAFOXTEMPLATE_FOLDER,
   LUA_WEBSITEMODULE_FOLDER,
-  LUA_WEBSITEMODULE_FILE,
+  LUA_REPO_FOLDER,
+  LUA_REPO_FILE,
   BACKUP_FOLDER: String;
 
   // dll
@@ -330,7 +331,7 @@ begin
   CONFIG_FILE := CONFIG_FOLDER + 'config.ini';
   ACCOUNTS_FILE := CONFIG_FOLDER + 'accounts.db';
   MODULES_FILE := CONFIG_FOLDER + 'modules.json';
-  LUA_WEBSITEMODULE_FILE := CONFIG_FOLDER + 'luamodules.json';
+  LUA_REPO_FILE := CONFIG_FOLDER + 'lua.json';
 
   DATA_FOLDER := APPDATA_DIRECTORY + 'data' + PathDelim;
 
@@ -343,6 +344,7 @@ begin
   FAVORITESDB_FILE := WORK_FOLDER + 'favorites.db';
 
   LUA_WEBSITEMODULE_FOLDER := FMD_DIRECTORY + 'lua' + PathDelim + 'modules' + PathDelim;
+  LUA_REPO_FOLDER := FMD_DIRECTORY + 'lua' + PathDelim;
 
   SetIniFiles;
 end;

@@ -8,10 +8,10 @@ SET repodl=https://github.com/fmd-project-team/FMD/releases/download/
 ECHO ; automatically build with make_release_win.bat>update
 
 CALL :makerelease i386-win32 Win32 --no-write-project
-ECHO WIN32=%repodl%%fver%/%oname%>>update
+ECHO WIN32=%repodl%%fverb%/%oname%>>update
 
 CALL :makerelease x86_64-win64 Win64 --no-write-project
-ECHO WIN64=%repodl%%fver%/%oname%>>update
+ECHO WIN64=%repodl%%fverb%/%oname%>>update
 
 ECHO VERSION=%fverb%>>update
 
