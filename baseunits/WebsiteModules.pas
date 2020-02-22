@@ -996,6 +996,12 @@ begin
                   Account.Status:=asUnknown;
               end;
             end;
+            if FCloudflareCF<>nil then
+            begin
+              jo2:=jo.Get('Cloudflare', TJSONObject(nil));
+              if jo2<>nil then
+                jd.JSONToObject(jo2,FCloudflareCF);
+            end;
             ja.Delete(j);
           end;
         end;
@@ -1045,6 +1051,8 @@ begin
           jo2.Strings['Cookies']:=EncryptString(Account.Cookies);
           jo.Add('Account',jo2);
         end;
+        if CloudflareEnabled then
+          jo.Add('Cloudflare',js.ObjectToJSON(FCloudflareCF));
       end;
     fs:=TMemoryStream.Create;
     try

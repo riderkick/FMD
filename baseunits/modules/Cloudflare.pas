@@ -15,13 +15,16 @@ type
   TCFProps = class
   public
     websitemodule: TObject;
-    cf_clearance: string;
-    expires: TDateTime;
+    fcf_clearance: string;
+    fexpires: TDateTime;
     CS: TRTLCriticalSection;
     constructor Create(awebsitemodule: TObject);
     destructor Destroy; override;
     procedure Reset;
     procedure AddCookiesTo(const ACookies: TStringList);
+  published
+    property CF_Clearance: String read fcf_clearance write fcf_clearance;
+    property Expires: TDateTime read fexpires write fexpires;
   end;
 
 function CFRequest(const AHTTP: THTTPSendThread; const Method, AURL: String; const Response: TObject; const CFProps: TCFProps): Boolean;
@@ -144,10 +147,10 @@ begin
         AHTTP.FollowRedirection := False;
         if AHTTP.HTTPRequest(m, FillHost(h, u)) then
         begin
-          cfprops.cf_clearance := AHTTP.Cookies.Values['cf_clearance'];
-          Result := cfprops.cf_clearance <> '';
+          cfprops.fcf_clearance := AHTTP.Cookies.Values['cf_clearance'];
+          Result := cfprops.fcf_clearance <> '';
           if Result then
-            cfprops.expires := AHTTP.CookiesExpires;
+            cfprops.fexpires := AHTTP.CookiesExpires;
         end;
         AHTTP.FollowRedirection := True;
       end;
@@ -176,7 +179,7 @@ function CFRequest(const AHTTP: THTTPSendThread; const Method, AURL: String; con
 begin
   Result := False;
   if AHTTP = nil then Exit;
-  if (CFProps.expires <> 0.0) and (Now > CFProps.expires) then
+  if (CFProps.fexpires <> 0.0) and (Now > CFProps.fexpires) then
     CFProps.Reset;
   CFProps.AddCookiesTo(AHTTP.Cookies);
   AHTTP.AllowServerErrorResponse := True;
@@ -190,7 +193,7 @@ begin
         // reduce the expires by 5 minutes, usually it is 24 hours or 16 hours
         // in case of the different between local and server time
         if Result then
-          CFProps.expires := IncMinute(CFProps.expires, -5);
+          CFProps.fexpires := IncMinute(CFProps.fexpires, -5);
       finally
         LeaveCriticalsection(CFProps.CS);
       end
@@ -232,8 +235,8 @@ procedure TCFProps.Reset;
 begin
   if TryEnterCriticalsection(CS) <> 0 then
     try
-      cf_clearance := '';
-      expires := 0.0;
+      fcf_clearance := '';
+      fexpires := 0.0;
     finally
       LeaveCriticalsection(CS);
     end;
@@ -241,8 +244,8 @@ end;
 
 procedure TCFProps.AddCookiesTo(const ACookies: TStringList);
 begin
-  if cf_clearance <> '' then
-    ACookies.Values['cf_clearance'] := cf_clearance;
+  if fcf_clearance <> '' then
+    ACookies.Values['cf_clearance'] := fcf_clearance;
 end;
 
 end.
