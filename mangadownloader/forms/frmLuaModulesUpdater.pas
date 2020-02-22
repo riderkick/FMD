@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
   Buttons, Menus, ExtCtrls, VirtualTrees, synautil, httpsendthread, BaseThread,
-  XQueryEngineHTML, GitHubRepo, fpjson, jsonparser, jsonscanner, dateutils;
+  XQueryEngineHTML, GitHubRepoV3, fpjson, jsonparser, jsonscanner, dateutils;
 
 type
 
@@ -38,7 +38,6 @@ type
     function GetCount: Integer; inline;
     function GetRepo(const AIndex: Integer): TLuaModuleRepo; inline;
   public
-    last_commit: String;
     Items: TStringList;
 
     constructor Create;
@@ -265,24 +264,17 @@ end;
 procedure TLuaModulesRepos.LoadFromFile(const AFileName: String);
 var
   f: TFileStream;
-  j: TJSONParser;
-  a: TJSONArray;
-  d, o: TJSONObject;
+  d: TJSONData;
+  o: TJSONObject;
   i: Integer;
   m: TLuaModuleRepo;
 begin
   if not FileExists(AFileName) then
     Exit;
 
-  d := nil;
   f := TFileStream.Create(AFileName, fmOpenRead or fmShareDenyWrite);
   try
-    j := TJSONParser.Create(f, [joUTF8]);
-    try
-      d := TJSONObject(j.Parse);
-    finally
-      j.Free;
-    end;
+    d:=GetJSON(f);
   finally
     f.Free;
   end;
@@ -290,21 +282,20 @@ begin
   if d = nil then Exit;
   try
     Self.Clear;
-    last_commit := d.Get('last_commit', '');
-    a:=d.Get('files', TJSONArray(nil));
-    if Assigned(a) then
-      for i := 0 to a.Count - 1 do
-      begin
-        o := TJSONObject(a.Items[i]);
-        m := Add(o.Get('name', ''));
-        m.sha := o.Get('sha', '');
-        m.last_modified := JSONToDateTime(o.Get('last_modified', ''));
-        m.last_message := o.Get('last_message', '');
-        m.flag := TLuaModuleRepoFlag(o.Get('flag', 0));
-        if (m.flag <> fFailedDownload) and
-          (not FileExists(LUA_REPO_FOLDER + TrimFilename(m.name))) then
-          m.flag := fFailedDownload;
-      end;
+    if d.JSONType=jtArray then
+      with TJSONArray(d) do
+        for i := 0 to Count - 1 do
+        begin
+          o := TJSONObject(Items[i]);
+          m := Self.Add(o.Get('name', ''));
+          m.sha := o.Get('sha', '');
+          m.last_modified := JSONToDateTime(o.Get('last_modified', ''));
+          m.last_message := o.Get('last_message', '');
+          m.flag := TLuaModuleRepoFlag(o.Get('flag', 0));
+          if (m.flag <> fFailedDownload) and
+            (not FileExists(LUA_REPO_FOLDER + TrimFilename(m.name))) then
+            m.flag := fFailedDownload;
+        end;
   finally
     d.Free;
   end;
@@ -314,15 +305,13 @@ end;
 procedure TLuaModulesRepos.SaveToFile(const AFileName: String);
 var
   a: TJSONArray;
-  d, o: TJSONObject;
+  o: TJSONObject;
   i: Integer;
   m: TLuaModuleRepo;
   f: TMemoryStream;
 begin
-  d := TJSONObject.Create;
+  a := TJSONArray.Create;
   try
-    d.Add('last_commit', last_commit);
-    a := TJSONArray.Create;
     for i := 0 to Items.Count - 1 do
     begin
       o := TJSONObject.Create;
@@ -334,19 +323,18 @@ begin
       o.Add('flag', Integer(m.flag));
       a.Add(o);
     end;
-    d.Add('files', a);
 
     if FileExists(AFileName) then
       DeleteFile(AFileName);
     f := TMemoryStream.Create;
     try
-      d.DumpJSON(f);
+      a.DumpJSON(f);
       f.SaveToFile(AFileName);
     finally
       f.Free;
     end;
   finally
-    d.Free;
+    a.Free;
   end;
 end;
 
@@ -361,7 +349,6 @@ var
   i: Integer;
 begin
   Result := TLuaModulesRepos.Create;
-  Result.last_commit := last_commit;
   for i := 0 to Items.Count - 1 do
     Result.Items.AddObject(Items[i], Repo[i].Clone);
 end;
@@ -607,7 +594,6 @@ begin
       Inc(i);
     end;
   end;
-  ARepos.last_commit := AReposUp.last_commit;
   if inew <> 0 then
     ARepos.Items.Sort;
   Result := inew + iupdate <> 0;
@@ -684,80 +670,14 @@ var
   i, imax: Integer;
   m: TLuaModuleRepo;
   trepos: TLuaModulesRepos;
-  tree: TJSONArray;
-
-  procedure LoadReposUp(const ATree: TJSONArray; const APath: String);
-  var
-    treeItem: Integer;
-    treeObject: TJSONObject;
-    treeArray: TJSONArray;
-    aItem: TLuaModuleRepo;
-  begin
-    for treeItem:=0 to ATree.Count-1 do
-    begin
-      treeObject:= TJSONObject(ATree[treeItem]);
-      treeArray := nil;
-      try
-        treeArray := TJSONArray(treeObject.GetPath('object.entries'));
-      except
-      end;
-      if Assigned(treeArray) then
-      begin
-        LoadReposUp(treeArray, APath+treeObject.Get('name','')+'/');
-      end
-      else
-      begin
-        aItem := FReposUp.Add(APath+treeObject.Get('name', ''));
-        aitem.sha := treeObject.Get('oid', '');
-      end;
-    end;
-  end;
-
-  procedure LoadReposProps;
-  var
-    ulist: TStringList;
-    aItem: Integer;
-    props: TJSONObject;
-    d: TJSONArray;
-  begin
-    ulist:=TStringList.Create;
-    try
-      for aItem:=0 to FRepos.Items.Count-1 do
-        if FRepos[aItem].flag in [fNew, fUpdate, fFailedDownload] then
-          ulist.AddObject(FRepos[aItem].name, FRepos[aItem]);
-      props:=FGitHubRepo.GetProps(ulist);
-      if Assigned(props) then
-      begin
-        for aItem:=0 to ulist.Count-1 do
-        begin
-          m := TLuaModuleRepo(ulist.Objects[aItem]);
-          try
-            d:=TJSONArray(props.GetPath('p'+IntToStr(aItem)+'.nodes'));
-            m.last_message := TJSONObject(d[0]).Get('message','');
-            m.last_modified := JSONToDateTime(TJSONObject(d[0]).Get('committedDate',''));
-          except
-          end;
-        end;
-      end;
-    finally
-      ulist.free;
-    end;
-  end;
-
 begin
   FRepos := FOwner.Repos.Clone;
-  Flast_commit:=FGitHubRepo.GetLastCommit;
-  if (Flast_commit<>'') and (Flast_commit<>FRepos.last_commit) then
+  if FGitHubRepo.GetUpdate then
   begin
-    // only load new tree with different last_commit
-    tree:=FGitHubRepo.GetTree;
-    if Assigned(tree) then
-    begin
-      FReposUp := TLuaModulesRepos.Create;
-      FReposUp.last_commit := Flast_commit;
-      LoadReposUp(tree,'');
-      FReposUp.Sort;
-    end;
+    FReposUp := TLuaModulesRepos.Create;
+    for i:=0 to FGitHubRepo.Tree.Count-1 do
+      FReposUp.Add(FGitHubRepo.Tree[i].path).sha := FGitHubRepo.Tree[i].path;
+    FReposUp.Sort;
   end;
 
   if FReposUp=nil then FReposUp:=FRepos.Clone;
@@ -788,8 +708,8 @@ begin
     end;
 
     // get properties
-    if foundupdate and (not Terminated) then
-      LoadReposProps;
+    //if foundupdate and (not Terminated) then
+      //LoadReposProps;
 
     Synchronize(@SyncFinishChecking);
 
@@ -849,7 +769,7 @@ begin
   FThreads := TFPList.Create;
   FDownloadedCount := 0;
   FStatusList := TStringList.Create;
-  FGitHubRepo := TGitHubRepo.Create(BASE_FILE, Self);
+  FGitHubRepo := TGitHubRepo.Create(BASE_FILE, LUA_REPO_WORK_FILE, Self);
 end;
 
 destructor TCheckUpdateThread.Destroy;

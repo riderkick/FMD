@@ -99,6 +99,7 @@ var
   LUA_WEBSITEMODULE_FOLDER,
   LUA_REPO_FOLDER,
   LUA_REPO_FILE,
+  LUA_REPO_WORK_FILE,
   BACKUP_FOLDER: String;
 
   // dll
@@ -332,6 +333,7 @@ begin
   ACCOUNTS_FILE := CONFIG_FOLDER + 'accounts.db';
   MODULES_FILE := CONFIG_FOLDER + 'modules.json';
   LUA_REPO_FILE := CONFIG_FOLDER + 'lua.json';
+  LUA_REPO_WORK_FILE := CONFIG_FOLDER + 'lua_repo.json';
 
   DATA_FOLDER := APPDATA_DIRECTORY + 'data' + PathDelim;
 
