@@ -226,7 +226,7 @@ function getpagenumber()
       if task.pagelinks.count < 1 then TXQuery.Create(http.Document).xpathstringall('//*[@id="readerareaimg"]//img/@src', task.pagelinks) end
       if task.pagelinks.count < 1 then TXQuery.Create(http.Document).xpathstringall('//*[@id="imgholder"]//img/@src', task.pagelinks) end
       if task.pagelinks.count < 1 then TXQuery.Create(http.Document).xpathstringall('//*[@class="entry-content"]//img/@src', task.pagelinks) end
-      if task.pagelinks.count < 1 then TXQuery.Create(http.Document).xpathstringall('//*[contains(@class, "part")]/img/@src', task.pagelinks) end
+      if task.pagelinks.count < 1 then TXQuery.Create(http.Document).xpathstringall('//*[@id="baca"]/img/@src', task.pagelinks) end
       if task.pagelinks.count < 1 or module.website == 'KoMBatch' then 
         local link = MaybeFillHost(module.rooturl,url)
         link = link:gsub('/manga', '/api/chapter')
@@ -361,7 +361,7 @@ local cat = 'Indonesian'
   AddWebsiteModule('MangaIndoNet', 'https://mangaindo.net', cat)
   AddWebsiteModule('KomikIndo', 'https://komikindo.co', cat)
   AddWebsiteModule('KomikIndoWebId', 'https://www.komikindo.web.id', cat)
-  AddWebsiteModule('Komiku', 'https://komiku.co', cat)
+  AddWebsiteModule('Komiku', 'https://komiku.co.id', cat)
   AddWebsiteModule('KazeManga', 'https://kazemanga.web.id', cat)
   AddWebsiteModule('Mangacan', 'http://www.mangacanblog.com', cat)
   AddWebsiteModule('MangaIndo', 'https://mangaindo.web.id', cat)
