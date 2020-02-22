@@ -4,6 +4,10 @@ https://github.com/fmd-project-team/FMD
 Changelog:
 ([!] Important, [+] Addition, [-] Removal, [*] Fix/Change, [?] Feedback needed)
 
+1.2.2.0 (23.02.2020)
+[*] Fixed website modules updater unable to find new update
+Full changes: https://github.com/fmd-project-team/FMD/compare/1.2.0.0...1.2.1.0
+
 1.2.1.0 (23.02.2020)
 [*] Various changes and bug fixes
 Full changes: https://github.com/fmd-project-team/FMD/compare/1.2.0.0...1.2.1.0
