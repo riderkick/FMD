@@ -5,8 +5,8 @@
 ## Download
 
 [![Latest release](https://img.shields.io/github/release/fmd-project-team/FMD.svg)](https://github.com/fmd-project-team/FMD/releases/latest)
-[![Download latest release (Win32)](https://img.shields.io/github/downloads/fmd-project-team/FMD/latest/fmd_1.2.0.0_i386-win32.7z.svg?label=Win32)](https://github.com/fmd-project-team/FMD/releases/download/1.2.0.0/fmd_1.2.0.0_i386-win32.7z)
-[![Download latest release (Win64)](https://img.shields.io/github/downloads/fmd-project-team/FMD/latest/fmd_1.2.0.0_x86_64-win64.7z.svg?label=Win64)](https://github.com/fmd-project-team/FMD/releases/download/1.2.0.0/fmd_1.2.0.0_x86_64-win64.7z)
+[![Download latest release (Win32)](https://img.shields.io/github/downloads/fmd-project-team/FMD/latest/fmd_1.2.1.0_i386-win32.7z.svg?label=Win32)](https://github.com/fmd-project-team/FMD/releases/download/1.2.1.0/fmd_1.2.1.0_i386-win32.7z)
+[![Download latest release (Win64)](https://img.shields.io/github/downloads/fmd-project-team/FMD/latest/fmd_1.2.1.0_x86_64-win64.7z.svg?label=Win64)](https://github.com/fmd-project-team/FMD/releases/download/1.2.1.0/fmd_1.2.1.0_x86_64-win64.7z)
 
 ## About FMD
 
