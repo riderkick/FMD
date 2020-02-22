@@ -241,7 +241,7 @@ function Init()
   AddWebsiteModule('MangazukiClub', 'https://mangazuki.club', cat)
   
   cat = 'English'
-  AddWebsiteModule('IsekaiScan', 'http://isekaiscan.com', cat)
+  AddWebsiteModule('IsekaiScan', 'https://isekaiscan.com', cat)
   AddWebsiteModule('MangaKomi', 'https://mangakomi.com', cat)
   AddWebsiteModule('MangaZukiWhatStatus', 'https://whatstatus.co', cat)
   AddWebsiteModule('MangaZukiOnline', 'https://www.mangazuki.online', cat)
