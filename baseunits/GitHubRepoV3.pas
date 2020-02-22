@@ -161,7 +161,6 @@ begin
       end;
       d.Free;
     end;
-    fdirty:=true;
   end;
   Result:=last_commit_sha;
 end;
@@ -215,6 +214,7 @@ begin
   new_commit_sha:=GetLastCommit;
   if (new_commit_sha<>'') and (new_commit_sha<>old_commit_sha) then
     result:=GetTree;
+  fdirty:=result;
 end;
 
 function TGitHubRepo.GetDownloadURL(const AName: String): String;
