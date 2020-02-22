@@ -458,7 +458,7 @@ end;
 
 procedure TCheckUpdateThread.SyncAskToProceed;
 begin
-  with TfrmDialogYN.Create(nil) do
+  with TfrmDialogYN.Create(FOwner) do
     try
       Caption := RS_NewUpdateFoundTitle;
       mMessages.Lines.Text := Format(RS_NewUpdateFoundLostChanges, [Trim(FStatusList.Text)]);
@@ -676,7 +676,7 @@ begin
   begin
     FReposUp := TLuaModulesRepos.Create;
     for i:=0 to FGitHubRepo.Tree.Count-1 do
-      FReposUp.Add(FGitHubRepo.Tree[i].path).sha := FGitHubRepo.Tree[i].path;
+      FReposUp.Add(FGitHubRepo.Tree[i].path).sha := FGitHubRepo.Tree[i].sha;
     FReposUp.Sort;
   end;
 
