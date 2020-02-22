@@ -86,6 +86,7 @@ type
     procedure SetNoProxy;
     procedure SetDefaultProxy;
     procedure Reset;
+    procedure ResetBasic;
     procedure SaveDocumentToFile(const AFileName: String; const ATryOriginalFileName: Boolean = False; const ALastModified: TDateTime = -1);
     property Timeout: Integer read FTimeout write SetTimeout;
     property RetryCount: Integer read FRetryCount write FRetryCount;
@@ -120,7 +121,7 @@ function FormatByteSize(const ABytes: Integer; AShowPerSecond: Boolean = False):
 
 const
   UserAgentSynapse   = 'Mozilla/4.0 (compatible; Synapse)';
-  UserAgentCURL      = 'curl/7.58.0';
+  UserAgentCURL      = 'curl/7.68.0';
   UserAgentGooglebot = 'Mozilla/5.0 (compatible; Googlebot/2.1;  http://www.google.com/bot.html)';
   UserAgentMSIE      = 'Mozilla/5.0 (Windows NT 10.0; Win64; Trident/7.0; rv:11.0) like Gecko';
   UserAgentFirefox   = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:72.0) Gecko/20100101 Firefox/72.0';
@@ -750,6 +751,12 @@ begin
   Headers.Values['Accept'] := ' text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8';
   Headers.Values['Accept-Charset'] := ' utf8';
   Headers.Values['Accept-Language'] := ' en-US,en;q=0.8';
+  if FGZip then Headers.Values['Accept-Encoding'] := ' gzip, deflate';
+end;
+
+procedure THTTPSendThread.ResetBasic;
+begin
+  Clear;
   if FGZip then Headers.Values['Accept-Encoding'] := ' gzip, deflate';
 end;
 
