@@ -123,7 +123,7 @@ end;
 
 function QuotedStr(const S: TDateTime): String;
 begin
-  Result := AnsiQuotedStr(FormatDateTime('yyyy-mm-dd hh:nn:ss', S, SQLiteFormatSettings), '''');
+  Result := AnsiQuotedStr(FormatDateTime('yyyy-mm-dd hh:nn:ss.zzz', S, SQLiteFormatSettings), '''');
 end;
 
 function QuotedStrD(const S: String): String;
