@@ -1,4 +1,4 @@
 ; automatically build with make_release_win.bat
-WIN32=https://github.com/fmd-project-team/FMD/releases/download/1.2.2.0/fmd_1.2.2.0_i386-win32.7z
-WIN64=https://github.com/fmd-project-team/FMD/releases/download/1.2.2.0/fmd_1.2.2.0_x86_64-win64.7z
-VERSION=1.2.2.0
+WIN32=https://github.com/fmd-project-team/FMD/releases/download/1.2.3.0/fmd_1.2.3.0_i386-win32.7z
+WIN64=https://github.com/fmd-project-team/FMD/releases/download/1.2.3.0/fmd_1.2.3.0_x86_64-win64.7z
+VERSION=1.2.3.0
