@@ -54,7 +54,12 @@ end;
 
 procedure TStringsStorage.SetText(AValue: String);
 begin
-  FStrings.Text := AValue;
+  EnterCriticalsection(FCS);
+  try
+    FStrings.Text := AValue;
+  finally
+    LeaveCriticalsection(FCS);
+  end;
 end;
 
 procedure TStringsStorage.SetValues(const AName: String; AValue: String);
