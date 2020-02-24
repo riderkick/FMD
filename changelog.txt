@@ -4,6 +4,10 @@ https://github.com/fmd-project-team/FMD
 Changelog:
 ([!] Important, [+] Addition, [-] Removal, [*] Fix/Change, [?] Feedback needed)
 
+1.2.4.0 (24.02.2020)
+[*] Various changes and bug fixes
+Full changes: https://github.com/fmd-project-team/FMD/compare/1.2.3.0...1.2.4.0
+
 1.2.3.0 (24.02.2020)
 [*] Various changes and bug fixes
 Full changes: https://github.com/fmd-project-team/FMD/compare/1.2.2.0...1.2.3.0

@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
   <ProjectOptions>
-    <Version Value="12"/>
+    <Version Value="11"/>
     <PathDelim Value="\"/>
     <General>
-      <Flags>
-        <CompatibilityMode Value="True"/>
-      </Flags>
       <SessionStorage Value="InProjectDir"/>
+      <MainUnit Value="0"/>
       <Title Value="Free Manga Downloader"/>
       <Scaled Value="True"/>
       <ResourceType Value="res"/>
@@ -25,7 +23,7 @@
       <UseVersionInfo Value="True"/>
       <MajorVersionNr Value="1"/>
       <MinorVersionNr Value="2"/>
-      <RevisionNr Value="3"/>
+      <RevisionNr Value="4"/>
       <Attributes pvaPrivateBuild="True"/>
       <StringTable Comments="https://github.com/fmd-project-team/FMD" FileDescription="Free Manga Downloader" LegalCopyright="©2015-2020" OriginalFilename="fmd.exe" ProductName="Free Manga Downloader" ProductVersion="$BuildMode()" PrivateBuild="FMD Project Team"/>
     </VersionInfo>
