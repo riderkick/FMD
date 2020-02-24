@@ -87,9 +87,9 @@ begin
     if re.Exec(body) then javascript:=re.Match[1];
 
     // challenge
-    re.Expression := 'setTimeout\(function\(\){\s*(var '+
+    re.Expression := 'setTimeout\(function\(\)\{\s*(var '+
                      's,t,o,p,b,r,e,a,k,i,n,g,f.+?\r?\n.+?a\.value\s*=.+?)\r?\n'+
-                     '([^{<>]*},\s*(\d{4,}))?';
+                     '([^\{<>]*\},\s*(\d{4,}))?';
     ms:=0;
     if re.Exec(javascript) and (re.SubExprMatchCount>0) then begin
       challenge:=re.Match[1];
