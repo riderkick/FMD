@@ -84,33 +84,6 @@ function QuotedStrD(const S: Integer): String; overload; inline;
 
 implementation
 
-const
-  SQLiteFormatSettings: TFormatSettings = (
-    CurrencyFormat            :1;
-    NegCurrFormat             :5;
-    ThousandSeparator         :',';
-    DecimalSeparator          :'.';
-    CurrencyDecimals          :2;
-    DateSeparator             :'-';
-    TimeSeparator             :':';
-    ListSeparator             :',';
-    CurrencyString            :'$';
-    ShortDateFormat           :'m/d/y';
-    LongDateFormat            :'dd" "mmmm" "yyyy';
-    TimeAMString              :'AM';
-    TimePMString              :'PM';
-    ShortTimeFormat           :'hh:nn';
-    LongTimeFormat            :'hh:nn:ss';
-    ShortMonthNames           :('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-                                'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec');
-    LongMonthNames            :('January', 'February', 'March', 'April', 'May',
-                                'June', 'July', 'August', 'September', 'October',
-                                'November', 'December');
-    ShortDayNames             :('Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat');
-    LongDayNames              :('Sunday', 'Monday', 'Tuesday', 'Wednesday',
-                                'Thursday', 'Friday', 'Saturday');
-    TwoDigitYearCenturyWindow :50;);
-
 function QuotedStr(const S: Integer): String;
 begin
   Result := AnsiQuotedStr(IntToStr(S), '''');
@@ -121,9 +94,26 @@ begin
   Result := AnsiQuotedStr(BoolToStr(S, '1', '0'), '''');
 end;
 
+function ToStrZeroPad(const i, len: Word): String;
+begin
+  Result:=IntToStr(i);
+  if Length(Result)<len then
+    Result:=StringOfChar('0',len-Length(Result))+Result;
+end;
+
+function DateTimeToSQLiteDateTime(const D: TDateTime): String;
+var
+  Year, Month, Day, Hour, Minute, Second, MiliSecond: word;
+begin
+  DecodeDate(D, Year, Month, Day);
+  DecodeTime(D, Hour, Minute, Second, MiliSecond);
+  Result := ToStrZeroPad(Year,4)+'-'+ToStrZeroPad(Month,2)+'-'+ToStrZeroPad(Day,2)+' '+
+            ToStrZeroPad(Hour,2)+':'+ToStrZeroPad(Minute,2)+':'+ToStrZeroPad(Second,2)+'.'+ToStrZeroPad(MiliSecond,3);
+end;
+
 function QuotedStr(const S: TDateTime): String;
 begin
-  Result := AnsiQuotedStr(FormatDateTime('yyyy-mm-dd hh:nn:ss.zzz', S, SQLiteFormatSettings), '''');
+  Result := AnsiQuotedStr(DateTimeToSQLiteDateTime(S), '"');
 end;
 
 function QuotedStrD(const S: String): String;
