@@ -7,6 +7,7 @@ local langs = {
 
 function getinfo()
   mangainfo.url = mangainfo.url:gsub('(.*)&page=.*', '%1')
+  http.cookies.values['ageGatePass'] = 'True'
   if http.get(mangainfo.url) then
     x=TXQuery.Create(http.document)
     mangainfo.title = x.xpathstring('//meta[@property="og:title"]/@content')
