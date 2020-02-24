@@ -106,25 +106,23 @@ end
 -- end of https://ltn.hitomi.la/common.js
 ----------------------------------------------------------------------------------------------
 
-function getpagenumber()  
+function getpagenumber()
 	if http.get(MaybeFillHost(module.rooturl, url)) then
-		x=TXQuery.Create(http.document)
-		local galleryid=x.xpathstring('//script[contains(.,"var galleryid")]'):match('=%s*(%d+)') or ''
-		local gallery_url=set_https(x.xpathstring('//script[contains(@src,"/galleries/")]/@src') or '')
-		if gallery_url and http.get(gallery_url) then
+		local x = TXQuery.Create(http.document)
+		local galleryid   = url:match('/(%d+)%.html')
+		local gallery_url = x.xpathstring('//script[contains(@src,"reader.js")]/@src'):match('//(.+)/')
+		if galleryid and gallery_url and http.get('https://'..gallery_url..'/galleries/'..galleryid..'.js') then
 			local no_webp=not module.GetOption('download_webp')
-			local s=StreamToString(http.document):match('(%[.+%])')
-			x.parsehtml(s)
-			local v=x.xpath('json(*)()')
-			local image={}
-			local vi
-			for i=1, v.count do
-				vi=v.get(i)
-				image.hash=x.xpathstring('./hash',vi)
-				image.haswebp=x.xpathstring('./haswebp',vi)=='1'
-				image.name=x.xpathstring('./name',vi)
-				image.hasavif=x.xpathstring('./hasavif',vi)=='1'
-				task.pagelinks.add(image_url_from_image(galleryid, image, no_webp))
+			local s = StreamToString(http.document):match('(%[.-%])')
+			if s then
+				x.parsehtml(s)
+				local image={},v for _,v in ipairs(x.xpathi('json(*)()')) do
+					image.hash    = x.xpathstring('./hash',v)
+					image.haswebp = x.xpathstring('./haswebp',v)=='1'
+					image.name    = x.xpathstring('./name',v)
+					image.hasavif = x.xpathstring('./hasavif',v)=='1'
+					task.pagelinks.add(image_url_from_image(galleryid, image, no_webp))
+				end
 			end
 		end
 	else
