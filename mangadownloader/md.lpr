@@ -12,7 +12,7 @@ uses
   Interfaces, // this includes the LCL widgetset
   Forms, LazFileUtils, IniFiles, simpleipc, sqlite3dyn, FMDOptions, uBaseUnit, FMDVars, webp,
   LuaWebsiteModules, SimpleException, Classes, sysutils, frmMain, MultiLog,
-  FileChannel, ssl_openssl_lib;
+  FileChannel, ssl_openssl_lib, blcksock, ssl_openssl;
 
 var
   CheckInstance: Boolean = True;
@@ -154,7 +154,10 @@ begin
     DLLSSLName:=FMD_DIRECTORY+OpenSSLDLLSSLName;
     DLLUtilName:=FMD_DIRECTORY+OpenSSLDLLUtilName;
     if InitSSLInterface then
+    begin
+      SSLImplementation := TSSLOpenSSL;
       _OpenSSLVersion:=TOpenSSLVersion(GetProcAddress(SSLUtilHandle,PChar('OpenSSL_version')));
+    end;
     if Assigned(_OpenSSLVersion) then
       OpenSSLVersion:=PAnsiChar(_OpenSSLVersion(0));
   end else
