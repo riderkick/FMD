@@ -1138,16 +1138,32 @@ begin
 end;
 
 function StreamToString(const Stream: TStream): String;
-var
-  p, x: Int64;
+Const
+  BufSize = 1024;
+  MaxGrow = 1 shl 29;
+Var
+  BytesRead,
+  BufLen,
+  I,BufDelta : Longint;
+  OldPos: Int64;
 begin
-  //SetString(Result, PChar(Stream.Memory), Stream.Size div SizeOf(Char));
-  p := Stream.Position;
-  Stream.Position := 0;
-  Setlength(Result, Stream.Size);
-  x := Stream.Read(PChar(Result)^, Stream.Size);
-  SetLength(Result, x);
-  Stream.Position := p;
+  Result:='';
+  try
+    OldPos:=Stream.Position;
+    BufLen:=0;
+    I:=1;
+    Repeat
+      BufDelta:=BufSize*I;
+      SetLength(Result,BufLen+BufDelta);
+      BytesRead:=Stream.Read(Result[BufLen+1],BufDelta);
+      inc(BufLen,BufDelta);
+      If I<MaxGrow then
+        I:=I shl 1;
+    Until BytesRead<>BufDelta;
+    SetLength(Result,BufLen-BufDelta+BytesRead);
+  finally
+    Stream.Position:=OldPos;
+  end;
 end;
 
 procedure StringToStream(const S: String; Stream: TStream);
@@ -1161,6 +1177,7 @@ function GetRightValue(const Name, s: String): String;
 var
   i: Integer;
 begin
+  Result := '';
   if s = '' then Exit('');
   if Name = '' then Exit(s);
   i := Pos(Name, s);
