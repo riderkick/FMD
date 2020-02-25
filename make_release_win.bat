@@ -40,6 +40,7 @@ COPY /Y "%tdir%\changelog.txt" "%odir%\"
 COPY /Y "%tdir%\readme.rtf" "%odir%\"
 COPY /Y "%tdir%\fmd.exe" "%odir%\"
 COPY /Y "%tdir%\updater.exe" "%odir%\"
+DEL /F "%rdir%\%oname%"
 "%cdir%\dist\%~1\7za" a "%rdir%\%oname%" "%odir%\*" -mx9 -ssw -stl -t7z -y
 RMDIR /S /Q "%odir%"
 ECHO ----------------------------------------------------------
