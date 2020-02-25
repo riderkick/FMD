@@ -11,6 +11,7 @@ end
 function GetNameAndLink()
 	if http.get(module.rooturl .. '/directory/') then
 		TXQuery.create(http.document).x.xpathhrefall('//*[@id="content"]//a', links, names)
+		return no_error
 	else
 		return net_problem
 	end
