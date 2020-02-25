@@ -12,8 +12,8 @@ object frmDialogYN: TfrmDialogYN
   ClientHeight = 325
   ClientWidth = 437
   Color = clWindow
-  Position = poOwnerFormCenter
-  LCLVersion = '2.1.0.0'
+  Position = poMainFormCenter
+  LCLVersion = '2.0.6.0'
   object btYes: TButton
     AnchorSideRight.Control = btNo
     AnchorSideBottom.Control = btNo
