@@ -22,7 +22,7 @@ In order to build FMD from the source code, you must install the latest version 
 
 To compile FMD some packages and components are needed. You can download and install most of them by the built-in Online Package Manager (OPM).  
 The following packages and components are used for building FMD:  
-[![Synapse r209](https://img.shields.io/badge/Synapse-r209-Blue.svg)](https://sourceforge.net/p/synalist/code/HEAD/tree/trunk/) <sup>(Compile before "InternetTools")</sup>  
+![Synapse 40.1](https://img.shields.io/badge/Synapse-OPM%20(40.1)-Blue.svg) <sup>(Compile before "InternetTools")</sup>  
 ![DCPCrypt 2.0.4.1](https://img.shields.io/badge/DCPCrypt-OPM%20(2.0.4.1)-Blue.svg)  
 ![RichMemo (18.01.2020)](https://img.shields.io/badge/RichMemo-OPM%20(18.01.2020)-Blue.svg)  
 ![LCL Extensions 0.6.1](https://img.shields.io/badge/LCL%20Extensions-OPM%20(0.6.1)-Blue.svg) <sup>(Compile before "Virtual TreeView")</sup>  
