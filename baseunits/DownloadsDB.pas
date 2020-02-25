@@ -31,7 +31,9 @@ type
       const Awebsite,Alink,Atitle,Astatus,Aprogress,Asaveto:String;
       const Adatetime:TDateTime;
       const Achapterslinks,Achaptersnames,Apagelinks,Apagecontainerlinks,Afilenames,Acustomfilenames,Achaptersstatus:String); inline;
-    procedure InternalUpdateFinishStored(const Adlid,AOrder:Integer;const Aenabled:Boolean);
+    procedure InternalUpdateOrderEnabled(const Adlid,AOrder:Integer;const Aenabled:Boolean);
+    procedure InternalUpdateOrder(const Adlid,AOrder:Integer);
+    procedure InternalUpdateEnabled(const Adlid:Integer;const Aenabled:Boolean);
     function Add(
       var Adlid:Integer;
       const Aenabled:Boolean;
@@ -176,11 +178,27 @@ begin
     ' WHERE "dlid"=' + QuotedStr(Adlid));
 end;
 
-procedure TDownloadsDB.InternalUpdateFinishStored(const Adlid,AOrder:Integer;const Aenabled:Boolean);
+procedure TDownloadsDB.InternalUpdateOrderEnabled(const Adlid, AOrder: Integer;
+  const Aenabled: Boolean);
 begin
   Connection.ExecuteDirect('UPDATE "downloads" SET ' +
     '"enabled"=' +            QuotedStr(Aenabled) + ', ' +
     '"order"=' +              QuotedStr(Aorder) +
+    ' WHERE "dlid"=' + QuotedStr(Adlid));
+end;
+
+procedure TDownloadsDB.InternalUpdateOrder(const Adlid, AOrder: Integer);
+begin
+  Connection.ExecuteDirect('UPDATE "downloads" SET ' +
+    '"order"='+QuotedStr(AOrder)+
+    ' WHERE "dlid"=' + QuotedStr(Adlid));
+end;
+
+procedure TDownloadsDB.InternalUpdateEnabled(const Adlid: Integer;
+  const Aenabled: Boolean);
+begin
+  Connection.ExecuteDirect('UPDATE "downloads" SET ' +
+    '"enabled"=' +QuotedStr(Aenabled)+
     ' WHERE "dlid"=' + QuotedStr(Adlid));
 end;
 
