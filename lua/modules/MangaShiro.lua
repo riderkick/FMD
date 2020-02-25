@@ -226,7 +226,7 @@ function getpagenumber()
       if task.pagelinks.count < 1 then TXQuery.Create(http.Document).xpathstringall('//*[@id="readerareaimg"]//img/@src', task.pagelinks) end
       if task.pagelinks.count < 1 then TXQuery.Create(http.Document).xpathstringall('//*[@id="imgholder"]//img/@src', task.pagelinks) end
       if task.pagelinks.count < 1 then TXQuery.Create(http.Document).xpathstringall('//*[@class="entry-content"]//img/@src', task.pagelinks) end
-      if task.pagelinks.count < 1 then TXQuery.Create(http.Document).xpathstringall('//*[@id="baca"]/img/@src', task.pagelinks) end
+      if task.pagelinks.count < 1 then TXQuery.Create(http.Document).xpathstringall('//*[@class="bc"]/img/@src', task.pagelinks) end
       if task.pagelinks.count < 1 or module.website == 'KoMBatch' then 
         local link = MaybeFillHost(module.rooturl,url)
         link = link:gsub('/manga', '/api/chapter')
