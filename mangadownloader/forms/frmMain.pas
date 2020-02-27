@@ -1313,7 +1313,11 @@ begin
     Enabled:=True;
   end;
 
-  Caption := 'Free Manga Downloader (' + FMD_VERSION_STRING + ')';
+  Caption := 'Free Manga Downloader v' + FMD_VERSION_STRING;
+  if REVISION_NUMBER <> '' then
+    Caption := Caption + ' r' + REVISION_NUMBER;
+  if REVISION_SHA <> '' then
+    Caption := Caption + ' (' + REVISION_SHA + ')';
   if LuaWebsiteModules.AlwaysLoadLuaFromFile then
     Caption := Caption + ' --lua-dofile';
 end;

@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
   <ProjectOptions>
-    <Version Value="11"/>
+    <Version Value="12"/>
     <PathDelim Value="\"/>
     <General>
+      <Flags>
+        <CompatibilityMode Value="True"/>
+      </Flags>
       <SessionStorage Value="InProjectDir"/>
-      <MainUnit Value="0"/>
       <Title Value="Free Manga Downloader"/>
       <Scaled Value="True"/>
       <ResourceType Value="res"/>
@@ -69,6 +71,10 @@
               <Define0 Value="DEBUGLEAKS"/>
               <Define1 Value="DEVBUILD"/>
             </OtherDefines>
+            <ExecuteBefore>
+              <Command Value="..\git2revision.bat ..\baseunits\revision.inc"/>
+              <CompileReasons Run="False"/>
+            </ExecuteBefore>
           </Other>
         </CompilerOptions>
       </Item2>
@@ -115,6 +121,10 @@
             <CompilerMessages>
               <IgnoredMessages idx4079="True"/>
             </CompilerMessages>
+            <ExecuteBefore>
+              <Command Value="..\git2revision.bat ..\baseunits\revision.inc"/>
+              <CompileReasons Run="False"/>
+            </ExecuteBefore>
           </Other>
         </CompilerOptions>
       </Item3>
@@ -157,6 +167,12 @@
               </Win32>
             </Options>
           </Linking>
+          <Other>
+            <ExecuteBefore>
+              <Command Value="..\git2revision.bat ..\baseunits\revision.inc"/>
+              <CompileReasons Run="False"/>
+            </ExecuteBefore>
+          </Other>
         </CompilerOptions>
       </Item4>
       <Item5 Name="Win32 Debug Leaks">
@@ -203,6 +219,10 @@
               <Define0 Value="DEBUGLEAKS"/>
               <Define1 Value="DEVBUILD"/>
             </OtherDefines>
+            <ExecuteBefore>
+              <Command Value="..\git2revision.bat ..\baseunits\revision.inc"/>
+              <CompileReasons Run="False"/>
+            </ExecuteBefore>
             <ExecuteAfter>
               <Command Value="cmd.exe /c copy /y languages\*.po ..\bin\$(TargetCPU)-$(TargetOS)\languages\"/>
               <CompileReasons Compile="False" Run="False"/>
@@ -254,6 +274,10 @@
               <Define0 Value="DEBUGLEAKS"/>
               <Define1 Value="DEVBUILD"/>
             </OtherDefines>
+            <ExecuteBefore>
+              <Command Value="..\git2revision.bat ..\baseunits\revision.inc"/>
+              <CompileReasons Run="False"/>
+            </ExecuteBefore>
             <ExecuteAfter>
               <Command Value="cmd.exe /c copy /y languages\*.po ..\bin\$(TargetCPU)-$(TargetOS)\languages\"/>
               <CompileReasons Compile="False" Run="False"/>
@@ -477,6 +501,10 @@
         <Define0 Value="DEBUGLEAKS"/>
         <Define1 Value="DEVBUILD"/>
       </OtherDefines>
+      <ExecuteBefore>
+        <Command Value="..\git2revision.bat ..\baseunits\revision.inc"/>
+        <CompileReasons Run="False"/>
+      </ExecuteBefore>
     </Other>
   </CompilerOptions>
   <Debugging>

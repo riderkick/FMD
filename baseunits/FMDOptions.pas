@@ -25,7 +25,6 @@ type
   TFMDDo = (DO_NOTHING, DO_EXIT, DO_POWEROFF, DO_HIBERNATE, DO_UPDATE);
 
 const
-  FMD_REVISION = '$WCREV$';
   FMD_INSTANCE = '_FreeMangaDownloaderInstance_';
   FMD_TARGETOS  = {$i %FPCTARGETOS%};
   FMD_TARGETCPU = {$i %FPCTARGETCPU%};
@@ -63,6 +62,8 @@ const
 
   BACKUP_FILE_PREFIX = 'fmdbackup_';
   BACKUP_FILE_EXT = '7z';
+
+{$i revision.inc}
 
 var
   FMD_VERSION_NUMBER: TProgramVersion;
