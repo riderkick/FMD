@@ -396,6 +396,10 @@ type
     property Data: TStringList read fdata;
   end;
 
+
+// graphics
+function BlendColor(FG, BG: TColor; T: Byte): TColor;
+
 // VT extras
 procedure SearchOnVT(Tree: TVirtualStringTree; Key: String; Column: Integer = 0);
 procedure SearchOnlyVisibleOnVT(Tree: TVirtualStringTree; Key: String; Column: Integer = 0);
@@ -738,6 +742,21 @@ begin
 end;
 
 {$ENDIF}
+
+function BlendColor(FG, BG: TColor; T: Byte): TColor;
+  function MixByte(B1, B2: Byte): Byte;
+  begin
+    Result := Byte(T * (B1 - B2) shr 8 + B2);
+  end;
+var
+  C1, C2: LongInt;
+begin
+  C1 := ColorToRGB(FG);
+  C2 := ColorToRGB(BG);
+  Result := (MixByte(Byte(C1 shr 16), Byte(C2 shr 16)) shl 16) +
+    (MixByte(Byte(C1 shr 8), Byte(C2 shr 8)) shl 8) +
+    MixByte(Byte(C1), Byte(C2));
+end;
 
 procedure SearchOnVT(Tree: TVirtualStringTree; Key: String; Column: Integer);
 var
