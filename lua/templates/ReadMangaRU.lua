@@ -111,7 +111,7 @@ function _M.GetPageNumber()
   json = GetBetween('[[', ', 0, ', Trim(GetBetween('rm_h.init(', 'false);', x.XPathString('//script[@type="text/javascript" and contains(., "rm_h.init")]'))))
   json = json:gsub('%],%[', ';'):gsub('\'', ''):gsub('"', ''):gsub(']]', ';')
   for i in json:gmatch('(.-);') do
-    i1, i2 = i:match('.-,(.-),(.-),.-,.-')
+    i1, i2 = i:match('(.-),.-,(.-),.-,.-')
     task.PageLinks.Add(i1 .. i2)
   end
   
