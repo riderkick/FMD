@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, httpsendthread, BaseThread, FMDOptions, process, ComCtrls,
-  Controls, Dialogs, StdCtrls, Buttons, blcksock;
+  Controls, Dialogs, Buttons, blcksock;
 
 type
 

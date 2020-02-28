@@ -17,9 +17,9 @@ uses
   {$else}
   UTF8Process,
   {$endif}
-  SysUtils, Classes, Graphics, lazutf8classes, LazFileUtils, LConvEncoding, LazUtils,
+  SysUtils, Classes, Graphics, lazutf8classes, LazFileUtils, LConvEncoding,
   strutils, dateutils, variants, base64, fpjson, jsonparser, jsonscanner,
-  fgl, RegExpr, synautil, httpsend, blcksock, ssl_openssl,
+  fgl, RegExpr, synautil, httpsend, blcksock,
   synacode, MultiLog, FPimage, GZIPUtils, uMisc, httpsendthread, FMDOptions,
   ImgInfos, NaturalSortUnit,
   MemBitmap, FPWritePNG, zstream, FPReadPNG, VirtualTrees;
