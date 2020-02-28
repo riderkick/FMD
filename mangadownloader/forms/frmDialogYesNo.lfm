@@ -11,9 +11,8 @@ object frmDialogYN: TfrmDialogYN
   ChildSizing.VerticalSpacing = 6
   ClientHeight = 325
   ClientWidth = 437
-  Color = clWindow
   Position = poMainFormCenter
-  LCLVersion = '2.0.6.0'
+  LCLVersion = '2.1.0.0'
   object btYes: TButton
     AnchorSideRight.Control = btNo
     AnchorSideBottom.Control = btNo
@@ -46,20 +45,29 @@ object frmDialogYN: TfrmDialogYN
   end
   object mMessages: TMemo
     AnchorSideLeft.Control = Owner
-    AnchorSideTop.Control = Owner
+    AnchorSideTop.Control = lbMessage
+    AnchorSideTop.Side = asrBottom
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = btNo
     Left = 6
-    Height = 282
-    Top = 6
+    Height = 261
+    Top = 27
     Width = 425
     Anchors = [akTop, akLeft, akRight, akBottom]
-    BorderStyle = bsNone
-    Color = clWindow
     ReadOnly = True
     ScrollBars = ssAutoBoth
     TabOrder = 2
     WordWrap = False
+  end
+  object lbMessage: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    Left = 6
+    Height = 15
+    Top = 6
+    Width = 56
+    Caption = 'lbMessage'
+    ParentColor = False
   end
 end

@@ -153,9 +153,9 @@ resourcestring
   RS_StartDownloading = 'Downloading...';
   RS_FinishDownload = 'Finish download';
   RS_NewUpdateFoundTitle = 'Modules update found!';
-  RS_NewUpdateFoundLostChanges = 'Modules update found, any local changes will be lost, procced?'#13#10#13#10'%s';
+  RS_NewUpdateFoundLostChanges = 'Modules update found, any local changes will be lost, procced?';
   RS_ModulesUpdatedTitle = 'Modules updated!';
-  RS_ModulesUpdatedRestart = 'Modules updated, restart now?'#13#10#13#10'%s';
+  RS_ModulesUpdatedRestart = 'Modules updated, restart now?';
   RS_StatusNew = '%s NEW*';
   RS_StatusUpdate = '%s UPDATE*';
   RS_StatusRedownloaded = '%s REDOWNLOAD*';
@@ -461,7 +461,8 @@ begin
   with TfrmDialogYN.Create(FOwner) do
     try
       Caption := RS_NewUpdateFoundTitle;
-      mMessages.Lines.Text := Format(RS_NewUpdateFoundLostChanges, [Trim(FStatusList.Text)]);
+      lbMessage.Caption := RS_NewUpdateFoundLostChanges;
+      mMessages.Lines.AddStrings(FStatusList);
       FProceed := ShowModal = mrYes;
     finally
       free;
@@ -505,7 +506,8 @@ begin
         with TfrmDialogYN.Create(FOwner) do
           try
             Caption := RS_ModulesUpdatedTitle;
-            mMessages.Lines.Text := Format(RS_ModulesUpdatedRestart, [Trim(FStatusList.Text)]);
+            lbMessage.Caption := RS_ModulesUpdatedRestart;
+            mMessages.Lines.AddStrings(FStatusList);
             yesRestart := ShowModal = mrYes;
           finally
             free;

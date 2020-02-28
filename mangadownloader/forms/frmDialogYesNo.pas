@@ -14,6 +14,7 @@ type
   TfrmDialogYN = class(TForm)
     btYes: TButton;
     btNo: TButton;
+    lbMessage: TLabel;
     mMessages: TMemo;
   private
 
