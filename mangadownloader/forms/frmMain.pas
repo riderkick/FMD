@@ -11,15 +11,14 @@ unit frmMain;
 interface
 
 uses
-  LCLVersion,
   {$ifdef windows}
   ActiveX, windows,
   {$else}
   FakeActiveX,
   {$endif}
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, LCLType, ExtCtrls, ComCtrls,
-  Buttons, Spin, Menus, VirtualTrees, RichMemo, IniFiles, simpleipc, lclproc, types, LCLIntf,
-  DefaultTranslator, EditBtn, PairSplitter, MultiLog, FileChannel, FileUtil, LazUTF8Classes,
+  Buttons, Spin, Menus, VirtualTrees, RichMemo, simpleipc, lclproc, types, LCLIntf,
+  EditBtn, PairSplitter, MultiLog, FileChannel, FileUtil, LazUTF8Classes,
   TAGraph, TASources, TASeries, TATools, AnimatedGif, uBaseUnit, uDownloadsManager,
   uFavoritesManager, uUpdateThread, uSilentThread, uMisc,
   uGetMangaInfosThread, frmDropTarget, frmAccountManager, frmWebsiteOptionCustom,
@@ -93,6 +92,7 @@ type
     edWebsitesSearch: TEditButton;
     gbImageConversion: TGroupBox;
     IconDLLeft: TImageList;
+    lbAboutVersion: TLabel;
     lbPNGCompressionLevel: TLabel;
     lbJPEGQuality: TLabel;
     lbWebPSaveAs: TLabel;
@@ -1313,11 +1313,7 @@ begin
     Enabled:=True;
   end;
 
-  Caption := 'Free Manga Downloader v' + FMD_VERSION_STRING;
-  if REVISION_NUMBER <> '' then
-    Caption := Caption + ' r' + REVISION_NUMBER;
-  if REVISION_SHA <> '' then
-    Caption := Caption + ' (' + REVISION_SHA + ')';
+  lbAboutVersion.Caption := Format(lbAboutVersion.Caption, [FMD_VERSION_STRING,REVISION_NUMBER+' ('+REVISION_SHA+')' ]);
   if LuaWebsiteModules.AlwaysLoadLuaFromFile then
     Caption := Caption + ' --lua-dofile';
 end;
@@ -2282,34 +2278,10 @@ end;
 
 procedure TMainForm.LoadAbout;
 var
-  i: Integer;
   fs: TFileStreamUTF8;
-  st: TStringList;
-  regx: TRegExpr;
 begin
   // load readme.rtf
   if FileExistsUTF8(README_FILE) then begin
-    regx := TRegExpr.Create;
-    st := TStringList.Create;
-    try
-      regx.ModifierI := True;
-      regx.Expression := '(version.*)((\d+\.){3}\d+)';
-      st.LoadFromFile(README_FILE);
-      if st.Count > 0 then
-        for i := 0 to st.Count - 1 do
-          if regx.Exec(st[i]) then
-          begin
-            if regx.Match[2] <> FMD_VERSION_STRING then begin
-              st[i] := regx.Replace(st[i], '$1\' + FMD_VERSION_STRING, True);
-              if DeleteFileUTF8(README_FILE) then
-                st.SaveToFile(README_FILE);
-            end;
-            Break;
-          end;
-    finally
-      st.Free;
-      regx.Free;
-    end;
     fs := TFileStreamUTF8.Create(README_FILE, fmOpenRead or fmShareDenyNone);
     try
       rmAbout.LoadRichText(fs);
@@ -2317,6 +2289,7 @@ begin
       fs.free;
     end;
   end;
+
   // load changelog.txt
   if FileExistsUTF8(CHANGELOG_FILE) then mmChangelog.Lines.LoadFromFile(CHANGELOG_FILE);
 

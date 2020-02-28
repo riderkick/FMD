@@ -7,7 +7,7 @@ GOTO :EOF
 :gitrev
 ECHO const>"%revfile%"
 FOR /F %%i IN ('git rev-list --count --first-parent HEAD') DO SET revnumber=%%i
-FOR /F %%i IN ('git log --pretty^=%%h -1') DO SET revsha=%%i
+FOR /F %%i IN ('git log --pretty^=%%H -1') DO SET revsha=%%i
 ECHO   REVISION_NUMBER = '%revnumber%';>>"%revfile%"
 ECHO   REVISION_SHA = '%revsha%';>>"%revfile%"
 GOTO :EOF

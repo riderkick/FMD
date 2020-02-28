@@ -1,7 +1,7 @@
 object MainForm: TMainForm
-  Left = 320
+  Left = 238
   Height = 657
-  Top = 121
+  Top = 64
   Width = 855
   ActiveControl = pcMain
   Caption = 'Free Manga Downloader'
@@ -4921,11 +4921,18 @@ object MainForm: TMainForm
           ClientHeight = 474
           ClientWidth = 837
           object rmAbout: TRichMemo
+            AnchorSideLeft.Control = tsAboutText
+            AnchorSideTop.Control = lbAboutVersion
+            AnchorSideTop.Side = asrBottom
+            AnchorSideRight.Control = tsAboutText
+            AnchorSideRight.Side = asrBottom
+            AnchorSideBottom.Control = tsAboutText
+            AnchorSideBottom.Side = asrBottom
             Left = 0
-            Height = 466
-            Top = 4
+            Height = 428
+            Top = 42
             Width = 837
-            Align = alClient
+            Anchors = [akTop, akLeft, akRight, akBottom]
             BorderSpacing.Top = 4
             BorderSpacing.Bottom = 4
             Color = clWhite
@@ -4949,6 +4956,18 @@ object MainForm: TMainForm
             ChildSizing.Layout = cclLeftToRightThenTopToBottom
             ChildSizing.ControlsPerLine = 10
             TabOrder = 1
+          end
+          object lbAboutVersion: TLabel
+            AnchorSideLeft.Control = tsAboutText
+            AnchorSideTop.Control = tsAboutText
+            Left = 0
+            Height = 30
+            Top = 6
+            Width = 65
+            BorderSpacing.Top = 6
+            BorderSpacing.Bottom = 6
+            Caption = 'Version: %s'#13#10'Revision: %s'
+            ParentColor = False
           end
         end
         object tsChangelogText: TTabSheet
