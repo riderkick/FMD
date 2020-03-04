@@ -57,7 +57,7 @@ end
 ----------------------------------------------------------------------------------------------------
 
 function Init()
-  AddWebsiteModule('SelfMangaRU', 'http://selfmanga.ru', 'Russian')
+  AddWebsiteModule('SelfMangaRU', 'https://selfmanga.ru', 'Russian')
 end
 
 function AddWebsiteModule(name, url, category)
