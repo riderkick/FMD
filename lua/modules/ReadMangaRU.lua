@@ -57,7 +57,7 @@ end
 ----------------------------------------------------------------------------------------------------
 
 function Init()
-  AddWebsiteModule('ReadMangaRU', 'http://readmanga.me', 'Russian')
+  AddWebsiteModule('ReadMangaRU', 'https://readmanga.me', 'Russian')
 end
 
 function AddWebsiteModule(name, url, category)

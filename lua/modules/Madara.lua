@@ -96,13 +96,13 @@ function Modules.Madara()
           task.pagelinks.add(src)
         end
       else
-        x.xpathstringall('//div[contains(@class, "page-break")]/img/@src', task.pagelinks)
+        x.xpathstringall('//div[contains(@class, "page-break")]/img/@data-src', task.pagelinks)
       end
       if task.pagelinks.count == 0 then
         x.xpathstringall('//div[@class="entry-content"]//picture/img/@src', task.pagelinks)
       end
-  	  if task.pagelinks.count < 1 then
-  		  x.xpathstringall('//div[contains(@class, "page-break")]/img/@data-src', task.pagelinks)
+      if task.pagelinks.count < 1 then
+        x.xpathstringall('//div[contains(@class, "page-break")]/img/@src', task.pagelinks)
   	  end
       if task.pagelinks.count < 1 then
         x.xpathstringall('//*[@class="wp-manga-chapter-img webpexpress-processed"]/@src', task.pagelinks)
@@ -259,6 +259,8 @@ function Init()
   AddWebsiteModule('SiXiangScans','http://www.sixiangscans.com', cat)
   AddWebsiteModule('NinjaScans', 'https://ninjascans.com', cat)
   AddWebsiteModule('ReadManhua', 'https://readmanhua.net', cat)
+  AddWebsiteModule('MangaDods', 'https://www.mangadods.com', cat)
+  AddWebsiteModule('DisasterScans', 'https://disasterscans.com', cat)
   
   cat = 'French'
   AddWebsiteModule('WakaScan', 'http://wakascan.com', cat)
@@ -306,6 +308,8 @@ function Init()
   AddWebsiteModule('MangaTX', 'https://mangatx.com', cat)
   AddWebsiteModule('NightComic', 'http://nightcomic.com', cat)
   AddWebsiteModule('MangaDao', 'https://mangadao.com', cat)
+  AddWebsiteModule('365Manga', 'https://365manga.com', cat)
+  AddWebsiteModule('MangaBob', 'https://mangabob.com', cat)
   
   cat = 'Arabic-Scanlation'
   AddWebsiteModule('3asqOrg', 'https://3asq.org', cat)

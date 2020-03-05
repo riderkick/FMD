@@ -11,9 +11,12 @@ local LuaDebug   = require 'LuaDebugging'
 -- Local Constants
 ----------------------------------------------------------------------------------------------------
 
-local Template   = require 'templates.ReadMangaRU'
--- DirectoryPagination = '/'            --> Override template variable by uncommenting this line.
--- DirectoryOffset     = 0              --> Override template variable by uncommenting this line.
+local Template   = require 'templates.MangaReaderOnline'
+-- DirectoryParameters = '/'            --> Override template variable by uncommenting this line.
+XPathTokenStatus    = 'Статус:'
+XPathTokenAuthors   = 'Автор(ы):'
+XPathTokenArtists   = 'Жудожник:'
+XPathTokenGenres    = 'Жанры:'
 
 
 ----------------------------------------------------------------------------------------------------
@@ -23,14 +26,6 @@ local Template   = require 'templates.ReadMangaRU'
 -- Get info and chapter list for current manga.
 function GetInfo()
   Template.GetInfo()
-  
-  return no_error
-end
-
-
--- Get the page count of the manga list of the current website.
-function GetDirectoryPageNumber()
-  Template.GetDirectoryPageNumber()
   
   return no_error
 end
@@ -57,7 +52,7 @@ end
 ----------------------------------------------------------------------------------------------------
 
 function Init()
-  AddWebsiteModule('SelfMangaRU', 'https://selfmanga.ru', 'Russian')
+  AddWebsiteModule('JapitComics', 'https://j-comics.ru', 'Russian')
 end
 
 function AddWebsiteModule(name, url, category)
@@ -66,7 +61,6 @@ function AddWebsiteModule(name, url, category)
   m.RootURL                  = url
   m.Category                 = category
   m.OnGetInfo                = 'GetInfo'
-  m.OnGetDirectoryPageNumber = 'GetDirectoryPageNumber'
   m.OnGetNameAndLink         = 'GetNameAndLink'
   m.OnGetPageNumber          = 'GetPageNumber'
   return m
