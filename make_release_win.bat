@@ -33,8 +33,8 @@ MKDIR "%odir%"
 call :copycdir config
 call :copycdir extras
 call :copycdir images
-call :copycdir languages
 call :copycdir licenses
+XCOPY /C /F /Y "%cdir%\languages\*.po" "%odir%\languages\"
 XCOPY /E /C /F /S "%cdir%\dist\%~1" "%odir%\"
 COPY /Y "%tdir%\changelog.txt" "%odir%\"
 COPY /Y "%tdir%\readme.rtf" "%odir%\"
