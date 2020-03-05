@@ -1,5 +1,15 @@
 msgid ""
-msgstr "Content-Type: text/plain; charset=UTF-8"
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: en\n"
+"X-Generator: Poedit 2.3\n"
 
 #: dbupdater.rs_buttoncancel
 msgctxt "dbupdater.rs_buttoncancel"
@@ -24,10 +34,10 @@ msgstr "%s: %d %s"
 #: dbupdater.rs_failedextract
 #, object-pascal-format
 msgid "%s: failed to extract, exitstatus = %d"
-msgstr "%s: failed to extract, exitstatus = %d\""
+msgstr "%s: failed to extract, exitstatus = %d"
 
 #: dbupdater.rs_faileditems
-#, object-pascal-format, fuzzy
+#, object-pascal-format
 #| msgid ""
 #| "Failed to finish:\n"
 #| "\n"
@@ -39,7 +49,7 @@ msgid ""
 msgstr ""
 "Failed to finish:\n"
 "\n"
-"%s\n"
+"%s"
 
 #: dbupdater.rs_faileditemstitle
 msgctxt "dbupdater.rs_faileditemstitle"
@@ -215,7 +225,6 @@ msgid "Split download"
 msgstr "Split download"
 
 #: frmmain.rs_dlgtitleexistindllist
-#, fuzzy
 #| msgid ""
 #| "This title are already in download list.\n"
 #| "Do you want to download it anyway?\n"
@@ -224,7 +233,7 @@ msgid ""
 "Do you want to download it anyway?"
 msgstr ""
 "This title are already in download list.\n"
-"Do you want to download it anyway?\n"
+"Do you want to download it anyway?"
 
 #: frmmain.rs_dlgtypeinnewchapter
 msgid "Type in new chapter:"
@@ -247,7 +256,6 @@ msgid "URL not supported!"
 msgstr "URL not supported!"
 
 #: frmmain.rs_droptargetmodeitems
-#, fuzzy
 #| msgid ""
 #| "Download all\n"
 #| "Add to favorites\n"
@@ -256,7 +264,7 @@ msgid ""
 "Add to favorites"
 msgstr ""
 "Download all\n"
-"Add to favorites\n"
+"Add to favorites"
 
 #: frmmain.rs_favoritesshowall
 msgctxt "frmmain.rs_favoritesshowall"
@@ -274,7 +282,6 @@ msgid "Enabled"
 msgstr "Enabled"
 
 #: frmmain.rs_filterstatusitems
-#, fuzzy
 #| msgid ""
 #| "Completed\n"
 #| "Ongoing\n"
@@ -286,7 +293,7 @@ msgid ""
 msgstr ""
 "Completed\n"
 "Ongoing\n"
-"<none>\n"
+"<none>"
 
 #: frmmain.rs_fiveyears
 msgid "Five years"
@@ -301,7 +308,6 @@ msgid "Four years"
 msgstr "Four years"
 
 #: frmmain.rs_hintfavoriteproblem
-#, fuzzy
 #| msgid ""
 #| "There is a problem with this data!\n"
 #| "Removing and re-adding this data may fix the problem.\n"
@@ -310,7 +316,7 @@ msgid ""
 "Removing and re-adding this data may fix the problem."
 msgstr ""
 "There is a problem with this data!\n"
-"Removing and re-adding this data may fix the problem.\n"
+"Removing and re-adding this data may fix the problem."
 
 #: frmmain.rs_history
 msgid "History"
@@ -360,7 +366,7 @@ msgid "Auto check for new chapter every %d minutes"
 msgstr "Auto check for new chapter every %d minutes"
 
 #: frmmain.rs_lbloptionexternalparamshint
-#, object-pascal-format, fuzzy
+#, object-pascal-format
 #| msgid ""
 #| "%s : Path to the manga\n"
 #| "%s : Chapter filename\n"
@@ -375,7 +381,7 @@ msgstr ""
 "%s : Path to the manga\n"
 "%s : Chapter filename\n"
 "\n"
-"Example : \"%s%s\"\n"
+"Example : \"%s%s\""
 
 #: frmmain.rs_loading
 msgid "Loading ..."
@@ -409,7 +415,6 @@ msgid "One year"
 msgstr "One year"
 
 #: frmmain.rs_optioncompress
-#, fuzzy
 #| msgid ""
 #| "None\n"
 #| "ZIP\n"
@@ -426,10 +431,9 @@ msgstr ""
 "ZIP\n"
 "CBZ\n"
 "PDF\n"
-"EPUB\n"
+"EPUB"
 
 #: frmmain.rs_optionfmddoitems
-#, fuzzy
 #| msgid ""
 #| "Nothing\n"
 #| "Exit\n"
@@ -444,11 +448,11 @@ msgstr ""
 "Nothing\n"
 "Exit\n"
 "Shutdown\n"
-"Hibernate\n"
+"Hibernate"
 
 #: frmmain.rs_revision
 msgid "Revision"
-msgstr ""
+msgstr "Revision"
 
 #: frmmain.rs_selected
 #, object-pascal-format
@@ -486,10 +490,9 @@ msgstr "Two years"
 
 #: frmmain.rs_version
 msgid "Version"
-msgstr ""
+msgstr "Version"
 
 #: frmmain.rs_webpconvertto
-#, fuzzy
 #| msgid ""
 #| "WebP\n"
 #| "PNG\n"
@@ -501,10 +504,9 @@ msgid ""
 msgstr ""
 "WebP\n"
 "PNG\n"
-"JPEG\n"
+"JPEG"
 
 #: frmmain.rs_webppnglevel
-#, fuzzy
 #| msgid ""
 #| "None\n"
 #| "Fastest\n"
@@ -519,7 +521,7 @@ msgstr ""
 "None\n"
 "Fastest\n"
 "Default\n"
-"Maximum\n"
+"Maximum"
 
 #: frmmain.rs_wronginput
 msgid "Invalid input!"
@@ -570,7 +572,7 @@ msgid "Downloading new version %s"
 msgstr "Downloading new version %s"
 
 #: selfupdater.rs_faileddownload
-#, object-pascal-format, fuzzy
+#, object-pascal-format
 #| msgid ""
 #| "Failed to download new version %s\n"
 #| "\n"
@@ -582,7 +584,7 @@ msgid ""
 msgstr ""
 "Failed to download new version %s\n"
 "\n"
-"%d %s\n"
+"%d %s"
 
 #: selfupdater.rs_failedextract
 #, object-pascal-format
@@ -731,19 +733,19 @@ msgstr "Copy"
 
 #: tfrmdialogyn.btno.caption
 msgid "&No"
-msgstr ""
+msgstr "&No"
 
 #: tfrmdialogyn.btyes.caption
 msgid "&Yes"
-msgstr ""
+msgstr "&Yes"
 
 #: tfrmdialogyn.caption
 msgid "Dialog"
-msgstr ""
+msgstr "Dialog"
 
 #: tfrmdialogyn.lbmessage.caption
 msgid "lbMessage"
-msgstr ""
+msgstr "lbMessage"
 
 #: timportfavorites.btcancel.caption
 msgctxt "TIMPORTFAVORITES.BTCANCEL.CAPTION"
@@ -1128,7 +1130,6 @@ msgid "Gender Bender"
 msgstr "Gender Bender"
 
 #: tmainform.ckfiltergenderbender.hint
-#, fuzzy
 #| msgid ""
 #| "Girls dressing up as guys, guys dressing up as girls.\n"
 #| "Guys turning into girls, girls turning into guys.\n"
@@ -1137,7 +1138,7 @@ msgid ""
 "Guys turning into girls, girls turning into guys."
 msgstr ""
 "Girls dressing up as guys, guys dressing up as girls.\n"
-"Guys turning into girls, girls turning into guys.\n"
+"Guys turning into girls, girls turning into guys."
 
 #: tmainform.ckfilterharem.caption
 msgid "Harem"
@@ -1543,7 +1544,6 @@ msgid "[?]"
 msgstr "[?]"
 
 #: tmainform.lbfilterhint.hint
-#, fuzzy
 #| msgid ""
 #| "Genres:\n"
 #| "- Checked: Include this genre.\n"
@@ -1573,7 +1573,7 @@ msgstr ""
 "Custom Genres:\n"
 "- Separate multiple genres with ','.\n"
 "- Exclude a genre by placing '!' or '-' at the beginning of a genre.\n"
-"- Example: Adventure,!Ecchi,Comedy.\n"
+"- Example: Adventure,!Ecchi,Comedy."
 
 #: tmainform.lbfilterstatus.caption
 msgctxt "TMAINFORM.LBFILTERSTATUS.CAPTION"
@@ -1618,7 +1618,6 @@ msgid "[?]"
 msgstr "[?]"
 
 #: tmainform.lboptionchaptercustomrenamehint.hint
-#, fuzzy
 #| msgid ""
 #| "%WEBSITE% : Website name\n"
 #| "%MANGA% : Manga title\n"
@@ -1649,7 +1648,7 @@ msgstr ""
 "%NUMBERING% : Numbering\n"
 "\n"
 "Note:\n"
-"Chapter folder name must have at least %CHAPTER% or %NUMBERING%.\n"
+"Chapter folder name must have at least %CHAPTER% or %NUMBERING%."
 
 #: tmainform.lboptionconnectiontimeout.caption
 msgid "Connection timeout (seconds)"
@@ -1678,7 +1677,6 @@ msgid "[?]"
 msgstr "[?]"
 
 #: tmainform.lboptionfilenamecustomrenamehint.hint
-#, fuzzy
 #| msgid ""
 #| "%WEBSITE% : Website name\n"
 #| "%MANGA% : Manga title\n"
@@ -1702,7 +1700,7 @@ msgstr ""
 "%FILENAME% : Filename\n"
 "\n"
 "Note:\n"
-"Filename must have at least %FILENAME%\n"
+"Filename must have at least %FILENAME%"
 
 #: tmainform.lboptionhost.caption
 msgid "Host"
@@ -1727,7 +1725,6 @@ msgid "[?]"
 msgstr "[?]"
 
 #: tmainform.lboptionmangacustomrenamehint.hint
-#, fuzzy
 #| msgid ""
 #| "%WEBSITE% : Website name\n"
 #| "%MANGA% : Manga title\n"
@@ -1751,7 +1748,7 @@ msgstr ""
 "%ARTIST% : Artist\n"
 "\n"
 "Note:\n"
-"Manga folder name must have at least %MANGA%.\n"
+"Manga folder name must have at least %MANGA%."
 
 #: tmainform.lboptionmaxparallel.caption
 msgid "Number of downloaded tasks at the same time"
@@ -2408,7 +2405,6 @@ msgid "Select directory"
 msgstr "Select directory"
 
 #: tselectdirectoryform.lbdescription.caption
-#, fuzzy
 #| msgid ""
 #| "If you change multiple entries at once, the new paths will be constructed like this:\n"
 #| "\"{New_Path}\\{Manga_Title}\"\n"
@@ -2423,7 +2419,7 @@ msgstr ""
 "If you change multiple entries at once, the new paths will be constructed like this:\n"
 "\"{New_Path}\\{Manga_Title}\"\n"
 "\n"
-"Old folder structures will be ignored. However, if the only part you change is the drive letter (e.g. 'D:'), only the letter will be replaced. This only works for absolute paths, relative paths will be ignored.\n"
+"Old folder structures will be ignored. However, if the only part you change is the drive letter (e.g. 'D:'), only the letter will be replaced. This only works for absolute paths, relative paths will be ignored."
 
 #: tshutdowncounterform.btabort.caption
 msgid "&Abort"
@@ -2490,7 +2486,6 @@ msgid "&Update"
 msgstr "&Update"
 
 #: tupdatedialogform.lbmessage.caption
-#, fuzzy
 #| msgid ""
 #| "New version found! Do you want to update now?\n"
 #| "FMD will be closed to finish the update.\n"
@@ -2499,7 +2494,7 @@ msgid ""
 "FMD will be closed to finish the update."
 msgstr ""
 "New version found! Do you want to update now?\n"
-"FMD will be closed to finish the update.\n"
+"FMD will be closed to finish the update."
 
 #: twebsiteselectionform.caption
 msgid "Select a website"
@@ -2516,4 +2511,3 @@ msgstr "Website name"
 #: twebsitesettingsform.edsearchproperty.texthint
 msgid "Setting name"
 msgstr "Setting name"
-
