@@ -1,26 +1,29 @@
 msgid ""
 msgstr ""
-"Last-Translator: Janusz Tomczak\n"
-"PO-Revision-Date: 2018-02-23 15:27+0100\n"
+"Last-Translator: Sławomir Niedziela <slniedz@poczta.onet.pl>\n"
+"PO-Revision-Date: 2018-12-25 15:44+0100\n"
 "Project-Id-Version: lclstrconsts\n"
 "Language-Team: \n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 2.2\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "POT-Creation-Date: \n"
 "MIME-Version: 1.0\n"
 "Language: pl_PL\n"
 
 #: lclstrconsts.hhshelpbrowsernotexecutable
+#, object-pascal-format
 msgid "Browser \"%s\" not executable."
-msgstr "Przeglądarka \"%s\" jest niewykonywalna."
+msgstr "Przeglądarka \"%s\" nie jest plikiem wykonywalnym."
 
 #: lclstrconsts.hhshelpbrowsernotfound
+#, object-pascal-format
 msgid "Browser \"%s\" not found."
 msgstr "Nie znaleziono przeglądarki \"%s\"."
 
 #: lclstrconsts.hhshelperrorwhileexecuting
+#, object-pascal-format
 msgid "Error while executing \"%s\":%s%s"
 msgstr "Błąd podczas wykonywania \"%s\":%s%s"
 
@@ -29,231 +32,55 @@ msgid "Unable to find a HTML browser."
 msgstr "Nie można znaleźć przeglądarki HTML."
 
 #: lclstrconsts.hhshelpnohtmlbrowserfoundpleasedefineone
+#, object-pascal-format
 msgid "No HTML Browser found.%sPlease define one in Tools -> Options -> Help -> Help Options"
 msgstr "Nie znaleziono przeglądarki HTML.%sUstaw ją w menu: Narzędzia -> Opcje -> Pomoc -> Opcje pomocy"
 
 #: lclstrconsts.hhshelpthehelpdatabasewasunabletofindfile
+#, object-pascal-format
 msgid "The help database \"%s\" was unable to find file \"%s\"."
 msgstr "Baza danych pomocy \"%s\" nie można znaleźć pliku \"%s\"."
 
 #: lclstrconsts.hhshelpthemacrosinbrowserparamswillbereplacedbytheurl
+#, object-pascal-format
 msgid "The macro %s in BrowserParams will be replaced by the URL."
 msgstr "Makro %s w przeglądarce BrowserParams zostanie zastąpione przez URL."
 
 #: lclstrconsts.ifsalt
 msgid "Alt"
-msgstr "klawisz Alt"
+msgstr "Alt"
 
 #: lclstrconsts.ifsctrl
 msgid "Ctrl"
-msgstr "klawisz Ctrl"
-
-#: lclstrconsts.ifsvk_accept
-msgid "Accept"
-msgstr "Akceptuj"
-
-#: lclstrconsts.ifsvk_apps
-msgid "application key"
-msgstr "klucz aplikacji"
-
-#: lclstrconsts.ifsvk_back
-msgid "Backspace"
-msgstr "klawisz Backspace"
-
-#: lclstrconsts.ifsvk_cancel
-msgctxt "lclstrconsts.ifsvk_cancel"
-msgid "Cancel"
-msgstr "Anuluj"
-
-#: lclstrconsts.ifsvk_capital
-msgid "Capital"
-msgstr "Wielkie"
-
-#: lclstrconsts.ifsvk_clear
-msgid "Clear"
-msgstr "Czyść"
+msgstr "Ctrl"
 
 #: lclstrconsts.ifsvk_cmd
 msgid "Cmd"
 msgstr "Komend (cmd)"
 
-#: lclstrconsts.ifsvk_control
-msgid "Control"
-msgstr "Kontrolka"
-
-#: lclstrconsts.ifsvk_convert
-msgid "Convert"
-msgstr "Konwertuj"
-
-#: lclstrconsts.ifsvk_delete
-msgctxt "lclstrconsts.ifsvk_delete"
-msgid "Delete"
-msgstr "klawisz Delete (Usuń)"
-
-#: lclstrconsts.ifsvk_down
-msgctxt "lclstrconsts.ifsvk_down"
-msgid "Down"
-msgstr "klawisz Down (w dół)"
-
-#: lclstrconsts.ifsvk_end
-msgctxt "lclstrconsts.ifsvk_end"
-msgid "End"
-msgstr "klawisz End (Koniec)"
-
-#: lclstrconsts.ifsvk_escape
-msgid "Escape"
-msgstr "Escape (wyjście)"
-
-#: lclstrconsts.ifsvk_execute
-msgid "Execute"
-msgstr "Wykonaj"
-
-#: lclstrconsts.ifsvk_final
-msgid "Final"
-msgstr "Finał"
-
-#: lclstrconsts.ifsvk_hanja
-msgid "Hanja"
-msgstr "Hanja"
-
 #: lclstrconsts.ifsvk_help
+msgctxt "lclstrconsts.ifsvk_help"
 msgid "Help"
 msgstr "Pomoc"
-
-#: lclstrconsts.ifsvk_home
-msgctxt "lclstrconsts.ifsvk_home"
-msgid "Home"
-msgstr "klawisz Home (Początek)"
-
-#: lclstrconsts.ifsvk_insert
-msgctxt "lclstrconsts.ifsvk_insert"
-msgid "Insert"
-msgstr "klawisz Insert (Wstaw)"
-
-#: lclstrconsts.ifsvk_junja
-msgid "Junja"
-msgstr "Junja"
-
-#: lclstrconsts.ifsvk_kana
-msgid "Kana"
-msgstr "Kana"
-
-#: lclstrconsts.ifsvk_lbutton
-msgid "Mouse Button Left"
-msgstr "Lewy przycisk myszy"
-
-#: lclstrconsts.ifsvk_left
-msgctxt "lclstrconsts.ifsvk_left"
-msgid "Left"
-msgstr "klawisz Left (w lewo)"
-
-#: lclstrconsts.ifsvk_lwin
-msgid "left windows key"
-msgstr "lewy klawisz Windows"
-
-#: lclstrconsts.ifsvk_mbutton
-msgid "Mouse Button Middle"
-msgstr "Środkowy przycisk myszy"
-
-#: lclstrconsts.ifsvk_menu
-msgctxt "lclstrconsts.ifsvk_menu"
-msgid "Menu"
-msgstr "Menu"
 
 #: lclstrconsts.ifsvk_meta
 msgid "Meta"
 msgstr "Meta"
 
-#: lclstrconsts.ifsvk_modechange
-msgid "Mode Change"
-msgstr "Zmiana Trybu"
-
-#: lclstrconsts.ifsvk_next
-msgctxt "lclstrconsts.ifsvk_next"
-msgid "Next"
-msgstr "Następny"
-
-#: lclstrconsts.ifsvk_nonconvert
-msgid "Nonconvert"
-msgstr "Nieprzetwarzalny"
-
-#: lclstrconsts.ifsvk_numlock
-msgid "Numlock"
-msgstr "Numlock"
-
-#: lclstrconsts.ifsvk_numpad
-msgid "Numpad %d"
-msgstr "Klawisz numeryczny %d"
-
-#: lclstrconsts.ifsvk_pause
-msgid "Pause key"
-msgstr "klawisz Pause (Pauza)"
-
-#: lclstrconsts.ifsvk_print
-msgid "Print"
-msgstr "Drukuj"
-
-#: lclstrconsts.ifsvk_prior
-msgctxt "lclstrconsts.ifsvk_prior"
-msgid "Prior"
-msgstr "Poprzedni"
-
-#: lclstrconsts.ifsvk_rbutton
-msgid "Mouse Button Right"
-msgstr "Prawy przycisk myszy"
-
-#: lclstrconsts.ifsvk_return
-msgid "Return"
-msgstr "klawisz Return (Powrót)"
-
-#: lclstrconsts.ifsvk_right
-msgctxt "lclstrconsts.ifsvk_right"
-msgid "Right"
-msgstr "klawisz Right (w prawo)"
-
-#: lclstrconsts.ifsvk_rwin
-msgid "right windows key"
-msgstr "prawy klawisz Windows"
-
-#: lclstrconsts.ifsvk_scroll
-msgid "Scroll"
-msgstr "Przewijaj"
-
-#: lclstrconsts.ifsvk_select
-msgid "Select"
-msgstr "Wybierz"
-
 #: lclstrconsts.ifsvk_shift
 msgid "Shift"
-msgstr "klawisz Shift"
-
-#: lclstrconsts.ifsvk_snapshot
-msgid "Snapshot"
-msgstr "Migawka"
-
-#: lclstrconsts.ifsvk_space
-msgid "Space key"
-msgstr "klawisz Spacja (Space key)"
+msgstr "Shift"
 
 #: lclstrconsts.ifsvk_super
 msgid "Super"
 msgstr "Super"
 
-#: lclstrconsts.ifsvk_tab
-msgctxt "lclstrconsts.ifsvk_tab"
-msgid "Tab"
-msgstr "klawisz Tab (tabulator)"
-
 #: lclstrconsts.ifsvk_unknown
 msgid "Unknown"
 msgstr "Nieznany"
 
-#: lclstrconsts.ifsvk_up
-msgctxt "lclstrconsts.ifsvk_up"
-msgid "Up"
-msgstr "klawisz Up (w górę)"
-
 #: lclstrconsts.lislclresourcesnotfound
+#, object-pascal-format
 msgctxt "lclstrconsts.lislclresourcesnotfound"
 msgid "Resource %s not found"
 msgstr "Nie znaleziono zasobu: %s"
@@ -279,6 +106,7 @@ msgid "Active Caption"
 msgstr "Aktywny nagłówek"
 
 #: lclstrconsts.rsallfiles
+#, object-pascal-format
 msgid "All files (%s)|%s|%s"
 msgstr "Wszystkie pliki (%s)|%s|%s"
 
@@ -291,6 +119,7 @@ msgid "Aqua"
 msgstr "Błękitny"
 
 #: lclstrconsts.rsascannothaveasparent
+#, object-pascal-format
 msgid "Class %s cannot have %s as parent."
 msgstr "Klasa %s nie może mieć %s jako elementu nadrzędnego."
 
@@ -300,7 +129,7 @@ msgstr "Pulpit"
 
 #: lclstrconsts.rsbackward
 msgid "Backward"
-msgstr "W górę"
+msgstr "Wstecz"
 
 #: lclstrconsts.rsbitmaps
 msgid "Bitmaps"
@@ -360,28 +189,28 @@ msgid "Case sensitive"
 msgstr "Uwzględnij wielkość liter"
 
 #: lclstrconsts.rscontrolclasscantcontainchildclass
+#, object-pascal-format
 msgid "Control of class '%s' can't have control of class '%s' as a child"
 msgstr "Kontrola klasy '%s' nie może mieć kontroli nad klasą '%s' jako potomek"
 
 #: lclstrconsts.rscontrolhasnoparentformorframe
+#, object-pascal-format
 msgid "Control '%s' has no parent form or frame"
 msgstr "Kontrolka '%s' nie ma formatki nadrzędnej lub ramki"
 
 #: lclstrconsts.rscontrolhasnoparentwindow
+#, object-pascal-format
 msgid "Control '%s' has no parent window"
 msgstr "Kontrolka '%s' nie ma okna nadrzędnego"
 
 #: lclstrconsts.rscontrolisnotaparent
+#, object-pascal-format
 msgid "'%s' is not a parent of '%s'"
 msgstr "'%s' nie jest elementem nadrzędnym dla '%s'"
 
 #: lclstrconsts.rscreamcolorcaption
 msgid "Cream"
 msgstr "Kremowy"
-
-#: lclstrconsts.rscreatinggdbcatchableerror
-msgid "Creating gdb catchable error:"
-msgstr "Błąd przy tworzeniu \"gdb catchable\":"
 
 #: lclstrconsts.rscursor
 msgid "Cursor"
@@ -416,10 +245,6 @@ msgstr "Kierunek"
 msgid "&Directory"
 msgstr "&Folder"
 
-#: lclstrconsts.rsdocking
-msgid "Docking"
-msgstr "Dokowanie"
-
 #: lclstrconsts.rsdocopy
 msgid "Copy"
 msgstr "Kopiuj"
@@ -446,14 +271,12 @@ msgid "Error"
 msgstr "Błąd"
 
 #: lclstrconsts.rserrorcreatingdevicecontext
+#, object-pascal-format
 msgid "Error creating device context for %s.%s"
 msgstr "Błąd przy tworzeniu \"device context\" dla %s.%s"
 
-#: lclstrconsts.rserrorinlcl
-msgid "ERROR in LCL: "
-msgstr "BŁĄD w LCL: "
-
 #: lclstrconsts.rserroroccurredinataddressframe
+#, object-pascal-format
 msgid "Error occurred in %s at %sAddress %s%s Frame %s"
 msgstr "Błąd w %s przy %sAdres %s%s Ramka %s"
 
@@ -470,10 +293,12 @@ msgid "Directory must exist"
 msgstr "Katalog musi istnieć"
 
 #: lclstrconsts.rsfddirectorynotexist
+#, object-pascal-format
 msgid "The directory \"%s\" does not exist."
 msgstr "Katalog \"%s\" nie istnieje."
 
 #: lclstrconsts.rsfdfilealreadyexists
+#, object-pascal-format
 msgid "The file \"%s\" already exists. Overwrite ?"
 msgstr "Plik \"%s\" już istnieje. Nadpisać ?"
 
@@ -482,10 +307,12 @@ msgid "File must exist"
 msgstr "Plik musi istnieć"
 
 #: lclstrconsts.rsfdfilenotexist
+#, object-pascal-format
 msgid "The file \"%s\" does not exist."
 msgstr "Plik \"%s\" nie istnieje."
 
 #: lclstrconsts.rsfdfilereadonly
+#, object-pascal-format
 msgid "The file \"%s\" is not writable."
 msgstr "Plik \"%s\" nie jest zapisywalny."
 
@@ -510,6 +337,7 @@ msgid "Path must exist"
 msgstr "Ścieżka musi istnieć"
 
 #: lclstrconsts.rsfdpathnoexist
+#, object-pascal-format
 msgid "The path \"%s\" does not exist."
 msgstr "Ścieżka \"%s\" nie istnieje."
 
@@ -518,6 +346,7 @@ msgid "Select Directory"
 msgstr "Wybierz katalog"
 
 #: lclstrconsts.rsfileinfofilenotfound
+#, object-pascal-format
 msgid "(file not found: \"%s\")"
 msgstr "(nie znaleziono pliku: \"%s\")"
 
@@ -544,27 +373,29 @@ msgstr "Pierwszy"
 
 #: lclstrconsts.rsfixedcolstoobig
 msgid "FixedCols can't be > ColCount"
-msgstr "FixedCols nie może być >= ColCount"
+msgstr "FixedCols nie może być > ColCount"
 
 #: lclstrconsts.rsfixedrowstoobig
 msgid "FixedRows can't be > RowCount"
-msgstr "FixedRows nie może być >= RowCount"
+msgstr "FixedRows nie może być > RowCount"
 
 #: lclstrconsts.rsformcolorcaption
 msgid "Form"
 msgstr "Formatka"
 
 #: lclstrconsts.rsformresourcesnotfoundforresourcelessformscreatenew
+#, object-pascal-format
 msgid "Form resource %s not found. For resourceless forms CreateNew constructor must be used. See the global variable RequireDerivedFormResource."
 msgstr "Nie znaleziono zasobu %s. Dla formularzy bez zasobów należy użyć konstruktora CreateNew. Zobacz zmienną globalną RequireDerivedFormResource."
 
 #: lclstrconsts.rsformstreamingerror
+#, object-pascal-format
 msgid "Form streaming \"%s\" error: %s"
 msgstr "Błąd przy zapisie formularza do strumienia  \"%s\": %s"
 
 #: lclstrconsts.rsforward
 msgid "Forward"
-msgstr "W przód"
+msgstr "Do przodu"
 
 #: lclstrconsts.rsfuchsiacolorcaption
 msgid "Fuchsia"
@@ -616,11 +447,11 @@ msgstr "Plik siatki nie istnieje"
 
 #: lclstrconsts.rsgridhasnocols
 msgid "Cannot insert rows into a grid when it has no columns"
-msgstr "Nie można wstawić wierszy do siatki, gdy nie ma kolumn"
+msgstr "Nie można wstawić wierszy do siatki gdy nie ma kolumn"
 
 #: lclstrconsts.rsgridhasnorows
 msgid "Cannot insert columns into a grid when it has no rows"
-msgstr "Nie można wstawić kolumn do siatki, gdy nie ma wierszy"
+msgstr "Nie można wstawić kolumn do siatki gdy nie ma wierszy"
 
 #: lclstrconsts.rsgridindexoutofrange
 msgid "Grid index out of range."
@@ -674,7 +505,13 @@ msgstr "--no-xshm             Wyłącz używanie X Shared Memory Extension."
 msgid "--sync                Call XSynchronize (display, True) after the Xserver connection has been established. This makes debugging X protocol errors easier, because X request buffering will be disabled and X errors will be received immediately after the protocol request that generated the error has been processed by the X server."
 msgstr "--sync                Wywołaj XSynchronize (display, True) Po połączeniu z serwerem X. To ułatwia odpluskwianie protokołu X, ponieważ buforowanie żądań X będzie wyłączone i błędy X będą odbierane natychmiast po przetworzeniu przez serwer X żądania, które spowodowało błąd."
 
+#: lclstrconsts.rshelp
+msgctxt "lclstrconsts.rshelp"
+msgid "Help"
+msgstr "Pomoc"
+
 #: lclstrconsts.rshelpalreadyregistered
+#, object-pascal-format
 msgid "%s: Already registered"
 msgstr "%s: jest już zarejestrowany"
 
@@ -691,42 +528,52 @@ msgid "Help Error"
 msgstr "Błąd Pomocy"
 
 #: lclstrconsts.rshelphelpcontextnotfound
+#, object-pascal-format
 msgid "Help context %s not found."
 msgstr "Nie znaleziono kontekstu Pomocy %s."
 
 #: lclstrconsts.rshelphelpcontextnotfoundindatabase
+#, object-pascal-format
 msgid "Help context %s not found in Database \"%s\"."
 msgstr "Nie znaleziono kontekstu Pomocy %s w bazie danych \"%s\"."
 
 #: lclstrconsts.rshelphelpdatabasedidnotfoundaviewerforahelppageoftype
+#, object-pascal-format
 msgid "Help Database \"%s\" did not find a viewer for a help page of type %s"
 msgstr "Baza danych Pomocy \"%s\" nie znalazła przeglądarki dla strony pomocy typu %s"
 
 #: lclstrconsts.rshelphelpdatabasenotfound
+#, object-pascal-format
 msgid "Help Database \"%s\" not found"
 msgstr "Nie znaleziono bazy danych Pomocy \"%s\" "
 
 #: lclstrconsts.rshelphelpfordirectivenotfound
+#, object-pascal-format
 msgid "Help for directive \"%s\" not found."
 msgstr "Nie znaleziono pomocy dla dyrektywy \"%s\"."
 
 #: lclstrconsts.rshelphelpfordirectivenotfoundindatabase
+#, object-pascal-format
 msgid "Help for directive \"%s\" not found in Database \"%s\"."
 msgstr "Nie znaleziono pomocy dla dyrektywy \"%s\" w bazie danych \"%s\"."
 
 #: lclstrconsts.rshelphelpkeywordnotfound
+#, object-pascal-format
 msgid "Help keyword \"%s\" not found."
 msgstr "Nie znaleziono pomocy dla słowa kluczowego \"%s\"."
 
 #: lclstrconsts.rshelphelpkeywordnotfoundindatabase
+#, object-pascal-format
 msgid "Help keyword \"%s\" not found in Database \"%s\"."
 msgstr "Nie znaleziono pomocy dla słowa kluczowego \"%s\" w bazie danych \"%s\"."
 
 #: lclstrconsts.rshelphelpnodehasnohelpdatabase
+#, object-pascal-format
 msgid "Help node \"%s\" has no Help Database"
 msgstr "Węzeł pomocy \"%s\" nie ma bazy danych pomocy"
 
 #: lclstrconsts.rshelpnohelpfoundforsource
+#, object-pascal-format
 msgid "No help found for line %d, column %d of %s."
 msgstr "Nie znaleziono pomocy dla wiersza nr %d, i kolumny nr %d z %s."
 
@@ -739,6 +586,7 @@ msgid "No help found for this topic"
 msgstr "Nie znaleziono pomocy dla tego tematu"
 
 #: lclstrconsts.rshelpnotregistered
+#, object-pascal-format
 msgid "%s: Not registered"
 msgstr "%s: nie jest zarejestrowany"
 
@@ -747,6 +595,7 @@ msgid "Help Selector Error"
 msgstr "Błąd selektora pomocy"
 
 #: lclstrconsts.rshelpthereisnoviewerforhelptype
+#, object-pascal-format
 msgid "There is no viewer for help type \"%s\""
 msgstr "Brak przeglądarki dla pomocy typu \"%s\""
 
@@ -817,10 +666,12 @@ msgid "Inactive Caption"
 msgstr "Nieaktywny napis"
 
 #: lclstrconsts.rsindexoutofbounds
+#, object-pascal-format
 msgid "%s Index %d out of bounds 0 .. %d"
 msgstr "%s Indeks %d przekracza zakres 0 .. %d"
 
 #: lclstrconsts.rsindexoutofrange
+#, object-pascal-format
 msgid "Index Out of range Cell[Col=%d Row=%d]"
 msgstr "Indeks poza zakresem Cell[Col=%d Row=%d]"
 
@@ -838,10 +689,12 @@ msgid "Insert"
 msgstr "Wstaw"
 
 #: lclstrconsts.rsinvaliddate
+#, object-pascal-format
 msgid "Invalid Date : %s"
 msgstr "Niepoprawna data: %s"
 
 #: lclstrconsts.rsinvaliddaterangehint
+#, object-pascal-format
 msgid "Invalid Date: %s. Must be between %s and %s"
 msgstr "Niepoprawna data: %s. Musi być z zakresu od %s do %s"
 
@@ -858,6 +711,7 @@ msgid "Invalid stream format"
 msgstr "Błędny format strumienia"
 
 #: lclstrconsts.rsisalreadyassociatedwith
+#, object-pascal-format
 msgid "%s is already associated with %s"
 msgstr "%s jest już skojarzony z %s"
 
@@ -874,8 +728,31 @@ msgid "Lime"
 msgstr "Jasnozielony"
 
 #: lclstrconsts.rslistindexexceedsbounds
+#, object-pascal-format
 msgid "List index exceeds bounds (%d)"
 msgstr "Indeks listy poza zakresem (%d)"
+
+#: lclstrconsts.rsmacosmenuhide
+#, object-pascal-format
+msgid "Hide %s"
+msgstr ""
+
+#: lclstrconsts.rsmacosmenuhideothers
+msgid "Hide Others"
+msgstr ""
+
+#: lclstrconsts.rsmacosmenuquit
+#, object-pascal-format
+msgid "Quit %s"
+msgstr ""
+
+#: lclstrconsts.rsmacosmenuservices
+msgid "Services"
+msgstr ""
+
+#: lclstrconsts.rsmacosmenushowall
+msgid "Show All"
+msgstr ""
 
 #: lclstrconsts.rsmarooncolorcaption
 msgid "Maroon"
@@ -944,7 +821,7 @@ msgstr "Tak na &wszystkie"
 
 #: lclstrconsts.rsmedgraycolorcaption
 msgid "Medium Gray"
-msgstr "Średni szay"
+msgstr "Średni szary"
 
 #: lclstrconsts.rsmenubarcolorcaption
 msgid "Menu Bar"
@@ -969,7 +846,7 @@ msgstr " zmodyfikowany "
 
 #: lclstrconsts.rsmoneygreencolorcaption
 msgid "Money Green"
-msgstr "Zieleń Pieniądza"
+msgstr "Zieleń pieniądza"
 
 #: lclstrconsts.rsmtauthentication
 msgid "Authentication"
@@ -981,7 +858,7 @@ msgstr "Potwierdzenie"
 
 #: lclstrconsts.rsmtcustom
 msgid "Custom"
-msgstr "Inny"
+msgstr "Własny"
 
 #: lclstrconsts.rsmterror
 msgctxt "lclstrconsts.rsmterror"
@@ -1027,29 +904,30 @@ msgstr "Wybierz datę"
 
 #: lclstrconsts.rspixmap
 msgid "Pixmap"
-msgstr "format Pixmap"
+msgstr "Pixmap"
 
 #: lclstrconsts.rsportablebitmap
 msgid "Portable BitMap"
-msgstr "format Portable BitMap"
+msgstr "Portable BitMap"
 
 #: lclstrconsts.rsportablegraymap
 msgid "Portable GrayMap"
-msgstr "format Portable GrayMap"
+msgstr "Portable GrayMap"
 
 #: lclstrconsts.rsportablenetworkgraphic
 msgid "Portable Network Graphic"
-msgstr "format Portable Network Graphic (PNG)"
+msgstr "Portable Network Graphic (PNG)"
 
 #: lclstrconsts.rsportablepixmap
 msgid "Portable PixMap"
-msgstr "format Portable PixMap"
+msgstr "Portable PixMap"
 
 #: lclstrconsts.rspostrecordhint
 msgid "Post"
 msgstr "Opublikuj"
 
 #: lclstrconsts.rspressoktoignoreandriskdatacorruptionpressaborttok
+#, object-pascal-format
 msgid "%s%sPress OK to ignore and risk data corruption.%sPress Abort to kill the program."
 msgstr "%s%sKliknij OK aby ignorować i zaryzykować utratę danych. %sKliknij Porzuć aby zakończyć program."
 
@@ -1063,6 +941,7 @@ msgid "Prompt on replace"
 msgstr "Zapytaj przed zastąpieniem"
 
 #: lclstrconsts.rspropertydoesnotexist
+#, object-pascal-format
 msgid "Property %s does not exist"
 msgstr "Właściwość %s nie istnieje"
 
@@ -1187,17 +1066,18 @@ msgid "Replace all"
 msgstr "Zamień wszystko"
 
 #: lclstrconsts.rsresourcenotfound
+#, object-pascal-format
 msgctxt "lclstrconsts.rsresourcenotfound"
 msgid "Resource %s not found"
 msgstr "Nie znaleziono zasobu: %s"
 
 #: lclstrconsts.rsscrollbarcolorcaption
 msgid "ScrollBar"
-msgstr "Pasek Przewijania (ScrollBar)"
+msgstr "Pasek przewijania (ScrollBar)"
 
 #: lclstrconsts.rsscrollbaroutofrange
 msgid "ScrollBar property out of range"
-msgstr "Właściwość Paska Przewijania (ScrollBar) poza zakresem"
+msgstr "Właściwość paska przewijania (ScrollBar) poza zakresem"
 
 #: lclstrconsts.rsselectcolortitle
 msgid "Select color"
@@ -1231,9 +1111,13 @@ msgstr "Morski"
 msgid "Text"
 msgstr "Tekst"
 
+#: lclstrconsts.rsthebuiltinurlisreadonlychangethebaseurlinstead
+msgid "The built-in URL is read only. Change the BaseURL instead."
+msgstr ""
+
 #: lclstrconsts.rstiff
 msgid "Tagged Image File Format"
-msgstr "format Tagged Image File Format (TIFF)"
+msgstr "Tagged Image File Format (TIFF)"
 
 #: lclstrconsts.rstpanelaccessibilitydescription
 msgctxt "lclstrconsts.rstpanelaccessibilitydescription"
@@ -1271,26 +1155,32 @@ msgid "Unsupported bitmap format."
 msgstr "Nieobsługiwany format bitmapy."
 
 #: lclstrconsts.rsunsupportedclipboardformat
+#, object-pascal-format
 msgid "Unsupported clipboard format: %s"
 msgstr "Nieobsługiwany format schowka: %s"
 
 #: lclstrconsts.rswarningunreleaseddcsdump
+#, object-pascal-format
 msgid " WARNING: There are %d unreleased DCs, a detailed dump follows:"
 msgstr " UWAGA: Pozostały %d niezwolnione DC, szczegółowy zrzut poniżej:"
 
 #: lclstrconsts.rswarningunreleasedgdiobjectsdump
+#, object-pascal-format
 msgid " WARNING: There are %d unreleased GDIObjects, a detailed dump follows:"
 msgstr " UWAGA: Pozostało %d niezwolnionych GDIObject, szczegółowy zrzut poniżej:"
 
 #: lclstrconsts.rswarningunreleasedmessagesinqueue
+#, object-pascal-format
 msgid " WARNING: There are %d messages left in the queue! I'll free them"
 msgstr " UWAGA: Pozostało %d komunikatów w kolejce! Zostaną usunięte"
 
 #: lclstrconsts.rswarningunreleasedtimerinfos
+#, object-pascal-format
 msgid " WARNING: There are %d TimerInfo structures left, I'll free them"
 msgstr " UWAGA: Pozostało %d struktur TimerInfo zostaną usunięte"
 
 #: lclstrconsts.rswarningunremovedpaintmessages
+#, object-pascal-format
 msgid " WARNING: There are %s unremoved LM_PAINT/LM_GtkPAINT message links left."
 msgstr " UWAGA: Pozostały %s nieusunięte dowiązania do LM_PAINT/LM_GtkPAINT."
 
@@ -1330,10 +1220,6 @@ msgstr "Żółty"
 msgid "Cannot focus a disabled or invisible window"
 msgstr "Nie można ustawić aktywności na niedostępnym lub niewidocznym oknie"
 
-#: lclstrconsts.scannotsetdesigntimeppi
-msgid "Cannot set design time PPI."
-msgstr "Nie można ustawiać projektowania podczas PPI."
-
 #: lclstrconsts.sduplicatemenus
 msgid "Duplicate menus"
 msgstr "Zdublowane menu"
@@ -1355,6 +1241,7 @@ msgid "Invalid action unregistration"
 msgstr "Błędne wyrejestrowanie akcji"
 
 #: lclstrconsts.sinvalidcharset
+#, object-pascal-format
 msgid "The char set in mask \"%s\" is not valid!"
 msgstr "Zestaw znaków w masce \"%s\" jest nieprawidłowy!"
 
@@ -1388,47 +1275,49 @@ msgstr "Alt+"
 
 #: lclstrconsts.smkcbksp
 msgid "BkSp"
-msgstr "klawisz BkSp"
+msgstr "BkSp"
 
 #: lclstrconsts.smkcctrl
 msgid "Ctrl+"
-msgstr "klawisz Ctrl+"
+msgstr "Ctrl+"
 
 #: lclstrconsts.smkcdel
 msgid "Del"
-msgstr "klawisz Del (Usuń)"
+msgstr "Del"
 
 #: lclstrconsts.smkcdown
 msgctxt "lclstrconsts.smkcdown"
 msgid "Down"
-msgstr "klawisz Down (w dół)"
+msgstr "W dół"
 
 #: lclstrconsts.smkcend
+#, fuzzy
 msgctxt "lclstrconsts.smkcend"
 msgid "End"
-msgstr "klawisz End (koniec)"
+msgstr "Klawisz End przenosi do najbliższego końca"
 
 #: lclstrconsts.smkcenter
 msgid "Enter"
-msgstr "klawisz Enter"
+msgstr "Enter"
 
 #: lclstrconsts.smkcesc
 msgid "Esc"
-msgstr "klawisz Esc"
+msgstr "Esc"
 
 #: lclstrconsts.smkchome
+#, fuzzy
 msgctxt "lclstrconsts.smkchome"
 msgid "Home"
-msgstr "klawisz Home (początek)"
+msgstr "Klawisz Home przenosi do najbliższego początku."
 
 #: lclstrconsts.smkcins
 msgid "Ins"
-msgstr "klawisz Ins (wstaw)"
+msgstr "Ins (wstaw)"
 
 #: lclstrconsts.smkcleft
 msgctxt "lclstrconsts.smkcleft"
 msgid "Left"
-msgstr "klawisz Left (w lewo)"
+msgstr "W lewo"
 
 #: lclstrconsts.smkcmeta
 msgid "Meta+"
@@ -1436,20 +1325,20 @@ msgstr "Meta+"
 
 #: lclstrconsts.smkcpgdn
 msgid "PgDn"
-msgstr "klawisz PgDn (strona w dół)"
+msgstr "PgDn (strona w dół)"
 
 #: lclstrconsts.smkcpgup
 msgid "PgUp"
-msgstr "klawisz PgUp (strona w górę)"
+msgstr "PgUp (strona w górę)"
 
 #: lclstrconsts.smkcright
 msgctxt "lclstrconsts.smkcright"
 msgid "Right"
-msgstr "klawisz Right (w prawo)"
+msgstr "W prawo"
 
 #: lclstrconsts.smkcshift
 msgid "Shift+"
-msgstr "klawisz Shift+"
+msgstr "Shift+"
 
 #: lclstrconsts.smkcspace
 msgid "Space"
@@ -1458,38 +1347,39 @@ msgstr "Spacja"
 #: lclstrconsts.smkctab
 msgctxt "lclstrconsts.smkctab"
 msgid "Tab"
-msgstr "klawisz Tab (tabulator)"
+msgstr "Tab (tabulator)"
 
 #: lclstrconsts.smkcup
 msgctxt "lclstrconsts.smkcup"
 msgid "Up"
-msgstr "klawisz Up (w górę)"
-
-#: lclstrconsts.snomdiform
-msgid "No MDI form present."
-msgstr "Brak formatki (okna) MDI."
+msgstr "W górę"
 
 #: lclstrconsts.snotimers
 msgid "No timers available"
 msgstr "Brak dostępnych timerów"
 
 #: lclstrconsts.sparentrequired
+#, object-pascal-format
 msgid "Control \"%s\" has no parent window."
 msgstr "Kontrola \"%s\" nie ma okna nadrzędnego."
 
 #: lclstrconsts.sparexpected
+#, object-pascal-format
 msgid "Wrong token type: %s expected"
 msgstr "Nieprawidłowy typ tokenu: oczekiwano %s"
 
 #: lclstrconsts.sparinvalidfloat
+#, object-pascal-format
 msgid "Invalid floating point number: %s"
 msgstr "Nieprawidłowa liczba zmiennoprzecinkowa: %s"
 
 #: lclstrconsts.sparinvalidinteger
+#, object-pascal-format
 msgid "Invalid integer number: %s"
 msgstr "Nieprawidłowa liczba całkowita:%s"
 
 #: lclstrconsts.sparlocinfo
+#, object-pascal-format
 msgid " (at %d,%d, stream offset %d)"
 msgstr " (w %d,%d, przesunięcie strumienia %d)"
 
@@ -1502,32 +1392,45 @@ msgid "Unterminated string"
 msgstr "Niezakończony łańcuch napisowy"
 
 #: lclstrconsts.sparwrongtokensymbol
+#, object-pascal-format
 msgid "Wrong token symbol: %s expected but %s found"
 msgstr "Nieprawidłowy symbol tokenu: spodziewano się %s lecz znaleziono %s"
 
 #: lclstrconsts.sparwrongtokentype
+#, object-pascal-format
 msgid "Wrong token type: %s expected but %s found"
 msgstr "Nieprawidłowy typ tokenu: spodziewano się %s lecz znaleziono %s"
 
 #: lclstrconsts.sshellctrlsbytes
+#, object-pascal-format
 msgid "%s bytes"
 msgstr "%s bajtów"
 
 #: lclstrconsts.sshellctrlsinvalidpath
+#, object-pascal-format, fuzzy
+#| msgid ""
+#| "Invalid pathname:\n"
+#| "\"%s\"\n"
 msgctxt "lclstrconsts.sshellctrlsinvalidpath"
 msgid ""
 "Invalid pathname:\n"
-"\"%s\"\n"
+"\"%s\""
 msgstr ""
 "Nieprawidłowa ścieżka (lokalizacja):\n"
 "\"%s\"\n"
 
 #: lclstrconsts.sshellctrlsinvalidpathrelative
+#, object-pascal-format, fuzzy
+#| msgid ""
+#| "Invalid relative pathname:\n"
+#| "\"%s\"\n"
+#| "in relation to rootpath:\n"
+#| "\"%s\"\n"
 msgid ""
 "Invalid relative pathname:\n"
 "\"%s\"\n"
 "in relation to rootpath:\n"
-"\"%s\"\n"
+"\"%s\""
 msgstr ""
 "Nieprawidłowa ścieżka (lokalizacja) relatywna:\n"
 "\"%s\"\n"
@@ -1535,19 +1438,25 @@ msgstr ""
 "\"%s\"\n"
 
 #: lclstrconsts.sshellctrlsinvalidroot
+#, object-pascal-format, fuzzy
+#| msgid ""
+#| "Invalid pathname:\n"
+#| "\"%s\"\n"
 msgctxt "lclstrconsts.sshellctrlsinvalidroot"
 msgid ""
 "Invalid pathname:\n"
-"\"%s\"\n"
+"\"%s\""
 msgstr ""
 "Nieprawidłowa ścieżka (lokalizacja):\n"
 "\"%s\"\n"
 
 #: lclstrconsts.sshellctrlskb
+#, object-pascal-format
 msgid "%s kB"
 msgstr "%s kB"
 
 #: lclstrconsts.sshellctrlsmb
+#, object-pascal-format
 msgid "%s MB"
 msgstr "%s MB"
 
@@ -1556,9 +1465,13 @@ msgid "Name"
 msgstr "Nazwa"
 
 #: lclstrconsts.sshellctrlsselecteditemdoesnotexists
+#, object-pascal-format, fuzzy
+#| msgid ""
+#| "The selected item does not exist on disk:\n"
+#| "\"%s\"\n"
 msgid ""
 "The selected item does not exist on disk:\n"
-"\"%s\"\n"
+"\"%s\""
 msgstr ""
 "Zaznaczona pozycja nie instnieje na dysku:\n"
 "\"%s\"\n"
