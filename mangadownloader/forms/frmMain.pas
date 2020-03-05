@@ -92,7 +92,6 @@ type
     edWebsitesSearch: TEditButton;
     gbImageConversion: TGroupBox;
     IconDLLeft: TImageList;
-    lbAboutVersion: TLabel;
     lbPNGCompressionLevel: TLabel;
     lbJPEGQuality: TLabel;
     lbWebPSaveAs: TLabel;
@@ -138,6 +137,7 @@ type
     miChapterListHideDownloaded: TMenuItem;
     miAbortSilentThread: TMenuItem;
     mmChangelog: TMemo;
+    pnAboutVersion: TPanel;
     pnThumb: TPanel;
     pnInfos: TPanel;
     pnDownloadList: TPanel;
@@ -718,7 +718,7 @@ type
 
     // load about information
     procedure LoadAbout;
-    procedure AddToAboutStatus(const ACaption, AValue: String);
+    procedure AddToAboutStatus(const ACaption, AValue: String; APanel: TPanel = nil);
 
     procedure CloseNow;
 
@@ -960,6 +960,9 @@ resourcestring
   RS_FavoritesShowAll = 'All';
   RS_FavoritesShowEnabled = 'Enabled';
   RS_FavoritesShowDisabled = 'Disabled';
+
+  RS_Version = 'Version';
+  RS_Revision = 'Revision';
 
 implementation
 
@@ -1313,7 +1316,10 @@ begin
     Enabled:=True;
   end;
 
-  lbAboutVersion.Caption := Format(lbAboutVersion.Caption, [FMD_VERSION_STRING,REVISION_NUMBER+' ('+REVISION_SHA+')' ]);
+  Self.Caption := Self.Caption + ' v' + FMD_VERSION_STRING;
+  AddToAboutStatus(RS_Version, FMD_VERSION_STRING, pnAboutVersion);
+  AddToAboutStatus(RS_Revision, REVISION_NUMBER+' ('+REVISION_SHA+')', pnAboutVersion);
+
   if LuaWebsiteModules.AlwaysLoadLuaFromFile then
     Caption := Caption + ' --lua-dofile';
 end;
@@ -2307,12 +2313,16 @@ begin
   if PCRE2LibHandle <> 0 then try AddToAboutStatus('PCRE Version', PCRE2Version); except end;
 end;
 
-procedure TMainForm.AddToAboutStatus(const ACaption, AValue: String);
+procedure TMainForm.AddToAboutStatus(const ACaption, AValue: String;
+  APanel: TPanel);
 
   function addaboutcomplbl(const ACaption: String): TLabel;
   begin
     Result := TLabel.Create(Self);
-    Result.Parent := pnAboutComp;
+    if APanel = nil then
+      Result.Parent := pnAboutComp
+    else
+      Result.Parent := APanel;
     Result.Caption := ACaption;
   end;
 

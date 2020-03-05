@@ -4921,18 +4921,11 @@ object MainForm: TMainForm
           ClientHeight = 474
           ClientWidth = 837
           object rmAbout: TRichMemo
-            AnchorSideLeft.Control = tsAboutText
-            AnchorSideTop.Control = lbAboutVersion
-            AnchorSideTop.Side = asrBottom
-            AnchorSideRight.Control = tsAboutText
-            AnchorSideRight.Side = asrBottom
-            AnchorSideBottom.Control = tsAboutText
-            AnchorSideBottom.Side = asrBottom
             Left = 0
-            Height = 428
-            Top = 42
+            Height = 466
+            Top = 4
             Width = 837
-            Anchors = [akTop, akLeft, akRight, akBottom]
+            Align = alClient
             BorderSpacing.Top = 4
             BorderSpacing.Bottom = 4
             Color = clWhite
@@ -4957,28 +4950,30 @@ object MainForm: TMainForm
             ChildSizing.ControlsPerLine = 10
             TabOrder = 1
           end
-          object lbAboutVersion: TLabel
             AnchorSideLeft.Control = tsAboutText
-            AnchorSideTop.Control = tsAboutText
+          object pnAboutVersion: TPanel
             Left = 0
-            Height = 30
-            Top = 6
-            Width = 65
-            BorderSpacing.Top = 6
-            BorderSpacing.Bottom = 6
-            Caption = 'Version: %s'#13#10'Revision: %s'
-            ParentColor = False
+            Height = 0
+            Top = 0
+            Width = 837
+            Align = alTop
+            AutoSize = True
+            BevelOuter = bvNone
+            ChildSizing.HorizontalSpacing = 4
+            ChildSizing.Layout = cclLeftToRightThenTopToBottom
+            ChildSizing.ControlsPerLine = 2
+            TabOrder = 2
           end
         end
         object tsChangelogText: TTabSheet
           Caption = 'Changelog'
-          ClientHeight = 404
-          ClientWidth = 753
+          ClientHeight = 474
+          ClientWidth = 837
           object mmChangelog: TMemo
             Left = 0
-            Height = 396
+            Height = 466
             Top = 4
-            Width = 753
+            Width = 837
             Align = alClient
             BorderSpacing.Top = 4
             BorderSpacing.Bottom = 4
