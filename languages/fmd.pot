@@ -1,300 +1,248 @@
 msgid ""
-msgstr ""
-"Content-Type: text/plain; charset=UTF-8\n"
-"Project-Id-Version: 0.9.161.0\n"
-"POT-Creation-Date: \n"
-"PO-Revision-Date: \n"
-"Last-Translator: Tokc.D.K. <tokcdk@gmail.com>\n"
-"Language-Team: TokcDK\n"
-"MIME-Version: 1.0\n"
-"Content-Transfer-Encoding: 8bit\n"
-"Language: ru_RU\n"
-"X-Generator: Poedit 2.0.6\n"
+msgstr "Content-Type: text/plain; charset=UTF-8"
 
 #: dbupdater.rs_buttoncancel
 msgctxt "dbupdater.rs_buttoncancel"
 msgid "Abort"
-msgstr "Отмена"
+msgstr ""
 
 #: dbupdater.rs_downloading
 #, object-pascal-format
 msgid "Downloading %s"
-msgstr "Скачивание %s"
+msgstr ""
 
 #: dbupdater.rs_extracting
 #, object-pascal-format
 msgid "Extracting %s"
-msgstr "Извлечение %s"
+msgstr ""
 
 #: dbupdater.rs_faileddownload
 #, object-pascal-format
 msgid "%s: %d %s"
-msgstr "%s: %d %s"
+msgstr ""
 
 #: dbupdater.rs_failedextract
 #, object-pascal-format
 msgid "%s: failed to extract, exitstatus = %d"
-msgstr "%s: ошибка при извлечении, exitstatus = %d"
+msgstr ""
 
 #: dbupdater.rs_faileditems
-#, object-pascal-format, fuzzy
-#| msgid ""
-#| "Failed to finish:\n"
-#| "\n"
-#| "%s\n"
+#, object-pascal-format
 msgid ""
 "Failed to finish:\n"
 "\n"
 "%s"
 msgstr ""
-"Не удалось завершить:\n"
-"\n"
-"%s\n"
 
 #: dbupdater.rs_faileditemstitle
 msgctxt "dbupdater.rs_faileditemstitle"
 msgid "Failed"
-msgstr "Неудачно"
+msgstr ""
 
 #: dbupdater.rs_failedtosave
 #, object-pascal-format
 msgid "%s: failed to save"
-msgstr "%s: ошибка при сохранении"
+msgstr ""
 
 #: dbupdater.rs_missingzipexe
 #, object-pascal-format
 msgid "%s: Missing %s"
-msgstr "%s: отсутствует %s"
+msgstr ""
 
 #: frmaccountmanager.rs_accountdeleteconfirmation
 msgid "Are you sure you want to delete this account?"
-msgstr "Хотите удалить этот аккаунт?"
+msgstr ""
 
 #: frmaccountmanager.rs_checking
 msgid "Checking"
-msgstr "Проверка"
+msgstr ""
 
 #: frmaccountmanager.rs_invalid
 msgctxt "frmaccountmanager.rs_invalid"
 msgid "Invalid"
-msgstr "Неверный"
+msgstr ""
 
 #: frmaccountmanager.rs_unknown
 msgid "Unknown"
-msgstr "Неизвестный"
+msgstr ""
 
 #: frmaccountmanager.rs_valid
 msgctxt "frmaccountmanager.rs_valid"
 msgid "OK"
-msgstr "OK"
+msgstr ""
 
 #: frmaccountset.rs_cantbeempty
 msgid "Username or password can't be empty!"
-msgstr "Имя пользователя и пароль не могут быть пустыми!"
+msgstr ""
 
 #: frmimportfavorites.rs_importcompleted
 msgid "Import completed."
-msgstr "Импорт завершен."
+msgstr ""
 
 #: frmimportfavorites.rs_listunimportedcaption
 msgid "List of unimported manga"
-msgstr "Список неимпортированной манги"
+msgstr ""
 
 #: frmluamodulesupdater.rs_checking
 msgctxt "frmluamodulesupdater.rs_checking"
 msgid "Checking..."
-msgstr "Проверка..."
+msgstr ""
 
 #: frmluamodulesupdater.rs_checkupdate
 msgctxt "frmluamodulesupdater.rs_checkupdate"
 msgid "Check update"
-msgstr "Проверить обновления"
+msgstr ""
 
 #: frmluamodulesupdater.rs_finishchecking
 msgid "Finish checking"
-msgstr "Проверено"
+msgstr ""
 
 #: frmluamodulesupdater.rs_finishdownload
 msgid "Finish download"
-msgstr "Скачано"
+msgstr ""
 
 #: frmluamodulesupdater.rs_modulesupdatedrestart
-#, fuzzy, badformat
-#| msgid ""
-#| "Modules updated, restart now?\n"
-#| "\n"
-#| "%s\n"
 msgid "Modules updated, restart now?"
 msgstr ""
-"Модули обновлены, перезапустить программу сейчас?\n"
-"\n"
-"%s\n"
 
 #: frmluamodulesupdater.rs_modulesupdatedtitle
 msgid "Modules updated!"
-msgstr "Модули обновлены!"
+msgstr ""
 
 #: frmluamodulesupdater.rs_newupdatefoundlostchanges
-#, fuzzy, badformat
-#| msgid ""
-#| "Modules update found, any local changes will be lost, procced?\n"
-#| "\n"
-#| "%s\n"
 msgid "Modules update found, any local changes will be lost, procced?"
 msgstr ""
-"Найдено обновление модулей, все локальные изменения модулей будут перезаписаны, продолжить?\n"
-"\n"
-"%s\n"
 
 #: frmluamodulesupdater.rs_newupdatefoundtitle
 msgid "Modules update found!"
-msgstr "Найдено обновление модулей!"
+msgstr ""
 
 #: frmluamodulesupdater.rs_startdownloading
 msgid "Downloading..."
-msgstr "Скачивание..."
+msgstr ""
 
 #: frmluamodulesupdater.rs_statusdelete
 #, object-pascal-format
-msgctxt "frmluamodulesupdater.rs_statusdelete"
 msgid "%s DELETE*"
-msgstr "%s УДАЛЕН*"
+msgstr ""
 
 #: frmluamodulesupdater.rs_statusfailed
 #, object-pascal-format
-msgctxt "frmluamodulesupdater.rs_statusfailed"
 msgid "%s FAILED*"
-msgstr "%s ОШИБКА*"
+msgstr ""
 
 #: frmluamodulesupdater.rs_statusnew
 #, object-pascal-format
-msgctxt "frmluamodulesupdater.rs_statusnew"
 msgid "%s NEW*"
-msgstr "%s НОВЫЙ*"
+msgstr ""
 
 #: frmluamodulesupdater.rs_statusredownloaded
 #, object-pascal-format
-msgctxt "frmluamodulesupdater.rs_statusredownloaded"
 msgid "%s REDOWNLOAD*"
-msgstr "%s ПОВТОРНАЯ ЗАГРУЗКА*"
+msgstr ""
 
 #: frmluamodulesupdater.rs_statusupdate
 #, object-pascal-format
-msgctxt "frmluamodulesupdater.rs_statusupdate"
 msgid "%s UPDATE*"
-msgstr "%s ОБНОВЛЕН*"
+msgstr ""
 
 #: frmmain.rs_alldownloads
 msgid "All downloads"
-msgstr "Все загрузки"
+msgstr ""
 
 #: frmmain.rs_btnok
 msgctxt "frmmain.rs_btnok"
 msgid "&OK"
-msgstr "&OK"
+msgstr ""
 
 #: frmmain.rs_cancel
 msgctxt "frmmain.rs_cancel"
 msgid "Cancel"
-msgstr "Отмена"
+msgstr ""
 
 #: frmmain.rs_checking
 msgctxt "frmmain.rs_checking"
 msgid "Checking..."
-msgstr "Проверка..."
+msgstr ""
 
 #: frmmain.rs_dlgcannotconnecttoserver
 msgid "Cannot connect to the server."
-msgstr "Не удалось подключиться к серверу."
+msgstr ""
 
 #: frmmain.rs_dlgcannotgetmangainfo
 msgid "Cannot get manga info. Please check your internet connection and try it again."
-msgstr "Не удалось получить информацию о манге. Проверьте интернет-подключение и попробуйте снова."
+msgstr ""
 
 #: frmmain.rs_dlgdownloadcount
 msgid "Download count:"
-msgstr "Количество загрузок:"
+msgstr ""
 
 #: frmmain.rs_dlgquit
 msgid "Are you sure you want to exit?"
-msgstr "Хотите выйти?"
+msgstr ""
 
 #: frmmain.rs_dlgremovefavorite
 msgid "Are you sure you want to delete the favorite(s)?"
-msgstr "Хотите удалить это избранное?"
+msgstr ""
 
 #: frmmain.rs_dlgremovefinishtasks
 msgid "Are you sure you want to delete all finished tasks?"
-msgstr "Хотите удалить все завершенные задачи?"
+msgstr ""
 
 #: frmmain.rs_dlgremoveitem
 msgid "Are you sure you want to delete this item(s)?"
-msgstr "Хотите удалить это?"
+msgstr ""
 
 #: frmmain.rs_dlgremovetask
 msgid "Are you sure you want to delete the task(s)?"
-msgstr "Хотите удалить эти задачи?"
+msgstr ""
 
 #: frmmain.rs_dlgsplitdownload
 msgctxt "frmmain.rs_dlgsplitdownload"
 msgid "Split download"
-msgstr "Разделить загрузку"
+msgstr ""
 
 #: frmmain.rs_dlgtitleexistindllist
-#, fuzzy
-#| msgid ""
-#| "This title are already in download list.\n"
-#| "Do you want to download it anyway?\n"
 msgid ""
 "This title are already in download list.\n"
 "Do you want to download it anyway?"
 msgstr ""
-"Это название уже в списке загрузки.\n"
-"Все равно хотите загрузить?\n"
 
 #: frmmain.rs_dlgtypeinnewchapter
 msgid "Type in new chapter:"
-msgstr "Введите новую главу:"
+msgstr ""
 
 #: frmmain.rs_dlgtypeinnewsavepath
 msgid "Type in new save path:"
-msgstr "Введите новый путь сохранения:"
+msgstr ""
 
 #: frmmain.rs_dlgupdaterisrunning
 msgid "Updater is running!"
-msgstr "Обновление запущено!"
+msgstr ""
 
 #: frmmain.rs_dlgupdaterwanttoupdatedb
 msgid "Do you want to download manga list from the server?"
-msgstr "Хотите загрузить список манги с сервера?"
+msgstr ""
 
 #: frmmain.rs_dlgurlnotsupport
 msgid "URL not supported!"
-msgstr "Ссылка не поддерживается!"
+msgstr ""
 
 #: frmmain.rs_droptargetmodeitems
-#, fuzzy
-#| msgid ""
-#| "Download all\n"
-#| "Add to favorites\n"
 msgid ""
 "Download all\n"
 "Add to favorites"
 msgstr ""
-"Загрузить все\n"
-"Добавить в избранное\n"
 
 #: frmmain.rs_favoritesshowall
-#, fuzzy
 msgctxt "frmmain.rs_favoritesshowall"
 msgid "All"
-msgstr "Все"
+msgstr ""
 
 #: frmmain.rs_favoritesshowdisabled
-#, fuzzy
 msgctxt "frmmain.rs_favoritesshowdisabled"
 msgid "Disabled"
-msgstr "Отключено"
+msgstr ""
 
 #: frmmain.rs_favoritesshowenabled
 msgctxt "frmmain.rs_favoritesshowenabled"
@@ -302,148 +250,116 @@ msgid "Enabled"
 msgstr ""
 
 #: frmmain.rs_filterstatusitems
-#, fuzzy
-#| msgid ""
-#| "Completed\n"
-#| "Ongoing\n"
-#| "<none>\n"
 msgid ""
 "Completed\n"
 "Ongoing\n"
 "<none>"
 msgstr ""
-"Завершено\n"
-"Онгоинг\n"
-"<нет>\n"
 
 #: frmmain.rs_fiveyears
 msgid "Five years"
-msgstr "Пять лет"
+msgstr ""
 
 #: frmmain.rs_fmdalreadyrunning
 msgid "Free Manga Downloader already running!"
-msgstr "Бесплатный Manga Downloader уже запущен!"
+msgstr ""
 
 #: frmmain.rs_fouryears
 msgid "Four years"
-msgstr "Четыре года"
+msgstr ""
 
 #: frmmain.rs_hintfavoriteproblem
-#, fuzzy
-#| msgid ""
-#| "There is a problem with this data!\n"
-#| "Removing and re-adding this data may fix the problem.\n"
 msgid ""
 "There is a problem with this data!\n"
 "Removing and re-adding this data may fix the problem."
 msgstr ""
-"Есть проблема с этими данными!\n"
-"Удаление и повторное добавление этих данных могут решить проблему.\n"
 
 #: frmmain.rs_history
 msgid "History"
-msgstr "История"
+msgstr ""
 
 #: frmmain.rs_import
 msgid "Import"
-msgstr "Импорт"
+msgstr ""
 
 #: frmmain.rs_infoartists
 msgid "Artist(s):"
-msgstr "Артисты:"
+msgstr ""
 
 #: frmmain.rs_infoauthors
 msgid "Author(s):"
-msgstr "Автор(ы):"
+msgstr ""
 
 #: frmmain.rs_infogenres
 msgid "Genre(s):"
-msgstr "Жанр:"
+msgstr ""
 
 #: frmmain.rs_infostatus
 msgid "Status:"
-msgstr "Статус:"
+msgstr ""
 
 #: frmmain.rs_infosummary
 msgid "Summary:"
-msgstr "Описание:"
+msgstr ""
 
 #: frmmain.rs_infotitle
 msgid "Title:"
-msgstr "Название:"
+msgstr ""
 
 #: frmmain.rs_infowebsite
-msgctxt "frmmain.rs_infowebsite"
 msgid "Website:"
-msgstr "Сайт:"
+msgstr ""
 
 #: frmmain.rs_inprogress
 msgid "In progress"
-msgstr "В процессе"
+msgstr ""
 
 #: frmmain.rs_lblautochecknewchapterminute
 #, object-pascal-format
 msgctxt "frmmain.rs_lblautochecknewchapterminute"
 msgid "Auto check for new chapter every %d minutes"
-msgstr "Автоматическая проверка новой главы каждые %d минут"
+msgstr ""
 
 #: frmmain.rs_lbloptionexternalparamshint
-#, object-pascal-format, fuzzy
-#| msgid ""
-#| "%s : Path to the manga\n"
-#| "%s : Chapter filename\n"
-#| "\n"
-#| "Example : \"%s%s\"\n"
+#, object-pascal-format
 msgid ""
 "%s : Path to the manga\n"
 "%s : Chapter filename\n"
 "\n"
 "Example : \"%s%s\""
 msgstr ""
-"%s : Путь к манге\n"
-"%s : Имя файла главы\n"
-"\n"
-"Пример : \"%s%s\"\n"
 
 #: frmmain.rs_loading
 msgid "Loading ..."
-msgstr "Загрузка..."
+msgstr ""
 
 #: frmmain.rs_modeall
 #, object-pascal-format
 msgid "Mode: Show all (%d)"
-msgstr "Режим: Показать все (%d)"
+msgstr ""
 
 #: frmmain.rs_modefiltered
 #, object-pascal-format
 msgid "Mode: Filtered (%d)"
-msgstr "Режим: Отфильтрованные (%d)"
+msgstr ""
 
 #: frmmain.rs_modesearching
-msgctxt "frmmain.rs_modesearching"
 msgid "Mode: Searching..."
-msgstr "Режим: Поиск..."
+msgstr ""
 
 #: frmmain.rs_onemonth
 msgid "One month"
-msgstr "За месяц"
+msgstr ""
 
 #: frmmain.rs_oneweek
 msgid "One week"
-msgstr "За неделю"
+msgstr ""
 
 #: frmmain.rs_oneyear
 msgid "One year"
-msgstr "Год"
+msgstr ""
 
 #: frmmain.rs_optioncompress
-#, fuzzy
-#| msgid ""
-#| "None\n"
-#| "ZIP\n"
-#| "CBZ\n"
-#| "PDF\n"
-#| "EPUB\n"
 msgid ""
 "None\n"
 "ZIP\n"
@@ -451,29 +367,14 @@ msgid ""
 "PDF\n"
 "EPUB"
 msgstr ""
-"Как есть\n"
-"ZIP\n"
-"CBZ\n"
-"PDF\n"
-"EPUB\n"
 
 #: frmmain.rs_optionfmddoitems
-#, fuzzy
-#| msgid ""
-#| "Nothing\n"
-#| "Exit\n"
-#| "Shutdown\n"
-#| "Hibernate\n"
 msgid ""
 "Nothing\n"
 "Exit\n"
 "Shutdown\n"
 "Hibernate"
 msgstr ""
-"Ничего\n"
-"Выход\n"
-"Выключить\n"
-"Сон\n"
 
 #: frmmain.rs_revision
 msgid "Revision"
@@ -482,281 +383,254 @@ msgstr ""
 #: frmmain.rs_selected
 #, object-pascal-format
 msgid "Selected: %d"
-msgstr "Выбрано: %d"
+msgstr ""
 
 #: frmmain.rs_sixmonths
 msgid "Six months"
-msgstr "Пол года"
+msgstr ""
 
 #: frmmain.rs_software
 msgid "Software"
-msgstr "Программа"
+msgstr ""
 
 #: frmmain.rs_softwarepath
 msgctxt "frmmain.rs_softwarepath"
 msgid "Path to the software (e.g. C:\\MangaDownloader)"
-msgstr "Путь к программе (например, C:\\MangaDownloader)"
+msgstr ""
 
 #: frmmain.rs_tenyears
 msgid "Ten years"
-msgstr "Десять лет"
+msgstr ""
 
 #: frmmain.rs_threeyears
 msgid "Three years"
-msgstr "Три года"
+msgstr ""
 
 #: frmmain.rs_today
 msgid "Today"
-msgstr "Cегодня"
+msgstr ""
 
 #: frmmain.rs_twoyears
 msgid "Two years"
-msgstr "Два года"
+msgstr ""
 
 #: frmmain.rs_version
 msgid "Version"
 msgstr ""
 
 #: frmmain.rs_webpconvertto
-#, fuzzy
-#| msgid ""
-#| "WebP\n"
-#| "PNG\n"
-#| "JPEG\n"
 msgid ""
 "WebP\n"
 "PNG\n"
 "JPEG"
 msgstr ""
-"WebP\n"
-"PNG\n"
-"JPEG\n"
 
 #: frmmain.rs_webppnglevel
-#, fuzzy
-#| msgid ""
-#| "None\n"
-#| "Fastest\n"
-#| "Default\n"
-#| "Maximum\n"
 msgid ""
 "None\n"
 "Fastest\n"
 "Default\n"
 "Maximum"
 msgstr ""
-"Без сжатия\n"
-"Скоростное\n"
-"По умолчанию\n"
-"Максимальное\n"
 
 #: frmmain.rs_wronginput
 msgid "Invalid input!"
-msgstr "Неверный ввод!"
+msgstr ""
 
 #: frmmain.rs_yesterday
 msgid "Yesterday"
-msgstr "Вчера"
+msgstr ""
 
 #: frmshutdowncounter.rs_lblmessageexit
 #, object-pascal-format
 msgid "FMD will exit in %d second."
-msgstr "Программа закроется через %d секунд."
+msgstr ""
 
 #: frmshutdowncounter.rs_lblmessagehibernate
 #, object-pascal-format
 msgid "System will hibernate in %d second."
-msgstr "Система перейдет в спящий режим через %d секунд."
+msgstr ""
 
 #: frmshutdowncounter.rs_lblmessageshutdown
 #, object-pascal-format
 msgid "System will shutdown in %d second."
-msgstr "Система выключится через %d секунд."
+msgstr ""
 
 #: frmtransferfavorites.rs_all
 msgctxt "frmtransferfavorites.rs_all"
 msgid "All"
-msgstr "Все"
+msgstr ""
 
 #: frmtransferfavorites.rs_invalid
 msgctxt "frmtransferfavorites.rs_invalid"
 msgid "Invalid"
-msgstr "Нельзя перенести"
+msgstr ""
 
 #: frmtransferfavorites.rs_valid
 msgctxt "frmtransferfavorites.rs_valid"
 msgid "Valid"
-msgstr "Можно перенести"
+msgstr ""
 
 #: selfupdater.rs_buttoncancel
 msgctxt "selfupdater.rs_buttoncancel"
 msgid "Abort"
-msgstr "Отменить"
+msgstr ""
 
 #: selfupdater.rs_downloading
 #, object-pascal-format
 msgid "Downloading new version %s"
-msgstr "Загрузка новой версии %s"
+msgstr ""
 
 #: selfupdater.rs_faileddownload
-#, object-pascal-format, fuzzy
-#| msgid ""
-#| "Failed to download new version %s\n"
-#| "\n"
-#| "%d %s\n"
+#, object-pascal-format
 msgid ""
 "Failed to download new version %s\n"
 "\n"
 "%d %s"
 msgstr ""
-"Не удалось загрузкить новую версию %s\n"
-"\n"
-"%d %s\n"
 
 #: selfupdater.rs_failedextract
 #, object-pascal-format
 msgid "Failed to extract %s, exitstatus = %d"
-msgstr "Не удалось извлечь %s, exitstatus = %d"
+msgstr ""
 
 #: selfupdater.rs_failedtitle
 msgctxt "selfupdater.rs_failedtitle"
 msgid "Failed"
-msgstr "Неудачно"
+msgstr ""
 
 #: selfupdater.rs_failedtosave
 #, object-pascal-format
 msgid "Failed to save %s"
-msgstr "Не удалось сохранить %s"
+msgstr ""
 
 #: selfupdater.rs_finishrestart
 msgid "Download update package finished, restart to proceed?"
-msgstr "Загрузка пакета обновления завершена, перезапустить для запуска обновления?"
+msgstr ""
 
 #: selfupdater.rs_finishrestarttitle
 msgid "Download finished"
-msgstr "Загрузка завершена"
+msgstr ""
 
 #: selfupdater.rs_missingfile
 #, object-pascal-format
-msgctxt "selfupdater.rs_missingfile"
 msgid "Missing %s"
-msgstr "Отсутствует %s"
+msgstr ""
 
 #: taccountmanagerform.btedit.caption
-msgctxt "taccountmanagerform.btedit.caption"
 msgid "Edit"
-msgstr "Изменить"
+msgstr ""
 
 #: taccountmanagerform.btrefresh.caption
 msgid "Refresh"
-msgstr "Обновить"
+msgstr ""
 
 #: taccountmanagerform.caption
 msgid "AccountManagerForm"
-msgstr "AccountManagerForm"
+msgstr ""
 
 #: taccountmanagerform.vtaccountlist.header.columns[1].text
-msgctxt "TACCOUNTMANAGERFORM.VTACCOUNTLIST.HEADER.COLUMNS[1].TEXT"
+msgctxt "taccountmanagerform.vtaccountlist.header.columns[1].text"
 msgid "Website"
-msgstr "Сайт"
+msgstr ""
 
 #: taccountmanagerform.vtaccountlist.header.columns[2].text
-msgctxt "TACCOUNTMANAGERFORM.VTACCOUNTLIST.HEADER.COLUMNS[2].TEXT"
+msgctxt "taccountmanagerform.vtaccountlist.header.columns[2].text"
 msgid "Username"
-msgstr "Имя пользователя"
+msgstr ""
 
 #: taccountmanagerform.vtaccountlist.header.columns[3].text
-msgctxt "TACCOUNTMANAGERFORM.VTACCOUNTLIST.HEADER.COLUMNS[3].TEXT"
+msgctxt "taccountmanagerform.vtaccountlist.header.columns[3].text"
 msgid "Status"
-msgstr "Статус"
+msgstr ""
 
 #: taccountsetform.btcancel.caption
-msgctxt "TACCOUNTSETFORM.BTCANCEL.CAPTION"
+msgctxt "taccountsetform.btcancel.caption"
 msgid "Cancel"
-msgstr "Отмена"
+msgstr ""
 
 #: taccountsetform.btok.caption
 msgid "Ok"
-msgstr "OK"
+msgstr ""
 
 #: taccountsetform.caption
 msgid "Account"
-msgstr "Учетная запись"
+msgstr ""
 
 #: taccountsetform.ckshowpassword.caption
 msgid "Show password"
-msgstr "Показать пароль"
+msgstr ""
 
 #: taccountsetform.edpassword.texthint
-msgctxt "TACCOUNTSETFORM.EDPASSWORD.TEXTHINT"
+msgctxt "taccountsetform.edpassword.texthint"
 msgid "Password"
-msgstr "Пароль"
+msgstr ""
 
 #: taccountsetform.edusername.texthint
-msgctxt "TACCOUNTSETFORM.EDUSERNAME.TEXTHINT"
+msgctxt "taccountsetform.edusername.texthint"
 msgid "Username"
-msgstr "Имя пользователя"
+msgstr ""
 
 #: taccountsetform.label2.caption
-msgctxt "TACCOUNTSETFORM.LABEL2.CAPTION"
+msgctxt "taccountsetform.label2.caption"
 msgid "Username"
-msgstr "Имя пользователя"
+msgstr ""
 
 #: taccountsetform.label3.caption
-msgctxt "TACCOUNTSETFORM.LABEL3.CAPTION"
+msgctxt "taccountsetform.label3.caption"
 msgid "Password"
-msgstr "Пароль"
+msgstr ""
 
 #: tcustomcolorform.caption
 msgid "CustomColorForm"
-msgstr "CustomColorForm"
+msgstr ""
 
 #: tcustomcolorform.tsbasiclist.caption
 msgid "Basic list"
-msgstr "Основной список"
+msgstr ""
 
 #: tcustomcolorform.tschapterlist.caption
 msgid "Chapter list"
-msgstr "Список глав"
+msgstr ""
 
 #: tcustomcolorform.tsfavoritelist.caption
 msgid "Favorite list"
-msgstr "Список избранного"
+msgstr ""
 
 #: tcustomcolorform.tsmangalist.caption
 msgid "Manga list"
-msgstr "Список манги"
+msgstr ""
 
 #: tformdroptarget.miaddtofavorites.caption
-msgctxt "TFORMDROPTARGET.MIADDTOFAVORITES.CAPTION"
+msgctxt "tformdroptarget.miaddtofavorites.caption"
 msgid "Add to favorites"
-msgstr "Добавить в избранное"
+msgstr ""
 
 #: tformdroptarget.miclose.caption
 msgid "&Close"
-msgstr "И Закрыть"
+msgstr ""
 
 #: tformdroptarget.midownloadall.caption
-msgctxt "TFORMDROPTARGET.MIDOWNLOADALL.CAPTION"
+msgctxt "tformdroptarget.midownloadall.caption"
 msgid "Download all"
-msgstr "Загрузить все"
+msgstr ""
 
 #: tformlogger.btnclearlog.caption
 msgid "Clear"
-msgstr "Очистить"
+msgstr ""
 
 #: tformlogger.ckstayontop.caption
 msgid "Stay on top"
-msgstr "Пребывание на вершине"
+msgstr ""
 
 #: tformlogger.lbloglimit.caption
 msgid "Log limit"
-msgstr "Лимит лога"
+msgstr ""
 
 #: tformlogger.micopy.caption
 msgctxt "tformlogger.micopy.caption"
 msgid "Copy"
-msgstr "Скопировать"
+msgstr ""
 
 #: tfrmdialogyn.btno.caption
 msgid "&No"
@@ -775,814 +649,778 @@ msgid "lbMessage"
 msgstr ""
 
 #: timportfavorites.btcancel.caption
-msgctxt "TIMPORTFAVORITES.BTCANCEL.CAPTION"
+msgctxt "timportfavorites.btcancel.caption"
 msgid "Cancel"
-msgstr "Отмена"
+msgstr ""
 
 #: timportfavorites.btimport.caption
 msgctxt "timportfavorites.btimport.caption"
 msgid "&OK"
-msgstr "&OK"
+msgstr ""
 
 #: timportfavorites.caption
 msgid "Import list ..."
-msgstr "Импорт списка ..."
+msgstr ""
 
 #: timportfavorites.cbsoftware.text
 msgid "Domdomsoft Manga Downloader"
-msgstr "Domdomsoft Manga Downloader"
+msgstr ""
 
 #: timportfavorites.edpath.texthint
-msgctxt "TIMPORTFAVORITES.EDPATH.TEXTHINT"
+msgctxt "timportfavorites.edpath.texthint"
 msgid "Path to the software (e.g. C:\\MangaDownloader)"
-msgstr "Путь к программе (пример: C:\\MangaDownloader)"
+msgstr ""
 
 #: timportfavorites.lbselectsoftware.caption
 msgid "Software:"
-msgstr "Программа:"
+msgstr ""
 
 #: tluamodulesupdaterform.btcheckupdate.caption
 msgctxt "tluamodulesupdaterform.btcheckupdate.caption"
 msgid "Check update"
-msgstr "Проверить обновления"
+msgstr ""
 
 #: tluamodulesupdaterform.ckautorestart.caption
 msgid "Auto restart"
-msgstr "Автоматически перезапускать программу"
+msgstr ""
 
 #: tluamodulesupdaterform.ckshowupdatewarning.caption
 msgid "Show update warning"
-msgstr "Показывать предупреждение"
+msgstr ""
 
 #: tluamodulesupdaterform.vtluamodulesrepos.header.columns[0].text
 msgid "Filename"
-msgstr "Файл"
+msgstr ""
 
 #: tluamodulesupdaterform.vtluamodulesrepos.header.columns[1].text
 msgid "Last modified"
-msgstr "Изменен"
+msgstr ""
 
 #: tluamodulesupdaterform.vtluamodulesrepos.header.columns[2].text
 msgid "Last message"
-msgstr "Описание изменения"
+msgstr ""
 
 #: tmainform.btabortupdatelist.hint
 msgid "Abort update list"
-msgstr "Прервать обновление списка"
+msgstr ""
 
 #: tmainform.btaddtofavorites.caption
 msgctxt "tmainform.btaddtofavorites.caption"
 msgid "Add to favorites"
-msgstr "Добавить в избранное"
+msgstr ""
 
 #: tmainform.btchecklatestversion.caption
-msgctxt "TMAINFORM.BTCHECKLATESTVERSION.CAPTION"
 msgid "Check for latest version"
-msgstr "Проверка последней версии"
+msgstr ""
 
 #: tmainform.btclearlogfile.caption
 msgid "Clear log file"
-msgstr "Очистить файл лога"
+msgstr ""
 
 #: tmainform.btdownload.caption
-msgctxt "tmainform.btdownload.caption"
 msgid "Download"
-msgstr "Загрузить"
+msgstr ""
 
 #: tmainform.btdownloadsplit.hint
 msgctxt "tmainform.btdownloadsplit.hint"
 msgid "Split download"
-msgstr "Разделить загрузку"
+msgstr ""
 
 #: tmainform.btfavoriteschecknewchapter.caption
 msgctxt "tmainform.btfavoriteschecknewchapter.caption"
 msgid "Check for new chapter"
-msgstr "Проверить на новую глава"
+msgstr ""
 
 #: tmainform.btfavoritesimport.caption
 msgid "Import list"
-msgstr "Импорт списка"
+msgstr ""
 
 #: tmainform.btfilter.caption
-msgctxt "TMAINFORM.BTFILTER.CAPTION"
+msgctxt "tmainform.btfilter.caption"
 msgid "Filter"
-msgstr "Фильтр"
+msgstr ""
 
 #: tmainform.btfilterreset.caption
 msgid "Reset value"
-msgstr "Сбросить том"
+msgstr ""
 
 #: tmainform.btopenlog.caption
 msgid "Open log"
-msgstr "Открыть лог"
+msgstr ""
 
 #: tmainform.btoptionapply.caption
 msgid "Apply"
-msgstr "Принять"
+msgstr ""
 
 #: tmainform.btreadonline.caption
 msgid "Read online"
-msgstr "Читать онлайн"
+msgstr ""
 
 #: tmainform.btremovefilterlarge.caption
-msgctxt "TMAINFORM.BTREMOVEFILTERLARGE.CAPTION"
+msgctxt "tmainform.btremovefilterlarge.caption"
 msgid "Remove filter"
-msgstr "Удалить фильтр"
+msgstr ""
 
 #: tmainform.btremovefilterlarge.hint
 msgctxt "tmainform.btremovefilterlarge.hint"
 msgid "Remove filter"
-msgstr "Удалить фильтр"
+msgstr ""
 
 #: tmainform.btupdatelist.hint
 msgctxt "tmainform.btupdatelist.hint"
 msgid "Update manga list"
-msgstr "Обновить список манги"
+msgstr ""
 
 #: tmainform.btvisitmyblog.caption
 msgid "Visit my blog"
-msgstr "Посетите мой блог"
+msgstr ""
 
 #: tmainform.caption
 msgid "Free Manga Downloader"
-msgstr "Free Manga Downloader"
+msgstr ""
 
 #: tmainform.cbaddasstopped.caption
 msgid "Add to download list as stopped task"
-msgstr "Добавить в список загрузки как остановленное задание"
+msgstr ""
 
 #: tmainform.cbfilterstatus.text
 msgid "<none>"
-msgstr "<нет>"
+msgstr ""
 
 #: tmainform.cbonlynew.caption
 msgid "Search only new manga"
-msgstr "Искать только новую мангу"
+msgstr ""
 
 #: tmainform.cboptionautocheckfavdownload.caption
-msgctxt "TMAINFORM.CBOPTIONAUTOCHECKFAVDOWNLOAD.CAPTION"
 msgid "Automatic download after finish checking"
-msgstr "Автоматическая загрузка после завершения проверки"
+msgstr ""
 
 #: tmainform.cboptionautocheckfavinterval.caption
 msgid "Auto check for new chapter in an interval"
-msgstr "Автоматическая проверка новой главы в интервале"
+msgstr ""
 
 #: tmainform.cboptionautocheckfavremovecompletedmanga.caption
-msgctxt "TMAINFORM.CBOPTIONAUTOCHECKFAVREMOVECOMPLETEDMANGA.CAPTION"
 msgid "Automatic remove completed manga from Favorites"
-msgstr "Автоматически удалять завершенную мангу из Избранного"
+msgstr ""
 
 #: tmainform.cboptionautocheckfavstartup.caption
 msgid "Auto check for new chapter at startup"
-msgstr "Автоматическая проверка новой главы при запуске"
+msgstr ""
 
 #: tmainform.cboptionautochecklatestversion.caption
-msgctxt "TMAINFORM.CBOPTIONAUTOCHECKLATESTVERSION.CAPTION"
 msgid "Auto check for latest version "
-msgstr "Автоматическая проверка последней версии "
+msgstr ""
 
 #: tmainform.cboptionautoopenfavstartup.caption
 msgid "Open Favorites at startup"
-msgstr "Открыть избранное при запуске"
+msgstr ""
 
 #: tmainform.cboptionchangeunicodecharacter.caption
-msgctxt "TMAINFORM.CBOPTIONCHANGEUNICODECHARACTER.CAPTION"
 msgid "Replace all unicode character with"
-msgstr "Заменить все символы Юникода на"
+msgstr ""
 
 #: tmainform.cboptionchangeunicodecharacter.hint
 msgid "Enable this if you have problem with unicode character in path."
-msgstr "Включите, если возникли проблемы с Unicode-символами в пути."
+msgstr ""
 
 #: tmainform.cboptiondeletecompletedtasksonclose.caption
 msgid "Delete completed tasks on close"
-msgstr "Удалить завершенные загрузки при выходе"
+msgstr ""
 
 #: tmainform.cboptiondigitchapter.caption
 msgid "Chapter"
-msgstr "Глава"
+msgstr ""
 
 #: tmainform.cboptiondigitvolume.caption
 msgid "Volume"
-msgstr "Том"
+msgstr ""
 
 #: tmainform.cboptionenableloadcover.caption
 msgid "Enable load manga cover"
-msgstr "Включить загрузку обложки манги"
+msgstr ""
 
 #: tmainform.cboptiongeneratechapterfolder.caption
 msgid "Auto generate chapter folder"
-msgstr "Авто-создание папки главы"
+msgstr ""
 
 #: tmainform.cboptiongeneratemangafolder.caption
-msgctxt "TMAINFORM.CBOPTIONGENERATEMANGAFOLDER.CAPTION"
 msgid "Auto generate folder based on manga's name"
-msgstr "Авто-создание папки на основе имени манги"
+msgstr ""
 
 #: tmainform.cboptionlivesearch.caption
 msgid "Enable live search (slow on long list)"
-msgstr "Включить живой поиск (медленно при длинном списке)"
+msgstr ""
 
 #: tmainform.cboptionminimizeonstart.caption
 msgid "Minimize on start"
-msgstr "Минимизировать при запуске"
+msgstr ""
 
 #: tmainform.cboptionminimizetotray.caption
 msgid "Minimize to tray"
-msgstr "Свернуть в трей"
+msgstr ""
 
 #: tmainform.cboptiononeinstanceonly.caption
 msgid "Permit only one FMD running"
-msgstr "Разрешить только один экземпляр программы"
+msgstr ""
 
 #: tmainform.cboptionproxytype.text
 msgid "HTTP"
-msgstr "HTTP"
+msgstr ""
 
 #: tmainform.cboptionremovemanganamefromchapter.caption
 msgid "Remove manga name from chapter"
-msgstr "Удалить имя манги из главы"
+msgstr ""
 
 #: tmainform.cboptionshowballoonhint.caption
 msgid "Show balloon hint"
-msgstr "Показывать подсказки"
+msgstr ""
 
 #: tmainform.cboptionshowdeletetaskdialog.caption
 msgid "Delete task/favorite"
-msgstr "Удаление задачи/избранного"
+msgstr ""
 
 #: tmainform.cboptionshowdownloadmangalistdialog.caption
 msgid "Download manga list if empty"
-msgstr "Загрузка списка манги, если он пустой"
+msgstr ""
 
 #: tmainform.cboptionshowdownloadstabonnewtasks.caption
 msgid "Show Downloads tab when adding new tasks"
-msgstr "Показать Загрузки при добавлении новых задач"
+msgstr ""
 
 #: tmainform.cboptionshowdownloadtoolbar.caption
 msgid "Show downloads toolbar"
-msgstr "Показать панель загрузок"
+msgstr ""
 
 #: tmainform.cboptionshowdownloadtoolbardeleteall.caption
 msgid "Show \"Delete all completed tasks\" in downloads toolbar"
-msgstr "Показать \"Удалить все завершенные задачи\" в панели загрузки"
+msgstr ""
 
 #: tmainform.cboptionshowdownloadtoolbarleft.caption
 msgid "Show left downloads toolbar"
-msgstr "Показать дополнительную панель загрузок"
+msgstr ""
 
 #: tmainform.cboptionshowfavoritestabonnewmanga.caption
-msgctxt "tmainform.cboptionshowfavoritestabonnewmanga.caption"
 msgid "Show Favorites tab when adding new manga"
-msgstr "Показать Избранное при добавлении новой манги"
+msgstr ""
 
 #: tmainform.cboptionshowquitdialog.caption
 msgid "Exit FMD"
-msgstr "Выход из программы"
+msgstr ""
 
 #: tmainform.cboptionsortdownloadswhenaddingnewdownloadtasks.caption
 msgid "Sort Downloads when adding new download tasks"
-msgstr "Сортировать загрузки при добавлении новых"
+msgstr ""
 
 #: tmainform.cboptionupdatelistnomangainfo.caption
 msgid "Don't load manga information when updating list (filter will be not work!)"
-msgstr "Не загружать информацию о манге при обновлении списка (фильтр не будет работать!)"
+msgstr ""
 
 #: tmainform.cboptionupdatelistremoveduplicatelocaldata.caption
 msgid "Remove duplicate local data when updating manga list"
-msgstr "Удалять повторяющиеся локальные данные при обновлении списка манги"
+msgstr ""
 
 #: tmainform.cboptionuseproxy.caption
 msgid "Use proxy"
-msgstr "Использовать прокси"
+msgstr ""
 
 #: tmainform.cbpngcompressionlevel.text
-msgctxt "tmainform.cbpngcompressionlevel.text"
 msgid "Fastest"
-msgstr "Скоростной"
+msgstr ""
 
 #: tmainform.cbsearchfromallsites.caption
 msgid "Search in all manga sites"
-msgstr "Поиск по всем сайтам манги"
+msgstr ""
 
 #: tmainform.cbselectmanga.hint
 msgid "For more manga sites, please go to Options->Manga sites"
-msgstr "Для получения дополнительных сайтов с мангой откройте Настройки->Сайты с мангой"
+msgstr ""
 
 #: tmainform.cbuseregexpr.caption
 msgid "Regular Expression"
-msgstr "Регулярное выражение (regexp)"
+msgstr ""
 
 #: tmainform.cbwebpsaveas.text
-msgctxt "tmainform.cbwebpsaveas.text"
 msgid "PNG"
-msgstr "PNG"
+msgstr ""
 
 #: tmainform.ckdroptarget.caption
 msgctxt "tmainform.ckdroptarget.caption"
 msgid "Show Drop Box"
-msgstr "Показать Дропбокс"
+msgstr ""
 
 #: tmainform.ckenablelogging.caption
 msgid "Enable logging"
-msgstr "Включить логирование"
+msgstr ""
 
 #: tmainform.ckfilteraction.caption
 msgid "Action"
-msgstr "Экшен"
+msgstr ""
 
 #: tmainform.ckfilteraction.hint
 msgid "A work typically depicting fighting, violence, chaos, and fast paced motion."
-msgstr "Работы жанра обычно изображают бой, насилие, хаос и быстрое движение."
+msgstr ""
 
 #: tmainform.ckfilteradult.caption
 msgid "Adult"
-msgstr "Взрослое"
+msgstr ""
 
 #: tmainform.ckfilteradult.hint
 msgid "Contains content that is suitable only for adults. Titles in this category may include prolonged scenes of intense violence and/or graphic sexual content and nudity."
-msgstr "Содержит контент, который подходит только для взрослых. Работы этой категории могут содержать длительные сцены интенсивного насилия и/или графический сексуальный контент и наготу."
+msgstr ""
 
 #: tmainform.ckfilteradventure.caption
 msgid "Adventure"
-msgstr "Приключения"
+msgstr ""
 
 #: tmainform.ckfilteradventure.hint
 msgid "If a character in the story goes on a trip or along that line, your best bet is that it is an adventure manga. Otherwise, it's up to your personal prejudice on this case."
-msgstr "Если персонаж в истории отправляется в путешествие или что-то в этом роде, тогда наверняка это приключенческая манга. В противном случае, это зависит от ваших личных предубеждений по этой теме."
+msgstr ""
 
 #: tmainform.ckfiltercomedy.caption
 msgid "Comedy"
-msgstr "Юмор"
+msgstr ""
 
 #: tmainform.ckfiltercomedy.hint
 msgid "A dramatic work that is light and often humorous or satirical in tone and that usually contains a happy resolution of the thematic conflict."
-msgstr "Драматическая работа, легкая и часто юмористическая или сатирическая по тону и, обычно, содержит счастливое разрешение тематического конфликта."
+msgstr ""
 
 #: tmainform.ckfilterdoujinshi.caption
 msgid "Doujinshi"
-msgstr "Додзинси"
+msgstr ""
 
 #: tmainform.ckfilterdoujinshi.hint
 msgid "Fan based work inpspired by official manga/anime."
-msgstr "Фанатские работы, вдохновленные официальной мангой/аниме."
+msgstr ""
 
 #: tmainform.ckfilterdrama.caption
 msgid "Drama"
-msgstr "Драма"
+msgstr ""
 
 #: tmainform.ckfilterdrama.hint
 msgid "A work meant to bring on an emotional response, such as instilling sadness or tension."
-msgstr "Работы жанра призванны вызвать эмоциональный отклик, например, внушить печаль или напряжение."
+msgstr ""
 
 #: tmainform.ckfilterechi.caption
 msgid "Ecchi"
-msgstr "Этти"
+msgstr ""
 
 #: tmainform.ckfilterechi.hint
 msgid "Possibly the line between hentai and non-hentai, ecchi usually refers to fanservice put in to attract a certain group of fans."
-msgstr "Возможно, середина между хентаем и не хентаем, этти обычно относится к фансервису, с целью привлечь определенную группу фанатов."
+msgstr ""
 
 #: tmainform.ckfilterfantasy.caption
 msgid "Fantasy"
-msgstr "Фентези"
+msgstr ""
 
 #: tmainform.ckfilterfantasy.hint
 msgid "Anything that involves, but not limited to, magic, dream world, and fairy tales."
-msgstr "Все, что включает в себя, помимо прочего, магию, воображаемый мир и сказки."
+msgstr ""
 
 #: tmainform.ckfiltergenderbender.caption
 msgid "Gender Bender"
-msgstr "Смена пола"
+msgstr ""
 
 #: tmainform.ckfiltergenderbender.hint
-#, fuzzy
-#| msgid ""
-#| "Girls dressing up as guys, guys dressing up as girls.\n"
-#| "Guys turning into girls, girls turning into guys.\n"
 msgid ""
 "Girls dressing up as guys, guys dressing up as girls.\n"
 "Guys turning into girls, girls turning into guys."
 msgstr ""
-"Девушки наряжаются как парни, парни наряжаются как девушки.\n"
-"Парни превращаются в девушек, девушки превращаются в парней.\n"
 
 #: tmainform.ckfilterharem.caption
 msgid "Harem"
-msgstr "Гарем"
+msgstr ""
 
 #: tmainform.ckfilterharem.hint
 msgid "A series involving one male character and many female characters (usually attracted to the male character). A Reverse Harem is when the genders are reversed."
-msgstr "В сериях учавствует один главный мужской персонаж и многих женских персонажей (как правило, испытывающих влечение к мужскому персонажу). Реверсивный гарем - это когда пол меняются на противоположный."
+msgstr ""
 
 #: tmainform.ckfilterhentai.caption
 msgctxt "tmainform.ckfilterhentai.caption"
 msgid "Hentai"
-msgstr "Хентай"
+msgstr ""
 
 #: tmainform.ckfilterhentai.hint
-msgctxt "TMAINFORM.CKFILTERHENTAI.HINT"
+msgctxt "tmainform.ckfilterhentai.hint"
 msgid "Hentai"
-msgstr "Хентай"
+msgstr ""
 
 #: tmainform.ckfilterhistorical.caption
 msgid "Historical"
-msgstr "История"
+msgstr ""
 
 #: tmainform.ckfilterhistorical.hint
 msgid "Having to do with old or ancient times."
-msgstr "Имеет отношение к старым или древним временам."
+msgstr ""
 
 #: tmainform.ckfilterhorror.caption
 msgid "Horror"
-msgstr "Ужасы"
+msgstr ""
 
 #: tmainform.ckfilterhorror.hint
 msgid "A painful emotion of fear, dread, and abhorrence; a shuddering with terror and detestation; the feeling inspired by something frightful and shocking."
-msgstr "Мучительное чувство ужаса, страха и отвращения; Содрогание от ужаса и ненависти; Чувство, вдохновленное чем-то страшным и шокирующим."
+msgstr ""
 
 #: tmainform.ckfilterjosei.caption
 msgid "Josei"
-msgstr "Дзёсэй"
+msgstr ""
 
 #: tmainform.ckfilterjosei.hint
 msgid "Literally \"Woman\". Targets women 18-30. Female equivalent to seinen. Unlike shoujo the romance is more realistic and less idealized. The storytelling is more explicit and mature."
-msgstr "Буквально «Женщина». Нацелено на женщин 18-30 лет. Женский эквивалент сёнен. В отличие от сёдзе роман более реалистичен и менее идеализирован. Рассказ историй более ясный и зрелый."
+msgstr ""
 
 #: tmainform.ckfilterlolicon.caption
 msgid "Lolicon"
-msgstr "Лоликон"
+msgstr ""
 
 #: tmainform.ckfilterlolicon.hint
 msgid "Representing a sexual attraction to young or under-age girls."
-msgstr "Представление сексуального влечения к молодым или несовершеннолетним девочкам."
+msgstr ""
 
 #: tmainform.ckfiltermartialarts.caption
 msgid "Martial Arts"
-msgstr "Боевые Искусства"
+msgstr ""
 
 #: tmainform.ckfiltermartialarts.hint
 msgid "As the name suggests, anything martial arts related. Any of several arts of combat or self-defense, such as aikido, karate, judo, or taekwondo, kendo, fencing, and so on and so forth."
-msgstr "Как следует из названия, все, что связано с боевыми искусствами. Любое из нескольких исскуств боя или самозащиты, таких как айкидо, каратэ, дзюдо, таэквондо, кендо, фехтование и т.д.и т.п."
+msgstr ""
 
 #: tmainform.ckfiltermature.caption
 msgid "Mature"
-msgstr "Зрелые"
+msgstr ""
 
 #: tmainform.ckfiltermature.hint
 msgid "Contains subject matter which may be too extreme for people under the age of 17. Titles in this category may contain intense violence, blood and gore, sexual content and/or strong language."
-msgstr "Содержит материаллы, которые могут быть слишком экстремальными для несовершеннолетних. Работы в этой категории могут содержать много насилия, крови, сексуального контента и/или резких слов."
+msgstr ""
 
 #: tmainform.ckfiltermecha.caption
 msgid "Mecha"
-msgstr "Меха"
+msgstr ""
 
 #: tmainform.ckfiltermecha.hint
 msgid "A work involving and usually concentrating on all types of large robotic machines."
-msgstr "Работы жанра, включают и обычно концентрируются на всех типах крупных роботизированных машин."
+msgstr ""
 
 #: tmainform.ckfiltermusical.caption
 msgctxt "tmainform.ckfiltermusical.caption"
 msgid "Musical"
-msgstr "Мюзикл"
+msgstr ""
 
 #: tmainform.ckfiltermusical.hint
 msgctxt "tmainform.ckfiltermusical.hint"
 msgid "Musical"
-msgstr "Музыка"
+msgstr ""
 
 #: tmainform.ckfiltermystery.caption
 msgid "Mystery"
-msgstr "Мистика"
+msgstr ""
 
 #: tmainform.ckfiltermystery.hint
 msgid "Usually an unexplained event occurs, and the main protagonist attempts to find out what caused it."
-msgstr "Обычно происходит необъяснимое событие и главный герой пытается выяснить, что вызвало его."
+msgstr ""
 
 #: tmainform.ckfilterpsychological.caption
 msgid "Psychological"
-msgstr "Психология"
+msgstr ""
 
 #: tmainform.ckfilterpsychological.hint
 msgid "Usually deals with the philosophy of a state of mind, in most cases detailing abnormal psychology."
-msgstr "Обычно речь идет о философии состояния ума, в большинстве случаев подробно описывающей аномальную психологию."
+msgstr ""
 
 #: tmainform.ckfilterromance.caption
 msgid "Romance"
-msgstr "Романтика"
+msgstr ""
 
 #: tmainform.ckfilterromance.hint
 msgid "Any love related story. We will define love as between man and woman in this case. Other than that, it is up to your own imagination of what love is."
-msgstr "Любая история, связанная с любовью. В этом случае мы определяем любовь между мужчиной и женщиной. Кроме этого, это зависит от вашего представления, что такое любовь."
+msgstr ""
 
 #: tmainform.ckfilterschoollife.caption
 msgid "School Life"
-msgstr "Школьная жизнь"
+msgstr ""
 
 #: tmainform.ckfilterschoollife.hint
 msgid "Having a major setting of the story deal with some type of school."
-msgstr "В основном сеттинге истории события происходят в какой-либо школе."
+msgstr ""
 
 #: tmainform.ckfilterscifi.caption
 msgid "Sci-Fi"
-msgstr "Скайфай"
+msgstr ""
 
 #: tmainform.ckfilterscifi.hint
 msgid "Short for science fiction, these works involve twists on technology and other science related phenomena which are contrary or stretches of the modern day scientific world."
-msgstr "Это сокращение от научной фантастики, эти работы связаны с поворотами в технологиях и других, связанных с наукой явлениях, которые являются противоречиями или отрезками современного научного мира."
+msgstr ""
 
 #: tmainform.ckfilterseinen.caption
 msgid "Seinen"
-msgstr "Сейнэн"
+msgstr ""
 
 #: tmainform.ckfilterseinen.hint
 msgid "From Google: Seinen means 'young Man'. Manga and anime that specifically targets young adult males around the ages of 18 to 25 are seinen titles. The stories in seinen works appeal to university students and those in the working world. Typically the story lines deal with the issues of adulthood."
-msgstr "Из Google: Сейнэн означает «молодой человек». аниме и манга, рассчитанные на особую целевую аудиторию — молодых мужчин от 18 лет и старше. Истории в Сейнэн рассчитаны на привлечение студентов университетов и тех, кто работают. Как правило, сюжетные линии посвящены проблемам взрослой жизни."
+msgstr ""
 
 #: tmainform.ckfiltershotacon.caption
 msgid "Shotacon"
-msgstr "Шота"
+msgstr ""
 
 #: tmainform.ckfiltershotacon.hint
 msgid "Representing a sexual attraction to young or under-age boys."
-msgstr "Представление сексуального влечения к молодым или несовершеннолетним мальчикам."
+msgstr ""
 
 #: tmainform.ckfiltershoujo.caption
 msgid "Shoujo"
-msgstr "Сёдзе"
+msgstr ""
 
 #: tmainform.ckfiltershoujo.hint
 msgid "A work intended and primarily written for females. Usually involves a lot of romance and strong character development."
-msgstr "Работы жанра нацелены и предназначены, в основном, для женщин. Обычно включает в себя много романтики и сильного развития персонажа."
+msgstr ""
 
 #: tmainform.ckfiltershoujoai.caption
 msgid "Shoujo Ai"
-msgstr "Сёдзе-ай"
+msgstr ""
 
 #: tmainform.ckfiltershoujoai.hint
-msgctxt "TMAINFORM.CKFILTERSHOUJOAI.HINT"
 msgid "Often synonymous with yuri, this can be thought of as somewhat less extreme. \"Girl''s Love\", so to speak."
-msgstr "Часто ассоциируется с Юри, можно считать несколько менее экстремальным. «Девичья любовь», так сказать."
+msgstr ""
 
 #: tmainform.ckfiltershounen.caption
 msgid "Shounen"
-msgstr "Сёнэн"
+msgstr ""
 
 #: tmainform.ckfiltershounen.hint
-msgctxt "tmainform.ckfiltershounen.hint"
 msgid "A work intended and primarily written for males. These works usually involve fighting and/or violence."
-msgstr "Работы жанра нацелены и предназначены, в основном, для мужчин. Обычно связано с борьбой и/или насилием."
+msgstr ""
 
 #: tmainform.ckfiltershounenai.caption
 msgid "Shounen Ai"
-msgstr "Сёнэн-ай"
+msgstr ""
 
 #: tmainform.ckfiltershounenai.hint
 msgid "Often synonymous with yaoi, this can be thought of as somewhat less extreme. \"Boy''s Love\", so to speak"
-msgstr "Часто ассоциируется с Яоем, можно считать несколько менее экстремальным. «Мужская любовь», так сказать"
+msgstr ""
 
 #: tmainform.ckfiltersliceoflife.caption
 msgid "Slice of Life"
-msgstr "Повседневность"
+msgstr ""
 
 #: tmainform.ckfiltersliceoflife.hint
 msgid "As the name suggests, this genre represents day-to-day tribulations of one/many character(s). These challenges/events could technically happen in real life and are often -if not all the time- set in the present timeline in a world that mirrors our own."
-msgstr "Wiki: Жанр, повествующий о жизни простых обывателей. Так называют любое реалистическое описание или представление событий и ситуаций из повседневной жизни. Акцент делается на чувствах и поведении персонажей."
+msgstr ""
 
 #: tmainform.ckfiltersmut.caption
 msgid "Smut"
-msgstr "Смат (Непристойность)"
+msgstr ""
 
 #: tmainform.ckfiltersmut.hint
 msgid "Deals with series that are considered profane or offensive, particularly with regards to sexual content."
-msgstr "Жанр сетевого текста, в котором описывается только секс между героями. Имеет дело с сериями, которые считаются неприличными или оскорбительными, особенно в отношении сексуального контента."
+msgstr ""
 
 #: tmainform.ckfiltersports.caption
 msgid "Sports"
-msgstr "Спорт"
+msgstr ""
 
 #: tmainform.ckfiltersports.hint
 msgid "As the name suggests, anything sports related. Baseball, basketball, hockey, soccer, golf, and racing just to name a few."
-msgstr "Как следует из названия, все, что связано со спортом. Бейсбол, баскетбол, хоккей, футбол, гольф и гонки- некоторые из них."
+msgstr ""
 
 #: tmainform.ckfiltersupernatural.caption
 msgid "Supernatural"
-msgstr "Сверхъестественное"
+msgstr ""
 
 #: tmainform.ckfiltersupernatural.hint
 msgid "Usually entails amazing and unexplained powers or events which defy the laws of physics."
-msgstr "Обычно подразумевает удивительные и необъяснимые силы или события, которые бросают вызов законам физики."
+msgstr ""
 
 #: tmainform.ckfiltertragedy.caption
 msgid "Tragedy"
-msgstr "Трагедия"
+msgstr ""
 
 #: tmainform.ckfiltertragedy.hint
 msgid "Contains events resulting in great loss and misfortune."
-msgstr "Содержит события, приводящие к большим потерям и неудачам."
+msgstr ""
 
 #: tmainform.ckfilterweebtons.caption
 msgctxt "tmainform.ckfilterweebtons.caption"
 msgid "Webtoons"
-msgstr "Вебкомиксы"
+msgstr ""
 
 #: tmainform.ckfilterweebtons.hint
 msgctxt "tmainform.ckfilterweebtons.hint"
 msgid "Webtoons"
-msgstr "Вебкомиксы"
+msgstr ""
 
 #: tmainform.ckfilteryaoi.caption
 msgid "Yaoi"
-msgstr "Яой"
+msgstr ""
 
 #: tmainform.ckfilteryaoi.hint
 msgid "This work usually involves intimate relationships between men."
-msgstr "Обычно связано с интимными отношениями между мужчинами."
+msgstr ""
 
 #: tmainform.ckfilteryuri.caption
 msgid "Yuri"
-msgstr "Юри"
+msgstr ""
 
 #: tmainform.ckfilteryuri.hint
 msgid "This work usually involves intimate relationships between women."
-msgstr "Обычно связано с интимными отношениями между женщинами."
+msgstr ""
 
 #: tmainform.ckoptionsalwaysstarttaskfromfailedchapters.caption
-msgctxt "tmainform.ckoptionsalwaysstarttaskfromfailedchapters.caption"
 msgid "Always start task from failed chapters"
-msgstr "Всегда запускать задачу с неудавшихся частей"
+msgstr ""
 
 #: tmainform.ckpngsaveasjpeg.caption
 msgid "Save PNG as JPEG"
-msgstr "Сохранять PNG как JPEG"
+msgstr ""
 
 #: tmainform.edcustomgenres.texthint
 msgid "Input custom genres, separated by comma"
-msgstr "Ввод пользовательских жанров, разделенных запятой"
+msgstr ""
 
 #: tmainform.eddownloadssearch.texthint
-msgctxt "tmainform.eddownloadssearch.texthint"
 msgid "Search downloads..."
-msgstr "Поиск загрузок..."
+msgstr ""
 
 #: tmainform.edfavoritessearch.texthint
-msgctxt "tmainform.edfavoritessearch.texthint"
 msgid "Search favorites..."
-msgstr "Поиск в избранном..."
+msgstr ""
 
 #: tmainform.edfilterartists.texthint
 msgctxt "tmainform.edfilterartists.texthint"
 msgid "Artist"
-msgstr "Артист"
+msgstr ""
 
 #: tmainform.edfilterauthors.texthint
 msgctxt "tmainform.edfilterauthors.texthint"
 msgid "Author"
-msgstr "Автор"
+msgstr ""
 
 #: tmainform.edfiltermangainfochapters.texthint
-msgctxt "TMAINFORM.EDFILTERMANGAINFOCHAPTERS.TEXTHINT"
+msgctxt "tmainform.edfiltermangainfochapters.texthint"
 msgid "Filter"
-msgstr "Фильтр"
+msgstr ""
 
 #: tmainform.edfiltersummary.texthint
 msgid "Part of summary"
-msgstr "Часть Описание"
+msgstr ""
 
 #: tmainform.edfiltertitle.texthint
-msgctxt "TMAINFORM.EDFILTERTITLE.TEXTHINT"
+msgctxt "tmainform.edfiltertitle.texthint"
 msgid "Title"
-msgstr "Название"
+msgstr ""
 
 #: tmainform.edmangalistsearch.texthint
-msgctxt "tmainform.edmangalistsearch.texthint"
 msgid "Search title..."
-msgstr "Поиск названия..."
+msgstr ""
 
 #: tmainform.edoptionchaptercustomrename.texthint
-msgctxt "TMAINFORM.EDOPTIONCHAPTERCUSTOMRENAME.TEXTHINT"
+msgctxt "tmainform.edoptionchaptercustomrename.texthint"
 msgid "Custom rename"
-msgstr "Пользовательское переименование"
+msgstr ""
 
 #: tmainform.edoptiondefaultpath.texthint
 msgid "Default download path"
-msgstr "Путь по умолчанию"
+msgstr ""
 
 #: tmainform.edoptionexternalparams.texthint
-msgctxt "TMAINFORM.EDOPTIONEXTERNALPARAMS.TEXTHINT"
 msgid "External program parameters"
-msgstr "Параметры внешней программы"
+msgstr ""
 
 #: tmainform.edoptionexternalpath.texthint
-msgctxt "TMAINFORM.EDOPTIONEXTERNALPATH.TEXTHINT"
 msgid "External program path"
-msgstr "Путь к внешней программе"
+msgstr ""
 
 #: tmainform.edoptionfilenamecustomrename.texthint
-msgctxt "TMAINFORM.EDOPTIONFILENAMECUSTOMRENAME.TEXTHINT"
+msgctxt "tmainform.edoptionfilenamecustomrename.texthint"
 msgid "Custom rename"
-msgstr "Пользовательское переименование"
+msgstr ""
 
 #: tmainform.edoptionhost.texthint
 msgid "Proxy host/IP"
-msgstr "Прокси-сервер / IP-адрес"
+msgstr ""
 
 #: tmainform.edoptionmangacustomrename.texthint
-msgctxt "TMAINFORM.EDOPTIONMANGACUSTOMRENAME.TEXTHINT"
+msgctxt "tmainform.edoptionmangacustomrename.texthint"
 msgid "Custom rename"
-msgstr "Пользовательское переименование"
+msgstr ""
 
 #: tmainform.edoptionpass.texthint
 msgid "Proxy password"
-msgstr "Пароль прокси"
+msgstr ""
 
 #: tmainform.edoptionuser.texthint
 msgid "Proxy username"
-msgstr "Имя пользователя прокси"
+msgstr ""
 
 #: tmainform.edsaveto.texthint
-msgctxt "TMAINFORM.EDSAVETO.TEXTHINT"
+msgctxt "tmainform.edsaveto.texthint"
 msgid "Save to"
-msgstr "Сохранить в"
+msgstr ""
 
 #: tmainform.edurl.texthint
 msgid "Input URL here"
-msgstr "Ввести адрес сюда"
+msgstr ""
 
 #: tmainform.edwebsitessearch.texthint
-msgctxt "TMAINFORM.EDWEBSITESSEARCH.TEXTHINT"
 msgid "Search website..."
-msgstr "Поиск сайта..."
+msgstr ""
 
 #: tmainform.gbdialogs.caption
 msgid "Show dialog confirmation for"
-msgstr "Показать диалог подтверждения когда"
+msgstr ""
 
 #: tmainform.gbdroptarget.caption
 msgid "Drop Box"
-msgstr "Дропбокс"
+msgstr ""
 
 #: tmainform.gbimageconversion.caption
 msgid "Image Conversion"
-msgstr "Конвертация изображений"
+msgstr ""
 
 #: tmainform.gboptionexternal.caption
 msgid "External program"
-msgstr "Внешняя программа"
+msgstr ""
 
 #: tmainform.gboptionfavorites.caption
-msgctxt "TMAINFORM.GBOPTIONFAVORITES.CAPTION"
+msgctxt "tmainform.gboptionfavorites.caption"
 msgid "Favorites"
-msgstr "Избранное"
+msgstr ""
 
 #: tmainform.gboptionproxy.caption
 msgid "Proxy config"
-msgstr "Конфигурация прокси-сервера"
+msgstr ""
 
 #: tmainform.gboptionrenaming.caption
 msgid "Renaming"
-msgstr "Переименовать"
+msgstr ""
 
 #: tmainform.lbdefaultdownloadpath.caption
 msgid "Choose the default download path:"
-msgstr "Выберите путь загрузки по умолчанию:"
+msgstr ""
 
 #: tmainform.lbdroptargetopacity.caption
 msgid "Opacity"
-msgstr "Прозрачность"
+msgstr ""
 
 #: tmainform.lbfilterartists.caption
 msgctxt "tmainform.lbfilterartists.caption"
 msgid "Artist"
-msgstr "Артист"
+msgstr ""
 
 #: tmainform.lbfilterauthors.caption
 msgctxt "tmainform.lbfilterauthors.caption"
 msgid "Author"
-msgstr "Автор"
+msgstr ""
 
 #: tmainform.lbfiltercustomgenres.caption
 msgid "Custom Genres"
-msgstr "Пользовательские жанры"
+msgstr ""
 
 #: tmainform.lbfilterhint.caption
 msgctxt "tmainform.lbfilterhint.caption"
 msgid "[?]"
-msgstr "[?]"
+msgstr ""
 
 #: tmainform.lbfilterhint.hint
-#, fuzzy
-#| msgid ""
-#| "Genres:\n"
-#| "- Checked: Include this genre.\n"
-#| "- Unchecked: Exclude this genre.\n"
-#| "- Grayed: Doesn't matter.\n"
-#| "\n"
-#| "Custom Genres:\n"
-#| "- Separate multiple genres with ','.\n"
-#| "- Exclude a genre by placing '!' or '-' at the beginning of a genre.\n"
-#| "- Example: Adventure,!Ecchi,Comedy.\n"
 msgid ""
 "Genres:\n"
 "- Checked: Include this genre.\n"
@@ -1594,71 +1432,49 @@ msgid ""
 "- Exclude a genre by placing '!' or '-' at the beginning of a genre.\n"
 "- Example: Adventure,!Ecchi,Comedy."
 msgstr ""
-"Жанры:\n"
-"- Отмечено: Включить этот жанр.\n"
-"- не отмечено: Исключить этот жанр.\n"
-"- Серое: Не имеет значения.\n"
-" \n"
-"Свои жанры:\n"
-"- Разделяйте несколько жанров с помощью ','.\n"
-"- Исключите жанр, поставив '!' или '-' в начале жанра.\n"
-"- Пример: Приключение,!Этти, Комедия.\n"
 
 #: tmainform.lbfilterstatus.caption
-msgctxt "TMAINFORM.LBFILTERSTATUS.CAPTION"
+msgctxt "tmainform.lbfilterstatus.caption"
 msgid "Status"
-msgstr "Статус"
+msgstr ""
 
 #: tmainform.lbfiltersummary.caption
 msgid "Summary"
-msgstr "Описание"
+msgstr ""
 
 #: tmainform.lbfiltertitle.caption
 msgctxt "tmainform.lbfiltertitle.caption"
 msgid "Title"
-msgstr "Название"
+msgstr ""
 
 #: tmainform.lbjpegquality.caption
 msgid "JPEG quality"
-msgstr "Качество JPEG"
+msgstr ""
 
 #: tmainform.lblogfilename.caption
 msgid "Log file:"
-msgstr "Файл лога:"
+msgstr ""
 
 #: tmainform.lbmode.caption
 msgid "Mode: Show all (0)"
-msgstr "Режим: Показать все (0)"
+msgstr ""
 
 #: tmainform.lboptionautocheckfavintervalminutes.caption
 #, object-pascal-format
-msgctxt "TMAINFORM.LBOPTIONAUTOCHECKFAVINTERVALMINUTES.CAPTION"
+msgctxt "tmainform.lboptionautocheckfavintervalminutes.caption"
 msgid "Auto check for new chapter every %d minutes"
-msgstr "Автоматическая проверка новой главы каждые %d минут"
+msgstr ""
 
 #: tmainform.lboptionchaptercustomrename.caption
-msgctxt "TMAINFORM.LBOPTIONCHAPTERCUSTOMRENAME.CAPTION"
 msgid "Chapter name:"
-msgstr "Название главы:"
+msgstr ""
 
 #: tmainform.lboptionchaptercustomrenamehint.caption
-msgctxt "TMAINFORM.LBOPTIONCHAPTERCUSTOMRENAMEHINT.CAPTION"
+msgctxt "tmainform.lboptionchaptercustomrenamehint.caption"
 msgid "[?]"
-msgstr "[?]"
+msgstr ""
 
 #: tmainform.lboptionchaptercustomrenamehint.hint
-#, fuzzy
-#| msgid ""
-#| "%WEBSITE% : Website name\n"
-#| "%MANGA% : Manga title\n"
-#| "%CHAPTER% : Chapter title\n"
-#| "%AUTHOR% : Author\n"
-#| "%ARTIST% : Artist\n"
-#| "%NUMBERING% : Numbering\n"
-#| "\n"
-#| "Note:\n"
-#| "Chapter folder name must have at least %CHAPTER% or %NUMBERING%.\n"
-msgctxt "TMAINFORM.LBOPTIONCHAPTERCUSTOMRENAMEHINT.HINT"
 msgid ""
 "%WEBSITE% : Website name\n"
 "%MANGA% : Manga title\n"
@@ -1670,52 +1486,34 @@ msgid ""
 "Note:\n"
 "Chapter folder name must have at least %CHAPTER% or %NUMBERING%."
 msgstr ""
-"%WEBSITE% : Название сайта\n"
-"%MANGA%: Название манги\n"
-"%CHAPTER%: Название главы\n"
-"%AUTHOR%: Автор\n"
-"%ARTIST%: Артист\n"
-"%NUMBERING% : Нумерация\n"
-"\n"
-"Примечание:\n"
-"Имя папки главы должно содержать как минимум %CHAPTER% или %NUMBERING%.\n"
 
 #: tmainform.lboptionconnectiontimeout.caption
 msgid "Connection timeout (seconds)"
-msgstr "Время ожидания подключения (в секундах)"
+msgstr ""
 
 #: tmainform.lboptionexternal.caption
 msgid "Open manga by using external program:"
-msgstr "Открыть мангу, используя внешнюю программу:"
+msgstr ""
 
 #: tmainform.lboptionexternalparams.caption
 msgid "Parameters:"
-msgstr "Параметры боксмода:"
+msgstr ""
 
 #: tmainform.lboptionexternalparamshint.caption
-msgctxt "TMAINFORM.LBOPTIONEXTERNALPARAMSHINT.CAPTION"
+msgctxt "tmainform.lboptionexternalparamshint.caption"
 msgid "[?]"
-msgstr "[?]"
+msgstr ""
 
 #: tmainform.lboptionfilenamecustomrename.caption
 msgid "Filename:"
-msgstr "Имя файла:"
+msgstr ""
 
 #: tmainform.lboptionfilenamecustomrenamehint.caption
-msgctxt "TMAINFORM.LBOPTIONFILENAMECUSTOMRENAMEHINT.CAPTION"
+msgctxt "tmainform.lboptionfilenamecustomrenamehint.caption"
 msgid "[?]"
-msgstr "[?]"
+msgstr ""
 
 #: tmainform.lboptionfilenamecustomrenamehint.hint
-#, fuzzy
-#| msgid ""
-#| "%WEBSITE% : Website name\n"
-#| "%MANGA% : Manga title\n"
-#| "%CHAPTER% : Chapter title\n"
-#| "%FILENAME% : Filename\n"
-#| "\n"
-#| "Note:\n"
-#| "Filename must have at least %FILENAME%\n"
 msgid ""
 "%WEBSITE% : Website name\n"
 "%MANGA% : Manga title\n"
@@ -1725,46 +1523,29 @@ msgid ""
 "Note:\n"
 "Filename must have at least %FILENAME%"
 msgstr ""
-"%WEBSITE%: Название сайта\n"
-"%MANGA%: Название манги\n"
-"%CHAPTER%: Название главы\n"
-"%FILENAME%: Имя файла\n"
-"\n"
-"Примечание:\n"
-"Имя файла должно содержать как минимум %FILENAME%\n"
 
 #: tmainform.lboptionhost.caption
 msgid "Host"
-msgstr "Сервер"
+msgstr ""
 
 #: tmainform.lboptionlanguage.caption
 msgid "Language:"
-msgstr "Язык:"
+msgstr ""
 
 #: tmainform.lboptionletfmddo.caption
 msgid "After download finish:"
-msgstr "После завершения загрузки:"
+msgstr ""
 
 #: tmainform.lboptionmangacustomrename.caption
-msgctxt "TMAINFORM.LBOPTIONMANGACUSTOMRENAME.CAPTION"
 msgid "Manga folder name:"
-msgstr "Имя каталога манги:"
+msgstr ""
 
 #: tmainform.lboptionmangacustomrenamehint.caption
-msgctxt "TMAINFORM.LBOPTIONMANGACUSTOMRENAMEHINT.CAPTION"
+msgctxt "tmainform.lboptionmangacustomrenamehint.caption"
 msgid "[?]"
-msgstr "[?]"
+msgstr ""
 
 #: tmainform.lboptionmangacustomrenamehint.hint
-#, fuzzy
-#| msgid ""
-#| "%WEBSITE% : Website name\n"
-#| "%MANGA% : Manga title\n"
-#| "%AUTHOR% : Author\n"
-#| "%ARTIST% : Artist\n"
-#| "\n"
-#| "Note:\n"
-#| "Manga folder name must have at least %MANGA%.\n"
 msgid ""
 "%WEBSITE% : Website name\n"
 "%MANGA% : Manga title\n"
@@ -1774,414 +1555,400 @@ msgid ""
 "Note:\n"
 "Manga folder name must have at least %MANGA%."
 msgstr ""
-"%WEBSITE%: Название сайта\n"
-"%MANGA%: Название манги\n"
-"%AUTHOR%: Автор\n"
-"%ARTIST%: Артист \n"
-"\n"
-"Примечание:\n"
-"Имя папки манги должно содержать как минимум %MANGA%.\n"
 
 #: tmainform.lboptionmaxparallel.caption
 msgid "Number of downloaded tasks at the same time"
-msgstr "Количество одновременно загружаемых задач"
+msgstr ""
 
 #: tmainform.lboptionmaxretry.caption
 msgid "Number of retry times if tasks have download problems (-1 = always retry)"
-msgstr "Количество повторных попыток, если задачи имеют проблемы с загрузкой (-1 = всегда повторять)"
+msgstr ""
 
 #: tmainform.lboptionmaxthread.caption
 msgid "Number of downloaded files per task at the same time"
-msgstr "Количество одновременно загружаемых файлов на одну задачу"
+msgstr ""
 
 #: tmainform.lboptionnewmangatime.caption
 msgid "New manga based on  it's update time (days)"
-msgstr "Новая манга основана на времени ее обновления (дней)"
+msgstr ""
 
 #: tmainform.lboptionpass.caption
 msgctxt "tmainform.lboptionpass.caption"
 msgid "Password"
-msgstr "Пароль"
+msgstr ""
 
 #: tmainform.lboptionpdfquality.caption
 msgid "PDF Quality Level"
 msgstr ""
 
 #: tmainform.lboptionpdfquality.hint
-msgctxt "TMAINFORM.LBOPTIONPDFQUALITY.HINT"
+msgctxt "tmainform.lboptionpdfquality.hint"
 msgid "100 = FlateEncode (lossless), lower = DCTEncode (lossy)"
-msgstr "100 = FlateEncode (без потерь), lower = DCTEncode (с потерями)"
+msgstr ""
 
 #: tmainform.lboptionpdfqualityhint.caption
-msgctxt "TMAINFORM.LBOPTIONPDFQUALITYHINT.CAPTION"
+msgctxt "tmainform.lboptionpdfqualityhint.caption"
 msgid "[?]"
-msgstr "[?]"
+msgstr ""
 
 #: tmainform.lboptionport.caption
 msgid "Port"
-msgstr "Порт"
+msgstr ""
 
 #: tmainform.lboptionproxytype.caption
 msgid "Type"
-msgstr "Тип"
+msgstr ""
 
 #: tmainform.lboptionrenamedigits.caption
 msgid "Rename  digits"
-msgstr "Переименовать цифры"
+msgstr ""
 
 #: tmainform.lboptionretryfailedtask.caption
 msgid "Number of retry times if task failed"
-msgstr "Количество попыток при ошибке в задаче"
+msgstr ""
 
 #: tmainform.lboptionuser.caption
 msgctxt "tmainform.lboptionuser.caption"
 msgid "Username"
-msgstr "Имя пользователя"
+msgstr ""
 
 #: tmainform.lbpngcompressionlevel.caption
-msgctxt "tmainform.lbpngcompressionlevel.caption"
 msgid "PNG Compression level"
-msgstr "Уровень компрессии PNG"
+msgstr ""
 
 #: tmainform.lbsaveto.caption
 msgid "Save to:"
-msgstr "Сохранить в:"
+msgstr ""
 
 #: tmainform.lbwebpsaveas.caption
 msgid "Save WebP as"
-msgstr "Сохранять WebP как"
+msgstr ""
 
 #: tmainform.medturldelete.caption
-msgctxt "TMAINFORM.MEDTURLDELETE.CAPTION"
+msgctxt "tmainform.medturldelete.caption"
 msgid "Delete"
-msgstr "Удалить"
+msgstr ""
 
 #: tmainform.medurlcopy.caption
 msgctxt "tmainform.medurlcopy.caption"
 msgid "Copy"
-msgstr "Скопировать"
+msgstr ""
 
 #: tmainform.medurlcut.caption
 msgid "Cut"
-msgstr "Вырезать"
+msgstr ""
 
 #: tmainform.medurlpaste.caption
 msgid "Paste"
-msgstr "Вставить"
+msgstr ""
 
 #: tmainform.medurlpasteandgo.caption
 msgid "Paste and go"
-msgstr "Вставить и пойти"
+msgstr ""
 
 #: tmainform.medurlselectall.caption
 msgid "Select all"
-msgstr "Выбрать все"
+msgstr ""
 
 #: tmainform.medurlundo.caption
 msgid "Undo"
-msgstr "Отменить"
+msgstr ""
 
 #: tmainform.miabortsilentthread.caption
 msgctxt "tmainform.miabortsilentthread.caption"
 msgid "Abort"
-msgstr "Отменить"
+msgstr ""
 
 #: tmainform.michapterlistascending.caption
 msgid "Ascending"
-msgstr "Восходящий"
+msgstr ""
 
 #: tmainform.michapterlistcheckall.caption
 msgctxt "tmainform.michapterlistcheckall.caption"
 msgid "Check all"
-msgstr "Отметить все"
+msgstr ""
 
 #: tmainform.michapterlistcheckselected.caption
 msgid "Check selected"
-msgstr "Отметить выделенные"
+msgstr ""
 
 #: tmainform.michapterlistdescending.caption
 msgid "Descending"
-msgstr "Нисходящий"
+msgstr ""
 
 #: tmainform.michapterlistfilter.caption
-msgctxt "TMAINFORM.MICHAPTERLISTFILTER.CAPTION"
+msgctxt "tmainform.michapterlistfilter.caption"
 msgid "Filter"
-msgstr "Фильтр"
+msgstr ""
 
 #: tmainform.michapterlisthidedownloaded.caption
 msgid "Hide downloaded chapters"
-msgstr "Скрыть загруженные главы"
+msgstr ""
 
 #: tmainform.michapterlisthighlight.caption
 msgid "Highlight downloaded chapters"
-msgstr "Подсветить загруженные главы"
+msgstr ""
 
 #: tmainform.michapterlistuncheckall.caption
 msgctxt "tmainform.michapterlistuncheckall.caption"
 msgid "Uncheck all"
-msgstr "Снять отметку со всех"
+msgstr ""
 
 #: tmainform.michapterlistuncheckselected.caption
 msgid "Uncheck selected"
-msgstr "Снять отметку с выделенных"
+msgstr ""
 
 #: tmainform.midownloaddelete.caption
 msgctxt "tmainform.midownloaddelete.caption"
 msgid "Delete"
-msgstr "Удалить"
+msgstr ""
 
 #: tmainform.midownloaddeletecompleted.caption
-msgctxt "TMAINFORM.MIDOWNLOADDELETECOMPLETED.CAPTION"
+msgctxt "tmainform.midownloaddeletecompleted.caption"
 msgid "Delete all completed tasks"
-msgstr "Удалить все выполненные задачи"
+msgstr ""
 
 #: tmainform.midownloaddeletetask.caption
 msgid "Task only"
-msgstr "Только задание"
+msgstr ""
 
 #: tmainform.midownloaddeletetaskdata.caption
 msgid "Task + Data"
-msgstr "Задача + Данные"
+msgstr ""
 
 #: tmainform.midownloaddeletetaskdatafavorite.caption
 msgid "Task + Data + Favorite"
-msgstr "Задача + Данные + Избранное"
+msgstr ""
 
 #: tmainform.midownloaddisable.caption
 msgctxt "tmainform.midownloaddisable.caption"
 msgid "Disable"
-msgstr "Отключить"
+msgstr ""
 
 #: tmainform.midownloadenable.caption
 msgctxt "tmainform.midownloadenable.caption"
 msgid "Enable"
-msgstr "Включить"
+msgstr ""
 
 #: tmainform.midownloadmergecompleted.caption
 msgid "Merge completed tasks"
-msgstr "Объединить завершенные задачи"
+msgstr ""
 
 #: tmainform.midownloadopenfolder.caption
 msgctxt "tmainform.midownloadopenfolder.caption"
 msgid "Open Folder"
-msgstr "Открыть папку"
+msgstr ""
 
 #: tmainform.midownloadopenwith.caption
 msgctxt "tmainform.midownloadopenwith.caption"
 msgid "Open ..."
-msgstr "Открыть..."
+msgstr ""
 
 #: tmainform.midownloadresume.caption
 msgid "Resume"
-msgstr "Продолжить"
+msgstr ""
 
 #: tmainform.midownloadstop.caption
 msgid "Stop"
-msgstr "Остановить"
+msgstr ""
 
 #: tmainform.midownloadviewmangainfo.caption
 msgctxt "tmainform.midownloadviewmangainfo.caption"
 msgid "View manga info"
-msgstr "Информация о манге"
+msgstr ""
 
 #: tmainform.mifavoriteschangecurrentchapter.caption
 msgid "Change \"Current chapter\""
-msgstr "Изменить \"Текущая глава\""
+msgstr ""
 
 #: tmainform.mifavoriteschangesaveto.caption
 msgid "Change \"Save to\""
-msgstr "Изменить \"Сохранить в\""
+msgstr ""
 
 #: tmainform.mifavoriteschecknewchapter.caption
-msgctxt "TMAINFORM.MIFAVORITESCHECKNEWCHAPTER.CAPTION"
+msgctxt "tmainform.mifavoriteschecknewchapter.caption"
 msgid "Check for new chapter"
-msgstr "Проверить на новые главы"
+msgstr ""
 
 #: tmainform.mifavoritesdefaultaction.caption
-msgctxt "tmainform.mifavoritesdefaultaction.caption"
 msgid "Default Action"
-msgstr "Default Action"
+msgstr ""
 
 #: tmainform.mifavoritesdefaultactionchecknewchapters.caption
-msgctxt "tmainform.mifavoritesdefaultactionchecknewchapters.caption"
 msgid "Check for new Chapters"
-msgstr "Check for new Chapters"
+msgstr ""
 
 #: tmainform.mifavoritesdefaultactionopenfolder.caption
 msgctxt "tmainform.mifavoritesdefaultactionopenfolder.caption"
 msgid "Open Folder"
-msgstr "Open Folder"
+msgstr ""
 
 #: tmainform.mifavoritesdefaultactionrename.caption
 msgctxt "tmainform.mifavoritesdefaultactionrename.caption"
 msgid "Rename"
-msgstr "Rename"
+msgstr ""
 
 #: tmainform.mifavoritesdefaultactionshowinfo.caption
-msgctxt "tmainform.mifavoritesdefaultactionshowinfo.caption"
 msgid "View Manga Info"
-msgstr "View Manga Info"
+msgstr ""
 
 #: tmainform.mifavoritesdelete.caption
-msgctxt "TMAINFORM.MIFAVORITESDELETE.CAPTION"
+msgctxt "tmainform.mifavoritesdelete.caption"
 msgid "Delete"
-msgstr "Удалить"
+msgstr ""
 
 #: tmainform.mifavoritesdisable.caption
 msgctxt "tmainform.mifavoritesdisable.caption"
 msgid "Disable"
-msgstr "Отключить"
+msgstr ""
 
 #: tmainform.mifavoritesdownloadall.caption
 msgctxt "tmainform.mifavoritesdownloadall.caption"
 msgid "Download all"
-msgstr "Загрузить все"
+msgstr ""
 
 #: tmainform.mifavoritesenable.caption
 msgctxt "tmainform.mifavoritesenable.caption"
 msgid "Enable"
-msgstr "Включить"
+msgstr ""
 
 #: tmainform.mifavoritesopenfolder.caption
-msgctxt "TMAINFORM.MIFAVORITESOPENFOLDER.CAPTION"
+msgctxt "tmainform.mifavoritesopenfolder.caption"
 msgid "Open Folder"
-msgstr "Открыть папку"
+msgstr ""
 
 #: tmainform.mifavoritesopenwith.caption
-msgctxt "TMAINFORM.MIFAVORITESOPENWITH.CAPTION"
+msgctxt "tmainform.mifavoritesopenwith.caption"
 msgid "Open ..."
-msgstr "Открыть..."
+msgstr ""
 
 #: tmainform.mifavoritesrename.caption
 msgctxt "tmainform.mifavoritesrename.caption"
 msgid "Rename"
-msgstr "Переименовать"
+msgstr ""
 
 #: tmainform.mifavoritesstopchecknewchapter.caption
 msgid "Stop check for new chapter"
-msgstr "Не проверять на новые главы"
+msgstr ""
 
 #: tmainform.mifavoritestransferwebsite.caption
-msgctxt "tmainform.mifavoritestransferwebsite.caption"
 msgid "Transfer website"
-msgstr "Перенести на другой сайт"
+msgstr ""
 
 #: tmainform.mifavoritesviewinfos.caption
-msgctxt "TMAINFORM.MIFAVORITESVIEWINFOS.CAPTION"
+msgctxt "tmainform.mifavoritesviewinfos.caption"
 msgid "View manga info"
-msgstr "Информация о манге"
+msgstr ""
 
 #: tmainform.mihighlightnewmanga.caption
 msgid "Highlight new manga"
-msgstr "Подсветить новую мангу"
+msgstr ""
 
 #: tmainform.mimangalistaddtofavorites.caption
 msgid "Add to Favorites"
-msgstr "Добавить в избранное"
+msgstr ""
 
 #: tmainform.mimangalistdelete.caption
 msgctxt "tmainform.mimangalistdelete.caption"
 msgid "Delete"
-msgstr "Удалить"
+msgstr ""
 
 #: tmainform.mimangalistdownloadall.caption
-msgctxt "TMAINFORM.MIMANGALISTDOWNLOADALL.CAPTION"
+msgctxt "tmainform.mimangalistdownloadall.caption"
 msgid "Download all"
-msgstr "Загрузить все"
+msgstr ""
 
 #: tmainform.mimangalistviewinfos.caption
 msgid "View manga infos"
-msgstr "Информация о манге"
+msgstr ""
 
 #: tmainform.mitrayafterdownloadfinish.caption
 msgid "After download finish"
-msgstr "После загрузки"
+msgstr ""
 
 #: tmainform.mitrayexit.caption
-msgctxt "TMAINFORM.MITRAYEXIT.CAPTION"
+msgctxt "tmainform.mitrayexit.caption"
 msgid "Exit"
-msgstr "Выход"
+msgstr ""
 
 #: tmainform.mitrayfinishexit.caption
 msgctxt "tmainform.mitrayfinishexit.caption"
 msgid "Exit"
-msgstr "Выход"
+msgstr ""
 
 #: tmainform.mitrayfinishhibernate.caption
 msgid "Hibernate"
-msgstr "Hibernate"
+msgstr ""
 
 #: tmainform.mitrayfinishnothing.caption
 msgid "Nothing"
-msgstr "Бесплатно"
+msgstr ""
 
 #: tmainform.mitrayfinishshutdown.caption
 msgid "Shutdown"
-msgstr "Неисправность"
+msgstr ""
 
 #: tmainform.mitrayrestore.caption
 msgid "Restore"
-msgstr "Восстановить"
+msgstr ""
 
 #: tmainform.mitrayresumeall.caption
 msgid "Resume all"
-msgstr "Продолжить все"
+msgstr ""
 
 #: tmainform.mitrayshowdropbox.caption
-msgctxt "TMAINFORM.MITRAYSHOWDROPBOX.CAPTION"
+msgctxt "tmainform.mitrayshowdropbox.caption"
 msgid "Show Drop Box"
-msgstr "Показать Drop Box"
+msgstr ""
 
 #: tmainform.mitraystopall.caption
 msgid "Stop all"
-msgstr "Остановить все"
+msgstr ""
 
 #: tmainform.mndownload1click.caption
 msgid "Download all lists from server at once"
-msgstr "Загрузите все списки с сервера одновременно"
+msgstr ""
 
 #: tmainform.mnfiltergenreallcheck.caption
-msgctxt "TMAINFORM.MNFILTERGENREALLCHECK.CAPTION"
+msgctxt "tmainform.mnfiltergenreallcheck.caption"
 msgid "Check all"
-msgstr "Отметить все"
+msgstr ""
 
 #: tmainform.mnfiltergenreallindeterminate.caption
 msgid "Indeterminate all"
-msgstr "Определить все"
+msgstr ""
 
 #: tmainform.mnfiltergenrealluncheck.caption
-msgctxt "TMAINFORM.MNFILTERGENREALLUNCHECK.CAPTION"
+msgctxt "tmainform.mnfiltergenrealluncheck.caption"
 msgid "Uncheck all"
-msgstr "Снить выделение со всех"
+msgstr ""
 
 #: tmainform.mnupdate1click.caption
 msgid "Update all lists at once"
-msgstr "Обновление всех списков одновременно"
+msgstr ""
 
 #: tmainform.mnupdatedownfromserver.caption
 msgid "Download manga list from server"
-msgstr "Загрузить список манги с сервера"
+msgstr ""
 
 #: tmainform.mnupdatelist.caption
-msgctxt "TMAINFORM.MNUPDATELIST.CAPTION"
+msgctxt "tmainform.mnupdatelist.caption"
 msgid "Update manga list"
-msgstr "Обновить список манги"
+msgstr ""
 
 #: tmainform.rball.caption
 msgid "Have all genre checked"
-msgstr "Содержит все отмеченные жанры"
+msgstr ""
 
 #: tmainform.rbfavoritesshowall.caption
-#, fuzzy
 msgctxt "tmainform.rbfavoritesshowall.caption"
 msgid "All"
-msgstr "Все"
+msgstr ""
 
 #: tmainform.rbfavoritesshowdisabled.caption
-#, fuzzy
 msgctxt "tmainform.rbfavoritesshowdisabled.caption"
 msgid "Disabled"
-msgstr "Отключено"
+msgstr ""
 
 #: tmainform.rbfavoritesshowenabled.caption
 msgctxt "tmainform.rbfavoritesshowenabled.caption"
@@ -2190,253 +1957,247 @@ msgstr ""
 
 #: tmainform.rbone.caption
 msgid "Have one of genres checked"
-msgstr "Содержит один из отмеченных жанров"
+msgstr ""
 
 #: tmainform.rgdroptargetmode.caption
 msgid "Mode"
-msgstr "Режим"
+msgstr ""
 
 #: tmainform.rgoptioncompress.caption
 msgid "Save downloaded chapters as"
-msgstr "Сохранить загруженные главы как"
+msgstr ""
 
 #: tmainform.seoptionpdfquality.hint
 msgctxt "tmainform.seoptionpdfquality.hint"
 msgid "100 = FlateEncode (lossless), lower = DCTEncode (lossy)"
-msgstr "100 = FlateEncode (без потерь), lower = DCTEncode (с потерями)"
+msgstr ""
 
 #: tmainform.tbdownloaddeletecompleted.caption
 msgctxt "tmainform.tbdownloaddeletecompleted.caption"
 msgid "Delete all completed tasks"
-msgstr "Удалить все выполненные задачи"
+msgstr ""
 
 #: tmainform.tbdownloadresumeall.caption
 msgid "Resume All"
-msgstr "Продолжить все"
+msgstr ""
 
 #: tmainform.tbdownloadstopall.caption
 msgid "Stop All"
-msgstr "Остановить все"
+msgstr ""
 
 #: tmainform.tbmidownloadmovebottom.hint
 msgid "Move selected item(s) to bottom"
-msgstr "Переместить выбранные элементы в конец списка"
+msgstr ""
 
 #: tmainform.tbmidownloadmovedown.hint
 msgid "Move selected item(s) down"
-msgstr "Сдвинуть выбранные элементы вниз"
+msgstr ""
 
 #: tmainform.tbmidownloadmovetop.hint
 msgid "Move selected item(s) to top"
-msgstr "Переместить выбранные элементы в начало списка"
+msgstr ""
 
 #: tmainform.tbmidownloadmoveup.hint
 msgid "Move selected item(s) up"
-msgstr "Сдвинуть выбранные элементы вверх"
+msgstr ""
 
 #: tmainform.tbwebsitescollapseall.caption
 msgid "Collapse All"
-msgstr "Свернуть все"
+msgstr ""
 
 #: tmainform.tbwebsitesexpandall.caption
 msgid "Expand All"
-msgstr "Раскрыть все"
+msgstr ""
 
 #: tmainform.tbwebsitesselectall.caption
 msgid "Select All"
-msgstr "Выбрать все"
+msgstr ""
 
 #: tmainform.tbwebsitesunselectall.caption
 msgid "Unselect All"
-msgstr "Снять все"
+msgstr ""
 
 #: tmainform.tsabout.caption
 msgid "About"
-msgstr "О программе"
+msgstr ""
 
 #: tmainform.tsabouttext.caption
 msgid "About FMD"
-msgstr "О программе"
+msgstr ""
 
 #: tmainform.tsaccounts.caption
 msgid "Accounts"
-msgstr "Учётные записи"
+msgstr ""
 
 #: tmainform.tschangelogtext.caption
 msgid "Changelog"
-msgstr "Журнал изменений"
+msgstr ""
 
 #: tmainform.tsconnections.caption
 msgid "Connections"
-msgstr "Соединение"
+msgstr ""
 
 #: tmainform.tscustomcolor.caption
 msgid "Custom color"
-msgstr "Пользовательские цвета"
+msgstr ""
 
 #: tmainform.tsdialogs.caption
 msgid "Dialogs"
-msgstr "Диалоги"
+msgstr ""
 
 #: tmainform.tsdownload.caption
-msgctxt "tmainform.tsdownload.caption"
 msgid "Downloads"
-msgstr "Загрузки"
+msgstr ""
 
 #: tmainform.tsfavorites.caption
 msgctxt "tmainform.tsfavorites.caption"
 msgid "Favorites"
-msgstr "Избранное"
+msgstr ""
 
 #: tmainform.tsgeneral.caption
 msgid "General"
-msgstr "Основные"
+msgstr ""
 
 #: tmainform.tsinfofilteradv.caption
 msgctxt "tmainform.tsinfofilteradv.caption"
 msgid "Filter"
-msgstr "Фильтр"
+msgstr ""
 
 #: tmainform.tsinfomanga.caption
 msgid "Info"
-msgstr "Информация"
+msgstr ""
 
 #: tmainform.tsinformation.caption
 msgid "Manga Info"
-msgstr "Информация о манге"
+msgstr ""
 
 #: tmainform.tslog.caption
 msgid "Log"
-msgstr "Лог"
+msgstr ""
 
 #: tmainform.tsmisc.caption
 msgid "Misc"
-msgstr "Разное"
+msgstr ""
 
 #: tmainform.tsoption.caption
 msgctxt "tmainform.tsoption.caption"
 msgid "Options"
-msgstr "Настройки"
+msgstr ""
 
 #: tmainform.tssaveto.caption
-msgctxt "TMAINFORM.TSSAVETO.CAPTION"
+msgctxt "tmainform.tssaveto.caption"
 msgid "Save to"
-msgstr "Сохранение"
+msgstr ""
 
 #: tmainform.tsupdate.caption
 msgid "Updates"
-msgstr "Обновления"
+msgstr ""
 
 #: tmainform.tsview.caption
 msgid "View"
-msgstr "Вид"
+msgstr ""
 
 #: tmainform.tswebsiteadvanced.caption
 msgid "Advanced"
-msgstr "Расширенные"
+msgstr ""
 
 #: tmainform.tswebsitemodules.caption
 msgid "Modules"
-msgstr "Модули"
+msgstr ""
 
 #: tmainform.tswebsiteoptions.caption
-msgctxt "TMAINFORM.TSWEBSITEOPTIONS.CAPTION"
+msgctxt "tmainform.tswebsiteoptions.caption"
 msgid "Options"
-msgstr "Настройки"
+msgstr ""
 
 #: tmainform.tswebsites.caption
 msgctxt "tmainform.tswebsites.caption"
 msgid "Websites"
-msgstr "Веб-сайты"
+msgstr ""
 
 #: tmainform.tswebsiteselection.caption
-msgctxt "TMAINFORM.TSWEBSITESELECTION.CAPTION"
+msgctxt "tmainform.tswebsiteselection.caption"
 msgid "Websites"
-msgstr "Веб-сайты"
+msgstr ""
 
 #: tmainform.vtdownload.header.columns[0].text
 msgid "Manga"
-msgstr "Манга"
+msgstr ""
 
 #: tmainform.vtdownload.header.columns[1].text
 msgctxt "tmainform.vtdownload.header.columns[1].text"
 msgid "Status"
-msgstr "Статус"
+msgstr ""
 
 #: tmainform.vtdownload.header.columns[2].text
 msgid "Progress"
-msgstr "Прогресс"
+msgstr ""
 
 #: tmainform.vtdownload.header.columns[3].text
-msgctxt "tmainform.vtdownload.header.columns[3].text"
 msgid "Transfer rate"
-msgstr "Скоростъ загрузки"
+msgstr ""
 
 #: tmainform.vtdownload.header.columns[4].text
 msgctxt "tmainform.vtdownload.header.columns[4].text"
 msgid "Website"
-msgstr "Сайт"
+msgstr ""
 
 #: tmainform.vtdownload.header.columns[5].text
 msgctxt "tmainform.vtdownload.header.columns[5].text"
 msgid "Save to"
-msgstr "Сохранить в"
+msgstr ""
 
 #: tmainform.vtdownload.header.columns[6].text
-msgctxt "TMAINFORM.VTDOWNLOAD.HEADER.COLUMNS[6].TEXT"
 msgid "Added"
-msgstr "Добавлена"
+msgstr ""
 
 #: tmainform.vtfavorites.header.columns[0].text
 msgid "#"
-msgstr "#"
+msgstr ""
 
 #: tmainform.vtfavorites.header.columns[1].text
-msgctxt "TMAINFORM.VTFAVORITES.HEADER.COLUMNS[1].TEXT"
+msgctxt "tmainform.vtfavorites.header.columns[1].text"
 msgid "Title"
-msgstr "Название"
+msgstr ""
 
 #: tmainform.vtfavorites.header.columns[2].text
 msgid "Current chapter"
-msgstr "Текущая глава"
+msgstr ""
 
 #: tmainform.vtfavorites.header.columns[3].text
-msgctxt "TMAINFORM.VTFAVORITES.HEADER.COLUMNS[3].TEXT"
+msgctxt "tmainform.vtfavorites.header.columns[3].text"
 msgid "Website"
-msgstr "Сайт"
+msgstr ""
 
 #: tmainform.vtfavorites.header.columns[4].text
-msgctxt "TMAINFORM.VTFAVORITES.HEADER.COLUMNS[4].TEXT"
+msgctxt "tmainform.vtfavorites.header.columns[4].text"
 msgid "Save to"
-msgstr "Сохранить в"
+msgstr ""
 
 #: tnewchapter.btcancel.caption
-msgctxt "TNEWCHAPTER.BTCANCEL.CAPTION"
 msgid "&Cancel"
-msgstr "Отмена"
+msgstr ""
 
 #: tnewchapter.btdownload.caption
-msgctxt "TNEWCHAPTER.BTDOWNLOAD.CAPTION"
 msgid "&Download"
-msgstr "Загрузить"
+msgstr ""
 
 #: tnewchapter.btqueue.caption
-msgctxt "TNEWCHAPTER.BTQUEUE.CAPTION"
 msgid "&Add to queue"
-msgstr "Добавить в очередь"
+msgstr ""
 
 #: tnewchapter.caption
 msgid "New Chapter Notification"
-msgstr "Уведомление о новой главе"
+msgstr ""
 
 #: tselectdirectoryform.btok.caption
 msgctxt "tselectdirectoryform.btok.caption"
 msgid "OK"
-msgstr "OK"
+msgstr ""
 
 #: tselectdirectoryform.caption
 msgid "Select directory"
-msgstr "Выбрать папку"
+msgstr ""
 
 #: tselectdirectoryform.lbdescription.caption
 msgid ""
@@ -2448,93 +2209,86 @@ msgstr ""
 
 #: tshutdowncounterform.btabort.caption
 msgid "&Abort"
-msgstr "Прервать"
+msgstr ""
 
 #: tshutdowncounterform.btnow.caption
 msgid "&Now"
-msgstr "Сейчас"
+msgstr ""
 
 #: ttransferfavoritesform.btcancel.caption
 msgctxt "ttransferfavoritesform.btcancel.caption"
 msgid "Cancel"
-msgstr "Отмена"
+msgstr ""
 
 #: ttransferfavoritesform.btok.caption
 msgctxt "ttransferfavoritesform.btok.caption"
 msgid "OK"
-msgstr "OK"
+msgstr ""
 
 #: ttransferfavoritesform.caption
 msgid "Transfer Favorites"
-msgstr "Перенос на другой сайт"
+msgstr ""
 
 #: ttransferfavoritesform.ckcleardownloadedchapters.caption
 msgid "Clear downloaded chapter list and reload from server"
-msgstr "Очистить скачанные главы и заново загрузить с сервера"
+msgstr ""
 
 #: ttransferfavoritesform.lbtransferto.caption
-msgctxt "ttransferfavoritesform.lbtransferto.caption"
 msgid "Transfer to"
-msgstr "Перенести на"
+msgstr ""
 
 #: ttransferfavoritesform.rball.caption
 msgctxt "ttransferfavoritesform.rball.caption"
 msgid "All"
-msgstr "Все"
+msgstr ""
 
 #: ttransferfavoritesform.rbinvalid.caption
 msgctxt "ttransferfavoritesform.rbinvalid.caption"
 msgid "Invalid"
-msgstr "Неподтвержденное"
+msgstr ""
 
 #: ttransferfavoritesform.rbvalid.caption
 msgctxt "ttransferfavoritesform.rbvalid.caption"
 msgid "Valid"
-msgstr "Подтвержденное"
+msgstr ""
 
 #: ttransferfavoritesform.vtfavs.header.columns[1].text
 msgctxt "ttransferfavoritesform.vtfavs.header.columns[1].text"
 msgid "Title"
-msgstr "Название"
+msgstr ""
 
 #: ttransferfavoritesform.vtfavs.header.columns[2].text
 msgctxt "ttransferfavoritesform.vtfavs.header.columns[2].text"
 msgid "Website"
-msgstr "Сайт"
+msgstr ""
 
 #: tupdatedialogform.btnlater.caption
 msgid "&Later"
-msgstr "Позже"
+msgstr ""
 
 #: tupdatedialogform.btnupdate.caption
 msgid "&Update"
-msgstr "Обновить"
+msgstr ""
 
 #: tupdatedialogform.lbmessage.caption
-#, fuzzy
-#| msgid ""
-#| "New version found! Do you want to update now?\n"
-#| "FMD will be closed to finish the update.\n"
 msgid ""
 "New version found! Do you want to update now?\n"
 "FMD will be closed to finish the update."
 msgstr ""
-"Найдена новая версия! Хотите обновить сейчас? \n"
-"FMD будет закрыт для завершения обновления. \n"
 
 #: twebsiteselectionform.caption
 msgid "Select a website"
-msgstr "Выбрать сайт"
+msgstr ""
 
 #: twebsitesettingsform.caption
 msgid "WebsiteSettingsForm"
-msgstr "WebsiteSettingsForm"
+msgstr ""
 
 #: twebsitesettingsform.edsearch.texthint
 msgid "Website name"
-msgstr "Название сайта"
+msgstr ""
 
 #: twebsitesettingsform.edsearchproperty.texthint
 msgid "Setting name"
-msgstr "Название параметра"
+msgstr ""
 
