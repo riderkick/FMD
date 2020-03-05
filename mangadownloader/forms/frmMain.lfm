@@ -4950,7 +4950,6 @@ object MainForm: TMainForm
             ChildSizing.ControlsPerLine = 10
             TabOrder = 1
           end
-            AnchorSideLeft.Control = tsAboutText
           object pnAboutVersion: TPanel
             Left = 0
             Height = 0
