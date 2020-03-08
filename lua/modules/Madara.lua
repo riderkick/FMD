@@ -310,6 +310,7 @@ function Init()
   AddWebsiteModule('MangaDao', 'https://mangadao.com', cat)
   AddWebsiteModule('365Manga', 'https://365manga.com', cat)
   AddWebsiteModule('MangaBob', 'https://mangabob.com', cat)
+  AddWebsiteModule('Manga68', 'https://manga68.com', cat)
   
   cat = 'Arabic-Scanlation'
   AddWebsiteModule('3asqOrg', 'https://3asq.org', cat)
@@ -326,4 +327,7 @@ function Init()
   cat = 'Portugues'
   AddWebsiteModule('IchirinNoHanaYuri', 'https://ichirinnohanayuri.com.br', cat)
   AddWebsiteModule('YaoiToshokan', 'https://www.yaoitoshokan.com.br', cat)
+  
+  cat = 'Russian'
+  AddWebsiteModule('BestManga', 'https://bestmanga.club', cat)
 end
