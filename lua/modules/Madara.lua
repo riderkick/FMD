@@ -263,7 +263,7 @@ function Init()
   AddWebsiteModule('DisasterScans', 'https://disasterscans.com', cat)
   
   cat = 'French'
-  AddWebsiteModule('WakaScan', 'http://wakascan.com', cat)
+  AddWebsiteModule('WakaScan', 'https://wakascan.com', cat)
   AddWebsiteModule('ATMSubs', 'https://atm-subs.fr', cat)
   
   cat = 'Indonesian'
