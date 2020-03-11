@@ -36,7 +36,7 @@ function GetInfo()
   mangainfo.Title     = x.XPathString('(//div[contains(@class, "container")]//h2)[1]/substring-after(., "Manga ")')
   mangainfo.Artists   = x.XPathStringAll('//dt[text()="' .. XPathTokenArtists .. '"]/following-sibling::dd[1]')
   
-  v = x.XPath('//ul[@class="chapterszz"]/li/h5')
+  v = x.XPath('//ul[@class="chapters888"]/li/h5')
   for i = 1, v.Count do
     mangainfo.ChapterLinks.Add(x.XPathString('a/@href', v.Get(i)))
     mangainfo.ChapterNames.Add(x.XPathString('.', v.Get(i)))
