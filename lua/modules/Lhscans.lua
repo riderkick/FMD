@@ -43,6 +43,8 @@ function getpagenumber()
           task.pagelinks.add(s)
         end
       end
+    elseif module.website == 'Lhscans' then
+      x.xpathstringall('//img[contains(@class, "chapter-img")]/@data-src', task.pagelinks)
     else
       x.xpathstringall('//img[contains(@class, "chapter-img")]/@src', task.pagelinks)
     end
