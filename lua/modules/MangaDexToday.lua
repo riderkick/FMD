@@ -61,8 +61,8 @@ function GetInfo()
 end
 
 function GetPageNumber()
-	if http.get(MaybeFillHost(module.rooturl,url)) then
-		task.pagelinks.commatext=TXQuery.Create(http.Document).XPathString('//p[@id="arraydata"]')
+	if http.get(MaybeFillHost(module.rooturl,url .. '/0')) then
+		TXQuery.Create(http.Document).XPathStringAll('//div[@id="readerarea"]/img/@src', task.pagelinks)
 		return true
 	else
 		return false
