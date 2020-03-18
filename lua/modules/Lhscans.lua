@@ -2,11 +2,7 @@ function getinfo()
   mangainfo.url=MaybeFillHost(module.RootURL, url)
   if http.get(mangainfo.url) then
     local x=TXQuery.Create(http.document)
-    if module.website == 'Manhwa18' then
-      mangainfo.title = x.xpathstring('//div[@class="container"]//li[3]//span')
-    else
-      mangainfo.title = Trim(SeparateLeft(x.XPathString('//title'), '- Raw'))
-    end
+    mangainfo.title = Trim(SeparateLeft(x.xpathstring('//div[@class="container"]//li[3]//span'), '- Raw'))
     mangainfo.coverlink = MaybeFillHost(module.rooturl, x.xpathstring('//img[@class="thumbnail"]/@src'))
     mangainfo.status = MangaInfoStatusIfPos(x.xpathstring('//ul[@class="manga-info"]/li[contains(., "Status")]//a'))
     mangainfo.authors=x.xpathstring('//ul[@class="manga-info"]/li[contains(., "Author")]//a')
@@ -37,7 +33,7 @@ function getpagenumber()
     if module.website == 'Manhwa18' then
       local v = x.xpath('//img[contains(@class, "chapter-img")]/@src')
       for i = 1, v.count do
-        local s = v.get(i).toString;
+        local s = v.get(i).toString
         s = s:gsub('app/', 'https://manhwa18.com/app/'):gsub('https://manhwa18.net/https://manhwa18.com', 'https://manhwa18.net')
         if string.find(s, ".iff") == nil then
           task.pagelinks.add(s)
@@ -61,8 +57,8 @@ function getnameandlink()
     local v = x.xpath('//span[@manga-slug]//a')
     for i = 1, v.count do
       local v1 = v.get(i)
-      names.Add(Trim(SeparateLeft(v1.toString, '- Raw')));
-      links.Add(v1.getAttribute('href'));
+      names.Add(Trim(SeparateLeft(v1.toString, '- Raw')))
+      links.Add(v1.getAttribute('href'))
     end
     return no_error
   else
@@ -98,4 +94,6 @@ function Init()
   cat = 'English'
   AddWebsiteModule('MangaWeek', 'https://mangaweek.com', cat)
   AddWebsiteModule('ManhwaScan', 'https://manhwascan.com', cat)
+  AddWebsiteModule('ManhuaScan', 'https://manhuascan.com', cat)
+  AddWebsiteModule('EcchiScan', 'https://ecchiscan.com', cat)
 end
