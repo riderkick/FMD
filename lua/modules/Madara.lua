@@ -312,6 +312,8 @@ function Init()
   AddWebsiteModule('MangaBob', 'https://mangabob.com', cat)
   AddWebsiteModule('Manga68', 'https://manga68.com', cat)
   AddWebsiteModule('EarlyManga', 'https://earlymanga.website', cat)
+  AddWebsiteModule('Mangakiss', 'https://mangakiss.org', cat)
+  AddWebsiteModule('MangaLord', 'https://www.mangalord.com', cat)
   
   cat = 'Arabic-Scanlation'
   AddWebsiteModule('3asqOrg', 'https://3asq.org', cat)
