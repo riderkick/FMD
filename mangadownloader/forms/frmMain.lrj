@@ -228,7 +228,7 @@
 {"hash":205834697,"name":"tmainform.lbjpegquality.caption","sourcebytes":[74,80,69,71,32,113,117,97,108,105,116,121],"value":"JPEG quality"},
 {"hash":252069175,"name":"tmainform.ckpngsaveasjpeg.caption","sourcebytes":[83,97,118,101,32,80,78,71,32,97,115,32,74,80,69,71],"value":"Save PNG as JPEG"},
 {"hash":208308883,"name":"tmainform.tsupdate.caption","sourcebytes":[85,112,100,97,116,101,115],"value":"Updates"},
-{"hash":72408384,"name":"tmainform.cboptionautochecklatestversion.caption","sourcebytes":[65,117,116,111,32,99,104,101,99,107,32,102,111,114,32,108,97,116,101,115,116,32,118,101,114,115,105,111,110,32],"value":"Auto check for latest version "},
+{"hash":71634382,"name":"tmainform.cboptionautochecklatestversion.caption","sourcebytes":[65,117,116,111,32,99,104,101,99,107,32,102,111,114,32,108,97,116,101,115,116,32,118,101,114,115,105,111,110],"value":"Auto check for latest version"},
 {"hash":225003075,"name":"tmainform.gboptionfavorites.caption","sourcebytes":[70,97,118,111,114,105,116,101,115],"value":"Favorites"},
 {"hash":4527776,"name":"tmainform.cboptionautocheckfavstartup.caption","sourcebytes":[65,117,116,111,32,99,104,101,99,107,32,102,111,114,32,110,101,119,32,99,104,97,112,116,101,114,32,97,116,32,115,116,97,114,116,117,112],"value":"Auto check for new chapter at startup"},
 {"hash":12237571,"name":"tmainform.lboptionautocheckfavintervalminutes.caption","sourcebytes":[65,117,116,111,32,99,104,101,99,107,32,102,111,114,32,110,101,119,32,99,104,97,112,116,101,114,32,101,118,101,114,121,32,37,100,32,109,105,110,117,116,101,115],"value":"Auto check for new chapter every %d minutes"},

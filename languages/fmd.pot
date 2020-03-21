@@ -808,7 +808,7 @@ msgid "Auto check for new chapter at startup"
 msgstr ""
 
 #: tmainform.cboptionautochecklatestversion.caption
-msgid "Auto check for latest version "
+msgid "Auto check for latest version"
 msgstr ""
 
 #: tmainform.cboptionautoopenfavstartup.caption

@@ -9,7 +9,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: id_ID\n"
-"X-Generator: Poedit 2.2.1\n"
+"X-Generator: Poedit 2.3\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #: dbupdater.rs_buttoncancel
 msgctxt "dbupdater.rs_buttoncancel"
@@ -37,11 +38,7 @@ msgid "%s: failed to extract, exitstatus = %d"
 msgstr "%s: gagal mengekstrak, kode = %d"
 
 #: dbupdater.rs_faileditems
-#, object-pascal-format, fuzzy
-#| msgid ""
-#| "Failed to finish:\n"
-#| "\n"
-#| "%s\n"
+#, object-pascal-format
 msgid ""
 "Failed to finish:\n"
 "\n"
@@ -49,7 +46,7 @@ msgid ""
 msgstr ""
 "Gagal menyelesaikan:\n"
 "\n"
-"%s\n"
+"%s"
 
 #: dbupdater.rs_faileditemstitle
 msgctxt "dbupdater.rs_faileditemstitle"
@@ -119,32 +116,16 @@ msgid "Finish download"
 msgstr "Selesai mengunduh"
 
 #: frmluamodulesupdater.rs_modulesupdatedrestart
-#, fuzzy, badformat
-#| msgid ""
-#| "Modules updated, restart now?\n"
-#| "\n"
-#| "%s\n"
 msgid "Modules updated, restart now?"
-msgstr ""
-"Modul dimutakhirkan, mulai ulang sekarang?\n"
-"\n"
-"%s\n"
+msgstr "Modul dimutakhirkan, mulai ulang sekarang?"
 
 #: frmluamodulesupdater.rs_modulesupdatedtitle
 msgid "Modules updated!"
 msgstr "Modul dimutakhirkan!"
 
 #: frmluamodulesupdater.rs_newupdatefoundlostchanges
-#, fuzzy, badformat
-#| msgid ""
-#| "Modules update found, any local changes will be lost, procced?\n"
-#| "\n"
-#| "%s\n"
 msgid "Modules update found, any local changes will be lost, procced?"
-msgstr ""
-"Modul mutakhir ditemukan, perubahan lokal akan ditimpa, lanjutkan?\n"
-"\n"
-"%s\n"
+msgstr "Modul mutakhir ditemukan, perubahan lokal akan ditimpa, lanjutkan?"
 
 #: frmluamodulesupdater.rs_newupdatefoundtitle
 msgid "Modules update found!"
@@ -241,16 +222,12 @@ msgid "Split download"
 msgstr "Pecah unduhan"
 
 #: frmmain.rs_dlgtitleexistindllist
-#, fuzzy
-#| msgid ""
-#| "This title are already in download list.\n"
-#| "Do you want to download it anyway?\n"
 msgid ""
 "This title are already in download list.\n"
 "Do you want to download it anyway?"
 msgstr ""
 "Judul ini sudah ada di daftar unduhan.\n"
-"Apakah Anda ingin mengunduhnya lagi?\n"
+"Apakah Anda ingin mengunduhnya lagi?"
 
 #: frmmain.rs_dlgtypeinnewchapter
 msgid "Type in new chapter:"
@@ -273,16 +250,12 @@ msgid "URL not supported!"
 msgstr "URL tidak didukung!"
 
 #: frmmain.rs_droptargetmodeitems
-#, fuzzy
-#| msgid ""
-#| "Download all\n"
-#| "Add to favorites\n"
 msgid ""
 "Download all\n"
 "Add to favorites"
 msgstr ""
 "Unduh semua\n"
-"Tambahkan ke kesukaan\n"
+"Tambahkan ke kesukaan"
 
 #: frmmain.rs_favoritesshowall
 msgctxt "frmmain.rs_favoritesshowall"
@@ -300,11 +273,6 @@ msgid "Enabled"
 msgstr "Aktif"
 
 #: frmmain.rs_filterstatusitems
-#, fuzzy
-#| msgid ""
-#| "Completed\n"
-#| "Ongoing\n"
-#| "<none>\n"
 msgid ""
 "Completed\n"
 "Ongoing\n"
@@ -312,7 +280,7 @@ msgid ""
 msgstr ""
 "Tamat\n"
 "Bersambung\n"
-"<tidak ada>\n"
+"<tidak ada>"
 
 #: frmmain.rs_fiveyears
 msgid "Five years"
@@ -327,16 +295,12 @@ msgid "Four years"
 msgstr "Empat tahun"
 
 #: frmmain.rs_hintfavoriteproblem
-#, fuzzy
-#| msgid ""
-#| "There is a problem with this data!\n"
-#| "Removing and re-adding this data may fix the problem.\n"
 msgid ""
 "There is a problem with this data!\n"
 "Removing and re-adding this data may fix the problem."
 msgstr ""
 "Ada masalah dengan data ini!\n"
-"Menghapus dan menambahkan kembali mungkin dapat memperbaiki masalah ini.\n"
+"Menghapus dan menambahkan kembali mungkin dapat memperbaiki masalah ini."
 
 #: frmmain.rs_history
 msgid "History"
@@ -386,12 +350,7 @@ msgid "Auto check for new chapter every %d minutes"
 msgstr "Periksa bab baru otomatis setiap %d menit"
 
 #: frmmain.rs_lbloptionexternalparamshint
-#, object-pascal-format, fuzzy
-#| msgid ""
-#| "%s : Path to the manga\n"
-#| "%s : Chapter filename\n"
-#| "\n"
-#| "Example : \"%s%s\"\n"
+#, object-pascal-format
 msgid ""
 "%s : Path to the manga\n"
 "%s : Chapter filename\n"
@@ -401,7 +360,7 @@ msgstr ""
 "%s : Lokasi komik tersimpan\n"
 "%s : Nama bab komik\n"
 "\n"
-"Contoh : \"%s%s\"\n"
+"Contoh : \"%s%s\""
 
 #: frmmain.rs_loading
 msgid "Loading ..."
@@ -435,13 +394,6 @@ msgid "One year"
 msgstr "Satu tahun"
 
 #: frmmain.rs_optioncompress
-#, fuzzy
-#| msgid ""
-#| "None\n"
-#| "ZIP\n"
-#| "CBZ\n"
-#| "PDF\n"
-#| "EPUB\n"
 msgid ""
 "None\n"
 "ZIP\n"
@@ -453,15 +405,9 @@ msgstr ""
 "ZIP\n"
 "CBZ\n"
 "PDF\n"
-"EPUB\n"
+"EPUB"
 
 #: frmmain.rs_optionfmddoitems
-#, fuzzy
-#| msgid ""
-#| "Nothing\n"
-#| "Exit\n"
-#| "Shutdown\n"
-#| "Hibernate\n"
 msgid ""
 "Nothing\n"
 "Exit\n"
@@ -471,11 +417,11 @@ msgstr ""
 "Tidak ada\n"
 "Keluar\n"
 "Matikan komputer\n"
-"Hibernasikan komputer\n"
+"Hibernasikan komputer"
 
 #: frmmain.rs_revision
 msgid "Revision"
-msgstr ""
+msgstr "Revisi"
 
 #: frmmain.rs_selected
 #, object-pascal-format
@@ -513,14 +459,9 @@ msgstr "Dua tahun"
 
 #: frmmain.rs_version
 msgid "Version"
-msgstr ""
+msgstr "Versi"
 
 #: frmmain.rs_webpconvertto
-#, fuzzy
-#| msgid ""
-#| "WebP\n"
-#| "PNG\n"
-#| "JPEG\n"
 msgid ""
 "WebP\n"
 "PNG\n"
@@ -528,15 +469,9 @@ msgid ""
 msgstr ""
 "WebP\n"
 "PNG\n"
-"JPEG\n"
+"JPEG"
 
 #: frmmain.rs_webppnglevel
-#, fuzzy
-#| msgid ""
-#| "None\n"
-#| "Fastest\n"
-#| "Default\n"
-#| "Maximum\n"
 msgid ""
 "None\n"
 "Fastest\n"
@@ -546,7 +481,7 @@ msgstr ""
 "Tidak ada\n"
 "Tercepat\n"
 "Asali\n"
-"Maksimum\n"
+"Maksimum"
 
 #: frmmain.rs_wronginput
 msgid "Invalid input!"
@@ -559,17 +494,17 @@ msgstr "Kemarin"
 #: frmshutdowncounter.rs_lblmessageexit
 #, object-pascal-format
 msgid "FMD will exit in %d second."
-msgstr "FMD akan ditutup dalam %d detik"
+msgstr "FMD akan ditutup dalam %d detik."
 
 #: frmshutdowncounter.rs_lblmessagehibernate
 #, object-pascal-format
 msgid "System will hibernate in %d second."
-msgstr "Komputer akan dihibernasi dalam %d detik"
+msgstr "Komputer akan dihibernasi dalam %d detik."
 
 #: frmshutdowncounter.rs_lblmessageshutdown
 #, object-pascal-format
 msgid "System will shutdown in %d second."
-msgstr "Komputer akan dimatikan dalam %d detik"
+msgstr "Komputer akan dimatikan dalam %d detik."
 
 #: frmtransferfavorites.rs_all
 msgctxt "frmtransferfavorites.rs_all"
@@ -597,11 +532,7 @@ msgid "Downloading new version %s"
 msgstr "Mengunduh versi mutakhir %s"
 
 #: selfupdater.rs_faileddownload
-#, object-pascal-format, fuzzy
-#| msgid ""
-#| "Failed to download new version %s\n"
-#| "\n"
-#| "%d %s\n"
+#, object-pascal-format
 msgid ""
 "Failed to download new version %s\n"
 "\n"
@@ -609,7 +540,7 @@ msgid ""
 msgstr ""
 "Gagal mengunduh versi mutakhir %s\n"
 "\n"
-"%d %s\n"
+"%d %s"
 
 #: selfupdater.rs_failedextract
 #, object-pascal-format
@@ -650,7 +581,6 @@ msgid "Refresh"
 msgstr "Segarkan"
 
 #: taccountmanagerform.caption
-#, fuzzy
 msgid "AccountManagerForm"
 msgstr "Form Manajer Akun"
 
@@ -707,7 +637,6 @@ msgid "Password"
 msgstr "Kata sandi"
 
 #: tcustomcolorform.caption
-#, fuzzy
 msgid "CustomColorForm"
 msgstr "Form Kustomisasi Warna"
 
@@ -760,19 +689,19 @@ msgstr "Salin"
 
 #: tfrmdialogyn.btno.caption
 msgid "&No"
-msgstr ""
+msgstr "&Ya"
 
 #: tfrmdialogyn.btyes.caption
 msgid "&Yes"
-msgstr ""
+msgstr "&Tidak"
 
 #: tfrmdialogyn.caption
 msgid "Dialog"
-msgstr ""
+msgstr "Dialog"
 
 #: tfrmdialogyn.lbmessage.caption
 msgid "lbMessage"
-msgstr ""
+msgstr "lbMessage"
 
 #: timportfavorites.btcancel.caption
 msgctxt "timportfavorites.btcancel.caption"
@@ -939,7 +868,7 @@ msgstr "Periksa bab baru otomatis saat program dimulai"
 
 #: tmainform.cboptionautochecklatestversion.caption
 msgctxt "tmainform.cboptionautochecklatestversion.caption"
-msgid "Auto check for latest version "
+msgid "Auto check for latest version"
 msgstr "Periksa versi mutakhir otomatis"
 
 #: tmainform.cboptionautoopenfavstartup.caption
@@ -1157,16 +1086,12 @@ msgid "Gender Bender"
 msgstr "Gender Bender"
 
 #: tmainform.ckfiltergenderbender.hint
-#, fuzzy
-#| msgid ""
-#| "Girls dressing up as guys, guys dressing up as girls.\n"
-#| "Guys turning into girls, girls turning into guys.\n"
 msgid ""
 "Girls dressing up as guys, guys dressing up as girls.\n"
 "Guys turning into girls, girls turning into guys."
 msgstr ""
 "Gadis berdandan sebagai laki-laki, laki-laki yang berpakaian sebagai gadis.\n"
-"Laki-Laki yang berubah menjadi gadis, gadis yang berubah menjadi laki-laki.\n"
+"Laki-Laki yang berubah menjadi gadis, gadis yang berubah menjadi laki-laki."
 
 #: tmainform.ckfilterharem.caption
 msgid "Harem"
@@ -1339,10 +1264,8 @@ msgid "Shounen Ai"
 msgstr "Shounen Ai"
 
 #: tmainform.ckfiltershounenai.hint
-#, fuzzy
-#| msgid "Often synonymous with yaoi, this can be thought of as somewhat less extreme. \"Boy''s Love\", so to speak"
 msgid "Often synonymous with yaoi, this can be thought of as somewhat less extreme. \"Boy''s Love\", so to speak"
-msgstr "Identik dengan yaoi, hanya agak kurang ekstrim. Bisa dikatakan \"Percintaan Antara Laki-laki\"."
+msgstr "Identik dengan yaoi, hanya agak kurang ekstrim. Bisa dikatakan \"Percintaan Antara Laki-laki\""
 
 #: tmainform.ckfiltersliceoflife.caption
 msgid "Slice of Life"
@@ -1574,17 +1497,6 @@ msgid "[?]"
 msgstr "[?]"
 
 #: tmainform.lbfilterhint.hint
-#, fuzzy
-#| msgid ""
-#| "Genres:\n"
-#| "- Checked: Include this genre.\n"
-#| "- Unchecked: Exclude this genre.\n"
-#| "- Grayed: Doesn't matter.\n"
-#| "\n"
-#| "Custom Genres:\n"
-#| "- Separate multiple genres with ','.\n"
-#| "- Exclude a genre by placing '!' or '-' at the beginning of a genre.\n"
-#| "- Example: Adventure,!Ecchi,Comedy.\n"
 msgid ""
 "Genres:\n"
 "- Checked: Include this genre.\n"
@@ -1604,7 +1516,7 @@ msgstr ""
 "Genre pilihan:\n"
 "- Pisahkan beberapa genre dengan ','.\n"
 "- Kecualikan genre dengan menempatkan  '!' atau '-' pada permulaan genre.\n"
-"- Contoh: Adventure,!Ecchi,Comedy.\n"
+"- Contoh: Adventure,!Ecchi,Comedy."
 
 #: tmainform.lbfilterstatus.caption
 msgctxt "TMAINFORM.LBFILTERSTATUS.CAPTION"
@@ -1649,17 +1561,6 @@ msgid "[?]"
 msgstr "[?]"
 
 #: tmainform.lboptionchaptercustomrenamehint.hint
-#, fuzzy
-#| msgid ""
-#| "%WEBSITE% : Website name\n"
-#| "%MANGA% : Manga title\n"
-#| "%CHAPTER% : Chapter title\n"
-#| "%AUTHOR% : Author\n"
-#| "%ARTIST% : Artist\n"
-#| "%NUMBERING% : Numbering\n"
-#| "\n"
-#| "Note:\n"
-#| "Chapter folder name must have at least %CHAPTER% or %NUMBERING%.\n"
 msgctxt "tmainform.lboptionchaptercustomrenamehint.hint"
 msgid ""
 "%WEBSITE% : Website name\n"
@@ -1680,7 +1581,7 @@ msgstr ""
 "%NUMBERING% : Penomoran\n"
 "\n"
 "Catatan:\n"
-"Nama direktori bab setidaknya harus memiliki %CHAPTER% atau %NUMBERING%.\n"
+"Nama direktori bab setidaknya harus memiliki %CHAPTER% atau %NUMBERING%."
 
 #: tmainform.lboptionconnectiontimeout.caption
 msgid "Connection timeout (seconds)"
@@ -1709,15 +1610,6 @@ msgid "[?]"
 msgstr "[?]"
 
 #: tmainform.lboptionfilenamecustomrenamehint.hint
-#, fuzzy
-#| msgid ""
-#| "%WEBSITE% : Website name\n"
-#| "%MANGA% : Manga title\n"
-#| "%CHAPTER% : Chapter title\n"
-#| "%FILENAME% : Filename\n"
-#| "\n"
-#| "Note:\n"
-#| "Filename must have at least %FILENAME%\n"
 msgid ""
 "%WEBSITE% : Website name\n"
 "%MANGA% : Manga title\n"
@@ -1733,7 +1625,7 @@ msgstr ""
 "%FILENAME% : Nama berkas\n"
 "\n"
 "Note:\n"
-"Nama berkas setidaknya harus memiliki %FILENAME%\n"
+"Nama berkas setidaknya harus memiliki %FILENAME%"
 
 #: tmainform.lboptionhost.caption
 msgid "Host"
@@ -1758,15 +1650,6 @@ msgid "[?]"
 msgstr "[?]"
 
 #: tmainform.lboptionmangacustomrenamehint.hint
-#, fuzzy
-#| msgid ""
-#| "%WEBSITE% : Website name\n"
-#| "%MANGA% : Manga title\n"
-#| "%AUTHOR% : Author\n"
-#| "%ARTIST% : Artist\n"
-#| "\n"
-#| "Note:\n"
-#| "Manga folder name must have at least %MANGA%.\n"
 msgid ""
 "%WEBSITE% : Website name\n"
 "%MANGA% : Manga title\n"
@@ -1782,7 +1665,7 @@ msgstr ""
 "%ARTIST% : Seniman\n"
 "\n"
 "Catatan:\n"
-"Nama direktori komik setidaknya harus memiliki %MANGA%\n"
+"Nama direktori komik setidaknya harus memiliki %MANGA%."
 
 #: tmainform.lboptionmaxparallel.caption
 msgid "Number of downloaded tasks at the same time"
@@ -2440,12 +2323,6 @@ msgid "Select directory"
 msgstr "Pilih direktori"
 
 #: tselectdirectoryform.lbdescription.caption
-#, fuzzy
-#| msgid ""
-#| "If you change multiple entries at once, the new paths will be constructed like this:\n"
-#| "\"{New_Path}\\{Manga_Title}\"\n"
-#| "\n"
-#| "Old folder structures will be ignored. However, if the only part you change is the drive letter (e.g. 'D:'), only the letter will be replaced. This only works for absolute paths, relative paths will be ignored.\n"
 msgid ""
 "If you change multiple entries at once, the new paths will be constructed like this:\n"
 "\"{New_Path}\\{Manga_Title}\"\n"
@@ -2455,7 +2332,7 @@ msgstr ""
 "Jika Anda mengubah banyak entri sekaligus, lokasi baru akan dibentuk seperti ini:\n"
 "\"{Lokasi_Baru}\\{Judul_Komik}\"\n"
 "\n"
-"Susunan direktori lama akan diabaikan. Namun, jika bagian yang Anda ubah adalah huruf kandarnya saja (misalnya 'D:'), hanya hurufnya yang akan diganti. Ini hanya berkerja pada lokasi absolut, lokasi relatif akan diabaikan.\n"
+"Susunan direktori lama akan diabaikan. Namun, jika bagian yang Anda ubah adalah huruf kandarnya saja (misalnya 'D:'), hanya hurufnya yang akan diganti. Ini hanya berkerja pada lokasi absolut, lokasi relatif akan diabaikan."
 
 #: tshutdowncounterform.btabort.caption
 msgid "&Abort"
@@ -2522,16 +2399,12 @@ msgid "&Update"
 msgstr "&Mutakhirkan"
 
 #: tupdatedialogform.lbmessage.caption
-#, fuzzy
-#| msgid ""
-#| "New version found! Do you want to update now?\n"
-#| "FMD will be closed to finish the update.\n"
 msgid ""
 "New version found! Do you want to update now?\n"
 "FMD will be closed to finish the update."
 msgstr ""
 "Versi mutakhir ditemukan! Apakah Anda ingin memutakhirkan sekarang?\n"
-"FMD akan ditutup untuk menyelesaikan pemutakhiran.\n"
+"FMD akan ditutup untuk menyelesaikan pemutakhiran."
 
 #: twebsiteselectionform.caption
 msgid "Select a website"
@@ -2548,4 +2421,3 @@ msgstr "Nama situs"
 #: twebsitesettingsform.edsearchproperty.texthint
 msgid "Setting name"
 msgstr "Nama pengaturan"
-

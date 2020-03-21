@@ -9,12 +9,10 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: en_US\n"
-"X-Generator: Poedit 1.8.12\n"
+"X-Generator: Poedit 2.3\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-Bookmarks: -1,-1,-1,-1,-1,-1,-1,29,-1,-1\n"
-"X-Poedit-Language: Greek\n"
-"X-Poedit-Country: GREECE\n"
 
 #: dbupdater.rs_buttoncancel
 msgctxt "dbupdater.rs_buttoncancel"
@@ -34,7 +32,7 @@ msgstr ""
 #: dbupdater.rs_faileddownload
 #, object-pascal-format
 msgid "%s: %d %s"
-msgstr ""
+msgstr "%s: %d %s"
 
 #: dbupdater.rs_failedextract
 #, object-pascal-format
@@ -223,16 +221,12 @@ msgid "Split download"
 msgstr "Διαχωρισμός λήψης"
 
 #: frmmain.rs_dlgtitleexistindllist
-#, fuzzy
-#| msgid ""
-#| "This title are already in download list.\n"
-#| "Do you want to download it anyway?\n"
 msgid ""
 "This title are already in download list.\n"
 "Do you want to download it anyway?"
 msgstr ""
 "Ο τίτλος αυτός είναι ήδη στη λίστα λήψης.\n"
-"Θέλετε οπωσδήποτε να τον κατεβάσετε;\n"
+"Θέλετε οπωσδήποτε να τον κατεβάσετε;"
 
 #: frmmain.rs_dlgtypeinnewchapter
 msgid "Type in new chapter:"
@@ -255,16 +249,12 @@ msgid "URL not supported!"
 msgstr "Η URL δεν υποστηρίζεται!"
 
 #: frmmain.rs_droptargetmodeitems
-#, fuzzy
-#| msgid ""
-#| "Download all\n"
-#| "Add to favorites\n"
 msgid ""
 "Download all\n"
 "Add to favorites"
 msgstr ""
 "Λήψη όλων\n"
-"Προσθήκη στα αγαπημένα\n"
+"Προσθήκη στα αγαπημένα"
 
 #: frmmain.rs_favoritesshowall
 msgctxt "frmmain.rs_favoritesshowall"
@@ -272,7 +262,6 @@ msgid "All"
 msgstr ""
 
 #: frmmain.rs_favoritesshowdisabled
-#, fuzzy
 msgctxt "frmmain.rs_favoritesshowdisabled"
 msgid "Disabled"
 msgstr "Απενεργ/μένο"
@@ -283,11 +272,6 @@ msgid "Enabled"
 msgstr ""
 
 #: frmmain.rs_filterstatusitems
-#, fuzzy
-#| msgid ""
-#| "Completed\n"
-#| "Ongoing\n"
-#| "<none>\n"
 msgid ""
 "Completed\n"
 "Ongoing\n"
@@ -295,7 +279,7 @@ msgid ""
 msgstr ""
 "Ολοκληρωμένο\n"
 "Σε εξέλιξη\n"
-"<καμία>\n"
+"<καμία>"
 
 #: frmmain.rs_fiveyears
 msgid "Five years"
@@ -310,16 +294,12 @@ msgid "Four years"
 msgstr ""
 
 #: frmmain.rs_hintfavoriteproblem
-#, fuzzy
-#| msgid ""
-#| "There is a problem with this data!\n"
-#| "Removing and re-adding this data may fix the problem.\n"
 msgid ""
 "There is a problem with this data!\n"
 "Removing and re-adding this data may fix the problem."
 msgstr ""
 "Υπάρχει ένα πρόβλημα με αυτά τα δεδομένα!\n"
-"Η αφαίρεση και προσθήκη ξανά αυτών των δεδομένων μπορεί να διορθώσει το πρόβλημα.\n"
+"Η αφαίρεση και προσθήκη ξανά αυτών των δεδομένων μπορεί να διορθώσει το πρόβλημα."
 
 #: frmmain.rs_history
 msgid "History"
@@ -369,12 +349,7 @@ msgid "Auto check for new chapter every %d minutes"
 msgstr "Αυτόματος έλεγχος για νέα κεφάλαια κάθε %d λεπτά"
 
 #: frmmain.rs_lbloptionexternalparamshint
-#, object-pascal-format, fuzzy
-#| msgid ""
-#| "%s : Path to the manga\n"
-#| "%s : Chapter filename\n"
-#| "\n"
-#| "Example : \"%s%s\"\n"
+#, object-pascal-format
 msgid ""
 "%s : Path to the manga\n"
 "%s : Chapter filename\n"
@@ -384,7 +359,7 @@ msgstr ""
 "%s : Η διαδρομή του manga\n"
 "%s : Όνομα αρχείου κεφαλαίου\n"
 "\n"
-"Παράδειγμα : \"%s%s\"\n"
+"Παράδειγμα : \"%s%s\""
 
 #: frmmain.rs_loading
 msgid "Loading ..."
@@ -425,14 +400,13 @@ msgid ""
 "PDF\n"
 "EPUB"
 msgstr ""
+"Καμία ενέργεια\n"
+"ZIP\n"
+"CBZ\n"
+"PDF\n"
+"EPUB"
 
 #: frmmain.rs_optionfmddoitems
-#, fuzzy
-#| msgid ""
-#| "Nothing\n"
-#| "Exit\n"
-#| "Shutdown\n"
-#| "Hibernate\n"
 msgid ""
 "Nothing\n"
 "Exit\n"
@@ -442,7 +416,7 @@ msgstr ""
 "Καμία ενέργεια\n"
 "Έξοδος\n"
 "Τερματισμός υπολογιστή\n"
-"Αδρανοποίηση υπολογιστή\n"
+"Αδρανοποίηση υπολογιστή"
 
 #: frmmain.rs_revision
 msgid "Revision"
@@ -492,6 +466,9 @@ msgid ""
 "PNG\n"
 "JPEG"
 msgstr ""
+"WebP\n"
+"PNG\n"
+"JPEG"
 
 #: frmmain.rs_webppnglevel
 msgid ""
@@ -883,7 +860,7 @@ msgstr "Αυτόματος έλεγχος για νέα κεφάλαια στη�
 
 #: tmainform.cboptionautochecklatestversion.caption
 msgctxt "tmainform.cboptionautochecklatestversion.caption"
-msgid "Auto check for latest version "
+msgid "Auto check for latest version"
 msgstr "Αυτόματος έλεγχος για την τελευταία έκδοση"
 
 #: tmainform.cboptionautoopenfavstartup.caption
@@ -1021,7 +998,7 @@ msgstr "Κανονική έκφραση"
 #: tmainform.cbwebpsaveas.text
 msgctxt "tmainform.cbwebpsaveas.text"
 msgid "PNG"
-msgstr ""
+msgstr "PNG"
 
 #: tmainform.ckdroptarget.caption
 msgctxt "tmainform.ckdroptarget.caption"
@@ -1049,7 +1026,7 @@ msgid "Contains content that is suitable only for adults. Titles in this categor
 msgstr ""
 "Περιέχει περιεχόμενο που είναι κατάλληλο μόνο για ενήλικες.\n"
 " Οι τίτλοι σε αυτή την κατηγορία μπορεί να περιέχουν σκηνές παρατεταμένης έντονης \n"
-"βίας ή/και γραφικά με σεξουαλικό περιεχόμενο και γυμνό.\n"
+"βίας ή/και γραφικά με σεξουαλικό περιεχόμενο και γυμνό."
 
 #: tmainform.ckfilteradventure.caption
 msgid "Adventure"
@@ -1060,7 +1037,7 @@ msgid "If a character in the story goes on a trip or along that line, your best 
 msgstr ""
 "Αν ένας χαρακτήρας στην ιστορία πηγαίνει σε ταξίδι ή κατά μήκος αυτής της γραμμής, \n"
 "το πιθανότερο είναι ότι πρόκειται για μια περιπέτεια manga. Ειδάλλως, είναι στο χέρι σας\n"
-" να αποφασίσετε γι αυτή την περίπτωση.\n"
+" να αποφασίσετε γι αυτή την περίπτωση."
 
 #: tmainform.ckfiltercomedy.caption
 msgid "Comedy"
@@ -1094,7 +1071,7 @@ msgstr "Ecchi"
 msgid "Possibly the line between hentai and non-hentai, ecchi usually refers to fanservice put in to attract a certain group of fans."
 msgstr ""
 "Ενδεχομένως η γραμμή μεταξύ Hentai και μη-Hentai, το Ecchi συνήθως αναφέρεται \n"
-"σε υπηρεσία οπαδών που θέλει να προσελκύσει μια συγκεκριμένη ομάδα οπαδών.\n"
+"σε υπηρεσία οπαδών που θέλει να προσελκύσει μια συγκεκριμένη ομάδα οπαδών."
 
 #: tmainform.ckfilterfantasy.caption
 msgid "Fantasy"
@@ -1109,16 +1086,12 @@ msgid "Gender Bender"
 msgstr "Gender Bender"
 
 #: tmainform.ckfiltergenderbender.hint
-#, fuzzy
-#| msgid ""
-#| "Girls dressing up as guys, guys dressing up as girls.\n"
-#| "Guys turning into girls, girls turning into guys.\n"
 msgid ""
 "Girls dressing up as guys, guys dressing up as girls.\n"
 "Guys turning into girls, girls turning into guys."
 msgstr ""
 "Κορίτσια που ντύνονται σαν αγόρια και αγόρια που ντύνονται σαν κορίτσια.\n"
-"Αγόρια που γίνονται κορίτσια και κορίτσια που γίνονται αγόρια.\n"
+"Αγόρια που γίνονται κορίτσια και κορίτσια που γίνονται αγόρια."
 
 #: tmainform.ckfilterharem.caption
 msgid "Harem"
@@ -1129,7 +1102,7 @@ msgid "A series involving one male character and many female characters (usually
 msgstr ""
 "Μια σειρά που περιλαμβάνει έναν αρσενικό χαρακτήρα και πολλούς γυναικείους \n"
 "(συνήθως έλκονται από τον αρσενικό χαρακτήρα). \n"
-"Το Reverse Harem είναι όταν τα φύλα αντιστρέφονται.\n"
+"Το Reverse Harem είναι όταν τα φύλα αντιστρέφονται."
 
 #: tmainform.ckfilterhentai.caption
 msgctxt "tmainform.ckfilterhentai.caption"
@@ -1157,7 +1130,7 @@ msgstr "Horror"
 msgid "A painful emotion of fear, dread, and abhorrence; a shuddering with terror and detestation; the feeling inspired by something frightful and shocking."
 msgstr ""
 "Ένα οδυνηρό συναίσθημα φόβου, τρόμου και αποστροφής. Ένα ανατριχιαστικό με τρόμο \n"
-"και αποστροφή. Το αίσθημα που είναι εμπνευσμένο από κάτι τρομακτικό και συγκλονιστικό.\n"
+"και αποστροφή. Το αίσθημα που είναι εμπνευσμένο από κάτι τρομακτικό και συγκλονιστικό."
 
 #: tmainform.ckfilterjosei.caption
 msgid "Josei"
@@ -1168,7 +1141,7 @@ msgid "Literally \"Woman\". Targets women 18-30. Female equivalent to seinen. Un
 msgstr ""
 "Κυριολεκτικά «Γυναίκα». Απευθύνεται σε γυναίκες 18-30. Ισοδύναμο με το θηλυκό. \n"
 "Σε αντίθεση με το Shoujo το ειδύλλιο είναι πιο ρεαλιστικό και λιγότερο εξιδανικευμένο. \n"
-"Η αφήγηση είναι πιο σαφής και ώριμη.\n"
+"Η αφήγηση είναι πιο σαφής και ώριμη."
 
 #: tmainform.ckfilterlolicon.caption
 msgid "Lolicon"
@@ -1187,7 +1160,7 @@ msgid "As the name suggests, anything martial arts related. Any of several arts 
 msgstr ""
 "Όπως υποδηλώνει το όνομα, οτιδήποτε σχετικό με πολεμικές τέχνες. \n"
 "Οποιεσδήποτε από τις διάφορες τέχνες μάχης ή αυτοάμυνας, όπως αϊκίντο, \n"
-"καράτε, τζούντο, τάε κβον ντο ή κέντο κ.ά.\n"
+"καράτε, τζούντο, τάε κβον ντο ή κέντο κ.ά."
 
 #: tmainform.ckfiltermature.caption
 msgid "Mature"
@@ -1198,7 +1171,7 @@ msgid "Contains subject matter which may be too extreme for people under the age
 msgstr ""
 "Περιέχει θέμα το οποίο μπορεί να είναι πολύ ακραίο για άτομα κάτω των 17 ετών. \n"
 "Οι τίτλοι σε αυτή την κατηγορία μπορεί να περιέχουν έντονη βία, έντονη αιματοχυσία, \n"
-"σεξουαλικό περιεχόμενο και σκληρή γλώσσα.\n"
+"σεξουαλικό περιεχόμενο και σκληρή γλώσσα."
 
 #: tmainform.ckfiltermecha.caption
 msgid "Mecha"
@@ -1208,7 +1181,7 @@ msgstr "Mecha"
 msgid "A work involving and usually concentrating on all types of large robotic machines."
 msgstr ""
 "Ένα έργο που περιλαμβάνει και συνήθως επικεντρώνεται σε όλους \n"
-"τους τύπους των μεγάλων ρομποτικών μηχανημάτων.\n"
+"τους τύπους των μεγάλων ρομποτικών μηχανημάτων."
 
 #: tmainform.ckfiltermusical.caption
 msgctxt "tmainform.ckfiltermusical.caption"
@@ -1228,7 +1201,7 @@ msgstr "Mystery"
 msgid "Usually an unexplained event occurs, and the main protagonist attempts to find out what caused it."
 msgstr ""
 "Συνήθως συμβαίνει κάποιο ανεξήγητο γεγονός και ο κεντρικός \n"
-"πρωταγωνιστής προσπαθεί να ανακαλύψει τι το προκάλεσε.\n"
+"πρωταγωνιστής προσπαθεί να ανακαλύψει τι το προκάλεσε."
 
 #: tmainform.ckfilterpsychological.caption
 msgid "Psychological"
@@ -1238,7 +1211,7 @@ msgstr "Psychological"
 msgid "Usually deals with the philosophy of a state of mind, in most cases detailing abnormal psychology."
 msgstr ""
 "Συνήθως ασχολείται με τη φιλοσοφία μιας κατάστασης του μυαλού. \n"
-"Στις περισσότερες περιπτώσεις σε μια ανώμαλη ψυχολογική κατάσταση.\n"
+"Στις περισσότερες περιπτώσεις σε μια ανώμαλη ψυχολογική κατάσταση."
 
 #: tmainform.ckfilterromance.caption
 msgid "Romance"
@@ -1248,7 +1221,7 @@ msgstr "Romance"
 msgid "Any love related story. We will define love as between man and woman in this case. Other than that, it is up to your own imagination of what love is."
 msgstr ""
 "Οποιαδήποτε ιστορία σχετική με αγάπη. Εμείς θεωρούμε την αγάπη μεταξύ άνδρα και γυναίκας. \n"
-"Εκτός από αυτήν, είναι θέμα της φαντασίας σας ποια αγάπη μπορεί να είναι.\n"
+"Εκτός από αυτήν, είναι θέμα της φαντασίας σας ποια αγάπη μπορεί να είναι."
 
 #: tmainform.ckfilterschoollife.caption
 msgid "School Life"
@@ -1266,7 +1239,7 @@ msgstr "Sci-Fi"
 msgid "Short for science fiction, these works involve twists on technology and other science related phenomena which are contrary or stretches of the modern day scientific world."
 msgstr ""
 "Τα έργα αυτά αφορούν ανατροπές στην τεχνολογία και σε άλλα φαινόμενα σχετικά με την επιστήμη \n"
-"που είναι αντίθετα ή παραποιιημένα τμήματα του σύγχρονου επιστημονικού κόσμου.\n"
+"που είναι αντίθετα ή παραποιιημένα τμήματα του σύγχρονου επιστημονικού κόσμου."
 
 #: tmainform.ckfilterseinen.caption
 msgid "Seinen"
@@ -1277,7 +1250,7 @@ msgid "From Google: Seinen means 'young Man'. Manga and anime that specifically 
 msgstr ""
 "Seinen σημαίνει «νέος άνθρωπος». Τα manga και anime που στοχεύουν ειδικά σε νεαρά ενήλικα αρσενικά,\n"
 " ηλικίας μεταξύ 18 και 25 ετών. Οι ιστορίες αυτές εμφανίζουν φοιτητές Πανεπιστημίου και άτομα από τον \n"
-"κόσμο της εργασίας. Σε γενικές γραμμές οι ιστορίες αυτές ασχολούνται με θέματα της ενήλικης ζωής.\n"
+"κόσμο της εργασίας. Σε γενικές γραμμές οι ιστορίες αυτές ασχολούνται με θέματα της ενήλικης ζωής."
 
 #: tmainform.ckfiltershotacon.caption
 msgid "Shotacon"
@@ -1295,7 +1268,7 @@ msgstr "Shoujo"
 msgid "A work intended and primarily written for females. Usually involves a lot of romance and strong character development."
 msgstr ""
 "Ένα έργο που προορίζεται και είναι κυρίως γραμμένο για γυναίκες. \n"
-"Συνήθως περιλαμβάνει ειδύλλια και ανάπτυξη ισχυρού χαρακτήρα.\n"
+"Συνήθως περιλαμβάνει ειδύλλια και ανάπτυξη ισχυρού χαρακτήρα."
 
 #: tmainform.ckfiltershoujoai.caption
 msgid "Shoujo Ai"
@@ -1306,7 +1279,7 @@ msgctxt "TMAINFORM.CKFILTERSHOUJOAI.HINT"
 msgid "Often synonymous with yuri, this can be thought of as somewhat less extreme. \"Girl''s Love\", so to speak."
 msgstr ""
 "Συχνά συνώνυμη με το Yuri. Αυτό μπορεί να θεωρηθεί ως κάπως λιγότερο ακραίο. \n"
-"Μπορείτε να το πείτε και «Έρωτας κοριτσιών».\n"
+"Μπορείτε να το πείτε και «Έρωτας κοριτσιών»."
 
 #: tmainform.ckfiltershounen.caption
 msgid "Shounen"
@@ -1317,7 +1290,7 @@ msgctxt "tmainform.ckfiltershounen.hint"
 msgid "A work intended and primarily written for males. These works usually involve fighting and/or violence."
 msgstr ""
 "Ένα έργο που προορίζεται και είναι γραμμένο κυρίως για άνδρες. \n"
-"Τα έργα αυτά αφορούν συνήθως σκηνές μάχης ή/και βία.\n"
+"Τα έργα αυτά αφορούν συνήθως σκηνές μάχης ή/και βία."
 
 #: tmainform.ckfiltershounenai.caption
 msgid "Shounen Ai"
@@ -1327,7 +1300,7 @@ msgstr "Shounen Ai"
 msgid "Often synonymous with yaoi, this can be thought of as somewhat less extreme. \"Boy''s Love\", so to speak"
 msgstr ""
 "Συχνά συνώνυμη με το Yaoi. Αυτό μπορεί να θεωρηθεί ως κάπως λιγότερο ακραίο. \n"
-"Μπορείτε να το πείτε και «Έρωτας αγοριών».\n"
+"Μπορείτε να το πείτε και «Έρωτας αγοριών»."
 
 #: tmainform.ckfiltersliceoflife.caption
 msgid "Slice of Life"
@@ -1339,7 +1312,7 @@ msgstr ""
 "Όπως υποδηλώνει το όνομα, το είδος αυτό αντιπροσωπεύει καθημερινές δοκιμασίες \n"
 "από έναν ή περισσότερους χαρακτήρες. Αυτές οι προκλήσεις / εκδηλώσεις θα μπορούσαν \n"
 "τεχνικά να συμβούν στην πραγματική ζωή και εμφανίζονται συχνά, αν όχι συνεχώς, σε \n"
-"έναν κόσμο που αντικατοπτρίζει τις δικές μας ζωές.\n"
+"έναν κόσμο που αντικατοπτρίζει τις δικές μας ζωές."
 
 #: tmainform.ckfiltersmut.caption
 msgid "Smut"
@@ -1357,7 +1330,7 @@ msgstr "Sports"
 msgid "As the name suggests, anything sports related. Baseball, basketball, hockey, soccer, golf, and racing just to name a few."
 msgstr ""
 "Όπως υποδηλώνει το όνομα, οτιδήποτε σχετικό με αθλήματα. \n"
-"Για παράδειγμα μπέιζμπολ, μπάσκετ, χόκεϊ, ποδόσφαιρο, γκολφ και μηχανοκίνητα.\n"
+"Για παράδειγμα μπέιζμπολ, μπάσκετ, χόκεϊ, ποδόσφαιρο, γκολφ και μηχανοκίνητα."
 
 #: tmainform.ckfiltersupernatural.caption
 msgid "Supernatural"
@@ -1367,7 +1340,7 @@ msgstr "Supernatural"
 msgid "Usually entails amazing and unexplained powers or events which defy the laws of physics."
 msgstr ""
 "Συνήθως συνεπάγεται εκπληκτικές και ανεξήγητες δυνάμεις ή γεγονότα \n"
-"τα οποία αψηφούν τους νόμους της φυσικής.\n"
+"τα οποία αψηφούν τους νόμους της φυσικής."
 
 #: tmainform.ckfiltertragedy.caption
 msgid "Tragedy"
@@ -1567,17 +1540,6 @@ msgid "[?]"
 msgstr "[?]"
 
 #: tmainform.lbfilterhint.hint
-#, fuzzy
-#| msgid ""
-#| "Genres:\n"
-#| "- Checked: Include this genre.\n"
-#| "- Unchecked: Exclude this genre.\n"
-#| "- Grayed: Doesn't matter.\n"
-#| "\n"
-#| "Custom Genres:\n"
-#| "- Separate multiple genres with ','.\n"
-#| "- Exclude a genre by placing '!' or '-' at the beginning of a genre.\n"
-#| "- Example: Adventure,!Ecchi,Comedy.\n"
 msgid ""
 "Genres:\n"
 "- Checked: Include this genre.\n"
@@ -1597,7 +1559,7 @@ msgstr ""
 "Προσαρμοσμένα είδη:\n"
 " - Διαχωρισμός πολλαπλών ειδών με ','.\n"
 " - Αποκλεισμός ενός είδους βάζοντας '!' ή '-' στην αρχή του είδους.\n"
-" - Παράδειγμα: Adventure,!Ecchi,Comedy.\n"
+" - Παράδειγμα: Adventure,!Ecchi,Comedy."
 
 #: tmainform.lbfilterstatus.caption
 msgctxt "TMAINFORM.LBFILTERSTATUS.CAPTION"
@@ -1642,17 +1604,6 @@ msgid "[?]"
 msgstr "[?]"
 
 #: tmainform.lboptionchaptercustomrenamehint.hint
-#, fuzzy
-#| msgid ""
-#| "%WEBSITE% : Website name\n"
-#| "%MANGA% : Manga title\n"
-#| "%CHAPTER% : Chapter title\n"
-#| "%AUTHOR% : Author\n"
-#| "%ARTIST% : Artist\n"
-#| "%NUMBERING% : Numbering\n"
-#| "\n"
-#| "Note:\n"
-#| "Chapter folder name must have at least %CHAPTER% or %NUMBERING%.\n"
 msgctxt "tmainform.lboptionchaptercustomrenamehint.hint"
 msgid ""
 "%WEBSITE% : Website name\n"
@@ -1673,7 +1624,7 @@ msgstr ""
 "%NUMBERING% : Αρίθμηση\n"
 "\n"
 "Σημείωση:\n"
-"Το όνομα φακέλου κεφαλαίου πρέπει να έχει τουλάχιστον %CHAPTER% ή %NUMBERING%.\n"
+"Το όνομα φακέλου κεφαλαίου πρέπει να έχει τουλάχιστον %CHAPTER% ή %NUMBERING%."
 
 #: tmainform.lboptionconnectiontimeout.caption
 msgid "Connection timeout (seconds)"
@@ -1702,15 +1653,6 @@ msgid "[?]"
 msgstr "[?]"
 
 #: tmainform.lboptionfilenamecustomrenamehint.hint
-#, fuzzy
-#| msgid ""
-#| "%WEBSITE% : Website name\n"
-#| "%MANGA% : Manga title\n"
-#| "%CHAPTER% : Chapter title\n"
-#| "%FILENAME% : Filename\n"
-#| "\n"
-#| "Note:\n"
-#| "Filename must have at least %FILENAME%\n"
 msgid ""
 "%WEBSITE% : Website name\n"
 "%MANGA% : Manga title\n"
@@ -1726,7 +1668,7 @@ msgstr ""
 "%FILENAME% : Όνομα αρχείου\n"
 "\n"
 "Σημείωση:\n"
-"Το όνομα αρχείου πρέπει να έχει τουλάχιστο %FILENAME%\n"
+"Το όνομα αρχείου πρέπει να έχει τουλάχιστο %FILENAME%"
 
 #: tmainform.lboptionhost.caption
 msgid "Host"
@@ -1751,15 +1693,6 @@ msgid "[?]"
 msgstr "[?]"
 
 #: tmainform.lboptionmangacustomrenamehint.hint
-#, fuzzy
-#| msgid ""
-#| "%WEBSITE% : Website name\n"
-#| "%MANGA% : Manga title\n"
-#| "%AUTHOR% : Author\n"
-#| "%ARTIST% : Artist\n"
-#| "\n"
-#| "Note:\n"
-#| "Manga folder name must have at least %MANGA%.\n"
 msgid ""
 "%WEBSITE% : Website name\n"
 "%MANGA% : Manga title\n"
@@ -1775,7 +1708,7 @@ msgstr ""
 "%ARTIST% : Καλλιτέχνης\n"
 "\n"
 "Σημείωση:\n"
-"Το όνομα φακέλου Manga πρέπει να έχει τουλάχιστον %MANGA%.\n"
+"Το όνομα φακέλου Manga πρέπει να έχει τουλάχιστον %MANGA%."
 
 #: tmainform.lboptionmaxparallel.caption
 msgid "Number of downloaded tasks at the same time"
@@ -2048,10 +1981,9 @@ msgid "Open ..."
 msgstr "Άνοιγμα..."
 
 #: tmainform.mifavoritesrename.caption
-#, fuzzy
 msgctxt "tmainform.mifavoritesrename.caption"
 msgid "Rename"
-msgstr "Rename"
+msgstr ""
 
 #: tmainform.mifavoritesstopchecknewchapter.caption
 msgid "Stop check for new chapter"
@@ -2173,7 +2105,6 @@ msgid "All"
 msgstr ""
 
 #: tmainform.rbfavoritesshowdisabled.caption
-#, fuzzy
 msgctxt "tmainform.rbfavoritesshowdisabled.caption"
 msgid "Disabled"
 msgstr "Απενεργ/μένο"
@@ -2506,16 +2437,12 @@ msgid "&Update"
 msgstr "&Ενημέρωση"
 
 #: tupdatedialogform.lbmessage.caption
-#, fuzzy
-#| msgid ""
-#| "New version found! Do you want to update now?\n"
-#| "FMD will be closed to finish the update.\n"
 msgid ""
 "New version found! Do you want to update now?\n"
 "FMD will be closed to finish the update."
 msgstr ""
 "Βρέθηκε νέα έκδοση! Θέλετε να γίνει ενημέρωση τώρα;\n"
-"Το FMD θα κλείσει για να ολοκληρωθεί η ενημέρωση.\n"
+"Το FMD θα κλείσει για να ολοκληρωθεί η ενημέρωση."
 
 #: twebsiteselectionform.caption
 msgid "Select a website"
@@ -2532,4 +2459,3 @@ msgstr ""
 #: twebsitesettingsform.edsearchproperty.texthint
 msgid "Setting name"
 msgstr ""
-

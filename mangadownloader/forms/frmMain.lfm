@@ -4110,7 +4110,7 @@ object MainForm: TMainForm
             Top = 8
             Width = 829
             Align = alTop
-            Caption = 'Auto check for latest version '
+            Caption = 'Auto check for latest version'
             ParentFont = False
             TabOrder = 0
           end

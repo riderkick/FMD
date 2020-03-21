@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: tr\n"
-"X-Generator: Poedit 2.2.3\n"
+"X-Generator: Poedit 2.3\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
@@ -39,11 +39,7 @@ msgid "%s: failed to extract, exitstatus = %d"
 msgstr "%s: çıkartma başarısız, çıkış durumu = %d"
 
 #: dbupdater.rs_faileditems
-#, object-pascal-format, fuzzy
-#| msgid ""
-#| "Failed to finish:\n"
-#| "\n"
-#| "%s\n"
+#, object-pascal-format
 msgid ""
 "Failed to finish:\n"
 "\n"
@@ -51,7 +47,7 @@ msgid ""
 msgstr ""
 "Bitirme başarısız:\n"
 "\n"
-"%s\n"
+"%s"
 
 #: dbupdater.rs_faileditemstitle
 msgctxt "dbupdater.rs_faileditemstitle"
@@ -121,32 +117,16 @@ msgid "Finish download"
 msgstr "İndirmeyi durdur"
 
 #: frmluamodulesupdater.rs_modulesupdatedrestart
-#, fuzzy, badformat
-#| msgid ""
-#| "Modules updated, restart now?\n"
-#| "\n"
-#| "%s\n"
 msgid "Modules updated, restart now?"
-msgstr ""
-"Modüller güncellendi, yeniden başlasın mı?\n"
-"\n"
-"%s\n"
+msgstr "Modüller güncellendi, yeniden başlasın mı?"
 
 #: frmluamodulesupdater.rs_modulesupdatedtitle
 msgid "Modules updated!"
 msgstr "Modüller güncellendi!"
 
 #: frmluamodulesupdater.rs_newupdatefoundlostchanges
-#, fuzzy, badformat
-#| msgid ""
-#| "Modules update found, any local changes will be lost, procced?\n"
-#| "\n"
-#| "%s\n"
 msgid "Modules update found, any local changes will be lost, procced?"
-msgstr ""
-"Modül güncellemeleri bulundu, herhangi bir yerel değişim kaybolacaktır, devam edilsin mi?\n"
-"\n"
-"%s\n"
+msgstr "Modül güncellemeleri bulundu, herhangi bir yerel değişim kaybolacaktır, devam edilsin mi?"
 
 #: frmluamodulesupdater.rs_newupdatefoundtitle
 msgid "Modules update found!"
@@ -243,16 +223,12 @@ msgid "Split download"
 msgstr "Bölünmüş indirme"
 
 #: frmmain.rs_dlgtitleexistindllist
-#, fuzzy
-#| msgid ""
-#| "This title are already in download list.\n"
-#| "Do you want to download it anyway?\n"
 msgid ""
 "This title are already in download list.\n"
 "Do you want to download it anyway?"
 msgstr ""
 "Bu başlık zaten indirme listesinde.\n"
-"Yine de indirmek istiyor musun?\n"
+"Yine de indirmek istiyor musun?"
 
 #: frmmain.rs_dlgtypeinnewchapter
 msgid "Type in new chapter:"
@@ -275,16 +251,12 @@ msgid "URL not supported!"
 msgstr "URL desteklenmiyor!"
 
 #: frmmain.rs_droptargetmodeitems
-#, fuzzy
-#| msgid ""
-#| "Download all\n"
-#| "Add to favorites\n"
 msgid ""
 "Download all\n"
 "Add to favorites"
 msgstr ""
 "Tümünü indir\n"
-"Favorilere ekle\n"
+"Favorilere ekle"
 
 #: frmmain.rs_favoritesshowall
 msgctxt "frmmain.rs_favoritesshowall"
@@ -302,11 +274,6 @@ msgid "Enabled"
 msgstr "Aktifler"
 
 #: frmmain.rs_filterstatusitems
-#, fuzzy
-#| msgid ""
-#| "Completed\n"
-#| "Ongoing\n"
-#| "<none>\n"
 msgid ""
 "Completed\n"
 "Ongoing\n"
@@ -314,7 +281,7 @@ msgid ""
 msgstr ""
 "Tamamlandı\n"
 "Devam Ediyor\n"
-"<Hiçbiri>\n"
+"<Hiçbiri>"
 
 #: frmmain.rs_fiveyears
 msgid "Five years"
@@ -329,16 +296,12 @@ msgid "Four years"
 msgstr "Dört yıl"
 
 #: frmmain.rs_hintfavoriteproblem
-#, fuzzy
-#| msgid ""
-#| "There is a problem with this data!\n"
-#| "Removing and re-adding this data may fix the problem.\n"
 msgid ""
 "There is a problem with this data!\n"
 "Removing and re-adding this data may fix the problem."
 msgstr ""
 "Bu veriyle ilgili bir sorun var!\n"
-"Silip tekrardan eklemek bu soruna çözüm olabilir.\n"
+"Silip tekrardan eklemek bu soruna çözüm olabilir."
 
 #: frmmain.rs_history
 msgid "History"
@@ -388,12 +351,7 @@ msgid "Auto check for new chapter every %d minutes"
 msgstr "Yeni bölümleri her %d dakikada bir kontrol et"
 
 #: frmmain.rs_lbloptionexternalparamshint
-#, object-pascal-format, fuzzy
-#| msgid ""
-#| "%s : Path to the manga\n"
-#| "%s : Chapter filename\n"
-#| "\n"
-#| "Example : \"%s%s\"\n"
+#, object-pascal-format
 msgid ""
 "%s : Path to the manga\n"
 "%s : Chapter filename\n"
@@ -403,7 +361,7 @@ msgstr ""
 "%s : Manga yolu\n"
 "%s : Bölüm dosya adı\n"
 "\n"
-"Örnek : \"%s%s\"\n"
+"Örnek : \"%s%s\""
 
 #: frmmain.rs_loading
 msgid "Loading ..."
@@ -437,13 +395,6 @@ msgid "One year"
 msgstr "Bir yıl"
 
 #: frmmain.rs_optioncompress
-#, fuzzy
-#| msgid ""
-#| "None\n"
-#| "ZIP\n"
-#| "CBZ\n"
-#| "PDF\n"
-#| "EPUB\n"
 msgid ""
 "None\n"
 "ZIP\n"
@@ -455,15 +406,9 @@ msgstr ""
 "ZIP\n"
 "CBZ\n"
 "PDF\n"
-"EPUB\n"
+"EPUB"
 
 #: frmmain.rs_optionfmddoitems
-#, fuzzy
-#| msgid ""
-#| "Nothing\n"
-#| "Exit\n"
-#| "Shutdown\n"
-#| "Hibernate\n"
 msgid ""
 "Nothing\n"
 "Exit\n"
@@ -473,7 +418,7 @@ msgstr ""
 "Hiçbiri\n"
 "Çıkış\n"
 "Kapat\n"
-"Uyku\n"
+"Uyku"
 
 #: frmmain.rs_revision
 msgid "Revision"
@@ -518,7 +463,6 @@ msgid "Version"
 msgstr ""
 
 #: frmmain.rs_webpconvertto
-#, fuzzy
 #| msgid ""
 #| "WebP\n"
 #| "PNG\n"
@@ -530,15 +474,9 @@ msgid ""
 msgstr ""
 "WebP\n"
 "PNG\n"
-"JPEG\n"
+"JPEG"
 
 #: frmmain.rs_webppnglevel
-#, fuzzy
-#| msgid ""
-#| "None\n"
-#| "Fastest\n"
-#| "Default\n"
-#| "Maximum\n"
 msgid ""
 "None\n"
 "Fastest\n"
@@ -548,7 +486,7 @@ msgstr ""
 "Hiçbiri\n"
 "En hızlı\n"
 "Varsayılan\n"
-"Maksimum\n"
+"Maksimum"
 
 #: frmmain.rs_wronginput
 msgid "Invalid input!"
@@ -599,11 +537,7 @@ msgid "Downloading new version %s"
 msgstr "%s yeni sürümü indiriliyor"
 
 #: selfupdater.rs_faileddownload
-#, object-pascal-format, fuzzy
-#| msgid ""
-#| "Failed to download new version %s\n"
-#| "\n"
-#| "%d %s\n"
+#, object-pascal-format
 msgid ""
 "Failed to download new version %s\n"
 "\n"
@@ -611,7 +545,7 @@ msgid ""
 msgstr ""
 "%s yeni sürümü indirmesi başarısız\n"
 "\n"
-"%d %s\n"
+"%d %s"
 
 #: selfupdater.rs_failedextract
 #, object-pascal-format
@@ -939,8 +873,8 @@ msgstr "Başlangıça yeni bölümleri otomatik kontrol et"
 
 #: tmainform.cboptionautochecklatestversion.caption
 msgctxt "tmainform.cboptionautochecklatestversion.caption"
-msgid "Auto check for latest version "
-msgstr "Son sürümü otomatik kontrol et "
+msgid "Auto check for latest version"
+msgstr "Son sürümü otomatik kontrol et"
 
 #: tmainform.cboptionautoopenfavstartup.caption
 msgid "Open Favorites at startup"
@@ -1157,16 +1091,12 @@ msgid "Gender Bender"
 msgstr "Gender Bender"
 
 #: tmainform.ckfiltergenderbender.hint
-#, fuzzy
-#| msgid ""
-#| "Girls dressing up as guys, guys dressing up as girls.\n"
-#| "Guys turning into girls, girls turning into guys.\n"
 msgid ""
 "Girls dressing up as guys, guys dressing up as girls.\n"
 "Guys turning into girls, girls turning into guys."
 msgstr ""
 "Kızlar erkek gibi giyinebilir, erkekler kız gibi giyinebilir.\n"
-"Erkekler kıza dönüşebilir, kızlar erkeğe dönüşebilir.\n"
+"Erkekler kıza dönüşebilir, kızlar erkeğe dönüşebilir."
 
 #: tmainform.ckfilterharem.caption
 msgid "Harem"
@@ -1571,17 +1501,6 @@ msgid "[?]"
 msgstr "[?]"
 
 #: tmainform.lbfilterhint.hint
-#, fuzzy
-#| msgid ""
-#| "Genres:\n"
-#| "- Checked: Include this genre.\n"
-#| "- Unchecked: Exclude this genre.\n"
-#| "- Grayed: Doesn't matter.\n"
-#| "\n"
-#| "Custom Genres:\n"
-#| "- Separate multiple genres with ','.\n"
-#| "- Exclude a genre by placing '!' or '-' at the beginning of a genre.\n"
-#| "- Example: Adventure,!Ecchi,Comedy.\n"
 msgid ""
 "Genres:\n"
 "- Checked: Include this genre.\n"
@@ -1601,7 +1520,7 @@ msgstr ""
 "Kişisel türler:\n"
 "- Birden fazla türü ',' ile ayır.\n"
 "- Başına '!' ya da '-' ekleyerek bir türü hariç tutun.\n"
-"- Örnek: Macera,!Ecchi,Komedi.\n"
+"- Örnek: Macera,!Ecchi,Komedi."
 
 #: tmainform.lbfilterstatus.caption
 msgctxt "TMAINFORM.LBFILTERSTATUS.CAPTION"
@@ -1646,17 +1565,6 @@ msgid "[?]"
 msgstr "[?]"
 
 #: tmainform.lboptionchaptercustomrenamehint.hint
-#, fuzzy
-#| msgid ""
-#| "%WEBSITE% : Website name\n"
-#| "%MANGA% : Manga title\n"
-#| "%CHAPTER% : Chapter title\n"
-#| "%AUTHOR% : Author\n"
-#| "%ARTIST% : Artist\n"
-#| "%NUMBERING% : Numbering\n"
-#| "\n"
-#| "Note:\n"
-#| "Chapter folder name must have at least %CHAPTER% or %NUMBERING%.\n"
 msgctxt "tmainform.lboptionchaptercustomrenamehint.hint"
 msgid ""
 "%WEBSITE% : Website name\n"
@@ -1677,7 +1585,7 @@ msgstr ""
 "%NUMBERING% : Numaralama\n"
 "\n"
 "Not:\n"
-"Bölüm klasörü en azından %CHAPTER% ya da %NUMBERING% içermelidir.\n"
+"Bölüm klasörü en azından %CHAPTER% ya da %NUMBERING% içermelidir."
 
 #: tmainform.lboptionconnectiontimeout.caption
 msgid "Connection timeout (seconds)"
@@ -1706,15 +1614,6 @@ msgid "[?]"
 msgstr "[?]"
 
 #: tmainform.lboptionfilenamecustomrenamehint.hint
-#, fuzzy
-#| msgid ""
-#| "%WEBSITE% : Website name\n"
-#| "%MANGA% : Manga title\n"
-#| "%CHAPTER% : Chapter title\n"
-#| "%FILENAME% : Filename\n"
-#| "\n"
-#| "Note:\n"
-#| "Filename must have at least %FILENAME%\n"
 msgid ""
 "%WEBSITE% : Website name\n"
 "%MANGA% : Manga title\n"
@@ -1730,7 +1629,7 @@ msgstr ""
 "%FILENAME% : Dosya adı\n"
 "\n"
 "Not:\n"
-"Dosya adı en azından %FILENAME% içermelidir\n"
+"Dosya adı en azından %FILENAME% içermelidir"
 
 #: tmainform.lboptionhost.caption
 msgid "Host"
@@ -1755,15 +1654,6 @@ msgid "[?]"
 msgstr "[?]"
 
 #: tmainform.lboptionmangacustomrenamehint.hint
-#, fuzzy
-#| msgid ""
-#| "%WEBSITE% : Website name\n"
-#| "%MANGA% : Manga title\n"
-#| "%AUTHOR% : Author\n"
-#| "%ARTIST% : Artist\n"
-#| "\n"
-#| "Note:\n"
-#| "Manga folder name must have at least %MANGA%.\n"
 msgid ""
 "%WEBSITE% : Website name\n"
 "%MANGA% : Manga title\n"
@@ -1779,7 +1669,7 @@ msgstr ""
 "%ARTIST% : Çizer\n"
 "\n"
 "Not:\n"
-"Manga klasörü adı en azından %MANGA% içermelidir.\n"
+"Manga klasörü adı en azından %MANGA% içermelidir."
 
 #: tmainform.lboptionmaxparallel.caption
 msgid "Number of downloaded tasks at the same time"
@@ -2508,16 +2398,12 @@ msgid "&Update"
 msgstr "&Güncelle"
 
 #: tupdatedialogform.lbmessage.caption
-#, fuzzy
-#| msgid ""
-#| "New version found! Do you want to update now?\n"
-#| "FMD will be closed to finish the update.\n"
 msgid ""
 "New version found! Do you want to update now?\n"
 "FMD will be closed to finish the update."
 msgstr ""
 "Yeni sürüm bulundu! Şimdi güncellemek ister misiniz?\n"
-"FMD, güncelleme için kapatılacak.\n"
+"FMD, güncelleme için kapatılacak."
 
 #: twebsiteselectionform.caption
 msgid "Select a website"
@@ -2534,4 +2420,3 @@ msgstr "Website Adı"
 #: twebsitesettingsform.edsearchproperty.texthint
 msgid "Setting name"
 msgstr "Ayar ismi"
-

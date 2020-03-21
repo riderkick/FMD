@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: pl_PL\n"
-"X-Generator: Poedit 1.8.12\n"
+"X-Generator: Poedit 2.3\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: dbupdater.rs_buttoncancel
@@ -191,7 +191,7 @@ msgstr "Nie można uzyskać informacji o mandze. Proszę sprawdzić swoje połą
 
 #: frmmain.rs_dlgdownloadcount
 msgid "Download count:"
-msgstr "Licznik pobrań"
+msgstr "Licznik pobrań:"
 
 #: frmmain.rs_dlgquit
 msgid "Are you sure you want to exit?"
@@ -365,7 +365,7 @@ msgid "Auto check for new chapter every %d minutes"
 msgstr "Automatyczne sprawdzanie nowych rozdziałów co %d minut"
 
 #: frmmain.rs_lbloptionexternalparamshint
-#, object-pascal-format, fuzzy
+#, fuzzy, object-pascal-format
 #| msgid ""
 #| "%s : Path to the manga\n"
 #| "%s : Chapter filename\n"
@@ -849,7 +849,7 @@ msgstr ""
 
 #: tmainform.cbaddasstopped.caption
 msgid "Add to download list as stopped task"
-msgstr "Dodaj do listy pobieranych jako zatrzymane zadanie."
+msgstr "Dodaj do listy pobieranych jako zatrzymane zadanie"
 
 #: tmainform.cbfilterstatus.text
 msgid "<none>"
@@ -862,7 +862,7 @@ msgstr "Szukaj tylko nowych mang"
 #: tmainform.cboptionautocheckfavdownload.caption
 msgctxt "tmainform.cboptionautocheckfavdownload.caption"
 msgid "Automatic download after finish checking"
-msgstr "Automatyczne pobieranie po sprawdzeniu "
+msgstr "Automatyczne pobieranie po sprawdzeniu"
 
 #: tmainform.cboptionautocheckfavinterval.caption
 msgid "Auto check for new chapter in an interval"
@@ -878,8 +878,10 @@ msgid "Auto check for new chapter at startup"
 msgstr "Automatyczne sprawdzanie nowego rozdziału na starcie"
 
 #: tmainform.cboptionautochecklatestversion.caption
+#, fuzzy
+#| msgid "Auto check for latest version "
 msgctxt "tmainform.cboptionautochecklatestversion.caption"
-msgid "Auto check for latest version "
+msgid "Auto check for latest version"
 msgstr "Automatyczne sprawdzanie aktualizacji"
 
 #: tmainform.cboptionautoopenfavstartup.caption
@@ -1004,7 +1006,7 @@ msgstr ""
 
 #: tmainform.cbsearchfromallsites.caption
 msgid "Search in all manga sites"
-msgstr "Szukaj we wszystkich witrynach "
+msgstr "Szukaj we wszystkich witrynach"
 
 #: tmainform.cbselectmanga.hint
 msgid "For more manga sites, please go to Options->Manga sites"
@@ -1230,7 +1232,7 @@ msgstr "Sci-Fi"
 
 #: tmainform.ckfilterscifi.hint
 msgid "Short for science fiction, these works involve twists on technology and other science related phenomena which are contrary or stretches of the modern day scientific world."
-msgstr "Skrót od science fiction, prace te obejmują przekręty na technologii i innych zjawiskach związanych z nauką, które są sprzeczne lub naciągnięte względem współczesnego naukowego świata"
+msgstr "Skrót od science fiction, prace te obejmują przekręty na technologii i innych zjawiskach związanych z nauką, które są sprzeczne lub naciągnięte względem współczesnego naukowego świata."
 
 #: tmainform.ckfilterseinen.caption
 msgid "Seinen"
@@ -1280,7 +1282,7 @@ msgstr "Shounen Ai"
 
 #: tmainform.ckfiltershounenai.hint
 msgid "Often synonymous with yaoi, this can be thought of as somewhat less extreme. \"Boy''s Love\", so to speak"
-msgstr "Cęsto równoznaczny z yaoi, może być uznane jako coś mniej ekstremalnego. \"Chłopięca miłość\", że tak powiem."
+msgstr "Cęsto równoznaczny z yaoi, może być uznane jako coś mniej ekstremalnego. \"Chłopięca miłość\", że tak powiem"
 
 #: tmainform.ckfiltersliceoflife.caption
 msgid "Slice of Life"
@@ -1412,7 +1414,7 @@ msgstr "Domyślna ścieżka pobierania"
 #: tmainform.edoptionexternalparams.texthint
 msgctxt "tmainform.edoptionexternalparams.texthint"
 msgid "External program parameters"
-msgstr "Parametry programu zewnętrznego "
+msgstr "Parametry programu zewnętrznego"
 
 #: tmainform.edoptionexternalpath.texthint
 msgctxt "tmainform.edoptionexternalpath.texthint"
@@ -1991,7 +1993,7 @@ msgstr "Otwórz folder"
 #: tmainform.mifavoritesopenwith.caption
 msgctxt "TMAINFORM.MIFAVORITESOPENWITH.CAPTION"
 msgid "Open ..."
-msgstr "Otwórz... "
+msgstr "Otwórz..."
 
 #: tmainform.mifavoritesrename.caption
 #, fuzzy
@@ -2103,7 +2105,7 @@ msgstr "Aktualizacja wszystkich list na raz"
 
 #: tmainform.mnupdatedownfromserver.caption
 msgid "Download manga list from server"
-msgstr "Pobierz listę manga z serwera "
+msgstr "Pobierz listę manga z serwera"
 
 #: tmainform.mnupdatelist.caption
 msgctxt "TMAINFORM.MNUPDATELIST.CAPTION"
@@ -2132,7 +2134,7 @@ msgstr ""
 
 #: tmainform.rbone.caption
 msgid "Have one of genres checked"
-msgstr "Miej jeden gatunek zaznaczony "
+msgstr "Miej jeden gatunek zaznaczony"
 
 #: tmainform.rgdroptargetmode.caption
 msgid "Mode"
@@ -2140,7 +2142,7 @@ msgstr "Tryb"
 
 #: tmainform.rgoptioncompress.caption
 msgid "Save downloaded chapters as"
-msgstr "Zapisz pobrane rozdziały jako "
+msgstr "Zapisz pobrane rozdziały jako"
 
 #: tmainform.seoptionpdfquality.hint
 msgctxt "tmainform.seoptionpdfquality.hint"
@@ -2150,7 +2152,7 @@ msgstr "100 = FlateEncode (bezstratne), niżej = DCTEncode (stratne)"
 #: tmainform.tbdownloaddeletecompleted.caption
 msgctxt "tmainform.tbdownloaddeletecompleted.caption"
 msgid "Delete all completed tasks"
-msgstr "Usuń wszystkie wykonane zadania "
+msgstr "Usuń wszystkie wykonane zadania"
 
 #: tmainform.tbdownloadresumeall.caption
 msgid "Resume All"
@@ -2479,4 +2481,3 @@ msgstr ""
 #: twebsitesettingsform.edsearchproperty.texthint
 msgid "Setting name"
 msgstr ""
-
