@@ -103,9 +103,6 @@ var
   LUA_REPO_WORK_FILE,
   BACKUP_FOLDER: String;
 
-  // dll
-  OpenSSLVersion:String='';
-
   // ini files
   revisionfile,
   updatesfile: TIniFile;

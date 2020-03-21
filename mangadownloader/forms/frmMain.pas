@@ -2307,7 +2307,7 @@ begin
   AddToAboutStatus('Build Time', GetBuildTime);
   if SQLiteLibraryHandle = 0 then InitializeSqlite();
   if SQLiteLibraryHandle <> 0 then try AddToAboutStatus('SQLite Version', sqlite3_version()); except end;
-  AddToAboutStatus('OpenSSL Version', OpenSSLVersion);
+  AddToAboutStatus('OpenSSL Version', SSLeayversion(0));
   if WebPLibHandle = 0 then InitWebPModule;
   if WebPLibHandle <> 0 then try AddToAboutStatus('WebP Version', WebPGetVersion); except end;
   if PCRE2LibHandle <> 0 then try AddToAboutStatus('PCRE Version', PCRE2Version); except end;

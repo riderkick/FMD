@@ -1,7 +1,7 @@
 object MainForm: TMainForm
-  Left = 238
+  Left = 46
   Height = 657
-  Top = 64
+  Top = 65
   Width = 855
   ActiveControl = pcMain
   Caption = 'Free Manga Downloader'

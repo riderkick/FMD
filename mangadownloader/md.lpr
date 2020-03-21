@@ -31,12 +31,6 @@ var
   evpathlen: Integer;
   evpath: String;
 
-type
-  TOpenSSLVersion=function (t:integer):PAnsiChar;cdecl;
-
-var
-  _OpenSSLVersion:TOpenSSLVersion=nil;
-
 const
   {$ifdef win64}
   OpenSSLDLLSSLName='libssl-1_1-x64.dll';
@@ -154,19 +148,12 @@ begin
     DLLSSLName:=FMD_DIRECTORY+OpenSSLDLLSSLName;
     DLLUtilName:=FMD_DIRECTORY+OpenSSLDLLUtilName;
     if InitSSLInterface then
-    begin
       SSLImplementation := TSSLOpenSSL;
-      _OpenSSLVersion:=TOpenSSLVersion(GetProcAddress(SSLUtilHandle,PChar('OpenSSL_version')));
-    end;
-    if Assigned(_OpenSSLVersion) then
-      OpenSSLVersion:=PAnsiChar(_OpenSSLVersion(0));
-  end else
-  if FileExists(FMD_DIRECTORY+DLLSSLName) and FileExists(FMD_DIRECTORY+DLLUtilName) then
+  end
+  else if FileExists(FMD_DIRECTORY+DLLSSLName) and FileExists(FMD_DIRECTORY+DLLUtilName) then
   begin
     DLLSSLName:=FMD_DIRECTORY+DLLSSLName;
     DLLUtilName:=FMD_DIRECTORY+DLLUtilName;
-    if InitSSLInterface then
-      OpenSSLVersion:=SSLeayversion(0);
   end;
   if not IsSSLloaded then
     InitSSLInterface;
