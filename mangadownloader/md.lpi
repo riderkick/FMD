@@ -40,7 +40,7 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
-            <OtherUnitFiles Value="..\baseunits;..\baseunits\animatedgifs;..\baseunits\extras;..\baseunits\lua;..\baseunits\modules;..\baseunits\SimpleException;forms"/>
+            <OtherUnitFiles Value="..\baseunits;..\baseunits\animatedgifs;..\baseunits\extras;..\baseunits\lua;..\baseunits\modules;..\baseunits\SimpleException;..\baseunits\synapse;forms"/>
             <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
           <CodeGeneration>
@@ -87,7 +87,7 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
-            <OtherUnitFiles Value="..\baseunits;..\baseunits\animatedgifs;..\baseunits\extras;..\baseunits\lua;..\baseunits\modules;..\baseunits\SimpleException;forms"/>
+            <OtherUnitFiles Value="..\baseunits;..\baseunits\animatedgifs;..\baseunits\extras;..\baseunits\lua;..\baseunits\modules;..\baseunits\SimpleException;..\baseunits\synapse;forms"/>
             <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
           <Parsing>
@@ -137,7 +137,7 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
-            <OtherUnitFiles Value="..\baseunits;..\baseunits\animatedgifs;..\baseunits\extras;..\baseunits\lua;..\baseunits\modules;..\baseunits\SimpleException;forms"/>
+            <OtherUnitFiles Value="..\baseunits;..\baseunits\animatedgifs;..\baseunits\extras;..\baseunits\lua;..\baseunits\modules;..\baseunits\SimpleException;..\baseunits\synapse;forms"/>
             <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
           <Parsing>
@@ -184,7 +184,7 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
-            <OtherUnitFiles Value="..\baseunits;..\baseunits\animatedgifs;..\baseunits\extras;..\baseunits\lua;..\baseunits\modules;..\baseunits\SimpleException;forms"/>
+            <OtherUnitFiles Value="..\baseunits;..\baseunits\animatedgifs;..\baseunits\extras;..\baseunits\lua;..\baseunits\modules;..\baseunits\SimpleException;..\baseunits\synapse;forms"/>
             <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
           <Parsing>
@@ -239,7 +239,7 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
-            <OtherUnitFiles Value="..\baseunits;..\baseunits\animatedgifs;..\baseunits\extras;..\baseunits\lua;..\baseunits\modules;..\baseunits\SimpleException;forms"/>
+            <OtherUnitFiles Value="..\baseunits;..\baseunits\animatedgifs;..\baseunits\extras;..\baseunits\lua;..\baseunits\modules;..\baseunits\SimpleException;..\baseunits\synapse;forms"/>
             <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
           <Parsing>
@@ -296,7 +296,7 @@
         <Mode0 Name="default"/>
       </Modes>
     </RunParams>
-    <RequiredPackages Count="10">
+    <RequiredPackages Count="9">
       <Item1>
         <PackageName Value="LCL"/>
       </Item1>
@@ -313,20 +313,17 @@
         <PackageName Value="virtualtreeview_package"/>
       </Item5>
       <Item6>
-        <PackageName Value="laz_synapse"/>
+        <PackageName Value="richmemopackage"/>
       </Item6>
       <Item7>
-        <PackageName Value="richmemopackage"/>
+        <PackageName Value="multiloglaz"/>
       </Item7>
       <Item8>
-        <PackageName Value="multiloglaz"/>
+        <PackageName Value="dcpcrypt"/>
       </Item8>
       <Item9>
-        <PackageName Value="dcpcrypt"/>
-      </Item9>
-      <Item10>
         <PackageName Value="internettools"/>
-      </Item10>
+      </Item9>
     </RequiredPackages>
     <Units Count="20">
       <Unit0>
@@ -467,7 +464,7 @@
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
-      <OtherUnitFiles Value="..\baseunits;..\baseunits\animatedgifs;..\baseunits\extras;..\baseunits\lua;..\baseunits\modules;..\baseunits\SimpleException;forms"/>
+      <OtherUnitFiles Value="..\baseunits;..\baseunits\animatedgifs;..\baseunits\extras;..\baseunits\lua;..\baseunits\modules;..\baseunits\SimpleException;..\baseunits\synapse;forms"/>
       <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <CodeGeneration>
