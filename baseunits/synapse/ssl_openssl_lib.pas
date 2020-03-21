@@ -1956,7 +1956,9 @@ begin
         _EvpPkeyAssign := GetProcAddr(SSLUtilHandle, 'EVP_PKEY_assign');
         _EVPCleanup := GetProcAddr(SSLUtilHandle, 'EVP_cleanup');
         _EvpGetDigestByName := GetProcAddr(SSLUtilHandle, 'EVP_get_digestbyname');
-        _SSLeayversion := GetProcAddr(SSLUtilHandle, 'SSLeay_version');
+        _SSLeayversion := GetProcAddr(SSLUtilHandle, 'OpenSSL_version');
+        if not Assigned(_SSLeayversion) then
+          _SSLeayversion := GetProcAddr(SSLUtilHandle, 'SSLeay_version');
         _ErrErrorString := GetProcAddr(SSLUtilHandle, 'ERR_error_string_n');
         _ErrGetError := GetProcAddr(SSLUtilHandle, 'ERR_get_error');
         _ErrClearError := GetProcAddr(SSLUtilHandle, 'ERR_clear_error');
