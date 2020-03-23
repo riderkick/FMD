@@ -183,10 +183,6 @@ function AddWebsiteModule(name, url, category)
 end
 
 function Init()
-  local cat = 'English'
-  AddWebsiteModule('MangaDeep', 'http://www.mangadeep.com', cat)
-  AddWebsiteModule('Manga99', 'http://www.manga99.com', cat)
-  
   cat = 'H-Sites'
   AddWebsiteModule('ReadHentaiManga', 'http://readhentaimanga.com', cat)
   
