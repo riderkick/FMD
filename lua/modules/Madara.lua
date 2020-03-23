@@ -251,6 +251,7 @@ function Init()
   AddWebsiteModule('OnManga', 'https://onmanga.com', cat)
   AddWebsiteModule('ReadRawManga', 'https://www.readrawmanga.com', cat)
   AddWebsiteModule('MangaStreamCC', 'https://www.mangastream.cc', cat)
+  AddWebsiteModule('TeabeerComics', 'https://teabeercomics.com', cat)
 
   cat = 'English-Scanlation'
   AddWebsiteModule('TrashScanlations', 'https://trashscanlations.com', cat)
@@ -265,6 +266,7 @@ function Init()
   cat = 'French'
   AddWebsiteModule('WakaScan', 'https://wakascan.com', cat)
   AddWebsiteModule('ATMSubs', 'https://atm-subs.fr', cat)
+  AddWebsiteModule('NovelFrance', 'http://novel-france.fr', cat)
   
   cat = 'Indonesian'
   AddWebsiteModule('MangaYosh', 'https://mangayosh.xyz', cat)
@@ -282,6 +284,7 @@ function Init()
   AddWebsiteModule('NManhwa', 'https://nmanhwa.com', cat)
   AddWebsiteModule('ManyToonCom', 'https://manytoon.com', cat)
   AddWebsiteModule('Hiperdex', 'https://hiperdex.com', cat)
+  AddWebsiteModule('ShosetsuManga', 'https://www.shosetsu-manga.org', cat)
 
   cat = 'Spanish-Scanlation'
   AddWebsiteModule('GodsRealmScan', 'https://godsrealmscan.com', cat)
@@ -314,6 +317,8 @@ function Init()
   AddWebsiteModule('EarlyManga', 'https://earlymanga.website', cat)
   AddWebsiteModule('Mangakiss', 'https://mangakiss.org', cat)
   AddWebsiteModule('MangaLord', 'https://www.mangalord.com', cat)
+  AddWebsiteModule('KissMangaIN', 'https://kissmanga.in', cat)
+  AddWebsiteModule('MiracleScans', 'https://miraclescans.com', cat)
   
   cat = 'Arabic-Scanlation'
   AddWebsiteModule('3asqOrg', 'https://3asq.org', cat)
@@ -333,4 +338,7 @@ function Init()
   
   cat = 'Russian'
   AddWebsiteModule('BestManga', 'https://bestmanga.club', cat)
+  
+  cat = 'Adult'
+  AddWebsiteModule('Milftoon', 'https://milftoon.xxx', cat)
 end
