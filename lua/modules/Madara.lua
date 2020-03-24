@@ -319,6 +319,7 @@ function Init()
   AddWebsiteModule('MangaLord', 'https://www.mangalord.com', cat)
   AddWebsiteModule('KissMangaIN', 'https://kissmanga.in', cat)
   AddWebsiteModule('MiracleScans', 'https://miraclescans.com', cat)
+  AddWebsiteModule('1stKissManga', 'https://1stkissmanga.com', cat)
   
   cat = 'Arabic-Scanlation'
   AddWebsiteModule('3asqOrg', 'https://3asq.org', cat)
