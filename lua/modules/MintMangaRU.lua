@@ -57,7 +57,7 @@ end
 ----------------------------------------------------------------------------------------------------
 
 function Init()
-  AddWebsiteModule('MintMangaRU', 'https://mintmanga.com', 'Russian')
+  AddWebsiteModule('MintMangaRU', 'https://mintmanga.live', 'Russian')
 end
 
 function AddWebsiteModule(name, url, category)
