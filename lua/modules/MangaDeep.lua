@@ -11,7 +11,8 @@ local LuaDebug   = require 'LuaDebugging'
 -- Local Constants
 ----------------------------------------------------------------------------------------------------
 
-DirectoryPagination = '/ajax/new_manga/page-'
+DirectoryPagination = '/category/index_'
+DirectorySuffix     = '.html'
 MangaInfoParameters = '?waring=1'
 
 
@@ -28,7 +29,7 @@ function GetInfo()
   if not http.Get(u) then return net_problem end
   
   x = TXQuery.Create(http.Document)
-  mangainfo.Title     = x.XPathString('//div[@class="book-info"]/h1')
+  mangainfo.Title     = Trim(SeparateLeft(x.XPathString('//div[@class="book-info"]/h1'), ' Manga'))
   mangainfo.CoverLink = x.XPathString('//div[@class="book-info"]//img/@src')
   mangainfo.Authors   = x.XPathString('string-join(//dd[@class="about-book"]//span[starts-with(.,"Author")]/following-sibling::a)')
   mangainfo.Genres    = x.XPathString('string-join(//ul[@class="inset-menu"]/li/a[not(contains(.,"Manga Reviews"))], ", ")')
@@ -109,6 +110,7 @@ end
 function Init()
   AddWebsiteModule('MangaDeep', 'http://www.mangadeep.com', 'English')
   AddWebsiteModule('Manga99', 'http://www.manga99.com', 'English')
+  AddWebsiteModule('TenManga', 'http://www.tenmanga.com', 'English')
 end
 
 function AddWebsiteModule(name, url, category)
