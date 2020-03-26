@@ -11,7 +11,7 @@ local LuaDebug   = require 'LuaDebugging'
 -- Local Constants
 ----------------------------------------------------------------------------------------------------
 
-local DirectoryPagination = '/manga-list/page-'
+DirectoryPagination = '/manga-list/page-'
 
 
 ----------------------------------------------------------------------------------------------------
@@ -20,54 +20,48 @@ local DirectoryPagination = '/manga-list/page-'
 
 -- Get info and chapter list for current manga.
 function GetInfo()
+  local pages, x, v = nil
   local u = MaybeFillHost(module.RootURL, url)
+  local p = 1
   
   --[[Debug]] LuaDebug.WriteLogWithHeader('GetInfo', 'url ->  ' .. u)
   if not http.Get(u) then return net_problem end
   
   x = TXQuery.Create(http.Document)
   mangainfo.Coverlink = MaybeFillHost(module.RootURL, x.XPathString('//div[@class="comic-info"]/div/img/@src'))
-  if module.Website == 'HeavenManga' then
-    mangainfo.Title 	= x.XPathString('//div[@class="info"]/h1')
-    mangainfo.Authors 	= x.XPathStringAll('//div[@class="info"]//div[@class="author"]/a')
-    mangainfo.Genres 	= x.XPathStringAll('//div[@class="info"]//div[@class="genre"]/a')
-    mangainfo.Status 	= MangaInfoStatusIfPos(x.XPathString('//div[@class="info"]//div[@class="update"]/span[last()]'))
-  else
-    mangainfo.Title 	= x.XPathString('//div[@class="comic-info"]/div/h1')
-    mangainfo.Authors 	= x.XPathStringAll('//div[@class="comic-info"]//div[@class="author"]/a')
-    mangainfo.Genres 	= x.XPathStringAll('//div[@class="comic-info"]//div[@class="genre"]/a')
-    mangainfo.Status 	= MangaInfoStatusIfPos(x.XPathString('//div[@class="comic-info"]//div[@class="update"]/span[last()]'))
-  end
-  mangainfo.Summary 	= x.XPathString('//div[@class="comic-description"]/p')
+  mangainfo.Title     = x.XPathString('//div[contains(@class, "info")]/h1')
+  mangainfo.Authors   = x.XPathStringAll('//div[contains(@class, "info")]//div[@class="author"]/a')
+  mangainfo.Genres    = x.XPathStringAll('//div[contains(@class, "info")]//div[@class="genre"]/a')
+  mangainfo.Status    = MangaInfoStatusIfPos(x.XPathString('//div[contains(@class, "info")]//div[@class="update"]/span[last()]'))
+  mangainfo.Summary   = x.XPathString('//div[@class="comic-description"]/p')
   
   pages = tonumber(x.XPathString('//div[@class="pagination"]//a[contains(@class, "page-numbers")][last()]/substring-after(@href, "/page-")'))
   if pages == nil then pages = 1 end
-  
-  --[[Debug]] LuaDebug.WriteLogWithHeader('GetInfo', 'pages ->  ' .. pages)
-  local p = 1
   while true do
-    --[[Debug]] LuaDebug.WriteLogWithHeader('GetInfo', 'url ->  ' .. u .. '/page-' .. tostring(p))
-	for _, v in ipairs(x.XPathI('//div[contains(@class, "chapters-wrapper")]//h2[@class="chap"]/a')) do
+    for _, v in ipairs(x.XPathI('//div[contains(@class, "chapters-wrapper")]//h2[@class="chap"]/a')) do
       mangainfo.ChapterNames.Add(x.XPathString('text()', v))
       mangainfo.ChapterLinks.Add(v.GetAttribute('href'))
     end
-	
-	p = p + 1
-	if p > pages then
-	  break
-	elseif http.get(u .. '/page-' .. tostring(p)) then
-	  x = TXQuery.Create(http.Document)
-	else
-	  break
-	end
+    p = p + 1
+    if p > pages then
+      break
+    elseif http.Get(u .. '/page-' .. tostring(p)) then
+      x = TXQuery.Create(http.Document)
+    else
+      break
+    end
   end
-  
   InvertStrings(mangainfo.ChapterLinks, mangainfo.ChapterNames)
+  
+  --[[Debug]] LuaDebug.PrintMangaInfo()
+  --[[Debug]] LuaDebug.WriteStatistics('Chapters', mangainfo.ChapterLinks.Count .. '  (' .. mangainfo.Title .. ')')
+  
   return no_error
 end
 
 -- Get the page count for the current chapter.
 function GetPageNumber()
+  local x = nil
   local u = MaybeFillHost(module.RootURL, url)
   
   --[[Debug]] LuaDebug.WriteLogWithHeader('GetPageNumber', 'url ->  ' .. u)
@@ -85,7 +79,8 @@ end
 
 -- Get the page count of the manga list of the current website.
 function GetDirectoryPageNumber()
-  local u = module.RootURL .. DirectoryPagination .. IncStr(url)
+  local x = nil
+  local u = module.RootURL .. DirectoryPagination .. 1 .. '/'
   
   --[[Debug]] LuaDebug.WriteLogWithHeader('GetDirectoryPageNumber', 'url ->  ' .. u)
   if not http.Get(u) then return net_problem end
@@ -99,14 +94,14 @@ end
 
 -- Get links and names from the manga list of the current website.
 function GetNameAndLink()
-  local u = module.RootURL .. DirectoryPagination .. IncStr(url)
+  local x = nil
+  local u = module.RootURL .. DirectoryPagination .. IncStr(url) .. '/'
   
   --[[Debug]] LuaDebug.WriteLogWithHeader('GetNameAndLink', 'url ->  ' .. u)
   if not http.Get(u) then return net_problem end
   
   x = TXQuery.Create(http.Document)
   x.XPathHREFAll('//div[@class="comics-grid"]/div/div/h3/a', links, names)
-  updatelist.CurrentDirectoryPageNumber = updatelist.CurrentDirectoryPageNumber + 1
 
   --[[Debug]] LuaDebug.PrintMangaDirectoryEntries(IncStr(url))
   
@@ -125,12 +120,12 @@ end
 
 function AddWebsiteModule(name, url, cat)
   local m = NewModule()
-  m.Website						= name
-  m.RootURL 					= url
-  m.Category 					= cat
-  m.OnGetInfo					= 'GetInfo'
-  m.OnGetNameAndLink			= 'GetNameAndLink'
-  m.OnGetPageNumber				= 'GetPageNumber'
-  m.OnGetDirectoryPageNumber 	= 'GetDirectoryPageNumber'
+  m.Website                     = name
+  m.RootURL                     = url
+  m.Category                    = cat
+  m.OnGetInfo                   = 'GetInfo'
+  m.OnGetNameAndLink            = 'GetNameAndLink'
+  m.OnGetPageNumber             = 'GetPageNumber'
+  m.OnGetDirectoryPageNumber    = 'GetDirectoryPageNumber'
   return m
 end
