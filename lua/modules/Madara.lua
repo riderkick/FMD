@@ -342,4 +342,7 @@ function Init()
   
   cat = 'Adult'
   AddWebsiteModule('Milftoon', 'https://milftoon.xxx', cat)
+  
+  cat = 'Portuguese-Scanlation'
+  AddWebsiteModule('NeoxScanlator', 'https://neoxscan.com/newsite', cat)
 end
