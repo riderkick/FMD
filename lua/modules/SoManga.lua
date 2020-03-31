@@ -53,7 +53,7 @@ function Init()
   local m = NewModule()
   m.website = 'SoManga'
   m.rooturl = 'http://somangas.net'
-  m.category = 'Portugues'
+  m.category = 'Portuguese'
   m.lastupdated='March 1, 2018'
   m.ongetinfo='getinfo'
   m.ongetpagenumber='getpagenumber'

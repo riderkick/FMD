@@ -84,7 +84,7 @@ end
 
 function Init()
   m=NewModule()
-  m.category='Portugues'
+  m.category='Portuguese'
   m.website='LeitorNet'
   m.rooturl='https://leitor.net'
   m.ongetinfo='getinfo'

@@ -4,11 +4,11 @@ function GetInfo()
     x=TXQuery.Create(http.Document)
     mangainfo.title=x.XPathString('//div[@id="main"]//h1')
     mangainfo.coverLink=MaybeFillHost(module.rooturl, x.XPathString('//div[@id="main"]//div[@class="description"]/img/@src'))
-    mangainfo.summary = x.XPathStringAll('//div[@id="main"]//div[@class="description"]/div/text()', '')
+    mangainfo.summary = x.XPathString('//div[@id="main"]//div[@class="description"]/p')
     mangainfo.artists = x.XPathStringAll('//div[@id="main"]//div[@class="content" and contains(div[@class="header"], "Arte")]/div[@class="description"]/a')
     mangainfo.authors = x.XPathStringAll('//div[@id="main"]//div[@class="content" and contains(div[@class="header"], "Autor")]/div[@class="description"]/a')
     mangainfo.genres = x.XPathStringAll('//div[@id="main"]//div[@class="content" and contains(div[@class="header"], "Gênero")]/div[@class="description"]/a')
-    mangainfo.status = MangaInfoStatusIfPos(x.xpathstring('//div[@id="main"]//div[@class="content" and contains(div[@class="header"], "Status")]/div[@class="description"]/a'), 'publicação', 'completo')
+    mangainfo.status = MangaInfoStatusIfPos(x.xpathstring('//div[@id="main"]//div[@class="content" and contains(div[@class="header"], "Status")]/div[@class="description"]/a'), 'Em publicação', 'Completo')
     x.XPathHREFAll('//table/tbody/tr/td/a', mangainfo.chapterlinks, mangainfo.chapternames)
     InvertStrings(mangainfo.chapterLinks, mangainfo.chapterNames)
     return no_error
@@ -65,10 +65,9 @@ end
 
 function Init()
   m=NewModule()
-  m.category='Portugues'
+  m.category='Portuguese'
   m.website='CentralDeMangas'
-  m.rooturl='http://cdmnet.com.br'
-  m.lastupdated='February 15, 2018'
+  m.rooturl='http://centraldemangas.online'
   m.ongetinfo='GetInfo'
   m.ongetpagenumber='GetPageNumber'
   m.ongetnameandlink='GetNameAndLink'

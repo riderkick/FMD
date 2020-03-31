@@ -57,7 +57,7 @@ end
 
 function Init()
   local m=NewModule()
-  m.category='Portugues'
+  m.category='Portuguese'
   m.website='UnionMangas'
   m.rooturl='https://unionleitor.top'
   m.ongetinfo='getinfo'

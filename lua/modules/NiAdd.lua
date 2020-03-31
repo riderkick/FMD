@@ -139,7 +139,7 @@ local cat = 'English'
   cat = 'Russian'
   AddWebsiteModule('NiAddRU', 'https://ru.niadd.com', cat)
   
-  cat = 'Portugues'
+  cat = 'Portuguese'
   AddWebsiteModule('NiAddBR', 'https://br.niadd.com', cat)
   
   cat = 'German'

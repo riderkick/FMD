@@ -55,7 +55,7 @@ function Init()
 	m=NewModule()
 	m.Website                    = 'MangaOnlineBR'
 	m.RootURL                    = 'http://mangaonline.com.br'
-	m.Category                   = 'Portugues'
+	m.Category                   = 'Portuguese'
 	m.OnGetNameAndLink           = 'GetNameAndLink'
 	m.OnGetInfo                  = 'GetInfo'
 	m.OnGetPageNumber            = 'GetPageNumber'

@@ -58,7 +58,7 @@ end
 ----------------------------------------------------------------------------------------------------
 
 function Init()
-  AddWebsiteModule('NineMangaBR', 'http://br.ninemanga.com', 'Portugues')
+  AddWebsiteModule('NineMangaBR', 'http://br.ninemanga.com', 'Portuguese')
 end
 
 function AddWebsiteModule(name, url, category)

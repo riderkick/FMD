@@ -333,7 +333,7 @@ function Init()
   AddWebsiteModule('MangaAction', 'https://manga-action.com', cat)
   AddWebsiteModule('NijiTranslations', 'https://niji-translations.com', cat)
   
-  cat = 'Portugues'
+  cat = 'Portuguese'
   AddWebsiteModule('IchirinNoHanaYuri', 'https://ichirinnohanayuri.com.br', cat)
   AddWebsiteModule('YaoiToshokan', 'https://www.yaoitoshokan.com.br', cat)
   
