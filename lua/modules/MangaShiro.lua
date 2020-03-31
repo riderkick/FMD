@@ -280,7 +280,8 @@ function getnameandlink()
     ['MataKomik'] = '/manga/?list',
     ['Rawkuma'] = '/manga/?list',
     ['KomikGoCoID'] = '/manga/?list',
-    ['MangaSWAT'] = '/manga/?list'
+    ['MangaSWAT'] = '/manga/?list',
+    ['MangaTsuki'] = '/manga/?list'
   }
   local dirurl = '/manga-list/'
   if dirs[module.website] ~= nil then
@@ -376,6 +377,7 @@ local cat = 'Indonesian'
   AddWebsiteModule('Mangakyo', 'https://www.mangakyo.com', cat)
   AddWebsiteModule('MataKomik', 'https://matakomik.com', cat)
   AddWebsiteModule('KomikGoCoID', 'https://www.komikgo.co.id', cat)
+  AddWebsiteModule('MangaTsuki', 'https://mangatsuki.web.id', cat)
   
   cat = 'Webcomics'
   AddWebsiteModule('SekteKomik', 'http://sektekomik.com', cat)
