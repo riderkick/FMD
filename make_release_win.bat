@@ -1,6 +1,6 @@
 @ECHO OFF
-REM lazbuild must be in environment path or inlcude it here
-REM SET PATH=%PATH%;lazarus
+REM lazbuild must be in environment variable LAZ or set it here
+REM SET LAZ=C:\lazarus
 TITLE=FMD Release
 SET cdir=%CD%
 CD /D "%cdir%"
@@ -20,7 +20,7 @@ GOTO :EOF
 
 :makerelease
 TITLE make %~1
-SET lbuild=lazbuild --build-mode="%~2" %~3
+SET lbuild=%LAZ%\lazbuild --build-mode="%~2" %~3
 %lbuild% "%cdir%\updaterslim\updater.lpi"
 %lbuild% "%cdir%\mangadownloader\md.lpi"
 SET tdir=%cdir%\bin\%~1
