@@ -5,7 +5,7 @@
 *.ppu
 *.rst
 *.cgi
-*.exe
+# *.exe
 *.log
 *.bak*
 fp.ini
