@@ -1318,7 +1318,8 @@ begin
 
   Self.Caption := Self.Caption + ' v' + FMD_VERSION_STRING;
   AddToAboutStatus(RS_Version, FMD_VERSION_STRING, pnAboutVersion);
-  AddToAboutStatus(RS_Revision, REVISION_NUMBER+' ('+REVISION_SHA+')', pnAboutVersion);
+  if REVISION_NUMBER <> '' then
+    AddToAboutStatus(RS_Revision, REVISION_NUMBER+' ('+REVISION_SHA+')', pnAboutVersion)
 
   if LuaWebsiteModules.AlwaysLoadLuaFromFile then
     Caption := Caption + ' --lua-dofile';
