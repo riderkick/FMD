@@ -324,7 +324,7 @@
         <PackageName Value="internettools"/>
       </Item9>
     </RequiredPackages>
-    <Units Count="20">
+    <Units Count="18">
       <Unit0>
         <Filename Value="md.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -428,31 +428,23 @@
         <ResourceBaseClass Value="Form"/>
       </Unit14>
       <Unit15>
-        <Filename Value="..\baseunits\DBUpdater.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit15>
-      <Unit16>
-        <Filename Value="..\baseunits\SelfUpdater.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit16>
-      <Unit17>
         <Filename Value="forms\frmWebsiteSettings.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="WebsiteSettingsForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-      </Unit17>
-      <Unit18>
+      </Unit15>
+      <Unit16>
         <Filename Value="forms\uBackupSettings.pas"/>
         <IsPartOfProject Value="True"/>
-      </Unit18>
-      <Unit19>
+      </Unit16>
+      <Unit17>
         <Filename Value="forms\frmDialogYesNo.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="frmDialogYN"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-      </Unit19>
+      </Unit17>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
