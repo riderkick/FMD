@@ -5,7 +5,7 @@ unit httpcookiemanager;
 interface
 
 uses
-  Classes, SysUtils, fgl, StrUtils, syncobjs, synautil;
+  Classes, SysUtils, fgl, StrUtils, syncobjs, synautil, httpsend;
 
 type
 
@@ -45,12 +45,12 @@ type
     FCookies: THTTPCookies;
     FGuardian: TCriticalSection;
   protected
-    procedure AddServerCookie(const AURL, ACookie: String);
+    procedure AddServerCookie(const AURL, ACookie: String; const ADate: TDateTime);
   public
     constructor Create;
     destructor Destroy; override;
-    procedure AddServerCookies(const AURL: String; const AHeaders: TStrings);
-    procedure SetCookies(const AURL: String; const ACookies: TStrings);
+    procedure AddServerCookies(const AURL: String; const AHTTP: THTTPSend);
+    procedure SetCookies(const AURL: String; const AHTTP: THTTPSend);
   published
     property Cookies: THTTPCookies read FCookies;
   end;
@@ -74,13 +74,24 @@ begin
   inherited Destroy;
 end;
 
-procedure THTTPCookieManager.AddServerCookie(const AURL, ACookie: String);
+procedure THTTPCookieManager.AddServerCookie(const AURL, ACookie: String;
+  const ADate: TDateTime);
 var
   s, n, ni, v: String;
   c: THTTPCookie;
   Prot, User, Pass, Host, Port, Path, Para: String;
+  i, ma: Integer;
 begin
   if Trim(ACookie) = '' then Exit;
+  n := Trim(SeparateLeft(ACookie, '='));
+  for i := 0 to FCookies.Count-1 do
+  begin
+    if n = FCookies[i].Name then
+    begin
+      FCookies.Delete(i);
+      Break;
+    end;
+  end;
   c := THTTPCookie.Create;
   FCookies.Add(c);
   for s in ACookie.Split([';']) do
@@ -99,6 +110,12 @@ begin
     else if ni = 'expires' then
     begin
       c.Expires := DecodeRfcDateTime(v);
+      c.Persistent := True;
+    end
+    else if ni = 'max-age' then
+    begin
+      ma := StrToIntDef(v, 0);
+      c.Expires := ADate + EncodeTime(0,0,ma,0);
       c.Persistent := True;
     end
     else if ni = 'secure' then
@@ -124,17 +141,24 @@ begin
 end;
 
 procedure THTTPCookieManager.AddServerCookies(const AURL: String;
-  const AHeaders: TStrings);
+  const AHTTP: THTTPSend);
 var
   i: Integer;
+  s: String;
+  d: TDateTime;
 begin
   FGuardian.Enter;
   try
-    for i := 0 to AHeaders.Count - 1 do
+    s := Trim(AHTTP.Headers.Values['Date']);
+    if s <> '' then
+      d := DecodeRfcDateTime(s)
+    else
+      d := Now;
+    for i := 0 to AHTTP.Headers.Count - 1 do
     begin
-      if Pos('set-cookie', LowerCase(AHeaders[i])) = 1 then
+      if Pos('set-cookie', LowerCase(AHTTP.Headers[i])) = 1 then
       begin
-        AddServerCookie(AURL, Trim(AHeaders.ValueFromIndex[i]));
+        AddServerCookie(AURL, Trim(AHTTP.Headers.ValueFromIndex[i]), d);
       end;
     end;
   finally
@@ -163,7 +187,7 @@ begin
 end;
 
 procedure THTTPCookieManager.SetCookies(const AURL: String;
-  const ACookies: TStrings);
+  const AHTTP: THTTPSend);
 var
   Prot, User, Pass, Host, Port, Path, Para: String;
   i: Integer;
@@ -224,7 +248,7 @@ begin
             ((not c.Secure) or (c.Secure and c.Secure)) and
             ((not c.HttpOnly) or (c.HttpOnly and IsHTTP)) then
         begin
-          ACookies.Values[c.Name] := c.Value;
+          AHTTP.Cookies.Values[c.Name] := c.Value;
         end;
         Inc(i);
       end;

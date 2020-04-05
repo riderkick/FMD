@@ -386,13 +386,13 @@ end;
 procedure THTTPSendThread.SetHTTPCookies;
 begin
   if Assigned(CookieManager) then
-    CookieManager.SetCookies(FURL, FCookies);
+    CookieManager.SetCookies(FURL, Self);
 end;
 
 procedure THTTPSendThread.ParseHTTPCookies;
 begin
   if Assigned(CookieManager) then
-    CookieManager.AddServerCookies(FURL, FHeaders);
+    CookieManager.AddServerCookies(FURL, Self);
 end;
 
 function THTTPSendThread.InternalHTTPRequest(const Method, URL: String;
