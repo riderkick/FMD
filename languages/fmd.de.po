@@ -12,6 +12,24 @@ msgstr ""
 "X-Generator: Poedit 2.3\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+#: checkupdate.rs_btncheckupdates
+#, fuzzy
+msgctxt "checkupdate.rs_btncheckupdates"
+msgid "Check for latest version"
+msgstr "Auf neuste Version prüfen"
+
+#: checkupdate.rs_currentversion
+msgid "Installed Version"
+msgstr ""
+
+#: checkupdate.rs_latestversion
+msgid "Latest Version   "
+msgstr ""
+
+#: checkupdate.rs_newversionfound
+msgid "New Version found!"
+msgstr ""
+
 #: dbupdater.rs_buttoncancel
 msgctxt "dbupdater.rs_buttoncancel"
 msgid "Abort"
@@ -567,6 +585,34 @@ msgstr "Herunterladen abgeschlossen"
 msgctxt "selfupdater.rs_missingfile"
 msgid "Missing %s"
 msgstr "%s fehlt"
+
+#: simpleexception.sbuttoncontinue
+msgid "&Continue"
+msgstr ""
+
+#: simpleexception.sbuttondetails
+msgid "&Show Details"
+msgstr ""
+
+#: simpleexception.sbuttonterminate
+msgid "&Terminate"
+msgstr ""
+
+#: simpleexception.scanthandleexception
+msgid "Can't handle exception"
+msgstr ""
+
+#: simpleexception.scheckboxignoreexception
+msgid "Ignore this exception for next time"
+msgstr ""
+
+#: simpleexception.sexceptioncaption
+msgid "An error occured during program execution:"
+msgstr ""
+
+#: simpleexception.sexceptiondialogtitle
+msgid "Exception Info"
+msgstr ""
 
 #: taccountmanagerform.btedit.caption
 msgctxt "taccountmanagerform.btedit.caption"
@@ -2417,3 +2463,173 @@ msgstr "Webseitenname"
 #: twebsitesettingsform.edsearchproperty.texthint
 msgid "Setting name"
 msgstr "Einstellungsname"
+
+#: udownloadsmanager.rs_compressing
+msgid "Compressing..."
+msgstr ""
+
+#: udownloadsmanager.rs_disabled
+#, fuzzy
+msgctxt "udownloadsmanager.rs_disabled"
+msgid "Disabled"
+msgstr "Deaktiviert"
+
+#: udownloadsmanager.rs_downloading
+msgid "Downloading"
+msgstr ""
+
+#: udownloadsmanager.rs_failed
+#, fuzzy
+msgctxt "udownloadsmanager.rs_failed"
+msgid "Failed"
+msgstr "Gescheitert"
+
+#: udownloadsmanager.rs_failedtocreatedir
+msgid "Failed to create directory!"
+msgstr ""
+
+#: udownloadsmanager.rs_failedtryresumetask
+msgid "Failed, try resuming this task!"
+msgstr ""
+
+#: udownloadsmanager.rs_finish
+msgid "Completed"
+msgstr ""
+
+#: udownloadsmanager.rs_preparing
+msgctxt "udownloadsmanager.rs_preparing"
+msgid "Preparing"
+msgstr ""
+
+#: udownloadsmanager.rs_stopped
+msgid "Stopped"
+msgstr ""
+
+#: udownloadsmanager.rs_waiting
+msgid "Waiting..."
+msgstr ""
+
+#: ufavoritesmanager.rs_btnaddtoqueue
+#, fuzzy
+msgctxt "ufavoritesmanager.rs_btnaddtoqueue"
+msgid "&Add to queue"
+msgstr "&zur Warteschlage hinzufügen"
+
+#: ufavoritesmanager.rs_btncancel
+#, fuzzy
+msgctxt "ufavoritesmanager.rs_btncancel"
+msgid "&Cancel"
+msgstr "&Abbrechen"
+
+#: ufavoritesmanager.rs_btncheckfavorites
+#, fuzzy
+msgctxt "ufavoritesmanager.rs_btncheckfavorites"
+msgid "Check for new chapter"
+msgstr "Auf neues Kapitel überprüfen"
+
+#: ufavoritesmanager.rs_btndownload
+#, fuzzy
+msgctxt "ufavoritesmanager.rs_btndownload"
+msgid "&Download"
+msgstr "&Download"
+
+#: ufavoritesmanager.rs_btnremove
+msgid "&Remove"
+msgstr ""
+
+#: ufavoritesmanager.rs_dlgcompletedmangacaption
+#, object-pascal-format
+msgid "Found %d completed manga"
+msgstr ""
+
+#: ufavoritesmanager.rs_dlgfavoritescheckisrunning
+msgid "Favorites check is running!"
+msgstr ""
+
+#: ufavoritesmanager.rs_dlgnewchaptercaption
+#, object-pascal-format
+msgid "%d manga(s) have new chapter(s)"
+msgstr ""
+
+#: ufavoritesmanager.rs_favoritehasnewchapter
+#, object-pascal-format
+msgid "%s <%s> has %d new chapter(s)."
+msgstr ""
+
+#: ufavoritesmanager.rs_lblmangawillberemoved
+msgid "Completed manga will be removed:"
+msgstr ""
+
+#: ufavoritesmanager.rs_lblnewchapterfound
+#, object-pascal-format
+msgid "Found %d new chapter from %d manga(s):"
+msgstr ""
+
+#: usilentthread.rs_silentthreadloadstatus
+#, object-pascal-format
+msgid "Loading: %d/%d"
+msgstr ""
+
+#: uupdatethread.rs_dlghasnewmanga
+#, object-pascal-format
+msgid "%s has %d new manga(s)"
+msgstr ""
+
+#: uupdatethread.rs_gettingdirectory
+msgid "Getting directory"
+msgstr ""
+
+#: uupdatethread.rs_gettinginfo
+msgid "Getting info"
+msgstr ""
+
+#: uupdatethread.rs_gettinglistfor
+msgid "Getting list for"
+msgstr ""
+
+#: uupdatethread.rs_indexingnewtitle
+msgid "Indexing new title(s)"
+msgstr ""
+
+#: uupdatethread.rs_lookingfornewtitle
+msgid "Looking for new title(s)"
+msgstr ""
+
+#: uupdatethread.rs_lookingfornewtitlefromanotherdirectory
+msgid "Looking for new title(s) from another directory"
+msgstr ""
+
+#: uupdatethread.rs_preparing
+msgctxt "uupdatethread.rs_preparing"
+msgid "Preparing"
+msgstr ""
+
+#: uupdatethread.rs_removingduplicatefromcurrentdata
+msgid "Removing duplicate from current data"
+msgstr ""
+
+#: uupdatethread.rs_removingduplicatefromlocaldata
+msgid "Removing duplicate from local data"
+msgstr ""
+
+#: uupdatethread.rs_removingduplicatefromnewtitle
+msgid "Removing duplicate from new title(s)"
+msgstr ""
+
+#: uupdatethread.rs_savingdata
+msgid "Saving data"
+msgstr ""
+
+#: uupdatethread.rs_synchronizingdata
+msgid "Synchronizing data"
+msgstr ""
+
+#: uupdatethread.rs_updatinglist
+msgid "Updating list"
+msgstr ""
+
+#: webp.serrloadfailed
+#, object-pascal-format
+msgid "Can not load WebP codec library \"%s\". Check your installation."
+msgstr ""
+
