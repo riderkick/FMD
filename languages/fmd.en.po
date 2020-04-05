@@ -12,22 +12,21 @@ msgstr ""
 "X-Generator: Poedit 2.3\n"
 
 #: checkupdate.rs_btncheckupdates
-#, fuzzy
 msgctxt "checkupdate.rs_btncheckupdates"
 msgid "Check for latest version"
 msgstr "Check for latest version"
 
 #: checkupdate.rs_currentversion
 msgid "Installed Version"
-msgstr ""
+msgstr "Installed Version"
 
 #: checkupdate.rs_latestversion
 msgid "Latest Version   "
-msgstr ""
+msgstr "Latest Version   "
 
 #: checkupdate.rs_newversionfound
 msgid "New Version found!"
-msgstr ""
+msgstr "New Version found!"
 
 #: dbupdater.rs_buttoncancel
 msgctxt "dbupdater.rs_buttoncancel"
@@ -590,31 +589,31 @@ msgstr "Missing %s"
 
 #: simpleexception.sbuttoncontinue
 msgid "&Continue"
-msgstr ""
+msgstr "&Continue"
 
 #: simpleexception.sbuttondetails
 msgid "&Show Details"
-msgstr ""
+msgstr "&Show Details"
 
 #: simpleexception.sbuttonterminate
 msgid "&Terminate"
-msgstr ""
+msgstr "&Terminate"
 
 #: simpleexception.scanthandleexception
 msgid "Can't handle exception"
-msgstr ""
+msgstr "Can't handle exception"
 
 #: simpleexception.scheckboxignoreexception
 msgid "Ignore this exception for next time"
-msgstr ""
+msgstr "Ignore this exception for next time"
 
 #: simpleexception.sexceptioncaption
 msgid "An error occured during program execution:"
-msgstr ""
+msgstr "An error occured during program execution:"
 
 #: simpleexception.sexceptiondialogtitle
 msgid "Exception Info"
-msgstr ""
+msgstr "Exception Info"
 
 #: taccountmanagerform.btedit.caption
 msgctxt "taccountmanagerform.btedit.caption"
@@ -2468,170 +2467,163 @@ msgstr "Setting name"
 
 #: udownloadsmanager.rs_compressing
 msgid "Compressing..."
-msgstr ""
+msgstr "Compressing..."
 
 #: udownloadsmanager.rs_disabled
-#, fuzzy
 msgctxt "udownloadsmanager.rs_disabled"
 msgid "Disabled"
 msgstr "Disabled"
 
 #: udownloadsmanager.rs_downloading
 msgid "Downloading"
-msgstr ""
+msgstr "Downloading"
 
 #: udownloadsmanager.rs_failed
-#, fuzzy
 msgctxt "udownloadsmanager.rs_failed"
 msgid "Failed"
 msgstr "Failed"
 
 #: udownloadsmanager.rs_failedtocreatedir
 msgid "Failed to create directory!"
-msgstr ""
+msgstr "Failed to create directory!"
 
 #: udownloadsmanager.rs_failedtryresumetask
 msgid "Failed, try resuming this task!"
-msgstr ""
+msgstr "Failed, try resuming this task!"
 
 #: udownloadsmanager.rs_finish
 msgid "Completed"
-msgstr ""
+msgstr "Completed"
 
 #: udownloadsmanager.rs_preparing
 msgctxt "udownloadsmanager.rs_preparing"
 msgid "Preparing"
-msgstr ""
+msgstr "Preparing"
 
 #: udownloadsmanager.rs_stopped
 msgid "Stopped"
-msgstr ""
+msgstr "Stopped"
 
 #: udownloadsmanager.rs_waiting
 msgid "Waiting..."
-msgstr ""
+msgstr "Waiting..."
 
 #: ufavoritesmanager.rs_btnaddtoqueue
-#, fuzzy
 msgctxt "ufavoritesmanager.rs_btnaddtoqueue"
 msgid "&Add to queue"
 msgstr "&Add to queue"
 
 #: ufavoritesmanager.rs_btncancel
-#, fuzzy
 msgctxt "ufavoritesmanager.rs_btncancel"
 msgid "&Cancel"
 msgstr "&Cancel"
 
 #: ufavoritesmanager.rs_btncheckfavorites
-#, fuzzy
 msgctxt "ufavoritesmanager.rs_btncheckfavorites"
 msgid "Check for new chapter"
 msgstr "Check for new chapter"
 
 #: ufavoritesmanager.rs_btndownload
-#, fuzzy
 msgctxt "ufavoritesmanager.rs_btndownload"
 msgid "&Download"
 msgstr "&Download"
 
 #: ufavoritesmanager.rs_btnremove
 msgid "&Remove"
-msgstr ""
+msgstr "&Remove"
 
 #: ufavoritesmanager.rs_dlgcompletedmangacaption
 #, object-pascal-format
 msgid "Found %d completed manga"
-msgstr ""
+msgstr "Found %d completed manga"
 
 #: ufavoritesmanager.rs_dlgfavoritescheckisrunning
 msgid "Favorites check is running!"
-msgstr ""
+msgstr "Favorites check is running!"
 
 #: ufavoritesmanager.rs_dlgnewchaptercaption
 #, object-pascal-format
 msgid "%d manga(s) have new chapter(s)"
-msgstr ""
+msgstr "%d manga(s) have new chapter(s)"
 
 #: ufavoritesmanager.rs_favoritehasnewchapter
 #, object-pascal-format
 msgid "%s <%s> has %d new chapter(s)."
-msgstr ""
+msgstr "%s <%s> has %d new chapter(s)."
 
 #: ufavoritesmanager.rs_lblmangawillberemoved
 msgid "Completed manga will be removed:"
-msgstr ""
+msgstr "Completed manga will be removed:"
 
 #: ufavoritesmanager.rs_lblnewchapterfound
 #, object-pascal-format
 msgid "Found %d new chapter from %d manga(s):"
-msgstr ""
+msgstr "Found %d new chapter from %d manga(s):"
 
 #: usilentthread.rs_silentthreadloadstatus
 #, object-pascal-format
 msgid "Loading: %d/%d"
-msgstr ""
+msgstr "Loading: %d/%d"
 
 #: uupdatethread.rs_dlghasnewmanga
 #, object-pascal-format
 msgid "%s has %d new manga(s)"
-msgstr ""
+msgstr "%s has %d new manga(s)"
 
 #: uupdatethread.rs_gettingdirectory
 msgid "Getting directory"
-msgstr ""
+msgstr "Getting directory"
 
 #: uupdatethread.rs_gettinginfo
 msgid "Getting info"
-msgstr ""
+msgstr "Getting info"
 
 #: uupdatethread.rs_gettinglistfor
 msgid "Getting list for"
-msgstr ""
+msgstr "Getting list for"
 
 #: uupdatethread.rs_indexingnewtitle
 msgid "Indexing new title(s)"
-msgstr ""
+msgstr "Indexing new title(s)"
 
 #: uupdatethread.rs_lookingfornewtitle
 msgid "Looking for new title(s)"
-msgstr ""
+msgstr "Looking for new title(s)"
 
 #: uupdatethread.rs_lookingfornewtitlefromanotherdirectory
 msgid "Looking for new title(s) from another directory"
-msgstr ""
+msgstr "Looking for new title(s) from another directory"
 
 #: uupdatethread.rs_preparing
 msgctxt "uupdatethread.rs_preparing"
 msgid "Preparing"
-msgstr ""
+msgstr "Preparing"
 
 #: uupdatethread.rs_removingduplicatefromcurrentdata
 msgid "Removing duplicate from current data"
-msgstr ""
+msgstr "Removing duplicate from current data"
 
 #: uupdatethread.rs_removingduplicatefromlocaldata
 msgid "Removing duplicate from local data"
-msgstr ""
+msgstr "Removing duplicate from local data"
 
 #: uupdatethread.rs_removingduplicatefromnewtitle
 msgid "Removing duplicate from new title(s)"
-msgstr ""
+msgstr "Removing duplicate from new title(s)"
 
 #: uupdatethread.rs_savingdata
 msgid "Saving data"
-msgstr ""
+msgstr "Saving data"
 
 #: uupdatethread.rs_synchronizingdata
 msgid "Synchronizing data"
-msgstr ""
+msgstr "Synchronizing data"
 
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
-msgstr ""
+msgstr "Updating list"
 
 #: webp.serrloadfailed
 #, object-pascal-format
 msgid "Can not load WebP codec library \"%s\". Check your installation."
-msgstr ""
-
+msgstr "Can not load WebP codec library \"%s\". Check your installation."
