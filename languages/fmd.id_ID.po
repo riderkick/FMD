@@ -12,6 +12,83 @@ msgstr ""
 "X-Generator: Poedit 2.3\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
+#: dbupdater.rs_buttoncancel
+msgctxt "dbupdater.rs_buttoncancel"
+msgid "Abort"
+msgstr "Batalkan"
+
+#: dbupdater.rs_downloading
+#, object-pascal-format
+msgid "Downloading %s"
+msgstr "Mengunduh %s"
+
+#: dbupdater.rs_extracting
+#, object-pascal-format
+msgid "Extracting %s"
+msgstr "Mengekstrak %s"
+
+#: dbupdater.rs_faileddownload
+#, object-pascal-format
+msgid "%s: %d %s"
+msgstr "%s: %d %s"
+
+#: dbupdater.rs_failedextract
+#, object-pascal-format
+msgid "%s: failed to extract, exitstatus = %d"
+msgstr "%s: gagal mengekstrak, kode = %d"
+
+#: dbupdater.rs_faileditems
+#, object-pascal-format
+msgid ""
+"Failed to finish:\n"
+"\n"
+"%s"
+msgstr ""
+"Gagal menyelesaikan:\n"
+"\n"
+"%s"
+
+#: dbupdater.rs_faileditemstitle
+msgctxt "dbupdater.rs_faileditemstitle"
+msgid "Failed"
+msgstr "Gagal"
+
+#: dbupdater.rs_failedtosave
+#, object-pascal-format
+msgid "%s: failed to save"
+msgstr "%s: gagal menyimpan"
+
+#: dbupdater.rs_missingzipexe
+#, object-pascal-format
+msgid "%s: Missing %s"
+msgstr "%s: Tidak ditemukan %s"
+
+#: ehentai.rs_downloadoriginalimage
+msgid "Download original image(require ExHentai account)"
+msgstr "Unduh gambar asli(memerlukan akun ExHentai)"
+
+#: ehentai.rs_settingsimagesize
+msgid "Image size:"
+msgstr "Ukuran gambar:"
+
+#: ehentai.rs_settingsimagesizeitems
+msgid ""
+"Auto\n"
+"780x\n"
+"980x\n"
+"1280x\n"
+"1600x\n"
+"2400x\n"
+"Original"
+msgstr ""
+"Otomatis\n"
+"780x\n"
+"980x\n"
+"1280x\n"
+"1600x\n"
+"2400x\n"
+"Asli"
+
 #: frmaccountmanager.rs_accountdeleteconfirmation
 msgid "Are you sure you want to delete this account?"
 msgstr "Apakah Anda yakin ingin menghapus akun ini?"
@@ -145,6 +222,10 @@ msgstr "Tidak bisa mendapatkan informasi komik. Silakan periksa koneksi internet
 msgid "Download count:"
 msgstr "Jumlah unduhan:"
 
+#: frmmain.rs_dlgmangalistselect
+msgid "You must choose at least 1 manga website!"
+msgstr "Anda harus memilih setidaknya 1 situs komik!"
+
 #: frmmain.rs_dlgquit
 msgid "Are you sure you want to exit?"
 msgstr "Apakah Anda yakin ingin keluar?"
@@ -231,17 +312,9 @@ msgstr ""
 "Bersambung\n"
 "<tidak ada>"
 
-#: frmmain.rs_fiveyears
-msgid "Five years"
-msgstr "Lima tahun"
-
 #: frmmain.rs_fmdalreadyrunning
 msgid "Free Manga Downloader already running!"
 msgstr "Free Manga Downloader sudah berjalan!"
-
-#: frmmain.rs_fouryears
-msgid "Four years"
-msgstr "Empat tahun"
 
 #: frmmain.rs_hintfavoriteproblem
 msgid ""
@@ -330,17 +403,45 @@ msgctxt "frmmain.rs_modesearching"
 msgid "Mode: Searching..."
 msgstr "Mode: Mencari..."
 
-#: frmmain.rs_onemonth
-msgid "One month"
-msgstr "Satu bulan"
+#: frmmain.rs_today
+msgid "Today"
+msgstr "Hari ini"
 
 #: frmmain.rs_oneweek
 msgid "One week"
 msgstr "Satu minggu"
 
+#: frmmain.rs_onemonth
+msgid "One month"
+msgstr "Satu bulan"
+
+#: frmmain.rs_sixmonths
+msgid "Six months"
+msgstr "Enam bulan"
+
 #: frmmain.rs_oneyear
 msgid "One year"
 msgstr "Satu tahun"
+
+#: frmmain.rs_twoyears
+msgid "Two years"
+msgstr "Dua tahun"
+
+#: frmmain.rs_threeyears
+msgid "Three years"
+msgstr "Tiga tahun"
+
+#: frmmain.rs_fouryears
+msgid "Four years"
+msgstr "Empat tahun"
+
+#: frmmain.rs_fiveyears
+msgid "Five years"
+msgstr "Lima tahun"
+
+#: frmmain.rs_tenyears
+msgid "Ten years"
+msgstr "Sepuluh tahun"
 
 #: frmmain.rs_optioncompress
 msgid ""
@@ -368,18 +469,10 @@ msgstr ""
 "Matikan komputer\n"
 "Hibernasikan komputer"
 
-#: frmmain.rs_revision
-msgid "Revision"
-msgstr "Revisi"
-
 #: frmmain.rs_selected
 #, object-pascal-format
 msgid "Selected: %d"
 msgstr "Dipilih: %d"
-
-#: frmmain.rs_sixmonths
-msgid "Six months"
-msgstr "Enam bulan"
 
 #: frmmain.rs_software
 msgid "Software"
@@ -390,25 +483,13 @@ msgctxt "frmmain.rs_softwarepath"
 msgid "Path to the software (e.g. C:\\MangaDownloader)"
 msgstr "Lokasi ke perangkat lunak (misalnya C:\\MangaDownloader)"
 
-#: frmmain.rs_tenyears
-msgid "Ten years"
-msgstr "Sepuluh tahun"
-
-#: frmmain.rs_threeyears
-msgid "Three years"
-msgstr "Tiga tahun"
-
-#: frmmain.rs_today
-msgid "Today"
-msgstr "Hari ini"
-
-#: frmmain.rs_twoyears
-msgid "Two years"
-msgstr "Dua tahun"
-
 #: frmmain.rs_version
 msgid "Version"
 msgstr "Versi"
+
+#: frmmain.rs_revision
+msgid "Revision"
+msgstr "Revisi"
 
 #: frmmain.rs_webpconvertto
 msgid ""
@@ -469,6 +550,76 @@ msgstr "Tidak valid"
 msgctxt "frmtransferfavorites.rs_valid"
 msgid "Valid"
 msgstr "Valid"
+
+#: kissmanga.rs_kissmanga_initvector
+msgid "Initialization Vector:"
+msgstr "Initialization Vector:"
+
+#: kissmanga.rs_kissmanga_key
+msgid "Key:"
+msgstr "Key:"
+
+#: kissmanga.rs_kissmanga_usegoogledcp
+msgid "Use Google DCP"
+msgstr "Gunakan Google DCP"
+
+#: mangafox.rs_removewatermark
+msgid "Remove watermark"
+msgstr "Hapus watermark"
+
+#: mangafox.rs_saveaspng
+msgid "Save as PNG"
+msgstr "Simpan sebagai PNG"
+
+#: selfupdater.rs_buttoncancel
+msgctxt "selfupdater.rs_buttoncancel"
+msgid "Abort"
+msgstr "Batalkan"
+
+#: selfupdater.rs_downloading
+#, object-pascal-format
+msgid "Downloading new version %s"
+msgstr "Mengunduh versi mutakhir %s"
+
+#: selfupdater.rs_faileddownload
+#, object-pascal-format
+msgid ""
+"Failed to download new version %s\n"
+"\n"
+"%d %s"
+msgstr ""
+"Gagal mengunduh versi mutakhir %s\n"
+"\n"
+"%d %s"
+
+#: selfupdater.rs_failedextract
+#, object-pascal-format
+msgid "Failed to extract %s, exitstatus = %d"
+msgstr "Gagal mengekstrak %s, kode = %d"
+
+#: selfupdater.rs_failedtitle
+msgctxt "selfupdater.rs_failedtitle"
+msgid "Failed"
+msgstr "Gagal"
+
+#: selfupdater.rs_failedtosave
+#, object-pascal-format
+msgid "Failed to save %s"
+msgstr "Gagal menyimpan %s"
+
+#: selfupdater.rs_finishrestart
+msgid "Download update package finished, restart to proceed?"
+msgstr "Pemutakhiran selesai diunduh, mulai ulang sekarang?"
+
+#: selfupdater.rs_finishrestarttitle
+msgid "Download finished"
+msgstr "Unduhan selesai"
+
+#: selfupdater.rs_missingfile
+#, object-pascal-format
+msgctxt "selfupdater.rs_missingfile"
+msgid "Missing %s"
+msgstr "Tidak ditemukan %s"
 
 #: taccountmanagerform.btedit.caption
 msgctxt "taccountmanagerform.btedit.caption"
@@ -1163,9 +1314,7 @@ msgid "Shounen Ai"
 msgstr "Shounen Ai"
 
 #: tmainform.ckfiltershounenai.hint
-#, fuzzy
-#| msgid "Often synonymous with yaoi, this can be thought of as somewhat less extreme. \"Boy''s Love\", so to speak"
-msgid "Often synonymous with yaoi, this can be thought of as somewhat less extreme. \"Boy''s Love\", so to speak"
+msgid "Often synonymous with yaoi, this can be thought of as somewhat less extreme. \"Boy''s Love\", so to speak"
 msgstr "Identik dengan yaoi, hanya agak kurang ekstrim. Bisa dikatakan \"Percintaan Antara Laki-laki\"."
 
 #: tmainform.ckfiltersliceoflife.caption
@@ -2323,3 +2472,170 @@ msgstr "Nama situs"
 msgid "Setting name"
 msgstr "Nama pengaturan"
 
+#: udownloadsmanager.rs_compressing
+msgid "Compressing..."
+msgstr "Mengompresi..."
+
+#: udownloadsmanager.rs_disabled
+msgid "Disabled"
+msgstr "Nonaktif"
+
+#: udownloadsmanager.rs_downloading
+msgid "Downloading"
+msgstr "Mengunduh"
+
+#: udownloadsmanager.rs_failed
+msgctxt "udownloadsmanager.rs_failed"
+msgid "Failed"
+msgstr "Gagal"
+
+#: udownloadsmanager.rs_failedtocreatedir
+msgid "Failed to create directory!"
+msgstr "Gagal membuat direktori!"
+
+#: udownloadsmanager.rs_failedtryresumetask
+msgid "Failed, try resuming this task!"
+msgstr "Gagal, coba lanjutkan unduhan ini!"
+
+#: udownloadsmanager.rs_finish
+msgid "Completed"
+msgstr "Selesai"
+
+#: udownloadsmanager.rs_preparing
+msgctxt "udownloadsmanager.rs_preparing"
+msgid "Preparing"
+msgstr "Mempersiapkan"
+
+#: udownloadsmanager.rs_stopped
+msgid "Stopped"
+msgstr "Berhenti"
+
+#: udownloadsmanager.rs_waiting
+msgid "Waiting..."
+msgstr "Menunggu..."
+
+#: ufavoritesmanager.rs_btnaddtoqueue
+msgctxt "ufavoritesmanager.rs_btnaddtoqueue"
+msgid "&Add to queue"
+msgstr "&Tambahkan ke antrean"
+
+#: ufavoritesmanager.rs_btncancel
+msgctxt "ufavoritesmanager.rs_btncancel"
+msgid "&Cancel"
+msgstr "&Batal"
+
+#: ufavoritesmanager.rs_btncheckfavorites
+msgctxt "ufavoritesmanager.rs_btncheckfavorites"
+msgid "Check for new chapter"
+msgstr "Periksa bab baru"
+
+#: ufavoritesmanager.rs_btndownload
+msgctxt "ufavoritesmanager.rs_btndownload"
+msgid "&Download"
+msgstr "&Unduh"
+
+#: ufavoritesmanager.rs_btnremove
+msgid "&Remove"
+msgstr "&Hapus"
+
+#: ufavoritesmanager.rs_dlgcompletedmangacaption
+msgid "Found %d completed manga"
+msgstr "Ditemukan %d komik yang tamat"
+
+#: ufavoritesmanager.rs_dlgfavoritescheckisrunning
+msgid "Favorites check is running!"
+msgstr "Pemeriksaan kesukaan sedang berjalan!"
+
+#: ufavoritesmanager.rs_dlgnewchaptercaption
+msgid "Found %d new chapter(s)"
+msgstr "Ditemukan %d bab baru"
+
+#: ufavoritesmanager.rs_favoritehasnewchapter
+msgid "%s <%s> has %d new chapter(s)."
+msgstr "%s <%s> memiliki %d bab baru"
+
+#: ufavoritesmanager.rs_lblmangawillberemoved
+msgid "Completed manga will be removed:"
+msgstr "Komik yang sudah tamat akan dihapus:"
+
+#: ufavoritesmanager.rs_lblnewchapterfound
+msgid "%d new chapter(s) from %d manga(s):"
+msgstr "%d bab baru dari %d komik:"
+
+#: usilentthread.rs_silentthreadloadstatus
+msgid "Loading: %d/%d"
+msgstr "Memuat: %d/%d"
+
+#: usubthread.rs_btncheckupdates
+msgctxt "usubthread.rs_btncheckupdates"
+msgid "Check for new version"
+msgstr "Periksa versi mutakhir"
+
+#: usubthread.rs_currentversion
+msgid "Installed Version"
+msgstr "Versi terinstal"
+
+#: usubthread.rs_latestversion
+msgid "Latest Version   "
+msgstr "Versi mutakhir "
+
+#: usubthread.rs_newversionfound
+msgid "New Version found!"
+msgstr "Versi mutakhir ditemukan!"
+
+#: uupdatethread.rs_dlghasnewmanga
+msgid "%s has %d new manga(s)"
+msgstr "%s memiliki %d komik baru"
+
+#: uupdatethread.rs_gettingdirectory
+msgid "Getting directory"
+msgstr "Memuat direktori"
+
+#: uupdatethread.rs_gettinginfo
+msgid "Getting info"
+msgstr "Memuat informasi"
+
+#: uupdatethread.rs_gettinglistfor
+msgid "Getting list for"
+msgstr "Memuat daftar untuk"
+
+#: uupdatethread.rs_indexingnewtitle
+msgid "Indexing new title(s)"
+msgstr "Pengindeksan judul baru"
+
+#: uupdatethread.rs_lookingfornewtitle
+msgid "Looking for new title(s)"
+msgstr "Mencari judul baru"
+
+#: uupdatethread.rs_lookingfornewtitlefromanotherdirectory
+msgid "Looking for new title(s) from another directory"
+msgstr "Mencari judul baru dari direktori lain"
+
+#: uupdatethread.rs_preparing
+msgctxt "uupdatethread.rs_preparing"
+msgid "Preparing"
+msgstr "Mempersiapkan"
+
+#: uupdatethread.rs_removingduplicatefromcurrentdata
+msgid "Removing duplicate from current data"
+msgstr "Menghapus duplikat dari data saat ini"
+
+#: uupdatethread.rs_removingduplicatefromlocaldata
+msgid "Removing duplicate from local data"
+msgstr "Menghapus duplikat dari data lokal"
+
+#: uupdatethread.rs_removingduplicatefromnewtitle
+msgid "Removing duplicate from new title(s)"
+msgstr "Menghapus duplikat dari judul baru"
+
+#: uupdatethread.rs_savingdata
+msgid "Saving data"
+msgstr "Menyimpan data"
+
+#: uupdatethread.rs_synchronizingdata
+msgid "Synchronizing data"
+msgstr "Sinkronisasi data"
+
+#: uupdatethread.rs_updatinglist
+msgid "Updating list"
+msgstr "Memutakhirkan daftar"
