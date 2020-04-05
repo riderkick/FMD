@@ -112,8 +112,6 @@ begin
     FHTTP.Headers.Values['If-None-Match'] := ' ' + last_etag;
   if not Terminated and FHTTP.Get(UPDATE_URL) then
   begin
-    SendLog('CheckUpdateResult', FHTTP.ResultCode);
-    SendLog('Etag', Trim(FHTTP.Headers.Values['ETag']));
     configfile.WriteString('update', 'LastUpdateEtag', Trim(FHTTP.Headers.Values['ETag']));
     configfile.UpdateFile;
     with TStringList.Create do try
