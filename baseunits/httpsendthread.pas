@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, httpsend, synautil, synacode, ssl_openssl, blcksock,
-  GZIPUtils, BaseThread, dateutils, strutils;
+  GZIPUtils, BaseThread, httpcookiemanager, dateutils, strutils;
 
 const
 
@@ -61,11 +61,11 @@ type
     FFollowRedirection: Boolean;
     FMaxRedirect: Integer;
     FAllowServerErrorResponse: Boolean;
-    FCookiesExpires: TDateTime;
     procedure SetTimeout(AValue: Integer);
     procedure OnOwnerTerminate(Sender: TObject);
   protected
-    procedure ParseCookiesExpires;
+    procedure SetHTTPCookies;
+    procedure ParseHTTPCookies;
     function InternalHTTPRequest(const Method, URL: String; const Response: TObject = nil): Boolean;
   public
     constructor Create(AOwner: TBaseThread = nil);
@@ -94,13 +94,13 @@ type
     property FollowRedirection: Boolean read FFollowRedirection write FFollowRedirection;
     property AllowServerErrorResponse: Boolean read FAllowServerErrorResponse write FAllowServerErrorResponse;
     property Thread: TBaseThread read FOwner;
-    property CookiesExpires: TDateTime read FCookiesExpires;
     property MaxRedirect: Integer read FMaxRedirect write FMaxRedirect;
   public
     BeforeHTTPMethod: THTTPMethodEvent;
     AfterHTTPMethod: THTTPMethodEvent;
     OnHTTPRequest: THTTPRequestEvent;
     OnRedirected: THTTPMethodRedirectEvent;
+    CookieManager: THTTPCookieManager;
     property LastURL: String read FURL;
   end;
 
@@ -383,29 +383,16 @@ begin
   Sock.AbortSocket;
 end;
 
-procedure THTTPSendThread.ParseCookiesExpires;
-var
-  i, p: Integer;
-  c: TDateTime;
-  s: String;
+procedure THTTPSendThread.SetHTTPCookies;
 begin
-  FCookiesExpires := 0.0;
-  for i := 0 to FHeaders.Count-1 do
-    if Pos('set-cookie', LowerCase(FHeaders[i])) = 1 then
-    begin
-      s := SeparateRight(FHeaders[i], ':');
-      p := Pos('expires', lowercase(s));
-      if p <> 0 then
-      begin
-        s := Copy(s, p, Length(s));
-        s := SeparateLeft(SeparateRight(s,'='),';');
-        s := Trim(SeparateLeft(s, 'GMT'));
-        c := DecodeRfcDateTime(s);
-        if (FCookiesExpires = 0.0) or (c < FCookiesExpires) then
-          FCookiesExpires := c;
-      end;
-    end;
-  write
+  if Assigned(CookieManager) then
+    CookieManager.SetCookies(FURL, FCookies);
+end;
+
+procedure THTTPSendThread.ParseHTTPCookies;
+begin
+  if Assigned(CookieManager) then
+    CookieManager.AddServerCookies(FURL, FHeaders);
 end;
 
 function THTTPSendThread.InternalHTTPRequest(const Method, URL: String;
@@ -472,9 +459,9 @@ begin
   aurl:=URL;
   if Assigned(BeforeHTTPMethod) then
     BeforeHTTPMethod(Self, amethod, aurl);
-  FCookiesExpires := 0.0;
+  SetHTTPCookies;
   Result := inherited HTTPMethod(amethod, aurl);
-  ParseCookiesExpires;
+  ParseHTTPCookies;
   if Assigned(AfterHTTPMethod) then
     AfterHTTPMethod(Self, amethod, aurl);
 end;

@@ -15,16 +15,9 @@ type
   TCFProps = class
   public
     websitemodule: TObject;
-    fcf_clearance: string;
-    fexpires: TDateTime;
     CS: TRTLCriticalSection;
     constructor Create(awebsitemodule: TObject);
     destructor Destroy; override;
-    procedure Reset;
-    procedure AddCookiesTo(const ACookies: TStringList);
-  published
-    property CF_Clearance: String read fcf_clearance write fcf_clearance;
-    property Expires: TDateTime read fexpires write fexpires;
   end;
 
 function CFRequest(const AHTTP: THTTPSendThread; const Method, AURL: String; const Response: TObject; const CFProps: TCFProps): Boolean;
@@ -174,11 +167,6 @@ begin
         AHTTP.FollowRedirection := False;
         AHTTP.HTTPRequest(m, FillHost(h, u));
         Result := AHTTP.Cookies.Values['cf_clearance']<>'';
-        if Result then
-        begin
-          cfprops.fcf_clearance := AHTTP.Cookies.Values['cf_clearance'];
-          cfprops.fexpires := AHTTP.CookiesExpires;
-        end;
         if AHTTP.ResultCode=403 then
            Logger.SendError('cloudflare bypass failed, probably asking for captcha! '+AURL);
         AHTTP.FollowRedirection := True;
@@ -208,31 +196,16 @@ function CFRequest(const AHTTP: THTTPSendThread; const Method, AURL: String; con
 begin
   Result := False;
   if AHTTP = nil then Exit;
-  if (CFProps.fexpires <> 0.0) and (Now > CFProps.fexpires) then
-    CFProps.Reset;
-  CFProps.AddCookiesTo(AHTTP.Cookies);
   AHTTP.AllowServerErrorResponse := True;
   Result := AHTTP.HTTPRequest(Method, AURL);
   if AntiBotActive(AHTTP) then begin
     if TryEnterCriticalsection(CFProps.CS) > 0 then
       try
-        CFProps.Reset;
-        //AHTTP.Cookies.Clear;
         Result := CFJS(AHTTP, AURL, CFProps);
-        // reduce the expires by 5 minutes, usually it is 24 hours or 16 hours
-        // in case of the different between local and server time
-        if Result then
-          CFProps.fexpires := IncMinute(CFProps.fexpires, -5);
       finally
         LeaveCriticalsection(CFProps.CS);
       end
     else begin
-      try
-        EnterCriticalsection(CFProps.CS);
-        CFProps.AddCookiesTo(AHTTP.Cookies);
-      finally
-        LeaveCriticalsection(CFProps.CS);
-      end;
       if not AHTTP.ThreadTerminated then
         Result := AHTTP.HTTPRequest(Method, AURL);
     end;
@@ -251,30 +224,12 @@ constructor TCFProps.Create(awebsitemodule: TObject);
 begin
   websitemodule:=awebsitemodule;
   InitCriticalSection(CS);
-  Reset;
 end;
 
 destructor TCFProps.Destroy;
 begin
   DoneCriticalsection(CS);
   inherited Destroy;
-end;
-
-procedure TCFProps.Reset;
-begin
-  if TryEnterCriticalsection(CS) <> 0 then
-    try
-      fcf_clearance := '';
-      fexpires := 0.0;
-    finally
-      LeaveCriticalsection(CS);
-    end;
-end;
-
-procedure TCFProps.AddCookiesTo(const ACookies: TStringList);
-begin
-  if fcf_clearance <> '' then
-    ACookies.Values['cf_clearance'] := fcf_clearance;
 end;
 
 end.
