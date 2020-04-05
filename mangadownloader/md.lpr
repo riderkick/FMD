@@ -10,7 +10,8 @@ uses
   windows,
  {$endif}
   Interfaces, // this includes the LCL widgetset
-  Forms, LazFileUtils, IniFiles, simpleipc, sqlite3dyn, FMDOptions, uBaseUnit, FMDVars, webp,
+  Forms, LazFileUtils, IniFiles, simpleipc, sqlite3dyn, FMDOptions, uBaseUnit,
+  FMDVars, webp, CheckUpdate, DBUpdater, SelfUpdater, uDownloadsManager,
   LuaWebsiteModules, SimpleException, Classes, sysutils, frmMain, MultiLog,
   FileChannel, ssl_openssl_lib, blcksock, ssl_openssl;
 
