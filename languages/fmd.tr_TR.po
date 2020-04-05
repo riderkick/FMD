@@ -13,57 +13,6 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
-#: dbupdater.rs_buttoncancel
-msgctxt "dbupdater.rs_buttoncancel"
-msgid "Abort"
-msgstr "İptal"
-
-#: dbupdater.rs_downloading
-#, object-pascal-format
-msgid "Downloading %s"
-msgstr "%s indiriliyor"
-
-#: dbupdater.rs_extracting
-#, object-pascal-format
-msgid "Extracting %s"
-msgstr "%s çıkartılıyor"
-
-#: dbupdater.rs_faileddownload
-#, object-pascal-format
-msgid "%s: %d %s"
-msgstr "%s: %d %s"
-
-#: dbupdater.rs_failedextract
-#, object-pascal-format
-msgid "%s: failed to extract, exitstatus = %d"
-msgstr "%s: çıkartma başarısız, çıkış durumu = %d"
-
-#: dbupdater.rs_faileditems
-#, object-pascal-format
-msgid ""
-"Failed to finish:\n"
-"\n"
-"%s"
-msgstr ""
-"Bitirme başarısız:\n"
-"\n"
-"%s"
-
-#: dbupdater.rs_faileditemstitle
-msgctxt "dbupdater.rs_faileditemstitle"
-msgid "Failed"
-msgstr "Başarısız oldu"
-
-#: dbupdater.rs_failedtosave
-#, object-pascal-format
-msgid "%s: failed to save"
-msgstr "%s: kaydetme başarısız"
-
-#: dbupdater.rs_missingzipexe
-#, object-pascal-format
-msgid "%s: Missing %s"
-msgstr "%s: eksik %s"
-
 #: frmaccountmanager.rs_accountdeleteconfirmation
 msgid "Are you sure you want to delete this account?"
 msgstr "Bu hesabı silmek istediğinizden emin misiniz?"
@@ -463,10 +412,6 @@ msgid "Version"
 msgstr ""
 
 #: frmmain.rs_webpconvertto
-#| msgid ""
-#| "WebP\n"
-#| "PNG\n"
-#| "JPEG\n"
 msgid ""
 "WebP\n"
 "PNG\n"
@@ -525,56 +470,6 @@ msgstr "Geçersiz"
 msgctxt "frmtransferfavorites.rs_valid"
 msgid "Valid"
 msgstr "Geçerli"
-
-#: selfupdater.rs_buttoncancel
-msgctxt "selfupdater.rs_buttoncancel"
-msgid "Abort"
-msgstr "Durdur"
-
-#: selfupdater.rs_downloading
-#, object-pascal-format
-msgid "Downloading new version %s"
-msgstr "%s yeni sürümü indiriliyor"
-
-#: selfupdater.rs_faileddownload
-#, object-pascal-format
-msgid ""
-"Failed to download new version %s\n"
-"\n"
-"%d %s"
-msgstr ""
-"%s yeni sürümü indirmesi başarısız\n"
-"\n"
-"%d %s"
-
-#: selfupdater.rs_failedextract
-#, object-pascal-format
-msgid "Failed to extract %s, exitstatus = %d"
-msgstr "%s çıkartma başarısız, çıkış durumu = %d"
-
-#: selfupdater.rs_failedtitle
-msgctxt "selfupdater.rs_failedtitle"
-msgid "Failed"
-msgstr "Başarısız oldu"
-
-#: selfupdater.rs_failedtosave
-#, object-pascal-format
-msgid "Failed to save %s"
-msgstr "%s kaydetme başarısız"
-
-#: selfupdater.rs_finishrestart
-msgid "Download update package finished, restart to proceed?"
-msgstr "Güncelleme paketi indirme tamamlandı, devam etmek için yeniden başlansın mı?"
-
-#: selfupdater.rs_finishrestarttitle
-msgid "Download finished"
-msgstr "İndirme tamamlandı"
-
-#: selfupdater.rs_missingfile
-#, object-pascal-format
-msgctxt "selfupdater.rs_missingfile"
-msgid "Missing %s"
-msgstr "%s eksik"
 
 #: taccountmanagerform.btedit.caption
 msgctxt "taccountmanagerform.btedit.caption"
@@ -2420,3 +2315,4 @@ msgstr "Website Adı"
 #: twebsitesettingsform.edsearchproperty.texthint
 msgid "Setting name"
 msgstr "Ayar ismi"
+

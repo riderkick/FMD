@@ -12,57 +12,6 @@ msgstr ""
 "X-Generator: Poedit 2.3\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: dbupdater.rs_buttoncancel
-msgctxt "dbupdater.rs_buttoncancel"
-msgid "Abort"
-msgstr "Abbrechen"
-
-#: dbupdater.rs_downloading
-#, object-pascal-format
-msgid "Downloading %s"
-msgstr "Lade %s herunter"
-
-#: dbupdater.rs_extracting
-#, object-pascal-format
-msgid "Extracting %s"
-msgstr "Entpacke %s"
-
-#: dbupdater.rs_faileddownload
-#, object-pascal-format
-msgid "%s: %d %s"
-msgstr "%s: %d %s"
-
-#: dbupdater.rs_failedextract
-#, object-pascal-format
-msgid "%s: failed to extract, exitstatus = %d"
-msgstr "Konnte %s nicht entpacken, Fehlercode: %d"
-
-#: dbupdater.rs_faileditems
-#, object-pascal-format
-msgid ""
-"Failed to finish:\n"
-"\n"
-"%s"
-msgstr ""
-"Fehlgeschlagen:\n"
-"\n"
-"%s"
-
-#: dbupdater.rs_faileditemstitle
-msgctxt "dbupdater.rs_faileditemstitle"
-msgid "Failed"
-msgstr "Gescheitert"
-
-#: dbupdater.rs_failedtosave
-#, object-pascal-format
-msgid "%s: failed to save"
-msgstr "Konnte %s nicht speichern"
-
-#: dbupdater.rs_missingzipexe
-#, object-pascal-format
-msgid "%s: Missing %s"
-msgstr "%s: %s fehlt"
-
 #: frmaccountmanager.rs_accountdeleteconfirmation
 msgid "Are you sure you want to delete this account?"
 msgstr "Bist du dir sicher, dass du den Account löschen willst?"
@@ -520,53 +469,6 @@ msgstr "Ungültig"
 msgctxt "frmtransferfavorites.rs_valid"
 msgid "Valid"
 msgstr "Gültig"
-
-#: selfupdater.rs_buttoncancel
-msgctxt "selfupdater.rs_buttoncancel"
-msgid "Abort"
-msgstr "Abbrechen"
-
-#: selfupdater.rs_downloading
-#, object-pascal-format
-msgid "Downloading new version %s"
-msgstr "Lade neue Version %s herunter"
-
-#: selfupdater.rs_faileddownload
-#, object-pascal-format
-msgid ""
-"Failed to download new version %s\n"
-"\n"
-"%d %s"
-msgstr ""
-
-#: selfupdater.rs_failedextract
-#, object-pascal-format
-msgid "Failed to extract %s, exitstatus = %d"
-msgstr "Konnte %s nicht entpacken, Fehlercode: %d"
-
-#: selfupdater.rs_failedtitle
-msgctxt "selfupdater.rs_failedtitle"
-msgid "Failed"
-msgstr "Gescheitert"
-
-#: selfupdater.rs_failedtosave
-#, object-pascal-format
-msgid "Failed to save %s"
-msgstr "Konnte %s nicht speichern"
-
-#: selfupdater.rs_finishrestart
-msgid "Download update package finished, restart to proceed?"
-msgstr "Herunterladen des Updates fertig, neustarten?"
-
-#: selfupdater.rs_finishrestarttitle
-msgid "Download finished"
-msgstr "Herunterladen abgeschlossen"
-
-#: selfupdater.rs_missingfile
-#, object-pascal-format
-msgctxt "selfupdater.rs_missingfile"
-msgid "Missing %s"
-msgstr "%s fehlt"
 
 #: taccountmanagerform.btedit.caption
 msgctxt "taccountmanagerform.btedit.caption"
@@ -2417,3 +2319,4 @@ msgstr "Webseitenname"
 #: twebsitesettingsform.edsearchproperty.texthint
 msgid "Setting name"
 msgstr "Einstellungsname"
+
