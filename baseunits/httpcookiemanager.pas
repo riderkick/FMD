@@ -5,7 +5,7 @@ unit httpcookiemanager;
 interface
 
 uses
-  Classes, SysUtils, fgl, StrUtils, syncobjs, synautil, httpsend;
+  Classes, SysUtils, fgl, StrUtils, DateUtils, syncobjs, synautil, httpsend;
 
 type
 
@@ -80,7 +80,7 @@ var
   s, n, ni, v: String;
   c: THTTPCookie;
   Prot, User, Pass, Host, Port, Path, Para: String;
-  i, ma: Integer;
+  i: Integer;
 begin
   if Trim(ACookie) = '' then Exit;
   n := Trim(SeparateLeft(ACookie, '='));
@@ -114,8 +114,7 @@ begin
     end
     else if ni = 'max-age' then
     begin
-      ma := StrToIntDef(v, 0);
-      c.Expires := ADate + EncodeTime(0,0,ma,0);
+      c.Expires := IncSecond(ADate, StrToIntDef(v, 0));
       c.Persistent := True;
     end
     else if ni = 'secure' then
