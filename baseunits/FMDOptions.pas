@@ -252,10 +252,12 @@ end;
 procedure TIniFileRun.UpdateFile;
 begin
   if CacheUpdates and (Dirty = False) then Exit;
-  inherited UpdateFile;
+  EnterCriticalSection(FCSLock);
   try
+    inherited UpdateFile;
     CopyFile(FileName, FRealFileName, [cffOverwriteFile, cffPreserveTime, cffCreateDestDirectory]);
-  except
+  finally
+    LeaveCriticalSection(FCSLock);
   end;
 end;
 
