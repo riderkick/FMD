@@ -233,7 +233,6 @@ const
   MangaInfo_StatusOngoing = '1';
 
   FMDSupportedOutputExt: array[0..3] of ShortString = ('.zip', '.cbz', '.pdf', '.epub');
-  FMDImageFileExt: array[0..3] of ShortString = ('.png', '.gif', '.jpg', '.webp');
   {$ifdef windows}
   // MAX_PATH = 260
   // MAX_PATH - 12 - 1
@@ -3277,10 +3276,10 @@ var
   i: Byte;
 begin
   Result := '';
-  for i := Low(FMDImageFileExt) to High(FMDImageFileExt) do
-    if FileExistsUTF8(AFileName + FMDImageFileExt[i]) then
+  for i := Low(ImageHandlerMgr.List) to High(ImageHandlerMgr.List) do
+    if FileExistsUTF8(AFileName + ImageHandlerMgr.List[i].Ext) then
     begin
-      Result := AFileName + FMDImageFileExt[i];
+      Result := AFileName + ImageHandlerMgr.List[i].Ext;
       Break;
     end;
 end;
