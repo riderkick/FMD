@@ -223,21 +223,22 @@ begin
     Prot := LowerCase(Prot);
     Host := LowerCase(Host);
     i := 0;
-    repeat
+    while i <= FCookies.Count - 1 do
+    begin
       c := FCookies[i];
       if (c.Persistent) and (c.Expires <= Now) then
         FCookies.Delete(i)
       else
       begin
+        Inc(i);
         if MatchesHost and IsPathMatch and
             ((not c.Secure) or (c.Secure and c.Secure)) and
             ((not c.HttpOnly) or (c.HttpOnly and IsHTTP)) then
         begin
           AHTTP.Cookies.Values[c.Name] := c.Value;
         end;
-        Inc(i);
       end;
-    until i >= FCookies.Count-1;
+    end;
   finally
     FGuardian.Leave;
   end;
