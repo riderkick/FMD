@@ -463,14 +463,14 @@ begin
   with Settings.HTTP do
   begin
     if Cookies<>'' then
-      AHTTP.Cookies.Text:=Cookies;
+      AHTTP.MergeCookies(Cookies);
     if UserAgent<>'' then
       AHTTP.UserAgent:=UserAgent;
     with Proxy do
     begin
       s:='';
       case Proxy.ProxyType of
-        ptDirect:AHTTP.SetNoProxy;
+        ptDefault,ptDirect:AHTTP.SetNoProxy;
         ptHTTP:s:='HTTP';
         ptSOCKS4:s:='SOCKS4';
         ptSOCKS5:s:='SOCKS5';
