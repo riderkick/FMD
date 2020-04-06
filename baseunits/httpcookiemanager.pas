@@ -171,20 +171,6 @@ begin
   Result := (ACharPos <= Length(AString)) and (AString[ACharPos] = AValue);
 end;
 
-function TextStartWith(const S, SubS: string): Boolean;
-begin
-  Result := (Length(SubS) <= Length(S)) and (Pos(SubS, S) = 1);
-end;
-
-function TextEndsWith(const S, SubS: string): Boolean;
-var
-  LS, LSubs: Integer;
-begin
-  LS := Length(s);
-  LSubs := Length(SubS);
-  Result := (LSubS <= LS) and (Pos(Subs, S) = (LS - LSubs + 1));
-end;
-
 procedure THTTPCookieManager.SetCookies(const AURL: String;
   const AHTTP: THTTPSend);
 var
@@ -195,8 +181,8 @@ var
   function IsPathMatch: Boolean;
   begin
     Result := SameText(Path, c.Path) or
-              ( (TextStartWith(Path, c.Path)) and
-                ( TextEndsWith(c.Path, '/') or CharEquals(Path, Length(c.Path), '/') )
+              ( Path.StartsWith(c.Path) and
+                ( c.Path.EndsWith('/') or CharEquals(Path, Length(c.Path), '/') )
               );
   end;
 
@@ -208,9 +194,9 @@ var
       if SameText(Host, c.Domain) then
         Result := True
       else
-      if TextEndsWith(Host, c.Domain) then
+      if Host.EndsWith(c.Domain) then
       begin
-        if TextEndsWith(Copy(Host, 1, Length(Host)-Length(c.Domain)), '.') then
+        if Copy(Host, 1, Length(Host)-Length(c.Domain)).EndsWith('.') then
           Result := True;
       end;
     end;
