@@ -13,25 +13,21 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #: checkupdate.rs_btncheckupdates
-#, fuzzy
 msgctxt "checkupdate.rs_btncheckupdates"
 msgid "Check for latest version"
 msgstr "Periksa versi mutakhir"
 
 #: checkupdate.rs_currentversion
-#, fuzzy
 msgctxt "checkupdate.rs_currentversion"
 msgid "Installed Version"
 msgstr "Versi terinstal"
 
 #: checkupdate.rs_latestversion
-#, fuzzy
 msgctxt "checkupdate.rs_latestversion"
 msgid "Latest Version   "
 msgstr "Versi mutakhir "
 
 #: checkupdate.rs_newversionfound
-#, fuzzy
 msgctxt "checkupdate.rs_newversionfound"
 msgid "New Version found!"
 msgstr "Versi mutakhir ditemukan!"
@@ -214,7 +210,7 @@ msgstr "Tidak dapat terhubung ke peladen."
 
 #: frmmain.rs_dlgcannotgetmangainfo
 msgid "Cannot get manga info. Please check your internet connection and try it again."
-msgstr "Tidak bisa mendapatkan informasi komik. Silakan periksa koneksi internet Anda dan coba lagi."
+msgstr "Tidak dapat mendapatkan informasi komik. Silakan periksa koneksi internet Anda dan coba lagi."
 
 #: frmmain.rs_dlgdownloadcount
 msgid "Download count:"
@@ -597,31 +593,31 @@ msgstr "Tidak ditemukan %s"
 
 #: simpleexception.sbuttoncontinue
 msgid "&Continue"
-msgstr ""
+msgstr "&Lanjutkan"
 
 #: simpleexception.sbuttondetails
 msgid "&Show Details"
-msgstr ""
+msgstr "&Tampilkan Perincian"
 
 #: simpleexception.sbuttonterminate
 msgid "&Terminate"
-msgstr ""
+msgstr "&Akhiri"
 
 #: simpleexception.scanthandleexception
 msgid "Can't handle exception"
-msgstr ""
+msgstr "Tidak dapat menangani pengecualian"
 
 #: simpleexception.scheckboxignoreexception
 msgid "Ignore this exception for next time"
-msgstr ""
+msgstr "Abaikan pengecualian ini untuk waktu berikutnya"
 
 #: simpleexception.sexceptioncaption
 msgid "An error occured during program execution:"
-msgstr ""
+msgstr "Terjadi galat selama eksekusi program:"
 
 #: simpleexception.sexceptiondialogtitle
 msgid "Exception Info"
-msgstr ""
+msgstr "Informasi Pengecualian"
 
 #: taccountmanagerform.btedit.caption
 msgctxt "taccountmanagerform.btedit.caption"
@@ -1316,8 +1312,6 @@ msgid "Shounen Ai"
 msgstr "Shounen Ai"
 
 #: tmainform.ckfiltershounenai.hint
-#, fuzzy
-#| msgid "Often synonymous with yaoi, this can be thought of as somewhat less extreme. \"Boy''s Love\", so to speak"
 msgid "Often synonymous with yaoi, this can be thought of as somewhat less extreme. \"Boy''s Love\", so to speak"
 msgstr "Identik dengan yaoi, hanya agak kurang ekstrim. Bisa dikatakan \"Percintaan Antara Laki-laki\"."
 
@@ -2386,7 +2380,7 @@ msgstr ""
 "Jika Anda mengubah banyak entri sekaligus, lokasi baru akan dibentuk seperti ini:\n"
 "\"{Lokasi_Baru}\\{Judul_Komik}\"\n"
 "\n"
-"Susunan direktori lama akan diabaikan. Namun, jika bagian yang Anda ubah adalah huruf kandarnya saja (misalnya 'D:'), hanya hurufnya yang akan diganti. Ini hanya berkerja pada lokasi absolut, lokasi relatif akan diabaikan."
+"Susunan direktori lama akan diabaikan. Namun, jika bagian yang Anda ubah hanya huruf kandarnya (misalnya 'D:'), maka hurufnya saja yang akan diganti. Ini hanya berkerja pada lokasi absolut, lokasi relatif akan diabaikan."
 
 #: tshutdowncounterform.btabort.caption
 msgid "&Abort"
@@ -2553,8 +2547,6 @@ msgid "Favorites check is running!"
 msgstr "Pemeriksaan kesukaan sedang berjalan!"
 
 #: ufavoritesmanager.rs_dlgnewchaptercaption
-#, object-pascal-format, fuzzy
-#| msgid "Found %d new chapter(s)"
 msgid "%d manga(s) have new chapter(s)"
 msgstr "Ditemukan %d bab baru"
 
@@ -2568,8 +2560,6 @@ msgid "Completed manga will be removed:"
 msgstr "Komik yang sudah tamat akan dihapus:"
 
 #: ufavoritesmanager.rs_lblnewchapterfound
-#, object-pascal-format, fuzzy
-#| msgid "%d new chapter(s) from %d manga(s):"
 msgid "Found %d new chapter from %d manga(s):"
 msgstr "%d bab baru dari %d komik:"
 
@@ -2639,5 +2629,5 @@ msgstr "Memutakhirkan daftar"
 #: webp.serrloadfailed
 #, object-pascal-format
 msgid "Can not load WebP codec library \"%s\". Check your installation."
-msgstr ""
+msgstr "Tidak dapat memuat pustaka kodek WebP \"%s\". Periksa instalasi Anda."
 
