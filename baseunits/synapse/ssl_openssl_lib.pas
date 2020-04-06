@@ -130,9 +130,13 @@ var
      {$ENDIF OS2}
     {$ENDIF}
   {$ELSE}
-  DLLSSLName: string = 'ssleay32.dll';
-  DLLSSLName2: string = 'libssl32.dll';
-  DLLUtilName: string = 'libeay32.dll';
+    {$IFDEF WIN64}
+      DLLSSLName: string = 'libssl-1_1-x64.dll';
+      DLLUtilName: string = 'libcrypto-1_1-x64.dll';
+    {$ELSE}
+      DLLSSLName: string = 'libssl-1_1.dll';
+      DLLUtilName: string = 'libcrypto-1_1.dll';
+    {$ENDIF}
   {$ENDIF}
 {$ENDIF}
 
@@ -1880,10 +1884,6 @@ begin
 {$ELSE}
       SSLUtilHandle := LoadLib(DLLUtilName);
       SSLLibHandle := LoadLib(DLLSSLName);
-  {$IFDEF MSWINDOWS}
-      if (SSLLibHandle = 0) then
-        SSLLibHandle := LoadLib(DLLSSLName2);
-  {$ENDIF}
 {$ENDIF}
       if (SSLLibHandle <> 0) and (SSLUtilHandle <> 0) then
       begin
