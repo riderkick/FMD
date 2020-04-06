@@ -77,6 +77,7 @@ type
     function POST(const URL: String; const POSTData: String = ''; const Response: TObject = nil): Boolean;
     function XHR(const URL: String; const Response: TObject = nil): Boolean;
     function GetCookies: String;
+    procedure MergeCookies(const ACookies: String);
     function GetLastModified: TDateTime;
     function GetOriginalFileName: String;
     function ThreadTerminated: Boolean;
@@ -609,6 +610,17 @@ begin
       if Result = '' then Result := Cookies.Strings[i]
       else Result := Result + '; ' + Cookies.Strings[i];
     end;
+end;
+
+procedure THTTPSendThread.MergeCookies(const ACookies: String);
+var
+  s: String;
+begin
+  for s in ACookies.Split(';') do
+  begin
+    if Pos('=', s) > 0 then
+      Cookies.Values[SeparateLeft(s,'=')] := SeparateRight(s,'=');
+  end;
 end;
 
 function THTTPSendThread.GetLastModified: TDateTime;
