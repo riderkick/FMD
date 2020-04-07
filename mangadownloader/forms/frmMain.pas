@@ -972,7 +972,7 @@ uses
   frmImportFavorites, frmShutdownCounter, frmSelectDirectory,
   frmWebsiteSettings, WebsiteModules, FMDVars, RegExpr, sqlite3dyn, Clipbrd,
   ssl_openssl_lib, LazFileUtils, LazUTF8, webp, DBUpdater, pcre2, pcre2lib,
-  LuaWebsiteModules, uBackupSettings;
+  StatusBarDownload, LuaWebsiteModules, uBackupSettings;
 
 var
   // thread for open db
@@ -1148,6 +1148,8 @@ end;
 { TMainForm }
 
 procedure TMainForm.FormCreate(Sender: TObject);
+var
+  space: Integer;
 begin
   Randomize;
   FormMain := Self;
@@ -1155,7 +1157,21 @@ begin
   PrevWndProc := windows.WNDPROC(windows.GetWindowLongPtr(Self.Handle, GWL_WNDPROC));
   windows.SetWindowLongPtr(Self.Handle, GWL_WNDPROC, PtrInt(@WndCallback));
   {$endif}
-  btAbortUpdateList.Parent := sbUpdateList;
+  space := ScaleFontTo96(2);
+  with btAbortUpdateList do begin
+    Parent := sbUpdateList;
+    Align := alNone;
+    Anchors := [akTop, akRight, akBottom];
+    AnchorSideTop.Control := sbUpdateList;
+    AnchorSideTop.Side := asrTop;
+    BorderSpacing.Top := space;
+    AnchorSideRight.Control := sbUpdateList;
+    AnchorSideRight.Side := asrRight;
+    BorderSpacing.Right := space;
+    AnchorSideBottom.Control := sbUpdateList;
+    AnchorSideBottom.Side := asrBottom;
+    BorderSpacing.Bottom := space;
+  end;
   isRunDownloadFilter := False;
   isUpdating := False;
   isPendingExitCounter:=False;
@@ -3850,13 +3866,6 @@ var
 begin
   if Panel.Index = 0 then
   begin
-    //Button
-    with btAbortUpdateList do
-    begin
-      Left := Rect.Right - Width - 3;
-      Top := Rect.Top + 2;
-    end;
-
     //Information
     if ulTotalPtr = 0 then
       ulTotalPtr := 100;
@@ -3867,7 +3876,7 @@ begin
     begin
       ClRect := Rect;
       ClRect.Left := Rect.Left + 3;
-      ClRect.Right := Rect.Right - btAbortUpdateList.Width - 6;
+      ClRect.Right := Rect.Right - btAbortUpdateList.Width - 3;
       ClRect.Bottom := Rect.Bottom - 3;
 
       TxtRect := ClRect;
