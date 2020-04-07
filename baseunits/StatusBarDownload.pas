@@ -45,7 +45,6 @@ type
     procedure HTTPSockOnStatus(Sender: TObject; Reason: THookSocketReason;
       const Value: String);
     procedure UpdateStatusText(AStatusText: String);
-    procedure Execute; override;
   public
     constructor Create(CreateSuspended: Boolean = True; AOwnerForm: TForm = nil;
       AImageList: TImageList = nil; AButtonCancelImageIndex: Integer = -1);
@@ -238,12 +237,6 @@ begin
     FStatusText := AStatusText;
     FNeedRepaint := True;
   end;
-end;
-
-procedure TStatusBarDownload.Execute;
-begin
-    while not Terminated do
-      Sleep(500);
 end;
 
 constructor TStatusBarDownload.Create(CreateSuspended: Boolean;
