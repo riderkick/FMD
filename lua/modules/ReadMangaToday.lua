@@ -42,14 +42,12 @@ function GetInfo()
 end
 
 function GetPageNumber()
-	task.pagelinks.clear()
-	task.pagenumber = 0
-	local u = MaybeFillHost(module.rooturl, url)
-	if not string.find(u:lower(), '/all%-pages') then
-		u = AppendURLDelim(u)..'all-pages'
-	end
-	if http.get(u) then
-		TXQuery.Create(http.document).xpathstringAll('//*[contains(@class,"content-list")]//img/@src', task.pagelinks)
+	if http.get(MaybeFillHost(module.rooturl, url)) then
+		local x = TXQuery.Create(http.document)
+		x.ParseHTML(Trim(GetBetween('var images = ', ';', x.XPathString('//script[@type="text/javascript" and contains(., "var images")]'))))
+		for _, v in ipairs(x.xpathi('json(*)()("url")')) do
+			task.pagelinks.add(v.tostring:gsub('///', '//'))
+		end
 		return true
 	else
 		return false
