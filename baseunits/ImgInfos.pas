@@ -633,10 +633,10 @@ initialization
   ImageHandlerMgr := TimageHandlerMgr.Create;
   ImageHandlerMgr.Add(TFPReaderJPEG, TFPWriterJPEG, @JPEGCheckImageStream, @JPEGGetImageSize, 'jpg');
   ImageHandlerMgr.Add(TFPReaderPNG, TFPWriterPNG, @PNGCheckImageStream, @PNGGetImageSize, 'png');
+  ImageHandlerMgr.Add(nil, nil, @WEBPCheckImageStream, @WEBPGetImageSize, 'webp');
   ImageHandlerMgr.Add(TFPReaderGif, TFPWriterPNG, @GIFCheckImageStream, @GIFGetImageSize, 'gif', 'png');
   ImageHandlerMgr.Add(TFPReaderBMP, TFPWriterBMP, @BMPCheckImageStream, @BMPGetImageSize, 'bmp');
   ImageHandlerMgr.Add(TFPReaderTiff, TFPWriterTiff, @TIFFCheckImageStream, @TIFFGetImageSize, 'tif');
-  ImageHandlerMgr.Add(nil, nil, @WEBPCheckImageStream, @WEBPGetImageSize, 'webp');
 
 finalization
   ImageHandlerMgr.Free;

@@ -3277,9 +3277,9 @@ var
 begin
   Result := '';
   for i := Low(ImageHandlerMgr.List) to High(ImageHandlerMgr.List) do
-    if FileExistsUTF8(AFileName + ImageHandlerMgr.List[i].Ext) then
+    if FileExistsUTF8(AFileName + '.' + ImageHandlerMgr.List[i].Ext) then
     begin
-      Result := AFileName + ImageHandlerMgr.List[i].Ext;
+      Result := AFileName + '.' + ImageHandlerMgr.List[i].Ext;
       Break;
     end;
 end;
