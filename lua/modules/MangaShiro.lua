@@ -229,14 +229,12 @@ function getpagenumber()
       if task.pagelinks.count < 1 then TXQuery.Create(http.Document).xpathstringall('//*[@class="bc"]/img/@src', task.pagelinks) end
       if task.pagelinks.count < 1 or module.website == 'KoMBatch' then 
         local link = MaybeFillHost(module.rooturl,url)
-        link = link:gsub('/manga', '/api/chapter')
+        link = link:gsub('/read', '/api/chapter')
         if http.get(link) then
           x=TXQuery.Create(http.document)
           x.parsehtml(http.document)
-          local v=x.xpath('json(*).chapter.images()')
-          for i=1,v.count do
-            local v1=v.get(i)
-            task.pagelinks.add(x.xpathstring('text', v1))
+		  for _, v in ipairs(x.xpathi('json(*).chapter.images()("text")')) do
+            task.pagelinks.add(v.tostring:gsub('^//', 'https://'))
           end
         else
           return false
