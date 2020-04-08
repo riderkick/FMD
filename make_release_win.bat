@@ -7,10 +7,10 @@ CD /D "%cdir%"
 SET repodl=https://github.com/fmd-project-team/FMD/releases/download/
 ECHO ; automatically build with make_release_win.bat>update
 
-CALL :makerelease i386-win32 Win32 --no-write-project
+CALL :makerelease i386-win32 Win32 --no-write-project -B
 ECHO WIN32=%repodl%%fverb%/%oname%>>update
 
-CALL :makerelease x86_64-win64 Win64 --no-write-project
+CALL :makerelease x86_64-win64 Win64 --no-write-project -B
 ECHO WIN64=%repodl%%fverb%/%oname%>>update
 
 ECHO VERSION=%fverb%>>update
@@ -20,7 +20,7 @@ GOTO :EOF
 
 :makerelease
 TITLE make %~1
-SET lbuild=%LAZ%\lazbuild --build-mode="%~2" %~3
+SET lbuild=%LAZ%\lazbuild --build-mode="%~2" %~3 %~4
 %lbuild% "%cdir%\updaterslim\updater.lpi"
 %lbuild% "%cdir%\mangadownloader\md.lpi"
 SET tdir=%cdir%\bin\%~1
