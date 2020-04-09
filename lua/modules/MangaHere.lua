@@ -3,9 +3,7 @@ function GetInfo()
   http.cookies.values['isAdult'] = '1'
   if http.get(mangainfo.url) then
     local x = TXQuery.Create(http.Document)
-    if mangainfo.title == '' then
-      mangainfo.title = x.XPathString('//span[@class="detail-info-right-title-font"]')
-    end
+    mangainfo.title = x.XPathString('//img[@class="detail-bg-img"]/@alt')
     mangainfo.coverlink = MaybeFillHost(module.rooturl, x.XPathString('//img[@class="detail-info-cover-img"]/@src'))
     mangainfo.status    = MangaInfoStatusIfPos(x.XPathString('css("table.table-borderless")//tr[th="Status"]/td'))
     mangainfo.authors   = x.XPathString('//p[@class="detail-info-right-say"]/a')
