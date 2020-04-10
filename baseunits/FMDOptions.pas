@@ -362,6 +362,7 @@ var
   p: TProcessUTF8;
   {$ifdef windows}
   current_handle: String;
+  wait_handle_counter: Integer;
   {$ifend}
 begin
   p := TProcessUTF8.Create(nil);
@@ -383,8 +384,13 @@ begin
   {$ifdef windows}
   // make sure it's running
   current_handle := FMD_DIRECTORY + PathDelim + current_handle + '_handle';
+  wait_handle_counter := 0;
   while not FileExists(current_handle) do
+  begin
     sleep(250);
+    Inc(wait_handle_counter, 250);
+    if wait_handle_counter > 10000 then Exit;
+  end;
   DeleteFile(current_handle);
   {$ifend}
 end;
