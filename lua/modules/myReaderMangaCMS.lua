@@ -122,4 +122,5 @@ function Init()
 
   c='Spanish-Scanlation'
   AddWebsiteModule('SOSScanlation', 'https://sosscanlation.com', c);
+  AddWebsiteModule('SamuraiScan', 'https://samuraiscan.com', c);
 end
