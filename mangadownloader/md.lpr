@@ -55,10 +55,6 @@ begin
   doRestartHandle:=THandle(StrToIntDef(AppParams.Values['--dorestart-handle'],-1));
   if Integer(doRestartHandle)<>-1 then
   begin
-    try
-      FileClose(FileCreate(FMD_DIRECTORY+PathDelim+IntToStr(doRestartHandle)+'_handle'));
-    except
-    end;
     // remove previous --dorestart-handle from params
     AppParams.Delete(AppParams.IndexOfName('--dorestart-handle'));
     while IsWindow(doRestartHandle) do
