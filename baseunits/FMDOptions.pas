@@ -360,6 +360,9 @@ end;
 procedure DoRestartFMD;
 var
   p: TProcessUTF8;
+  {$ifdef windows}
+  current_handle: String;
+  {$ifend}
 begin
   p := TProcessUTF8.Create(nil);
   try
@@ -370,15 +373,20 @@ begin
     p.InheritHandles := False;
     p.Parameters.AddStrings(AppParams);
     {$ifdef windows}
-    p.Parameters.Add('--dorestart-handle='+IntToStr(Integer(Application.Handle)));
+    current_handle := IntToStr(Integer(Application.Handle));
+    p.Parameters.Add('--dorestart-handle=' + current_handle);
     {$ifend}
     p.Execute;
-    // make sure it's running
-    while not p.Running do
-      sleep(100);
   finally
     p.Free;
   end;
+  {$ifdef windows}
+  // make sure it's running
+  current_handle := FMD_DIRECTORY + PathDelim + current_handle + '_handle';
+  while not FileExists(current_handle) do
+    sleep(250);
+  DeleteFile(current_handle);
+  {$ifend}
 end;
 
 procedure doInitialization;
