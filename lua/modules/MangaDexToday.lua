@@ -42,16 +42,16 @@ function GetInfo()
 	mangainfo.url=MaybeFillHost(module.rooturl,url)
 	if http.get(mangainfo.url) then
 		x=TXQuery.Create(http.Document)
-		mangainfo.title=x.XPathString('//h1[@itemprop="name"]')
-		mangainfo.coverlink=x.XPathString('//div[@class="imgdesc"]/img/@src')
-		mangainfo.authors=x.XPathString('//div[@class="listinfo"]//li[contains(.,"Author")]/substring-after(.,":")');
-		mangainfo.summary=x.XPathString('//div[@id="noidungm"]');
-		mangainfo.genres=x.XPathStringAll('//div[@class="listinfo"]//li[contains(., "Genres")]/a')
-		mangainfo.status=MangaInfoStatusIfPos((x.XPathString('//div[@class="listinfo"]//li[contains(.,"Status")]')))
+		mangainfo.title     = x.xpathstring('//h1[@itemprop="name"]')
+		mangainfo.coverlink = x.xpathstring('//div[@class="imgdesc"]/img/@src')
+		mangainfo.authors   = x.xpathstring('//div[@class="listinfo"]//li[contains(.,"Author")]/substring-after(.,":")')
+		mangainfo.summary   = x.xpathstring('//div[@id="noidungm"]');
+		mangainfo.genres    = x.xpathstringall('//div[@class="listinfo"]//li[contains(., "Genres")]/a')
+		mangainfo.status    = MangaInfoStatusIfPos((x.xpathstring('//div[@class="listinfo"]//li[contains(.,"Status")]')))
 		local chapters=x.XPath('//div[@class="cl"]//li/span')
 		for i=1,chapters.count do
-			mangainfo.chapterlinks.add(x.XPathString('a/@href',chapters.get(i)))
-			mangainfo.chapternames.add(x.XPathString('.',chapters.get(i)))
+			mangainfo.chapterlinks.add(x.xpathstring('a/@href',chapters.get(i)))
+			mangainfo.chapternames.add(x.xpathstring('.',chapters.get(i)))
 		end		
 		InvertStrings(mangainfo.chapterlinks,mangainfo.chapternames)    
 		return no_error
@@ -62,7 +62,7 @@ end
 
 function GetPageNumber()
 	if http.get(MaybeFillHost(module.rooturl,url .. '/0')) then
-		TXQuery.Create(http.Document).XPathStringAll('//div[@id="readerarea"]/img/@src', task.pagelinks)
+		TXQuery.Create(http.Document).xpathstringall('//div[@id="readerarea"]/img/@src', task.pagelinks)
 		return true
 	else
 		return false
