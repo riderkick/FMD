@@ -526,6 +526,7 @@ begin
   if Assigned(FLastException) then
   begin
     FLastReport := FLastReport +
+      'Exception Object  : ' + HexStr(FLastException) + LineEnding +
       'Exception Class   : ' + FLastException.ClassName + LineEnding +
       'Message           : ' + FLastException.Message + LineEnding;
   end;
@@ -535,7 +536,7 @@ begin
   if Logger.Enabled then
   begin
     if Assigned(FLastException) then
-      Logger.SendExceptionStr(FLastException.ClassName + ' - ' + FLastException.Message, S)
+      Logger.SendExceptionStr(HexStr(FLastException) + ' ' + FLastException.ClassName + ' - ' + FLastException.Message, S)
     else
       Logger.SendExceptionStr('Program exception!', S);
   end
