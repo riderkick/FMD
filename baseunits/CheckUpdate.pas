@@ -99,21 +99,13 @@ begin
 end;
 
 procedure TCheckUpdateThread.Execute;
-var
-  last_etag: String;
 begin
   FNewVersionString := '';
   FUpdateURL := '';
   FChangelog := '';
   Synchronize(@SyncStartUpdate);
-
-  last_etag := configfile.ReadString('update', 'LastUpdateEtag', '');
-  if last_etag <> '' then
-    FHTTP.Headers.Values['If-None-Match'] := ' ' + last_etag;
   if not Terminated and FHTTP.Get(UPDATE_URL) then
   begin
-    configfile.WriteString('update', 'LastUpdateEtag', Trim(FHTTP.Headers.Values['ETag']));
-    configfile.UpdateFile;
     with TStringList.Create do try
       LoadFromStream(FHTTP.Document);
       if Count <> 0 then begin
