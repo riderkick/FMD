@@ -5,15 +5,18 @@ unit SQLiteData;
 interface
 
 uses
-  SysUtils, LazFileUtils, strutils, sqlite3conn, sqldb;
+  SysUtils, Classes, LazFileUtils, strutils, sqlite3conn, sqldb, SQLite3Dyn;
 
 type
 
   { TSQLite3ConnectionH }
 
   TSQLite3ConnectionH = class(TSQLite3Connection)
+  protected
+    procedure DoInternalDisconnect; override;
   public
     property Handle read GetHandle;
+    property Statements;
   end;
 
   TExceptionEvent = procedure(Sender: TObject; E: Exception) of object;
@@ -28,7 +31,7 @@ type
     FOnError: TExceptionEvent;
     FTrans: TSQLTransaction;
     FQuery: TSQLQuery;
-    FFilename: String;
+    FFileName: String;
     FTableName: String;
     FCreateParams: String;
     FSelectParams: String;
@@ -65,7 +68,7 @@ type
     property Connection: TSQLite3ConnectionH read FConn;
     property Transaction: TSQLTransaction read FTrans;
     property Table: TSQLQuery read FQuery;
-    property Filename: String read FFilename write FFilename;
+    property Filename: String read FFileName write FFileName;
     property TableName: String read FTableName write FTableName;
     property CreateParams: String read FCreateParams write SetCreateParams;
     property SelectParams: String read FSelectParams write SetSelectParams;
@@ -83,6 +86,7 @@ function QuotedStrD(const S: String): String; overload; inline;
 function QuotedStrD(const S: Integer): String; overload; inline;
 
 implementation
+
 
 function QuotedStr(const S: Integer): String;
 begin
@@ -124,6 +128,30 @@ end;
 function QuotedStrD(const S: Integer): String;
 begin
   Result := AnsiQuotedStr(IntToStr(S), '"');
+end;
+
+{ TSQLite3ConnectionH }
+
+procedure TSQLite3ConnectionH.DoInternalDisconnect;
+var
+  L: TList;
+  i: Integer;
+  lhandle: psqlite3;
+begin
+  L := Statements.LockList;
+  try
+    for i:=0 to L.Count-1 do
+      TCustomSQLStatement(L[i]).Unprepare;
+    L.Clear;
+  finally
+    Statements.UnlockList;
+  end;
+  lhandle:=Handle;
+  if lhandle <> nil then
+  begin
+    checkerror(sqlite3_close_v2(lhandle));
+    ReleaseSQLite;
+  end;
 end;
 
 { TSQliteData }
@@ -180,9 +208,9 @@ end;
 function TSQliteData.OpenDB: Boolean;
 begin
   Result := False;
-  if FFilename = '' then Exit;
+  if FFileName = '' then Exit;
   try
-    FConn.DatabaseName := FFilename;
+    FConn.DatabaseName := FFileName;
     FConn.Connected := True;
     FTrans.Active := True;
   except
@@ -291,7 +319,7 @@ begin
   AutoApplyUpdates := True;
   FAutoVacuum := True;
   FRecordCount := 0;
-  FFilename := '';
+  FFileName := '';
   FTableName := 'maintable';
   FCreateParams := '';
 end;
@@ -309,8 +337,8 @@ function TSQliteData.Open(const AOpenTable: Boolean;
   const AGetRecordCount: Boolean): Boolean;
 begin
   Result := False;
-  if (FFilename = '') or (FCreateParams = '') then Exit;
-  if FileExistsUTF8(FFilename) then
+  if (FFileName = '') or (FCreateParams = '') then Exit;
+  if FileExistsUTF8(FFileName) then
     Result := OpenDB
   else
     Result := CreateDB;
