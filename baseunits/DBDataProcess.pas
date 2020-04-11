@@ -825,6 +825,8 @@ begin
     Dec(FRecordCount);
     Result := True;
   except
+    on E: Exception do
+      Logger.SendException(ClassName+'['+Website+'].DeleteData.Error!',E);
   end;
 end;
 

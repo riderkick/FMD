@@ -3447,31 +3447,34 @@ end;
 
 procedure TMainForm.miMangaListDeleteClick(Sender: TObject);
 var
-  xNode: PVirtualNode;
-  DeleteCount: Integer;
+  xNode, deleteNode: PVirtualNode;
+  deleteCount: Integer;
 begin
   if vtMangaList.SelectedCount = 0 then Exit;
   if dataProcess.Table.Active = False then Exit;
   if MessageDlg('', RS_DlgRemoveItem, mtConfirmation, [mbYes, mbNo], 0) = mrNo then Exit;
   try
     vtMangaList.BeginUpdate;
-    DeleteCount := 0;
+    deleteCount := 0;
     xNode := vtMangaList.GetPreviousSelected(nil);
     while Assigned(xNode) do
     begin
       if dataProcess.DeleteData(xNode^.Index) then
+        deleteNode := xNode
+      else
+        deleteNode := nil;
+      xNode := vtMangaList.GetPreviousSelected(xNode);
+      if Assigned(deleteNode) then
       begin
-        Inc(DeleteCount);
-        vtMangaList.DeleteNode(xNode);
+        vtMangaList.DeleteNode(deleteNode);
+        Inc(deleteCount);
       end;
+    end;
+    if deleteCount > 0 then
+    begin
       dataProcess.Table.ApplyUpdates;
       dataProcess.Table.SQLTransaction.CommitRetaining;
-      xNode := vtMangaList.GetPreviousSelected(xNode);
-    end;
-    if DeleteCount <> 0 then
-    begin
       vtMangaList.ClearSelection;
-      UpdateVtMangaListFilterStatus;
     end;
   finally
     vtMangaList.EndUpdate;
