@@ -67,6 +67,8 @@ const
 { TStatusBarDownload }
 
 procedure TStatusBarDownload.SyncCreate;
+var
+  txtHeight: Integer;
 begin
   FControlMargin := FOwnerForm.ScaleFontTo96(2);
   FStatusBar := TPanel.Create(nil);
@@ -75,7 +77,8 @@ begin
     DoubleBuffered := True;
     Align := alBottom;
     AutoSize := False;
-    Height := ScaleFontTo96(26);
+    txtHeight := Canvas.GetTextHeight('A');
+    Height := txtHeight + (FControlMargin * 4);
     Caption := '';
     Color := clBtnFace;
     BevelOuter := bvNone;
@@ -143,9 +146,9 @@ begin
   with FStatusBar.Canvas do begin
     if FResized then begin
       FProgressBarRect := FStatusBar.ClientRect;
-      FProgressBarRect.Inflate(-FControlMargin, -(FControlMargin*2));
+      FProgressBarRect.Inflate(-FControlMargin, -(FControlMargin * 2));
       FStatusTextRect := FStatusBar.ClientRect;
-      FProgressBarRect.Width := GetTextWidth('999.99 MB/999.99 MB');
+      FProgressBarRect.Width := GetTextWidth('_999.99 MB/999.99 MB_');
       FStatusTextRect.Left := FProgressBarRect.Right + (FControlMargin * 2);
       FStatusTextRect.Right := FButtonCancel.Left - FControlMargin;
       FResized := False;
