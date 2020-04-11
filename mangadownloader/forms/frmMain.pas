@@ -2110,7 +2110,7 @@ procedure TMainForm.miDownloadDeleteTaskClick(Sender: TObject);
 var
   xNode: PVirtualNode;
   i: Integer;
-  f, d: String;
+  f, d, s: String;
 begin
   if vtDownload.SelectedCount = 0 then Exit;
   if DLManager.Count = 0 then Exit;
@@ -2151,16 +2151,9 @@ begin
             if DirectoryExistsUTF8(f) then
               DeleteDirectory(f, False);
             f := RemovePathDelim(f);
-            if FileExistsUTF8(f + '.zip') then
-              DeleteFileUTF8(f + '.zip')
-            else if FileExistsUTF8(f + '.cbz') then
-              DeleteFileUTF8(f + '.cbz')
-            else if FileExistsUTF8(f + '.pdf') then
-              DeleteFileUTF8(f + '.pdf')
-            else if FileExistsUTF8(f + '.epub') then
-              DeleteFileUTF8(f + '.epub')
-            else if DirectoryExistsUTF8(f) then
-              DeleteDirectory(f, False);
+            for s in FMDSupportedPackedOutputExt do
+              if FileExistsUTF8(f + s) then
+                DeleteFileUTF8(f + s);
           end;
           RemoveDirUTF8(d);
         end;
@@ -5928,19 +5921,18 @@ procedure TMainForm.OpenWithExternalProgramChapters(const Dir: String;
 
   function FindSupportedOutputExt(const Dir, Filename: String): String;
   var
-    i: Integer;
-    ADir, SDir: String;
+    ADir, SDir, s: String;
   begin
     Result := '';
     if Filename = '' then Exit;
     ADir := CorrectPathSys(Dir);
     if not DirectoryExistsUTF8(ADir) then Exit;
-    for i := Low(FMDSupportedOutputExt) to High(FMDSupportedOutputExt) do
+    for s in FMDSupportedPackedOutputExt do
     begin
       SDir := ChompPathDelim(CorrectPathSys(ADir + Filename));
-      if FileExistsUTF8(SDir + FMDSupportedOutputExt[i]) then
+      if FileExistsUTF8(SDir + s) then
       begin
-        Result := GetLastDir(SDir) + FMDSupportedOutputExt[i];
+        Result := GetLastDir(SDir) + s;
         Break;
       end;
     end;

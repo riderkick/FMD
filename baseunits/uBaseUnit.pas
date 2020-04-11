@@ -232,7 +232,7 @@ const
   MangaInfo_StatusCompleted = '0';
   MangaInfo_StatusOngoing = '1';
 
-  FMDSupportedOutputExt: array[0..3] of ShortString = ('.zip', '.cbz', '.pdf', '.epub');
+  FMDSupportedPackedOutputExt: array[0..3] of ShortString = ('.zip', '.cbz', '.pdf', '.epub');
   {$ifdef windows}
   // MAX_PATH = 260
   // MAX_PATH - 12 - 1
