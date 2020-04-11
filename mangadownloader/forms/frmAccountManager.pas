@@ -125,8 +125,7 @@ end;
 procedure TAccountCheckThread.Execute;
 begin
   try
-    if fmodule.OnLogin<>nil then
-      fmodule.OnLogin(fhttp,fmodule);
+    Modules.Login(fhttp, fmodule.ID);
     Synchronize(@SyncStatus);
   except
     on E: Exception do
