@@ -144,6 +144,9 @@ var
   txtWidth, txtHeight: integer;
 begin
   with FStatusBar.Canvas do begin
+    Pen.Color := clActiveBorder;
+    Line(0,0,FStatusBar.ClientRect.Right,0);
+
     if FResized then begin
       FProgressBarRect := FStatusBar.ClientRect;
       FProgressBarRect.Inflate(-FControlMargin, -(FControlMargin * 2));
@@ -156,9 +159,6 @@ begin
 
     Brush.Style := bsSolid;
     Pen.Style := psSolid;
-
-    Pen.Color := clActiveBorder;
-    Line(0,0,FStatusBar.ClientRect.Right,0);
 
     Pen.Color := CL_ProgressBarBaseLine;
     Brush.Color := CL_ProgressBarBase;
