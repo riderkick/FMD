@@ -3475,6 +3475,7 @@ begin
       dataProcess.Table.ApplyUpdates;
       dataProcess.Table.SQLTransaction.CommitRetaining;
       vtMangaList.ClearSelection;
+      UpdateVtMangaListFilterStatus
     end;
   finally
     vtMangaList.EndUpdate;
