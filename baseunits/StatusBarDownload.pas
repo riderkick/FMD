@@ -141,11 +141,11 @@ procedure TStatusBarDownload.StatusBarPaint(Sender: TObject);
 var
   txtWidth, txtHeight: integer;
 begin
-  with StatusBar.Canvas do begin
+  with FStatusBar.Canvas do begin
     if FResized then begin
-      FProgressBarRect := StatusBar.ClientRect;
+      FProgressBarRect := FStatusBar.ClientRect;
       FProgressBarRect.Inflate(-FControlMargin, -(FControlMargin*2));
-      FStatusTextRect := StatusBar.ClientRect;
+      FStatusTextRect := FStatusBar.ClientRect;
       FProgressBarRect.Width := GetTextWidth('999.99 MB/999.99 MB');
       FStatusTextRect.Left := FProgressBarRect.Right + (FControlMargin * 2);
       FStatusTextRect.Right := FButtonCancel.Left - FControlMargin;
@@ -156,7 +156,7 @@ begin
     Pen.Style := psSolid;
 
     Pen.Color := clActiveBorder;
-    Line(0,0,StatusBar.ClientRect.Right,0);
+    Line(0,0,FStatusBar.ClientRect.Right,0);
 
     Pen.Color := CL_BarGrayLine;
     Brush.Color := CL_BarGray;
