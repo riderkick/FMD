@@ -59,11 +59,10 @@ implementation
 uses uBaseUnit;
 
 const
-  CL_BarGrayLine        = $bcbcbc;
-  CL_BarGray            = $e6e6e6;
-
-  CL_BarGreenLine       = $25b006;
-  CL_BarGreen           = $42d932;
+  CL_ProgressBarBaseLine = $bcbcbc;
+  CL_ProgressBarBase     = $e6e6e6;
+  CL_ProgressBarLine     = $25b006;
+  CL_ProgressBar         = $42d932;
 
 { TStatusBarDownload }
 
@@ -158,8 +157,8 @@ begin
     Pen.Color := clActiveBorder;
     Line(0,0,FStatusBar.ClientRect.Right,0);
 
-    Pen.Color := CL_BarGrayLine;
-    Brush.Color := CL_BarGray;
+    Pen.Color := CL_ProgressBarBaseLine;
+    Brush.Color := CL_ProgressBarBase;
     Rectangle(FProgressBarRect);
 
     if FPercents > 0 then begin
@@ -167,12 +166,12 @@ begin
       FProgressBarPercentsRect.Right :=
         Round((FProgressBarPercentsRect.Right - FProgressBarPercentsRect.Left) * FPercents) + FProgressBarPercentsRect.Left;
 
-      Pen.Color   := CL_BarGreenLine;
-      Brush.Color := CL_BarGreen;
+      Pen.Color   := CL_ProgressBarLine;
+      Brush.Color := CL_ProgressBar;
 
       Frame(FProgressBarPercentsRect);
       FProgressBarPercentsRect.Inflate(-2, -2);
-      GradientFill(FProgressBarPercentsRect, BlendColor(Brush.Color, CL_BarGray, 128), Brush.Color, gdHorizontal);
+      GradientFill(FProgressBarPercentsRect, BlendColor(Brush.Color, CL_ProgressBarBase, 128), Brush.Color, gdHorizontal);
 
       Brush.Style := bsClear;
 
