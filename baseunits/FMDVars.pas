@@ -29,10 +29,6 @@ var
   // file logger
   FileLogger: TFileChannel;
 
-  // status in status bar update
-  ulTotalPtr,
-  ulWorkPtr: Integer;
-
   // download manager
   DLManager: TDownloadManager;
 

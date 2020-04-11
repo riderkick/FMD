@@ -17,7 +17,6 @@
 {"hash":160200703,"name":"tmainform.vtdownload.header.columns[5].text","sourcebytes":[83,97,118,101,32,116,111],"value":"Save to"},
 {"hash":4696756,"name":"tmainform.vtdownload.header.columns[6].text","sourcebytes":[65,100,100,101,100],"value":"Added"},
 {"hash":221371535,"name":"tmainform.tsinformation.caption","sourcebytes":[77,97,110,103,97,32,73,110,102,111],"value":"Manga Info"},
-{"hash":206498996,"name":"tmainform.btabortupdatelist.hint","sourcebytes":[65,98,111,114,116,32,117,112,100,97,116,101,32,108,105,115,116],"value":"Abort update list"},
 {"hash":158194067,"name":"tmainform.cbselectmanga.hint","sourcebytes":[70,111,114,32,109,111,114,101,32,109,97,110,103,97,32,115,105,116,101,115,44,32,112,108,101,97,115,101,32,103,111,32,116,111,32,79,112,116,105,111,110,115,45,62,77,97,110,103,97,32,115,105,116,101,115],"value":"For more manga sites, please go to Options->Manga sites"},
 {"hash":119443044,"name":"tmainform.btupdatelist.hint","sourcebytes":[85,112,100,97,116,101,32,109,97,110,103,97,32,108,105,115,116],"value":"Update manga list"},
 {"hash":138125102,"name":"tmainform.edmangalistsearch.texthint","sourcebytes":[83,101,97,114,99,104,32,116,105,116,108,101,46,46,46],"value":"Search title..."},

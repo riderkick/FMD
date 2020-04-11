@@ -800,10 +800,6 @@ msgstr "Изменен"
 msgid "Last message"
 msgstr "Описание изменения"
 
-#: tmainform.btabortupdatelist.hint
-msgid "Abort update list"
-msgstr "Прервать обновление списка"
-
 #: tmainform.btaddtofavorites.caption
 msgctxt "tmainform.btaddtofavorites.caption"
 msgid "Add to favorites"

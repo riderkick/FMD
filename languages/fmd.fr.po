@@ -803,10 +803,6 @@ msgstr "Dernière modification"
 msgid "Last message"
 msgstr "Dernier message"
 
-#: tmainform.btabortupdatelist.hint
-msgid "Abort update list"
-msgstr "Annuler la mise à jour de la liste"
-
 #: tmainform.btaddtofavorites.caption
 msgctxt "tmainform.btaddtofavorites.caption"
 msgid "Add to favorites"

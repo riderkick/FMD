@@ -398,11 +398,9 @@ type
     seOptionPDFQuality: TSpinEdit;
     seOptionDigitVolume: TSpinEdit;
     seOptionDigitChapter: TSpinEdit;
-    btAbortUpdateList: TSpeedButton;
     spInfos: TSplitter;
     spMainSplitter: TSplitter;
     sbMain: TStatusBar;
-    sbUpdateList: TStatusBar;
     tbDropTargetOpacity: TTrackBar;
     tbWebsitesCollapseAll: TToolButton;
     tbWebsitesExpandAll: TToolButton;
@@ -1148,8 +1146,6 @@ end;
 { TMainForm }
 
 procedure TMainForm.FormCreate(Sender: TObject);
-var
-  space: Integer;
 begin
   Randomize;
   FormMain := Self;
@@ -1157,28 +1153,13 @@ begin
   PrevWndProc := windows.WNDPROC(windows.GetWindowLongPtr(Self.Handle, GWL_WNDPROC));
   windows.SetWindowLongPtr(Self.Handle, GWL_WNDPROC, PtrInt(@WndCallback));
   {$endif}
-  space := ScaleFontTo96(2);
-  with btAbortUpdateList do begin
-    Parent := sbUpdateList;
-    Align := alNone;
-    Anchors := [akTop, akRight, akBottom];
-    AnchorSideTop.Control := sbUpdateList;
-    AnchorSideTop.Side := asrTop;
-    BorderSpacing.Top := space;
-    AnchorSideRight.Control := sbUpdateList;
-    AnchorSideRight.Side := asrRight;
-    BorderSpacing.Right := space;
-    AnchorSideBottom.Control := sbUpdateList;
-    AnchorSideBottom.Side := asrBottom;
-    BorderSpacing.Bottom := space;
-  end;
+
   isRunDownloadFilter := False;
   isUpdating := False;
   isPendingExitCounter:=False;
   isNormalExit:=False;
   DoAfterFMD := DO_NOTHING;
   Application.HintHidePause := 10000;
-  sbUpdateList.DoubleBuffered := True;
 
   ForceDirectoriesUTF8(CONFIG_FOLDER);
 
@@ -2577,11 +2558,6 @@ begin
     HintInfo.HintMaxWidth := 500;
     HintInfo.HideTimeout := 300000;
   end;
-  if HintInfo.HintControl = sbUpdateList then
-    if isUpdating then
-      HintStr := Trim(updateList.websites.Text)
-    else
-      HintStr := '';
 end;
 
 // -----
@@ -3864,16 +3840,16 @@ begin
   if Panel.Index = 0 then
   begin
     //Information
-    if ulTotalPtr = 0 then
-      ulTotalPtr := 100;
-    if ulWorkPtr > ulTotalPtr then
-      ulWorkPtr := ulTotalPtr;
-    Percents := ulWorkPtr / ulTotalPtr;
+    //if ulTotalPtr = 0 then
+    //  ulTotalPtr := 100;
+    //if ulWorkPtr > ulTotalPtr then
+    //  ulWorkPtr := ulTotalPtr;
+    //Percents := ulWorkPtr / ulTotalPtr;
     with StatusBar.Canvas do
     begin
       ClRect := Rect;
       ClRect.Left := Rect.Left + 3;
-      ClRect.Right := Rect.Right - btAbortUpdateList.Width - 3;
+      //ClRect.Right := Rect.Right - btAbortUpdateList.Width - 3;
       ClRect.Bottom := Rect.Bottom - 3;
 
       TxtRect := ClRect;

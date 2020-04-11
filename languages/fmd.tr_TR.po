@@ -802,10 +802,6 @@ msgstr "Son değişim"
 msgid "Last message"
 msgstr "Son mesaj"
 
-#: tmainform.btabortupdatelist.hint
-msgid "Abort update list"
-msgstr "Liste güncellemeyi iptal et"
-
 #: tmainform.btaddtofavorites.caption
 msgctxt "tmainform.btaddtofavorites.caption"
 msgid "Add to favorites"

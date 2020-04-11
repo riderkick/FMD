@@ -798,10 +798,6 @@ msgstr "Zuletzt geändert"
 msgid "Last message"
 msgstr "Letzte Nachricht"
 
-#: tmainform.btabortupdatelist.hint
-msgid "Abort update list"
-msgstr "Aktualisierungsliste abbrechen"
-
 #: tmainform.btaddtofavorites.caption
 msgctxt "tmainform.btaddtofavorites.caption"
 msgid "Add to favorites"

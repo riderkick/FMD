@@ -803,10 +803,6 @@ msgstr "Terakhir dimutakhirkan"
 msgid "Last message"
 msgstr "Pesan terakhir"
 
-#: tmainform.btabortupdatelist.hint
-msgid "Abort update list"
-msgstr "Batalkan memutakhirkan daftar komik"
-
 #: tmainform.btaddtofavorites.caption
 msgctxt "tmainform.btaddtofavorites.caption"
 msgid "Add to favorites"
@@ -2547,6 +2543,7 @@ msgid "Favorites check is running!"
 msgstr "Pemeriksaan kesukaan sedang berjalan!"
 
 #: ufavoritesmanager.rs_dlgnewchaptercaption
+#, object-pascal-format
 msgid "%d manga(s) have new chapter(s)"
 msgstr "Ditemukan %d bab baru"
 
@@ -2560,6 +2557,7 @@ msgid "Completed manga will be removed:"
 msgstr "Komik yang sudah tamat akan dihapus:"
 
 #: ufavoritesmanager.rs_lblnewchapterfound
+#, object-pascal-format
 msgid "Found %d new chapter from %d manga(s):"
 msgstr "%d bab baru dari %d komik:"
 

@@ -799,10 +799,6 @@ msgstr "Last modified"
 msgid "Last message"
 msgstr "Last message"
 
-#: tmainform.btabortupdatelist.hint
-msgid "Abort update list"
-msgstr "Abort update list"
-
 #: tmainform.btaddtofavorites.caption
 msgctxt "tmainform.btaddtofavorites.caption"
 msgid "Add to favorites"
@@ -2627,3 +2623,4 @@ msgstr "Updating list"
 #, object-pascal-format
 msgid "Can not load WebP codec library \"%s\". Check your installation."
 msgstr "Can not load WebP codec library \"%s\". Check your installation."
+

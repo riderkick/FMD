@@ -812,10 +812,6 @@ msgstr ""
 msgid "Last message"
 msgstr ""
 
-#: tmainform.btabortupdatelist.hint
-msgid "Abort update list"
-msgstr "Przerwij aktualizacje list"
-
 #: tmainform.btaddtofavorites.caption
 msgctxt "tmainform.btaddtofavorites.caption"
 msgid "Add to favorites"

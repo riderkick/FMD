@@ -793,10 +793,6 @@ msgstr ""
 msgid "Last message"
 msgstr ""
 
-#: tmainform.btabortupdatelist.hint
-msgid "Abort update list"
-msgstr "Ματαίωση ενημέρωσης λίστας"
-
 #: tmainform.btaddtofavorites.caption
 msgctxt "tmainform.btaddtofavorites.caption"
 msgid "Add to favorites"
