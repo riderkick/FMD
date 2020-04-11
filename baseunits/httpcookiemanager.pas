@@ -45,7 +45,7 @@ type
     FCookies: THTTPCookies;
     FGuardian: TCriticalSection;
   protected
-    procedure AddServerCookie(const AURL, ACookie: String; const ADate: TDateTime);
+    procedure AddServerCookie(const AURL, ACookie: String; const AServerDate: TDateTime);
   public
     constructor Create;
     destructor Destroy; override;
@@ -75,7 +75,7 @@ begin
 end;
 
 procedure THTTPCookieManager.AddServerCookie(const AURL, ACookie: String;
-  const ADate: TDateTime);
+  const AServerDate: TDateTime);
 var
   s, n, ni, v: String;
   c: THTTPCookie;
@@ -84,6 +84,7 @@ var
 begin
   if Trim(ACookie) = '' then Exit;
   n := Trim(SeparateLeft(ACookie, '='));
+  writeln('set-cookie ',n);
   for i := 0 to FCookies.Count-1 do
   begin
     if n = FCookies[i].Name then
@@ -114,7 +115,7 @@ begin
     end
     else if ni = 'max-age' then
     begin
-      c.Expires := IncSecond(ADate, StrToIntDef(v, 0));
+      c.Expires := IncSecond(AServerDate, StrToIntDef(v, 0));
       c.Persistent := True;
     end
     else if ni = 'secure' then

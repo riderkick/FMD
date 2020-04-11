@@ -894,7 +894,6 @@ begin
     luaClassAddBooleanProperty(L, MetaTable, 'Enabled', @Enabled);
     luaClassAddStringProperty(L, MetaTable, 'Username', @Username);
     luaClassAddStringProperty(L, MetaTable, 'Password', @Password);
-    luaClassAddStringProperty(L, MetaTable, 'Cookies', @Cookies);
     luaClassAddIntegerProperty(L, MetaTable, 'Status', @Status);
     luaClassAddObject(L, MetaTable, Guardian, 'Guardian', @luaCriticalSectionAddMetaTable);
   end;

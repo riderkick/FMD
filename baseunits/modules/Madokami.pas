@@ -51,14 +51,10 @@ begin
       if AHTTP.GET(urlroot) then begin
         //Result := AHTTP.Cookies.Values['laravel_session'] <> '';
         Result := (AHTTP.ResultCode < 400) and (AHTTP.Headers.Values['WWW-Authenticate'] = '');
-        if Result then begin
-          Module.Account.Cookies := AHTTP.GetCookies;
-          Module.Account.Status := asValid;
-        end
-        else begin
-          Module.Account.Cookies := '';
+        if Result then
+          Module.Account.Status := asValid
+        else
           Module.Account.Status := asInvalid;
-        end;
       end;
     finally
       LeaveCriticalsection(locklogin);
@@ -66,8 +62,6 @@ begin
   else begin
     EnterCriticalsection(locklogin);
     try
-      if Result then
-        AHTTP.Cookies.Text := Module.Account.Cookies;
     finally
       LeaveCriticalsection(locklogin);
     end;
@@ -77,7 +71,6 @@ end;
 
 procedure SetAuth(const AHTTP: THTTPSendThread; const Module: TModuleContainer);
 begin
-  AHTTP.Cookies.Text := Module.Account.Cookies;
   if AHTTP.Cookies.Count <> 0 then
   begin
     if madokamiauth = '' then

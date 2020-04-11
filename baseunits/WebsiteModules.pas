@@ -73,7 +73,6 @@ type
 
   TWebsiteModuleAccount = class
   private
-    FCookies: String;
     FEnabled: Boolean;
     FPassword: String;
     FStatus: TAccountStatus;
@@ -86,7 +85,6 @@ type
     property Enabled: Boolean read FEnabled write FEnabled;
     property Username: String read FUsername write FUsername;
     property Password: String read FPassword write FPassword;
-    property Cookies: String read FCookies write FCookies;
     property Status: TAccountStatus read FStatus write FStatus;
   end;
 
@@ -872,7 +870,10 @@ begin
   if ModuleExist(ModuleId) then
   with FModuleList[ModuleId] do
     if Assigned(OnLogin) then
+    begin
+      PrepareHTTP(AHTTP);
       Result := OnLogin(AHTTP, FModuleList[ModuleId]);
+    end;
 end;
 
 function TWebsiteModules.Login(const AHTTP: THTTPSendThread;
@@ -999,7 +1000,6 @@ begin
                 jd.JSONToObject(jo2,Account);
                 if Account.Username<>'' then Account.Username := DecryptString(Account.Username);
                 if Account.Password<>'' then Account.Password := DecryptString(Account.Password);
-                if Account.Cookies<>'' then Account.Cookies := DecryptString(Account.Cookies);
                 if Account.Status=asChecking then
                   Account.Status:=asUnknown;
               end;
@@ -1061,7 +1061,6 @@ begin
           jo2:=js.ObjectToJSON(Account);
           jo2.Strings['Username']:=EncryptString(Account.Username);
           jo2.Strings['Password']:=EncryptString(Account.Password);
-          jo2.Strings['Cookies']:=EncryptString(Account.Cookies);
           jo.Add('Account',jo2);
         end;
         j_cookies:=TJSONArray.Create;

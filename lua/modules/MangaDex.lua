@@ -1,6 +1,5 @@
 function getinfo()
   mangainfo.url=MaybeFillHost(module.rooturl,url)
-  setLoginCookies(module, http)
   http.cookies.values['mangadex_h_toggle'] = '1'
   local id = url:match('title/(%d+)')
   if id == nil then id = url:match('manga/(%d+)'); end
@@ -263,7 +262,6 @@ function findlang(lang)
 end
 
 function getpagenumber()
-  setLoginCookies(module, http)
   http.cookies.values['mangadex_h_toggle'] = '1'
   local chapterid = url:match('chapter/(%d+)')
   delay()
@@ -348,12 +346,6 @@ function getFormData(formData)
 	return 'multipart/form-data; boundary='..b,r
 end
 
-function setLoginCookies(module, http)
-  if module.account.enabled and (module.account.status==asValid) then
-    http.cookies.text=module.account.cookies
-  end
-end
-
 function Login()
 	module.account.status=asChecking
 	local login_url=module.rooturl..'/login'
@@ -384,11 +376,6 @@ function Login()
 	http.POST(login_post_url,post_data)
 	if http.resultcode==200 then
 		if http.cookies.values['mangadex_rememberme_token']~='' then
-			local s='mangadex_rememberme_token='..http.cookies.values['mangadex_rememberme_token']
-			-- if http.cookies.values['mangadex_session']~='' then
-				-- s=s..'; mangadex_session='..http.cookies.values['mangadex_session']
-			-- end
-			module.account.cookies=s
 			module.account.status=asValid
 		else
 			module.account.status=asInvalid

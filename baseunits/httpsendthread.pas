@@ -462,6 +462,8 @@ begin
     BeforeHTTPMethod(Self, amethod, aurl);
   SetHTTPCookies;
   Result := inherited HTTPMethod(amethod, aurl);
+  writeln('parsecookies, ',HexStr(CookieManager));
+  writeln(Headers.Text);
   ParseHTTPCookies;
   if Assigned(AfterHTTPMethod) then
     AfterHTTPMethod(Self, amethod, aurl);
