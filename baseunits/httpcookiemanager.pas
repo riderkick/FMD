@@ -51,6 +51,7 @@ type
     destructor Destroy; override;
     procedure AddServerCookies(const AURL: String; const AHTTP: THTTPSend);
     procedure SetCookies(const AURL: String; const AHTTP: THTTPSend);
+    procedure Clear;
   published
     property Cookies: THTTPCookies read FCookies;
   end;
@@ -239,6 +240,16 @@ begin
         end;
       end;
     end;
+  finally
+    FGuardian.Leave;
+  end;
+end;
+
+procedure THTTPCookieManager.Clear;
+begin
+  FGuardian.Enter;
+  try
+    FCookies.Clear;
   finally
     FGuardian.Leave;
   end;

@@ -834,6 +834,12 @@ begin
   TLuaWebsiteModule(luaClassGetObject(L)).Module.TotalDirectory := lua_tointeger(L, 1);
 end;
 
+function lua_clearcookies(L: Plua_State): Integer; cdecl;
+begin
+  Result := 0;
+  TLuaWebsiteModule(luaClassGetObject(L)).Module.CookieManager.Clear;
+end;
+
 function lua_getoption(L: Plua_State): Integer; cdecl;
 var
   m: TLuaWebsiteModule;
@@ -877,11 +883,12 @@ begin
 end;
 
 const
-  methods: packed array [0..5] of luaL_Reg = (
+  methods: packed array [0..6] of luaL_Reg = (
     (name: 'AddOptionCheckBox'; func: @lua_addoptioncheckbox),
     (name: 'AddOptionEdit'; func: @lua_addoptionedit),
     (name: 'AddOptionSpinEdit'; func: @lua_addoptionspinedit),
     (name: 'AddOptionCombobox'; func: @lua_addoptioncombobox),
+    (name: 'ClearCookies'; func: @lua_clearcookies),
     (name: 'GetOption'; func: @lua_getoption),
     (name: nil; func: nil)
     );
