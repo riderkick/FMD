@@ -347,6 +347,7 @@ function getFormData(formData)
 end
 
 function Login()
+	module.ClearCookies()
 	module.account.status=asChecking
 	local login_url=module.rooturl..'/login'
 	if not http.GET(login_url) then
