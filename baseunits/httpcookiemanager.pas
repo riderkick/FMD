@@ -84,7 +84,6 @@ var
 begin
   if Trim(ACookie) = '' then Exit;
   n := Trim(SeparateLeft(ACookie, '='));
-  writeln('set-cookie ',n);
   for i := 0 to FCookies.Count-1 do
   begin
     if n = FCookies[i].Name then
