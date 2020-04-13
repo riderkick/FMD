@@ -23,7 +23,7 @@ uses
   uFavoritesManager, uUpdateThread, uSilentThread, uMisc,
   uGetMangaInfosThread, frmDropTarget, frmAccountManager, frmWebsiteOptionCustom,
   frmCustomColor, frmLogger, frmTransferFavorites,
-  frmLuaModulesUpdater, CheckUpdate, DBDataProcess, MangaFoxWatermark,
+  frmLuaModulesUpdater, FMDForms, CheckUpdate, DBDataProcess, MangaFoxWatermark,
   SimpleTranslator, FMDOptions, httpsendthread, SimpleException;
 
 type
@@ -1342,10 +1342,13 @@ begin
     miDownloadDeleteCompletedClick(nil);
 
   isExiting := True;
+  FormManager.Clear;
+
   {$ifdef windows}
   if Assigned(PrevWndProc) then
     windows.SetWindowLongPtr(Self.Handle, GWL_WNDPROC, PtrInt(PrevWndProc));
   {$endif}
+
   if FavoriteManager.isRunning then
     FavoriteManager.StopChekForNewChapter(True);
   if SilentThreadManager.Count > 0 then
