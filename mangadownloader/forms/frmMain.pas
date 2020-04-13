@@ -435,7 +435,6 @@ type
     procedure appPropertiesMainShowHint(var HintStr: String;
       var CanShow: Boolean; var HintInfo: THintInfo);
     procedure btAddToFavoritesClick(Sender: TObject);
-    procedure btAbortUpdateListClick(Sender: TObject);
     procedure btAbortCheckLatestVersionClick(Sender: TObject);
     procedure btCancelFavoritesCheckClick(Sender: TObject);
     procedure btChecksClick(Sender: TObject);
@@ -586,8 +585,6 @@ type
     procedure pmSbMainPopup(Sender: TObject);
     procedure pmTrayPopup(Sender: TObject);
     procedure rgOptionCompressSelectionChanged(Sender: TObject);
-    procedure sbUpdateListDrawPanel(StatusBar: TStatusBar; Panel: TStatusPanel;
-      const Rect: TRect);
     procedure seOptionAutoCheckFavIntervalMinutesChange(Sender: TObject);
     procedure spMainSplitterMoved(Sender: TObject);
     procedure tbDownloadDeleteCompletedClick(Sender: TObject);
@@ -2533,12 +2530,6 @@ begin
   end;
 end;
 
-procedure TMainForm.btAbortUpdateListClick(Sender: TObject);
-begin
-  if isUpdating then
-    updateList.Terminate;
-end;
-
 procedure TMainForm.btAbortCheckLatestVersionClick(Sender: TObject);
 begin
   if Assigned(CheckUpdateThread) then
@@ -3829,55 +3820,6 @@ begin
   seOptionPDFQuality.Enabled:=rgOptionCompress.ItemIndex=3;
   lbOptionPDFQuality.Enabled:=seOptionPDFQuality.Enabled;
   lbOptionPDFQualityHint.Enabled:=seOptionPDFQuality.Enabled;
-end;
-
-procedure TMainForm.sbUpdateListDrawPanel(StatusBar: TStatusBar;
-  Panel: TStatusPanel; const Rect: TRect);
-var
-  ClRect, TxtRect, BarRect, ProgressBarRect: TRect;
-  Percents: double;
-begin
-  if Panel.Index = 0 then
-  begin
-    //Information
-    //if ulTotalPtr = 0 then
-    //  ulTotalPtr := 100;
-    //if ulWorkPtr > ulTotalPtr then
-    //  ulWorkPtr := ulTotalPtr;
-    //Percents := ulWorkPtr / ulTotalPtr;
-    with StatusBar.Canvas do
-    begin
-      ClRect := Rect;
-      ClRect.Left := Rect.Left + 3;
-      //ClRect.Right := Rect.Right - btAbortUpdateList.Width - 3;
-      ClRect.Bottom := Rect.Bottom - 3;
-
-      TxtRect := ClRect;
-      TxtRect.Bottom := TxtRect.Top + TextHeight('A');
-      //progress-bar box
-      BarRect := ClRect;
-      BarRect.Top := TxtRect.Bottom + 2;
-
-      Pen.Style := psSolid;
-      Brush.Style := bsSolid;
-      Pen.Color:=CL_BarGrayLine;
-      Brush.Color:=CL_BarGray;
-      Rectangle(BarRect);
-
-      ProgressBarRect := BarRect;
-      ProgressBarRect.Right := round((ProgressBarRect.Right - ProgressBarRect.Left) *
-        Percents) + ProgressBarRect.Left;
-
-      if (ProgressBarRect.Right - ProgressBarRect.Left) > 0 then
-      begin
-        Pen.Color:=CL_BarGreenLine;
-        Brush.Color:=CL_BarGreen;
-        Rectangle(ProgressBarRect);
-      end;
-      Brush.Style := bsClear;
-      TextRect(txtRect, 5, 0, Panel.Text, UpdateStatusTextStyle);
-    end;
-  end;
 end;
 
 procedure TMainForm.seOptionAutoCheckFavIntervalMinutesChange(Sender: TObject);
