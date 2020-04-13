@@ -33,16 +33,14 @@ function GetInfo()
   mangainfo.Authors   = x.XPathString('//span[@class="mlabel" and contains(., "Author")]/following-sibling::a[1]')
   mangainfo.Genres    = x.XPathStringAll('//span[@class="mlabel" and contains(., "Genre")]/following-sibling::a')
   mangainfo.Summary   = x.XPathString('//span[@class="mlabel" and contains(., "Description")]/following-sibling::div[1]')
-  
-  if not http.Get(x.XPathString('//link[@rel="alternate" and @type="application/rss+xml"]/@href')) then return net_problem end
-  x = TXQuery.Create(http.Document)
-  
-  v = x.XPath('//item')
-  for i = 1, v.Count do
-    mangainfo.ChapterLinks.Add(x.XPathString('link', v.Get(i)))
-    mangainfo.ChapterNames.Add(x.XPathString('title', v.Get(i)))
+
+  local chapter_uri = x.XPathString('//div[@ng-if]/a/@href'):gsub('%{.*$', '')
+  local chapters = x.XPathString('//script[contains(.,"vm.Chapters =")]'):match('(%[.-%])')
+  x.ParseHTML(chapters)
+  for i, c in ipairs(x.XPathI('json(*)().ChapterName')) do
+	mangainfo.ChapterNames.Add('Chapter ' .. tostring(i) .. ' ' .. c.ToString)
+	mangainfo.ChapterLinks.Add(chapter_uri .. '-chapter-' .. tostring(i) .. '.html')
   end
-  InvertStrings(mangainfo.ChapterLinks, mangainfo.ChapterNames)
   
   --[[Debug]] LuaDebug.PrintMangaInfo()
   --[[Debug]] LuaDebug.WriteStatistics('Chapters', mangainfo.ChapterLinks.Count .. '  (' .. mangainfo.Title .. ')')
