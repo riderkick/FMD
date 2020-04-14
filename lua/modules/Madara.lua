@@ -262,6 +262,7 @@ function Init()
   AddWebsiteModule('ReadManhua', 'https://readmanhua.net', cat)
   AddWebsiteModule('MangaDods', 'https://www.mangadods.com', cat)
   AddWebsiteModule('DisasterScans', 'https://disasterscans.com', cat)
+  AddWebsiteModule('RaiderScans', 'https://raiderscans.com', cat)
   
   cat = 'French'
   AddWebsiteModule('WakaScan', 'https://wakascan.com', cat)
