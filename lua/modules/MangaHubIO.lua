@@ -1,5 +1,5 @@
 local perpage = 30
-local apiurl = 'https://api2.mangahub.io/graphql'
+local apiurl = 'https://api.mghubcdn.com/graphql'
 local cdnurl = 'https://img.mghubcdn.com/file/imghub/'
 
 function getx()
