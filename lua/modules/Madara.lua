@@ -335,6 +335,7 @@ function Init()
   AddWebsiteModule('Mangalek', 'https://mangalek.com', cat)
   AddWebsiteModule('MangaAction', 'https://manga-action.com', cat)
   AddWebsiteModule('NijiTranslations', 'https://niji-translations.com', cat)
+  AddWebsiteModule('MangaArabTeam', 'https://mangaarabteam.com', cat)
   
   cat = 'Portuguese'
   AddWebsiteModule('IchirinNoHanaYuri', 'https://ichirinnohanayuri.com.br', cat)
