@@ -298,7 +298,7 @@ function Init()
   AddWebsiteModule('HunterFansub', 'https://hunterfansub.com', cat)
   AddWebsiteModule('SDLGFansub', 'https://www.sdlg-fansub.tk', cat)
   AddWebsiteModule('ArtemisNF', 'https://artemisnf.com', cat)
-  AddWebsiteModule('LazyboysScan', 'http://lazyboysscan.com', cat)
+  AddWebsiteModule('LazyBoysScan', 'https://lazyboysscan.com', cat)
   AddWebsiteModule('BDSFansub', 'https://bdsfansub.com', cat)
 	
   cat = 'Webcomics'
