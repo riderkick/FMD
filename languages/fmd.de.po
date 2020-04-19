@@ -20,15 +20,15 @@ msgstr "Auf neuste Version prüfen"
 
 #: checkupdate.rs_currentversion
 msgid "Installed Version"
-msgstr ""
+msgstr "Installierte version"
 
 #: checkupdate.rs_latestversion
 msgid "Latest Version   "
-msgstr ""
+msgstr "Neuste version"
 
 #: checkupdate.rs_newversionfound
 msgid "New Version found!"
-msgstr ""
+msgstr "Neu Version gefunden!"
 
 #: dbupdater.rs_buttoncancel
 msgctxt "dbupdater.rs_buttoncancel"
@@ -2527,105 +2527,105 @@ msgstr "Auf neues Kapitel überprüfen"
 #, fuzzy
 msgctxt "ufavoritesmanager.rs_btndownload"
 msgid "&Download"
-msgstr "&Download"
+msgstr "&herunterladen"
 
 #: ufavoritesmanager.rs_btnremove
 msgid "&Remove"
-msgstr ""
+msgstr "6Entfernen"
 
 #: ufavoritesmanager.rs_dlgcompletedmangacaption
 #, object-pascal-format
 msgid "Found %d completed manga"
-msgstr ""
+msgstr "Fand %d fertige Manga(s)"
 
 #: ufavoritesmanager.rs_dlgfavoritescheckisrunning
 msgid "Favorites check is running!"
-msgstr ""
+msgstr "Favoriten werden überprüft!"
 
 #: ufavoritesmanager.rs_dlgnewchaptercaption
 #, object-pascal-format
 msgid "%d manga(s) have new chapter(s)"
-msgstr ""
+msgstr "%d Manga(s) haben neue Kapitel"
 
 #: ufavoritesmanager.rs_favoritehasnewchapter
 #, object-pascal-format
 msgid "%s <%s> has %d new chapter(s)."
-msgstr ""
+msgstr "%s <%s> hat %d neue(s) Kapitel."
 
 #: ufavoritesmanager.rs_lblmangawillberemoved
 msgid "Completed manga will be removed:"
-msgstr ""
+msgstr "Fertige Mangas werden entfernt:"
 
 #: ufavoritesmanager.rs_lblnewchapterfound
 #, object-pascal-format
 msgid "Found %d new chapter from %d manga(s):"
-msgstr ""
+msgstr "Fand %d neue Kapitel von %d Manga(s)"
 
 #: usilentthread.rs_silentthreadloadstatus
 #, object-pascal-format
 msgid "Loading: %d/%d"
-msgstr ""
+msgstr "Lade: %d/%d"
 
 #: uupdatethread.rs_dlghasnewmanga
 #, object-pascal-format
 msgid "%s has %d new manga(s)"
-msgstr ""
+msgstr "%s hat %d neue(n) Manga(s)"
 
 #: uupdatethread.rs_gettingdirectory
 msgid "Getting directory"
-msgstr ""
+msgstr "Lade Verzeichnis"
 
 #: uupdatethread.rs_gettinginfo
 msgid "Getting info"
-msgstr ""
+msgstr "Lade Infos"
 
 #: uupdatethread.rs_gettinglistfor
 msgid "Getting list for"
-msgstr ""
+msgstr "Lade Liste für"
 
 #: uupdatethread.rs_indexingnewtitle
 msgid "Indexing new title(s)"
-msgstr ""
+msgstr "Suche nach neuen Titeln"
 
 #: uupdatethread.rs_lookingfornewtitle
 msgid "Looking for new title(s)"
-msgstr ""
+msgstr "Suche nach neuen Titeln"
 
 #: uupdatethread.rs_lookingfornewtitlefromanotherdirectory
 msgid "Looking for new title(s) from another directory"
-msgstr ""
+msgstr "Suche nach neuen Titeln aus einem anderen Verzeichnis"
 
 #: uupdatethread.rs_preparing
 msgctxt "uupdatethread.rs_preparing"
 msgid "Preparing"
-msgstr ""
+msgstr "Vorbereiten"
 
 #: uupdatethread.rs_removingduplicatefromcurrentdata
 msgid "Removing duplicate from current data"
-msgstr ""
+msgstr "Entferne Duplikate aus derzeitigen Daten"
 
 #: uupdatethread.rs_removingduplicatefromlocaldata
 msgid "Removing duplicate from local data"
-msgstr ""
+msgstr "Entferne Duplikate aus lokalen Daten"
 
 #: uupdatethread.rs_removingduplicatefromnewtitle
 msgid "Removing duplicate from new title(s)"
-msgstr ""
+msgstr "Entferne Suplikate aus neuen Titeln"
 
 #: uupdatethread.rs_savingdata
 msgid "Saving data"
-msgstr ""
+msgstr "Speichere Daten"
 
 #: uupdatethread.rs_synchronizingdata
 msgid "Synchronizing data"
-msgstr ""
+msgstr "Synchronisiere Daten"
 
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
-msgstr ""
+msgstr "Liste erneuern"
 
 #: webp.serrloadfailed
 #, object-pascal-format
 msgid "Can not load WebP codec library \"%s\". Check your installation."
-msgstr ""
+msgstr "Kann WebP Codec \"%s\ nicht laden. Überprüfen sie ihre Installation."
 
