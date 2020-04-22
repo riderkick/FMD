@@ -1736,8 +1736,8 @@ msgstr "PDF Qualitätsstufe"
 
 #: tmainform.lboptionpdfquality.hint
 msgctxt "TMAINFORM.LBOPTIONPDFQUALITY.HINT"
-msgid "100 = FlateEncode (lossless), lower = DCTEncode (lossy)"
-msgstr "100 = FlateEncode (Verlustfrei), Niedriger = DCTEncode (verlustbehaftet)"
+msgid "100 = FlateEncode (lossless), = DCTEncode (lossy)"
+msgstr "100 = FlateEncode (Verlustfrei), Niedriger = DCTEncode (Verlustbehaftet)"
 
 #: tmainform.lboptionpdfqualityhint.caption
 msgctxt "tmainform.lboptionpdfqualityhint.caption"
@@ -1988,10 +1988,11 @@ msgstr "Umbenennen"
 msgid "Stop check for new chapter"
 msgstr "Nach neuen Kapitel suchen anhalten"
 
-#: tmainform.mifavoritestransferwebsite.caption
+#: tmainform.mifavorites
+website.caption
 msgctxt "tmainform.mifavoritestransferwebsite.caption"
 msgid "Transfer website"
-msgstr ""
+msgstr "Webseite übertragen"
 
 #: tmainform.mifavoritesviewinfos.caption
 msgctxt "TMAINFORM.MIFAVORITESVIEWINFOS.CAPTION"
@@ -2128,7 +2129,7 @@ msgstr "Speichere geladene Kapitel als"
 #: tmainform.seoptionpdfquality.hint
 msgctxt "tmainform.seoptionpdfquality.hint"
 msgid "100 = FlateEncode (lossless), lower = DCTEncode (lossy)"
-msgstr "100 = FlateEncode (Verlustfrei), lower = DCTEncode (Verlustbehaftet)"
+msgstr "100 = FlateEncode (Verlustfrei), Niedriger = DCTEncode (Verlustbehaftet)"
 
 #: tmainform.tbdownloaddeletecompleted.caption
 msgctxt "tmainform.tbdownloaddeletecompleted.caption"
