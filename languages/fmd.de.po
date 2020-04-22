@@ -1988,8 +1988,7 @@ msgstr "Umbenennen"
 msgid "Stop check for new chapter"
 msgstr "Nach neuen Kapitel suchen anhalten"
 
-#: tmainform.mifavorites
-website.caption
+#: tmainform.mifavoriteswebsite.caption
 msgctxt "tmainform.mifavoritestransferwebsite.caption"
 msgid "Transfer website"
 msgstr "Webseite übertragen"
