@@ -439,7 +439,7 @@ msgstr ""
 
 #: frmmain.rs_revision
 msgid "Revision"
-msgstr ""
+msgstr "Revision"
 
 #: frmmain.rs_selected
 #, object-pascal-format
@@ -477,7 +477,7 @@ msgstr "Zwei Jahre"
 
 #: frmmain.rs_version
 msgid "Version"
-msgstr ""
+msgstr "Version"
 
 #: frmmain.rs_webpconvertto
 msgid ""
@@ -556,6 +556,9 @@ msgid ""
 "\n"
 "%d %s"
 msgstr ""
+"konnte neue Version nicht herunterladen %s\n"
+"\n"
+"%d %s"
 
 #: selfupdater.rs_failedextract
 #, object-pascal-format
@@ -588,15 +591,15 @@ msgstr "%s fehlt"
 
 #: simpleexception.sbuttoncontinue
 msgid "&Continue"
-msgstr ""
+msgstr "&Fortsetzen"
 
 #: simpleexception.sbuttondetails
 msgid "&Show Details"
-msgstr ""
+msgstr "&Details anzeigen"
 
 #: simpleexception.sbuttonterminate
 msgid "&Terminate"
-msgstr ""
+msgstr "&Terminieren"
 
 #: simpleexception.scanthandleexception
 msgid "Can't handle exception"
@@ -604,15 +607,15 @@ msgstr ""
 
 #: simpleexception.scheckboxignoreexception
 msgid "Ignore this exception for next time"
-msgstr ""
+msgstr "Diesen Fehler das nächste mal ignorieren"
 
 #: simpleexception.sexceptioncaption
 msgid "An error occured during program execution:"
-msgstr ""
+msgstr "Ein Fehler ist bei der Programmausführung aufgetreten:"
 
 #: simpleexception.sexceptiondialogtitle
 msgid "Exception Info"
-msgstr ""
+msgstr "Fehlerinformationen"
 
 #: taccountmanagerform.btedit.caption
 msgctxt "taccountmanagerform.btedit.caption"
@@ -625,7 +628,7 @@ msgstr "Aktualisieren"
 
 #: taccountmanagerform.caption
 msgid "AccountManagerForm"
-msgstr ""
+msgstr "AccountManagerForm"
 
 #: taccountmanagerform.vtaccountlist.header.columns[1].text
 msgctxt "taccountmanagerform.vtaccountlist.header.columns[1].text"
@@ -653,7 +656,7 @@ msgstr "Ok"
 
 #: taccountsetform.caption
 msgid "Account"
-msgstr ""
+msgstr "Account"
 
 #: taccountsetform.ckshowpassword.caption
 msgid "Show password"
@@ -706,7 +709,7 @@ msgstr "Zu den Favoriten hinzufügen"
 
 #: tformdroptarget.miclose.caption
 msgid "&Close"
-msgstr "&schließen"
+msgstr "&Schließen"
 
 #: tformdroptarget.midownloadall.caption
 msgctxt "tformdroptarget.midownloadall.caption"
@@ -715,7 +718,7 @@ msgstr "Alles laden"
 
 #: tformlogger.btnclearlog.caption
 msgid "Clear"
-msgstr "Sauber"
+msgstr "Säubern"
 
 #: tformlogger.ckstayontop.caption
 msgid "Stay on top"
@@ -732,19 +735,19 @@ msgstr "Kopieren"
 
 #: tfrmdialogyn.btno.caption
 msgid "&No"
-msgstr ""
+msgstr "&Nein"
 
 #: tfrmdialogyn.btyes.caption
 msgid "&Yes"
-msgstr ""
+msgstr "&Ja"
 
 #: tfrmdialogyn.caption
 msgid "Dialog"
-msgstr ""
+msgstr "Dialog"
 
 #: tfrmdialogyn.lbmessage.caption
 msgid "lbMessage"
-msgstr ""
+msgstr "lbMessage"
 
 #: timportfavorites.btcancel.caption
 msgctxt "TIMPORTFAVORITES.BTCANCEL.CAPTION"
@@ -974,7 +977,7 @@ msgstr "Entferne Manga-Name aus dem Kapitel"
 
 #: tmainform.cboptionshowballoonhint.caption
 msgid "Show balloon hint"
-msgstr "Show balloon hint"
+msgstr "Benachrichtigung anzeigen"
 
 #: tmainform.cboptionshowdeletetaskdialog.caption
 msgid "Delete task/favorite"
@@ -998,7 +1001,7 @@ msgstr "Zeige \"Lösche alle abgeschlossenen Aufgaben\" in Download-Symbolleiste
 
 #: tmainform.cboptionshowdownloadtoolbarleft.caption
 msgid "Show left downloads toolbar"
-msgstr ""
+msgstr "Zeige Download-Toolbar"
 
 #: tmainform.cboptionshowfavoritestabonnewmanga.caption
 msgctxt "tmainform.cboptionshowfavoritestabonnewmanga.caption"
@@ -1023,7 +1026,7 @@ msgstr "Remove duplicate local data when updating manga list"
 
 #: tmainform.cboptionuseproxy.caption
 msgid "Use proxy"
-msgstr "Benutze Proxy"
+msgstr "Proxy benutzen"
 
 #: tmainform.cbpngcompressionlevel.text
 msgctxt "tmainform.cbpngcompressionlevel.text"
@@ -1450,7 +1453,7 @@ msgstr "Benutzerdefinierte Umbenennung"
 
 #: tmainform.edoptionhost.texthint
 msgid "Proxy host/IP"
-msgstr "Proxy host/IP"
+msgstr "Proxy Host/IP"
 
 #: tmainform.edoptionmangacustomrename.texthint
 msgctxt "tmainform.edoptionmangacustomrename.texthint"
@@ -1459,11 +1462,11 @@ msgstr "Benutzerdefinierte Umbenennung"
 
 #: tmainform.edoptionpass.texthint
 msgid "Proxy password"
-msgstr "Proxy passwort"
+msgstr "Proxy-Passwort"
 
 #: tmainform.edoptionuser.texthint
 msgid "Proxy username"
-msgstr "Proxy Benutzername"
+msgstr "Proxy-Benutzername"
 
 #: tmainform.edsaveto.texthint
 msgctxt "TMAINFORM.EDSAVETO.TEXTHINT"
@@ -1477,7 +1480,7 @@ msgstr "URL hier einfügen"
 #: tmainform.edwebsitessearch.texthint
 msgctxt "tmainform.edwebsitessearch.texthint"
 msgid "Search website..."
-msgstr "Durchsuche webseite..."
+msgstr "Durchsuche Webseite..."
 
 #: tmainform.gbdialogs.caption
 msgid "Show dialog confirmation for"
@@ -1485,7 +1488,7 @@ msgstr "Zeige Dialogbestätigungen für"
 
 #: tmainform.gbdroptarget.caption
 msgid "Drop Box"
-msgstr "Drop Box"
+msgstr "Ablage"
 
 #: tmainform.gbimageconversion.caption
 msgid "Image Conversion"
@@ -1502,7 +1505,7 @@ msgstr "Favoriten"
 
 #: tmainform.gboptionproxy.caption
 msgid "Proxy config"
-msgstr "Proxy Einstellung"
+msgstr "Proxyeinstellungen"
 
 #: tmainform.gboptionrenaming.caption
 msgid "Renaming"
@@ -1555,7 +1558,7 @@ msgstr ""
 "Eigene Genres:\n"
 "- Separiere mehrere Genres mit ','.\n"
 "- Schließe ein Genre aus mit '!' oder  '-' am Anfang eines Genre.\n"
-"- Beispiel: Abenteuer, !Ecchi, Komödie."
+"- Beispiel: Abenteuer,!Ecchi,Komödie."
 
 #: tmainform.lbfilterstatus.caption
 msgctxt "TMAINFORM.LBFILTERSTATUS.CAPTION"
@@ -1733,8 +1736,8 @@ msgstr "PDF Qualitätsstufe"
 
 #: tmainform.lboptionpdfquality.hint
 msgctxt "TMAINFORM.LBOPTIONPDFQUALITY.HINT"
-msgid "100 = FlateEncode (lossless), lower = DCTEncode (lossy)"
-msgstr "100 = FlateEncode (Verlustfrei), Niedriger = DCTEncode (verlustbehaftet)"
+msgid "100 = FlateEncode (lossless), = DCTEncode (lossy)"
+msgstr "100 = FlateEncode (Verlustfrei), Niedriger = DCTEncode (Verlustbehaftet)"
 
 #: tmainform.lboptionpdfqualityhint.caption
 msgctxt "tmainform.lboptionpdfqualityhint.caption"
@@ -1964,7 +1967,7 @@ msgstr "Alles laden"
 #: tmainform.mifavoritesenable.caption
 msgctxt "tmainform.mifavoritesenable.caption"
 msgid "Enable"
-msgstr "Aktiviere"
+msgstr "Aktivieren"
 
 #: tmainform.mifavoritesopenfolder.caption
 msgctxt "TMAINFORM.MIFAVORITESOPENFOLDER.CAPTION"
@@ -1985,10 +1988,10 @@ msgstr "Umbenennen"
 msgid "Stop check for new chapter"
 msgstr "Nach neuen Kapitel suchen anhalten"
 
-#: tmainform.mifavoritestransferwebsite.caption
+#: tmainform.mifavoriteswebsite.caption
 msgctxt "tmainform.mifavoritestransferwebsite.caption"
 msgid "Transfer website"
-msgstr ""
+msgstr "Webseite übertragen"
 
 #: tmainform.mifavoritesviewinfos.caption
 msgctxt "TMAINFORM.MIFAVORITESVIEWINFOS.CAPTION"
@@ -2125,7 +2128,7 @@ msgstr "Speichere geladene Kapitel als"
 #: tmainform.seoptionpdfquality.hint
 msgctxt "tmainform.seoptionpdfquality.hint"
 msgid "100 = FlateEncode (lossless), lower = DCTEncode (lossy)"
-msgstr "100 = FlateEncode (lossless), lower = DCTEncode (lossy)"
+msgstr "100 = FlateEncode (Verlustfrei), Niedriger = DCTEncode (Verlustbehaftet)"
 
 #: tmainform.tbdownloaddeletecompleted.caption
 msgctxt "tmainform.tbdownloaddeletecompleted.caption"
@@ -2345,7 +2348,7 @@ msgstr "&Download"
 #: tnewchapter.btqueue.caption
 msgctxt "TNEWCHAPTER.BTQUEUE.CAPTION"
 msgid "&Add to queue"
-msgstr "&zur Warteschlage hinzufügen"
+msgstr "&Zur Warteschlage hinzufügen"
 
 #: tnewchapter.caption
 msgid "New Chapter Notification"
@@ -2392,7 +2395,7 @@ msgstr "OK"
 
 #: ttransferfavoritesform.caption
 msgid "Transfer Favorites"
-msgstr ""
+msgstr "Favoriten übertragen"
 
 #: ttransferfavoritesform.ckcleardownloadedchapters.caption
 msgid "Clear downloaded chapter list and reload from server"
@@ -2401,7 +2404,7 @@ msgstr "Kapitelliste löschen und erneut vom Server herunterladen"
 #: ttransferfavoritesform.lbtransferto.caption
 msgctxt "ttransferfavoritesform.lbtransferto.caption"
 msgid "Transfer to"
-msgstr ""
+msgstr "Übertragen nach"
 
 #: ttransferfavoritesform.rball.caption
 msgctxt "ttransferfavoritesform.rball.caption"
@@ -2462,7 +2465,7 @@ msgstr "Einstellungsname"
 
 #: udownloadsmanager.rs_compressing
 msgid "Compressing..."
-msgstr ""
+msgstr "Kompressiere..."
 
 #: udownloadsmanager.rs_disabled
 #, fuzzy
@@ -2472,7 +2475,7 @@ msgstr "Deaktiviert"
 
 #: udownloadsmanager.rs_downloading
 msgid "Downloading"
-msgstr ""
+msgstr "Lade herunter"
 
 #: udownloadsmanager.rs_failed
 #, fuzzy
@@ -2482,34 +2485,34 @@ msgstr "Gescheitert"
 
 #: udownloadsmanager.rs_failedtocreatedir
 msgid "Failed to create directory!"
-msgstr ""
+msgstr "Verzeichnis konnte nicht erstellt werden!"
 
 #: udownloadsmanager.rs_failedtryresumetask
 msgid "Failed, try resuming this task!"
-msgstr ""
+msgstr "Fehlgeschlagen, versuch diese Aufagabe zu wiederholen!"
 
 #: udownloadsmanager.rs_finish
 msgid "Completed"
-msgstr ""
+msgstr "Fertiggestellt"
 
 #: udownloadsmanager.rs_preparing
 msgctxt "udownloadsmanager.rs_preparing"
 msgid "Preparing"
-msgstr ""
+msgstr "Bereite vor"
 
 #: udownloadsmanager.rs_stopped
 msgid "Stopped"
-msgstr ""
+msgstr "Angehalten"
 
 #: udownloadsmanager.rs_waiting
 msgid "Waiting..."
-msgstr ""
+msgstr "Warten..."
 
 #: ufavoritesmanager.rs_btnaddtoqueue
 #, fuzzy
 msgctxt "ufavoritesmanager.rs_btnaddtoqueue"
 msgid "&Add to queue"
-msgstr "&zur Warteschlage hinzufügen"
+msgstr "&Zur Warteschlage hinzufügen"
 
 #: ufavoritesmanager.rs_btncancel
 #, fuzzy
@@ -2527,11 +2530,11 @@ msgstr "Auf neues Kapitel überprüfen"
 #, fuzzy
 msgctxt "ufavoritesmanager.rs_btndownload"
 msgid "&Download"
-msgstr "&herunterladen"
+msgstr "&Herunterladen"
 
 #: ufavoritesmanager.rs_btnremove
 msgid "&Remove"
-msgstr "6Entfernen"
+msgstr "&Entfernen"
 
 #: ufavoritesmanager.rs_dlgcompletedmangacaption
 #, object-pascal-format
