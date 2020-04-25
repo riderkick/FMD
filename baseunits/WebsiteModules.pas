@@ -301,9 +301,6 @@ function CleanOptionName(const S: String): String;
 
 implementation
 
-uses
-{$I ModuleList.inc}
-
 var
   CS_Connection: TRTLCriticalSection;
 
