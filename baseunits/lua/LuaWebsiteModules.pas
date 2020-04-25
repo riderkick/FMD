@@ -45,7 +45,7 @@ type
     procedure AddOptionComboBox(const AName, ACaption, AItems: String; const ADefault: Integer);
 
     procedure LuaPushMe(L: Plua_State);
-    procedure LuaDoMe(L: Plua_State);
+    procedure LuaDoMe(L: Plua_State); inline;
   end;
 
   TLuaWebsiteModules = specialize TFPGList<TLuaWebsiteModule>;
@@ -130,7 +130,6 @@ procedure luaWebsiteModuleAddMetaTable(L: Plua_State; Obj: Pointer;
 
 var
   LuaWebsiteModulesManager: TLuaWebsiteModulesManager;
-  AlwaysLoadLuaFromFile: Boolean = {$ifdef DEVBUILD}True{$else}False{$endif};
 
 implementation
 
@@ -781,17 +780,8 @@ begin
 end;
 
 procedure TLuaWebsiteModule.LuaDoMe(L: Plua_State);
-var
-  r: Integer;
 begin
-  if AlwaysLoadLuaFromFile then
-    r := luaL_loadfile(L, PChar(Container.FileName))
-  else
-    r := LuaLoadFromStream(L, Container.ByteCode, PChar(Container.FileName));
-  if r = 0 then
-    r := lua_pcall(L, 0, 0, 0);
-  if r <> 0 then
-    raise Exception.Create(LuaGetReturnString(r));
+  LuaExecute(L, Container.ByteCode, Container.FileName);
 end;
 
 // -----------------------------------------------------------------------------
@@ -931,8 +921,6 @@ begin
     luaClassAddBooleanProperty(L, MetaTable, 'FavoriteAvailable',
       @Module.FavoriteAvailable);
     luaClassAddBooleanProperty(L, MetaTable, 'DynamicPageLink', @Module.DynamicPageLink);
-    luaClassAddBooleanProperty(L, MetaTable, 'CloudflareEnabled',
-      @Module.CloudflareEnabled);
     luaClassAddStringProperty(L, MetaTable, 'OnBeforeUpdateList', @OnBeforeUpdateList);
     luaClassAddStringProperty(L, MetaTable, 'OnAfterUpdateList', @OnAfterUpdateList);
     luaClassAddStringProperty(L, MetaTable, 'OnGetDirectoryPageNumber',

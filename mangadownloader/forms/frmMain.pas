@@ -11,6 +11,7 @@ unit frmMain;
 interface
 
 uses
+  FMDOptions,
   {$ifdef windows}
   ActiveX, windows,
   {$else}
@@ -24,7 +25,7 @@ uses
   uGetMangaInfosThread, frmDropTarget, frmAccountManager, frmWebsiteOptionCustom,
   frmCustomColor, frmLogger, frmTransferFavorites,
   frmLuaModulesUpdater, uBaseForms, CheckUpdate, DBDataProcess,
-  SimpleTranslator, FMDOptions, httpsendthread, SimpleException;
+  SimpleTranslator, httpsendthread, SimpleException;
 
 type
 
@@ -967,7 +968,7 @@ uses
   frmImportFavorites, frmShutdownCounter, frmSelectDirectory,
   frmWebsiteSettings, WebsiteModules, FMDVars, RegExpr, sqlite3dyn, Clipbrd,
   ssl_openssl_lib, LazFileUtils, LazUTF8, webp, DBUpdater, pcre2, pcre2lib,
-  StatusBarDownload, LuaWebsiteModules, uBackupSettings;
+  StatusBarDownload, LuaWebsiteModules, LuaBase, uBackupSettings;
 
 var
   // thread for open db
@@ -1312,7 +1313,7 @@ begin
   if REVISION_NUMBER <> '' then
     AddToAboutStatus(RS_Revision, REVISION_NUMBER+' ('+REVISION_SHA+')', pnAboutVersion);
 
-  if LuaWebsiteModules.AlwaysLoadLuaFromFile then
+  if AlwaysLoadLuaFromFile then
     Caption := Caption + ' --lua-dofile';
 end;
 
