@@ -25,7 +25,7 @@ implementation
 uses
   LuaStrings, LuaBaseUnit, LuaRegExpr, LuaPCRE2, LuaSynaUtil, LuaSynaCode,
   MultiLog, LuaCrypto, LuaImagePuzzle, LuaDuktape, LuaCriticalSection,
-  LuaLogger, LuaUtils, LuaMemoryStream;
+  LuaLogger, LuaUtils, LuaMemoryStream, LuaFMD;
 
 function luabase_print(L: Plua_State): Integer; cdecl;
 var
@@ -52,6 +52,9 @@ begin
   lua_register(L, 'print', @luabase_print);
   lua_register(L, 'Sleep', @luabase_sleep);
 
+  luaPushStringGlobal(L, 'PathDelim', PathDelim);
+
+  luaFMDRegister(L);
   luaBaseUnitRegister(L);
   luaRegExprRegister(L);
   luaPCRE2Register(L);

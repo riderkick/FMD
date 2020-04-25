@@ -23,7 +23,7 @@ uses
   uFavoritesManager, uUpdateThread, uSilentThread, uMisc,
   uGetMangaInfosThread, frmDropTarget, frmAccountManager, frmWebsiteOptionCustom,
   frmCustomColor, frmLogger, frmTransferFavorites,
-  frmLuaModulesUpdater, uBaseForms, CheckUpdate, DBDataProcess, MangaFoxWatermark,
+  frmLuaModulesUpdater, uBaseForms, CheckUpdate, DBDataProcess,
   SimpleTranslator, FMDOptions, httpsendthread, SimpleException;
 
 type
@@ -1273,9 +1273,6 @@ begin
 
   // logger
   FormLogger := TFormLogger.Create(Self);
-
-  // load mangafox template
-  MangaFoxWatermark.SetTemplateDirectory(MANGAFOXTEMPLATE_FOLDER);
 
   // hint
   ShowHint := True;

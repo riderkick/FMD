@@ -7,6 +7,7 @@ interface
 uses
   Classes, SysUtils, lua53;
 
+function luaNewTable(L: Plua_State): Integer;
 procedure luaAddCFunctionToTable(L: Plua_State; Table: Integer;
   Name: PAnsiChar; Func: lua_CFunction);
 procedure luaAddCClosureToTable(L: Plua_State; Table, Value: Integer;
@@ -41,6 +42,12 @@ procedure luaL_openlib(L: Plua_State; n: PansiChar; lr: PluaL_Reg;
 procedure luaL_register(L: Plua_State; n: PAnsiChar; lr: PluaL_Reg); inline;
 
 implementation
+
+function luaNewTable(L: Plua_State): Integer;
+begin
+  lua_newtable(L);
+  Result := lua_gettop(L);
+end;
 
 procedure luaAddCFunctionToTable(L: Plua_State; Table: Integer;
   Name: PAnsiChar; Func: lua_CFunction);

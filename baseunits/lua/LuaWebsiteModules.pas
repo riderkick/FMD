@@ -137,7 +137,8 @@ implementation
 uses
   FMDOptions, FileUtil, MultiLog, LuaClass, LuaBase, LuaMangaInfo, LuaHTTPSend,
   LuaXQuery, LuaUtils, LuaDownloadTask, LuaUpdateListManager, LuaStrings,
-  LuaCriticalSection, uData, uDownloadsManager, xquery, httpsendthread, FMDVars;
+  LuaCriticalSection, LuaWebsiteModulesExtras, uData, uDownloadsManager, xquery,
+  httpsendthread, FMDVars;
 
 threadvar
   TempModules:TLuaWebsiteModules;
@@ -441,6 +442,7 @@ begin
     try
       LuaPushMe(l);
       luaPushStringGlobal(l, 'filename', AFilename);
+      luaWebsiteModulesExtrasRegisterAfterImageSaved(l);
 
       LuaDoMe(l);
       LuaCallFunction(l, OnAfterImageSaved);
@@ -507,6 +509,7 @@ begin
         i := lua_pcall(l, 0, 0, 0);
         if i <> 0 then
           raise Exception.Create(LuaGetReturnString(i));
+        luaWebsiteModulesExtrasRegisterInit(l);
         LuaCallFunction(l, 'Init');
       end;
     except

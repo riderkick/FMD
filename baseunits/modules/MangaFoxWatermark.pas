@@ -38,10 +38,10 @@ uses
   Classes, SysUtils, FileUtil, LazFileUtils, LazUTF8Classes, Math, FPimage, FPReadJPEG, FPWriteJPEG,
   FPWritePNG, ImgInfos;
 
-procedure SetTemplateDirectory(const Directory: String);
-function LoadTemplate(const Directory: String = ''): Integer;
+procedure SetTemplateDirectory(const ADirectory: String);
+function LoadTemplate(const ADirectory: String = ''): Integer;
 procedure ClearTemplate;
-function RemoveWatermark(const FileName: String; const SaveAsPNG: Boolean = False): Boolean; inline;
+function RemoveWatermark(const AFileName: String; const ASaveAsPNG: Boolean = False): Boolean; inline;
 
 implementation
 
@@ -84,18 +84,18 @@ type
 var
   WatermarkRemover: TWatermarkRemover;
 
-procedure SetTemplateDirectory(const Directory: String);
+procedure SetTemplateDirectory(const ADirectory: String);
 begin
   if WatermarkRemover = nil then
     WatermarkRemover := TWatermarkRemover.Create;
-  WatermarkRemover.TemplateDirectory := Directory;
+  WatermarkRemover.TemplateDirectory := ADirectory;
 end;
 
-function LoadTemplate(const Directory: String): Integer;
+function LoadTemplate(const ADirectory: String): Integer;
 begin
   if WatermarkRemover = nil then
     WatermarkRemover := TWatermarkRemover.Create;
-  Result := WatermarkRemover.LoadTemplate(Directory);
+  Result := WatermarkRemover.LoadTemplate(ADirectory);
 end;
 
 procedure ClearTemplate;
@@ -107,11 +107,11 @@ begin
   end;
 end;
 
-function RemoveWatermark(const FileName: String; const SaveAsPNG: Boolean): Boolean;
+function RemoveWatermark(const AFileName: String; const ASaveAsPNG: Boolean): Boolean;
 begin
   Result := False;
   if Assigned(WatermarkRemover) then
-    Result := WatermarkRemover.RemoveWatermark(FileName, SaveAsPNG);
+    Result := WatermarkRemover.RemoveWatermark(AFileName, ASaveAsPNG);
 end;
 
 { TWatermarkTemplates }
