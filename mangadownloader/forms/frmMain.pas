@@ -23,7 +23,7 @@ uses
   uFavoritesManager, uUpdateThread, uSilentThread, uMisc,
   uGetMangaInfosThread, frmDropTarget, frmAccountManager, frmWebsiteOptionCustom,
   frmCustomColor, frmLogger, frmTransferFavorites,
-  frmLuaModulesUpdater, FMDForms, CheckUpdate, DBDataProcess, MangaFoxWatermark,
+  frmLuaModulesUpdater, uBaseForms, CheckUpdate, DBDataProcess, MangaFoxWatermark,
   SimpleTranslator, FMDOptions, httpsendthread, SimpleException;
 
 type

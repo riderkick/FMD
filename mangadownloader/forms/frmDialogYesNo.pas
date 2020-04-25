@@ -5,13 +5,13 @@ unit frmDialogYesNo;
 interface
 
 uses
-  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, FMDForms;
+  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, uBaseForms;
 
 type
 
   { TfrmDialogYN }
 
-  TfrmDialogYN = class(TFMDForm)
+  TfrmDialogYN = class(TBaseForm)
     btYes: TButton;
     btNo: TButton;
     lbMessage: TLabel;

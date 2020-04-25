@@ -1,4 +1,4 @@
-unit FMDForms;
+unit uBaseForms;
 
 {$mode objfpc}{$H+}
 
@@ -9,17 +9,17 @@ uses
 
 type
 
-  { TFMDForm }
+  { TBaseForm }
 
-  TFMDForm = class(TForm)
+  TBaseForm = class(TForm)
   public
     constructor Create(TheOwner: TComponent); override;
     destructor Destroy; override;
   end;
 
-  { TFormManager }
+  { TRegisterBaseForm }
 
-  TFormManager = class
+  TRegisterBaseForm = class
   private
     FList: TList;
     FGuardian: TCriticalSection;
@@ -32,33 +32,33 @@ type
   end;
 
 var
-  FormManager: TFormManager;
+  FormManager: TRegisterBaseForm;
 
 implementation
 
-{ TFMDForm }
+{ TBaseForm }
 
-constructor TFMDForm.Create(TheOwner: TComponent);
+constructor TBaseForm.Create(TheOwner: TComponent);
 begin
   inherited Create(TheOwner);
   FormManager.Add(Self);
 end;
 
-destructor TFMDForm.Destroy;
+destructor TBaseForm.Destroy;
 begin
   FormManager.Remove(Self);
   inherited Destroy;
 end;
 
-{ TFormManager }
+{ TRegisterBaseForm }
 
-constructor TFormManager.Create;
+constructor TRegisterBaseForm.Create;
 begin
   FGuardian := TCriticalSection.Create;
   FList := TList.Create;
 end;
 
-destructor TFormManager.Destroy;
+destructor TRegisterBaseForm.Destroy;
 begin
   Clear;
   FList.Free;
@@ -66,7 +66,7 @@ begin
   inherited Destroy;
 end;
 
-procedure TFormManager.Add(AForm: TForm);
+procedure TRegisterBaseForm.Add(AForm: TForm);
 begin
   FGuardian.Enter;
   try
@@ -76,7 +76,7 @@ begin
   end;
 end;
 
-procedure TFormManager.Remove(AForm: TForm);
+procedure TRegisterBaseForm.Remove(AForm: TForm);
 begin
   FGuardian.Enter;
   try
@@ -86,7 +86,7 @@ begin
   end;
 end;
 
-procedure TFormManager.Clear;
+procedure TRegisterBaseForm.Clear;
 var
   f: Pointer;
 begin
@@ -98,7 +98,7 @@ begin
 end;
 
 initialization
-  FormManager := TFormManager.Create;
+  FormManager := TRegisterBaseForm.Create;
 
 finalization
   FormManager.Free;

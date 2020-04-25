@@ -198,7 +198,7 @@ object MainForm: TMainForm
                 end
                 object tbSeparator1: TToolButton
                   Left = 153
-                  Height = 25
+                  Height = 5
                   Top = 0
                   Style = tbsDivider
                   Visible = False
