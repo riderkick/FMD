@@ -31,7 +31,6 @@ SET oname=fmd_%fverb%_%~1.7z
 RMDIR /S /Q "%odir%"
 MKDIR "%odir%"
 call :copycdir config
-call :copycdir extras
 call :copycdir images
 call :copycdir licenses
 XCOPY /C /F /Y "%cdir%\languages\*.po" "%odir%\languages\"
