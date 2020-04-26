@@ -6,13 +6,13 @@ interface
 
 uses
   Forms, Controls, StdCtrls,
-  Buttons, DefaultTranslator, ExtCtrls, uBaseForms;
+  Buttons, DefaultTranslator, ExtCtrls;
 
 type
 
   { TUpdateDialogForm }
 
-  TUpdateDialogForm = class(TBaseForm)
+  TUpdateDialogForm = class(TForm)
     btnLater: TBitBtn;
     btnUpdate: TBitBtn;
     lbMessage: TLabel;

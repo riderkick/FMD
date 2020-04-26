@@ -3,7 +3,6 @@ program md;
 {$mode objfpc}{$H+}
 
 uses
-  FMDOptions,
  {$IFDEF UNIX} {$IFDEF UseCThreads}
   cthreads,
  {$ENDIF} {$ENDIF}
@@ -11,10 +10,10 @@ uses
   windows,
  {$endif}
   Interfaces, // this includes the LCL widgetset
-  Forms, LazFileUtils, IniFiles, simpleipc, sqlite3dyn, uBaseUnit,
+  Forms, LazFileUtils, IniFiles, simpleipc, sqlite3dyn, FMDOptions, uBaseUnit,
   FMDVars, webp, CheckUpdate, DBUpdater, SelfUpdater, uDownloadsManager,
-  LuaWebsiteModules, LuaBase, SimpleException, Classes, sysutils, frmMain,
-  MultiLog, FileChannel, ssl_openssl_lib, blcksock, ssl_openssl;
+  LuaWebsiteModules, SimpleException, Classes, sysutils, frmMain, MultiLog,
+  FileChannel, ssl_openssl_lib, blcksock, ssl_openssl;
 
 var
   CheckInstance: Boolean = True;
@@ -71,7 +70,7 @@ begin
 
   // always execute lua modules from file, for dev purpose
   if AppParams.IndexOf('--lua-dofile')<>-1 then
-    AlwaysLoadLuaFromFile:=True;
+    LuaWebsiteModules.AlwaysLoadLuaFromFile:=True;
 
   with TIniFile.Create(CONFIG_FILE) do
     try

@@ -11,7 +11,7 @@ interface
 
 uses
   Classes, SysUtils, fgl, uData, uDownloadsManager, FMDOptions, httpsendthread,
-  WebsiteModulesSettings, Process, Multilog, LazLogger, WebsiteBypass, RegExpr, fpjson, jsonparser,
+  WebsiteModulesSettings, Process, Multilog, LazLogger, Cloudflare, RegExpr, fpjson, jsonparser,
   jsonscanner, fpjsonrtti, uBaseUnit, httpcookiemanager, syncobjs;
 
 const
@@ -99,11 +99,13 @@ type
     FID: Integer;
     FSettings: TWebsiteModuleSettings;
     FTotalDirectory: Integer;
-    FWebsiteBypass: TWebsiteBypass;
+    FCloudflareCF: TCFProps;
+    FCloudflareEnabled: Boolean;
     FCookieManager: THTTPCookieManager;
     procedure SetAccountSupport(AValue: Boolean);
-    procedure CheckWebsiteBypass(const AHTTP: THTTPSendThread);
-    function WebsiteBypassHTTPRequest(const AHTTP: THTTPSendThread; const Method, URL: String; const Response: TObject = nil): Boolean;
+    procedure SetCloudflareEnabled(AValue: Boolean);
+    procedure CheckCloudflareEnabled(const AHTTP: THTTPSendThread);
+    function CloudflareHTTPRequest(const AHTTP: THTTPSendThread; const Method, URL: String; const Response: TObject = nil): Boolean;
     procedure SetTotalDirectory(AValue: Integer);
     procedure AddOption(const AOptionType: TWebsiteOptionType;
       const ABindValue: Pointer; const AName: String; const ACaption: PString; const AItems: PString = nil);
@@ -152,6 +154,7 @@ type
       const ACaption: PString);
     procedure AddOptionComboBox(const ABindValue: PInteger; const AName: String;
       const ACaption, AItems: PString);
+    property CloudflareEnabled: Boolean read FCloudflareEnabled write SetCloudflareEnabled;
     procedure PrepareHTTP(const AHTTP: THTTPSendThread);
 
     procedure IncActiveTaskCount; inline;
@@ -298,6 +301,9 @@ function CleanOptionName(const S: String): String;
 
 implementation
 
+uses
+{$I ModuleList.inc}
+
 var
   CS_Connection: TRTLCriticalSection;
 
@@ -336,6 +342,19 @@ end;
 
 { TModuleContainer }
 
+procedure TModuleContainer.SetCloudflareEnabled(AValue: Boolean);
+begin
+  if FCloudflareEnabled = AValue then Exit;
+  FCloudflareEnabled := AValue;
+  if FCloudflareEnabled then
+    FCloudflareCF := TCFProps.Create(self)
+  else
+  begin
+    FCloudflareCF.Free;
+    FCloudflareCF := nil;
+  end;
+end;
+
 procedure TModuleContainer.SetAccountSupport(AValue: Boolean);
 begin
   if FAccountSupport = AValue then Exit;
@@ -350,16 +369,17 @@ begin
     FAccount.Free;
 end;
 
-procedure TModuleContainer.CheckWebsiteBypass(const AHTTP: THTTPSendThread);
+procedure TModuleContainer.CheckCloudflareEnabled(const AHTTP: THTTPSendThread);
 begin
-  if AHTTP.OnHTTPRequest <> @WebsiteBypassHTTPRequest then
-    AHTTP.OnHTTPRequest := @WebsiteBypassHTTPRequest;
+  if FCloudflareEnabled then
+    if AHTTP.OnHTTPRequest <> @CloudflareHTTPRequest then
+      AHTTP.OnHTTPRequest := @CloudflareHTTPRequest;
 end;
 
-function TModuleContainer.WebsiteBypassHTTPRequest(const AHTTP: THTTPSendThread;
+function TModuleContainer.CloudflareHTTPRequest(const AHTTP: THTTPSendThread;
   const Method, URL: String; const Response: TObject): Boolean;
 begin
-  Result := WebsiteBypassRequest(AHTTP, Method, URL, Response, FWebsiteBypass);
+  Result := Cloudflare.CFRequest(AHTTP, Method, URL, Response, FCloudflareCF);
 end;
 
 procedure TModuleContainer.SetTotalDirectory(AValue: Integer);
@@ -388,7 +408,7 @@ begin
   DynamicPageLink := False;
   TotalDirectory := 1;
   CurrentDirectoryIndex := 0;
-  FWebsiteBypass := TWebsiteBypass.Create(self);
+  CloudflareEnabled := True;
   FCookieManager := THTTPCookieManager.Create;
 end;
 
@@ -396,8 +416,8 @@ destructor TModuleContainer.Destroy;
 begin
   SetLength(TotalDirectoryPage, 0);
   SetLength(OptionList,0);
-  if Assigned(FWebsiteBypass) then
-    FWebsiteBypass.Free;
+  if Assigned(FCloudflareCF) then
+    FCloudflareCF.Free;
   if Assigned(FAccount) then
     FAccount.Free;
   FSettings.Free;
@@ -435,8 +455,8 @@ var
   s: String;
 begin
   AHTTP.CookieManager := FCookieManager;
-  CheckWebsiteBypass(AHTTP);
-
+  //todo: replace it with website challenges, there is more than cloudflare
+  CheckCloudflareEnabled(AHTTP);
   if not Settings.Enabled then exit;
   with Settings.HTTP do
   begin

@@ -7,7 +7,7 @@ interface
 uses
   frmMain, uDownloadsManager, uFavoritesManager, uUpdateThread, DBDataProcess,
   uSilentThread, uBaseUnit, uGetMangaInfosThread, CheckUpdate,
-  DBUpdater, SelfUpdater, Classes, FileChannel, simpleipc;
+  FMDOptions, DBUpdater, SelfUpdater, Classes, FileChannel, simpleipc;
 
 var
   FormMain: TMainForm;
@@ -20,8 +20,10 @@ var
 
   //Instance
   FMDInstance: TSimpleIPCServer;
+  AppParams:TStringList;
 
   // update fmd through main thread
+  DoAfterFMD: TFMDDo;
   IsDlgCounter: Boolean = False;
 
   // file logger
@@ -56,6 +58,13 @@ var
   SelfUpdaterThread: TSelfUpdaterThread;
 
 implementation
+
+initialization
+  AppParams:=TStringList.Create;
+  AppParams.NameValueSeparator:='=';
+
+finalization
+  AppParams.Free;
 
 end.
 

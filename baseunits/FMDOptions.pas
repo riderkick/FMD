@@ -103,9 +103,6 @@ var
   LUA_REPO_WORK_FILE,
   BACKUP_FOLDER: String;
 
-  // program params
-  AppParams: TStringList;
-
   // ini files
   revisionfile,
   updatesfile: TIniFile;
@@ -126,7 +123,6 @@ var
   AvailableWebsites: TStringList;
 
   // general
-  DoAfterFMD: TFMDDo;
   OptionLetFMDDo: TFMDDo = DO_NOTHING;
   OptionDeleteCompletedTasksOnClose: Boolean = False;
   OptionSortDownloadsWhenAddingNewDownloadTasks: Boolean = False;
@@ -226,7 +222,7 @@ procedure DoRestartFMD;
 
 implementation
 
-uses process, UTF8Process;
+uses FMDVars, process, UTF8Process;
 
 { TIniFileRun }
 
@@ -358,7 +354,7 @@ end;
 procedure RestartFMD;
 begin
   OptionRestartFMD := True;
-  Application.MainForm.Close;
+  FormMain.Close;
 end;
 
 procedure DoRestartFMD;
@@ -384,8 +380,6 @@ end;
 
 procedure doInitialization;
 begin
-  AppParams:=TStringList.Create;
-  AppParams.NameValueSeparator:='=';
   GetProgramVersion(FMD_VERSION_NUMBER);
   FMD_VERSION_STRING := ProgramversionToStr(FMD_VERSION_NUMBER);
   AvailableWebsites := TStringList.Create;
@@ -398,7 +392,6 @@ procedure doFinalization;
 begin
   FreeIniFiles;
   AvailableWebsites.Free;
-  AppParams.Free;
 end;
 
 initialization
