@@ -144,6 +144,27 @@ function getpagenumber()
   return result
 end
 
+function getpagenumber_jb()
+  local result = false
+  if getWithCookie(MaybeFillHost(module.rooturl, url)) then
+    x = TXQuery.create(http.document)
+    task.pagenumber = x.xpath('//div[@class="topbar_right"]//ul[@class="dropdown"]/li').count
+    s = x.xpathstring('//script[contains(.,"[\'fromCharCode\',\'")]')
+    if s ~= '' then
+      s = GetBetween('[\'fromCharCode\',\'', '\'];', s)
+      s = ExecJS("function decrypt(encrypted) {return encrypted.replace(/[a-zA-Z]/g,function (a) {return String.fromCharCode((a <= 'Z' ? 90 : 122) >= (a = a.charCodeAt(0) + 13) ? a : a - 26);});}; decrypt('" .. s .. "');")
+      s = DecodeBase64(s)
+      x.parsehtml(s)
+      v = x.xpath('json(*)()("url")')
+      for i = 1, v.count do
+        task.pagelinks.add(v.get(i).ToString)
+      end
+    end
+    result = true
+  end
+  return result
+end
+
 function getimageurl()
   local result = false
   local s = url
@@ -209,6 +230,7 @@ function AddWebsiteModule(name, url, category)
   m.OnGetDirectoryPageNumber = 'getdirectorypagenumber'
   m.OnGetNameAndLink = 'getnameandlink'
   if name == 'TwistedHelScans' then m.ongetinfo = 'getinfo_ths'; end
+  if name == 'Jaiminisbox' then m.OnGetPageNumber = 'getpagenumber_jb'; end
   return m
 end
 
