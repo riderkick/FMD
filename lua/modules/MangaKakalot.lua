@@ -67,7 +67,11 @@ function getpagenumber()
       if not http.get(u) then return false; end
     end
     local x=TXQuery.Create(http.Document)
-    x.xpathstringall('//div[@id="vungdoc"]/img/@src', task.pagelinks)
+    for _, v in ipairs(x.XPathI('//div[@id="vungdoc"]/img')) do
+      if string.find(v.GetAttribute('src'), "log") == nil then
+      task.pagelinks.add(v.GetAttribute('src'))
+      end
+    end
     if task.pagelinks.count == 0 then
       x.xpathstringall('//div[@class="vung_doc"]/img/@src', task.pagelinks)
     end
