@@ -34,13 +34,19 @@ function GetInfo()
   mangainfo.Genres    = x.XPathStringAll('//span[@class="mlabel" and contains(., "Genre")]/following-sibling::a')
   mangainfo.Summary   = x.XPathString('//span[@class="mlabel" and contains(., "Description")]/following-sibling::div[1]')
 
+
+  -- vm.ChapterURLEncode=function(e){Index="";var t=e.substring(0,1);1!=t&&(Index="-index-"+t);var n=parseInt(e.slice(1,-1)),m="",a=e[e.length-1];return 0!=a&&(m="."+a),"-chapter-"+n+m+Index+vm.PageOne+".html"}
   local chapter_uri = x.XPathString('//div[@ng-if]/a/@href'):gsub('%{.*$', '')
   local chapters = x.XPathString('//script[contains(.,"vm.Chapters =")]'):match('(%[.-%])')
   x.ParseHTML(chapters)
-  for i, c in ipairs(x.XPathI('json(*)().ChapterName')) do
-	mangainfo.ChapterNames.Add('Chapter ' .. tostring(i) .. ' ' .. c.ToString)
-	mangainfo.ChapterLinks.Add(chapter_uri .. '-chapter-' .. tostring(i) .. '.html')
+  for i, c in ipairs(x.XPathI('json(*)().Chapter')) do
+    local chapter_id = tostring(tonumber(string.sub(c.toString, 2, 5)))
+    if c.toString:sub(6, 6) ~= '0' then chapter_id = chapter_id .. '.' .. c.toString:sub(6, 6) end
+	mangainfo.ChapterNames.Add('Chapter ' .. chapter_id)
+	mangainfo.ChapterLinks.Add(chapter_uri .. '-chapter-' .. chapter_id .. '.html')
   end
+  
+  InvertStrings(mangainfo.ChapterLinks, mangainfo.ChapterNames)
   
   --[[Debug]] LuaDebug.PrintMangaInfo()
   --[[Debug]] LuaDebug.WriteStatistics('Chapters', mangainfo.ChapterLinks.Count .. '  (' .. mangainfo.Title .. ')')
