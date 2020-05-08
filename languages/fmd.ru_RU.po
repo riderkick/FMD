@@ -1,33 +1,32 @@
 msgid ""
 msgstr ""
-"Content-Type: text/plain; charset=UTF-8\n"
-"Project-Id-Version: 0.9.161.0\n"
+"Project-Id-Version: 1.3.3.0\n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
 "Last-Translator: Tokc.D.K. <tokcdk@gmail.com>\n"
-"Language-Team: TokcDK\n"
-"MIME-Version: 1.0\n"
-"Content-Transfer-Encoding: 8bit\n"
+"Language-Team: Russian (DenisK<TokcDK>)\n"
 "Language: ru_RU\n"
-"X-Generator: Poedit 2.3\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.0.6\n"
 
 #: checkupdate.rs_btncheckupdates
-#, fuzzy
 msgctxt "checkupdate.rs_btncheckupdates"
 msgid "Check for latest version"
 msgstr "Проверка последней версии"
 
 #: checkupdate.rs_currentversion
 msgid "Installed Version"
-msgstr ""
+msgstr "Установлена версия"
 
 #: checkupdate.rs_latestversion
 msgid "Latest Version   "
-msgstr ""
+msgstr "Последняя версия   "
 
 #: checkupdate.rs_newversionfound
 msgid "New Version found!"
-msgstr ""
+msgstr "Найдена новая версия!"
 
 #: dbupdater.rs_buttoncancel
 msgctxt "dbupdater.rs_buttoncancel"
@@ -142,7 +141,9 @@ msgstr "Модули обновлены!"
 
 #: frmluamodulesupdater.rs_newupdatefoundlostchanges
 msgid "Modules update found, any local changes will be lost, procced?"
-msgstr "Найдено обновление модулей, все локальные изменения модулей будут перезаписаны, продолжить?"
+msgstr ""
+"Найдено обновление модулей, все локальные изменения модулей будут "
+"перезаписаны, продолжить?"
 
 #: frmluamodulesupdater.rs_newupdatefoundtitle
 msgid "Modules update found!"
@@ -154,31 +155,26 @@ msgstr "Скачивание..."
 
 #: frmluamodulesupdater.rs_statusdelete
 #, object-pascal-format
-msgctxt "frmluamodulesupdater.rs_statusdelete"
 msgid "%s DELETE*"
 msgstr "%s УДАЛЕН*"
 
 #: frmluamodulesupdater.rs_statusfailed
 #, object-pascal-format
-msgctxt "frmluamodulesupdater.rs_statusfailed"
 msgid "%s FAILED*"
 msgstr "%s ОШИБКА*"
 
 #: frmluamodulesupdater.rs_statusnew
 #, object-pascal-format
-msgctxt "frmluamodulesupdater.rs_statusnew"
 msgid "%s NEW*"
 msgstr "%s НОВЫЙ*"
 
 #: frmluamodulesupdater.rs_statusredownloaded
 #, object-pascal-format
-msgctxt "frmluamodulesupdater.rs_statusredownloaded"
 msgid "%s REDOWNLOAD*"
 msgstr "%s ПОВТОРНАЯ ЗАГРУЗКА*"
 
 #: frmluamodulesupdater.rs_statusupdate
 #, object-pascal-format
-msgctxt "frmluamodulesupdater.rs_statusupdate"
 msgid "%s UPDATE*"
 msgstr "%s ОБНОВЛЕН*"
 
@@ -206,8 +202,12 @@ msgid "Cannot connect to the server."
 msgstr "Не удалось подключиться к серверу."
 
 #: frmmain.rs_dlgcannotgetmangainfo
-msgid "Cannot get manga info. Please check your internet connection and try it again."
-msgstr "Не удалось получить информацию о манге. Проверьте интернет-подключение и попробуйте снова."
+msgid ""
+"Cannot get manga info. Please check your internet connection and try it "
+"again."
+msgstr ""
+"Не удалось получить информацию о манге. Проверьте интернет-подключение и "
+"попробуйте снова."
 
 #: frmmain.rs_dlgdownloadcount
 msgid "Download count:"
@@ -287,7 +287,7 @@ msgstr "Отключено"
 #: frmmain.rs_favoritesshowenabled
 msgctxt "frmmain.rs_favoritesshowenabled"
 msgid "Enabled"
-msgstr ""
+msgstr "Включено"
 
 #: frmmain.rs_filterstatusitems
 msgid ""
@@ -352,7 +352,6 @@ msgid "Title:"
 msgstr "Название:"
 
 #: frmmain.rs_infowebsite
-msgctxt "frmmain.rs_infowebsite"
 msgid "Website:"
 msgstr "Сайт:"
 
@@ -394,7 +393,6 @@ msgid "Mode: Filtered (%d)"
 msgstr "Режим: Отфильтрованные (%d)"
 
 #: frmmain.rs_modesearching
-msgctxt "frmmain.rs_modesearching"
 msgid "Mode: Searching..."
 msgstr "Режим: Поиск..."
 
@@ -438,7 +436,7 @@ msgstr ""
 
 #: frmmain.rs_revision
 msgid "Revision"
-msgstr ""
+msgstr "Ревизия"
 
 #: frmmain.rs_selected
 #, object-pascal-format
@@ -476,7 +474,7 @@ msgstr "Два года"
 
 #: frmmain.rs_version
 msgid "Version"
-msgstr ""
+msgstr "Версия"
 
 #: frmmain.rs_webpconvertto
 msgid ""
@@ -576,7 +574,8 @@ msgstr "Не удалось сохранить %s"
 
 #: selfupdater.rs_finishrestart
 msgid "Download update package finished, restart to proceed?"
-msgstr "Загрузка пакета обновления завершена, перезапустить для запуска обновления?"
+msgstr ""
+"Загрузка пакета обновления завершена, перезапустить для запуска обновления?"
 
 #: selfupdater.rs_finishrestarttitle
 msgid "Download finished"
@@ -584,42 +583,40 @@ msgstr "Загрузка завершена"
 
 #: selfupdater.rs_missingfile
 #, object-pascal-format
-msgctxt "selfupdater.rs_missingfile"
 msgid "Missing %s"
 msgstr "Отсутствует %s"
 
 #: simpleexception.sbuttoncontinue
 msgid "&Continue"
-msgstr ""
+msgstr "Продолжить"
 
 #: simpleexception.sbuttondetails
 msgid "&Show Details"
-msgstr ""
+msgstr "Подробно"
 
 #: simpleexception.sbuttonterminate
 msgid "&Terminate"
-msgstr ""
+msgstr "Прервать"
 
 #: simpleexception.scanthandleexception
 msgid "Can't handle exception"
-msgstr ""
+msgstr "Не удалось обработать ошибку"
 
 #: simpleexception.scheckboxignoreexception
 msgid "Ignore this exception for next time"
-msgstr ""
+msgstr "Игнорировать ошибку в следующий раз"
 
 #: simpleexception.sexceptioncaption
 msgid "An error occured during program execution:"
-msgstr ""
+msgstr "При выполнении программы произошла ошибка:"
 
 #: simpleexception.sexceptiondialogtitle
 msgid "Exception Info"
-msgstr ""
+msgstr "Информация об ошибке"
 
 #: taccountmanagerform.btedit.caption
-msgctxt "taccountmanagerform.btedit.caption"
 msgid "Edit"
-msgstr "Изменить"
+msgstr "Правка"
 
 #: taccountmanagerform.btrefresh.caption
 msgid "Refresh"
@@ -630,22 +627,22 @@ msgid "AccountManagerForm"
 msgstr "AccountManagerForm"
 
 #: taccountmanagerform.vtaccountlist.header.columns[1].text
-msgctxt "TACCOUNTMANAGERFORM.VTACCOUNTLIST.HEADER.COLUMNS[1].TEXT"
+msgctxt "taccountmanagerform.vtaccountlist.header.columns[1].text"
 msgid "Website"
 msgstr "Сайт"
 
 #: taccountmanagerform.vtaccountlist.header.columns[2].text
-msgctxt "TACCOUNTMANAGERFORM.VTACCOUNTLIST.HEADER.COLUMNS[2].TEXT"
+msgctxt "taccountmanagerform.vtaccountlist.header.columns[2].text"
 msgid "Username"
 msgstr "Имя пользователя"
 
 #: taccountmanagerform.vtaccountlist.header.columns[3].text
-msgctxt "TACCOUNTMANAGERFORM.VTACCOUNTLIST.HEADER.COLUMNS[3].TEXT"
+msgctxt "taccountmanagerform.vtaccountlist.header.columns[3].text"
 msgid "Status"
 msgstr "Статус"
 
 #: taccountsetform.btcancel.caption
-msgctxt "TACCOUNTSETFORM.BTCANCEL.CAPTION"
+msgctxt "taccountsetform.btcancel.caption"
 msgid "Cancel"
 msgstr "Отмена"
 
@@ -662,22 +659,22 @@ msgid "Show password"
 msgstr "Показать пароль"
 
 #: taccountsetform.edpassword.texthint
-msgctxt "TACCOUNTSETFORM.EDPASSWORD.TEXTHINT"
+msgctxt "taccountsetform.edpassword.texthint"
 msgid "Password"
 msgstr "Пароль"
 
 #: taccountsetform.edusername.texthint
-msgctxt "TACCOUNTSETFORM.EDUSERNAME.TEXTHINT"
+msgctxt "taccountsetform.edusername.texthint"
 msgid "Username"
 msgstr "Имя пользователя"
 
 #: taccountsetform.label2.caption
-msgctxt "TACCOUNTSETFORM.LABEL2.CAPTION"
+msgctxt "taccountsetform.label2.caption"
 msgid "Username"
 msgstr "Имя пользователя"
 
 #: taccountsetform.label3.caption
-msgctxt "TACCOUNTSETFORM.LABEL3.CAPTION"
+msgctxt "taccountsetform.label3.caption"
 msgid "Password"
 msgstr "Пароль"
 
@@ -702,16 +699,16 @@ msgid "Manga list"
 msgstr "Список манги"
 
 #: tformdroptarget.miaddtofavorites.caption
-msgctxt "TFORMDROPTARGET.MIADDTOFAVORITES.CAPTION"
+msgctxt "tformdroptarget.miaddtofavorites.caption"
 msgid "Add to favorites"
 msgstr "Добавить в избранное"
 
 #: tformdroptarget.miclose.caption
 msgid "&Close"
-msgstr "И Закрыть"
+msgstr "Закрыть"
 
 #: tformdroptarget.midownloadall.caption
-msgctxt "TFORMDROPTARGET.MIDOWNLOADALL.CAPTION"
+msgctxt "tformdroptarget.midownloadall.caption"
 msgid "Download all"
 msgstr "Загрузить все"
 
@@ -734,22 +731,22 @@ msgstr "Скопировать"
 
 #: tfrmdialogyn.btno.caption
 msgid "&No"
-msgstr ""
+msgstr "Нет"
 
 #: tfrmdialogyn.btyes.caption
 msgid "&Yes"
-msgstr ""
+msgstr "Да"
 
 #: tfrmdialogyn.caption
 msgid "Dialog"
-msgstr ""
+msgstr "Диалог"
 
 #: tfrmdialogyn.lbmessage.caption
 msgid "lbMessage"
-msgstr ""
+msgstr "lbMessage"
 
 #: timportfavorites.btcancel.caption
-msgctxt "TIMPORTFAVORITES.BTCANCEL.CAPTION"
+msgctxt "timportfavorites.btcancel.caption"
 msgid "Cancel"
 msgstr "Отмена"
 
@@ -767,9 +764,9 @@ msgid "Domdomsoft Manga Downloader"
 msgstr "Domdomsoft Manga Downloader"
 
 #: timportfavorites.edpath.texthint
-msgctxt "TIMPORTFAVORITES.EDPATH.TEXTHINT"
+msgctxt "timportfavorites.edpath.texthint"
 msgid "Path to the software (e.g. C:\\MangaDownloader)"
-msgstr "Путь к программе (пример: C:\\MangaDownloader)"
+msgstr "Путь к программе (например, C:\\MangaDownloader)"
 
 #: timportfavorites.lbselectsoftware.caption
 msgid "Software:"
@@ -806,7 +803,7 @@ msgid "Add to favorites"
 msgstr "Добавить в избранное"
 
 #: tmainform.btchecklatestversion.caption
-msgctxt "TMAINFORM.BTCHECKLATESTVERSION.CAPTION"
+msgctxt "tmainform.btchecklatestversion.caption"
 msgid "Check for latest version"
 msgstr "Проверка последней версии"
 
@@ -815,7 +812,6 @@ msgid "Clear log file"
 msgstr "Очистить файл лога"
 
 #: tmainform.btdownload.caption
-msgctxt "tmainform.btdownload.caption"
 msgid "Download"
 msgstr "Загрузить"
 
@@ -834,7 +830,7 @@ msgid "Import list"
 msgstr "Импорт списка"
 
 #: tmainform.btfilter.caption
-msgctxt "TMAINFORM.BTFILTER.CAPTION"
+msgctxt "tmainform.btfilter.caption"
 msgid "Filter"
 msgstr "Фильтр"
 
@@ -855,7 +851,7 @@ msgid "Read online"
 msgstr "Читать онлайн"
 
 #: tmainform.btremovefilterlarge.caption
-msgctxt "TMAINFORM.BTREMOVEFILTERLARGE.CAPTION"
+msgctxt "tmainform.btremovefilterlarge.caption"
 msgid "Remove filter"
 msgstr "Удалить фильтр"
 
@@ -890,34 +886,30 @@ msgid "Search only new manga"
 msgstr "Искать только новую мангу"
 
 #: tmainform.cboptionautocheckfavdownload.caption
-msgctxt "TMAINFORM.CBOPTIONAUTOCHECKFAVDOWNLOAD.CAPTION"
 msgid "Automatic download after finish checking"
-msgstr "Автоматическая загрузка после завершения проверки"
+msgstr "Автозагрузка после завершения проверки"
 
 #: tmainform.cboptionautocheckfavinterval.caption
 msgid "Auto check for new chapter in an interval"
-msgstr "Автоматическая проверка новой главы в интервале"
+msgstr "Автопроверка новой главы в интервале"
 
 #: tmainform.cboptionautocheckfavremovecompletedmanga.caption
-msgctxt "TMAINFORM.CBOPTIONAUTOCHECKFAVREMOVECOMPLETEDMANGA.CAPTION"
 msgid "Automatic remove completed manga from Favorites"
-msgstr "Автоматически удалять завершенную мангу из Избранного"
+msgstr "Автоматически убирать завершенную мангу из Избранного"
 
 #: tmainform.cboptionautocheckfavstartup.caption
 msgid "Auto check for new chapter at startup"
 msgstr "Автоматическая проверка новой главы при запуске"
 
 #: tmainform.cboptionautochecklatestversion.caption
-msgctxt "TMAINFORM.CBOPTIONAUTOCHECKLATESTVERSION.CAPTION"
 msgid "Auto check for latest version"
-msgstr "Автоматическая проверка последней версии"
+msgstr "Автопроверка последней версии"
 
 #: tmainform.cboptionautoopenfavstartup.caption
 msgid "Open Favorites at startup"
 msgstr "Открыть избранное при запуске"
 
 #: tmainform.cboptionchangeunicodecharacter.caption
-msgctxt "TMAINFORM.CBOPTIONCHANGEUNICODECHARACTER.CAPTION"
 msgid "Replace all unicode character with"
 msgstr "Заменить все символы Юникода на"
 
@@ -946,9 +938,8 @@ msgid "Auto generate chapter folder"
 msgstr "Авто-создание папки главы"
 
 #: tmainform.cboptiongeneratemangafolder.caption
-msgctxt "TMAINFORM.CBOPTIONGENERATEMANGAFOLDER.CAPTION"
 msgid "Auto generate folder based on manga's name"
-msgstr "Авто-создание папки на основе имени манги"
+msgstr "Автосоздание папки на основе имени манги"
 
 #: tmainform.cboptionlivesearch.caption
 msgid "Enable live search (slow on long list)"
@@ -1003,7 +994,6 @@ msgid "Show left downloads toolbar"
 msgstr "Показать дополнительную панель загрузок"
 
 #: tmainform.cboptionshowfavoritestabonnewmanga.caption
-msgctxt "tmainform.cboptionshowfavoritestabonnewmanga.caption"
 msgid "Show Favorites tab when adding new manga"
 msgstr "Показать Избранное при добавлении новой манги"
 
@@ -1016,8 +1006,11 @@ msgid "Sort Downloads when adding new download tasks"
 msgstr "Сортировать загрузки при добавлении новых"
 
 #: tmainform.cboptionupdatelistnomangainfo.caption
-msgid "Don't load manga information when updating list (filter will be not work!)"
-msgstr "Не загружать информацию о манге при обновлении списка (фильтр не будет работать!)"
+msgid ""
+"Don't load manga information when updating list (filter will be not work!)"
+msgstr ""
+"Не загружать информацию о манге при обновлении списка (фильтр не будет "
+"работать!)"
 
 #: tmainform.cboptionupdatelistremoveduplicatelocaldata.caption
 msgid "Remove duplicate local data when updating manga list"
@@ -1028,7 +1021,6 @@ msgid "Use proxy"
 msgstr "Использовать прокси"
 
 #: tmainform.cbpngcompressionlevel.text
-msgctxt "tmainform.cbpngcompressionlevel.text"
 msgid "Fastest"
 msgstr "Скоростной"
 
@@ -1038,14 +1030,15 @@ msgstr "Поиск по всем сайтам манги"
 
 #: tmainform.cbselectmanga.hint
 msgid "For more manga sites, please go to Options->Manga sites"
-msgstr "Для получения дополнительных сайтов с мангой откройте Настройки->Сайты с мангой"
+msgstr ""
+"Для получения дополнительных сайтов с мангой откройте Настройки->Сайты с "
+"мангой"
 
 #: tmainform.cbuseregexpr.caption
 msgid "Regular Expression"
 msgstr "Регулярное выражение (regexp)"
 
 #: tmainform.cbwebpsaveas.text
-msgctxt "tmainform.cbwebpsaveas.text"
 msgid "PNG"
 msgstr "PNG"
 
@@ -1063,7 +1056,8 @@ msgid "Action"
 msgstr "Экшен"
 
 #: tmainform.ckfilteraction.hint
-msgid "A work typically depicting fighting, violence, chaos, and fast paced motion."
+msgid ""
+"A work typically depicting fighting, violence, chaos, and fast paced motion."
 msgstr "Работы жанра обычно изображают бой, насилие, хаос и быстрое движение."
 
 #: tmainform.ckfilteradult.caption
@@ -1071,24 +1065,40 @@ msgid "Adult"
 msgstr "Взрослое"
 
 #: tmainform.ckfilteradult.hint
-msgid "Contains content that is suitable only for adults. Titles in this category may include prolonged scenes of intense violence and/or graphic sexual content and nudity."
-msgstr "Содержит контент, который подходит только для взрослых. Работы этой категории могут содержать длительные сцены интенсивного насилия и/или графический сексуальный контент и наготу."
+msgid ""
+"Contains content that is suitable only for adults. Titles in this category "
+"may include prolonged scenes of intense violence and/or graphic sexual "
+"content and nudity."
+msgstr ""
+"Содержит контент, который подходит только для взрослых. Работы этой "
+"категории могут содержать длительные сцены интенсивного насилия и/или "
+"графический сексуальный контент и наготу."
 
 #: tmainform.ckfilteradventure.caption
 msgid "Adventure"
 msgstr "Приключения"
 
 #: tmainform.ckfilteradventure.hint
-msgid "If a character in the story goes on a trip or along that line, your best bet is that it is an adventure manga. Otherwise, it's up to your personal prejudice on this case."
-msgstr "Если персонаж в истории отправляется в путешествие или что-то в этом роде, тогда наверняка это приключенческая манга. В противном случае, это зависит от ваших личных предубеждений по этой теме."
+msgid ""
+"If a character in the story goes on a trip or along that line, your best bet "
+"is that it is an adventure manga. Otherwise, it's up to your personal "
+"prejudice on this case."
+msgstr ""
+"Если персонаж в истории отправляется в путешествие или что-то в этом роде, "
+"тогда наверняка это приключенческая манга. В противном случае, это зависит "
+"от ваших личных предубеждений по этой теме."
 
 #: tmainform.ckfiltercomedy.caption
 msgid "Comedy"
 msgstr "Юмор"
 
 #: tmainform.ckfiltercomedy.hint
-msgid "A dramatic work that is light and often humorous or satirical in tone and that usually contains a happy resolution of the thematic conflict."
-msgstr "Драматическая работа, легкая и часто юмористическая или сатирическая по тону и, обычно, содержит счастливое разрешение тематического конфликта."
+msgid ""
+"A dramatic work that is light and often humorous or satirical in tone and "
+"that usually contains a happy resolution of the thematic conflict."
+msgstr ""
+"Драматическая работа, легкая и часто юмористическая или сатирическая по тону "
+"и, обычно, содержит счастливое разрешение тематического конфликта."
 
 #: tmainform.ckfilterdoujinshi.caption
 msgid "Doujinshi"
@@ -1103,24 +1113,35 @@ msgid "Drama"
 msgstr "Драма"
 
 #: tmainform.ckfilterdrama.hint
-msgid "A work meant to bring on an emotional response, such as instilling sadness or tension."
-msgstr "Работы жанра призванны вызвать эмоциональный отклик, например, внушить печаль или напряжение."
+msgid ""
+"A work meant to bring on an emotional response, such as instilling sadness "
+"or tension."
+msgstr ""
+"Работы жанра призванны вызвать эмоциональный отклик, например, внушить "
+"печаль или напряжение."
 
 #: tmainform.ckfilterechi.caption
 msgid "Ecchi"
 msgstr "Этти"
 
 #: tmainform.ckfilterechi.hint
-msgid "Possibly the line between hentai and non-hentai, ecchi usually refers to fanservice put in to attract a certain group of fans."
-msgstr "Возможно, середина между хентаем и не хентаем, этти обычно относится к фансервису, с целью привлечь определенную группу фанатов."
+msgid ""
+"Possibly the line between hentai and non-hentai, ecchi usually refers to "
+"fanservice put in to attract a certain group of fans."
+msgstr ""
+"Возможно, середина между хентаем и не хентаем, этти обычно относится к "
+"фансервису, с целью привлечь определенную группу фанатов."
 
 #: tmainform.ckfilterfantasy.caption
 msgid "Fantasy"
 msgstr "Фентези"
 
 #: tmainform.ckfilterfantasy.hint
-msgid "Anything that involves, but not limited to, magic, dream world, and fairy tales."
-msgstr "Все, что включает в себя, помимо прочего, магию, воображаемый мир и сказки."
+msgid ""
+"Anything that involves, but not limited to, magic, dream world, and fairy "
+"tales."
+msgstr ""
+"Все, что включает в себя, помимо прочего, магию, воображаемый мир и сказки."
 
 #: tmainform.ckfiltergenderbender.caption
 msgid "Gender Bender"
@@ -1139,8 +1160,14 @@ msgid "Harem"
 msgstr "Гарем"
 
 #: tmainform.ckfilterharem.hint
-msgid "A series involving one male character and many female characters (usually attracted to the male character). A Reverse Harem is when the genders are reversed."
-msgstr "В сериях учавствует один главный мужской персонаж и многих женских персонажей (как правило, испытывающих влечение к мужскому персонажу). Реверсивный гарем - это когда пол меняются на противоположный."
+msgid ""
+"A series involving one male character and many female characters (usually "
+"attracted to the male character). A Reverse Harem is when the genders are "
+"reversed."
+msgstr ""
+"В сериях учавствует один главный мужской персонаж и многих женских "
+"персонажей (как правило, испытывающих влечение к мужскому персонажу). "
+"Реверсивный гарем - это когда пол меняются на противоположный."
 
 #: tmainform.ckfilterhentai.caption
 msgctxt "tmainform.ckfilterhentai.caption"
@@ -1148,7 +1175,7 @@ msgid "Hentai"
 msgstr "Хентай"
 
 #: tmainform.ckfilterhentai.hint
-msgctxt "TMAINFORM.CKFILTERHENTAI.HINT"
+msgctxt "tmainform.ckfilterhentai.hint"
 msgid "Hentai"
 msgstr "Хентай"
 
@@ -1165,16 +1192,26 @@ msgid "Horror"
 msgstr "Ужасы"
 
 #: tmainform.ckfilterhorror.hint
-msgid "A painful emotion of fear, dread, and abhorrence; a shuddering with terror and detestation; the feeling inspired by something frightful and shocking."
-msgstr "Мучительное чувство ужаса, страха и отвращения; Содрогание от ужаса и ненависти; Чувство, вдохновленное чем-то страшным и шокирующим."
+msgid ""
+"A painful emotion of fear, dread, and abhorrence; a shuddering with terror "
+"and detestation; the feeling inspired by something frightful and shocking."
+msgstr ""
+"Мучительное чувство ужаса, страха и отвращения; Содрогание от ужаса и "
+"ненависти; Чувство, вдохновленное чем-то страшным и шокирующим."
 
 #: tmainform.ckfilterjosei.caption
 msgid "Josei"
 msgstr "Дзёсэй"
 
 #: tmainform.ckfilterjosei.hint
-msgid "Literally \"Woman\". Targets women 18-30. Female equivalent to seinen. Unlike shoujo the romance is more realistic and less idealized. The storytelling is more explicit and mature."
-msgstr "Буквально «Женщина». Нацелено на женщин 18-30 лет. Женский эквивалент сёнен. В отличие от сёдзе роман более реалистичен и менее идеализирован. Рассказ историй более ясный и зрелый."
+msgid ""
+"Literally \"Woman\". Targets women 18-30. Female equivalent to seinen. "
+"Unlike shoujo the romance is more realistic and less idealized. The "
+"storytelling is more explicit and mature."
+msgstr ""
+"Буквально «Женщина». Нацелено на женщин 18-30 лет. Женский эквивалент сёнен. "
+"В отличие от сёдзе роман более реалистичен и менее идеализирован. Рассказ "
+"историй более ясный и зрелый."
 
 #: tmainform.ckfilterlolicon.caption
 msgid "Lolicon"
@@ -1182,31 +1219,49 @@ msgstr "Лоликон"
 
 #: tmainform.ckfilterlolicon.hint
 msgid "Representing a sexual attraction to young or under-age girls."
-msgstr "Представление сексуального влечения к молодым или несовершеннолетним девочкам."
+msgstr ""
+"Представление сексуального влечения к молодым или несовершеннолетним "
+"девочкам."
 
 #: tmainform.ckfiltermartialarts.caption
 msgid "Martial Arts"
 msgstr "Боевые Искусства"
 
 #: tmainform.ckfiltermartialarts.hint
-msgid "As the name suggests, anything martial arts related. Any of several arts of combat or self-defense, such as aikido, karate, judo, or taekwondo, kendo, fencing, and so on and so forth."
-msgstr "Как следует из названия, все, что связано с боевыми искусствами. Любое из нескольких исскуств боя или самозащиты, таких как айкидо, каратэ, дзюдо, таэквондо, кендо, фехтование и т.д.и т.п."
+msgid ""
+"As the name suggests, anything martial arts related. Any of several arts of "
+"combat or self-defense, such as aikido, karate, judo, or taekwondo, kendo, "
+"fencing, and so on and so forth."
+msgstr ""
+"Как следует из названия, все, что связано с боевыми искусствами. Любое из "
+"нескольких исскуств боя или самозащиты, таких как айкидо, каратэ, дзюдо, "
+"таэквондо, кендо, фехтование и т.д.и т.п."
 
 #: tmainform.ckfiltermature.caption
 msgid "Mature"
 msgstr "Зрелые"
 
 #: tmainform.ckfiltermature.hint
-msgid "Contains subject matter which may be too extreme for people under the age of 17. Titles in this category may contain intense violence, blood and gore, sexual content and/or strong language."
-msgstr "Содержит материаллы, которые могут быть слишком экстремальными для несовершеннолетних. Работы в этой категории могут содержать много насилия, крови, сексуального контента и/или резких слов."
+msgid ""
+"Contains subject matter which may be too extreme for people under the age of "
+"17. Titles in this category may contain intense violence, blood and gore, "
+"sexual content and/or strong language."
+msgstr ""
+"Содержит материаллы, которые могут быть слишком экстремальными для "
+"несовершеннолетних. Работы в этой категории могут содержать много насилия, "
+"крови, сексуального контента и/или резких слов."
 
 #: tmainform.ckfiltermecha.caption
 msgid "Mecha"
 msgstr "Меха"
 
 #: tmainform.ckfiltermecha.hint
-msgid "A work involving and usually concentrating on all types of large robotic machines."
-msgstr "Работы жанра, включают и обычно концентрируются на всех типах крупных роботизированных машин."
+msgid ""
+"A work involving and usually concentrating on all types of large robotic "
+"machines."
+msgstr ""
+"Работы жанра, включают и обычно концентрируются на всех типах крупных "
+"роботизированных машин."
 
 #: tmainform.ckfiltermusical.caption
 msgctxt "tmainform.ckfiltermusical.caption"
@@ -1223,24 +1278,37 @@ msgid "Mystery"
 msgstr "Мистика"
 
 #: tmainform.ckfiltermystery.hint
-msgid "Usually an unexplained event occurs, and the main protagonist attempts to find out what caused it."
-msgstr "Обычно происходит необъяснимое событие и главный герой пытается выяснить, что вызвало его."
+msgid ""
+"Usually an unexplained event occurs, and the main protagonist attempts to "
+"find out what caused it."
+msgstr ""
+"Обычно происходит необъяснимое событие и главный герой пытается выяснить, "
+"что вызвало его."
 
 #: tmainform.ckfilterpsychological.caption
 msgid "Psychological"
 msgstr "Психология"
 
 #: tmainform.ckfilterpsychological.hint
-msgid "Usually deals with the philosophy of a state of mind, in most cases detailing abnormal psychology."
-msgstr "Обычно речь идет о философии состояния ума, в большинстве случаев подробно описывающей аномальную психологию."
+msgid ""
+"Usually deals with the philosophy of a state of mind, in most cases "
+"detailing abnormal psychology."
+msgstr ""
+"Обычно речь идет о философии состояния ума, в большинстве случаев подробно "
+"описывающей аномальную психологию."
 
 #: tmainform.ckfilterromance.caption
 msgid "Romance"
 msgstr "Романтика"
 
 #: tmainform.ckfilterromance.hint
-msgid "Any love related story. We will define love as between man and woman in this case. Other than that, it is up to your own imagination of what love is."
-msgstr "Любая история, связанная с любовью. В этом случае мы определяем любовь между мужчиной и женщиной. Кроме этого, это зависит от вашего представления, что такое любовь."
+msgid ""
+"Any love related story. We will define love as between man and woman in this "
+"case. Other than that, it is up to your own imagination of what love is."
+msgstr ""
+"Любая история, связанная с любовью. В этом случае мы определяем любовь между "
+"мужчиной и женщиной. Кроме этого, это зависит от вашего представления, что "
+"такое любовь."
 
 #: tmainform.ckfilterschoollife.caption
 msgid "School Life"
@@ -1255,16 +1323,30 @@ msgid "Sci-Fi"
 msgstr "Скайфай"
 
 #: tmainform.ckfilterscifi.hint
-msgid "Short for science fiction, these works involve twists on technology and other science related phenomena which are contrary or stretches of the modern day scientific world."
-msgstr "Это сокращение от научной фантастики, эти работы связаны с поворотами в технологиях и других, связанных с наукой явлениях, которые являются противоречиями или отрезками современного научного мира."
+msgid ""
+"Short for science fiction, these works involve twists on technology and "
+"other science related phenomena which are contrary or stretches of the "
+"modern day scientific world."
+msgstr ""
+"Это сокращение от научной фантастики, эти работы связаны с поворотами в "
+"технологиях и других, связанных с наукой явлениях, которые являются "
+"противоречиями или отрезками современного научного мира."
 
 #: tmainform.ckfilterseinen.caption
 msgid "Seinen"
 msgstr "Сейнэн"
 
 #: tmainform.ckfilterseinen.hint
-msgid "From Google: Seinen means 'young Man'. Manga and anime that specifically targets young adult males around the ages of 18 to 25 are seinen titles. The stories in seinen works appeal to university students and those in the working world. Typically the story lines deal with the issues of adulthood."
-msgstr "Из Google: Сейнэн означает «молодой человек». аниме и манга, рассчитанные на особую целевую аудиторию — молодых мужчин от 18 лет и старше. Истории в Сейнэн рассчитаны на привлечение студентов университетов и тех, кто работают. Как правило, сюжетные линии посвящены проблемам взрослой жизни."
+msgid ""
+"From Google: Seinen means 'young Man'. Manga and anime that specifically "
+"targets young adult males around the ages of 18 to 25 are seinen titles. The "
+"stories in seinen works appeal to university students and those in the "
+"working world. Typically the story lines deal with the issues of adulthood."
+msgstr ""
+"Из Google: Сейнэн означает «молодой человек». аниме и манга, рассчитанные на "
+"особую целевую аудиторию — молодых мужчин от 18 лет и старше. Истории в "
+"Сейнэн рассчитаны на привлечение студентов университетов и тех, кто "
+"работают. Как правило, сюжетные линии посвящены проблемам взрослой жизни."
 
 #: tmainform.ckfiltershotacon.caption
 msgid "Shotacon"
@@ -1272,73 +1354,109 @@ msgstr "Шота"
 
 #: tmainform.ckfiltershotacon.hint
 msgid "Representing a sexual attraction to young or under-age boys."
-msgstr "Представление сексуального влечения к молодым или несовершеннолетним мальчикам."
+msgstr ""
+"Представление сексуального влечения к молодым или несовершеннолетним "
+"мальчикам."
 
 #: tmainform.ckfiltershoujo.caption
 msgid "Shoujo"
 msgstr "Сёдзе"
 
 #: tmainform.ckfiltershoujo.hint
-msgid "A work intended and primarily written for females. Usually involves a lot of romance and strong character development."
-msgstr "Работы жанра нацелены и предназначены, в основном, для женщин. Обычно включает в себя много романтики и сильного развития персонажа."
+msgid ""
+"A work intended and primarily written for females. Usually involves a lot of "
+"romance and strong character development."
+msgstr ""
+"Работы жанра нацелены и предназначены, в основном, для женщин. Обычно "
+"включает в себя много романтики и сильного развития персонажа."
 
 #: tmainform.ckfiltershoujoai.caption
 msgid "Shoujo Ai"
 msgstr "Сёдзе-ай"
 
 #: tmainform.ckfiltershoujoai.hint
-msgctxt "TMAINFORM.CKFILTERSHOUJOAI.HINT"
-msgid "Often synonymous with yuri, this can be thought of as somewhat less extreme. \"Girl''s Love\", so to speak."
-msgstr "Часто ассоциируется с Юри, можно считать несколько менее экстремальным. «Девичья любовь», так сказать."
+msgid ""
+"Often synonymous with yuri, this can be thought of as somewhat less extreme. "
+"\"Girl''s Love\", so to speak."
+msgstr ""
+"Часто ассоциируется с Юри, можно считать несколько менее экстремальным. "
+"«Девичья любовь», так сказать."
 
 #: tmainform.ckfiltershounen.caption
 msgid "Shounen"
 msgstr "Сёнэн"
 
 #: tmainform.ckfiltershounen.hint
-msgctxt "tmainform.ckfiltershounen.hint"
-msgid "A work intended and primarily written for males. These works usually involve fighting and/or violence."
-msgstr "Работы жанра нацелены и предназначены, в основном, для мужчин. Обычно связано с борьбой и/или насилием."
+msgid ""
+"A work intended and primarily written for males. These works usually involve "
+"fighting and/or violence."
+msgstr ""
+"Работы жанра нацелены и предназначены, в основном, для мужчин. Обычно "
+"связано с борьбой и/или насилием."
 
 #: tmainform.ckfiltershounenai.caption
 msgid "Shounen Ai"
 msgstr "Сёнэн-ай"
 
 #: tmainform.ckfiltershounenai.hint
-msgid "Often synonymous with yaoi, this can be thought of as somewhat less extreme. \"Boy''s Love\", so to speak"
-msgstr "Часто ассоциируется с Яоем, можно считать несколько менее экстремальным. «Мужская любовь», так сказать"
+msgid ""
+"Often synonymous with yaoi, this can be thought of as somewhat less extreme. "
+"\"Boy''s Love\", so to speak"
+msgstr ""
+"Часто ассоциируется с Яоем, можно считать несколько менее экстремальным. "
+"«Мужская любовь», так сказать"
 
 #: tmainform.ckfiltersliceoflife.caption
 msgid "Slice of Life"
 msgstr "Повседневность"
 
 #: tmainform.ckfiltersliceoflife.hint
-msgid "As the name suggests, this genre represents day-to-day tribulations of one/many character(s). These challenges/events could technically happen in real life and are often -if not all the time- set in the present timeline in a world that mirrors our own."
-msgstr "Wiki: Жанр, повествующий о жизни простых обывателей. Так называют любое реалистическое описание или представление событий и ситуаций из повседневной жизни. Акцент делается на чувствах и поведении персонажей."
+msgid ""
+"As the name suggests, this genre represents day-to-day tribulations of one/"
+"many character(s). These challenges/events could technically happen in real "
+"life and are often -if not all the time- set in the present timeline in a "
+"world that mirrors our own."
+msgstr ""
+"Wiki: Жанр, повествующий о жизни простых обывателей. Так называют любое "
+"реалистическое описание или представление событий и ситуаций из повседневной "
+"жизни. Акцент делается на чувствах и поведении персонажей."
 
 #: tmainform.ckfiltersmut.caption
 msgid "Smut"
 msgstr "Смат (Непристойность)"
 
 #: tmainform.ckfiltersmut.hint
-msgid "Deals with series that are considered profane or offensive, particularly with regards to sexual content."
-msgstr "Жанр сетевого текста, в котором описывается только секс между героями. Имеет дело с сериями, которые считаются неприличными или оскорбительными, особенно в отношении сексуального контента."
+msgid ""
+"Deals with series that are considered profane or offensive, particularly "
+"with regards to sexual content."
+msgstr ""
+"Жанр сетевого текста, в котором описывается только секс между героями. Имеет "
+"дело с сериями, которые считаются неприличными или оскорбительными, особенно "
+"в отношении сексуального контента."
 
 #: tmainform.ckfiltersports.caption
 msgid "Sports"
 msgstr "Спорт"
 
 #: tmainform.ckfiltersports.hint
-msgid "As the name suggests, anything sports related. Baseball, basketball, hockey, soccer, golf, and racing just to name a few."
-msgstr "Как следует из названия, все, что связано со спортом. Бейсбол, баскетбол, хоккей, футбол, гольф и гонки- некоторые из них."
+msgid ""
+"As the name suggests, anything sports related. Baseball, basketball, hockey, "
+"soccer, golf, and racing just to name a few."
+msgstr ""
+"Как следует из названия, все, что связано со спортом. Бейсбол, баскетбол, "
+"хоккей, футбол, гольф и гонки- некоторые из них."
 
 #: tmainform.ckfiltersupernatural.caption
 msgid "Supernatural"
 msgstr "Сверхъестественное"
 
 #: tmainform.ckfiltersupernatural.hint
-msgid "Usually entails amazing and unexplained powers or events which defy the laws of physics."
-msgstr "Обычно подразумевает удивительные и необъяснимые силы или события, которые бросают вызов законам физики."
+msgid ""
+"Usually entails amazing and unexplained powers or events which defy the laws "
+"of physics."
+msgstr ""
+"Обычно подразумевает удивительные и необъяснимые силы или события, которые "
+"бросают вызов законам физики."
 
 #: tmainform.ckfiltertragedy.caption
 msgid "Tragedy"
@@ -1375,7 +1493,6 @@ msgid "This work usually involves intimate relationships between women."
 msgstr "Обычно связано с интимными отношениями между женщинами."
 
 #: tmainform.ckoptionsalwaysstarttaskfromfailedchapters.caption
-msgctxt "tmainform.ckoptionsalwaysstarttaskfromfailedchapters.caption"
 msgid "Always start task from failed chapters"
 msgstr "Всегда запускать задачу с неудавшихся частей"
 
@@ -1388,12 +1505,10 @@ msgid "Input custom genres, separated by comma"
 msgstr "Ввод пользовательских жанров, разделенных запятой"
 
 #: tmainform.eddownloadssearch.texthint
-msgctxt "tmainform.eddownloadssearch.texthint"
 msgid "Search downloads..."
 msgstr "Поиск загрузок..."
 
 #: tmainform.edfavoritessearch.texthint
-msgctxt "tmainform.edfavoritessearch.texthint"
 msgid "Search favorites..."
 msgstr "Поиск в избранном..."
 
@@ -1408,7 +1523,7 @@ msgid "Author"
 msgstr "Автор"
 
 #: tmainform.edfiltermangainfochapters.texthint
-msgctxt "TMAINFORM.EDFILTERMANGAINFOCHAPTERS.TEXTHINT"
+msgctxt "tmainform.edfiltermangainfochapters.texthint"
 msgid "Filter"
 msgstr "Фильтр"
 
@@ -1417,17 +1532,16 @@ msgid "Part of summary"
 msgstr "Часть Описание"
 
 #: tmainform.edfiltertitle.texthint
-msgctxt "TMAINFORM.EDFILTERTITLE.TEXTHINT"
+msgctxt "tmainform.edfiltertitle.texthint"
 msgid "Title"
 msgstr "Название"
 
 #: tmainform.edmangalistsearch.texthint
-msgctxt "tmainform.edmangalistsearch.texthint"
 msgid "Search title..."
 msgstr "Поиск названия..."
 
 #: tmainform.edoptionchaptercustomrename.texthint
-msgctxt "TMAINFORM.EDOPTIONCHAPTERCUSTOMRENAME.TEXTHINT"
+msgctxt "tmainform.edoptionchaptercustomrename.texthint"
 msgid "Custom rename"
 msgstr "Пользовательское переименование"
 
@@ -1436,17 +1550,15 @@ msgid "Default download path"
 msgstr "Путь по умолчанию"
 
 #: tmainform.edoptionexternalparams.texthint
-msgctxt "TMAINFORM.EDOPTIONEXTERNALPARAMS.TEXTHINT"
 msgid "External program parameters"
 msgstr "Параметры внешней программы"
 
 #: tmainform.edoptionexternalpath.texthint
-msgctxt "TMAINFORM.EDOPTIONEXTERNALPATH.TEXTHINT"
 msgid "External program path"
 msgstr "Путь к внешней программе"
 
 #: tmainform.edoptionfilenamecustomrename.texthint
-msgctxt "TMAINFORM.EDOPTIONFILENAMECUSTOMRENAME.TEXTHINT"
+msgctxt "tmainform.edoptionfilenamecustomrename.texthint"
 msgid "Custom rename"
 msgstr "Пользовательское переименование"
 
@@ -1455,7 +1567,7 @@ msgid "Proxy host/IP"
 msgstr "Прокси-сервер / IP-адрес"
 
 #: tmainform.edoptionmangacustomrename.texthint
-msgctxt "TMAINFORM.EDOPTIONMANGACUSTOMRENAME.TEXTHINT"
+msgctxt "tmainform.edoptionmangacustomrename.texthint"
 msgid "Custom rename"
 msgstr "Пользовательское переименование"
 
@@ -1468,7 +1580,7 @@ msgid "Proxy username"
 msgstr "Имя пользователя прокси"
 
 #: tmainform.edsaveto.texthint
-msgctxt "TMAINFORM.EDSAVETO.TEXTHINT"
+msgctxt "tmainform.edsaveto.texthint"
 msgid "Save to"
 msgstr "Сохранить в"
 
@@ -1477,7 +1589,6 @@ msgid "Input URL here"
 msgstr "Ввести адрес сюда"
 
 #: tmainform.edwebsitessearch.texthint
-msgctxt "TMAINFORM.EDWEBSITESSEARCH.TEXTHINT"
 msgid "Search website..."
 msgstr "Поиск сайта..."
 
@@ -1498,7 +1609,7 @@ msgid "External program"
 msgstr "Внешняя программа"
 
 #: tmainform.gboptionfavorites.caption
-msgctxt "TMAINFORM.GBOPTIONFAVORITES.CAPTION"
+msgctxt "tmainform.gboptionfavorites.caption"
 msgid "Favorites"
 msgstr "Избранное"
 
@@ -1560,7 +1671,7 @@ msgstr ""
 "- Пример: Приключение,!Этти, Комедия."
 
 #: tmainform.lbfilterstatus.caption
-msgctxt "TMAINFORM.LBFILTERSTATUS.CAPTION"
+msgctxt "tmainform.lbfilterstatus.caption"
 msgid "Status"
 msgstr "Статус"
 
@@ -1587,22 +1698,20 @@ msgstr "Режим: Показать все (0)"
 
 #: tmainform.lboptionautocheckfavintervalminutes.caption
 #, object-pascal-format
-msgctxt "TMAINFORM.LBOPTIONAUTOCHECKFAVINTERVALMINUTES.CAPTION"
+msgctxt "tmainform.lboptionautocheckfavintervalminutes.caption"
 msgid "Auto check for new chapter every %d minutes"
-msgstr "Автоматическая проверка новой главы каждые %d минут"
+msgstr "Автопроверка новой главы каждые %d минут"
 
 #: tmainform.lboptionchaptercustomrename.caption
-msgctxt "TMAINFORM.LBOPTIONCHAPTERCUSTOMRENAME.CAPTION"
 msgid "Chapter name:"
 msgstr "Название главы:"
 
 #: tmainform.lboptionchaptercustomrenamehint.caption
-msgctxt "TMAINFORM.LBOPTIONCHAPTERCUSTOMRENAMEHINT.CAPTION"
+msgctxt "tmainform.lboptionchaptercustomrenamehint.caption"
 msgid "[?]"
 msgstr "[?]"
 
 #: tmainform.lboptionchaptercustomrenamehint.hint
-msgctxt "TMAINFORM.LBOPTIONCHAPTERCUSTOMRENAMEHINT.HINT"
 msgid ""
 "%WEBSITE% : Website name\n"
 "%MANGA% : Manga title\n"
@@ -1637,7 +1746,7 @@ msgid "Parameters:"
 msgstr "Параметры боксмода:"
 
 #: tmainform.lboptionexternalparamshint.caption
-msgctxt "TMAINFORM.LBOPTIONEXTERNALPARAMSHINT.CAPTION"
+msgctxt "tmainform.lboptionexternalparamshint.caption"
 msgid "[?]"
 msgstr "[?]"
 
@@ -1646,7 +1755,7 @@ msgid "Filename:"
 msgstr "Имя файла:"
 
 #: tmainform.lboptionfilenamecustomrenamehint.caption
-msgctxt "TMAINFORM.LBOPTIONFILENAMECUSTOMRENAMEHINT.CAPTION"
+msgctxt "tmainform.lboptionfilenamecustomrenamehint.caption"
 msgid "[?]"
 msgstr "[?]"
 
@@ -1681,12 +1790,11 @@ msgid "After download finish:"
 msgstr "После завершения загрузки:"
 
 #: tmainform.lboptionmangacustomrename.caption
-msgctxt "TMAINFORM.LBOPTIONMANGACUSTOMRENAME.CAPTION"
 msgid "Manga folder name:"
-msgstr "Имя каталога манги:"
+msgstr "Имя папки манги:"
 
 #: tmainform.lboptionmangacustomrenamehint.caption
-msgctxt "TMAINFORM.LBOPTIONMANGACUSTOMRENAMEHINT.CAPTION"
+msgctxt "tmainform.lboptionmangacustomrenamehint.caption"
 msgid "[?]"
 msgstr "[?]"
 
@@ -1713,8 +1821,11 @@ msgid "Number of downloaded tasks at the same time"
 msgstr "Количество одновременно загружаемых задач"
 
 #: tmainform.lboptionmaxretry.caption
-msgid "Number of retry times if tasks have download problems (-1 = always retry)"
-msgstr "Количество повторных попыток, если задачи имеют проблемы с загрузкой (-1 = всегда повторять)"
+msgid ""
+"Number of retry times if tasks have download problems (-1 = always retry)"
+msgstr ""
+"Количество повторных попыток, если задачи имеют проблемы с загрузкой (-1 = "
+"всегда повторять)"
 
 #: tmainform.lboptionmaxthread.caption
 msgid "Number of downloaded files per task at the same time"
@@ -1731,15 +1842,15 @@ msgstr "Пароль"
 
 #: tmainform.lboptionpdfquality.caption
 msgid "PDF Quality Level"
-msgstr ""
+msgstr "Качество PDF"
 
 #: tmainform.lboptionpdfquality.hint
-msgctxt "TMAINFORM.LBOPTIONPDFQUALITY.HINT"
+msgctxt "tmainform.lboptionpdfquality.hint"
 msgid "100 = FlateEncode (lossless), lower = DCTEncode (lossy)"
 msgstr "100 = FlateEncode (без потерь), lower = DCTEncode (с потерями)"
 
 #: tmainform.lboptionpdfqualityhint.caption
-msgctxt "TMAINFORM.LBOPTIONPDFQUALITYHINT.CAPTION"
+msgctxt "tmainform.lboptionpdfqualityhint.caption"
 msgid "[?]"
 msgstr "[?]"
 
@@ -1765,9 +1876,8 @@ msgid "Username"
 msgstr "Имя пользователя"
 
 #: tmainform.lbpngcompressionlevel.caption
-msgctxt "tmainform.lbpngcompressionlevel.caption"
 msgid "PNG Compression level"
-msgstr "Уровень компрессии PNG"
+msgstr "Уровень сжатия PNG"
 
 #: tmainform.lbsaveto.caption
 msgid "Save to:"
@@ -1778,7 +1888,7 @@ msgid "Save WebP as"
 msgstr "Сохранять WebP как"
 
 #: tmainform.medturldelete.caption
-msgctxt "TMAINFORM.MEDTURLDELETE.CAPTION"
+msgctxt "tmainform.medturldelete.caption"
 msgid "Delete"
 msgstr "Удалить"
 
@@ -1830,7 +1940,7 @@ msgid "Descending"
 msgstr "Нисходящий"
 
 #: tmainform.michapterlistfilter.caption
-msgctxt "TMAINFORM.MICHAPTERLISTFILTER.CAPTION"
+msgctxt "tmainform.michapterlistfilter.caption"
 msgid "Filter"
 msgstr "Фильтр"
 
@@ -1857,7 +1967,7 @@ msgid "Delete"
 msgstr "Удалить"
 
 #: tmainform.midownloaddeletecompleted.caption
-msgctxt "TMAINFORM.MIDOWNLOADDELETECOMPLETED.CAPTION"
+msgctxt "tmainform.midownloaddeletecompleted.caption"
 msgid "Delete all completed tasks"
 msgstr "Удалить все выполненные задачи"
 
@@ -1919,19 +2029,17 @@ msgid "Change \"Save to\""
 msgstr "Изменить \"Сохранить в\""
 
 #: tmainform.mifavoriteschecknewchapter.caption
-msgctxt "TMAINFORM.MIFAVORITESCHECKNEWCHAPTER.CAPTION"
+msgctxt "tmainform.mifavoriteschecknewchapter.caption"
 msgid "Check for new chapter"
-msgstr "Проверить на новые главы"
+msgstr "Проверить на новую глава"
 
 #: tmainform.mifavoritesdefaultaction.caption
-msgctxt "tmainform.mifavoritesdefaultaction.caption"
 msgid "Default Action"
-msgstr "Default Action"
+msgstr "Действие по умолчанию"
 
 #: tmainform.mifavoritesdefaultactionchecknewchapters.caption
-msgctxt "tmainform.mifavoritesdefaultactionchecknewchapters.caption"
 msgid "Check for new Chapters"
-msgstr "Check for new Chapters"
+msgstr "Проверить новые главы"
 
 #: tmainform.mifavoritesdefaultactionopenfolder.caption
 msgctxt "tmainform.mifavoritesdefaultactionopenfolder.caption"
@@ -1944,12 +2052,11 @@ msgid "Rename"
 msgstr "Rename"
 
 #: tmainform.mifavoritesdefaultactionshowinfo.caption
-msgctxt "tmainform.mifavoritesdefaultactionshowinfo.caption"
 msgid "View Manga Info"
 msgstr "View Manga Info"
 
 #: tmainform.mifavoritesdelete.caption
-msgctxt "TMAINFORM.MIFAVORITESDELETE.CAPTION"
+msgctxt "tmainform.mifavoritesdelete.caption"
 msgid "Delete"
 msgstr "Удалить"
 
@@ -1969,12 +2076,12 @@ msgid "Enable"
 msgstr "Включить"
 
 #: tmainform.mifavoritesopenfolder.caption
-msgctxt "TMAINFORM.MIFAVORITESOPENFOLDER.CAPTION"
+msgctxt "tmainform.mifavoritesopenfolder.caption"
 msgid "Open Folder"
 msgstr "Открыть папку"
 
 #: tmainform.mifavoritesopenwith.caption
-msgctxt "TMAINFORM.MIFAVORITESOPENWITH.CAPTION"
+msgctxt "tmainform.mifavoritesopenwith.caption"
 msgid "Open ..."
 msgstr "Открыть..."
 
@@ -1988,12 +2095,11 @@ msgid "Stop check for new chapter"
 msgstr "Не проверять на новые главы"
 
 #: tmainform.mifavoritestransferwebsite.caption
-msgctxt "tmainform.mifavoritestransferwebsite.caption"
 msgid "Transfer website"
 msgstr "Перенести на другой сайт"
 
 #: tmainform.mifavoritesviewinfos.caption
-msgctxt "TMAINFORM.MIFAVORITESVIEWINFOS.CAPTION"
+msgctxt "tmainform.mifavoritesviewinfos.caption"
 msgid "View manga info"
 msgstr "Информация о манге"
 
@@ -2011,7 +2117,7 @@ msgid "Delete"
 msgstr "Удалить"
 
 #: tmainform.mimangalistdownloadall.caption
-msgctxt "TMAINFORM.MIMANGALISTDOWNLOADALL.CAPTION"
+msgctxt "tmainform.mimangalistdownloadall.caption"
 msgid "Download all"
 msgstr "Загрузить все"
 
@@ -2024,7 +2130,7 @@ msgid "After download finish"
 msgstr "После загрузки"
 
 #: tmainform.mitrayexit.caption
-msgctxt "TMAINFORM.MITRAYEXIT.CAPTION"
+msgctxt "tmainform.mitrayexit.caption"
 msgid "Exit"
 msgstr "Выход"
 
@@ -2054,9 +2160,9 @@ msgid "Resume all"
 msgstr "Продолжить все"
 
 #: tmainform.mitrayshowdropbox.caption
-msgctxt "TMAINFORM.MITRAYSHOWDROPBOX.CAPTION"
+msgctxt "tmainform.mitrayshowdropbox.caption"
 msgid "Show Drop Box"
-msgstr "Показать Drop Box"
+msgstr "Показать Дропбокс"
 
 #: tmainform.mitraystopall.caption
 msgid "Stop all"
@@ -2067,7 +2173,7 @@ msgid "Download all lists from server at once"
 msgstr "Загрузите все списки с сервера одновременно"
 
 #: tmainform.mnfiltergenreallcheck.caption
-msgctxt "TMAINFORM.MNFILTERGENREALLCHECK.CAPTION"
+msgctxt "tmainform.mnfiltergenreallcheck.caption"
 msgid "Check all"
 msgstr "Отметить все"
 
@@ -2076,9 +2182,9 @@ msgid "Indeterminate all"
 msgstr "Определить все"
 
 #: tmainform.mnfiltergenrealluncheck.caption
-msgctxt "TMAINFORM.MNFILTERGENREALLUNCHECK.CAPTION"
+msgctxt "tmainform.mnfiltergenrealluncheck.caption"
 msgid "Uncheck all"
-msgstr "Снить выделение со всех"
+msgstr "Снять отметку со всех"
 
 #: tmainform.mnupdate1click.caption
 msgid "Update all lists at once"
@@ -2089,7 +2195,7 @@ msgid "Download manga list from server"
 msgstr "Загрузить список манги с сервера"
 
 #: tmainform.mnupdatelist.caption
-msgctxt "TMAINFORM.MNUPDATELIST.CAPTION"
+msgctxt "tmainform.mnupdatelist.caption"
 msgid "Update manga list"
 msgstr "Обновить список манги"
 
@@ -2110,7 +2216,7 @@ msgstr "Отключено"
 #: tmainform.rbfavoritesshowenabled.caption
 msgctxt "tmainform.rbfavoritesshowenabled.caption"
 msgid "Enabled"
-msgstr ""
+msgstr "Включено"
 
 #: tmainform.rbone.caption
 msgid "Have one of genres checked"
@@ -2203,7 +2309,6 @@ msgid "Dialogs"
 msgstr "Диалоги"
 
 #: tmainform.tsdownload.caption
-msgctxt "tmainform.tsdownload.caption"
 msgid "Downloads"
 msgstr "Загрузки"
 
@@ -2243,9 +2348,9 @@ msgid "Options"
 msgstr "Настройки"
 
 #: tmainform.tssaveto.caption
-msgctxt "TMAINFORM.TSSAVETO.CAPTION"
+msgctxt "tmainform.tssaveto.caption"
 msgid "Save to"
-msgstr "Сохранение"
+msgstr "Сохранить в"
 
 #: tmainform.tsupdate.caption
 msgid "Updates"
@@ -2264,7 +2369,7 @@ msgid "Modules"
 msgstr "Модули"
 
 #: tmainform.tswebsiteoptions.caption
-msgctxt "TMAINFORM.TSWEBSITEOPTIONS.CAPTION"
+msgctxt "tmainform.tswebsiteoptions.caption"
 msgid "Options"
 msgstr "Настройки"
 
@@ -2274,7 +2379,7 @@ msgid "Websites"
 msgstr "Веб-сайты"
 
 #: tmainform.tswebsiteselection.caption
-msgctxt "TMAINFORM.TSWEBSITESELECTION.CAPTION"
+msgctxt "tmainform.tswebsiteselection.caption"
 msgid "Websites"
 msgstr "Веб-сайты"
 
@@ -2292,7 +2397,6 @@ msgid "Progress"
 msgstr "Прогресс"
 
 #: tmainform.vtdownload.header.columns[3].text
-msgctxt "tmainform.vtdownload.header.columns[3].text"
 msgid "Transfer rate"
 msgstr "Скоростъ загрузки"
 
@@ -2307,7 +2411,6 @@ msgid "Save to"
 msgstr "Сохранить в"
 
 #: tmainform.vtdownload.header.columns[6].text
-msgctxt "TMAINFORM.VTDOWNLOAD.HEADER.COLUMNS[6].TEXT"
 msgid "Added"
 msgstr "Добавлена"
 
@@ -2316,7 +2419,7 @@ msgid "#"
 msgstr "#"
 
 #: tmainform.vtfavorites.header.columns[1].text
-msgctxt "TMAINFORM.VTFAVORITES.HEADER.COLUMNS[1].TEXT"
+msgctxt "tmainform.vtfavorites.header.columns[1].text"
 msgid "Title"
 msgstr "Название"
 
@@ -2325,27 +2428,27 @@ msgid "Current chapter"
 msgstr "Текущая глава"
 
 #: tmainform.vtfavorites.header.columns[3].text
-msgctxt "TMAINFORM.VTFAVORITES.HEADER.COLUMNS[3].TEXT"
+msgctxt "tmainform.vtfavorites.header.columns[3].text"
 msgid "Website"
 msgstr "Сайт"
 
 #: tmainform.vtfavorites.header.columns[4].text
-msgctxt "TMAINFORM.VTFAVORITES.HEADER.COLUMNS[4].TEXT"
+msgctxt "tmainform.vtfavorites.header.columns[4].text"
 msgid "Save to"
 msgstr "Сохранить в"
 
 #: tnewchapter.btcancel.caption
-msgctxt "TNEWCHAPTER.BTCANCEL.CAPTION"
+msgctxt "tnewchapter.btcancel.caption"
 msgid "&Cancel"
 msgstr "Отмена"
 
 #: tnewchapter.btdownload.caption
-msgctxt "TNEWCHAPTER.BTDOWNLOAD.CAPTION"
+msgctxt "tnewchapter.btdownload.caption"
 msgid "&Download"
 msgstr "Загрузить"
 
 #: tnewchapter.btqueue.caption
-msgctxt "TNEWCHAPTER.BTQUEUE.CAPTION"
+msgctxt "tnewchapter.btqueue.caption"
 msgid "&Add to queue"
 msgstr "Добавить в очередь"
 
@@ -2364,11 +2467,20 @@ msgstr "Выбрать папку"
 
 #: tselectdirectoryform.lbdescription.caption
 msgid ""
-"If you change multiple entries at once, the new paths will be constructed like this:\n"
+"If you change multiple entries at once, the new paths will be constructed "
+"like this:\n"
 "\"{New_Path}\\{Manga_Title}\"\n"
 "\n"
-"Old folder structures will be ignored. However, if the only part you change is the drive letter (e.g. 'D:'), only the letter will be replaced. This only works for absolute paths, relative paths will be ignored."
+"Old folder structures will be ignored. However, if the only part you change "
+"is the drive letter (e.g. 'D:'), only the letter will be replaced. This only "
+"works for absolute paths, relative paths will be ignored."
 msgstr ""
+"При изменении нескольких записей за раз новые пути будут построены так:\n"
+"\"{New_Path}\\{Manga_Title}\"\n"
+"\n"
+"Старая структура папок будет проигнорирована. Однако, если изменяется только "
+"буква диска (напр. 'D:'), то только буква будет заменена. Это работает "
+"только для абсолютных путей, относительные пути будут проигнорированы."
 
 #: tshutdowncounterform.btabort.caption
 msgid "&Abort"
@@ -2397,7 +2509,6 @@ msgid "Clear downloaded chapter list and reload from server"
 msgstr "Очистить скачанные главы и заново загрузить с сервера"
 
 #: ttransferfavoritesform.lbtransferto.caption
-msgctxt "ttransferfavoritesform.lbtransferto.caption"
 msgid "Transfer to"
 msgstr "Перенести на"
 
@@ -2460,170 +2571,304 @@ msgstr "Название параметра"
 
 #: udownloadsmanager.rs_compressing
 msgid "Compressing..."
-msgstr ""
+msgstr "Сжатие..."
 
 #: udownloadsmanager.rs_disabled
-#, fuzzy
 msgctxt "udownloadsmanager.rs_disabled"
 msgid "Disabled"
 msgstr "Отключено"
 
 #: udownloadsmanager.rs_downloading
 msgid "Downloading"
-msgstr ""
+msgstr "Загрузка"
 
 #: udownloadsmanager.rs_failed
-#, fuzzy
 msgctxt "udownloadsmanager.rs_failed"
 msgid "Failed"
 msgstr "Неудачно"
 
 #: udownloadsmanager.rs_failedtocreatedir
 msgid "Failed to create directory!"
-msgstr ""
+msgstr "Не удалось создать папку!"
 
 #: udownloadsmanager.rs_failedtryresumetask
 msgid "Failed, try resuming this task!"
-msgstr ""
+msgstr "Неудача, попытка возобновить задачу!"
 
 #: udownloadsmanager.rs_finish
 msgid "Completed"
-msgstr ""
+msgstr "Завершено"
 
 #: udownloadsmanager.rs_preparing
 msgctxt "udownloadsmanager.rs_preparing"
 msgid "Preparing"
-msgstr ""
+msgstr "Подготовка"
 
 #: udownloadsmanager.rs_stopped
 msgid "Stopped"
-msgstr ""
+msgstr "Остановлено"
 
 #: udownloadsmanager.rs_waiting
 msgid "Waiting..."
-msgstr ""
+msgstr "Ожидание..."
 
 #: ufavoritesmanager.rs_btnaddtoqueue
-#, fuzzy
 msgctxt "ufavoritesmanager.rs_btnaddtoqueue"
 msgid "&Add to queue"
 msgstr "Добавить в очередь"
 
 #: ufavoritesmanager.rs_btncancel
-#, fuzzy
 msgctxt "ufavoritesmanager.rs_btncancel"
 msgid "&Cancel"
 msgstr "Отмена"
 
 #: ufavoritesmanager.rs_btncheckfavorites
-#, fuzzy
 msgctxt "ufavoritesmanager.rs_btncheckfavorites"
 msgid "Check for new chapter"
 msgstr "Проверить на новую глава"
 
 #: ufavoritesmanager.rs_btndownload
-#, fuzzy
 msgctxt "ufavoritesmanager.rs_btndownload"
 msgid "&Download"
 msgstr "Загрузить"
 
 #: ufavoritesmanager.rs_btnremove
 msgid "&Remove"
-msgstr ""
+msgstr "Удалить"
 
 #: ufavoritesmanager.rs_dlgcompletedmangacaption
 #, object-pascal-format
 msgid "Found %d completed manga"
-msgstr ""
+msgstr "Найдено %d экз. законченной манги"
 
 #: ufavoritesmanager.rs_dlgfavoritescheckisrunning
 msgid "Favorites check is running!"
-msgstr ""
+msgstr "Запущена проверка избранного!"
 
 #: ufavoritesmanager.rs_dlgnewchaptercaption
 #, object-pascal-format
 msgid "%d manga(s) have new chapter(s)"
-msgstr ""
+msgstr "%d экз. манги имеют новые главы"
 
 #: ufavoritesmanager.rs_favoritehasnewchapter
 #, object-pascal-format
 msgid "%s <%s> has %d new chapter(s)."
-msgstr ""
+msgstr "%s <%s> имеет %d новых глав."
 
 #: ufavoritesmanager.rs_lblmangawillberemoved
 msgid "Completed manga will be removed:"
-msgstr ""
+msgstr "Законченная манга будет убрана:"
 
 #: ufavoritesmanager.rs_lblnewchapterfound
 #, object-pascal-format
 msgid "Found %d new chapter from %d manga(s):"
-msgstr ""
+msgstr "Найдено %d новых глав %d манги:"
 
 #: usilentthread.rs_silentthreadloadstatus
 #, object-pascal-format
 msgid "Loading: %d/%d"
-msgstr ""
+msgstr "Загрузка: %d/%d"
 
 #: uupdatethread.rs_dlghasnewmanga
 #, object-pascal-format
 msgid "%s has %d new manga(s)"
-msgstr ""
+msgstr "%s имеет %d новых экз. манги"
 
 #: uupdatethread.rs_gettingdirectory
 msgid "Getting directory"
-msgstr ""
+msgstr "Получение папки"
 
 #: uupdatethread.rs_gettinginfo
 msgid "Getting info"
-msgstr ""
+msgstr "Получение информации"
 
 #: uupdatethread.rs_gettinglistfor
 msgid "Getting list for"
-msgstr ""
+msgstr "Получение списка для"
 
 #: uupdatethread.rs_indexingnewtitle
 msgid "Indexing new title(s)"
-msgstr ""
+msgstr "Индексирование новых тайтлов"
 
 #: uupdatethread.rs_lookingfornewtitle
 msgid "Looking for new title(s)"
-msgstr ""
+msgstr "Поиск новых тайтлов"
 
 #: uupdatethread.rs_lookingfornewtitlefromanotherdirectory
 msgid "Looking for new title(s) from another directory"
-msgstr ""
+msgstr "Поиск новых тайтлов из другой папки"
 
 #: uupdatethread.rs_preparing
 msgctxt "uupdatethread.rs_preparing"
 msgid "Preparing"
-msgstr ""
+msgstr "Подготовка"
 
 #: uupdatethread.rs_removingduplicatefromcurrentdata
 msgid "Removing duplicate from current data"
-msgstr ""
+msgstr "Удаление дубликатов их текущих данных"
 
 #: uupdatethread.rs_removingduplicatefromlocaldata
 msgid "Removing duplicate from local data"
-msgstr ""
+msgstr "Удаление дубликатов из локальных данных"
 
 #: uupdatethread.rs_removingduplicatefromnewtitle
 msgid "Removing duplicate from new title(s)"
-msgstr ""
+msgstr "Удаление дубликатов новых тайтлов"
 
 #: uupdatethread.rs_savingdata
 msgid "Saving data"
-msgstr ""
+msgstr "Сохранение данных"
 
 #: uupdatethread.rs_synchronizingdata
 msgid "Synchronizing data"
-msgstr ""
+msgstr "Синхронизация данных"
 
 #: uupdatethread.rs_updatinglist
 msgid "Updating list"
-msgstr ""
+msgstr "Обновление списка"
 
 #: webp.serrloadfailed
 #, object-pascal-format
 msgid "Can not load WebP codec library \"%s\". Check your installation."
 msgstr ""
+"Невозможно загрузить библиотеку кодека WebP \"%s\". Проверьте установку."
 
+#~ msgctxt "TACCOUNTSETFORM.BTCANCEL.CAPTION"
+#~ msgid "Cancel"
+#~ msgstr "Отмена"
+
+#~ msgctxt "TACCOUNTSETFORM.EDUSERNAME.TEXTHINT"
+#~ msgid "Username"
+#~ msgstr "Имя пользователя"
+
+#~ msgctxt "TACCOUNTSETFORM.LABEL2.CAPTION"
+#~ msgid "Username"
+#~ msgstr "Имя пользователя"
+
+#~ msgctxt "TACCOUNTSETFORM.LABEL3.CAPTION"
+#~ msgid "Password"
+#~ msgstr "Пароль"
+
+#~ msgctxt "TIMPORTFAVORITES.BTCANCEL.CAPTION"
+#~ msgid "Cancel"
+#~ msgstr "Отмена"
+
+#~ msgctxt "TIMPORTFAVORITES.EDPATH.TEXTHINT"
+#~ msgid "Path to the software (e.g. C:\\MangaDownloader)"
+#~ msgstr "Путь к программе (пример: C:\\MangaDownloader)"
+
+#~ msgctxt "TMAINFORM.BTCHECKLATESTVERSION.CAPTION"
+#~ msgid "Check for latest version"
+#~ msgstr "Проверка последней версии"
+
+#~ msgctxt "TMAINFORM.CKFILTERHENTAI.HINT"
+#~ msgid "Hentai"
+#~ msgstr "Хентай"
+
+#~ msgctxt "TMAINFORM.EDFILTERMANGAINFOCHAPTERS.TEXTHINT"
+#~ msgid "Filter"
+#~ msgstr "Фильтр"
+
+#~ msgctxt "TMAINFORM.EDOPTIONFILENAMECUSTOMRENAME.TEXTHINT"
+#~ msgid "Custom rename"
+#~ msgstr "Пользовательское переименование"
+
+#~ msgctxt "TMAINFORM.EDOPTIONMANGACUSTOMRENAME.TEXTHINT"
+#~ msgid "Custom rename"
+#~ msgstr "Пользовательское переименование"
+
+#~ msgctxt "TMAINFORM.LBFILTERSTATUS.CAPTION"
+#~ msgid "Status"
+#~ msgstr "Статус"
+
+#~ msgctxt "TMAINFORM.LBOPTIONAUTOCHECKFAVINTERVALMINUTES.CAPTION"
+#~ msgid "Auto check for new chapter every %d minutes"
+#~ msgstr "Автоматическая проверка новой главы каждые %d минут"
+
+#~ msgctxt "TMAINFORM.LBOPTIONCHAPTERCUSTOMRENAMEHINT.CAPTION"
+#~ msgid "[?]"
+#~ msgstr "[?]"
+
+#~ msgctxt "TMAINFORM.LBOPTIONEXTERNALPARAMSHINT.CAPTION"
+#~ msgid "[?]"
+#~ msgstr "[?]"
+
+#~ msgctxt "TMAINFORM.LBOPTIONFILENAMECUSTOMRENAMEHINT.CAPTION"
+#~ msgid "[?]"
+#~ msgstr "[?]"
+
+#~ msgctxt "TMAINFORM.LBOPTIONMANGACUSTOMRENAMEHINT.CAPTION"
+#~ msgid "[?]"
+#~ msgstr "[?]"
+
+#~ msgctxt "TMAINFORM.LBOPTIONPDFQUALITYHINT.CAPTION"
+#~ msgid "[?]"
+#~ msgstr "[?]"
+
+#~ msgctxt "TMAINFORM.MICHAPTERLISTFILTER.CAPTION"
+#~ msgid "Filter"
+#~ msgstr "Фильтр"
+
+#~ msgctxt "TMAINFORM.MIFAVORITESCHECKNEWCHAPTER.CAPTION"
+#~ msgid "Check for new chapter"
+#~ msgstr "Проверить на новые главы"
+
+#~ msgctxt "TMAINFORM.MIFAVORITESDELETE.CAPTION"
+#~ msgid "Delete"
+#~ msgstr "Удалить"
+
+#~ msgctxt "TMAINFORM.MIFAVORITESOPENFOLDER.CAPTION"
+#~ msgid "Open Folder"
+#~ msgstr "Открыть папку"
+
+#~ msgctxt "TMAINFORM.MIFAVORITESOPENWITH.CAPTION"
+#~ msgid "Open ..."
+#~ msgstr "Открыть..."
+
+#~ msgctxt "TMAINFORM.MIFAVORITESVIEWINFOS.CAPTION"
+#~ msgid "View manga info"
+#~ msgstr "Информация о манге"
+
+#~ msgctxt "TMAINFORM.MIMANGALISTDOWNLOADALL.CAPTION"
+#~ msgid "Download all"
+#~ msgstr "Загрузить все"
+
+#~ msgctxt "TMAINFORM.MITRAYSHOWDROPBOX.CAPTION"
+#~ msgid "Show Drop Box"
+#~ msgstr "Показать Drop Box"
+
+#~ msgctxt "TMAINFORM.MNFILTERGENREALLCHECK.CAPTION"
+#~ msgid "Check all"
+#~ msgstr "Отметить все"
+
+#~ msgctxt "TMAINFORM.MNFILTERGENREALLUNCHECK.CAPTION"
+#~ msgid "Uncheck all"
+#~ msgstr "Снить выделение со всех"
+
+#~ msgctxt "TMAINFORM.MNUPDATELIST.CAPTION"
+#~ msgid "Update manga list"
+#~ msgstr "Обновить список манги"
+
+#~ msgctxt "TMAINFORM.TSSAVETO.CAPTION"
+#~ msgid "Save to"
+#~ msgstr "Сохранение"
+
+#~ msgctxt "TMAINFORM.TSWEBSITEOPTIONS.CAPTION"
+#~ msgid "Options"
+#~ msgstr "Настройки"
+
+#~ msgctxt "TMAINFORM.TSWEBSITESELECTION.CAPTION"
+#~ msgid "Websites"
+#~ msgstr "Веб-сайты"
+
+#~ msgctxt "TMAINFORM.VTFAVORITES.HEADER.COLUMNS[1].TEXT"
+#~ msgid "Title"
+#~ msgstr "Название"
+
+#~ msgctxt "TMAINFORM.VTFAVORITES.HEADER.COLUMNS[3].TEXT"
+#~ msgid "Website"
+#~ msgstr "Сайт"
+
+#~ msgctxt "TMAINFORM.VTFAVORITES.HEADER.COLUMNS[4].TEXT"
+#~ msgid "Save to"
+#~ msgstr "Сохранить в"
