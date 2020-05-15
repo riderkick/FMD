@@ -251,8 +251,6 @@ function Init()
   AddWebsiteModule('OnManga', 'https://onmanga.com', cat)
   AddWebsiteModule('ReadRawManga', 'https://www.readrawmanga.com', cat)
   AddWebsiteModule('MangaStreamCC', 'https://www.mangastream.cc', cat)
-  AddWebsiteModule('WuxiaWorld', 'https://wuxiaworld.site', cat)
-  AddWebsiteModule('Webnovel.live', 'https://webnovel.live', cat)
   AddWebsiteModule('TeabeerComics', 'https://teabeercomics.com', cat)
 
   cat = 'English-Scanlation'
@@ -325,6 +323,8 @@ function Init()
   AddWebsiteModule('KissMangaIN', 'https://kissmanga.in', cat)
   AddWebsiteModule('MiracleScans', 'https://miraclescans.com', cat)
   AddWebsiteModule('1stKissManga', 'https://1stkissmanga.com', cat)
+  AddWebsiteModule('WuxiaWorld', 'https://wuxiaworld.site', cat)
+  AddWebsiteModule('WebNovelLive', 'https://webnovel.live', cat)
   
   cat = 'Arabic-Scanlation'
   AddWebsiteModule('3asqOrg', 'https://3asq.org', cat)
