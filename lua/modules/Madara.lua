@@ -251,6 +251,8 @@ function Init()
   AddWebsiteModule('OnManga', 'https://onmanga.com', cat)
   AddWebsiteModule('ReadRawManga', 'https://www.readrawmanga.com', cat)
   AddWebsiteModule('MangaStreamCC', 'https://www.mangastream.cc', cat)
+  AddWebsiteModule('WuxiaWorld', 'https://wuxiaworld.site', cat)
+  AddWebsiteModule('Webnovel.live', 'https://webnovel.live', cat)
   AddWebsiteModule('TeabeerComics', 'https://teabeercomics.com', cat)
 
   cat = 'English-Scanlation'
