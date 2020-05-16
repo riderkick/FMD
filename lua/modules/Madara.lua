@@ -325,6 +325,7 @@ function Init()
   AddWebsiteModule('1stKissManga', 'https://1stkissmanga.com', cat)
   AddWebsiteModule('WuxiaWorld', 'https://wuxiaworld.site', cat)
   AddWebsiteModule('WebNovelLive', 'https://webnovel.live', cat)
+  AddWebsiteModule('MangaRockTeam', 'https://mangarockteam.com', cat)
   
   cat = 'Arabic-Scanlation'
   AddWebsiteModule('3asqOrg', 'https://3asq.org', cat)
