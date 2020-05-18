@@ -11,7 +11,6 @@ function GetInfo()
 	mangainfo.url = MaybeFillHost(module.rooturl,url)
 	local id = url:match('c/(%d+)')
 	if http.GET(string.format(infoURL,id)) then
-		--print(StreamToString(http.document))
 		local y = StreamToString(http.document)
 		local x = TXQuery.Create(http.Document)
 		mangainfo.title = ToUTF8(GetBetween('\"name\":\"','\",',y))
