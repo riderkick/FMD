@@ -10,39 +10,65 @@ local seriesURL = 'http://manhua.weibo.com/c/%s'
 function GetInfo()
 	mangainfo.url = MaybeFillHost(module.rooturl,url)
 	local id = url:match('c/(%d+)')
-
-	if http.get(string.format(infoURL,id)) then
+	if http.GET(string.format(infoURL,id)) then
+		local y = StreamToString(http.document)
 		local x = TXQuery.Create(http.Document)
-		mangainfo.title = x.XPathString('json(*)/data/comic/name')
+		mangainfo.title = ToUTF8(GetBetween('\"name\":\"','\",',y))
 		if(x.XPathString('json(*)/data/comic/hcover') ~= '') then
 			mangainfo.coverLink = string.format(coverURL, x.XPathString('json(*)/data/comic/hcover'))
 		else
 			mangainfo.coverLink = x.XPathString('json(*)/data/comic/cover')
 		end
-		mangainfo.authors = x.XPathString('json(*)/data/comic/sina_nickname')
-		mangainfo.summary = x.XPathString('json(*)/data/comic/description')
+		mangainfo.authors = ToUTF8(GetBetween('\"sina_nickname\":\"','\",',y))
+		mangainfo.summary = ToUTF8(GetBetween('\"description\":\"','\",',y))
 		
 		-- Populate genres list
 		local genres = ''
-		local category = x.XPath('json(*).data.comic_cate()')
+		local category = GetBetween('\"comic_cate\":[',']',y)
+		local j,k = string.find(category,'cate_name\":\"')
 		
-		if category.count > 0 then genres = x.XPathString('cate_name', category.get(1)) end
-		for i = 2, category.count do
-			local c = x.XPathString('cate_name', category.get(i))
-			genres = genres .. ', ' .. c
+		while j ~= nil do
+			local i2,j2 = string.find(category,'\",',k)
+			local c = ToUTF8(string.sub(category,k+1,i2-1))
+			if genres == '' then
+				genres = c
+			else
+				genres = genres .. ', ' .. c
+			end
+			j,k = string.find(category,'cate_name\":\"',j2)
 		end
 		mangainfo.genres = genres
 		
 		local chapter = x.XPath('json(*).data.chapter_list()')
+		local chapterString = GetBetween('\"chapter_list\":\"[',']',y)
+		j,k = string.find(chapterString,'chapter_name\":\"')
 		for i = 1, chapter.count do
 			mangainfo.chapterlinks.add(string.format(chapterURL,x.XPathString('chapter_id',chapter.get(i))))
-			mangainfo.chapternames.add(x.XPathString('chapter_name',chapter.get(i)))
+			local i2,j2 = string.find(chapterString,'\",',k)
+			local c = ToUTF8(string.sub(chapterString,k+1,i2-1))
+			mangainfo.chapternames.add(c)
+			j,k = string.find(chapterString,'chapter_name\":\"',j2)
 		end
 		
 		return no_error
 	else
 		return net_problem
 	end
+end
+
+function ToUTF8(s)
+	local i = 1
+	local out = ''
+	while i < string.len(s) do
+		if string.byte(s,i) == string.byte('\\') and string.byte(s,i+1) == string.byte('u') then
+			out = out .. utf8.char(tonumber(string.sub(s,i+2,i+5),16))
+			i =i+ 6
+		else
+			out = out .. string.sub(s,i,i)
+			i = i+1
+		end
+	end
+	return out
 end
 
 function GetPageNumber()
@@ -61,11 +87,16 @@ end
 function GetNameAndLink()
 	-- based on assumption of <10,000 comics, rows num must be increased if this is exceeded (!2500 at time of writing)
 	if(http.get'(https://apiwap.vcomic.com/wbcomic/comic/filter_result?page_num=1&rows_num=10000&cate_id=0&end_status=0&comic_pay_status=0&order=comic_read_num&_request_from=pc') then
+		local y = StreamToString(http.Document)
 		local x = TXQuery.Create(http.Document)
 		local list = x.XPath('json(*).data.data()')
+		local j,k = string.find(y,'comic_name\":')
 		for i = 1, list.count do
 			links.add(string.format(seriesURL,x.XPathString('comic_id',list.get(i))))
-			names.add(x.XPathString('comic_name',list.get(i)))
+			local i2,j2 = string.find(y,'\",',k)
+			local n = ToUTF8(string.sub(y,k+1,i2-1))
+			names.add(n)
+			j,k = string.find(y,'comic_name\":',j2)
 		end
 	else
 		return net_problem
