@@ -300,6 +300,7 @@ function Init()
   AddWebsiteModule('ArtemisNF', 'https://artemisnf.com', cat)
   AddWebsiteModule('LazyBoysScan', 'https://lazyboysscan.com', cat)
   AddWebsiteModule('BDSFansub', 'https://bdsfansub.com', cat)
+  AddWebsiteModule('LeerManhua', 'https://leermanhua.com', cat)
 	
   cat = 'Webcomics'
   AddWebsiteModule('ManyToon', 'https://manytoon.me', cat)
