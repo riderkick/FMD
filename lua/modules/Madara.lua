@@ -66,13 +66,25 @@ function Modules.Madara()
           mangainfo.chapternames.Add(v1.toString);
           mangainfo.chapterlinks.Add(link);
         end
-      elseif module.website == 'PlotTwistNoFansub' then
-        x.XPathHREFAll('//li[contains(@class, "wp-manga-chapter")]//a', mangainfo.chapterlinks, mangainfo.chapternames)
       elseif module.website == 'Mangareceh' then
         x.XPathHREFAll('//li[contains(@class, "wp-manga-chapter")]/a[1]', mangainfo.chapterlinks, mangainfo.chapternames)
       else
         x.XPathHREFAll('//li[contains(@class, "wp-manga-chapter")]/a', mangainfo.chapterlinks, mangainfo.chapternames)
       end
+	  
+      local idmanga = x.xpathstring('//div[@id="manga-chapters-holder"]/@data-id')
+      if mangainfo.chapterlinks.count < 1 then
+        http.reset()
+        http.headers.values['Cache-Control'] = 'no-cache'
+        http.headers.values['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
+        http.headers.Add('X-Requested-With: XMLHttpRequest')
+        local q = 'action=manga_get_chapters&manga=' .. idmanga
+        if http.post(module.rooturl .. '/wp-admin/admin-ajax.php', q) then
+            local x = TXQuery.Create(http.Document)
+            x.XPathHREFAll('//li[contains(@class, "wp-manga-chapter")]/a', mangainfo.chapterlinks, mangainfo.chapternames)
+        end
+      end
+      
       InvertStrings(mangainfo.chapterlinks,mangainfo.chapternames)
       return no_error
     end
@@ -284,7 +296,7 @@ function Init()
   AddWebsiteModule('ManhwaClub', 'https://manhwa.club', cat)
   AddWebsiteModule('NManhwa', 'https://nmanhwa.com', cat)
   AddWebsiteModule('ManyToonCom', 'https://manytoon.com', cat)
-  AddWebsiteModule('Hiperdex', 'https://hiperdex.com', cat)
+  AddWebsiteModule('Hiperdex', 'https://hiperdex.info', cat)
   AddWebsiteModule('ShosetsuManga', 'https://www.shosetsu-manga.org', cat)
 
   cat = 'Spanish-Scanlation'
@@ -318,7 +330,7 @@ function Init()
   AddWebsiteModule('365Manga', 'https://365manga.com', cat)
   AddWebsiteModule('MangaBob', 'https://mangabob.com', cat)
   AddWebsiteModule('Manga68', 'https://manga68.com', cat)
-  AddWebsiteModule('EarlyManga', 'https://earlymanga.website', cat)
+  AddWebsiteModule('EarlyManga', 'https://earlymanga.net', cat)
   AddWebsiteModule('Mangakiss', 'https://mangakiss.org', cat)
   AddWebsiteModule('MangaLord', 'https://www.mangalord.com', cat)
   AddWebsiteModule('KissMangaIN', 'https://kissmanga.in', cat)
