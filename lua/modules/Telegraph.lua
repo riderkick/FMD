@@ -12,9 +12,7 @@ function GetInfo()
     x=TXQuery.Create(http.document)
     mangainfo.title     = x.XPathString('//meta[@property="og:title"]/@content')
     mangainfo.coverlink = x.XPathString('//meta[@name="twitter:image"]/@content')
-    mangainfo.authors   = x.XPathString('//meta[@property="article:author"]/@content')
-    mangainfo.artists   = x.XPathString('//meta[@property="og:site_name"]/@content')
-	mangainfo.Summary   = mangainfo.title .. string.char(10) .. mangainfo.authors .. ' - ' .. x.XPathString('//meta[@property="article:published_time"]/@content') .. string.char(10) .. mangainfo.url
+    	mangainfo.Summary   = mangainfo.title .. string.char(10) .. x.XPathString('//meta[@property="article:author"]/@content') .. ' - ' .. x.XPathString('//meta[@property="article:published_time"]/@content')
     mangainfo.ChapterLinks.Add(mangainfo.url)
 	mangainfo.ChapterNames.Add(mangainfo.title)
     return no_error
