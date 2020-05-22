@@ -96,6 +96,7 @@ function Init()
   AddWebsiteModule('ManhwaScan', 'https://manhwascan.com', cat)
   AddWebsiteModule('ManhuaScan', 'https://manhuascan.com', cat)
   AddWebsiteModule('EcchiScan', 'https://ecchiscan.com', cat)
+  AddWebsiteModule('HeroScan', 'https://heroscan.com', cat)
   
   cat = 'H-Sites'
   AddWebsiteModule('ManhwaSmut', 'https://manhwasmut.com', cat)
