@@ -310,7 +310,7 @@ function Init()
   AddWebsiteModule('ManhwaClub', 'https://manhwa.club', cat)
   AddWebsiteModule('NManhwa', 'https://nmanhwa.com', cat)
   AddWebsiteModule('ManyToonCom', 'https://manytoon.com', cat)
-  AddWebsiteModule('Hiperdex', 'https://hiperdex.info', cat)
+  AddWebsiteModule('Hiperdex', 'https://hiperdex.com', cat)
   AddWebsiteModule('ShosetsuManga', 'https://www.shosetsu-manga.org', cat)
 
   cat = 'Spanish-Scanlation'
