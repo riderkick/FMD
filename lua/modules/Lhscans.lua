@@ -44,7 +44,7 @@ function getpagenumber()
     else
       x.xpathstringall('//img[contains(@class, "chapter-img")]/@src', task.pagelinks)
     end
-    if module.website == 'Lhscans' or module.website == 'MangaHato' then task.pagecontainerlinks.text = u end
+    if module.website == 'HanaScan' or module.website == 'Lhscans' or module.website == 'MangaHato' then task.pagecontainerlinks.text = u end
   else
     return false
   end
@@ -67,7 +67,7 @@ function getnameandlink()
 end
 
 function BeforeDownloadImage()
-  if module.website == 'Lhscans' or module.website == 'MangaHato' then http.headers.values['Referer'] = task.pagecontainerlinks.text end
+  if module.website == 'HanaScan' or module.website == 'Lhscans' or module.website == 'MangaHato' then http.headers.values['Referer'] = task.pagecontainerlinks.text end
   return true
 end
 
