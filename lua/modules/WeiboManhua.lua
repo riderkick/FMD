@@ -27,6 +27,8 @@ function GetInfo()
 		local category = GetBetween('\"comic_cate\":[',']',y)
 		local j,k = string.find(category,'cate_name\":\"')
 		
+		mangainfo.status = MangaInfoStatusIfPos(x.XPathString('json(*)/data/comic/is_end'),'0','1')
+		
 		while j ~= nil do
 			local i2,j2 = string.find(category,'\",',k)
 			local c = ToUTF8(string.sub(category,k+1,i2-1))
@@ -59,7 +61,7 @@ end
 function ToUTF8(s)
 	local i = 1
 	local out = ''
-	while i < string.len(s) do
+	while i <= string.len(s) do
 		if string.byte(s,i) == string.byte('\\') and string.byte(s,i+1) == string.byte('u') then
 			out = out .. utf8.char(tonumber(string.sub(s,i+2,i+5),16))
 			i =i+ 6
