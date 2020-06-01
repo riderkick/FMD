@@ -2070,7 +2070,7 @@ msgstr "Lade alle Listen aufeinmal vom Server"
 #: tmainform.mnfiltergenreallcheck.caption
 msgctxt "tmainform.mnfiltergenreallcheck.caption"
 msgid "Check all"
-msgstr "Check all"
+msgstr "Alle auswählen"
 
 #: tmainform.mnfiltergenreallindeterminate.caption
 msgid "Indeterminate all"
@@ -2079,7 +2079,7 @@ msgstr "Indeterminate all"
 #: tmainform.mnfiltergenrealluncheck.caption
 msgctxt "tmainform.mnfiltergenrealluncheck.caption"
 msgid "Uncheck all"
-msgstr "Uncheck all"
+msgstr "Alle abwählen"
 
 #: tmainform.mnupdate1click.caption
 msgid "Update all lists at once"
@@ -2562,7 +2562,7 @@ msgstr "Fertige Mangas werden entfernt:"
 #: ufavoritesmanager.rs_lblnewchapterfound
 #, object-pascal-format
 msgid "Found %d new chapter from %d manga(s):"
-msgstr "Fand %d neue Kapitel von %d Manga(s)"
+msgstr "Fand %d neue Kapitel von %d Manga(s):"
 
 #: usilentthread.rs_silentthreadloadstatus
 #, object-pascal-format
@@ -2613,7 +2613,7 @@ msgstr "Entferne Duplikate aus lokalen Daten"
 
 #: uupdatethread.rs_removingduplicatefromnewtitle
 msgid "Removing duplicate from new title(s)"
-msgstr "Entferne Suplikate aus neuen Titeln"
+msgstr "Entferne Duplikate aus neuen Titeln"
 
 #: uupdatethread.rs_savingdata
 msgid "Saving data"
@@ -2630,5 +2630,5 @@ msgstr "Liste erneuern"
 #: webp.serrloadfailed
 #, object-pascal-format
 msgid "Can not load WebP codec library \"%s\". Check your installation."
-msgstr "Kann WebP Codec \"%s\ nicht laden. Überprüfen sie ihre Installation."
+msgstr "Kann WebP Codec \"%s"\ nicht laden. Überprüfen Sie ihre Installation."
 
