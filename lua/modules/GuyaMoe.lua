@@ -46,7 +46,7 @@ function GetInfo()
     for _, w in ipairs(x.XPathI('jn:keys(groups)', v)) do
       local group_id = w.toString
       local group = x.XPathString('(groups)(' .. group_id .. ')', json)
-      local link = string.format('/read/manga/%s/%s/#%s', slug, id, group_id)
+      local link = string.gsub(string.format('/read/manga/%s/%s/#%s', slug, id, group_id), "%.", "-")
       local title = string.format('%s - %s [%s]', id, x.XPathString('title', v), group)
       mangainfo.ChapterLinks.Add(link)
       mangainfo.ChapterNames.Add(title)
@@ -68,7 +68,7 @@ function GetPageNumber()
 
   local x = TXQuery.Create(http.Document)
   local slug = GetSlug(x)
-  local ch = u:match('/(%d+)/?$')
+  local ch = string.gsub(u:match('/([%d%-]+)/?$'), "-", ".")
 
   u = string.format('%s/api/series/%s/', module.RootURL, slug)
   if not http.Get(u) then return false end
