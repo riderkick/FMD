@@ -9,8 +9,13 @@ function GetInfo()
 	mangainfo.Title = x.XPathString("//h1[@class='entry-title']")
 	mangainfo.Genres = x.XPathString('//header[@class="entry-header"]/string-join(./p[position()>1]//a,", ")')
 	
-	mangainfo.ChapterLinks.Add(mangainfo.url)
-	mangainfo.ChapterNames.Add("1")
+	if v.Count == 0 then
+		mangainfo.ChapterLinks.Add(mangainfo.url)
+		mangainfo.ChapterNames.Add(mangainfo.Title)
+	else
+		mangainfo.ChapterLinks.Add(mangainfo.url)
+		mangainfo.ChapterNames.Add("1")
+	end
 	
 	local v = x.XPath('//*[contains(@class,"entry-pagination")]/a')
 	
