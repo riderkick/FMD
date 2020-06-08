@@ -96,5 +96,5 @@ function Init()
   
   cat = 'English'
   AddWebsiteModule('MangaNT', 'https://mangant.com', cat)
-  AddWebsiteModule('ManhuaPlus', 'https://manhuaplus.com', 'English')
+  AddWebsiteModule('ManhuaPlus', 'https://manhuaplus.com', cat)
 end
