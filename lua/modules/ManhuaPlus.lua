@@ -56,7 +56,7 @@ end
 ----------------------------------------------------------------------------------------------------
 
 function Init()
-  AddWebsiteModule('ManhuaPlus', 'hhttps://manhuaplus.com', 'English')
+  AddWebsiteModule('ManhuaPlus', 'https://manhuaplus.com', 'English')
 end
 
 function AddWebsiteModule(name, url, category)
