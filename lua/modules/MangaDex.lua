@@ -270,10 +270,11 @@ function getpagenumber()
     x.ParseHTML(StreamToString(http.Document):gsub('<', ''):gsub('>', ''):gsub('&quot;', ''))
     local hash = x.xpathstring('json(*).hash')
     local srv = x.xpathstring('json(*).server')
+	if srv:sub(-1) ~= '/' then srv = srv .. '/' end
     local v = x.xpath('json(*).page_array()')
     for i = 1, v.count do
       local v1 = v.get(i)
-      local s = MaybeFillHost(module.rooturl, srv .. '/' .. hash .. '/' .. v1.toString)
+      local s = MaybeFillHost(module.rooturl, srv .. hash .. '/' .. v1.toString)
       task.pagelinks.add(s)
     end
     return true
