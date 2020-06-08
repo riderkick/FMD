@@ -36,7 +36,11 @@ function getpagenumber()
   local u = MaybeFillHost(module.rooturl, url)
   if http.get(u) then
     local x=TXQuery.Create(http.Document)
-    x.xpathstringall('//div[@class="page-chapter"]/img/@data-original', task.pagelinks)
+    if module.website == 'ManhuaPlus' then
+      x.xpathstringall('//*[@class="blocks-gallery-item"]//img/@data-src', task.pagelinks)
+    else
+      x.xpathstringall('//div[@class="page-chapter"]/img/@data-original', task.pagelinks)
+    end
     task.pagecontainerlinks.text = u
   else
     return false
@@ -92,4 +96,5 @@ function Init()
   
   cat = 'English'
   AddWebsiteModule('MangaNT', 'https://mangant.com', cat)
+  AddWebsiteModule('ManhuaPlus', 'https://manhuaplus.com', cat)
 end
