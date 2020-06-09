@@ -357,6 +357,7 @@ function Init()
   AddWebsiteModule('WebNovelLive', 'https://webnovel.live', cat)
   AddWebsiteModule('MangaRockTeam', 'https://mangarockteam.com', cat)
   AddWebsiteModule('PhenomenalNoFansub', 'https://www.phenomenalnofansub.site', cat)
+  AddWebsiteModule('TraduccionesAmistosas', 'https://traduccionesamistosas.xyz', cat)
   
   cat = 'Arabic-Scanlation'
   AddWebsiteModule('3asqOrg', 'https://3asq.org', cat)
