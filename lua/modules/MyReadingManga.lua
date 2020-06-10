@@ -1,24 +1,19 @@
 function GetInfo()
-	mangainfo.URL = MaybeFillHost(module.RootURL, url)
+	mangainfo.url = MaybeFillHost(module.RootURL, url)
 	mangainfo.Website = "MyReadingManga"
 	
-	if not http.get(mangainfo.URL) then return net_problem end
+	if not http.get(mangainfo.url) then return net_problem end
 	
 	local x = TXQuery.Create(http.Document)
 	
-	mangainfo.Title = x.XPathString("//h1[@class='entry-title']")
+	mangainfo.Title  = x.XPathString("//h1[@class='entry-title']")
 	mangainfo.Genres = x.XPathString('//header[@class="entry-header"]/string-join(./p[position()>1]//a,", ")')
+	mangainfo.Status = MangaInfoStatusIfPos(x.XPathString('//*[@class="entry-terms" and contains(., "Status")]/a'))
 	
-	if v.Count == 0 then
-		mangainfo.ChapterLinks.Add(mangainfo.url)
-		mangainfo.ChapterNames.Add(mangainfo.Title)
-	else
-		mangainfo.ChapterLinks.Add(mangainfo.url)
-		mangainfo.ChapterNames.Add("1")
-	end
+	mangainfo.ChapterLinks.Add(mangainfo.url)
+	mangainfo.ChapterNames.Add(mangainfo.Title)
 	
 	local v = x.XPath('//*[contains(@class,"entry-pagination")]/a')
-	
 	for i = 1, v.Count do
 		local v1 = v.Get(i)
 		if string.match(v1.toString, '^Next') == nil then
@@ -26,7 +21,7 @@ function GetInfo()
 			mangainfo.ChapterNames.Add(mangainfo.Title .. ' - ' .. v1.toString);
 		end
 	end
-	if mangainfo.ChapterNames.count > 1 then
+	if mangainfo.ChapterNames.Count > 1 then
 		mangainfo.ChapterNames[0] = mangainfo.ChapterNames[0]
 	end
 end
@@ -78,7 +73,6 @@ function Init()
 	m.Website = 'MyReadingManga'
 	m.RootURL = 'https://myreadingmanga.info'
 	m.Category = 'H-Sites'
-	m.LastUpdated='June 04, 2020'
 	m.OnGetInfo='GetInfo'
 	m.OnGetPageNumber='GetPageNumber'
 	m.OnGetNameAndLink='GetNameAndLink'
