@@ -1,16 +1,16 @@
 Modules = {}
 
-function Modules.manhwapool()
-  local manhwapool = {}
+function Modules.Madara()
+  local Madara = {}
 
-  function manhwapool:new()
+  function Madara:new()
     local obj = {}
     setmetatable(obj, self)
     self.__index = self
     return obj
   end
 
-  function manhwapool:getinfo()
+  function Madara:getinfo()
     mangainfo.url=MaybeFillHost(module.RootURL, url)
     if http.get(mangainfo.url) then
       local x=TXQuery.Create(http.document)
@@ -104,7 +104,7 @@ function Modules.manhwapool()
     return net_problem
   end
 
-  function manhwapool:getpagenumber()
+  function Madara:getpagenumber()
     task.pagelinks.clear()
     local aurl = MaybeFillHost(module.rooturl, url)
     if Pos('style=list', aurl) == 0 then
@@ -140,7 +140,7 @@ function Modules.manhwapool()
     return false
   end
 
-  function manhwapool:getnameandlink()
+  function Madara:getnameandlink()
     local perpage = 100
     local q = 'action=madara_load_more&page='.. url ..'&template=madara-core%2Fcontent%2Fcontent-archive&vars%5Bpost_type%5D=wp-manga&vars%5Berror%5D=&vars%5Bm%5D=&vars%5Bp%5D=0&vars%5Bpost_parent%5D=&vars%5Bsubpost%5D=&vars%5Bsubpost_id%5D=&vars%5Battachment%5D=&vars%5Battachment_id%5D=0&vars%5Bname%5D=&vars%5Bstatic%5D=&vars%5Bpagename%5D=&vars%5Bpage_id%5D=0&vars%5Bsecond%5D=&vars%5Bminute%5D=&vars%5Bhour%5D=&vars%5Bday%5D=0&vars%5Bmonthnum%5D=0&vars%5Byear%5D=0&vars%5Bw%5D=0&vars%5Bcategory_name%5D=&vars%5Btag%5D=&vars%5Bcat%5D=&vars%5Btag_id%5D=&vars%5Bauthor%5D=&vars%5Bauthor_name%5D=&vars%5Bfeed%5D=&vars%5Btb%5D=&vars%5Bpaged%5D=1&vars%5Bmeta_key%5D=&vars%5Bmeta_value%5D=&vars%5Bpreview%5D=&vars%5Bs%5D=&vars%5Bsentence%5D=&vars%5Btitle%5D=&vars%5Bfields%5D=&vars%5Bmenu_order%5D=&vars%5Bembed%5D=&vars%5Bignore_sticky_posts%5D=false&vars%5Bsuppress_filters%5D=false&vars%5Bcache_results%5D=true&vars%5Bupdate_post_term_cache%5D=true&vars%5Blazy_load_term_meta%5D=true&vars%5Bupdate_post_meta_cache%5D=true&vars%5Bposts_per_page%5D='.. tostring(perpage) ..'&vars%5Bnopaging%5D=false&vars%5Bcomments_per_page%5D=50&vars%5Bno_found_rows%5D=false&vars%5Border%5D=ASC&vars%5Borderby%5D=post_title&vars%5Btemplate%5D=archive&vars%5Bsidebar%5D=full&vars%5Bpost_status%5D=publish'
     if http.post(module.rooturl .. '/wp-admin/admin-ajax.php', q) then
@@ -155,12 +155,12 @@ function Modules.manhwapool()
     end
   end
 
-  return manhwapool
+  return Madara
 end
 
 function Modules.ChibiManga()
   local ChibiManga = {}
-  setmetatable(ChibiManga, { __index = Modules.manhwapool() })
+  setmetatable(ChibiManga, { __index = Modules.Madara() })
 
   function ChibiManga:getpagenumber()
     task.pagelinks.clear()
@@ -180,7 +180,7 @@ end
 
 function Modules.HentaiRead()
   local HentaiRead = {}
-  setmetatable(HentaiRead, { __index = Modules.manhwapool() })
+  setmetatable(HentaiRead, { __index = Modules.Madara() })
 
   function HentaiRead:getpagenumber()
     task.pagelinks.clear()
@@ -200,7 +200,7 @@ end
 
 function Modules.OnManga()
   local OnManga = {}
-  setmetatable(OnManga, { __index = Modules.manhwapool() })
+  setmetatable(OnManga, { __index = Modules.Madara() })
 
   function OnManga:getpagenumber()
     task.pagelinks.clear()
@@ -224,7 +224,7 @@ function createInstance()
   if m ~= nil then
     return m():new()
   else
-    return Modules.manhwapool():new()
+    return Modules.Madara():new()
   end
 end
 
@@ -267,7 +267,6 @@ function Init()
 
   cat = 'English'
   AddWebsiteModule('IsekaiScan', 'https://isekaiscan.com', cat)
-  AddWebsiteModule('ManhwaPool', 'https://manhwapool.com', cat)
   AddWebsiteModule('MangaKomi', 'https://mangakomi.com', cat)
   AddWebsiteModule('MangaZukiWhatStatus', 'https://whatstatus.co', cat)
   AddWebsiteModule('MangaZukiOnline', 'https://www.mangazuki.online', cat)
@@ -333,6 +332,7 @@ function Init()
   AddWebsiteModule('BakaguyaScan', 'https://bakaguya-scan.tk', cat)
 
   cat = 'Webcomics'
+  AddWebsiteModule('ManhwaPool', 'https://manhwapool.com', cat)
   AddWebsiteModule('ManyToon', 'https://manytoon.me', cat)
   AddWebsiteModule('PocketAngelScan', 'https://pocketangelscans.com', cat)
   AddWebsiteModule('Toonily', 'https://toonily.com', cat)
