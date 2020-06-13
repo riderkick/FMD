@@ -332,6 +332,7 @@ function Init()
   AddWebsiteModule('BakaguyaScan', 'https://bakaguya-scan.tk', cat)
 	
   cat = 'Webcomics'
+  AddWebsiteModule('ManhwaPool', 'https://manhwapool.com', cat)
   AddWebsiteModule('ManyToon', 'https://manytoon.me', cat)
   AddWebsiteModule('PocketAngelScan', 'https://pocketangelscans.com', cat)
   AddWebsiteModule('Toonily', 'https://toonily.com', cat)
