@@ -68,7 +68,11 @@ function GetPageNumber()
   if not http.Get(u) then return net_problem end
   
   x = TXQuery.Create(http.Document)
-  x.XPathStringAll('//div[@class="chapter-content"]//img/@src', task.PageLinks)
+  if x.xPath('//div[@class="chapter-content"]//img[contains(@src, "&url=")]/@src').count > 0 then
+    x.XPathStringAll('//div[@class="chapter-content"]//img/substring-after(@src, "&url=")', task.PageLinks)
+  else
+	x.XPathStringAll('//div[@class="chapter-content"]//img/@src', task.PageLinks)
+  end
   task.PageNumber = task.PageLinks.Count
   
   --[[Debug]] LuaDebug.PrintChapterPageLinks()
