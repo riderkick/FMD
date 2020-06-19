@@ -40,7 +40,13 @@ function getpagenumber()
         end
       end
     elseif module.website == 'Lhscans' then
-      x.xpathstringall('//img[contains(@class, "chapter-img")]/@data-src', task.pagelinks)
+      local v = x.XPath('//img[contains(@class, "chapter-img")]/@data-src')
+      for i = 1, v.Count do
+        local s = v.Get(i).toString
+        if string.find(s, "LoveHeaven") == nil then
+          task.PageLinks.Add(DecodeBase64(s))
+        end
+      end
     else
       x.xpathstringall('//img[contains(@class, "chapter-img")]/@src', task.pagelinks)
     end
