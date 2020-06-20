@@ -277,6 +277,7 @@ function Init()
   AddWebsiteModule('ReadRawManga', 'https://www.readrawmanga.com', cat)
   AddWebsiteModule('MangaStreamCC', 'https://www.mangastream.cc', cat)
   AddWebsiteModule('TeabeerComics', 'https://teabeercomics.com', cat)
+  AddWebsiteModule('MangaSushi', 'https://mangasushi.net', cat)
 
   cat = 'English-Scanlation'
   AddWebsiteModule('TrashScanlations', 'https://trashscanlations.com', cat)
@@ -360,6 +361,7 @@ function Init()
   AddWebsiteModule('MangaRockTeam', 'https://mangarockteam.com', cat)
   AddWebsiteModule('PhenomenalNoFansub', 'https://www.phenomenalnofansub.site', cat)
   AddWebsiteModule('TraduccionesAmistosas', 'https://traduccionesamistosas.xyz', cat)
+  AddWebsiteModule('WebtoonXYZ', 'https://www.webtoon.xyz', cat)
   
   cat = 'Arabic-Scanlation'
   AddWebsiteModule('3asqOrg', 'https://3asq.org', cat)
