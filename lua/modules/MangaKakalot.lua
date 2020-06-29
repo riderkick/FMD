@@ -81,6 +81,7 @@ function getpagenumber()
     if task.pagelinks.count == 0 then
       x.xpathstringall('//div[@id="vungdoc"]/img/@data-src', task.pagelinks)
     end
+    task.pagecontainerlinks.text = u
     return true
   else
     return false
@@ -128,6 +129,11 @@ function getdirectorypagenumber()
   end
 end
 
+function beforedownloadimage()
+  http.headers.values['Referer'] = task.pagecontainerlinks.text
+  return true
+end
+
 function AddWebsiteModule(name, url)
   local m = NewModule()
   m.website = name
@@ -137,6 +143,7 @@ function AddWebsiteModule(name, url)
   m.ongetpagenumber='getpagenumber'
   m.ongetnameandlink='getnameandlink'
   m.ongetdirectorypagenumber = 'getdirectorypagenumber'
+  m.onbeforedownloadimage = 'beforedownloadimage'
   return m
 end 
 
