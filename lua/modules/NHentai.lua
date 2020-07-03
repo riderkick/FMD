@@ -28,11 +28,16 @@ function GetInfo()
   
   x = TXQuery.Create(http.Document)
   mangainfo.Title     = x.XPathString('//h1')
-  mangainfo.CoverLink = x.XPathString('//div[@id="cover"]//img/@data-src')
-  if mangainfo.CoverLink == '' then mangainfo.CoverLink = x.XPathString('//div[@id="cover"]//img/@src') end
-  mangainfo.Artists   = x.XPathString('//section[@id="tags"]//a[contains(@href, "artist")]/text()')
-  mangainfo.Genres    = x.XPathStringAll('//section[@id="tags"]//a/text()')
-  mangainfo.Summary   = x.XPathString('//div[contains(@class, "drop-discription")]/p/text()')
+  if module.website == 'NHentai' then
+    mangainfo.CoverLink = x.XPathString('//div[@id="cover"]//img/@data-src')
+    mangainfo.Artists   = x.XPathStringAll('//*[@class="tags"]/a[contains(@href, "artist")]/*[@class="name"]')
+    mangainfo.Genres    = x.XPathStringAll('//*[@class="tags"]/a[contains(@href, "tag")]/*[@class="name"]')
+  else
+    mangainfo.CoverLink = x.XPathString('//div[@id="cover"]//img/@src')
+    mangainfo.Artists   = x.XPathStringAll('//section[@id="tags"]//a[contains(@href, "artists")]/text()')
+    mangainfo.Genres    = x.XPathStringAll('//section[@id="tags"]//a[contains(@href, "tags")]/text()')
+    mangainfo.Summary   = x.XPathString('//div[contains(@class, "drop-discription")]/p/text()')
+  end
    
   mangainfo.ChapterLinks.Add(url)
   mangainfo.ChapterNames.Add(mangainfo.Title)
