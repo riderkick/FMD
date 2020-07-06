@@ -39,8 +39,15 @@ function GetInfo()
   if pages == nil then pages = 1 end
   while true do
     for _, v in ipairs(x.XPathI('//div[contains(@class, "chapters-wrapper")]//h2[@class="chap"]/a')) do
-      mangainfo.ChapterNames.Add(x.XPathString('text()', v))
-      mangainfo.ChapterLinks.Add(v.GetAttribute('href'))
+	  if x.XPathString('span/text()', v) == 'RAW' then 
+	    if module.getoption('luaincluderaw') then
+          mangainfo.ChapterNames.Add(x.XPathString('text()', v) .. ' ' .. x.XPathString('span/text()', v))
+          mangainfo.ChapterLinks.Add(v.GetAttribute('href'))
+		end
+	  else
+        mangainfo.ChapterNames.Add(x.XPathString('text()', v))
+        mangainfo.ChapterLinks.Add(v.GetAttribute('href'))
+	  end
     end
     p = p + 1
     if p > pages then
@@ -131,5 +138,7 @@ function AddWebsiteModule(name, url, cat)
   m.OnGetNameAndLink            = 'GetNameAndLink'
   m.OnGetPageNumber             = 'GetPageNumber'
   m.OnGetDirectoryPageNumber    = 'GetDirectoryPageNumber'
+  
+  m.addoptioncheckbox('luaincluderaw', 'Show [raw] chapters', false)
   return m
 end
