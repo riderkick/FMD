@@ -278,6 +278,7 @@ function Init()
   AddWebsiteModule('MangaStreamCC', 'https://www.mangastream.cc', cat)
   AddWebsiteModule('TeabeerComics', 'https://teabeercomics.com', cat)
   AddWebsiteModule('MangaSushi', 'https://mangasushi.net', cat)
+  AddWebsiteModule('Manhuaus', 'https://manhuaus.com', cat)
 
   cat = 'English-Scanlation'
   AddWebsiteModule('TrashScanlations', 'https://trashscanlations.com', cat)
@@ -292,7 +293,6 @@ function Init()
   AddWebsiteModule('WordExcerpt', 'https://wordexcerpt.com', cat)
   AddWebsiteModule('ManhwaTime', 'https://manhwatime.xyz', cat)
   AddWebsiteModule('MartialScans', 'https://martialscans.com', cat)
-  AddWebsiteModule('Manhuaus', 'https://manhuaus.com', cat)
   
   cat = 'French'
   AddWebsiteModule('WakaScan', 'https://wakascan.com', cat)
