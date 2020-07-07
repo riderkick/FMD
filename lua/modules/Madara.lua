@@ -361,9 +361,11 @@ function Init()
   AddWebsiteModule('WebNovelLive', 'https://webnovel.live', cat)
   AddWebsiteModule('MangaRockTeam', 'https://mangarockteam.com', cat)
   AddWebsiteModule('PhenomenalNoFansub', 'https://phenomenalnofansub.com', cat)
-  AddWebsiteModule('TraduccionesAmistosas', 'https://traduccionesamistosas.xyz', cat)
+  AddWebsiteModule('TraduccionesAmistosas', 'https://scantraduccionesamistosas.xyz', cat)
   AddWebsiteModule('WebtoonXYZ', 'https://www.webtoon.xyz', cat)
-  AddWebsiteModule('AHStudios', 'https://ahstudios.net', cat)	
+  AddWebsiteModule('AHStudios', 'https://ahstudios.net', cat)
+  AddWebsiteModule('Alianzamarcial', 'https://www.alianzamarcial.xyz', cat)
+  AddWebsiteModule('Skymangas', 'https://skymangas.com', cat) 
   
   cat = 'Arabic-Scanlation'
   AddWebsiteModule('3asqOrg', 'https://3asq.org', cat)
