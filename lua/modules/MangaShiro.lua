@@ -143,6 +143,7 @@ function getMangas(x)
     if mangainfo.chapterlinks.count < 1 then x.xpathhrefall('//ul[@class="lcp_catlist"]//li/a', mangainfo.chapterlinks, mangainfo.chapternames) end
     if mangainfo.chapterlinks.count < 1 then x.xpathhrefall('//div[contains(@class, "bxcl")]//li//*[contains(@class,"lchx")]/a', mangainfo.chapterlinks, mangainfo.chapternames) end
     if mangainfo.chapterlinks.count < 1 then x.xpathhrefall('//div[contains(@class, "lchx")]//li//*[contains(@class,"bxcl")]/a', mangainfo.chapterlinks, mangainfo.chapternames) end
+    if mangainfo.chapterlinks.count < 1 then x.xpathhrefall('//span[@class="lchx"]/a', mangainfo.chapterlinks, mangainfo.chapternames) end
     
     if mangainfo.chapterlinks.count < 1 or module.website == 'Mangacan' then
       local v = x.xpath('//table[@class="updates"]//td/a')
