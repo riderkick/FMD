@@ -143,6 +143,7 @@ function getMangas(x)
     if mangainfo.chapterlinks.count < 1 then x.xpathhrefall('//ul[@class="lcp_catlist"]//li/a', mangainfo.chapterlinks, mangainfo.chapternames) end
     if mangainfo.chapterlinks.count < 1 then x.xpathhrefall('//div[contains(@class, "bxcl")]//li//*[contains(@class,"lchx")]/a', mangainfo.chapterlinks, mangainfo.chapternames) end
     if mangainfo.chapterlinks.count < 1 then x.xpathhrefall('//div[contains(@class, "lchx")]//li//*[contains(@class,"bxcl")]/a', mangainfo.chapterlinks, mangainfo.chapternames) end
+    if mangainfo.chapterlinks.count < 1 then x.xpathhrefall('//span[@class="lchx"]/a', mangainfo.chapterlinks, mangainfo.chapternames) end
     
     if mangainfo.chapterlinks.count < 1 or module.website == 'Mangacan' then
       local v = x.xpath('//table[@class="updates"]//td/a')
@@ -350,7 +351,7 @@ local cat = 'Indonesian'
   AddWebsiteModule('MangaShiro', 'https://mangashiro.co', cat)
   AddWebsiteModule('MangaKita', 'https://mangakita.net', cat)
   AddWebsiteModule('KomikStation', 'https://www.komikstation.com', cat)
-  AddWebsiteModule('MangaKid', 'https://mgku.me', cat)
+  AddWebsiteModule('MangaKid', 'https://mangakid.club', cat)
   AddWebsiteModule('KomikCast', 'https://komikcast.com', cat)
   AddWebsiteModule('WestManga', 'https://westmanga.info', cat)
   AddWebsiteModule('Kiryuu', 'https://kiryuu.co', cat)
@@ -365,14 +366,14 @@ local cat = 'Indonesian'
   AddWebsiteModule('Mangacan', 'http://www.mangacanblog.com', cat)
   AddWebsiteModule('MangaIndo', 'https://mangaindo.web.id', cat)
   AddWebsiteModule('KomikMama', 'https://komikmama.net', cat)
-  AddWebsiteModule('MangaCeng', 'https://mangaceng.com', cat)
+  AddWebsiteModule('MangaXin', 'https://mangaxin.com', cat)
   AddWebsiteModule('MaidMangaID', 'https://www.maid.my.id', cat)
   AddWebsiteModule('KomikAV', 'https://komikav.com', cat)
   AddWebsiteModule('KoMBatch', 'https://kombatch.com', cat)
   AddWebsiteModule('Ngomik', 'https://ngomik.in', cat)
   AddWebsiteModule('MangaPus', 'https://mangapus.com', cat)
   AddWebsiteModule('Mangaseno', 'https://mangaseno.com', cat)
-  AddWebsiteModule('Mangakyo', 'https://www.mangakyo.com', cat)
+  AddWebsiteModule('Mangakyo', 'https://www.mangakyo.me', cat)
   AddWebsiteModule('MataKomik', 'https://matakomik.com', cat)
   AddWebsiteModule('KomikGoCoID', 'https://www.komikgo.co.id', cat)
   AddWebsiteModule('MangaTsuki', 'https://mangatsuki.web.id', cat)
