@@ -294,6 +294,8 @@ function Init()
   AddWebsiteModule('ManhwaTime', 'https://manhwatime.xyz', cat)
   AddWebsiteModule('MartialScans', 'https://martialscans.com', cat)
   AddWebsiteModule('AsuraScans', 'https://asurascans.com', cat)
+  AddWebsiteModule('HeroManhua', 'https://heromanhua.com', cat)
+  AddWebsiteModule('MangaTurf', 'https://mangaturf.com', cat)
   
   cat = 'French'
   AddWebsiteModule('WakaScan', 'https://wakascan.com', cat)
