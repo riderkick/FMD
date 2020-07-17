@@ -366,6 +366,7 @@ function Init()
   AddWebsiteModule('AHStudios', 'https://ahstudios.net', cat)
   AddWebsiteModule('Alianzamarcial', 'https://www.alianzamarcial.xyz', cat)
   AddWebsiteModule('Skymangas', 'https://skymangas.com', cat) 
+  AddWebsiteModule('Fenixscan', 'https://fenixscan.com', cat) 
   
   cat = 'Arabic-Scanlation'
   AddWebsiteModule('3asqOrg', 'https://3asq.org', cat)
