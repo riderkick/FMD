@@ -75,10 +75,14 @@ function GetPageNumber()
   if not http.Get(u) then return net_problem end
   
   x = TXQuery.Create(http.Document)
-  if x.xPath('//div[@class="chapter-content"]//img[contains(@src, "&url=")]/@src').count > 0 then
-    x.XPathStringAll('//div[@class="chapter-content"]//img/substring-after(@src, "&url=")', task.PageLinks)
-  else
-	x.XPathStringAll('//div[@class="chapter-content"]//img/@src', task.PageLinks)
+  v = x.xpath('//div[@class="chapter-content"]//img')
+  for i = 1, v.count do
+    v1 = v.get(i)
+    local src = v1.getattribute('src')
+	if src:find('&url=') then
+	  src = string.match(src, "&url=(.*)")
+	end
+    task.pagelinks.add(src)
   end
   task.PageNumber = task.PageLinks.Count
   
