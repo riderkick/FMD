@@ -25,14 +25,32 @@ XPathTokenStatus    = 'Statut'
 
 -- Get info and chapter list for current manga.
 function GetInfo()
-  Template.GetInfo()
-  local x = nil
+  local v, x = nil
   local u = MaybeFillHost(module.RootURL, url)
   
   if not http.Get(u) then return net_problem end
   
   x = TXQuery.Create(http.Document)
+  mangainfo.Title     = x.XPathString('(//div[contains(@class, "container")]//h2)[1]')
+  mangainfo.CoverLink = x.XPathString('//div[@class="boxed"]/img/@src')
   mangainfo.Status    = MangaInfoStatusIfPos(x.XPathString('//dt[text()="' .. XPathTokenStatus .. '"]/following-sibling::dd[1]/span'), 'En cours', 'Complete')
+  mangainfo.Authors   = x.XPathStringAll('//dt[text()="' .. XPathTokenAuthors .. '"]/following-sibling::dd[1]/a')
+  mangainfo.Artists   = x.XPathStringAll('//dt[text()="' .. XPathTokenArtists .. '"]/following-sibling::dd[1]/a')
+  mangainfo.Genres    = x.XPathStringAll('//dt[text()="' .. XPathTokenGenres .. '"]/following-sibling::dd[1]/a')
+  mangainfo.Summary   = x.XPathString('//div[contains(@class, "well")]/p')
+
+  for _, v in ipairs(x.XPathI('//ul[@class="chapters"]/li/h5')) do
+    if x.XPathString('normalize-space(.)', v):find('RAW') then
+      if module.getoption('luaincluderaw') then
+        mangainfo.ChapterLinks.Add(x.XPathString('a/@href', v))
+        mangainfo.ChapterNames.Add(x.XPathString('normalize-space(.)', v))
+      end
+    else
+      mangainfo.ChapterLinks.Add(x.XPathString('a/@href', v))
+      mangainfo.ChapterNames.Add(x.XPathString('normalize-space(.)', v))
+    end
+  end
+  InvertStrings(mangainfo.ChapterLinks, mangainfo.ChapterNames)
   
   return no_error
 end
@@ -70,5 +88,7 @@ function AddWebsiteModule(name, url, category)
   m.OnGetInfo                = 'GetInfo'
   m.OnGetNameAndLink         = 'GetNameAndLink'
   m.OnGetPageNumber          = 'GetPageNumber'
+  
+  m.addoptioncheckbox('luaincluderaw', 'Show [RAW] chapters', false)
   return m
 end

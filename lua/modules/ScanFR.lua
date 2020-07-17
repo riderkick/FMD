@@ -36,10 +36,16 @@ function GetInfo()
   mangainfo.Title     = x.XPathString('(//div[contains(@class, "container")]//h2)[1]/substring-after(., "Manga ")')
   mangainfo.Artists   = x.XPathStringAll('//dt[text()="' .. XPathTokenArtists .. '"]/following-sibling::dd[1]')
   
-  v = x.XPath('//ul[@class="chapters888"]/li/h5')
-  for i = 1, v.Count do
-    mangainfo.ChapterLinks.Add(x.XPathString('a/@href', v.Get(i)))
-    mangainfo.ChapterNames.Add(x.XPathString('.', v.Get(i)))
+  for _, v in ipairs(x.XPathI('//ul[@class="chapters888"]/li/h5')) do
+    if x.XPathString('normalize-space(.)', v):find('RAW') then
+      if module.getoption('luaincluderaw') then
+        mangainfo.ChapterLinks.Add(x.XPathString('a/@href', v))
+        mangainfo.ChapterNames.Add(x.XPathString('normalize-space(.)', v))
+      end
+    else
+      mangainfo.ChapterLinks.Add(x.XPathString('a/@href', v))
+      mangainfo.ChapterNames.Add(x.XPathString('normalize-space(.)', v))
+    end
   end
   InvertStrings(mangainfo.ChapterLinks, mangainfo.ChapterNames)
   
@@ -79,5 +85,7 @@ function AddWebsiteModule(name, url, category)
   m.OnGetInfo                = 'GetInfo'
   m.OnGetNameAndLink         = 'GetNameAndLink'
   m.OnGetPageNumber          = 'GetPageNumber'
+  
+  m.addoptioncheckbox('luaincluderaw', 'Show [RAW] chapters', false)
   return m
 end
