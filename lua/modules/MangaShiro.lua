@@ -192,15 +192,6 @@ function getpagenumber()
       local s = x.xpathstring('*')
             x.parsehtml(DecodeBase64(GetBetween('](atob(', ')),', s)))
             x.xpathstringall('json(*)()', task.pagelinks)
-    elseif module.website == 'MangaShiro' then
-      local x = TXQuery.Create(http.Document)
-      local v=x.xpath('//*[@id="readerarea"]//a')
-        for i=1,v.count do
-            local v1=v.get(i)
-            if string.find(v1.getAttribute('href'), "shironime.png") == nil then
-                task.pagelinks.add(v1.getAttribute('href'))
-            end
-        end
     elseif module.website == 'Kiryuu' then
       local x = TXQuery.Create(http.Document)
       local v=x.xpath('//*[@id="readerarea"]//img')
