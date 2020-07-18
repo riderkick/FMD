@@ -10,9 +10,6 @@
 
 This is an active fork of the Free Manga Downloader which is a free open source application written in Object Pascal for managing and downloading manga from various websites. The source code was released under the GPLv2 license.  
   
-  
-[Supported Websites](https://github.com/fmd-project-team/FMD/wiki/Supported-Websites)  
-  
 ## Build instructions
 
 In order to build FMD from the source code, you must install the latest version of Lazarus and Free Pascal Compiler:  
