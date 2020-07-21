@@ -370,6 +370,7 @@ function Init()
   AddWebsiteModule('Skymangas', 'https://skymangas.com', cat) 
   AddWebsiteModule('Fenixscan', 'https://fenixscan.com', cat) 
   AddWebsiteModule('Apolltoons', 'https://apolltoons.xyz', cat)
+  AddWebsiteModule('Apollcomics', 'https://apollcomics.xyz', cat) 
   AddWebsiteModule('ManhuaPlus', 'https://manhuaplus.com', cat)
   
   cat = 'Arabic-Scanlation'
