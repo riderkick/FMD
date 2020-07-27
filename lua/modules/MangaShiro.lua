@@ -92,6 +92,7 @@ function getGenres(x)
   if genre == '' then genre = x.xpathstringall('//ul[@class="genre"]/li') end
   if genre == '' then genre = x.xpathstringall('//span[@class="details"]//div[starts-with(.,"Genre")]/a') end
   if genre == '' then genre = x.xpathstringall('//div[@class="listinfo"]//li[starts-with(.,"Genre")]/substring-after(.,":")') end
+  if genre == '' then genre = x.xpathstringall('//div[@class="genre-info"]/a') end
   return genre
 end
 
@@ -219,6 +220,7 @@ function getpagenumber()
       if task.pagelinks.count < 1 then TXQuery.Create(http.Document).xpathstringall('//*[@id="imgholder"]//img/@src', task.pagelinks) end
       if task.pagelinks.count < 1 then TXQuery.Create(http.Document).xpathstringall('//*[@class="entry-content"]//img/@src', task.pagelinks) end
       if task.pagelinks.count < 1 then TXQuery.Create(http.Document).xpathstringall('//*[@class="bc"]/img/@src', task.pagelinks) end
+      if task.pagelinks.count < 1 then TXQuery.Create(http.Document).xpathstringall('//*[@class="reader-area"]/img/@src', task.pagelinks) end
       if task.pagelinks.count < 1 or module.website == 'KoMBatch' then 
         local link = MaybeFillHost(module.rooturl,url)
         link = link:gsub('/read', '/api/chapter')
@@ -271,7 +273,8 @@ function getnameandlink()
     ['Rawkuma'] = '/manga/?list',
     ['KomikGoCoID'] = '/manga/?list',
     ['MangaSWAT'] = '/manga/?list',
-    ['MangaTsuki'] = '/manga/?list'
+    ['MangaTsuki'] = '/manga/?list',
+    ['ManhwaTime'] = '/manhwa/'
   }
   local dirurl = '/manga-list/'
   if dirs[module.website] ~= nil then
@@ -285,6 +288,7 @@ function getnameandlink()
     if links.count < 1 then x.xpathhrefall('//*[@class="soralist"]//a',links,names) end
     if links.count < 1 then x.xpathhrefall('//*[@id="a-z"]//h4/a',links,names) end
     if links.count < 1 then x.xpathhrefall('//*[@class="manga-list"]/a',links,names) end
+    if links.count < 1 then x.xpathhrefall('//*[@class="animposx"]/a',links,names) end
     
     if links.count < 1 or module.website == 'KoMBatch' then
       local pages = 1
@@ -333,7 +337,7 @@ function AddWebsiteModule(site, url, cat)
   m.ongetinfo='getinfo'
   m.ongetpagenumber='getpagenumber'
   m.ongetnameandlink='getnameandlink'
-  if site == 'MangaShiro' then m.OnBeforeDownloadImage = 'BeforeDownloadImage' end
+  if site == 'MangaShiro' or site == 'ManhwaTime' then m.OnBeforeDownloadImage = 'BeforeDownloadImage' end
   return m
 end
 
@@ -378,4 +382,7 @@ local cat = 'Indonesian'
   
   cat = 'Arabic'
   AddWebsiteModule('MangaSWAT', 'https://mangaswat.com', cat)
+  
+  cat = 'English-Scanlation'
+  AddWebsiteModule('ManhwaTime', 'https://manhwatime.xyz', cat)
 end
