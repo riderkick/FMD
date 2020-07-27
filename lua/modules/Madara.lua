@@ -279,6 +279,7 @@ function Init()
   AddWebsiteModule('TeabeerComics', 'https://teabeercomics.com', cat)
   AddWebsiteModule('MangaSushi', 'https://mangasushi.net', cat)
   AddWebsiteModule('Manhuaus', 'https://manhuaus.com', cat)
+  AddWebsiteModule('AstralLibrary', 'https://astrallibrary.net', cat)
 
   cat = 'English-Scanlation'
   AddWebsiteModule('TrashScanlations', 'https://trashscanlations.com', cat)
