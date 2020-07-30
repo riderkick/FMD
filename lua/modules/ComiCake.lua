@@ -60,4 +60,5 @@ function Init()
   local cat = 'English-Scanlation'
   AddWebsiteModule('LetItGoScans', 'https://reader.letitgo.scans.today', cat)
   AddWebsiteModule('ProjectTime', 'https://read.ptscans.com', cat)
+  AddWebsiteModule('WhimSubs', 'https://whimsubs.xyz', cat)
 end
