@@ -373,6 +373,7 @@ function Init()
   AddWebsiteModule('Apolltoons', 'https://apolltoons.xyz', cat)
   AddWebsiteModule('Apollcomics', 'https://apollcomics.xyz', cat) 
   AddWebsiteModule('ManhuaPlus', 'https://manhuaplus.com', cat)
+  AddWebsiteModule('ToonilyNet', 'https://toonily.net', cat)
   
   cat = 'Arabic-Scanlation'
   AddWebsiteModule('3asqOrg', 'https://3asq.org', cat)
