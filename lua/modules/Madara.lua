@@ -375,6 +375,7 @@ function Init()
   AddWebsiteModule('ManhuaPlus', 'https://manhuaplus.com', cat)
   AddWebsiteModule('ToonilyNet', 'https://toonily.net', cat)
   AddWebsiteModule('Mangakik', 'https://mangakik.com', cat)
+  AddWebsiteModule('FunlistOnline', 'https://funlist.online', cat)
   
   cat = 'Arabic-Scanlation'
   AddWebsiteModule('3asqOrg', 'https://3asq.org', cat)

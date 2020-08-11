@@ -1,7 +1,8 @@
 local dirurl = {
   ['TruyenChon'] = '/the-loai?status=-1&sort=15&page=%s',
   ['NetTruyen'] = '/tim-truyen?status=-1&sort=15&page=%s',
-  ['MangaNT'] = '/genres?status=-1&sort=15&page=%s'
+  ['MangaNT'] = '/genres?status=-1&sort=15&page=%s',
+  ['ManhuaES'] = '/category-comics/manga/page/%s'
 }
 
 function getinfo()
@@ -38,6 +39,8 @@ function getpagenumber()
     local x=TXQuery.Create(http.Document)
     if module.website == 'ManhuaPlus' then
       x.xpathstringall('//*[@class="blocks-gallery-item"]//img/@data-src', task.pagelinks)
+    elseif module.website == 'ManhuaES' then
+      x.xpathstringall('//div[contains(@class, "reading-detail")]//img/@data-src', task.pagelinks)
     else
       x.xpathstringall('//div[@class="page-chapter"]/img/@data-original', task.pagelinks)
     end
@@ -52,6 +55,7 @@ function getnameandlink()
   if http.get(module.RootURL .. dirurl[module.website]:format(IncStr(url))) then
     local x = TXQuery.Create(http.Document)
     x.XPathHREFAll('//div[@class="item"]//h3/a', links, names)
+    if links.count < 1 then x.XPathHREFAll('//div[@class="overlay"]/a', links, names) end
     return no_error
   else
     return net_problem
@@ -96,4 +100,7 @@ function Init()
   
   cat = 'English'
   AddWebsiteModule('MangaNT', 'https://mangant.com', cat)
+  
+  cat = 'Spanish'
+  AddWebsiteModule('ManhuaES', 'https://manhuaes.com', cat)
 end
