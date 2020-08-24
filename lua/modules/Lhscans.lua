@@ -47,6 +47,8 @@ function getpagenumber()
           task.PageLinks.Add(DecodeBase64(s))
         end
       end
+    elseif module.website == 'HeroScan' then
+	    x.xpathstringall('//img[contains(@class, "chapter-img")]/@data-original', task.pagelinks)
     else
       x.xpathstringall('//img[contains(@class, "chapter-img")]/@src', task.pagelinks)
     end
