@@ -271,7 +271,7 @@ function Init()
   
   -- es-sc
   cat = 'Spanish-Scanlation'
-  AddWebsiteModule('KirishimaFansub', 'http://lector.kirishimafansub.net', cat)
+  AddWebsiteModule('KirishimaFansub', 'https://kirishimafansub.net', cat)
   AddWebsiteModule('LoliVault', 'https://lolivault.net', cat)
   AddWebsiteModule('Mangasubes', 'http://mangasubes.patyscans.com', cat)
   AddWebsiteModule('MenudoFansub', 'http://www.menudo-fansub.com', cat)
