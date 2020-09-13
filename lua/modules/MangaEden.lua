@@ -41,6 +41,7 @@ function GetPageNumber()
         task.PageLinks[i] = 'https:' .. task.PageLinks[i]
       end;
     end
+    task.PageContainerLinks.text = MaybeFillHost(module.rooturl, url)
     return true
   else
     return false
@@ -78,6 +79,11 @@ function GetNameAndLink()
   end
 end
 
+function BeforeDownloadImage()
+  http.headers.values['Referer'] = task.PageContainerLinks.text
+  return true
+end
+
 function InitModule(website, rooturl, category)
   m=NewModule()
   m.category=category
@@ -88,6 +94,7 @@ function InitModule(website, rooturl, category)
   m.ongetpagenumber='GetPageNumber'
   m.OnGetDirectoryPageNumber = 'GetDirectoryPageNumber'
   m.ongetnameandlink='GetNameAndLink' 
+  m.onbeforedownloadimage = 'BeforeDownloadImage'
 end
 
 function Init()
