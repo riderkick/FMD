@@ -2,7 +2,8 @@ local dirurl = {
   ['TruyenChon'] = '/the-loai?status=-1&sort=15&page=%s',
   ['NetTruyen'] = '/tim-truyen?status=-1&sort=15&page=%s',
   ['MangaNT'] = '/genres?status=-1&sort=15&page=%s',
-  ['ManhuaES'] = '/category-comics/manga/page/%s'
+  ['ManhuaES'] = '/category-comics/manga/page/%s',
+  ['NhatTruyen'] = '/the-loai?status=-1&sort=15&page=%s'
 }
 
 function getinfo()
@@ -97,6 +98,7 @@ function Init()
   local cat = 'Vietnamese'
   AddWebsiteModule('TruyenChon', 'http://truyenchon.com', cat)
   AddWebsiteModule('NetTruyen', 'http://www.nettruyen.com', cat)
+  AddWebsiteModule('NhatTruyen', 'http://nhattruyen.com', cat)
   
   cat = 'English'
   AddWebsiteModule('MangaNT', 'https://mangant.com', cat)
