@@ -284,7 +284,7 @@ function Init()
 
   cat = 'English-Scanlation'
   AddWebsiteModule('TrashScanlations', 'https://trashscanlations.com', cat)
-  AddWebsiteModule('ChibiManga', 'http://www.cmreader.info', cat)
+  AddWebsiteModule('ChibiManga', 'https://www.cmreader.info', cat)
   AddWebsiteModule('ZinManga', 'https://zinmanga.com', cat)
   AddWebsiteModule('SiXiangScans','http://www.sixiangscans.com', cat)
   AddWebsiteModule('NinjaScans', 'https://ninjascans.com', cat)
