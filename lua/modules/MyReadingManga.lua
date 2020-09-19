@@ -1,24 +1,22 @@
 function GetInfo()
-	mangainfo.url = MaybeFillHost(module.RootURL, url)
-	mangainfo.Website = "MyReadingManga"
-	
-	if not http.get(mangainfo.url) then return net_problem end
-	
+	local u = MaybeFillHost(module.RootURL, url)
+
+	if not http.get(u) then return net_problem end
+
 	local x = TXQuery.Create(http.Document)
-	
 	mangainfo.Title  = x.XPathString("//h1[@class='entry-title']")
 	mangainfo.Genres = x.XPathString('//header[@class="entry-header"]/string-join(./p[position()>1]//a,", ")')
 	mangainfo.Status = MangaInfoStatusIfPos(x.XPathString('//*[@class="entry-terms" and contains(., "Status")]/a'))
-	
+
 	mangainfo.ChapterLinks.Add(mangainfo.url)
-	mangainfo.ChapterNames.Add(mangainfo.Title)
-	
+	mangainfo.ChapterNames.Add(mangainfo.title)
+
 	local v = x.XPath('//*[contains(@class,"entry-pagination")]/a')
 	for i = 1, v.Count do
 		local v1 = v.Get(i)
 		if string.match(v1.toString, '^Next') == nil then
 			mangainfo.ChapterLinks.Add(v1.getAttribute('href'));
-			mangainfo.ChapterNames.Add(mangainfo.Title .. ' - ' .. v1.toString);
+			mangainfo.ChapterNames.Add(mangainfo.Title .. ' - ' .. v1.toString)
 		end
 	end
 	if mangainfo.ChapterNames.Count > 1 then
@@ -27,20 +25,13 @@ function GetInfo()
 end
 
 function GetPageNumber()
-	if http.get(MaybeFillHost(module.rootURL, url)) then
+	task.PageLinks.Clear()
+	if http.get(MaybeFillHost(module.RootURL, url)) then
 		local x = TXQuery.Create(http.Document)
-		
-		local t = x.XPath('//*[contains(@class, "entry-content")]//img/@data-lazy-src')
-		
-		if t == 0 then
-			t = x.XPath('//*[contains(@class,"separator")]//img/@data-lazy-src')
+		x.XPathStringAll('//*[contains(@class,"entry-content")]//img/@data-src', task.PageLinks)
+		if task.PageLinks.Count == 0 then
+			x.XPathStringAll('//div[@class="separator" and @style]//img/@data-src', task.PageLinks)
 		end
-		
-		for i = 1, t.Count do
-			local t1 = t.Get(i).ToString
-			task.PageLinks.Add(t1)
-		end
-
 	else
 		return false
 	end
