@@ -385,4 +385,7 @@ local cat = 'Indonesian'
   
   cat = 'English-Scanlation'
   AddWebsiteModule('ManhwaTime', 'https://manhwatime.xyz', cat)
+  
+  cat = 'English-Scanlation'
+  AddWebsiteModule('AsuraScans', 'https://asurascans.com', cat)
 end
