@@ -379,6 +379,7 @@ function Init()
   AddWebsiteModule('ManhwaLatino', 'https://manhwa-latino.com', cat)
   AddWebsiteModule('AncientEmpireScan', 'https://www.ancientempirescan.site', cat)
   AddWebsiteModule('ManhuasWorld', 'https://www.manhuasworld.com', cat)
+  AddWebsiteModule('MangaNelo', 'https://manganelo.link', cat)
   
   cat = 'Arabic-Scanlation'
   AddWebsiteModule('3asqOrg', 'https://3asq.org', cat)
