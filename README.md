@@ -2,6 +2,15 @@
 
 <sup>(Forked from https://github.com/riderkick/FMD)</sup>
 
+# DISCONTINUED, PLEASE MOVE ON TO FMD2
+
+This fork of FMD will not be continued any further. You can still use it but it won't get any updates anymore.
+You can still find us on our Discord server and talk about FMD or even FMD2, but you should still report bugs, etc. to its repository instead.
+
+FMD2 can be found here: https://github.com/dazedcat19/FMD2
+ 
+ 
+ 
 ## Download
 
 [![Latest release](https://img.shields.io/github/release/fmd-project-team/FMD.svg)](https://github.com/fmd-project-team/FMD/releases/latest)
