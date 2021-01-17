@@ -1,0 +1,73 @@
+object frmDialogYN: TfrmDialogYN
+  Left = 414
+  Height = 325
+  Top = 174
+  Width = 437
+  BorderIcons = [biSystemMenu]
+  Caption = 'Dialog'
+  ChildSizing.LeftRightSpacing = 6
+  ChildSizing.TopBottomSpacing = 6
+  ChildSizing.HorizontalSpacing = 6
+  ChildSizing.VerticalSpacing = 6
+  ClientHeight = 325
+  ClientWidth = 437
+  Position = poMainFormCenter
+  LCLVersion = '2.1.0.0'
+  object btYes: TButton
+    AnchorSideRight.Control = btNo
+    AnchorSideBottom.Control = btNo
+    AnchorSideBottom.Side = asrBottom
+    Left = 339
+    Height = 25
+    Top = 294
+    Width = 44
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    Caption = '&Yes'
+    Default = True
+    ModalResult = 6
+    TabOrder = 0
+  end
+  object btNo: TButton
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 389
+    Height = 25
+    Top = 294
+    Width = 42
+    Anchors = [akRight, akBottom]
+    AutoSize = True
+    Caption = '&No'
+    ModalResult = 7
+    TabOrder = 1
+  end
+  object mMessages: TMemo
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = lbMessage
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = btNo
+    Left = 6
+    Height = 261
+    Top = 27
+    Width = 425
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    ReadOnly = True
+    ScrollBars = ssAutoBoth
+    TabOrder = 2
+    WordWrap = False
+  end
+  object lbMessage: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    Left = 6
+    Height = 15
+    Top = 6
+    Width = 56
+    Caption = 'lbMessage'
+    ParentColor = False
+  end
+end

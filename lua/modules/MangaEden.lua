@@ -41,6 +41,7 @@ function GetPageNumber()
         task.PageLinks[i] = 'https:' .. task.PageLinks[i]
       end;
     end
+    task.PageContainerLinks.text = MaybeFillHost(module.rooturl, url)
     return true
   else
     return false
@@ -69,7 +70,7 @@ function GetDirectoryPageNumber()
 end
 
 function GetNameAndLink()
-  if http.get(module.rooturl..GetDirUrl(module.website).."?page="..IncStr(url)) then
+  if http.get(module.rooturl..GetDirUrl(module.website).."&page="..IncStr(url)) then
     x=TXQuery.Create(http.Document)
     x.xpathhrefall('//table[@id="mangaList"]//tr/td[1]/a', links, names)
     return no_error
@@ -78,16 +79,22 @@ function GetNameAndLink()
   end
 end
 
+function BeforeDownloadImage()
+  http.headers.values['Referer'] = task.PageContainerLinks.text
+  return true
+end
+
 function InitModule(website, rooturl, category)
   m=NewModule()
   m.category=category
   m.website=website
   m.rooturl=rooturl
-  m.lastupdated='November 25, 2018'
+  m.lastupdated='May 17, 2019'
   m.ongetinfo='GetInfo'
   m.ongetpagenumber='GetPageNumber'
   m.OnGetDirectoryPageNumber = 'GetDirectoryPageNumber'
   m.ongetnameandlink='GetNameAndLink' 
+  m.onbeforedownloadimage = 'BeforeDownloadImage'
 end
 
 function Init()

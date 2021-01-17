@@ -33,12 +33,7 @@ type
     procedure vtAccountListGetText(Sender: TBaseVirtualTree;
       Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType;
       var CellText: String);
-    {$if VTMajorVersion < 5}
-    procedure vtAccountListHeaderClick(Sender: TVTHeader; Column: TColumnIndex;
-      Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
-    {$else}
     procedure vtAccountListHeaderClick(Sender: TVTHeader; HitInfo: TVTHeaderHitInfo);
-    {$endif}
     procedure vtAccountListPaintText(Sender: TBaseVirtualTree;
       const TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
       TextType: TVSTTextType);
@@ -130,8 +125,7 @@ end;
 procedure TAccountCheckThread.Execute;
 begin
   try
-    if fmodule.OnLogin<>nil then
-      fmodule.OnLogin(fhttp,fmodule);
+    Modules.Login(fhttp, fmodule.ID);
     Synchronize(@SyncStatus);
   except
     on E: Exception do
@@ -215,23 +209,11 @@ begin
   end;
 end;
 
-{$if VTMajorVersion < 5}
-procedure TAccountManagerForm.vtAccountListHeaderClick(Sender: TVTHeader;
-  Column: TColumnIndex; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
-{$else}
 procedure TAccountManagerForm.vtAccountListHeaderClick(Sender: TVTHeader;
   HitInfo: TVTHeaderHitInfo);
-var
-  Column: TColumnIndex;
-  Button: TMouseButton;
-{$endif}
 begin
-  {$if VTMajorVersion >= 5}
-  Column := HitInfo.Column;
-  Button := HitInfo.Button;
-  {$endif}
-  if Sender.SortColumn <> Column then
-    Sender.SortColumn := Column
+  if Sender.SortColumn <> HitInfo.Column then
+    Sender.SortColumn := HitInfo.Column
   else
   if Sender.SortDirection = sdAscending then
     Sender.SortDirection := sdDescending

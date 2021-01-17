@@ -16,7 +16,7 @@ interface
 
 uses
   SysUtils, fgl, uBaseUnit, uData, uDownloadsManager,
-  WebsiteModules, FMDOptions, httpsendthread, BaseThread, LazFileUtils;
+  WebsiteModules, FMDOptions, httpsendthread, BaseThread, LazFileUtils, MultiLog;
 
 type
 
@@ -185,6 +185,8 @@ begin
     finally
       LeaveCriticalsection(FCS_META);
     end;
+    if OptionSortDownloadsWhenAddingNewDownloadTasks then
+      DLManager.Sort(DLManager.SortColumn);
   end;
 end;
 
@@ -363,6 +365,7 @@ begin
       if FSavePath = '' then
       begin
         FillSaveTo;
+		OverrideSaveTo(website);
         FSavePath := edSaveTo.Text;
         // save to
         if OptionGenerateMangaFolder then
@@ -451,6 +454,7 @@ begin
       if FSavePath = '' then
       begin
         FillSaveTo;
+		OverrideSaveTo(website);
         s := edSaveTo.Text;
       end
       else

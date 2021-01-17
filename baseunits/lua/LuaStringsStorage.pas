@@ -38,7 +38,7 @@ procedure luaStringsStorageAddMetaTable(L: Plua_State; Obj: Pointer;
 
 implementation
 
-uses LuaClass;
+uses LuaClass, LuaUtils;
 
 { TStringsStorage }
 
@@ -54,7 +54,12 @@ end;
 
 procedure TStringsStorage.SetText(AValue: String);
 begin
-  FStrings.Text := AValue;
+  EnterCriticalsection(FCS);
+  try
+    FStrings.Text := AValue;
+  finally
+    LeaveCriticalsection(FCS);
+  end;
 end;
 
 procedure TStringsStorage.SetValues(const AName: String; AValue: String);
@@ -115,20 +120,20 @@ end;
 
 function strings_getvalue(L: Plua_State): Integer; cdecl;
 begin
-  lua_pushstring(L, TUserData(luaClassGetObject(L)).GetValues(lua_tostring(L, 1)));
+  lua_pushstring(L, TUserData(luaClassGetObject(L)).GetValues(luaGetString(L, 1)));
   Result := 1;
 end;
 
 function strings_setvalue(L: Plua_State): Integer; cdecl;
 begin
   Result := 0;
-  TUserData(luaClassGetObject(L)).SetValues(lua_tostring(L, 1), lua_tostring(L, 2));
+  TUserData(luaClassGetObject(L)).SetValues(luaGetString(L, 1), luaGetString(L, 2));
 end;
 
 function strings_remove(L: Plua_State): Integer; cdecl;
 begin
   Result := 0;
-  TUserData(luaClassGetObject(L)).Remove(lua_tostring(L, 1));
+  TUserData(luaClassGetObject(L)).Remove(luaGetString(L, 1));
 end;
 
 function strings_gettext(L: Plua_State): Integer; cdecl;
@@ -140,7 +145,7 @@ end;
 function strings_settext(L: Plua_State): Integer; cdecl;
 begin
   Result := 0;
-  TUserData(luaClassGetObject(L)).Text := lua_tostring(L, 1);
+  TUserData(luaClassGetObject(L)).Text := luaGetString(L, 1);
 end;
 
 const

@@ -1,4 +1,4 @@
-﻿local dirurl = '/mangas'
+local dirurl = '/mangas'
 
 function getinfo()
   mangainfo.url=MaybeFillHost(module.RootURL, url)
@@ -57,10 +57,9 @@ end
 
 function Init()
   local m=NewModule()
-  m.category='Portugues'
+  m.category='Portuguese'
   m.website='UnionMangas'
-  m.rooturl='http://unionmangas.site'
-  m.lastupdated='April 6, 2018'
+  m.rooturl='https://unionleitor.top'
   m.ongetinfo='getinfo'
   m.ongetpagenumber='getpagenumber'
   m.ongetnameandlink='getnameandlink'

@@ -36,7 +36,7 @@ interface
 uses
   Classes, SysUtils, LazFileUtils, LazUTF8Classes, FPimage, ImgInfos, MemBitmap,
   FPReadJPEG, FPWriteJPEG, FPReadPNG, JPEGLib, JdAPImin, JDataSrc, Jerror,
-  zstream;
+  zstream, AnimatedGif, MultiLog;
 
 type
   TCompressionQuality = 0..100;
@@ -377,6 +377,38 @@ begin
   end;
 end;
 
+{ --- Does not work yet. --- }
+
+{ procedure GIFToPageInfo(const PageInfo: TPageInfo); }
+{ var }
+  { AMS: TMemoryStreamUTF8; }
+  { MBM: TAnimatedGif; }
+  { WRT: TFPWriterPNG; }
+{ begin }
+  { AMS := TMemoryStreamUTF8.Create; }
+  { try }
+    { MBM := TAnimatedGif.Create(PageInfo.FileName); }
+    { MBM.CurrentImage := 0; }
+    { try }
+      { if Assigned(MBM) then }
+      { try }
+        { WRT := TFPWriterPNG.create; }
+        { WRT.Indexed := False; }
+        { WRT.UseAlpha := MBM.MemBitmap.HasTransparentPixels; }
+        { WRT.CompressionLevel := clnone; }
+        { MBM.MemBitmap.SaveToStream(AMS, WRT); }
+      { finally }
+        { WRT.Free; }
+      { end; }
+    { finally }
+      { MBM.Free; }
+    { end; }
+    { PNGToPageInfo(PageInfo, AMS); }
+  { finally }
+    { AMS.Free; }
+  { end; }
+{ end; }
+
 procedure ImageToPageInfo(const PageInfo: TPageInfo);
 var
   IMG: TFPCustomImage;
@@ -444,6 +476,9 @@ begin
     else
     if Ext = 'webp' then
       WEBPToPageInfo(Self)
+    { else }
+    { if Ext = 'gif' then }
+      { GIFToPageInfo(Self) }
     else
       ImageToPageInfo(Self);
   except

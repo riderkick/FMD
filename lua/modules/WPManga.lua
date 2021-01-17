@@ -9,15 +9,12 @@ function getinfo()
     mangainfo.artists = x.XPathString('//*[contains(@class,"mng_det")]//*[self::p or self::li][starts-with(.,"Artist")]/substring-after(normalize-space(.)," ")')
     mangainfo.status = MangaInfoStatusIfPos(x.XPathString('//*[contains(@class,"mng_det")]//*[self::p or self::li][starts-with(.,"Status")]/substring-after(normalize-space(.)," ")'))
     mangainfo.summary = x.XPathString('//div[@class="det"]/p[1]')
-    if (module.website == 'ReadHentaiManga') or (module.website == 'HentaiRead') then
+    if (module.website == 'ReadHentaiManga') then
       mangainfo.genres = x.XPathString('string-join(//*[contains(@class,"mng_det")]//*[self::p or self::li]//a,", ")')
     else
       mangainfo.genres = x.XPathString('//*[contains(@class,"mng_det")]//*[self::p or self::li][starts-with(.,"Category")]/string-join((./*[position()>1]),", ")')
     end
-    if module.website == 'HentaiRead' then
-      mangainfo.chapterLinks.Add(x.XPathString('//a[@class="lst"]/@href'))
-      mangainfo.chapterNames.Add(mangainfo.title)
-    elseif module.website == 'MangaOnlineToday' then
+    if module.website == 'MangaOnlineToday' then
       mangainfo.summary = x.XPathString('//div[contains(@class,"mng_det")]/p[1]')
       x.xpathhrefall('//ul[@class="chp_lst"]/li/a', mangainfo.chapterLinks, mangainfo.chapterNames)
     else
@@ -130,8 +127,6 @@ function getdirurl(website)
     result = 'manga_list'
   elseif (website == 'ReadHentaiManga') then
     result = 'hentai-manga-list'
-  elseif (website == 'HentaiRead') then
-    result = 'hentai-list'
   else
     result = 'manga-list'
   end
@@ -178,7 +173,6 @@ function AddWebsiteModule(name, url, category)
   m.website = name
   m.rooturl = url
   m.category = category
-  m.lastupdated = 'February 13, 2018'
   m.sortedlist = true
   m.OnGetInfo = 'getinfo'
   m.OnGetPageNumber = 'getpagenumber'
@@ -189,15 +183,8 @@ function AddWebsiteModule(name, url, category)
 end
 
 function Init()
-  local cat = 'English'
-  AddWebsiteModule('Authrone', 'http://www.authrone.com', cat)
-  AddWebsiteModule('EyeOnManga', 'http://www.eyeonmanga.com', cat)
-  AddWebsiteModule('MangaDeep', 'http://www.mangadeep.com', cat)
-  AddWebsiteModule('Manga99', 'http://www.manga99.com', cat)
-  
   cat = 'H-Sites'
   AddWebsiteModule('ReadHentaiManga', 'http://readhentaimanga.com', cat)
-  AddWebsiteModule('HentaiRead', 'http://hentairead.com', cat)
   
   cat = "Arabic-Scanlation"
   AddWebsiteModule('3asq', 'http://www.3asq.info', cat)

@@ -61,10 +61,8 @@ begin
       if POST(exhentaiurllogin, s) then begin
         if ResultCode = 200 then begin
           Result := Cookies.Values['ipb_pass_hash'] <> '';
-          if Result then begin
-            Module.Account.Cookies := GetCookies;
-            Module.Account.Status := asValid;
-          end
+          if Result then
+            Module.Account.Status := asValid
           else Module.Account.Status := asInvalid;
         end;
       end;
@@ -76,7 +74,6 @@ begin
   else
   begin
     while onlogin do Sleep(1000);
-    if Result then AHTTP.Cookies.Text := Module.Account.Cookies;
   end;
 end;
 
@@ -93,7 +90,6 @@ begin
       ACookies := AHTTP.Cookies.Text
     else
       ACookies := '';
-    AHTTP.Cookies.AddText(Module.Account.Cookies);
     Result := AHTTP.GET(AURL);
     if Result and (AHTTP.ResultCode > 300) then begin
       Result := ExHentaiLogin(AHTTP, Module);
@@ -422,7 +418,7 @@ procedure RegisterModule;
 begin
   with AddWebsiteModule('E-Hentai', 'https://e-hentai.org') do
     AddOptionComboBox(@settingsimagesize, 'SettingsImageSize', @RS_SettingsImageSize, @RS_SettingsImageSizeItems);
-  with AddWebsiteModule('ExHentai', 'http://exhentai.org') do begin
+  with AddWebsiteModule('ExHentai', 'https://exhentai.org') do begin
     AccountSupport := True;
     OnLogin := @ExHentaiLogin;
   end;

@@ -5,42 +5,28 @@ unit DBUpdater;
 interface
 
 uses
-  Classes, SysUtils, httpsendthread, BaseThread, FMDOptions, process, ComCtrls,
-  Controls, Dialogs, StdCtrls, Buttons, blcksock;
+  Classes, SysUtils, httpsendthread, FMDOptions, StatusBarDownload,
+  process, ComCtrls, Controls, Dialogs, Buttons;
 
 type
 
   { TDBUpdaterThread }
 
-  TDBUpdaterThread = class(TBaseThread)
+  TDBUpdaterThread = class(TStatusBarDownload)
   private
-    FStatusBar: TStatusBar;
-    FProgressBar: TProgressBar;
-    FButtonCancel: TSpeedButton;
-    FHTTP: THTTPSendThread;
-    FTotalSize: Integer;
-    FCurrentSize: Integer;
+    FCurrentId: Integer;
     FCurrentName: String;
     FFailedList: TStringList;
-    FCurrentId: Integer;
-    FStatusText: String;
   protected
-    procedure ButtonCancelClick(Sender: TObject);
-    procedure HTTPSockOnStatus(Sender: TObject; Reason: THookSocketReason;
-      const Value: String);
     procedure HTTPRedirected(const AHTTP: THTTPSendThread; const URL: String);
   protected
     procedure SyncStart;
     procedure SyncFinal;
-    procedure SyncStartDownload;
-    procedure SyncUpdateProgress;
-    procedure SyncUpdateStatus;
     procedure SyncUpdateHint;
     procedure SyncShowFailed;
     procedure SyncCloseUsed;
     procedure SyncReopenUsed;
     procedure SyncRemoveAttached;
-    procedure UpdateStatusText(const S: String);
     procedure Execute; override;
   public
     Items: TStringList;
@@ -76,31 +62,6 @@ end;
 
 { TDBUpdaterThread }
 
-procedure TDBUpdaterThread.ButtonCancelClick(Sender: TObject);
-begin
-  Self.Terminate;
-end;
-
-procedure TDBUpdaterThread.HTTPSockOnStatus(Sender: TObject;
-  Reason: THookSocketReason; const Value: String);
-begin
-  if Terminated then
-    Exit;
-  if Reason = HR_ReadCount then
-  begin
-    if FTotalSize = 0 then
-      FTotalSize := StrToIntDef(Trim(FHTTP.Headers.Values['Content-Length']), 0);
-    Inc(FCurrentSize, StrToInt(Value));
-    Synchronize(@SyncUpdateProgress);
-  end
-  else
-  if Reason = HR_Connect then
-  begin
-    FCurrentSize := 0;
-    FTotalSize := 0;
-  end;
-end;
-
 procedure TDBUpdaterThread.HTTPRedirected(const AHTTP: THTTPSendThread;
   const URL: String);
 begin
@@ -111,110 +72,16 @@ end;
 procedure TDBUpdaterThread.SyncStart;
 begin
   DBUpdaterThread := Self;
-
-  FStatusBar := TStatusBar.Create(FormMain);
-  with FStatusBar do
-  begin
-    Parent := FormMain;
-    SimplePanel := False;
-    with Panels.Add do        // panel for progress bar
-      Width := 100;
-    Panels.Add;               // panel for progress text
-    Panels.Add;               // panel for status text
-  end;
-
-  FProgressBar := TProgressBar.Create(FormMain);
-  with FProgressBar do
-  begin
-    Parent := FStatusBar;
-    Align := alNone;
-    Smooth := True;
-    Style := pbstNormal;
-    Min := 0;
-    Width := FStatusBar.Panels[0].Width - 10;
-    Anchors := [akTop, akLeft, akBottom];
-    AnchorSideTop.Control := FStatusBar;
-    AnchorSideTop.Side := asrTop;
-    AnchorSideLeft.Control := FStatusBar;
-    AnchorSideLeft.Side := asrTop;
-    AnchorSideBottom.Control := FStatusBar;
-    AnchorSideBottom.Side := asrBottom;
-    BorderSpacing.Top := 2;
-    BorderSpacing.Left := 5;
-    BorderSpacing.Bottom := 2;
-  end;
-
-  FButtonCancel := TSpeedButton.Create(FormMain);
-  with FButtonCancel do
-  begin
-    Parent := FStatusBar;
-    Align := alNone;
-    AutoSize := True;
-    Caption := RS_ButtonCancel;
-    ShowCaption := True;
-    Flat := True;
-    Anchors := [akTop, akRight, akBottom];
-    AnchorSideTop.Control := FStatusBar;
-    AnchorSideTop.Side := asrTop;
-    AnchorSideRight.Control := FStatusBar;
-    AnchorSideRight.Side := asrRight;
-    AnchorSideBottom.Control := FStatusBar;
-    AnchorSideBottom.Side := asrBottom;
-    BorderSpacing.Top := 2;
-    BorderSpacing.Right := 5;
-    BorderSpacing.Bottom := 2;
-    OnClick := @ButtonCancelClick;
-  end;
 end;
 
 procedure TDBUpdaterThread.SyncFinal;
 begin
   DBUpdaterThread := nil;
-  FHTTP.Sock.OnStatus := nil;
-  FreeAndNil(FStatusBar);
-  FreeAndNil(FProgressBar);
-  FreeAndNil(FButtonCancel);
-end;
-
-procedure TDBUpdaterThread.SyncStartDownload;
-begin
-  FCurrentSize := 0;
-  FTotalSize := 0;
-  FProgressBar.Max := 0;
-  FProgressBar.Position := 0;
-  FStatusBar.Panels[1].Text := '';
-  FStatusBar.Panels[1].Width := 0;
-  FStatusBar.Panels[2].Text := Format('[%d/%d] ' + RS_Downloading,
-    [FCurrentId + 1, Items.Count,
-    FCurrentName + DBDATA_EXT]);
-end;
-
-procedure TDBUpdaterThread.SyncUpdateProgress;
-var
-  s: String;
-begin
-  if FStatusBar = nil then
-    Exit;
-  if FProgressBar.Max <> FTotalSize then
-    FProgressBar.Max := FTotalSize;
-  if FProgressBar.Position <> FCurrentSize then
-    FProgressBar.Position := FCurrentSize;
-
-  s := FormatByteSize(FCurrentSize);
-  if FTotalSize <> 0 then
-    s += '/' + FormatByteSize(FTotalSize);
-  FStatusBar.Panels[1].Width := FStatusBar.Canvas.TextWidth(s) + 10;
-  FStatusBar.Panels[1].Text := s;
-end;
-
-procedure TDBUpdaterThread.SyncUpdateStatus;
-begin
-  FStatusBar.Panels[2].Text := FStatusText;
 end;
 
 procedure TDBUpdaterThread.SyncUpdateHint;
 begin
-  FStatusBar.Hint := Trim(Items.Text);
+  StatusBar.Hint := Trim(Items.Text);
 end;
 
 procedure TDBUpdaterThread.SyncShowFailed;
@@ -240,17 +107,9 @@ begin
   dataProcess.RemoveFilter;
 end;
 
-procedure TDBUpdaterThread.UpdateStatusText(const S: String);
-begin
-  if FStatusText = S then
-    Exit;
-  FStatusText := S;
-  Synchronize(@SyncUpdateStatus);
-end;
-
 procedure TDBUpdaterThread.Execute;
 var
-  currentfilename, lurl: String;
+  currentfilename: String;
   cont: Boolean;
   used: Boolean;
 begin
@@ -262,9 +121,9 @@ begin
       Break;
     try
       FCurrentName := Items[FCurrentId];
-      Synchronize(@SyncStartDownload);
-      lurl := GetDBURL(FCurrentName);
-      if FHTTP.GET(GetDBURL(FCurrentName)) and (FHTTP.ResultCode < 300) then
+      UpdateStatusText(Format('[%d/%d] ' +
+        RS_Downloading, [FCurrentId + 1, Items.Count, FCurrentName + DBDATA_EXT]));
+      if HTTP.GET(GetDBURL(FCurrentName)) and (HTTP.ResultCode < 300) then
       begin
         cont := True;
         // save to data folder
@@ -274,7 +133,7 @@ begin
           DeleteFile(currentfilename);
         if not FileExists(currentfilename) then
         begin
-          FHTTP.Document.SaveToFile(currentfilename);
+          HTTP.Document.SaveToFile(currentfilename);
           if not FileExists(currentfilename) then
           begin
             FFailedList.Add(Format(RS_FailedToSave, [FCurrentName]));
@@ -331,8 +190,8 @@ begin
         end;
       end
       else
-        FFailedList.Add(Format(RS_FailedDownload, [FCurrentName, FHTTP.ResultCode,
-          FHTTP.ResultString]));
+        FFailedList.Add(Format(RS_FailedDownload, [FCurrentName, HTTP.ResultCode,
+          HTTP.ResultString]));
     except
       on E: Exception do
         FFailedList.Add(E.Message);
@@ -343,13 +202,9 @@ end;
 
 constructor TDBUpdaterThread.Create;
 begin
-  inherited Create(True);
-  FreeOnTerminate := True;
+  inherited Create(True, FormMain, FormMain.IconList, 24);
   FFailedList := TStringList.Create;
-  FHTTP := THTTPSendThread.Create(Self);
-  FHTTP.UserAgent := UserAgentCURL;
-  FHTTP.Sock.OnStatus := @HTTPSockOnStatus;
-  FHTTP.OnRedirected:=@HTTPRedirected;
+  HTTP.OnRedirected := @HTTPRedirected;
   Items := TStringList.Create;
   Synchronize(@SyncStart);
 end;
@@ -359,7 +214,6 @@ begin
   if (not Terminated) and (FFailedList.Count <> 0) then
     Synchronize(@SyncShowFailed);
   Synchronize(@SyncFinal);
-  FHTTP.Free;
   FFailedList.Free;
   FreeAndNil(Items);
   inherited Destroy;
@@ -401,7 +255,6 @@ end;
 
 procedure TDBUpdaterThread.UpdateStatus;
 begin
-  SyncUpdateStatus;
   SyncUpdateHint;
 end;
 

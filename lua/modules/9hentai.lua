@@ -54,7 +54,6 @@ function getdirectorypagenumber()
     local x = TXQuery.Create(http.Document)
     page = tonumber(x.XPathString('json(*).total_count'))
     if page == nil then page = 1 end
-    print(page)
     return true
   else
     return false

@@ -1,75 +1,82 @@
-function GetInfo() 
-  mangainfo.url = MaybeFillHost(module.RootURL, url)
-  if http.GET(mangainfo.url) then
+function getinfo()
+  mangainfo.url=MaybeFillHost(module.RootURL, url)
+  if http.get(mangainfo.url) then
     local x=TXQuery.Create(http.document)
-    if mangainfo.title == '' then 
-      mangainfo.title = x.XPathString('//h1[@class="postsby"]/substring-after(.,":")')
+    if mangainfo.title == '' then
+	  local v=x.xpath('//ol[@class="breadcrumb"]//li//a')
+	  local v1=v.get(3)
+	  mangainfo.title = v1.toString
     end
-    mangainfo.title = Trim(mangainfo.title)
-    mangainfo.coverLink = x.XPathString('(//div[@class="featured-thumbnail"])[1]/img/@src')    
-    while true do
-      x.xpathhreftitleall('//h2[@class="title"]/a',mangainfo.chapterlinks,mangainfo.chapternames)
-      local nextpage = x.xpathstring('//nav/div[@class="nav-links"]/*[contains(@class, "current")]/following-sibling::a[1]/@href')
-      if nextpage == '' then break; end
-      if http.get(nextpage) then
-        x.parsehtml(http.document)
-      else
-        break
-      end
-    end    
-    InvertStrings(mangainfo.chapterLinks, mangainfo.chapterNames)
+    mangainfo.coverlink = MaybeFillHost(module.rooturl, x.xpathstring('//img[@class="thumbnail"]/@src'))
+    mangainfo.status = MangaInfoStatusIfPos(x.xpathstring('//ul[@class="manga-info"]/li[contains(., "Status")]//a'))
+    mangainfo.authors=x.xpathstring('//ul[@class="manga-info"]/li[contains(., "Author")]//a')
+    mangainfo.genres=x.xpathstringall('//ul[@class="manga-info"]/li[contains(., "Genre")]//a')
+    mangainfo.summary=x.xpathstring('//h3[text()="Description"]/following-sibling::p')
+    if mangainfo.summary == '' then
+      mangainfo.summary=x.xpathstring('//div[@class="detail"]/div[@class="content"]')
+    end
+    x.xpathhrefall('//div[@id="tab-chapper"]//table/tbody/tr/td/a', mangainfo.chapterlinks, mangainfo.chapternames)
+    if mangainfo.chapterlinks.count == 0 then
+      x.xpathhrefall('//div[@id="list-chapters"]//a[@class="chapter"]', mangainfo.chapterlinks, mangainfo.chapternames)
+    end
+    for i = 0, mangainfo.chapterlinks.count-1 do
+      mangainfo.chapterlinks[i] = module.RootURL .. '/' .. mangainfo.chapterlinks[i]
+    end
+    InvertStrings(mangainfo.chapterlinks, mangainfo.chapternames)
     return no_error
   else
     return net_problem
   end
 end
 
-local readrooturl = 'http://read.lhtranslation.com'
-function GetPageNumber()
-  local s = '/read-' .. url:gsub('/', '') .. '.html'
-  if http.get(MaybeFillHost(readrooturl, s)) then
-    local x=TXQuery.Create(http.document)
-    x.xpathstringall('//img[contains(@class,"chapter-img")]/@src',task.pagelinks)
-    if task.pagelinks.count > 0 then return true; end
+function getpagenumber()
+  task.pagelinks.clear()
+  local u = MaybeFillHost(module.rooturl, url)
+  if http.get(u) then
+    local x=TXQuery.Create(http.Document)
+    x.xpathstringall('//img[@class="_lazy chapter-img"]/@src', task.pagelinks)
+    task.pagecontainerlinks.text = u
+  else
+    return false
   end
-  s = s:gsub('(%d+)-(%d+)%.html$', '%1.%2.html')
-  if http.get(MaybeFillHost(readrooturl, s)) then
-    local x=TXQuery.Create(http.document)
-    x.xpathstringall('//img[contains(@class,"chapter-img")]/@src',task.pagelinks)
-    if task.pagelinks.count > 0 then return true; end
-  end
-  if http.get(MaybeFillHost(module.rooturl, url)) then
-    local x = TXQuery.Create(http.document)
-    if http.get(x.xpathstring('//div[@class="commentmetadata"][1]/p/a/@href')) then
-      x.parsehtml(http.document)
-      x.xpathstringall('//img[contains(@class,"chapter-img")]/@src',task.pagelinks)
-      if task.pagelinks.count > 0 then return true; end
-    end    
-  end
-  return false
+  return true
 end
 
-function GetNameAndLink()
-  if http.GET(module.rooturl) then
-    local x=TXQuery.Create(http.document)
-    local v=x.xpath('//select[@id="cat"]/option[@value!="-1"]')
-    for i=1,v.count do
-      local v1=v.get(i)
-      links.add(module.rooturl..'/?cat='..v1.getattribute('value'))
-      names.add(Trim(v1.tostring:gsub('%(%d+%)%s*$', '')))
+function getnameandlink()
+  if http.get(module.RootURL .. '/manga-list.html?listType=allABC') then
+    local x = TXQuery.Create(http.Document)
+    local v = x.xpath('//span[@manga-slug]//a')
+    for i = 1, v.count do
+      local v1 = v.get(i)
+      names.Add(Trim(SeparateLeft(v1.toString, '- Raw')));
+      links.Add(v1.getAttribute('href'));
     end
     return no_error
   else
     return net_problem
   end
+end
+
+function BeforeDownloadImage()
+  http.headers.values['Referer'] = task.pagecontainerlinks.text
+  return true
+end
+
+function AddWebsiteModule(name, url, cat)
+  local m = NewModule()
+  m.category = cat
+  m.Website = name
+  m.RootURL = url
+  m.LastUpdated = 'March 30, 2019'
+  m.totaldirectory=1
+  m.ongetinfo='getinfo'
+  m.ongetpagenumber='getpagenumber'
+  m.ongetnameandlink='getnameandlink'
+  m.OnBeforeDownloadImage = 'BeforeDownloadImage'
+  return m
 end
 
 function Init()
-  local m=NewModule()
-  m.category = 'English-Scanlation'
-  m.Website = 'LHTranslation'
-  m.RootURL = 'http://lhtranslation.net'
-  m.OnGetNameAndLink = 'GetNameAndLink'
-  m.OnGetInfo = 'GetInfo'
-  m.OnGetPageNumber = 'GetPageNumber'
+  local cat = 'English-Scanlation'
+  AddWebsiteModule('LHTranslation', 'http://lhtranslation.net', cat)
 end

@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
   <ProjectOptions>
-    <Version Value="10"/>
+    <Version Value="12"/>
     <PathDelim Value="\"/>
     <General>
+      <Flags>
+        <CompatibilityMode Value="True"/>
+      </Flags>
       <SessionStorage Value="InProjectDir"/>
-      <MainUnit Value="0"/>
       <Title Value="Free Manga Downloader"/>
       <Scaled Value="True"/>
       <ResourceType Value="res"/>
@@ -17,14 +19,15 @@
     </General>
     <i18n>
       <EnableI18N Value="True"/>
-      <OutDir Value="languages"/>
+      <OutDir Value="..\languages"/>
     </i18n>
     <VersionInfo>
       <UseVersionInfo Value="True"/>
-      <MinorVersionNr Value="9"/>
-      <RevisionNr Value="158"/>
+      <MajorVersionNr Value="1"/>
+      <MinorVersionNr Value="3"/>
+      <RevisionNr Value="3"/>
       <Attributes pvaPrivateBuild="True"/>
-      <StringTable Comments="https://github.com/riderkick/FMD" FileDescription="Free Manga Downloader" LegalCopyright="©2015-2018" OriginalFilename="fmd.exe" ProductName="Free Manga Downloader" ProductVersion="$BuildMode()" PrivateBuild="riderkick"/>
+      <StringTable Comments="https://github.com/fmd-project-team/FMD" FileDescription="Free Manga Downloader" LegalCopyright="©2015-2020" OriginalFilename="fmd.exe" ProductName="Free Manga Downloader" ProductVersion="$BuildMode()" PrivateBuild="FMD Project Team"/>
     </VersionInfo>
     <BuildModes Count="6">
       <Item1 Name="Win32" Default="True"/>
@@ -33,10 +36,11 @@
           <Version Value="11"/>
           <PathDelim Value="\"/>
           <Target>
-            <Filename Value="..\bin\fmd"/>
+            <Filename Value="..\bin\$(TargetCPU)-$(TargetOS)\fmd"/>
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
+            <OtherUnitFiles Value="..\baseunits;..\baseunits\animatedgifs;..\baseunits\extras;..\baseunits\lua;..\baseunits\modules;..\baseunits\SimpleException;..\baseunits\synapse;forms"/>
             <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
           <CodeGeneration>
@@ -44,10 +48,9 @@
             <TargetCPU Value="x86_64"/>
             <TargetOS Value="win64"/>
             <Optimizations>
-              <OptimizationLevel Value="4"/>
+              <OptimizationLevel Value="2"/>
               <VariablesInRegisters Value="True"/>
             </Optimizations>
-            <SmallerCode Value="True"/>
           </CodeGeneration>
           <Linking>
             <Debugging>
@@ -63,6 +66,16 @@
               </Win32>
             </Options>
           </Linking>
+          <Other>
+            <OtherDefines Count="2">
+              <Define0 Value="DEBUGLEAKS"/>
+              <Define1 Value="DEVBUILD"/>
+            </OtherDefines>
+            <ExecuteBefore>
+              <Command Value="..\git2revision.bat ..\baseunits\revision.inc"/>
+              <CompileReasons Run="False"/>
+            </ExecuteBefore>
+          </Other>
         </CompilerOptions>
       </Item2>
       <Item3 Name="Win32 Debug">
@@ -70,10 +83,11 @@
           <Version Value="11"/>
           <PathDelim Value="\"/>
           <Target>
-            <Filename Value="..\bin\fmd"/>
+            <Filename Value="..\bin\$(TargetCPU)-$(TargetOS)\fmd"/>
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
+            <OtherUnitFiles Value="..\baseunits;..\baseunits\animatedgifs;..\baseunits\extras;..\baseunits\lua;..\baseunits\modules;..\baseunits\SimpleException;..\baseunits\synapse;forms"/>
             <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
           <Parsing>
@@ -107,6 +121,14 @@
             <CompilerMessages>
               <IgnoredMessages idx4079="True"/>
             </CompilerMessages>
+            <OtherDefines Count="2">
+              <Define0 Value="DEBUGLEAKS"/>
+              <Define1 Value="DEVBUILD"/>
+            </OtherDefines>
+            <ExecuteBefore>
+              <Command Value="..\git2revision.bat ..\baseunits\revision.inc"/>
+              <CompileReasons Run="False"/>
+            </ExecuteBefore>
           </Other>
         </CompilerOptions>
       </Item3>
@@ -115,10 +137,11 @@
           <Version Value="11"/>
           <PathDelim Value="\"/>
           <Target>
-            <Filename Value="..\bin\fmd"/>
+            <Filename Value="..\bin\$(TargetCPU)-$(TargetOS)\fmd"/>
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
+            <OtherUnitFiles Value="..\baseunits;..\baseunits\animatedgifs;..\baseunits\extras;..\baseunits\lua;..\baseunits\modules;..\baseunits\SimpleException;..\baseunits\synapse;forms"/>
             <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
           <Parsing>
@@ -148,6 +171,12 @@
               </Win32>
             </Options>
           </Linking>
+          <Other>
+            <ExecuteBefore>
+              <Command Value="..\git2revision.bat ..\baseunits\revision.inc"/>
+              <CompileReasons Run="False"/>
+            </ExecuteBefore>
+          </Other>
         </CompilerOptions>
       </Item4>
       <Item5 Name="Win32 Debug Leaks">
@@ -155,11 +184,11 @@
           <Version Value="11"/>
           <PathDelim Value="\"/>
           <Target>
-            <Filename Value="..\bin\fmd"/>
+            <Filename Value="..\bin\$(TargetCPU)-$(TargetOS)\fmd"/>
           </Target>
           <SearchPaths>
-            <IncludeFiles Value="$(ProjOutDir);..\baseunits\includes\AnimeA;..\baseunits\includes\AnimeStory;..\baseunits\includes\AnimExtremist;..\baseunits\includes\CentralDeMangas;..\baseunits\includes\EGScans;..\baseunits\includes\EsMangaHere;..\baseunits\includes\Kivmanga;..\baseunits\includes\LectureEnLigne;..\baseunits\includes\MangaAr;..\baseunits\includes\S2scans;..\baseunits\includes\ScanManga;..\baseunits\includes\Starkana;..\baseunits\includes\Turkcraft;..\baseunits\includes\VnSharing;..\baseunits\includes\MeinManga;..\baseunits\includes\MangaREADER_POR;..\baseunits\includes\MangasPROJECT;..\baseunits\lua"/>
-            <OtherUnitFiles Value="..\baseunits;..\baseunits\animatedgifs;..\baseunits\SimpleException;..\baseunits\modules;..\baseunits\extras;..\baseunits\lua;forms"/>
+            <IncludeFiles Value="$(ProjOutDir)"/>
+            <OtherUnitFiles Value="..\baseunits;..\baseunits\animatedgifs;..\baseunits\extras;..\baseunits\lua;..\baseunits\modules;..\baseunits\SimpleException;..\baseunits\synapse;forms"/>
             <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
           <Parsing>
@@ -177,6 +206,7 @@
             <TargetCPU Value="i386"/>
             <TargetOS Value="win32"/>
             <Optimizations>
+              <OptimizationLevel Value="0"/>
               <VariablesInRegisters Value="True"/>
             </Optimizations>
           </CodeGeneration>
@@ -185,15 +215,21 @@
               <UseHeaptrc Value="True"/>
               <UseExternalDbgSyms Value="True"/>
             </Debugging>
-            <Options>
-              <Win32>
-                <GraphicApplication Value="True"/>
-              </Win32>
-            </Options>
           </Linking>
           <Other>
+            <CustomOptions Value="-dDEVBUILD
+-dDEBUGLEAKS"/>
+            <OtherDefines Count="2">
+              <Define0 Value="DEBUGLEAKS"/>
+              <Define1 Value="DEVBUILD"/>
+            </OtherDefines>
+            <ExecuteBefore>
+              <Command Value="..\git2revision.bat ..\baseunits\revision.inc"/>
+              <CompileReasons Run="False"/>
+            </ExecuteBefore>
             <ExecuteAfter>
-              <Command Value="cmd.exe /c copy /y languages\*.po ..\bin\languages\"/>
+              <Command Value="cmd.exe /c copy /y ..\languages\*.po ..\bin\$(TargetCPU)-$(TargetOS)\languages\ 1>nul"/>
+              <CompileReasons Compile="False" Run="False"/>
             </ExecuteAfter>
           </Other>
         </CompilerOptions>
@@ -203,11 +239,11 @@
           <Version Value="11"/>
           <PathDelim Value="\"/>
           <Target>
-            <Filename Value="..\bin\fmd"/>
+            <Filename Value="..\bin\$(TargetCPU)-$(TargetOS)\fmd"/>
           </Target>
           <SearchPaths>
-            <IncludeFiles Value="$(ProjOutDir);..\baseunits\includes\AnimeA;..\baseunits\includes\AnimeStory;..\baseunits\includes\AnimExtremist;..\baseunits\includes\CentralDeMangas;..\baseunits\includes\EGScans;..\baseunits\includes\EsMangaHere;..\baseunits\includes\Kivmanga;..\baseunits\includes\LectureEnLigne;..\baseunits\includes\MangaAr;..\baseunits\includes\S2scans;..\baseunits\includes\ScanManga;..\baseunits\includes\Starkana;..\baseunits\includes\Turkcraft;..\baseunits\includes\VnSharing;..\baseunits\includes\MeinManga;..\baseunits\includes\MangaREADER_POR;..\baseunits\includes\MangasPROJECT;..\baseunits\lua"/>
-            <OtherUnitFiles Value="..\baseunits;..\baseunits\animatedgifs;..\baseunits\SimpleException;..\baseunits\modules;..\baseunits\extras;..\baseunits\lua;forms"/>
+            <IncludeFiles Value="$(ProjOutDir)"/>
+            <OtherUnitFiles Value="..\baseunits;..\baseunits\animatedgifs;..\baseunits\extras;..\baseunits\lua;..\baseunits\modules;..\baseunits\SimpleException;..\baseunits\synapse;forms"/>
             <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
           <Parsing>
@@ -225,6 +261,7 @@
             <TargetCPU Value="x86_64"/>
             <TargetOS Value="win64"/>
             <Optimizations>
+              <OptimizationLevel Value="0"/>
               <VariablesInRegisters Value="True"/>
             </Optimizations>
           </CodeGeneration>
@@ -233,78 +270,66 @@
               <UseHeaptrc Value="True"/>
               <UseExternalDbgSyms Value="True"/>
             </Debugging>
-            <Options>
-              <Win32>
-                <GraphicApplication Value="True"/>
-              </Win32>
-            </Options>
           </Linking>
           <Other>
+            <CustomOptions Value="-dDEVBUILD
+-dDEBUGLEAKS"/>
+            <OtherDefines Count="2">
+              <Define0 Value="DEBUGLEAKS"/>
+              <Define1 Value="DEVBUILD"/>
+            </OtherDefines>
+            <ExecuteBefore>
+              <Command Value="..\git2revision.bat ..\baseunits\revision.inc"/>
+              <CompileReasons Run="False"/>
+            </ExecuteBefore>
             <ExecuteAfter>
-              <Command Value="cmd.exe /c copy /y languages\*.po ..\bin\languages\"/>
+              <Command Value="cmd.exe /c copy /y ..\languages\*.po ..\bin\$(TargetCPU)-$(TargetOS)\languages\ 1>nul"/>
+              <CompileReasons Compile="False" Run="False"/>
             </ExecuteAfter>
           </Other>
         </CompilerOptions>
       </Item6>
-      <SharedMatrixOptions Count="10">
-        <Item1 ID="285210846225" Targets="#project" Modes="Win32 Debug Leaks,Win64 Debug Leaks,Win64 Debug,Win32 Debug,Win64,Win32" Value="-Fu..\baseunits -Fu..\baseunits\animatedgifs -Fu..\baseunits\SimpleException -Fu..\baseunits\modules -Fu..\baseunits\extras -Fuforms"/>
-        <Item2 ID="787838556410" Targets="#project" Modes="Win32 Debug Leaks,Win64 Debug Leaks,Win64 Debug,Win32 Debug,Win32,Win64" Value="-Fi..\baseunits\includes\AnimeA -Fi..\baseunits\includes\AnimeStory -Fi..\baseunits\includes\AnimExtremist -Fi..\baseunits\includes\CentralDeMangas -Fi..\baseunits\includes\EGScans -Fi..\baseunits\includes\EsMangaHere -Fi..\baseunits\includes\Kivmanga -Fi..\baseunits\includes\LectureEnLigne -Fi..\baseunits\includes\MangaAr -Fi..\baseunits\includes\S2scans -Fi..\baseunits\includes\ScanManga -Fi..\baseunits\includes\Starkana -Fi..\baseunits\includes\Turkcraft -Fi..\baseunits\includes\VnSharing -Fi..\baseunits\includes\MeinManga -Fi..\baseunits\includes\MangaREADER_POR -Fi..\baseunits\includes\MangasPROJECT"/>
-        <Item3 ID="465017374973" Targets="#project" Modes="Win32,Win64 Debug Leaks,Win32 Debug Leaks,Win64 Debug,Win32 Debug,Win64" Value="-dMANGADOWNLOADER -dDOWNLOADER -dSELFUPDATE -dMULTILOG"/>
-        <Item4 ID="729045573668" Targets="#project" Modes="Win32 Debug Leaks,Win64 Debug Leaks,Win32,Win64,Win32 Debug,Win64 Debug" Value="-Fu..\baseunits\lua -Fu..\baseunits\pcre"/>
-        <Item5 ID="534084266787" Targets="#project" Modes="Win64 Debug Leaks,Win32 Debug Leaks" Value="-dDEBUGLEAKS -dDEVBUILD -WC"/>
-        <Item6 ID="951904047630" Targets="#project" Value="-uUSE_FLRE_WITH_CACHE -dUSE_SOROKINS_REGEX -uUSE_BBFLRE_UNICODE -dUSE_BBFULL_UNICODE"/>
-        <Item7 ID="140379931701" Targets="#project" Value="-Fi..\3rd\BESEN\src -Fi..\3rd\internettools\data -Fu..\3rd\BESEN\src -Fu..\3rd\internettools\data -Fu..\3rd\internettools\internet -Fu..\3rd\internettools\system -Fu..\3rd\internettools\import\flre\src"/>
-        <Item8 ID="403646715137" Targets="BESENPkg,internettools" Modes="Win32 Debug Leaks,Win64 Debug Leaks,Win64 Debug,Win32 Debug,Win32,Win64" Value="-CX -O3 -Xs -XX -g- -Os"/>
-        <Item9 ID="127282585717" Targets="internettools" Modes="Win32,Win64,Win32 Debug,Win64 Debug,Win64 Debug Leaks,Win32 Debug Leaks" Value="-uUSE_FLRE_WITH_CACHE -dUSE_SOROKINS_REGEX -uUSE_BBFLRE_UNICODE -dUSE_BBFULL_UNICODE"/>
-        <Item10 ID="939088584661" Targets="LazControls,TAChartLazarusPkg" Modes="Win64 Debug,Win32 Debug,Win64,Win32,Win32 Debug Leaks,Win64 Debug Leaks" Value="-CX -O3 -Xs -XX -g- -Os"/>
-      </SharedMatrixOptions>
     </BuildModes>
     <PublishOptions>
       <Version Value="2"/>
-      <DestinationDirectory Value="C:\Users\Cholif\Desktop\laz\fmd-rev339\publish"/>
-      <IncludeFileFilter Value="*.(pas|pp|inc|lfm|lpr|lrs|lpi|lpk|sh|xml)"/>
-      <UseExcludeFileFilter Value="True"/>
-      <ExcludeFileFilter Value="*.(bak|ppu|o|so);*~;backup"/>
+      <DestinationDirectory Value="D:\Entwicklung\FMD\Publish"/>
     </PublishOptions>
     <RunParams>
-      <local>
-        <FormatVersion Value="1"/>
-      </local>
+      <FormatVersion Value="2"/>
+      <Modes Count="1">
+        <Mode0 Name="default"/>
+      </Modes>
     </RunParams>
-    <RequiredPackages Count="10">
+    <RequiredPackages Count="9">
       <Item1>
-        <PackageName Value="RunTimeTypeInfoControls"/>
+        <PackageName Value="LCL"/>
       </Item1>
       <Item2>
-        <PackageName Value="LazControls"/>
+        <PackageName Value="RunTimeTypeInfoControls"/>
       </Item2>
       <Item3>
-        <PackageName Value="LCL"/>
+        <PackageName Value="LazControls"/>
       </Item3>
       <Item4>
         <PackageName Value="TAChartLazarusPkg"/>
       </Item4>
       <Item5>
-        <PackageName Value="richmemopackage"/>
+        <PackageName Value="virtualtreeview_package"/>
       </Item5>
       <Item6>
-        <PackageName Value="virtualtreeview_package"/>
+        <PackageName Value="richmemopackage"/>
       </Item6>
       <Item7>
         <PackageName Value="multiloglaz"/>
       </Item7>
       <Item8>
-        <PackageName Value="laz_synapse"/>
+        <PackageName Value="dcpcrypt"/>
       </Item8>
       <Item9>
-        <PackageName Value="dcpcrypt"/>
-      </Item9>
-      <Item10>
         <PackageName Value="internettools"/>
-        <DefaultFilename Value="..\3rd\internettools\internettools.lpk" Prefer="True"/>
-      </Item10>
+      </Item9>
     </RequiredPackages>
-    <Units Count="18">
+    <Units Count="27">
       <Unit0>
         <Filename Value="md.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -390,6 +415,7 @@
         <Filename Value="forms\frmSelectDirectory.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="SelectDirectoryForm"/>
+        <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
       </Unit12>
       <Unit13>
@@ -407,30 +433,70 @@
         <ResourceBaseClass Value="Form"/>
       </Unit14>
       <Unit15>
-        <Filename Value="..\baseunits\DBUpdater.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit15>
-      <Unit16>
-        <Filename Value="..\baseunits\SelfUpdater.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit16>
-      <Unit17>
         <Filename Value="forms\frmWebsiteSettings.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="WebsiteSettingsForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
+      </Unit15>
+      <Unit16>
+        <Filename Value="forms\uBackupSettings.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit16>
+      <Unit17>
+        <Filename Value="forms\frmDialogYesNo.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmDialogYN"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
       </Unit17>
+      <Unit18>
+        <Filename Value="..\baseunits\DBUpdater.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit18>
+      <Unit19>
+        <Filename Value="..\baseunits\SelfUpdater.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit19>
+      <Unit20>
+        <Filename Value="..\baseunits\CheckUpdate.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit20>
+      <Unit21>
+        <Filename Value="..\baseunits\uDownloadsManager.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit21>
+      <Unit22>
+        <Filename Value="..\baseunits\uFavoritesManager.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit22>
+      <Unit23>
+        <Filename Value="..\baseunits\uSilentThread.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit23>
+      <Unit24>
+        <Filename Value="..\baseunits\uUpdateThread.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit24>
+      <Unit25>
+        <Filename Value="..\baseunits\webp.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit25>
+      <Unit26>
+        <Filename Value="..\baseunits\SimpleException\SimpleException.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit26>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
     <Version Value="11"/>
     <PathDelim Value="\"/>
     <Target>
-      <Filename Value="..\bin\fmd"/>
+      <Filename Value="..\bin\$(TargetCPU)-$(TargetOS)\fmd"/>
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
+      <OtherUnitFiles Value="..\baseunits;..\baseunits\animatedgifs;..\baseunits\extras;..\baseunits\lua;..\baseunits\modules;..\baseunits\SimpleException;..\baseunits\synapse;forms"/>
       <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <CodeGeneration>
@@ -438,10 +504,9 @@
       <TargetCPU Value="i386"/>
       <TargetOS Value="win32"/>
       <Optimizations>
-        <OptimizationLevel Value="4"/>
+        <OptimizationLevel Value="2"/>
         <VariablesInRegisters Value="True"/>
       </Optimizations>
-      <SmallerCode Value="True"/>
     </CodeGeneration>
     <Linking>
       <Debugging>
@@ -461,6 +526,14 @@
       <CompilerMessages>
         <IgnoredMessages idx5028="True"/>
       </CompilerMessages>
+      <OtherDefines Count="2">
+        <Define0 Value="DEBUGLEAKS"/>
+        <Define1 Value="DEVBUILD"/>
+      </OtherDefines>
+      <ExecuteBefore>
+        <Command Value="..\git2revision.bat ..\baseunits\revision.inc"/>
+        <CompileReasons Run="False"/>
+      </ExecuteBefore>
     </Other>
   </CompilerOptions>
   <Debugging>

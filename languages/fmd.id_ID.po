@@ -1,0 +1,2631 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Slasar41\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: id_ID\n"
+"X-Generator: Poedit 2.3\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: checkupdate.rs_btncheckupdates
+msgctxt "checkupdate.rs_btncheckupdates"
+msgid "Check for latest version"
+msgstr "Periksa versi mutakhir"
+
+#: checkupdate.rs_currentversion
+msgctxt "checkupdate.rs_currentversion"
+msgid "Installed Version"
+msgstr "Versi terinstal"
+
+#: checkupdate.rs_latestversion
+msgctxt "checkupdate.rs_latestversion"
+msgid "Latest Version   "
+msgstr "Versi mutakhir "
+
+#: checkupdate.rs_newversionfound
+msgctxt "checkupdate.rs_newversionfound"
+msgid "New Version found!"
+msgstr "Versi mutakhir ditemukan!"
+
+#: dbupdater.rs_buttoncancel
+msgctxt "dbupdater.rs_buttoncancel"
+msgid "Abort"
+msgstr "Batalkan"
+
+#: dbupdater.rs_downloading
+#, object-pascal-format
+msgid "Downloading %s"
+msgstr "Mengunduh %s"
+
+#: dbupdater.rs_extracting
+#, object-pascal-format
+msgid "Extracting %s"
+msgstr "Mengekstrak %s"
+
+#: dbupdater.rs_faileddownload
+#, object-pascal-format
+msgid "%s: %d %s"
+msgstr "%s: %d %s"
+
+#: dbupdater.rs_failedextract
+#, object-pascal-format
+msgid "%s: failed to extract, exitstatus = %d"
+msgstr "%s: gagal mengekstrak, kode = %d"
+
+#: dbupdater.rs_faileditems
+#, object-pascal-format
+msgid ""
+"Failed to finish:\n"
+"\n"
+"%s"
+msgstr ""
+"Gagal menyelesaikan:\n"
+"\n"
+"%s"
+
+#: dbupdater.rs_faileditemstitle
+msgctxt "dbupdater.rs_faileditemstitle"
+msgid "Failed"
+msgstr "Gagal"
+
+#: dbupdater.rs_failedtosave
+#, object-pascal-format
+msgid "%s: failed to save"
+msgstr "%s: gagal menyimpan"
+
+#: dbupdater.rs_missingzipexe
+#, object-pascal-format
+msgid "%s: Missing %s"
+msgstr "%s: Tidak ditemukan %s"
+
+#: frmaccountmanager.rs_accountdeleteconfirmation
+msgid "Are you sure you want to delete this account?"
+msgstr "Apakah Anda yakin ingin menghapus akun ini?"
+
+#: frmaccountmanager.rs_checking
+msgid "Checking"
+msgstr "Memeriksa"
+
+#: frmaccountmanager.rs_invalid
+msgctxt "frmaccountmanager.rs_invalid"
+msgid "Invalid"
+msgstr "Tidak valid"
+
+#: frmaccountmanager.rs_unknown
+msgid "Unknown"
+msgstr "Tidak diketahui"
+
+#: frmaccountmanager.rs_valid
+msgctxt "frmaccountmanager.rs_valid"
+msgid "OK"
+msgstr "Oke"
+
+#: frmaccountset.rs_cantbeempty
+msgid "Username or password can't be empty!"
+msgstr "Nama pengguna atau kata sandi tidak boleh kosong!"
+
+#: frmimportfavorites.rs_importcompleted
+msgid "Import completed."
+msgstr "Selesai mengimpor."
+
+#: frmimportfavorites.rs_listunimportedcaption
+msgid "List of unimported manga"
+msgstr "Daftar komik yang tidak bisa diimpor"
+
+#: frmluamodulesupdater.rs_checking
+msgctxt "frmluamodulesupdater.rs_checking"
+msgid "Checking..."
+msgstr "Memeriksa..."
+
+#: frmluamodulesupdater.rs_checkupdate
+msgctxt "frmluamodulesupdater.rs_checkupdate"
+msgid "Check update"
+msgstr "Periksa pemutakhiran"
+
+#: frmluamodulesupdater.rs_finishchecking
+msgid "Finish checking"
+msgstr "Selesai memeriksa"
+
+#: frmluamodulesupdater.rs_finishdownload
+msgid "Finish download"
+msgstr "Selesai mengunduh"
+
+#: frmluamodulesupdater.rs_modulesupdatedrestart
+msgid "Modules updated, restart now?"
+msgstr "Modul dimutakhirkan, mulai ulang sekarang?"
+
+#: frmluamodulesupdater.rs_modulesupdatedtitle
+msgid "Modules updated!"
+msgstr "Modul dimutakhirkan!"
+
+#: frmluamodulesupdater.rs_newupdatefoundlostchanges
+msgid "Modules update found, any local changes will be lost, procced?"
+msgstr "Modul mutakhir ditemukan, perubahan lokal akan ditimpa, lanjutkan?"
+
+#: frmluamodulesupdater.rs_newupdatefoundtitle
+msgid "Modules update found!"
+msgstr "Modul mutakhir ditemukan!"
+
+#: frmluamodulesupdater.rs_startdownloading
+msgid "Downloading..."
+msgstr "Mengunduh..."
+
+#: frmluamodulesupdater.rs_statusdelete
+#, object-pascal-format
+msgctxt "frmluamodulesupdater.rs_statusdelete"
+msgid "%s DELETE*"
+msgstr "%s DIHAPUS*"
+
+#: frmluamodulesupdater.rs_statusfailed
+#, object-pascal-format
+msgctxt "frmluamodulesupdater.rs_statusfailed"
+msgid "%s FAILED*"
+msgstr "%s GAGAL*"
+
+#: frmluamodulesupdater.rs_statusnew
+#, object-pascal-format
+msgctxt "frmluamodulesupdater.rs_statusnew"
+msgid "%s NEW*"
+msgstr "%s BARU*"
+
+#: frmluamodulesupdater.rs_statusredownloaded
+#, object-pascal-format
+msgctxt "frmluamodulesupdater.rs_statusredownloaded"
+msgid "%s REDOWNLOAD*"
+msgstr "%s DIUNDUH ULANG*"
+
+#: frmluamodulesupdater.rs_statusupdate
+#, object-pascal-format
+msgctxt "frmluamodulesupdater.rs_statusupdate"
+msgid "%s UPDATE*"
+msgstr "%s PEMUTAKHIRAN*"
+
+#: frmmain.rs_alldownloads
+msgid "All downloads"
+msgstr "Semua unduhan"
+
+#: frmmain.rs_btnok
+msgctxt "frmmain.rs_btnok"
+msgid "&OK"
+msgstr "&Oke"
+
+#: frmmain.rs_cancel
+msgctxt "frmmain.rs_cancel"
+msgid "Cancel"
+msgstr "Batal"
+
+#: frmmain.rs_checking
+msgctxt "frmmain.rs_checking"
+msgid "Checking..."
+msgstr "Memeriksa..."
+
+#: frmmain.rs_dlgcannotconnecttoserver
+msgid "Cannot connect to the server."
+msgstr "Tidak dapat terhubung ke peladen."
+
+#: frmmain.rs_dlgcannotgetmangainfo
+msgid "Cannot get manga info. Please check your internet connection and try it again."
+msgstr "Tidak dapat mendapatkan informasi komik. Silakan periksa koneksi internet Anda dan coba lagi."
+
+#: frmmain.rs_dlgdownloadcount
+msgid "Download count:"
+msgstr "Jumlah unduhan:"
+
+#: frmmain.rs_dlgquit
+msgid "Are you sure you want to exit?"
+msgstr "Apakah Anda yakin ingin keluar?"
+
+#: frmmain.rs_dlgremovefavorite
+msgid "Are you sure you want to delete the favorite(s)?"
+msgstr "Apakah Anda yakin ingin menghapus kesukaan ini?"
+
+#: frmmain.rs_dlgremovefinishtasks
+msgid "Are you sure you want to delete all finished tasks?"
+msgstr "Apakah Anda yakin ingin menghapus semua unduhan yang sudah selesai?"
+
+#: frmmain.rs_dlgremoveitem
+msgid "Are you sure you want to delete this item(s)?"
+msgstr "Apakah Anda yakin ingin menghapus data ini?"
+
+#: frmmain.rs_dlgremovetask
+msgid "Are you sure you want to delete the task(s)?"
+msgstr "Apakah Anda yakin ingin menghapus unduhan ini?"
+
+#: frmmain.rs_dlgsplitdownload
+msgctxt "frmmain.rs_dlgsplitdownload"
+msgid "Split download"
+msgstr "Pecah unduhan"
+
+#: frmmain.rs_dlgtitleexistindllist
+msgid ""
+"This title are already in download list.\n"
+"Do you want to download it anyway?"
+msgstr ""
+"Judul ini sudah ada di daftar unduhan.\n"
+"Apakah Anda ingin mengunduhnya lagi?"
+
+#: frmmain.rs_dlgtypeinnewchapter
+msgid "Type in new chapter:"
+msgstr "Masukkan bab baru:"
+
+#: frmmain.rs_dlgtypeinnewsavepath
+msgid "Type in new save path:"
+msgstr "Masukkan lokasi penyimpanan baru:"
+
+#: frmmain.rs_dlgupdaterisrunning
+msgid "Updater is running!"
+msgstr "Pemutakhiran sedang berjalan!"
+
+#: frmmain.rs_dlgupdaterwanttoupdatedb
+msgid "Do you want to download manga list from the server?"
+msgstr "Apakah Anda ingin mengunduh daftar komik dari peladen?"
+
+#: frmmain.rs_dlgurlnotsupport
+msgid "URL not supported!"
+msgstr "URL tidak didukung!"
+
+#: frmmain.rs_droptargetmodeitems
+msgid ""
+"Download all\n"
+"Add to favorites"
+msgstr ""
+"Unduh semua\n"
+"Tambahkan ke kesukaan"
+
+#: frmmain.rs_favoritesshowall
+msgctxt "frmmain.rs_favoritesshowall"
+msgid "All"
+msgstr "Semua"
+
+#: frmmain.rs_favoritesshowdisabled
+msgctxt "frmmain.rs_favoritesshowdisabled"
+msgid "Disabled"
+msgstr "Nonaktif"
+
+#: frmmain.rs_favoritesshowenabled
+msgctxt "frmmain.rs_favoritesshowenabled"
+msgid "Enabled"
+msgstr "Aktif"
+
+#: frmmain.rs_filterstatusitems
+msgid ""
+"Completed\n"
+"Ongoing\n"
+"<none>"
+msgstr ""
+"Tamat\n"
+"Bersambung\n"
+"<tidak ada>"
+
+#: frmmain.rs_fiveyears
+msgid "Five years"
+msgstr "Lima tahun"
+
+#: frmmain.rs_fmdalreadyrunning
+msgid "Free Manga Downloader already running!"
+msgstr "Free Manga Downloader sudah berjalan!"
+
+#: frmmain.rs_fouryears
+msgid "Four years"
+msgstr "Empat tahun"
+
+#: frmmain.rs_hintfavoriteproblem
+msgid ""
+"There is a problem with this data!\n"
+"Removing and re-adding this data may fix the problem."
+msgstr ""
+"Ada masalah dengan data ini!\n"
+"Menghapus dan menambahkan kembali mungkin dapat memperbaiki masalah ini."
+
+#: frmmain.rs_history
+msgid "History"
+msgstr "Riwayat"
+
+#: frmmain.rs_import
+msgid "Import"
+msgstr "Impor"
+
+#: frmmain.rs_infoartists
+msgid "Artist(s):"
+msgstr "Seniman:"
+
+#: frmmain.rs_infoauthors
+msgid "Author(s):"
+msgstr "Penulis:"
+
+#: frmmain.rs_infogenres
+msgid "Genre(s):"
+msgstr "Genre:"
+
+#: frmmain.rs_infostatus
+msgid "Status:"
+msgstr "Status:"
+
+#: frmmain.rs_infosummary
+msgid "Summary:"
+msgstr "Ringkasan:"
+
+#: frmmain.rs_infotitle
+msgid "Title:"
+msgstr "Judul:"
+
+#: frmmain.rs_infowebsite
+msgctxt "frmmain.rs_infowebsite"
+msgid "Website:"
+msgstr "Situs:"
+
+#: frmmain.rs_inprogress
+msgid "In progress"
+msgstr "Dalam proses"
+
+#: frmmain.rs_lblautochecknewchapterminute
+#, object-pascal-format
+msgctxt "frmmain.rs_lblautochecknewchapterminute"
+msgid "Auto check for new chapter every %d minutes"
+msgstr "Periksa bab baru otomatis setiap %d menit"
+
+#: frmmain.rs_lbloptionexternalparamshint
+#, object-pascal-format
+msgid ""
+"%s : Path to the manga\n"
+"%s : Chapter filename\n"
+"\n"
+"Example : \"%s%s\""
+msgstr ""
+"%s : Lokasi komik tersimpan\n"
+"%s : Nama bab komik\n"
+"\n"
+"Contoh : \"%s%s\""
+
+#: frmmain.rs_loading
+msgid "Loading ..."
+msgstr "Memuat ..."
+
+#: frmmain.rs_modeall
+#, object-pascal-format
+msgid "Mode: Show all (%d)"
+msgstr "Mode: Tampilkan semua (%d)"
+
+#: frmmain.rs_modefiltered
+#, object-pascal-format
+msgid "Mode: Filtered (%d)"
+msgstr "Mode: Disaring (%d)"
+
+#: frmmain.rs_modesearching
+msgctxt "frmmain.rs_modesearching"
+msgid "Mode: Searching..."
+msgstr "Mode: Mencari..."
+
+#: frmmain.rs_onemonth
+msgid "One month"
+msgstr "Satu bulan"
+
+#: frmmain.rs_oneweek
+msgid "One week"
+msgstr "Satu minggu"
+
+#: frmmain.rs_oneyear
+msgid "One year"
+msgstr "Satu tahun"
+
+#: frmmain.rs_optioncompress
+msgid ""
+"None\n"
+"ZIP\n"
+"CBZ\n"
+"PDF\n"
+"EPUB"
+msgstr ""
+"Tidak ada\n"
+"ZIP\n"
+"CBZ\n"
+"PDF\n"
+"EPUB"
+
+#: frmmain.rs_optionfmddoitems
+msgid ""
+"Nothing\n"
+"Exit\n"
+"Shutdown\n"
+"Hibernate"
+msgstr ""
+"Tidak ada\n"
+"Keluar\n"
+"Matikan komputer\n"
+"Hibernasikan komputer"
+
+#: frmmain.rs_revision
+msgid "Revision"
+msgstr "Revisi"
+
+#: frmmain.rs_selected
+#, object-pascal-format
+msgid "Selected: %d"
+msgstr "Dipilih: %d"
+
+#: frmmain.rs_sixmonths
+msgid "Six months"
+msgstr "Enam bulan"
+
+#: frmmain.rs_software
+msgid "Software"
+msgstr "Perangkat lunak"
+
+#: frmmain.rs_softwarepath
+msgctxt "frmmain.rs_softwarepath"
+msgid "Path to the software (e.g. C:\\MangaDownloader)"
+msgstr "Lokasi ke perangkat lunak (misalnya C:\\MangaDownloader)"
+
+#: frmmain.rs_tenyears
+msgid "Ten years"
+msgstr "Sepuluh tahun"
+
+#: frmmain.rs_threeyears
+msgid "Three years"
+msgstr "Tiga tahun"
+
+#: frmmain.rs_today
+msgid "Today"
+msgstr "Hari ini"
+
+#: frmmain.rs_twoyears
+msgid "Two years"
+msgstr "Dua tahun"
+
+#: frmmain.rs_version
+msgid "Version"
+msgstr "Versi"
+
+#: frmmain.rs_webpconvertto
+msgid ""
+"WebP\n"
+"PNG\n"
+"JPEG"
+msgstr ""
+"WebP\n"
+"PNG\n"
+"JPEG"
+
+#: frmmain.rs_webppnglevel
+msgid ""
+"None\n"
+"Fastest\n"
+"Default\n"
+"Maximum"
+msgstr ""
+"Tidak ada\n"
+"Tercepat\n"
+"Asali\n"
+"Maksimum"
+
+#: frmmain.rs_wronginput
+msgid "Invalid input!"
+msgstr "Masukan salah!"
+
+#: frmmain.rs_yesterday
+msgid "Yesterday"
+msgstr "Kemarin"
+
+#: frmshutdowncounter.rs_lblmessageexit
+#, object-pascal-format
+msgid "FMD will exit in %d second."
+msgstr "FMD akan ditutup dalam %d detik."
+
+#: frmshutdowncounter.rs_lblmessagehibernate
+#, object-pascal-format
+msgid "System will hibernate in %d second."
+msgstr "Komputer akan dihibernasi dalam %d detik."
+
+#: frmshutdowncounter.rs_lblmessageshutdown
+#, object-pascal-format
+msgid "System will shutdown in %d second."
+msgstr "Komputer akan dimatikan dalam %d detik."
+
+#: frmtransferfavorites.rs_all
+msgctxt "frmtransferfavorites.rs_all"
+msgid "All"
+msgstr "Semua"
+
+#: frmtransferfavorites.rs_invalid
+msgctxt "frmtransferfavorites.rs_invalid"
+msgid "Invalid"
+msgstr "Tidak valid"
+
+#: frmtransferfavorites.rs_valid
+msgctxt "frmtransferfavorites.rs_valid"
+msgid "Valid"
+msgstr "Valid"
+
+#: selfupdater.rs_buttoncancel
+msgctxt "selfupdater.rs_buttoncancel"
+msgid "Abort"
+msgstr "Batalkan"
+
+#: selfupdater.rs_downloading
+#, object-pascal-format
+msgid "Downloading new version %s"
+msgstr "Mengunduh versi mutakhir %s"
+
+#: selfupdater.rs_faileddownload
+#, object-pascal-format
+msgid ""
+"Failed to download new version %s\n"
+"\n"
+"%d %s"
+msgstr ""
+"Gagal mengunduh versi mutakhir %s\n"
+"\n"
+"%d %s"
+
+#: selfupdater.rs_failedextract
+#, object-pascal-format
+msgid "Failed to extract %s, exitstatus = %d"
+msgstr "Gagal mengekstrak %s, kode = %d"
+
+#: selfupdater.rs_failedtitle
+msgctxt "selfupdater.rs_failedtitle"
+msgid "Failed"
+msgstr "Gagal"
+
+#: selfupdater.rs_failedtosave
+#, object-pascal-format
+msgid "Failed to save %s"
+msgstr "Gagal menyimpan %s"
+
+#: selfupdater.rs_finishrestart
+msgid "Download update package finished, restart to proceed?"
+msgstr "Pemutakhiran selesai diunduh, mulai ulang sekarang?"
+
+#: selfupdater.rs_finishrestarttitle
+msgid "Download finished"
+msgstr "Unduhan selesai"
+
+#: selfupdater.rs_missingfile
+#, object-pascal-format
+msgctxt "selfupdater.rs_missingfile"
+msgid "Missing %s"
+msgstr "Tidak ditemukan %s"
+
+#: simpleexception.sbuttoncontinue
+msgid "&Continue"
+msgstr "&Lanjutkan"
+
+#: simpleexception.sbuttondetails
+msgid "&Show Details"
+msgstr "&Tampilkan Perincian"
+
+#: simpleexception.sbuttonterminate
+msgid "&Terminate"
+msgstr "&Akhiri"
+
+#: simpleexception.scanthandleexception
+msgid "Can't handle exception"
+msgstr "Tidak dapat menangani pengecualian"
+
+#: simpleexception.scheckboxignoreexception
+msgid "Ignore this exception for next time"
+msgstr "Abaikan pengecualian ini untuk waktu berikutnya"
+
+#: simpleexception.sexceptioncaption
+msgid "An error occured during program execution:"
+msgstr "Terjadi galat selama eksekusi program:"
+
+#: simpleexception.sexceptiondialogtitle
+msgid "Exception Info"
+msgstr "Informasi Pengecualian"
+
+#: taccountmanagerform.btedit.caption
+msgctxt "taccountmanagerform.btedit.caption"
+msgid "Edit"
+msgstr "Sunting"
+
+#: taccountmanagerform.btrefresh.caption
+msgid "Refresh"
+msgstr "Segarkan"
+
+#: taccountmanagerform.caption
+msgid "AccountManagerForm"
+msgstr "Form Manajer Akun"
+
+#: taccountmanagerform.vtaccountlist.header.columns[1].text
+msgctxt "taccountmanagerform.vtaccountlist.header.columns[1].text"
+msgid "Website"
+msgstr "Situs"
+
+#: taccountmanagerform.vtaccountlist.header.columns[2].text
+msgctxt "taccountmanagerform.vtaccountlist.header.columns[2].text"
+msgid "Username"
+msgstr "Nama pengguna"
+
+#: taccountmanagerform.vtaccountlist.header.columns[3].text
+msgctxt "taccountmanagerform.vtaccountlist.header.columns[3].text"
+msgid "Status"
+msgstr "Status"
+
+#: taccountsetform.btcancel.caption
+msgctxt "taccountsetform.btcancel.caption"
+msgid "Cancel"
+msgstr "Batal"
+
+#: taccountsetform.btok.caption
+msgid "Ok"
+msgstr "Oke"
+
+#: taccountsetform.caption
+msgid "Account"
+msgstr "Akun"
+
+#: taccountsetform.ckshowpassword.caption
+msgid "Show password"
+msgstr "Tampilkan kata sandi"
+
+#: taccountsetform.edpassword.texthint
+msgctxt "taccountsetform.edpassword.texthint"
+msgid "Password"
+msgstr "Kata sandi"
+
+#: taccountsetform.edusername.texthint
+msgctxt "taccountsetform.edusername.texthint"
+msgid "Username"
+msgstr "Nama pengguna"
+
+#: taccountsetform.label2.caption
+msgctxt "taccountsetform.label2.caption"
+msgid "Username"
+msgstr "Nama pengguna"
+
+#: taccountsetform.label3.caption
+msgctxt "taccountsetform.label3.caption"
+msgid "Password"
+msgstr "Kata sandi"
+
+#: tcustomcolorform.caption
+msgid "CustomColorForm"
+msgstr "Form Kustomisasi Warna"
+
+#: tcustomcolorform.tsbasiclist.caption
+msgid "Basic list"
+msgstr "Daftar Dasar"
+
+#: tcustomcolorform.tschapterlist.caption
+msgid "Chapter list"
+msgstr "Daftar Bab"
+
+#: tcustomcolorform.tsfavoritelist.caption
+msgid "Favorite list"
+msgstr "Daftar Kesukaan"
+
+#: tcustomcolorform.tsmangalist.caption
+msgid "Manga list"
+msgstr "Daftar Komik"
+
+#: tformdroptarget.miaddtofavorites.caption
+msgctxt "tformdroptarget.miaddtofavorites.caption"
+msgid "Add to favorites"
+msgstr "Tambahkan ke kesukaan"
+
+#: tformdroptarget.miclose.caption
+msgid "&Close"
+msgstr "&Tutup"
+
+#: tformdroptarget.midownloadall.caption
+msgctxt "tformdroptarget.midownloadall.caption"
+msgid "Download all"
+msgstr "Unduh semua"
+
+#: tformlogger.btnclearlog.caption
+msgid "Clear"
+msgstr "Bersihkan"
+
+#: tformlogger.ckstayontop.caption
+msgid "Stay on top"
+msgstr "Tetap di atas"
+
+#: tformlogger.lbloglimit.caption
+msgid "Log limit"
+msgstr "Batasi pencatatan"
+
+#: tformlogger.micopy.caption
+msgctxt "tformlogger.micopy.caption"
+msgid "Copy"
+msgstr "Salin"
+
+#: tfrmdialogyn.btno.caption
+msgid "&No"
+msgstr "&Tidak"
+
+#: tfrmdialogyn.btyes.caption
+msgid "&Yes"
+msgstr "&Ya"
+
+#: tfrmdialogyn.caption
+msgid "Dialog"
+msgstr "Dialog"
+
+#: tfrmdialogyn.lbmessage.caption
+msgid "lbMessage"
+msgstr "lbMessage"
+
+#: timportfavorites.btcancel.caption
+msgctxt "timportfavorites.btcancel.caption"
+msgid "Cancel"
+msgstr "Batal"
+
+#: timportfavorites.btimport.caption
+msgctxt "timportfavorites.btimport.caption"
+msgid "&OK"
+msgstr "&Oke"
+
+#: timportfavorites.caption
+msgid "Import list ..."
+msgstr "Impor daftar ..."
+
+#: timportfavorites.cbsoftware.text
+msgid "Domdomsoft Manga Downloader"
+msgstr "Domdomsoft Manga Downloader"
+
+#: timportfavorites.edpath.texthint
+msgctxt "timportfavorites.edpath.texthint"
+msgid "Path to the software (e.g. C:\\MangaDownloader)"
+msgstr "Lokasi ke perangkat lunak (misalnya C:\\MangaDownloader)"
+
+#: timportfavorites.lbselectsoftware.caption
+msgid "Software:"
+msgstr "Perangkat lunak:"
+
+#: tluamodulesupdaterform.btcheckupdate.caption
+msgctxt "tluamodulesupdaterform.btcheckupdate.caption"
+msgid "Check update"
+msgstr "Periksa pemutakhiran"
+
+#: tluamodulesupdaterform.ckautorestart.caption
+msgid "Auto restart"
+msgstr "Mulai ulang otomatis"
+
+#: tluamodulesupdaterform.ckshowupdatewarning.caption
+msgid "Show update warning"
+msgstr "Tampilkan peringatan pemutakhiran"
+
+#: tluamodulesupdaterform.vtluamodulesrepos.header.columns[0].text
+msgid "Filename"
+msgstr "Nama berkas"
+
+#: tluamodulesupdaterform.vtluamodulesrepos.header.columns[1].text
+msgid "Last modified"
+msgstr "Terakhir dimutakhirkan"
+
+#: tluamodulesupdaterform.vtluamodulesrepos.header.columns[2].text
+msgid "Last message"
+msgstr "Pesan terakhir"
+
+#: tmainform.btaddtofavorites.caption
+msgctxt "tmainform.btaddtofavorites.caption"
+msgid "Add to favorites"
+msgstr "Tambahkan ke kesukaan"
+
+#: tmainform.btchecklatestversion.caption
+msgctxt "tmainform.btchecklatestversion.caption"
+msgid "Check for latest version"
+msgstr "Periksa versi mutakhir"
+
+#: tmainform.btclearlogfile.caption
+msgid "Clear log file"
+msgstr "Bersihkan berkas pencatatan"
+
+#: tmainform.btdownload.caption
+msgctxt "tmainform.btdownload.caption"
+msgid "Download"
+msgstr "Unduh"
+
+#: tmainform.btdownloadsplit.hint
+msgctxt "tmainform.btdownloadsplit.hint"
+msgid "Split download"
+msgstr "Pecah unduhan"
+
+#: tmainform.btfavoriteschecknewchapter.caption
+msgctxt "tmainform.btfavoriteschecknewchapter.caption"
+msgid "Check for new chapter"
+msgstr "Periksa bab baru"
+
+#: tmainform.btfavoritesimport.caption
+msgid "Import list"
+msgstr "Impor daftar"
+
+#: tmainform.btfilter.caption
+msgctxt "TMAINFORM.BTFILTER.CAPTION"
+msgid "Filter"
+msgstr "Saring"
+
+#: tmainform.btfilterreset.caption
+msgid "Reset value"
+msgstr "Atur Ulang"
+
+#: tmainform.btopenlog.caption
+msgid "Open log"
+msgstr "Buka pencatatan"
+
+#: tmainform.btoptionapply.caption
+msgid "Apply"
+msgstr "Terapkan"
+
+#: tmainform.btreadonline.caption
+msgid "Read online"
+msgstr "Baca daring"
+
+#: tmainform.btremovefilterlarge.caption
+msgctxt "TMAINFORM.BTREMOVEFILTERLARGE.CAPTION"
+msgid "Remove filter"
+msgstr "Singkirkan"
+
+#: tmainform.btremovefilterlarge.hint
+msgctxt "tmainform.btremovefilterlarge.hint"
+msgid "Remove filter"
+msgstr "Singkirkan"
+
+#: tmainform.btupdatelist.hint
+msgctxt "tmainform.btupdatelist.hint"
+msgid "Update manga list"
+msgstr "Mutakhirkan daftar komik"
+
+#: tmainform.btvisitmyblog.caption
+msgid "Visit my blog"
+msgstr "Kunjungi blog"
+
+#: tmainform.caption
+msgid "Free Manga Downloader"
+msgstr "Free Manga Downloader"
+
+#: tmainform.cbaddasstopped.caption
+msgid "Add to download list as stopped task"
+msgstr "Tambahkan ke daftar unduhan tanpa dimulai"
+
+#: tmainform.cbfilterstatus.text
+msgid "<none>"
+msgstr "<tidak ada>"
+
+#: tmainform.cbonlynew.caption
+msgid "Search only new manga"
+msgstr "Hanya cari komik baru"
+
+#: tmainform.cboptionautocheckfavdownload.caption
+msgctxt "tmainform.cboptionautocheckfavdownload.caption"
+msgid "Automatic download after finish checking"
+msgstr "Mengunduh otomatis setelah selesai memeriksa"
+
+#: tmainform.cboptionautocheckfavinterval.caption
+msgid "Auto check for new chapter in an interval"
+msgstr "Periksa bab baru otomatis dalam interval"
+
+#: tmainform.cboptionautocheckfavremovecompletedmanga.caption
+msgctxt "tmainform.cboptionautocheckfavremovecompletedmanga.caption"
+msgid "Automatic remove completed manga from Favorites"
+msgstr "Hapus komik yang sudah tamat otomatis dari daftar kesukaan"
+
+#: tmainform.cboptionautocheckfavstartup.caption
+msgid "Auto check for new chapter at startup"
+msgstr "Periksa bab baru otomatis saat program dimulai"
+
+#: tmainform.cboptionautochecklatestversion.caption
+msgctxt "tmainform.cboptionautochecklatestversion.caption"
+msgid "Auto check for latest version"
+msgstr "Periksa versi mutakhir otomatis"
+
+#: tmainform.cboptionautoopenfavstartup.caption
+msgid "Open Favorites at startup"
+msgstr "Tampilkan daftar kesukaan saat program dimulai"
+
+#: tmainform.cboptionchangeunicodecharacter.caption
+msgctxt "tmainform.cboptionchangeunicodecharacter.caption"
+msgid "Replace all unicode character with"
+msgstr "Ganti semua simbol unicode menjadi"
+
+#: tmainform.cboptionchangeunicodecharacter.hint
+msgid "Enable this if you have problem with unicode character in path."
+msgstr "Aktifkan pilihan ini jika Anda mengalami masalah dengan karakter unicode pada lokasi."
+
+#: tmainform.cboptiondeletecompletedtasksonclose.caption
+msgid "Delete completed tasks on close"
+msgstr "Hapus unduhan yang sudah selesai saat keluar"
+
+#: tmainform.cboptiondigitchapter.caption
+msgid "Chapter"
+msgstr "Bab"
+
+#: tmainform.cboptiondigitvolume.caption
+msgid "Volume"
+msgstr "Jilid"
+
+#: tmainform.cboptionenableloadcover.caption
+msgid "Enable load manga cover"
+msgstr "Aktifkan sampul komik"
+
+#: tmainform.cboptiongeneratechapterfolder.caption
+msgid "Auto generate chapter folder"
+msgstr "Buat direktori bab otomatis"
+
+#: tmainform.cboptiongeneratemangafolder.caption
+msgctxt "tmainform.cboptiongeneratemangafolder.caption"
+msgid "Auto generate folder based on manga's name"
+msgstr "Buat direktori bab otomatis berdasarkan nama komik"
+
+#: tmainform.cboptionlivesearch.caption
+msgid "Enable live search (slow on long list)"
+msgstr "Aktifkan pencarian langsung (lambat dengan daftar yang panjang)"
+
+#: tmainform.cboptionminimizeonstart.caption
+msgid "Minimize on start"
+msgstr "Kecilkan ke penampan saat dimulai"
+
+#: tmainform.cboptionminimizetotray.caption
+msgid "Minimize to tray"
+msgstr "Kecilkan ke penampan"
+
+#: tmainform.cboptiononeinstanceonly.caption
+msgid "Permit only one FMD running"
+msgstr "Hanya izinkan satu FMD yang berjalan"
+
+#: tmainform.cboptionproxytype.text
+msgid "HTTP"
+msgstr "HTTP"
+
+#: tmainform.cboptionremovemanganamefromchapter.caption
+msgid "Remove manga name from chapter"
+msgstr "Hapus nama komik dari bab"
+
+#: tmainform.cboptionshowballoonhint.caption
+msgid "Show balloon hint"
+msgstr "Tampilkan balon pemberitahuan"
+
+#: tmainform.cboptionshowdeletetaskdialog.caption
+msgid "Delete task/favorite"
+msgstr "Hapus unduhan/kesukaan"
+
+#: tmainform.cboptionshowdownloadmangalistdialog.caption
+msgid "Download manga list if empty"
+msgstr "Unduh daftar komik jika kosong"
+
+#: tmainform.cboptionshowdownloadstabonnewtasks.caption
+msgid "Show Downloads tab when adding new tasks"
+msgstr "Tampilkan daftar unduhan saat menambahkan unduhan baru"
+
+#: tmainform.cboptionshowdownloadtoolbar.caption
+msgid "Show downloads toolbar"
+msgstr "Tampilkan bilah alat unduhan"
+
+#: tmainform.cboptionshowdownloadtoolbardeleteall.caption
+msgid "Show \"Delete all completed tasks\" in downloads toolbar"
+msgstr "Tampilkan \"Hapus semua unduhan yang sudah selesai\" di bilah alat daftar unduhan"
+
+#: tmainform.cboptionshowdownloadtoolbarleft.caption
+msgid "Show left downloads toolbar"
+msgstr "Tampilkan bilah alat kiri"
+
+#: tmainform.cboptionshowfavoritestabonnewmanga.caption
+msgctxt "tmainform.cboptionshowfavoritestabonnewmanga.caption"
+msgid "Show Favorites tab when adding new manga"
+msgstr "Tampilkan daftar kesukaan saat menambahkan komik baru"
+
+#: tmainform.cboptionshowquitdialog.caption
+msgid "Exit FMD"
+msgstr "Keluar dari FMD"
+
+#: tmainform.cboptionsortdownloadswhenaddingnewdownloadtasks.caption
+msgid "Sort Downloads when adding new download tasks"
+msgstr "Urutkan daftar unduhan saat menambahkan unduhan baru"
+
+#: tmainform.cboptionupdatelistnomangainfo.caption
+msgid "Don't load manga information when updating list (filter will be not work!)"
+msgstr "Jangan memuat informasi komik saat memutakhirkan daftar (saringan tidak akan bekerja!)"
+
+#: tmainform.cboptionupdatelistremoveduplicatelocaldata.caption
+msgid "Remove duplicate local data when updating manga list"
+msgstr "Hapus data lokal duplikat saat memutakhirkan daftar komik"
+
+#: tmainform.cboptionuseproxy.caption
+msgid "Use proxy"
+msgstr "Gunakan proxy"
+
+#: tmainform.cbpngcompressionlevel.text
+msgctxt "tmainform.cbpngcompressionlevel.text"
+msgid "Fastest"
+msgstr "Tercepat"
+
+#: tmainform.cbsearchfromallsites.caption
+msgid "Search in all manga sites"
+msgstr "Cari di semua situs komik"
+
+#: tmainform.cbselectmanga.hint
+msgid "For more manga sites, please go to Options->Manga sites"
+msgstr "Untuk situs yang lain, silakan pilih di Pengaturan->Situs->Situs"
+
+#: tmainform.cbuseregexpr.caption
+msgid "Regular Expression"
+msgstr "Persamaan reguler"
+
+#: tmainform.cbwebpsaveas.text
+msgctxt "tmainform.cbwebpsaveas.text"
+msgid "PNG"
+msgstr "PNG"
+
+#: tmainform.ckdroptarget.caption
+msgctxt "tmainform.ckdroptarget.caption"
+msgid "Show Drop Box"
+msgstr "Tampilkan kotak unduh"
+
+#: tmainform.ckenablelogging.caption
+msgid "Enable logging"
+msgstr "Aktifkan pencatatan"
+
+#: tmainform.ckfilteraction.caption
+msgid "Action"
+msgstr "Action"
+
+#: tmainform.ckfilteraction.hint
+msgid "A work typically depicting fighting, violence, chaos, and fast paced motion."
+msgstr "Sebuah karya yang biasanya menggambarkan pertarungan, kekerasan, kekacauan, dan gerakan cepat mondar-mandir."
+
+#: tmainform.ckfilteradult.caption
+msgid "Adult"
+msgstr "Adult"
+
+#: tmainform.ckfilteradult.hint
+msgid "Contains content that is suitable only for adults. Titles in this category may include prolonged scenes of intense violence and/or graphic sexual content and nudity."
+msgstr "Berisi konten yang cocok hanya untuk orang dewasa. Judul dalam kategori ini mungkin termasuk adegan kekerasan berkepanjangan yang intens dan/atau konten seksual dan ketelanjangan."
+
+#: tmainform.ckfilteradventure.caption
+msgid "Adventure"
+msgstr "Adventure"
+
+#: tmainform.ckfilteradventure.hint
+msgid "If a character in the story goes on a trip or along that line, your best bet is that it is an adventure manga. Otherwise, it's up to your personal prejudice on this case."
+msgstr "Jika seorang karakter dalam cerita melakukan perjalanan ke suatu tempat, taruhan terbaik Anda adalah komik petualangan. Sebaliknya, terserah prasangka Anda pada kasus ini."
+
+#: tmainform.ckfiltercomedy.caption
+msgid "Comedy"
+msgstr "Comedy"
+
+#: tmainform.ckfiltercomedy.hint
+msgid "A dramatic work that is light and often humorous or satirical in tone and that usually contains a happy resolution of the thematic conflict."
+msgstr "Sebuah karya dramatis yang ringan dan sering lucu atau satir dalam nada dan yang biasanya berisi resolusi bahagia dari konflik tematik."
+
+#: tmainform.ckfilterdoujinshi.caption
+msgid "Doujinshi"
+msgstr "Doujinshi"
+
+#: tmainform.ckfilterdoujinshi.hint
+msgid "Fan based work inpspired by official manga/anime."
+msgstr "Karya penggemar yang didasarkan oleh karya aslinya."
+
+#: tmainform.ckfilterdrama.caption
+msgid "Drama"
+msgstr "Drama"
+
+#: tmainform.ckfilterdrama.hint
+msgid "A work meant to bring on an emotional response, such as instilling sadness or tension."
+msgstr "Sebuah karya yang dimaksudkan untuk membawa respons emosional, seperti menanamkan kesedihan atau ketegangan."
+
+#: tmainform.ckfilterechi.caption
+msgid "Ecchi"
+msgstr "Ecchi"
+
+#: tmainform.ckfilterechi.hint
+msgid "Possibly the line between hentai and non-hentai, ecchi usually refers to fanservice put in to attract a certain group of fans."
+msgstr "Di antara hentai dan bukan hentai, ecchi biasanya merujuk ke fanservice yang disisipkan untuk menarik sekelompok penggemar tertentu."
+
+#: tmainform.ckfilterfantasy.caption
+msgid "Fantasy"
+msgstr "Fantasy"
+
+#: tmainform.ckfilterfantasy.hint
+msgid "Anything that involves, but not limited to, magic, dream world, and fairy tales."
+msgstr "Apa pun yang melibatkan, namun tidak terbatas pada sihir, dunia mimpi, dan dongeng."
+
+#: tmainform.ckfiltergenderbender.caption
+msgid "Gender Bender"
+msgstr "Gender Bender"
+
+#: tmainform.ckfiltergenderbender.hint
+msgid ""
+"Girls dressing up as guys, guys dressing up as girls.\n"
+"Guys turning into girls, girls turning into guys."
+msgstr ""
+"Gadis berdandan sebagai laki-laki, laki-laki yang berpakaian sebagai gadis.\n"
+"Laki-Laki yang berubah menjadi gadis, gadis yang berubah menjadi laki-laki."
+
+#: tmainform.ckfilterharem.caption
+msgid "Harem"
+msgstr "Harem"
+
+#: tmainform.ckfilterharem.hint
+msgid "A series involving one male character and many female characters (usually attracted to the male character). A Reverse Harem is when the genders are reversed."
+msgstr "Sebuah serial yang melibatkan satu karakter laki-laki dan banyak karakter perempuan (biasanya tertarik karakter laki-laki). Reverse Harem adalah saat jenis kelamin dibalik."
+
+#: tmainform.ckfilterhentai.caption
+msgctxt "tmainform.ckfilterhentai.caption"
+msgid "Hentai"
+msgstr "Hentai"
+
+#: tmainform.ckfilterhentai.hint
+msgctxt "tmainform.ckfilterhentai.hint"
+msgid "Hentai"
+msgstr "Hentai"
+
+#: tmainform.ckfilterhistorical.caption
+msgid "Historical"
+msgstr "Historical"
+
+#: tmainform.ckfilterhistorical.hint
+msgid "Having to do with old or ancient times."
+msgstr "Yang berkaitan dengan waktu lama atau kuno."
+
+#: tmainform.ckfilterhorror.caption
+msgid "Horror"
+msgstr "Horror"
+
+#: tmainform.ckfilterhorror.hint
+msgid "A painful emotion of fear, dread, and abhorrence; a shuddering with terror and detestation; the feeling inspired by something frightful and shocking."
+msgstr "Emosi ketakutan dan kebencian; gemetar dengan teror dan kebencian; perasaan yang diinspirasi oleh sesuatu yang mengerikan dan mengejutkan."
+
+#: tmainform.ckfilterjosei.caption
+msgid "Josei"
+msgstr "Josei"
+
+#: tmainform.ckfilterjosei.hint
+msgid "Literally \"Woman\". Targets women 18-30. Female equivalent to seinen. Unlike shoujo the romance is more realistic and less idealized. The storytelling is more explicit and mature."
+msgstr "Secara harfiah \"Wanita\". Menargetkan wanita berumur 18-30 tahun. Setara dengan seinen. Tidak seperti shoujo, romansa lebih realistis dan kurang ideal. Cerita lebih eksplisit dan matang."
+
+#: tmainform.ckfilterlolicon.caption
+msgid "Lolicon"
+msgstr "Lolicon"
+
+#: tmainform.ckfilterlolicon.hint
+msgid "Representing a sexual attraction to young or under-age girls."
+msgstr "Mewakili daya tarik seksual ke anak perempuan di bawah umur."
+
+#: tmainform.ckfiltermartialarts.caption
+msgid "Martial Arts"
+msgstr "Martial Arts"
+
+#: tmainform.ckfiltermartialarts.hint
+msgid "As the name suggests, anything martial arts related. Any of several arts of combat or self-defense, such as aikido, karate, judo, or taekwondo, kendo, fencing, and so on and so forth."
+msgstr "Seperti namanya, apa pun yang berkaitan seni bela diri. Salah satu dari beberapa seni tempur atau membela diri, seperti aikido, karate, judo atau taekwondo, kendo, anggar, dan sebagainya."
+
+#: tmainform.ckfiltermature.caption
+msgid "Mature"
+msgstr "Mature"
+
+#: tmainform.ckfiltermature.hint
+msgid "Contains subject matter which may be too extreme for people under the age of 17. Titles in this category may contain intense violence, blood and gore, sexual content and/or strong language."
+msgstr "Berisi materi pelajaran yang mungkin terlalu ekstrem bagi orang di bawah umur 17 tahun. Judul dalam kategori ini mungkin berisi kekerasan yang intens, darah dan gore, konten seksual dan bahasa yang kuat."
+
+#: tmainform.ckfiltermecha.caption
+msgid "Mecha"
+msgstr "Mecha"
+
+#: tmainform.ckfiltermecha.hint
+msgid "A work involving and usually concentrating on all types of large robotic machines."
+msgstr "Sebuah karya melibatkan dan biasanya berkonsentrasi pada semua jenis mesin robot yang besar."
+
+#: tmainform.ckfiltermusical.caption
+msgctxt "tmainform.ckfiltermusical.caption"
+msgid "Musical"
+msgstr "Musical"
+
+#: tmainform.ckfiltermusical.hint
+msgctxt "tmainform.ckfiltermusical.hint"
+msgid "Musical"
+msgstr "Musikal"
+
+#: tmainform.ckfiltermystery.caption
+msgid "Mystery"
+msgstr "Mystery"
+
+#: tmainform.ckfiltermystery.hint
+msgid "Usually an unexplained event occurs, and the main protagonist attempts to find out what caused it."
+msgstr "Biasanya terjadi suatu peristiwa yang tidak dapat dijelaskan dan tokoh utama mencoba untuk mencari tahu apa yang menyebabkannya."
+
+#: tmainform.ckfilterpsychological.caption
+msgid "Psychological"
+msgstr "Psychological"
+
+#: tmainform.ckfilterpsychological.hint
+msgid "Usually deals with the philosophy of a state of mind, in most cases detailing abnormal psychology."
+msgstr "Biasanya berkaitan dengan filosofi dari keadaan pikiran, dalam kebanyakan kasus memerinci psikologi abnormal."
+
+#: tmainform.ckfilterromance.caption
+msgid "Romance"
+msgstr "Romance"
+
+#: tmainform.ckfilterromance.hint
+msgid "Any love related story. We will define love as between man and woman in this case. Other than that, it is up to your own imagination of what love is."
+msgstr "Apa pun yang berkaitan dengan kisah cinta. Dalam hal ini kita akan mendefinisikan cinta antara pria dan wanita. Selain itu terserah pada imajinasi Anda sendiri apakah itu cinta."
+
+#: tmainform.ckfilterschoollife.caption
+msgid "School Life"
+msgstr "School Life"
+
+#: tmainform.ckfilterschoollife.hint
+msgid "Having a major setting of the story deal with some type of school."
+msgstr "Memiliki latar cerita utama yang berhubungan dengan sekolah."
+
+#: tmainform.ckfilterscifi.caption
+msgid "Sci-Fi"
+msgstr "Sci-Fi"
+
+#: tmainform.ckfilterscifi.hint
+msgid "Short for science fiction, these works involve twists on technology and other science related phenomena which are contrary or stretches of the modern day scientific world."
+msgstr "Fiksi ilmiah, karya-karya ini melibatkan liku pada teknologi dan ilmu pengetahuan lain terkait fenomena yang bertentangan atau membentang dari dunia ilmiah modern."
+
+#: tmainform.ckfilterseinen.caption
+msgid "Seinen"
+msgstr "Seinen"
+
+#: tmainform.ckfilterseinen.hint
+msgid "From Google: Seinen means 'young Man'. Manga and anime that specifically targets young adult males around the ages of 18 to 25 are seinen titles. The stories in seinen works appeal to university students and those in the working world. Typically the story lines deal with the issues of adulthood."
+msgstr "Dari Google: Seinen berarti \"Pemuda\". Komik dan kartun yang secara khusus menargetkan laki-laki dewasa berumur 18-25 tahun. Kisah-kisah dalam karya seinen menarik bagi mahasiswa dan orang-orang dalam dunia kerja. Biasanya garis cerita berurusan dengan isu-isu kedewasaan."
+
+#: tmainform.ckfiltershotacon.caption
+msgid "Shotacon"
+msgstr "Shotacon"
+
+#: tmainform.ckfiltershotacon.hint
+msgid "Representing a sexual attraction to young or under-age boys."
+msgstr "Mewakili daya tarik seksual ke anak laki-laki di bawah umur."
+
+#: tmainform.ckfiltershoujo.caption
+msgid "Shoujo"
+msgstr "Shoujo"
+
+#: tmainform.ckfiltershoujo.hint
+msgid "A work intended and primarily written for females. Usually involves a lot of romance and strong character development."
+msgstr "Sebuah karya dimaksudkan dan terutama ditulis untuk perempuan. Biasanya melibatkan banyak romansa dan pengembangan karakter yang kuat."
+
+#: tmainform.ckfiltershoujoai.caption
+msgid "Shoujo Ai"
+msgstr "Shoujo Ai"
+
+#: tmainform.ckfiltershoujoai.hint
+msgctxt "tmainform.ckfiltershoujoai.hint"
+msgid "Often synonymous with yuri, this can be thought of as somewhat less extreme. \"Girl''s Love\", so to speak."
+msgstr "Identik dengan yuri, hanya agak kurang ekstrem. Bisa dikatakan \"Percintaan Antara Perempuan\"."
+
+#: tmainform.ckfiltershounen.caption
+msgid "Shounen"
+msgstr "Shounen"
+
+#: tmainform.ckfiltershounen.hint
+msgctxt "tmainform.ckfiltershounen.hint"
+msgid "A work intended and primarily written for males. These works usually involve fighting and/or violence."
+msgstr "Sebuah karya yang ditujukan untuk laki-laki. Biasanya melibatkan perkelahian dan/atau kekerasan."
+
+#: tmainform.ckfiltershounenai.caption
+msgid "Shounen Ai"
+msgstr "Shounen Ai"
+
+#: tmainform.ckfiltershounenai.hint
+msgid "Often synonymous with yaoi, this can be thought of as somewhat less extreme. \"Boy''s Love\", so to speak"
+msgstr "Identik dengan yaoi, hanya agak kurang ekstrim. Bisa dikatakan \"Percintaan Antara Laki-laki\"."
+
+#: tmainform.ckfiltersliceoflife.caption
+msgid "Slice of Life"
+msgstr "Slice of Life"
+
+#: tmainform.ckfiltersliceoflife.hint
+msgid "As the name suggests, this genre represents day-to-day tribulations of one/many character(s). These challenges/events could technically happen in real life and are often -if not all the time- set in the present timeline in a world that mirrors our own."
+msgstr "Sepenggal cerita keseharian dari kehidupan seseorang/banyak orang. Biasanya berhungungan dengan kejadian yang sering terjadi di kehidupan nyata."
+
+#: tmainform.ckfiltersmut.caption
+msgid "Smut"
+msgstr "Smut"
+
+#: tmainform.ckfiltersmut.hint
+msgid "Deals with series that are considered profane or offensive, particularly with regards to sexual content."
+msgstr "Berurusan dengan seri yang dianggap profan atau menyinggung, khususnya dalam hal konten seksual."
+
+#: tmainform.ckfiltersports.caption
+msgid "Sports"
+msgstr "Sports"
+
+#: tmainform.ckfiltersports.hint
+msgid "As the name suggests, anything sports related. Baseball, basketball, hockey, soccer, golf, and racing just to name a few."
+msgstr "Apa pun mengenai olahraga."
+
+#: tmainform.ckfiltersupernatural.caption
+msgid "Supernatural"
+msgstr "Supernatural"
+
+#: tmainform.ckfiltersupernatural.hint
+msgid "Usually entails amazing and unexplained powers or events which defy the laws of physics."
+msgstr "Biasanya menampilkan kekuatan atau kejadian yang diluar nalar dan hukum fisika."
+
+#: tmainform.ckfiltertragedy.caption
+msgid "Tragedy"
+msgstr "Tragedy"
+
+#: tmainform.ckfiltertragedy.hint
+msgid "Contains events resulting in great loss and misfortune."
+msgstr "Berisi kejadian yang mengakibatkan kerugian besar dan kemalangan."
+
+#: tmainform.ckfilterweebtons.caption
+msgctxt "tmainform.ckfilterweebtons.caption"
+msgid "Webtoons"
+msgstr "Webtoons"
+
+#: tmainform.ckfilterweebtons.hint
+msgctxt "tmainform.ckfilterweebtons.hint"
+msgid "Webtoons"
+msgstr "Webtoons"
+
+#: tmainform.ckfilteryaoi.caption
+msgid "Yaoi"
+msgstr "Yaoi"
+
+#: tmainform.ckfilteryaoi.hint
+msgid "This work usually involves intimate relationships between men."
+msgstr "Biasanya melibatkan hubungan yang intim antara laki-laki."
+
+#: tmainform.ckfilteryuri.caption
+msgid "Yuri"
+msgstr "Yuri"
+
+#: tmainform.ckfilteryuri.hint
+msgid "This work usually involves intimate relationships between women."
+msgstr "Biasanya melibatkan hubungan yang intim antara perempuan."
+
+#: tmainform.ckoptionsalwaysstarttaskfromfailedchapters.caption
+msgctxt "tmainform.ckoptionsalwaysstarttaskfromfailedchapters.caption"
+msgid "Always start task from failed chapters"
+msgstr "Selalu mulai unduhan dari bab yang gagal"
+
+#: tmainform.ckpngsaveasjpeg.caption
+msgid "Save PNG as JPEG"
+msgstr "Simpan PNG sebagai JPEG"
+
+#: tmainform.edcustomgenres.texthint
+msgid "Input custom genres, separated by comma"
+msgstr "Masukkan genre pilihan, dipisahkan dengan koma"
+
+#: tmainform.eddownloadssearch.texthint
+msgctxt "tmainform.eddownloadssearch.texthint"
+msgid "Search downloads..."
+msgstr "Cari unduhan..."
+
+#: tmainform.edfavoritessearch.texthint
+msgctxt "tmainform.edfavoritessearch.texthint"
+msgid "Search favorites..."
+msgstr "Cari kesukaan..."
+
+#: tmainform.edfilterartists.texthint
+msgctxt "tmainform.edfilterartists.texthint"
+msgid "Artist"
+msgstr "Seniman"
+
+#: tmainform.edfilterauthors.texthint
+msgctxt "tmainform.edfilterauthors.texthint"
+msgid "Author"
+msgstr "Penulis"
+
+#: tmainform.edfiltermangainfochapters.texthint
+msgctxt "tmainform.edfiltermangainfochapters.texthint"
+msgid "Filter"
+msgstr "Saring"
+
+#: tmainform.edfiltersummary.texthint
+msgid "Part of summary"
+msgstr "Bagian dari ringkasan"
+
+#: tmainform.edfiltertitle.texthint
+msgctxt "tmainform.edfiltertitle.texthint"
+msgid "Title"
+msgstr "Judul"
+
+#: tmainform.edmangalistsearch.texthint
+msgctxt "tmainform.edmangalistsearch.texthint"
+msgid "Search title..."
+msgstr "Cari judul..."
+
+#: tmainform.edoptionchaptercustomrename.texthint
+msgctxt "tmainform.edoptionchaptercustomrename.texthint"
+msgid "Custom rename"
+msgstr "Ubah nama pilihan"
+
+#: tmainform.edoptiondefaultpath.texthint
+msgid "Default download path"
+msgstr "Lokasi unduhan asali"
+
+#: tmainform.edoptionexternalparams.texthint
+msgctxt "tmainform.edoptionexternalparams.texthint"
+msgid "External program parameters"
+msgstr "Parameter program"
+
+#: tmainform.edoptionexternalpath.texthint
+msgctxt "tmainform.edoptionexternalpath.texthint"
+msgid "External program path"
+msgstr "Lokasi program"
+
+#: tmainform.edoptionfilenamecustomrename.texthint
+msgctxt "tmainform.edoptionfilenamecustomrename.texthint"
+msgid "Custom rename"
+msgstr "Ubah nama pilihan"
+
+#: tmainform.edoptionhost.texthint
+msgid "Proxy host/IP"
+msgstr "Host/IP"
+
+#: tmainform.edoptionmangacustomrename.texthint
+msgctxt "tmainform.edoptionmangacustomrename.texthint"
+msgid "Custom rename"
+msgstr "Ubah nama pilihan"
+
+#: tmainform.edoptionpass.texthint
+msgid "Proxy password"
+msgstr "Kata sandi"
+
+#: tmainform.edoptionuser.texthint
+msgid "Proxy username"
+msgstr "Nama pengguna"
+
+#: tmainform.edsaveto.texthint
+msgctxt "tmainform.edsaveto.texthint"
+msgid "Save to"
+msgstr "Lokasi penyimpanan"
+
+#: tmainform.edurl.texthint
+msgid "Input URL here"
+msgstr "Masukkan URL di sini"
+
+#: tmainform.edwebsitessearch.texthint
+msgctxt "tmainform.edwebsitessearch.texthint"
+msgid "Search website..."
+msgstr "Cari situs..."
+
+#: tmainform.gbdialogs.caption
+msgid "Show dialog confirmation for"
+msgstr "Tampilkan dialog konfirmasi untuk"
+
+#: tmainform.gbdroptarget.caption
+msgid "Drop Box"
+msgstr "Kotak unduh"
+
+#: tmainform.gbimageconversion.caption
+msgid "Image Conversion"
+msgstr "Konversi gambar"
+
+#: tmainform.gboptionexternal.caption
+msgid "External program"
+msgstr "Program eksternal"
+
+#: tmainform.gboptionfavorites.caption
+msgctxt "TMAINFORM.GBOPTIONFAVORITES.CAPTION"
+msgid "Favorites"
+msgstr "Kesukaan"
+
+#: tmainform.gboptionproxy.caption
+msgid "Proxy config"
+msgstr "Konfigurasi proxy"
+
+#: tmainform.gboptionrenaming.caption
+msgid "Renaming"
+msgstr "Mengubah nama"
+
+#: tmainform.lbdefaultdownloadpath.caption
+msgid "Choose the default download path:"
+msgstr "Pilih lokasi unduhan asali:"
+
+#: tmainform.lbdroptargetopacity.caption
+msgid "Opacity"
+msgstr "Opasitas"
+
+#: tmainform.lbfilterartists.caption
+msgctxt "tmainform.lbfilterartists.caption"
+msgid "Artist"
+msgstr "Seniman"
+
+#: tmainform.lbfilterauthors.caption
+msgctxt "tmainform.lbfilterauthors.caption"
+msgid "Author"
+msgstr "Penulis"
+
+#: tmainform.lbfiltercustomgenres.caption
+msgid "Custom Genres"
+msgstr "Genre Pilihan"
+
+#: tmainform.lbfilterhint.caption
+msgctxt "tmainform.lbfilterhint.caption"
+msgid "[?]"
+msgstr "[?]"
+
+#: tmainform.lbfilterhint.hint
+msgid ""
+"Genres:\n"
+"- Checked: Include this genre.\n"
+"- Unchecked: Exclude this genre.\n"
+"- Grayed: Doesn't matter.\n"
+"\n"
+"Custom Genres:\n"
+"- Separate multiple genres with ','.\n"
+"- Exclude a genre by placing '!' or '-' at the beginning of a genre.\n"
+"- Example: Adventure,!Ecchi,Comedy."
+msgstr ""
+"Genre:\n"
+"- Dicentang: Sertakan genre ini.\n"
+"- Tidak dicentang: Kecualikan genre ini.\n"
+"- Terisi: Tidak penting.\n"
+"\n"
+"Genre pilihan:\n"
+"- Pisahkan beberapa genre dengan ','.\n"
+"- Kecualikan genre dengan menempatkan  '!' atau '-' pada permulaan genre.\n"
+"- Contoh: Adventure,!Ecchi,Comedy."
+
+#: tmainform.lbfilterstatus.caption
+msgctxt "TMAINFORM.LBFILTERSTATUS.CAPTION"
+msgid "Status"
+msgstr "Status"
+
+#: tmainform.lbfiltersummary.caption
+msgid "Summary"
+msgstr "Ringkasan"
+
+#: tmainform.lbfiltertitle.caption
+msgctxt "tmainform.lbfiltertitle.caption"
+msgid "Title"
+msgstr "Judul"
+
+#: tmainform.lbjpegquality.caption
+msgid "JPEG quality"
+msgstr "Kualitas JPEG"
+
+#: tmainform.lblogfilename.caption
+msgid "Log file:"
+msgstr "Berkas pencatatan:"
+
+#: tmainform.lbmode.caption
+msgid "Mode: Show all (0)"
+msgstr "Mode: Tampilkan semua (0)"
+
+#: tmainform.lboptionautocheckfavintervalminutes.caption
+#, object-pascal-format
+msgctxt "tmainform.lboptionautocheckfavintervalminutes.caption"
+msgid "Auto check for new chapter every %d minutes"
+msgstr "Periksa bab baru otomatis setiap %d menit"
+
+#: tmainform.lboptionchaptercustomrename.caption
+msgctxt "tmainform.lboptionchaptercustomrename.caption"
+msgid "Chapter name:"
+msgstr "Nama bab:"
+
+#: tmainform.lboptionchaptercustomrenamehint.caption
+msgctxt "tmainform.lboptionchaptercustomrenamehint.caption"
+msgid "[?]"
+msgstr "[?]"
+
+#: tmainform.lboptionchaptercustomrenamehint.hint
+msgctxt "tmainform.lboptionchaptercustomrenamehint.hint"
+msgid ""
+"%WEBSITE% : Website name\n"
+"%MANGA% : Manga title\n"
+"%CHAPTER% : Chapter title\n"
+"%AUTHOR% : Author\n"
+"%ARTIST% : Artist\n"
+"%NUMBERING% : Numbering\n"
+"\n"
+"Note:\n"
+"Chapter folder name must have at least %CHAPTER% or %NUMBERING%."
+msgstr ""
+"%WEBSITE% : Nama situs\n"
+"%MANGA% : Judul komik\n"
+"%CHAPTER% : Judul Bab\n"
+"%AUTHOR% : Penulis\n"
+"%ARTIST% : Seniman\n"
+"%NUMBERING% : Penomoran\n"
+"\n"
+"Catatan:\n"
+"Nama direktori bab setidaknya harus memiliki %CHAPTER% atau %NUMBERING%."
+
+#: tmainform.lboptionconnectiontimeout.caption
+msgid "Connection timeout (seconds)"
+msgstr "Batas waktu koneksi (detik)"
+
+#: tmainform.lboptionexternal.caption
+msgid "Open manga by using external program:"
+msgstr "Buka komik dengan program eksternal:"
+
+#: tmainform.lboptionexternalparams.caption
+msgid "Parameters:"
+msgstr "Parameter:"
+
+#: tmainform.lboptionexternalparamshint.caption
+msgctxt "tmainform.lboptionexternalparamshint.caption"
+msgid "[?]"
+msgstr "[?]"
+
+#: tmainform.lboptionfilenamecustomrename.caption
+msgid "Filename:"
+msgstr "Nama berkas:"
+
+#: tmainform.lboptionfilenamecustomrenamehint.caption
+msgctxt "tmainform.lboptionfilenamecustomrenamehint.caption"
+msgid "[?]"
+msgstr "[?]"
+
+#: tmainform.lboptionfilenamecustomrenamehint.hint
+msgid ""
+"%WEBSITE% : Website name\n"
+"%MANGA% : Manga title\n"
+"%CHAPTER% : Chapter title\n"
+"%FILENAME% : Filename\n"
+"\n"
+"Note:\n"
+"Filename must have at least %FILENAME%"
+msgstr ""
+"%WEBSITE% : Nama situs\n"
+"%MANGA% : Judul komik\n"
+"%CHAPTER% : Judul bab\n"
+"%FILENAME% : Nama berkas\n"
+"\n"
+"Note:\n"
+"Nama berkas setidaknya harus memiliki %FILENAME%"
+
+#: tmainform.lboptionhost.caption
+msgid "Host"
+msgstr "Host"
+
+#: tmainform.lboptionlanguage.caption
+msgid "Language:"
+msgstr "Bahasa:"
+
+#: tmainform.lboptionletfmddo.caption
+msgid "After download finish:"
+msgstr "Tugas setelah unduhan selesai:"
+
+#: tmainform.lboptionmangacustomrename.caption
+msgctxt "tmainform.lboptionmangacustomrename.caption"
+msgid "Manga folder name:"
+msgstr "Nama direktori komik:"
+
+#: tmainform.lboptionmangacustomrenamehint.caption
+msgctxt "tmainform.lboptionmangacustomrenamehint.caption"
+msgid "[?]"
+msgstr "[?]"
+
+#: tmainform.lboptionmangacustomrenamehint.hint
+msgid ""
+"%WEBSITE% : Website name\n"
+"%MANGA% : Manga title\n"
+"%AUTHOR% : Author\n"
+"%ARTIST% : Artist\n"
+"\n"
+"Note:\n"
+"Manga folder name must have at least %MANGA%."
+msgstr ""
+"%WEBSITE% : Nama situs\n"
+"%MANGA% : Judul komik\n"
+"%AUTHOR% : Penulis\n"
+"%ARTIST% : Seniman\n"
+"\n"
+"Catatan:\n"
+"Nama direktori komik setidaknya harus memiliki %MANGA%."
+
+#: tmainform.lboptionmaxparallel.caption
+msgid "Number of downloaded tasks at the same time"
+msgstr "Jumlah unduhan aktif pada waktu yang sama"
+
+#: tmainform.lboptionmaxretry.caption
+msgid "Number of retry times if tasks have download problems (-1 = always retry)"
+msgstr "Jumlah pengulangan jika unduhan memiliki masalah (-1 = selalu coba lagi)"
+
+#: tmainform.lboptionmaxthread.caption
+msgid "Number of downloaded files per task at the same time"
+msgstr "Jumlah koneksi per unduhan pada waktu yang sama"
+
+#: tmainform.lboptionnewmangatime.caption
+msgid "New manga based on  it's update time (days)"
+msgstr "Komik baru berdasarkan waktu pemutakhiran (hari)"
+
+#: tmainform.lboptionpass.caption
+msgctxt "tmainform.lboptionpass.caption"
+msgid "Password"
+msgstr "Kata sandi"
+
+#: tmainform.lboptionpdfquality.caption
+msgid "PDF Quality Level"
+msgstr "Tingkat kualitas PDF"
+
+#: tmainform.lboptionpdfquality.hint
+msgctxt "TMAINFORM.LBOPTIONPDFQUALITY.HINT"
+msgid "100 = FlateEncode (lossless), lower = DCTEncode (lossy)"
+msgstr "100 = FlateEncode (lossless), lebih rendah = DCTEncode (lossy)"
+
+#: tmainform.lboptionpdfqualityhint.caption
+msgctxt "tmainform.lboptionpdfqualityhint.caption"
+msgid "[?]"
+msgstr "[?]"
+
+#: tmainform.lboptionport.caption
+msgid "Port"
+msgstr "Port"
+
+#: tmainform.lboptionproxytype.caption
+msgid "Type"
+msgstr "Tipe"
+
+#: tmainform.lboptionrenamedigits.caption
+msgid "Rename  digits"
+msgstr "Ganti jumlah digit"
+
+#: tmainform.lboptionretryfailedtask.caption
+msgid "Number of retry times if task failed"
+msgstr "Jumlah pengulangan pada tugas unduhan yang memiliki masalah"
+
+#: tmainform.lboptionuser.caption
+msgctxt "tmainform.lboptionuser.caption"
+msgid "Username"
+msgstr "Nama pengguna"
+
+#: tmainform.lbpngcompressionlevel.caption
+msgctxt "tmainform.lbpngcompressionlevel.caption"
+msgid "PNG Compression level"
+msgstr "Tingkat kompresi PNG"
+
+#: tmainform.lbsaveto.caption
+msgid "Save to:"
+msgstr "Lokasi penyimpanan:"
+
+#: tmainform.lbwebpsaveas.caption
+msgid "Save WebP as"
+msgstr "Simpan WebP sebagai"
+
+#: tmainform.medturldelete.caption
+msgctxt "TMAINFORM.MEDTURLDELETE.CAPTION"
+msgid "Delete"
+msgstr "Hapus"
+
+#: tmainform.medurlcopy.caption
+msgctxt "tmainform.medurlcopy.caption"
+msgid "Copy"
+msgstr "Salin"
+
+#: tmainform.medurlcut.caption
+msgid "Cut"
+msgstr "Potong"
+
+#: tmainform.medurlpaste.caption
+msgid "Paste"
+msgstr "Tempel"
+
+#: tmainform.medurlpasteandgo.caption
+msgid "Paste and go"
+msgstr "Tempel dan tuju"
+
+#: tmainform.medurlselectall.caption
+msgid "Select all"
+msgstr "Pilih semua"
+
+#: tmainform.medurlundo.caption
+msgid "Undo"
+msgstr "Urungkan"
+
+#: tmainform.miabortsilentthread.caption
+msgctxt "tmainform.miabortsilentthread.caption"
+msgid "Abort"
+msgstr "Batalkan"
+
+#: tmainform.michapterlistascending.caption
+msgid "Ascending"
+msgstr "Menaik"
+
+#: tmainform.michapterlistcheckall.caption
+msgctxt "tmainform.michapterlistcheckall.caption"
+msgid "Check all"
+msgstr "Centang semua"
+
+#: tmainform.michapterlistcheckselected.caption
+msgid "Check selected"
+msgstr "Centang yang dipilih"
+
+#: tmainform.michapterlistdescending.caption
+msgid "Descending"
+msgstr "Menurun"
+
+#: tmainform.michapterlistfilter.caption
+msgctxt "tmainform.michapterlistfilter.caption"
+msgid "Filter"
+msgstr "Saring"
+
+#: tmainform.michapterlisthidedownloaded.caption
+msgid "Hide downloaded chapters"
+msgstr "Sembunyikan bab terunduh"
+
+#: tmainform.michapterlisthighlight.caption
+msgid "Highlight downloaded chapters"
+msgstr "Sorot bab terunduh"
+
+#: tmainform.michapterlistuncheckall.caption
+msgctxt "tmainform.michapterlistuncheckall.caption"
+msgid "Uncheck all"
+msgstr "Hapus semua centang"
+
+#: tmainform.michapterlistuncheckselected.caption
+msgid "Uncheck selected"
+msgstr "Hapus centang yang dipilih"
+
+#: tmainform.midownloaddelete.caption
+msgctxt "tmainform.midownloaddelete.caption"
+msgid "Delete"
+msgstr "Hapus"
+
+#: tmainform.midownloaddeletecompleted.caption
+msgctxt "TMAINFORM.MIDOWNLOADDELETECOMPLETED.CAPTION"
+msgid "Delete all completed tasks"
+msgstr "Hapus semua unduhan yang sudah selesai"
+
+#: tmainform.midownloaddeletetask.caption
+msgid "Task only"
+msgstr "Daftar saja"
+
+#: tmainform.midownloaddeletetaskdata.caption
+msgid "Task + Data"
+msgstr "Daftar dan data"
+
+#: tmainform.midownloaddeletetaskdatafavorite.caption
+msgid "Task + Data + Favorite"
+msgstr "Daftar, data, dan kesukaan"
+
+#: tmainform.midownloaddisable.caption
+msgctxt "tmainform.midownloaddisable.caption"
+msgid "Disable"
+msgstr "Nonaktifkan"
+
+#: tmainform.midownloadenable.caption
+msgctxt "tmainform.midownloadenable.caption"
+msgid "Enable"
+msgstr "Aktifkan"
+
+#: tmainform.midownloadmergecompleted.caption
+msgid "Merge completed tasks"
+msgstr "Gabungkan unduhan yang sudah selesai"
+
+#: tmainform.midownloadopenfolder.caption
+msgctxt "tmainform.midownloadopenfolder.caption"
+msgid "Open Folder"
+msgstr "Buka direktori"
+
+#: tmainform.midownloadopenwith.caption
+msgctxt "tmainform.midownloadopenwith.caption"
+msgid "Open ..."
+msgstr "Buka ..."
+
+#: tmainform.midownloadresume.caption
+msgid "Resume"
+msgstr "Lanjutkan"
+
+#: tmainform.midownloadstop.caption
+msgid "Stop"
+msgstr "Hentikan"
+
+#: tmainform.midownloadviewmangainfo.caption
+msgctxt "tmainform.midownloadviewmangainfo.caption"
+msgid "View manga info"
+msgstr "Lihat informasi komik"
+
+#: tmainform.mifavoriteschangecurrentchapter.caption
+msgid "Change \"Current chapter\""
+msgstr "Ubah status bab saat ini"
+
+#: tmainform.mifavoriteschangesaveto.caption
+msgid "Change \"Save to\""
+msgstr "Ubah lokasi penyimpanan"
+
+#: tmainform.mifavoriteschecknewchapter.caption
+msgctxt "tmainform.mifavoriteschecknewchapter.caption"
+msgid "Check for new chapter"
+msgstr "Periksa bab baru"
+
+#: tmainform.mifavoritesdefaultaction.caption
+msgctxt "tmainform.mifavoritesdefaultaction.caption"
+msgid "Default Action"
+msgstr "Tindakan asali"
+
+#: tmainform.mifavoritesdefaultactionchecknewchapters.caption
+msgctxt "tmainform.mifavoritesdefaultactionchecknewchapters.caption"
+msgid "Check for new Chapters"
+msgstr "Periksa bab baru"
+
+#: tmainform.mifavoritesdefaultactionopenfolder.caption
+msgctxt "tmainform.mifavoritesdefaultactionopenfolder.caption"
+msgid "Open Folder"
+msgstr "Buka direktori"
+
+#: tmainform.mifavoritesdefaultactionrename.caption
+msgctxt "tmainform.mifavoritesdefaultactionrename.caption"
+msgid "Rename"
+msgstr "Ubah nama"
+
+#: tmainform.mifavoritesdefaultactionshowinfo.caption
+msgctxt "tmainform.mifavoritesdefaultactionshowinfo.caption"
+msgid "View Manga Info"
+msgstr "Lihat informasi komik"
+
+#: tmainform.mifavoritesdelete.caption
+msgctxt "TMAINFORM.MIFAVORITESDELETE.CAPTION"
+msgid "Delete"
+msgstr "Hapus"
+
+#: tmainform.mifavoritesdisable.caption
+msgctxt "tmainform.mifavoritesdisable.caption"
+msgid "Disable"
+msgstr "Nonaktifkan"
+
+#: tmainform.mifavoritesdownloadall.caption
+msgctxt "tmainform.mifavoritesdownloadall.caption"
+msgid "Download all"
+msgstr "Unduh semua"
+
+#: tmainform.mifavoritesenable.caption
+msgctxt "tmainform.mifavoritesenable.caption"
+msgid "Enable"
+msgstr "Aktifkan"
+
+#: tmainform.mifavoritesopenfolder.caption
+msgctxt "TMAINFORM.MIFAVORITESOPENFOLDER.CAPTION"
+msgid "Open Folder"
+msgstr "Buka direktori"
+
+#: tmainform.mifavoritesopenwith.caption
+msgctxt "TMAINFORM.MIFAVORITESOPENWITH.CAPTION"
+msgid "Open ..."
+msgstr "Buka ..."
+
+#: tmainform.mifavoritesrename.caption
+msgctxt "tmainform.mifavoritesrename.caption"
+msgid "Rename"
+msgstr "Ubah nama"
+
+#: tmainform.mifavoritesstopchecknewchapter.caption
+msgid "Stop check for new chapter"
+msgstr "Berhenti periksa bab baru"
+
+#: tmainform.mifavoritestransferwebsite.caption
+msgctxt "tmainform.mifavoritestransferwebsite.caption"
+msgid "Transfer website"
+msgstr "Transfer situs"
+
+#: tmainform.mifavoritesviewinfos.caption
+msgctxt "TMAINFORM.MIFAVORITESVIEWINFOS.CAPTION"
+msgid "View manga info"
+msgstr "Lihat informasi komik"
+
+#: tmainform.mihighlightnewmanga.caption
+msgid "Highlight new manga"
+msgstr "Sorot komik baru"
+
+#: tmainform.mimangalistaddtofavorites.caption
+msgid "Add to Favorites"
+msgstr "Tambahkan ke kesukaan"
+
+#: tmainform.mimangalistdelete.caption
+msgctxt "tmainform.mimangalistdelete.caption"
+msgid "Delete"
+msgstr "Hapus"
+
+#: tmainform.mimangalistdownloadall.caption
+msgctxt "TMAINFORM.MIMANGALISTDOWNLOADALL.CAPTION"
+msgid "Download all"
+msgstr "Unduh semua"
+
+#: tmainform.mimangalistviewinfos.caption
+msgid "View manga infos"
+msgstr "Lihat informasi komik"
+
+#: tmainform.mitrayafterdownloadfinish.caption
+msgid "After download finish"
+msgstr "Setelah unduhan selesai"
+
+#: tmainform.mitrayexit.caption
+msgctxt "tmainform.mitrayexit.caption"
+msgid "Exit"
+msgstr "Keluar"
+
+#: tmainform.mitrayfinishexit.caption
+msgctxt "tmainform.mitrayfinishexit.caption"
+msgid "Exit"
+msgstr "Keluar"
+
+#: tmainform.mitrayfinishhibernate.caption
+msgid "Hibernate"
+msgstr "Hibernasikan komputer"
+
+#: tmainform.mitrayfinishnothing.caption
+msgid "Nothing"
+msgstr "Tidak ada"
+
+#: tmainform.mitrayfinishshutdown.caption
+msgid "Shutdown"
+msgstr "Matikan komputer"
+
+#: tmainform.mitrayrestore.caption
+msgid "Restore"
+msgstr "Pulihkan"
+
+#: tmainform.mitrayresumeall.caption
+msgid "Resume all"
+msgstr "Lanjutkan semua"
+
+#: tmainform.mitrayshowdropbox.caption
+msgctxt "tmainform.mitrayshowdropbox.caption"
+msgid "Show Drop Box"
+msgstr "Tampilkan kotak unduh"
+
+#: tmainform.mitraystopall.caption
+msgid "Stop all"
+msgstr "Hentikan semua"
+
+#: tmainform.mndownload1click.caption
+msgid "Download all lists from server at once"
+msgstr "Unduh semua daftar dari peladen"
+
+#: tmainform.mnfiltergenreallcheck.caption
+msgctxt "tmainform.mnfiltergenreallcheck.caption"
+msgid "Check all"
+msgstr "Centang semua"
+
+#: tmainform.mnfiltergenreallindeterminate.caption
+msgid "Indeterminate all"
+msgstr "Tak tentu semua"
+
+#: tmainform.mnfiltergenrealluncheck.caption
+msgctxt "tmainform.mnfiltergenrealluncheck.caption"
+msgid "Uncheck all"
+msgstr "Hapus semua centang"
+
+#: tmainform.mnupdate1click.caption
+msgid "Update all lists at once"
+msgstr "Mutakhirkan semua daftar"
+
+#: tmainform.mnupdatedownfromserver.caption
+msgid "Download manga list from server"
+msgstr "Unduh daftar komik dari peladen"
+
+#: tmainform.mnupdatelist.caption
+msgctxt "TMAINFORM.MNUPDATELIST.CAPTION"
+msgid "Update manga list"
+msgstr "Mutakhirkan daftar komik"
+
+#: tmainform.rball.caption
+msgid "Have all genre checked"
+msgstr "Memiliki semua genre yang dicentang"
+
+#: tmainform.rbfavoritesshowall.caption
+msgctxt "tmainform.rbfavoritesshowall.caption"
+msgid "All"
+msgstr "Semua"
+
+#: tmainform.rbfavoritesshowdisabled.caption
+msgctxt "tmainform.rbfavoritesshowdisabled.caption"
+msgid "Disabled"
+msgstr "Nonaktif"
+
+#: tmainform.rbfavoritesshowenabled.caption
+msgctxt "tmainform.rbfavoritesshowenabled.caption"
+msgid "Enabled"
+msgstr "Aktif"
+
+#: tmainform.rbone.caption
+msgid "Have one of genres checked"
+msgstr "Memiliki salah satu genre yang dicentang"
+
+#: tmainform.rgdroptargetmode.caption
+msgid "Mode"
+msgstr "Mode"
+
+#: tmainform.rgoptioncompress.caption
+msgid "Save downloaded chapters as"
+msgstr "Menyimpan bab terunduh sebagai"
+
+#: tmainform.seoptionpdfquality.hint
+msgctxt "tmainform.seoptionpdfquality.hint"
+msgid "100 = FlateEncode (lossless), lower = DCTEncode (lossy)"
+msgstr "100 = FlateEncode (lossless), lebih rendah = DCTEncode (lossy)"
+
+#: tmainform.tbdownloaddeletecompleted.caption
+msgctxt "tmainform.tbdownloaddeletecompleted.caption"
+msgid "Delete all completed tasks"
+msgstr "Hapus semua unduhan yang sudah selesai"
+
+#: tmainform.tbdownloadresumeall.caption
+msgid "Resume All"
+msgstr "Lanjutkan semua"
+
+#: tmainform.tbdownloadstopall.caption
+msgid "Stop All"
+msgstr "Hentikan semua"
+
+#: tmainform.tbmidownloadmovebottom.hint
+msgid "Move selected item(s) to bottom"
+msgstr "Pindahkan entri terpilih ke paling bawah"
+
+#: tmainform.tbmidownloadmovedown.hint
+msgid "Move selected item(s) down"
+msgstr "Pindahkan entri terpilih ke bawah"
+
+#: tmainform.tbmidownloadmovetop.hint
+msgid "Move selected item(s) to top"
+msgstr "Pindahkan entri terpilih ke paling atas"
+
+#: tmainform.tbmidownloadmoveup.hint
+msgid "Move selected item(s) up"
+msgstr "Pindahkan entri terpilih ke atas"
+
+#: tmainform.tbwebsitescollapseall.caption
+msgid "Collapse All"
+msgstr "Ciutkan semua"
+
+#: tmainform.tbwebsitesexpandall.caption
+msgid "Expand All"
+msgstr "Bentangkan semua"
+
+#: tmainform.tbwebsitesselectall.caption
+msgid "Select All"
+msgstr "Centang semua"
+
+#: tmainform.tbwebsitesunselectall.caption
+msgid "Unselect All"
+msgstr "Hapus semua centang"
+
+#: tmainform.tsabout.caption
+msgid "About"
+msgstr "Tentang"
+
+#: tmainform.tsabouttext.caption
+msgid "About FMD"
+msgstr "Tentang FMD"
+
+#: tmainform.tsaccounts.caption
+msgid "Accounts"
+msgstr "Akun"
+
+#: tmainform.tschangelogtext.caption
+msgid "Changelog"
+msgstr "Catatan Perubahan"
+
+#: tmainform.tsconnections.caption
+msgid "Connections"
+msgstr "Koneksi"
+
+#: tmainform.tscustomcolor.caption
+msgid "Custom color"
+msgstr "Kustomisasi Warna"
+
+#: tmainform.tsdialogs.caption
+msgid "Dialogs"
+msgstr "Dialog"
+
+#: tmainform.tsdownload.caption
+msgctxt "tmainform.tsdownload.caption"
+msgid "Downloads"
+msgstr "Unduhan"
+
+#: tmainform.tsfavorites.caption
+msgctxt "tmainform.tsfavorites.caption"
+msgid "Favorites"
+msgstr "Kesukaan"
+
+#: tmainform.tsgeneral.caption
+msgid "General"
+msgstr "Umum"
+
+#: tmainform.tsinfofilteradv.caption
+msgctxt "tmainform.tsinfofilteradv.caption"
+msgid "Filter"
+msgstr "Saring"
+
+#: tmainform.tsinfomanga.caption
+msgid "Info"
+msgstr "Informasi"
+
+#: tmainform.tsinformation.caption
+msgid "Manga Info"
+msgstr "Informasi Komik"
+
+#: tmainform.tslog.caption
+msgctxt "tmainform.tslog.caption"
+msgid "Log"
+msgstr "Pencatatan"
+
+#: tmainform.tsmisc.caption
+msgid "Misc"
+msgstr "Lain-lain"
+
+#: tmainform.tsoption.caption
+msgctxt "tmainform.tsoption.caption"
+msgid "Options"
+msgstr "Pengaturan"
+
+#: tmainform.tssaveto.caption
+msgctxt "tmainform.tssaveto.caption"
+msgid "Save to"
+msgstr "Penyimpanan"
+
+#: tmainform.tsupdate.caption
+msgid "Updates"
+msgstr "Pemutakhiran"
+
+#: tmainform.tsview.caption
+msgid "View"
+msgstr "Tampilan"
+
+#: tmainform.tswebsiteadvanced.caption
+msgid "Advanced"
+msgstr "Lanjutan"
+
+#: tmainform.tswebsitemodules.caption
+msgid "Modules"
+msgstr "Modul"
+
+#: tmainform.tswebsiteoptions.caption
+msgctxt "tmainform.tswebsiteoptions.caption"
+msgid "Options"
+msgstr "Pengaturan"
+
+#: tmainform.tswebsites.caption
+msgctxt "tmainform.tswebsites.caption"
+msgid "Websites"
+msgstr "Situs"
+
+#: tmainform.tswebsiteselection.caption
+msgctxt "tmainform.tswebsiteselection.caption"
+msgid "Websites"
+msgstr "Situs"
+
+#: tmainform.vtdownload.header.columns[0].text
+msgid "Manga"
+msgstr "Komik"
+
+#: tmainform.vtdownload.header.columns[1].text
+msgctxt "tmainform.vtdownload.header.columns[1].text"
+msgid "Status"
+msgstr "Status"
+
+#: tmainform.vtdownload.header.columns[2].text
+msgid "Progress"
+msgstr "Kemajuan"
+
+#: tmainform.vtdownload.header.columns[3].text
+msgctxt "tmainform.vtdownload.header.columns[3].text"
+msgid "Transfer rate"
+msgstr "Kecepatan"
+
+#: tmainform.vtdownload.header.columns[4].text
+msgctxt "tmainform.vtdownload.header.columns[4].text"
+msgid "Website"
+msgstr "Situs"
+
+#: tmainform.vtdownload.header.columns[5].text
+msgctxt "tmainform.vtdownload.header.columns[5].text"
+msgid "Save to"
+msgstr "Lokasi penyimpanan"
+
+#: tmainform.vtdownload.header.columns[6].text
+msgctxt "tmainform.vtdownload.header.columns[6].text"
+msgid "Added"
+msgstr "Ditambahkan"
+
+#: tmainform.vtfavorites.header.columns[0].text
+msgid "#"
+msgstr "#"
+
+#: tmainform.vtfavorites.header.columns[1].text
+msgctxt "TMAINFORM.VTFAVORITES.HEADER.COLUMNS[1].TEXT"
+msgid "Title"
+msgstr "Judul"
+
+#: tmainform.vtfavorites.header.columns[2].text
+msgid "Current chapter"
+msgstr "Bab saat ini"
+
+#: tmainform.vtfavorites.header.columns[3].text
+msgctxt "TMAINFORM.VTFAVORITES.HEADER.COLUMNS[3].TEXT"
+msgid "Website"
+msgstr "Situs"
+
+#: tmainform.vtfavorites.header.columns[4].text
+msgctxt "TMAINFORM.VTFAVORITES.HEADER.COLUMNS[4].TEXT"
+msgid "Save to"
+msgstr "Lokasi penyimpanan"
+
+#: tnewchapter.btcancel.caption
+msgctxt "tnewchapter.btcancel.caption"
+msgid "&Cancel"
+msgstr "&Batal"
+
+#: tnewchapter.btdownload.caption
+msgctxt "tnewchapter.btdownload.caption"
+msgid "&Download"
+msgstr "&Unduh"
+
+#: tnewchapter.btqueue.caption
+msgctxt "tnewchapter.btqueue.caption"
+msgid "&Add to queue"
+msgstr "&Tambahkan ke antrean"
+
+#: tnewchapter.caption
+msgid "New Chapter Notification"
+msgstr "Notifikasi Bab Baru"
+
+#: tselectdirectoryform.btok.caption
+msgctxt "tselectdirectoryform.btok.caption"
+msgid "OK"
+msgstr "Oke"
+
+#: tselectdirectoryform.caption
+msgid "Select directory"
+msgstr "Pilih direktori"
+
+#: tselectdirectoryform.lbdescription.caption
+msgid ""
+"If you change multiple entries at once, the new paths will be constructed like this:\n"
+"\"{New_Path}\\{Manga_Title}\"\n"
+"\n"
+"Old folder structures will be ignored. However, if the only part you change is the drive letter (e.g. 'D:'), only the letter will be replaced. This only works for absolute paths, relative paths will be ignored."
+msgstr ""
+"Jika Anda mengubah banyak entri sekaligus, lokasi baru akan dibentuk seperti ini:\n"
+"\"{Lokasi_Baru}\\{Judul_Komik}\"\n"
+"\n"
+"Susunan direktori lama akan diabaikan. Namun, jika bagian yang Anda ubah hanya huruf kandarnya (misalnya 'D:'), maka hurufnya saja yang akan diganti. Ini hanya berkerja pada lokasi absolut, lokasi relatif akan diabaikan."
+
+#: tshutdowncounterform.btabort.caption
+msgid "&Abort"
+msgstr "&Batalkan"
+
+#: tshutdowncounterform.btnow.caption
+msgid "&Now"
+msgstr "&Sekarang"
+
+#: ttransferfavoritesform.btcancel.caption
+msgctxt "ttransferfavoritesform.btcancel.caption"
+msgid "Cancel"
+msgstr "Batal"
+
+#: ttransferfavoritesform.btok.caption
+msgctxt "ttransferfavoritesform.btok.caption"
+msgid "OK"
+msgstr "Oke"
+
+#: ttransferfavoritesform.caption
+msgid "Transfer Favorites"
+msgstr "Transfer kesukaan"
+
+#: ttransferfavoritesform.ckcleardownloadedchapters.caption
+msgid "Clear downloaded chapter list and reload from server"
+msgstr "Bersihkan daftar bab terunduh dan muat ulang dari peladen"
+
+#: ttransferfavoritesform.lbtransferto.caption
+msgctxt "ttransferfavoritesform.lbtransferto.caption"
+msgid "Transfer to"
+msgstr "Transfer ke"
+
+#: ttransferfavoritesform.rball.caption
+msgctxt "ttransferfavoritesform.rball.caption"
+msgid "All"
+msgstr "Semua"
+
+#: ttransferfavoritesform.rbinvalid.caption
+msgctxt "ttransferfavoritesform.rbinvalid.caption"
+msgid "Invalid"
+msgstr "Tidak valid"
+
+#: ttransferfavoritesform.rbvalid.caption
+msgctxt "ttransferfavoritesform.rbvalid.caption"
+msgid "Valid"
+msgstr "Valid"
+
+#: ttransferfavoritesform.vtfavs.header.columns[1].text
+msgctxt "ttransferfavoritesform.vtfavs.header.columns[1].text"
+msgid "Title"
+msgstr "Judul"
+
+#: ttransferfavoritesform.vtfavs.header.columns[2].text
+msgctxt "ttransferfavoritesform.vtfavs.header.columns[2].text"
+msgid "Website"
+msgstr "Situs"
+
+#: tupdatedialogform.btnlater.caption
+msgid "&Later"
+msgstr "&Nanti saja"
+
+#: tupdatedialogform.btnupdate.caption
+msgid "&Update"
+msgstr "&Mutakhirkan"
+
+#: tupdatedialogform.lbmessage.caption
+msgid ""
+"New version found! Do you want to update now?\n"
+"FMD will be closed to finish the update."
+msgstr ""
+"Versi mutakhir ditemukan! Apakah Anda ingin memutakhirkan sekarang?\n"
+"FMD akan ditutup untuk menyelesaikan pemutakhiran."
+
+#: twebsiteselectionform.caption
+msgid "Select a website"
+msgstr "Pilih situs"
+
+#: twebsitesettingsform.caption
+msgid "WebsiteSettingsForm"
+msgstr "Form Pengaturan Situs"
+
+#: twebsitesettingsform.edsearch.texthint
+msgid "Website name"
+msgstr "Nama situs"
+
+#: twebsitesettingsform.edsearchproperty.texthint
+msgid "Setting name"
+msgstr "Nama pengaturan"
+
+#: udownloadsmanager.rs_compressing
+msgid "Compressing..."
+msgstr "Mengompresi..."
+
+#: udownloadsmanager.rs_disabled
+msgctxt "udownloadsmanager.rs_disabled"
+msgid "Disabled"
+msgstr "Nonaktif"
+
+#: udownloadsmanager.rs_downloading
+msgid "Downloading"
+msgstr "Mengunduh"
+
+#: udownloadsmanager.rs_failed
+msgctxt "udownloadsmanager.rs_failed"
+msgid "Failed"
+msgstr "Gagal"
+
+#: udownloadsmanager.rs_failedtocreatedir
+msgid "Failed to create directory!"
+msgstr "Gagal membuat direktori!"
+
+#: udownloadsmanager.rs_failedtryresumetask
+msgid "Failed, try resuming this task!"
+msgstr "Gagal, coba lanjutkan unduhan ini!"
+
+#: udownloadsmanager.rs_finish
+msgid "Completed"
+msgstr "Selesai"
+
+#: udownloadsmanager.rs_preparing
+msgctxt "udownloadsmanager.rs_preparing"
+msgid "Preparing"
+msgstr "Mempersiapkan"
+
+#: udownloadsmanager.rs_stopped
+msgid "Stopped"
+msgstr "Berhenti"
+
+#: udownloadsmanager.rs_waiting
+msgid "Waiting..."
+msgstr "Menunggu..."
+
+#: ufavoritesmanager.rs_btnaddtoqueue
+msgctxt "ufavoritesmanager.rs_btnaddtoqueue"
+msgid "&Add to queue"
+msgstr "&Tambahkan ke antrean"
+
+#: ufavoritesmanager.rs_btncancel
+msgctxt "ufavoritesmanager.rs_btncancel"
+msgid "&Cancel"
+msgstr "&Batal"
+
+#: ufavoritesmanager.rs_btncheckfavorites
+msgctxt "ufavoritesmanager.rs_btncheckfavorites"
+msgid "Check for new chapter"
+msgstr "Periksa bab baru"
+
+#: ufavoritesmanager.rs_btndownload
+msgctxt "ufavoritesmanager.rs_btndownload"
+msgid "&Download"
+msgstr "&Unduh"
+
+#: ufavoritesmanager.rs_btnremove
+msgid "&Remove"
+msgstr "&Hapus"
+
+#: ufavoritesmanager.rs_dlgcompletedmangacaption
+#, object-pascal-format
+msgid "Found %d completed manga"
+msgstr "Ditemukan %d komik yang tamat"
+
+#: ufavoritesmanager.rs_dlgfavoritescheckisrunning
+msgid "Favorites check is running!"
+msgstr "Pemeriksaan kesukaan sedang berjalan!"
+
+#: ufavoritesmanager.rs_dlgnewchaptercaption
+#, object-pascal-format
+msgid "%d manga(s) have new chapter(s)"
+msgstr "Ditemukan %d bab baru"
+
+#: ufavoritesmanager.rs_favoritehasnewchapter
+#, object-pascal-format
+msgid "%s <%s> has %d new chapter(s)."
+msgstr "%s <%s> memiliki %d bab baru"
+
+#: ufavoritesmanager.rs_lblmangawillberemoved
+msgid "Completed manga will be removed:"
+msgstr "Komik yang sudah tamat akan dihapus:"
+
+#: ufavoritesmanager.rs_lblnewchapterfound
+#, object-pascal-format
+msgid "Found %d new chapter from %d manga(s):"
+msgstr "%d bab baru dari %d komik:"
+
+#: usilentthread.rs_silentthreadloadstatus
+#, object-pascal-format
+msgid "Loading: %d/%d"
+msgstr "Memuat: %d/%d"
+
+#: uupdatethread.rs_dlghasnewmanga
+#, object-pascal-format
+msgid "%s has %d new manga(s)"
+msgstr "%s memiliki %d komik baru"
+
+#: uupdatethread.rs_gettingdirectory
+msgid "Getting directory"
+msgstr "Memuat direktori"
+
+#: uupdatethread.rs_gettinginfo
+msgid "Getting info"
+msgstr "Memuat informasi"
+
+#: uupdatethread.rs_gettinglistfor
+msgid "Getting list for"
+msgstr "Memuat daftar untuk"
+
+#: uupdatethread.rs_indexingnewtitle
+msgid "Indexing new title(s)"
+msgstr "Pengindeksan judul baru"
+
+#: uupdatethread.rs_lookingfornewtitle
+msgid "Looking for new title(s)"
+msgstr "Mencari judul baru"
+
+#: uupdatethread.rs_lookingfornewtitlefromanotherdirectory
+msgid "Looking for new title(s) from another directory"
+msgstr "Mencari judul baru dari direktori lain"
+
+#: uupdatethread.rs_preparing
+msgctxt "uupdatethread.rs_preparing"
+msgid "Preparing"
+msgstr "Mempersiapkan"
+
+#: uupdatethread.rs_removingduplicatefromcurrentdata
+msgid "Removing duplicate from current data"
+msgstr "Menghapus duplikat dari data saat ini"
+
+#: uupdatethread.rs_removingduplicatefromlocaldata
+msgid "Removing duplicate from local data"
+msgstr "Menghapus duplikat dari data lokal"
+
+#: uupdatethread.rs_removingduplicatefromnewtitle
+msgid "Removing duplicate from new title(s)"
+msgstr "Menghapus duplikat dari judul baru"
+
+#: uupdatethread.rs_savingdata
+msgid "Saving data"
+msgstr "Menyimpan data"
+
+#: uupdatethread.rs_synchronizingdata
+msgid "Synchronizing data"
+msgstr "Sinkronisasi data"
+
+#: uupdatethread.rs_updatinglist
+msgid "Updating list"
+msgstr "Memutakhirkan daftar"
+
+#: webp.serrloadfailed
+#, object-pascal-format
+msgid "Can not load WebP codec library \"%s\". Check your installation."
+msgstr "Tidak dapat memuat pustaka kodek WebP \"%s\". Periksa instalasi Anda."
+

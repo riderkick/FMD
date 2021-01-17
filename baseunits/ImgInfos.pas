@@ -56,10 +56,10 @@ type
 
   TimageHandlerMgr = class
   private
-    FList: array of TImageHandlerRec;
     FEmptyHandlerRec: TImageHandlerRec;
     function GetCount: Integer;
   public
+    List: array of TImageHandlerRec;
     constructor Create;
     destructor Destroy; override;
     procedure Add(const ReaderClass: TFPCustomImageReaderClass;
@@ -82,7 +82,7 @@ type
     function GetImageFileWriterClass(const FileName: String): TFPCustomImageWriterClass; inline;
     function GetImageExtWriterClass(const Ext: String): TFPCustomImageWriterClass; inline;
     function GetImageWriterExt(const Ext: String): String; inline;
-  public
+  published
     property Count: Integer read GetCount;
   end;
 
@@ -180,7 +180,7 @@ end;
 
 function TimageHandlerMgr.GetCount: Integer;
 begin
-  Result := Length(FList);
+  Result := Length(List);
 end;
 
 constructor TimageHandlerMgr.Create;
@@ -190,7 +190,7 @@ end;
 
 destructor TimageHandlerMgr.Destroy;
 begin
-  SetLength(Flist, 0);
+  SetLength(List, 0);
   inherited Destroy;
 end;
 
@@ -202,17 +202,17 @@ procedure TimageHandlerMgr.Add(const ReaderClass: TFPCustomImageReaderClass;
 var
   i: Integer;
 begin
-  i := Length(FList);
-  SetLength(FList, i + 1);
-  FList[i].ReaderClass := ReaderClass;
-  FList[i].WriterClass := WriterClass;
-  FList[i].CheckImageStream := CheckImageStreamFunc;
-  FList[i].GetImageStreamSize := GetImageStreamSizeProc;
-  FList[i].Ext := Ext;
+  i := Length(List);
+  SetLength(List, i + 1);
+  List[i].ReaderClass := ReaderClass;
+  List[i].WriterClass := WriterClass;
+  List[i].CheckImageStream := CheckImageStreamFunc;
+  List[i].GetImageStreamSize := GetImageStreamSizeProc;
+  List[i].Ext := Ext;
   if WExt <> '' then
-    FList[i].WExt := WExt
+    List[i].WExt := WExt
   else
-    FList[i].WExt := Ext;
+    List[i].WExt := Ext;
 end;
 
 function TimageHandlerMgr.GetImageHandlerByStream(const Stream: TStream): PImageHandlerRec;
@@ -225,12 +225,12 @@ begin
   if Stream.Size = 0 then Exit;
   P := Stream.Position;
   try
-    for i := Low(FList) to High(Flist) do
+    for i := Low(List) to High(List) do
     begin
       Stream.Position := 0;
-      if FList[i].CheckImageStream(Stream) then
+      if List[i].CheckImageStream(Stream) then
       begin
-        Result := @FList[i];
+        Result := @List[i];
         Break;
       end;
     end;
@@ -258,10 +258,10 @@ var
   i: Integer;
 begin
   Result := @FEmptyHandlerRec;
-  for i := Low(FList) to High(Flist) do
-    if Ext = FList[i].Ext then
+  for i := Low(List) to High(List) do
+    if Ext = List[i].Ext then
     begin
-      Result := @FList[i];
+      Result := @List[i];
       Break;
     end;
 end;
@@ -633,10 +633,10 @@ initialization
   ImageHandlerMgr := TimageHandlerMgr.Create;
   ImageHandlerMgr.Add(TFPReaderJPEG, TFPWriterJPEG, @JPEGCheckImageStream, @JPEGGetImageSize, 'jpg');
   ImageHandlerMgr.Add(TFPReaderPNG, TFPWriterPNG, @PNGCheckImageStream, @PNGGetImageSize, 'png');
+  ImageHandlerMgr.Add(nil, nil, @WEBPCheckImageStream, @WEBPGetImageSize, 'webp');
   ImageHandlerMgr.Add(TFPReaderGif, TFPWriterPNG, @GIFCheckImageStream, @GIFGetImageSize, 'gif', 'png');
   ImageHandlerMgr.Add(TFPReaderBMP, TFPWriterBMP, @BMPCheckImageStream, @BMPGetImageSize, 'bmp');
   ImageHandlerMgr.Add(TFPReaderTiff, TFPWriterTiff, @TIFFCheckImageStream, @TIFFGetImageSize, 'tif');
-  ImageHandlerMgr.Add(nil, nil, @WEBPCheckImageStream, @WEBPGetImageSize, 'webp');
 
 finalization
   ImageHandlerMgr.Free;

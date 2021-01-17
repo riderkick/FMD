@@ -2,7 +2,10 @@ function getinfo()
   mangainfo.url=MaybeFillHost(module.RootURL, url)
   if http.get(mangainfo.url) then
     x=TXQuery.Create(http.document)		
-    mangainfo.title=x.xpathstring('//h1[@class="post-title"]')	
+    mangainfo.title=x.xpathstring('//meta[@property="og:title"]/@content')
+    mangainfo.coverlink=x.xpathstring('//meta[@property="og:image"]/@content')
+    mangainfo.authors=x.xpathstring('//a[@class="post-account"]')
+    mangainfo.summary=x.xpathstring('//p[@class="post-image-description"]')
     mangainfo.chapterlinks.add(url)
     mangainfo.chapternames.add(mangainfo.title)
     return no_error
@@ -17,7 +20,7 @@ function taskstart()
 end
 
 function getpagenumber()
-  local hash = url:match('/a/(.+)/?')
+  local hash = url:match('.*/(.+)$')
   if hash ~= nil then
     -- album
     if http.get(module.rooturl .. '/ajaxalbums/getimages/' .. hash .. '/hit.json') then
@@ -47,7 +50,6 @@ function Init()
   m=NewModule()
   m.website='Imgur'
   m.rooturl='https://imgur.com'
-  m.lastupdated='February 6, 2018'
   m.OnGetInfo='getinfo'
   m.OnTaskStart='taskstart'
   m.OnGetPageNumber='getpagenumber'

@@ -23,7 +23,7 @@ function getpagenumber()
     local script = x.xpathstring('//script[contains(@src, "chapter")]/@src')
     if http.get(script) then
       s = StreamToString(http.document)
-      s = '!function(){eval'..GetBetween('!function(){eval', '))}();', s)..'))}();'
+      s = '!function(){eval(function(p, a, c, k, e, r)'..GetBetween('eval(function(p, a, c, k, e, r)', '}();', s)..'}();'
       s = 'var W={nonce:"'..nonce..'",DATA:"'..data..'"};'..s..';JSON.stringify(_v);'
       s = ExecJS(s)
       x.parsehtml(s)
@@ -68,7 +68,6 @@ function Init()
   m.category='Raw'
   m.website='AcQQCom'
   m.rooturl='https://ac.qq.com'
-  m.lastupdated='April 2, 2018'
   m.ongetinfo='getinfo'
   m.ongetpagenumber='getpagenumber'
   m.ongetdirectorypagenumber='getdirectorypagenumber'

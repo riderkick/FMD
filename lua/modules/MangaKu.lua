@@ -4,16 +4,18 @@ function getinfo()
     x=TXQuery.Create(http.document)
 	
     mangainfo.title=x.xpathstring('//title/text()')
-	  :gsub('Baca', ''):gsub('Online Komik', ''):gsub('Komik -', ''):gsub('Komik', '')
-	  :gsub('Manga -', ''):gsub('Manga', ''):gsub('Online -', ''):gsub('Terbaru', '')
-	  :gsub('Bahasa Indonesia', ''):gsub('^%s*[–/]', '')
-	  
+	  :gsub('Baca', ''):gsub('Online Komik', ''):gsub('Komik -', ''):gsub('Komik', ''):gsub('KOMIK', '')
+	  :gsub('komik', ''):gsub('Manga -', ''):gsub('Manga', ''):gsub('Online -', ''):gsub('Terbaru', '')
+	  :gsub('Bahasa', ''):gsub('Indonesia', ''):gsub('bahasa', ''):gsub('indonesia', '')
+	  :gsub('BAHASA', ''):gsub('INDONESIA', ''):gsub('terbaru', ''):gsub('^%s*[–/]', '')
+
     mangainfo.coverlink=x.xpathstring('//a[@imageanchor]/img/@src')
-    mangainfo.authors=x.xpathstring('//*[contains(., "Author")]/following-sibling::text()'):gsub("^:", "")
-	mangainfo.artists=x.xpathstring('//*[contains(., "Artist")]/following-sibling::text()'):gsub("^:", "")
+    mangainfo.authors=x.xpathstring('//*[contains(., ("Author","Penulis"))]/following-sibling::text()'):gsub("^:", "")
+	mangainfo.artists=x.xpathstring('//*[contains(., ("Artist","Seniman"))]/following-sibling::text()'):gsub("^:", "")
     mangainfo.genres=x.xpathstring('//*[contains(., "Genre")]/following-sibling::text()'):gsub("^:", "")
-    mangainfo.status = MangaInfoStatusIfPos(x.xpathstring('//*[contains(., "Episodes")]/following-sibling::text()'))
-	x.xpathhrefall('//div[contains(@style, "-moz-border-radius")]/a', mangainfo.chapterlinks, mangainfo.chapternames)
+    mangainfo.status = MangaInfoStatusIfPos(x.xpathstring('//*[contains(., ("Episodes","Status"))]/following-sibling::text()'))
+	mangainfo.summary = x.xpathstring('//*[contains(., "Sinopsis")]/following-sibling::text()'):gsub("^:", "")
+    x.xpathhrefall('//div[contains(@style, "-moz-border-radius")]//a', mangainfo.chapterlinks, mangainfo.chapternames)
     InvertStrings(mangainfo.chapterlinks,mangainfo.chapternames)
     return no_error
   else
@@ -59,7 +61,7 @@ function Init()
   m.category='Indonesian'
   m.website='MangaKu'
   m.rooturl='http://mangaku.in'
-  m.lastupdated='February 17, 2018'
+  m.lastupdated='July 10, 2019'
   m.ongetinfo='getinfo'
   m.ongetpagenumber='getpagenumber'
   m.ongetnameandlink='getnameandlink'

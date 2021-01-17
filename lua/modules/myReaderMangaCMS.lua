@@ -74,77 +74,6 @@ function Modules.myReaderMangaCMS()
   return myReaderMangaCMS
 end
 
-function Modules.WhiteCloudPavilion()
-  local WhiteCloudPavilion = {}
-  setmetatable(WhiteCloudPavilion, { __index = Modules.myReaderMangaCMS() })
-  
-  function WhiteCloudPavilion:getdirurl()
-    return '/manga/free' .. Modules.myReaderMangaCMS().getdirurl()
-  end
-  
-  return WhiteCloudPavilion
-end
-
-function Modules.GodsRealmScan()
-  local GodsRealmScan = {}
-  setmetatable(GodsRealmScan, { __index = Modules.myReaderMangaCMS() })
-  
-  function GodsRealmScan:getdirurl()
-    return '/public' .. Modules.myReaderMangaCMS().getdirurl()
-  end
-  
-  return GodsRealmScan
-end
-
-function Modules.MangaDenizi()
-  local MangaDenizi = {}
-  setmetatable(MangaDenizi, { __index = Modules.myReaderMangaCMS() })
-  
-  function MangaDenizi:getinfo()
-    Modules.myReaderMangaCMS().getinfo()
-    local x=TXQuery.Create(http.document)
-    mangainfo.status = MangaInfoStatusIfPos(x.XPathString('//dt[.="Durum:"]/following-sibling::dd[1]'), 'Devam Ediyor', 'Tamamlandı')
-  end
-  
-  return MangaDenizi
-end
-
-function Modules.FallenAngelsScans()
-  local FallenAngelsScans = {}
-  setmetatable(FallenAngelsScans, { __index = Modules.myReaderMangaCMS() })
-  
-  function FallenAngelsScans:getinfo()
-    Modules.myReaderMangaCMS().getinfo()
-    if mangainfo.coverLink:match('^//') ~= nil then
-      mangainfo.coverLink = 'https:' .. mangainfo.coverLink
-    end
-  end
-  
-  return FallenAngelsScans
-end
-
-function Modules.KomikGue()
-  local KomikGue = {}
-  setmetatable(KomikGue, { __index = Modules.myReaderMangaCMS() })
-  
-  function KomikGue:getinfo()
-    Modules.myReaderMangaCMS().getinfo()
-    local x=TXQuery.Create(http.document)
-    mangainfo.artists = x.XPathStringAll('//dt[.="Artist(s)"]/following-sibling::dd[1]')
-    mangainfo.summary = x.XPathString('//div[@class="well"]/div')
-    local v = x.xpath('//div[@class="chapter-wrapper"]/table//td[@class="chapter"]/a')
-    for i = 1, v.Count do
-      local v2 = v.Get(i)
-      mangainfo.chapterLinks.Add(v2.getAttribute('href'))
-      mangainfo.chapterNames.Add(x.XPathString('normalize-space(.)', v2))
-    end
-    InvertStrings(mangainfo.chapterLinks, mangainfo.chapterNames)
-  end
-  
-  return KomikGue
-end
-
-
 -------------------------------------------------------------------------------
 
 function createInstance()
@@ -187,34 +116,11 @@ function AddWebsiteModule(name, url, cat)
 end
 
 function Init()
-  local c='Spanish'
-  AddWebsiteModule('MangaDoor', 'http://mangadoor.com', c);
-  AddWebsiteModule('MangAs', 'https://mang.as', c);
-  
-  c='Indonesian'
-  AddWebsiteModule('Komikid', 'https://www.komikid.com', c);
-  AddWebsiteModule('KomikGue', 'https://www.komikgue.com', c);
-  
-  c='Raw'
-  AddWebsiteModule('RawMangaUpdate', 'http://rawmangaupdate.com', c);
+  local c='Raw'
   AddWebsiteModule('MangaRawOnline', 'http://mangaraw.online', c);
   AddWebsiteModule('RawMangaSite', 'https://rawmanga.site', c);
-  
-  c='Turkish'
-  AddWebsiteModule('MangaDenizi', 'http://www.mangadenizi.com', c);
-  AddWebsiteModule('MangaVadisi', 'http://manga-v2.mangavadisi.org', c);
-
-  c='English-Scanlation'
-  AddWebsiteModule('FallenAngelsScans','https://manga.fascans.com', c);
-  AddWebsiteModule('WhiteCloudPavilion','https://whitecloudpavilion.com', c);
-  AddWebsiteModule('HatigarmScans', 'https://www.hatigarmscans.net', c)
-  AddWebsiteModule('WoweScans', 'https://wowescans.net', c)
 
   c='Spanish-Scanlation'
-  AddWebsiteModule('DarkSkyScan', 'https://darkskyprojects.org', c);
-  AddWebsiteModule('CoYuHi', 'http://www.universoyuri.com', c);
   AddWebsiteModule('SOSScanlation', 'https://sosscanlation.com', c);
-  
-  c='French'
-  AddWebsiteModule('ScanFR', 'https://www.scan-fr.io', c);
+  AddWebsiteModule('SamuraiScan', 'https://samuraiscan.com', c);
 end

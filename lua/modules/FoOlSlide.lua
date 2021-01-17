@@ -27,8 +27,7 @@ function getdirurl(website)
   local dirs = {
     ['Jaiminisbox'] = dirurlreader,
     ['DokiFansubs'] = dirurlreader,
-    ['AtelierDuNoir'] = dirurlreader,
-    ['OneTimeScans'] = dirurlfoolslide,
+    ['OneTimeScans'] = dirurl,
     ['DejameProbar'] = dirurlslide,
     ['MenudoFansub'] = dirurlslide,
     ['SolitarioNoFansub'] = dirurlslide,
@@ -37,8 +36,8 @@ function getdirurl(website)
     ['HelveticaScans'] = dirurlhelvetica,
     ['RavensScans'] = dirurllector,
     ['NoraNoFansub'] = dirurllector,
-    ['HotChocolateScans'] = dirurlfsdir,
     ['AntisenseScans'] = dirurlonline,
+	['SenseScans'] = dirurlreader,
     ['MangaichiScan'] = dirurlfsdir,
     ['Riceballicious'] = dirurlreaderlist,
     ['Yuri-ism'] = dirurlslide,
@@ -49,7 +48,8 @@ function getdirurl(website)
     ['YaoiIsLife'] = dirurlreader,
     ['FujoshiBitches'] = dirurlreader,
     ['TapTrans'] = dirurlfsdir,
-    ['LoliVault'] = dirurlonline
+    ['LoliVault'] = dirurlonline,
+    ['Shoujohearts'] = dirurlreader
   }  
   if dirs[website] ~= nil then
     return dirs[website]
@@ -65,11 +65,7 @@ function getinfo()
     x = TXQuery.Create(http.document)
     mangainfo.coverlink = x.xpathstring('//div[@class="thumbnail" or contains(@class, "thumb")]/img/@src')
     if mangainfo.title == '' then
-      if module.website == 'AtelierDuNoir' then
-        mangainfo.title = x.xpathstring('//div[@class="section-headline"]//h3')
-      else
-        mangainfo.title = x.xpathstring('//h1[@class="title"]')
-      end
+      mangainfo.title = x.xpathstring('//h1[@class="title"]')
     end
     if Pos('emailprotected', mangainfo.title) > 0 then
       mangainfo.title = Trim(SeparateLeft(x.xpathstring('//title'), '::'))
@@ -148,6 +144,27 @@ function getpagenumber()
   return result
 end
 
+function getpagenumber_jb()
+  local result = false
+  if getWithCookie(MaybeFillHost(module.rooturl, url)) then
+    x = TXQuery.create(http.document)
+    task.pagenumber = x.xpath('//div[@class="topbar_right"]//ul[@class="dropdown"]/li').count
+    s = x.xpathstring('//script[contains(.,"[\'fromCharCode\',\'")]')
+    if s ~= '' then
+      s = GetBetween('[\'fromCharCode\',\'', '\'];', s)
+      s = ExecJS("function decrypt(encrypted) {return encrypted.replace(/[a-zA-Z]/g,function (a) {return String.fromCharCode((a <= 'Z' ? 90 : 122) >= (a = a.charCodeAt(0) + 13) ? a : a - 26);});}; decrypt('" .. s .. "');")
+      s = DecodeBase64(s)
+      x.parsehtml(s)
+      v = x.xpath('json(*)()("url")')
+      for i = 1, v.count do
+        task.pagelinks.add(v.get(i).ToString)
+      end
+    end
+    result = true
+  end
+  return result
+end
+
 function getimageurl()
   local result = false
   local s = url
@@ -187,14 +204,7 @@ function getnameandlink()
   if getWithCookie(s) then
     result = no_error
     local x = TXQuery.create(http.document)
-    if module.website == 'AtelierDuNoir' then
-      local v = x.xpath('//div[@class="caption"]')
-      for i = 1, v.count do
-        v1 = v.get(i)
-        links.add(x.xpathstring('div/a/@href', v1))
-        names.add(x.xpathstring('h4', v1))
-      end
-    elseif module.website == 'TwistedHelScans' then
+    if module.website == 'TwistedHelScans' then
       local v = x.xpath('//div[contains(@class, "series_card")]/a')
       for i = 1, v.count do
         local v1 = v.get(i)
@@ -213,7 +223,6 @@ function AddWebsiteModule(name, url, category)
   m.website = name
   m.rooturl = url
   m.category = category
-  m.lastupdated = 'february, 6 2018'
   m.ongetinfo = 'getinfo'
   m.OnTaskStart = 'taskstart'
   m.OnGetPageNumber = 'getpagenumber'
@@ -221,67 +230,61 @@ function AddWebsiteModule(name, url, category)
   m.OnGetDirectoryPageNumber = 'getdirectorypagenumber'
   m.OnGetNameAndLink = 'getnameandlink'
   if name == 'TwistedHelScans' then m.ongetinfo = 'getinfo_ths'; end
+  if name == 'Jaiminisbox' then m.OnGetPageNumber = 'getpagenumber_jb'; end
   return m
 end
 
 function Init()
   local cat = 'English-Scanlation'
-  AddWebsiteModule('PowerManga', 'http://read.powermanga.org', cat)
-  AddWebsiteModule('Shoujosense', 'http://reader.shoujosense.com', cat)
-  AddWebsiteModule('OneTimeScans', 'http://otscans.com', cat)
-  AddWebsiteModule('SenseScans', 'http://reader.sensescans.com', cat)
-  AddWebsiteModule('Jaiminisbox', 'https://jaiminisbox.com', cat)
-  AddWebsiteModule('KireiCake', 'https://reader.kireicake.com', cat)
-  AddWebsiteModule('HelveticaScans', 'http://helveticascans.com', cat)
-  AddWebsiteModule('DokiFansubs', 'https://kobato.hologfx.com', cat)
-  AddWebsiteModule('AtelierDuNoir', 'http://atelierdunoir.org', cat)
-  AddWebsiteModule('WorldThree', 'http://www.slide.world-three.org', cat)
-  AddWebsiteModule('S2Scans', 'https://reader.s2smanga.com', cat)
-  AddWebsiteModule('HotChocolateScans', 'http://hotchocolatescans.com', cat)
-  AddWebsiteModule('LetItGoScans', 'http://reader.letitgo.scans.today', cat)
-  AddWebsiteModule('SeaOtterScans', 'https://reader.seaotterscans.com', cat)
   AddWebsiteModule('AntisenseScans', 'http://antisensescans.com', cat)
-  AddWebsiteModule('TheCatScans', 'https://reader.thecatscans.com', cat)
-  AddWebsiteModule('DeathTollScans', 'https://reader.deathtollscans.net', cat)
-  AddWebsiteModule('MangaichiScan', 'http://mangaichiscans.mokkori.fr', cat)
-  AddWebsiteModule('ForgottenScans', 'http://reader.fos-scans.com', cat)
-  AddWebsiteModule('Riceballicious', 'http://riceballicious.info', cat)
-  AddWebsiteModule('PhoenixSerenade', 'https://reader.serenade.moe', cat)
-  AddWebsiteModule('VortexScans', 'https://reader.vortex-scans.com', cat)
-  AddWebsiteModule('RoseliaScanlations', 'http://reader.roseliascans.com', cat)
-  AddWebsiteModule('Yuri-ism', 'https://www.yuri-ism.net', cat)
-  AddWebsiteModule('SilentSkyScans', 'http://reader.silentsky-scans.net', cat)
   AddWebsiteModule('BunnysScans', 'http://bns.shounen-ai.net', cat)
   AddWebsiteModule('CanisMajorScans', 'http://cm-scans.shounen-ai.net', cat)
-  AddWebsiteModule('HoshikuzuuScans', 'http://hoshiscans.shounen-ai.net', cat)
-  AddWebsiteModule('YaoiIsLife', 'http://yaoislife.shounen-ai.net', cat)
-  AddWebsiteModule('FujoshiBitches', 'http://fujoshibitches.shounen-ai.net', cat)
-  AddWebsiteModule('TwistedHelScans', 'http://www.twistedhelscans.com', cat)
-  AddWebsiteModule('TapTrans', 'https://taptaptaptaptap.net', cat)
+  AddWebsiteModule('DeathTollScans', 'https://reader.deathtollscans.net', cat)
+  AddWebsiteModule('DokiFansubs', 'https://kobato.hologfx.com', cat)
   AddWebsiteModule('EvilFlowers', 'http://reader.evilflowers.com', cat)
+  AddWebsiteModule('ForgottenScans', 'http://reader.fos-scans.com', cat)
+  AddWebsiteModule('FujoshiBitches', 'http://fujoshibitches.shounen-ai.net', cat)
+  AddWebsiteModule('HelveticaScans', 'http://helveticascans.com', cat)
+  AddWebsiteModule('HoshikuzuuScans', 'http://hoshiscans.shounen-ai.net', cat)
   AddWebsiteModule('IlluminatiManga', 'http://reader.manga-download.org', cat)
+  AddWebsiteModule('Jaiminisbox', 'https://jaiminisbox.com', cat)
+  AddWebsiteModule('KireiCake', 'https://reader.kireicake.com', cat)
+  AddWebsiteModule('MangaichiScan', 'http://mangaichiscans.mokkori.fr', cat)
+  AddWebsiteModule('OneTimeScans', 'https://reader.otscans.com', cat)
+  AddWebsiteModule('PhoenixSerenade', 'https://reader.serenade.moe', cat)
+  AddWebsiteModule('PowerManga', 'http://read.powermanga.org', cat)
+  AddWebsiteModule('Riceballicious', 'http://riceballicious.info', cat)
+  AddWebsiteModule('RoseliaScanlations', 'http://reader.roseliascans.com', cat)
+  AddWebsiteModule('S2Scans', 'https://reader.s2smanga.com', cat)
+  AddWebsiteModule('SeaOtterScans', 'https://reader.seaotterscans.com', cat)
+  AddWebsiteModule('SenseScans', 'http://sensescans.com', cat)
+  AddWebsiteModule('Shoujohearts', 'http://shoujohearts.com', cat)
+  AddWebsiteModule('Shoujosense', 'http://reader.shoujosense.com', cat)
+  AddWebsiteModule('SilentSkyScans', 'http://reader.silentsky-scans.net', cat)
+  AddWebsiteModule('TapTrans', 'https://taptaptaptaptap.net', cat)
+  AddWebsiteModule('TheCatScans', 'https://reader2.thecatscans.com', cat)
+  AddWebsiteModule('TwistedHelScans', 'http://www.twistedhelscans.com', cat)
+  AddWebsiteModule('VortexScans', 'https://reader.vortex-scans.com', cat)
+  AddWebsiteModule('WorldThree', 'http://www.slide.world-three.org', cat)
+  AddWebsiteModule('YaoiIsLife', 'http://yaoislife.shounen-ai.net', cat)
+  AddWebsiteModule('Yuri-ism', 'https://www.yuri-ism.net', cat)
   
   -- es-sc
   cat = 'Spanish-Scanlation'
-  AddWebsiteModule('DejameProbar', 'http://dejameprobar.es', cat)
-  AddWebsiteModule('HoshinoFansub', 'http://manga.animefrontline.com', cat)
-  AddWebsiteModule('MenudoFansub', 'http://www.menudo-fansub.com', cat)
-  AddWebsiteModule('Pzykosis666HFansub', 'https://pzykosis666hfansub.com', cat)
-  AddWebsiteModule('SeinagiFansub', 'https://seinagi.org', cat)
-  AddWebsiteModule('SeinagiAdultoFansub', 'https://adulto.seinagi.org', cat)
-  AddWebsiteModule('SolitarioNoFansub', 'http://snf.mangaea.net', cat)
-  AddWebsiteModule('RavensScans', 'http://ravens-scans.com', cat)
-  AddWebsiteModule('KirishimaFansub', 'http://lector.kirishimafansub.com', cat)
-  AddWebsiteModule('NoraNoFansub', 'https://www.noranofansub.com', cat)
-  AddWebsiteModule('NeoProjectScan', 'http://npscan.mangaea.net', cat)
-  AddWebsiteModule('YamiTenshiNoFansub', 'http://lector.ytnofan.com', cat)
-  AddWebsiteModule('XAnimeSeduccion', 'http://xanime-seduccion.com', cat)
-  AddWebsiteModule('JokerFansub', 'http://reader.jokerfansub.com', cat)
-  AddWebsiteModule('PatyScans', 'http://lector.patyscans.com', cat)
-  AddWebsiteModule('PCNet', 'http://pcnet.patyscans.com', cat)
-  AddWebsiteModule('Nightow', 'http://nightow.net', cat)
-  AddWebsiteModule('TrueColorsScan', 'https://truecolorsscans.miocio.org', cat)
-  AddWebsiteModule('MangajinNoFansub', 'https://www.mangajinnofansub.com', cat)
+  AddWebsiteModule('KirishimaFansub', 'https://kirishimafansub.net', cat)
   AddWebsiteModule('LoliVault', 'https://lolivault.net', cat)
   AddWebsiteModule('Mangasubes', 'http://mangasubes.patyscans.com', cat)
+  AddWebsiteModule('MenudoFansub', 'http://www.menudo-fansub.com', cat)
+  AddWebsiteModule('NeoProjectScan', 'http://npscan.mangaea.net', cat)
+  AddWebsiteModule('Nightow', 'http://nightow.net', cat)
+  AddWebsiteModule('NoraNoFansub', 'https://www.noranofansub.com', cat)
+  AddWebsiteModule('PCNet', 'http://pcnet.patyscans.com', cat)
+  AddWebsiteModule('PatyScans', 'http://lector.patyscans.com', cat)
+  AddWebsiteModule('Pzykosis666HFansub', 'https://pzykosis666hfansub.com', cat)
+  AddWebsiteModule('RavensScans', 'http://ravens-scans.com', cat)
+  AddWebsiteModule('SeinagiAdultoFansub', 'https://adulto.seinagi.org.es', cat)
+  AddWebsiteModule('SeinagiFansub', 'https://seinagi.org.es', cat)
+  AddWebsiteModule('SolitarioNoFansub', 'http://snf.mangaea.net', cat)
+  AddWebsiteModule('TrueColorsScan', 'https://truecolorsscans.miocio.org', cat)
+  AddWebsiteModule('XAnimeSeduccion', 'http://xanime-seduccion.com', cat)
 end

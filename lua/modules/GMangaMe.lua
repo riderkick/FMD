@@ -1,5 +1,5 @@
 local domain = 'gmanga.me'
-local mediaUrl = 'http://media.' .. domain .. '/uploads'
+local mediaUrl = 'https://media.' .. domain .. '/uploads'
 
 function getinfo()
   function urlencode(str)
@@ -18,7 +18,7 @@ function getinfo()
     local x=TXQuery.Create(http.document)
     local s = x.xpathstring('//script[@type="application/json" and @class]')
     x.parsehtml(s)
-    local pageurl = x.xpathstring('json(*).globals.page_url')
+    local pageurl = x.xpathstring('json(*).globals.pageUrl')
     local id = x.xpathstring('json(*).mangaDataAction.mangaData.id')
     local cover = x.xpathstring('json(*).mangaDataAction.mangaData.cover')
     mangainfo.coverlink = mediaUrl .. '/manga/cover/' .. id .. '/' .. cover
@@ -40,6 +40,7 @@ function getinfo()
         local ch = tonumber(x.xpathstring('chapter', v1))
         local team = x.xpathstring('team_name', v1)
         local key = string.format('%08.2f %s', ch, team)
+		
         table.insert(t, key)
         data[key] = {
           name = string.format('%s - %s [%s]', tostring(ch), x.xpathstring('title', v1), team),
@@ -61,14 +62,15 @@ function getinfo()
 end
 
 function getpagenumber()
-  local js = require 'modules.jsunpack'
+  local js = require 'utils.jsunpack'
   if http.get(MaybeFillHost(module.rooturl,url)) then
     local x = TXQuery.Create(http.Document);
     local s = x.xpathstring('//script[@type="application/json" and @class]')
     x.parsehtml(s)
+	local mediakey = x.xpathstring('json(*).globals.mediaKey')
     local pages = js.splitstr(x.xpathstring('json(*).readerDataAction.readerData.release.hq_pages'), '\r\n')
     for _, k in ipairs(pages) do
-      task.pagelinks.add(mediaUrl .. '/releases/' .. k)
+      task.pagelinks.add(mediaUrl .. '/releases/' .. k .. '?ak=' .. mediakey)
     end
     return true
   else
@@ -98,8 +100,7 @@ function Init()
   m=NewModule()
   m.category='Arabic'
   m.website='GManga'
-  m.rooturl='http://' .. domain
-  m.lastupdated='December 6, 2018'
+  m.rooturl='https://' .. domain
   m.ongetinfo='getinfo'
   m.ongetpagenumber='getpagenumber'
   m.ongetnameandlink='getnameandlink'

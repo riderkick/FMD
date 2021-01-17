@@ -32,11 +32,14 @@ function getpagenumber()
     local curCh = x.xpathstring('//select[@id="chapter_select"]/option[@selected]/@value')
     local s = x.xpathstring('//script[contains(., "images")]')
     local slug = Trim(GetBetween("var manga_slug =", ";", s):gsub('"', ''))
+	local chapter = Trim(GetBetween("var viewschapter =", ";", s):gsub('"', ''))
     s = GetBetween("var images =", ";", s)
     x.parsehtml(s)
     local v = x.xpath('json(*)()')
     for i = 1, v.count do
-      s = string.format("/manga/%s/%s/%s", slug, curCh, v.get(i).toString)
+      s = string.format("/manga/%s/%s/%s/%s", slug, chapter, curCh, v.get(i).toString)
+	  s = string.gsub(s, '//', '/')
+	  s = string.gsub(s, '///', '/')
       task.pagelinks.add(MaybeFillHost(module.rooturl, s))
     end
   else

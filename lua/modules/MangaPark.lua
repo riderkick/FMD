@@ -1,5 +1,6 @@
 function getinfo()
   mangainfo.url=MaybeFillHost(module.RootURL, url)
+  http.cookies.values['set'] = 'h=1'
   if http.get(mangainfo.url) then
     local x=TXQuery.Create(http.document)
     if mangainfo.title == '' then
@@ -35,7 +36,7 @@ function getpagenumber()
   task.pagelinks.clear()
   if http.get(MaybeFillHost(module.rooturl, url)) then
     local x=TXQuery.Create(http.Document)
-    x.xpathstringall('//a[@class="img-link"]/img[@class="img"]/@src', task.pagelinks)
+    x.xpathstringall('json(//script[contains(.,"var _load_pages")]/substring-after(substring-before(.,";")," = "))()/u', task.pagelinks)
   else
     return false
   end
@@ -68,6 +69,7 @@ function AddWebsiteModule(name, url)
   m.website = name
   m.rooturl = url
   m.category = 'English'
+  m.lastupdated = 'April 09, 2019'
   m.ongetinfo='getinfo'
   m.ongetpagenumber='getpagenumber'
   m.ongetnameandlink='getnameandlink'

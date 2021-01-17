@@ -61,7 +61,7 @@ var
   host,
   webs,
   path: String;
-  i, j, m: Integer;
+  i, m: Integer;
   regx: TRegExpr;
 begin
   if NOT FileExistsUTF8(CleanAndExpandDirectory(edPath.Text) + 'Config/Bookmarks') then

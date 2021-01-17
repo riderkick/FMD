@@ -1,0 +1,109 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Project-Id-Version: updater.es\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Mariolr & lordzidiousback\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: es\n"
+"X-Generator: Poedit 1.8.11\n"
+
+#: tfrmmain.caption
+msgid "Free Manga Downloader - Updater"
+msgstr "Free Manga Downloader - Actualizador"
+
+#: tfrmmain.lbfilesize.caption
+msgid "File size"
+msgstr "Tamaño del Archivo"
+
+#: tfrmmain.lbstatus.caption
+msgid "Waiting..."
+msgstr "Esperando..."
+
+#: tfrmmain.lbtransferrate.caption
+msgid "Transfer rate"
+msgstr "Ratio de Transferencia"
+
+#: tfrmmessage.caption
+msgid "Help"
+msgstr "Ayuda"
+
+#: umain.rs_7znotfound
+msgid "Can't extract file because 7za.exe not found!"
+msgstr "No se Puede Extraer Archivo porque 7za.exe no se Encontró!"
+
+#: umain.rs_anerroroccured
+msgid "An error occured when trying to download file."
+msgstr "Un Error Ocurrió Cuando se Trató de Descargar el Archivo."
+
+#: umain.rs_downloading
+msgid "Downloading [%s]..."
+msgstr "Descargando [%s]..."
+
+#: umain.rs_errorcheckantivirus
+msgid "Error saving file, check your AntiVirus!"
+msgstr "Error al Guardar Archivo, Revisa tu Antivirus!"
+
+#: umain.rs_faileddownloadpage
+msgid "Failed downloading file!"
+msgstr "Error al Descargar Archivo!"
+
+#: umain.rs_failedloadpage
+msgid "Failed loading page!"
+msgstr "Error al Cargar la Página!"
+
+#: umain.rs_filenotfound
+msgid "File not found!"
+msgstr "Archivo no Encontrado!"
+
+#: umain.rs_finished
+msgid "Finished."
+msgstr "Terminado."
+
+#: umain.rs_invalidurl
+msgid "Invalid URL!"
+msgstr "URL no válida!"
+
+#: umain.rs_loadingpage
+msgid "Loading page..."
+msgstr "Cargando Página..."
+
+#: umain.rs_redirected
+msgid "Redirected..."
+msgstr "Redirigido..."
+
+#: umain.rs_response
+msgid "Response"
+msgstr "Respuesta"
+
+#: umain.rs_retrydownloading
+msgid "Retry downloading[%d] [%s]..."
+msgstr "Reintentando Descargar [%d] [%s]..."
+
+#: umain.rs_retryloadpage
+msgid "Retry loading page[%d]..."
+msgstr "Reintentando Cargar Página [%d]..."
+
+#: umain.rs_savefile
+msgid "Saving file... "
+msgstr "Guardando Archivo... "
+
+#: umain.rs_servererror
+msgid "Server response error!"
+msgstr "Error de Respuesta del Servidor!"
+
+#: umain.rs_unknown
+msgid "(unknown)"
+msgstr "(Desconocido)"
+
+#: umain.rs_unpackfile
+msgid "Unpacking file [%s]..."
+msgstr "Extrayendo Archivo [%s]..."
+
+#: umain.rs_waitmainapp
+msgid "Waiting main app to close..."
+msgstr "Esperando Aplicación Principal que se Cierre..."
+

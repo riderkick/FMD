@@ -72,7 +72,6 @@ var
   s, key, cid: string;
   query: TXQueryEngineHTML;
   page: Integer;
-  v: IXQValue;
   lst: TStringList;
 begin
   Result := False;
@@ -109,15 +108,19 @@ begin
                 lst := TStringList.Create;
                 try
                   lst.CommaText := s;
-                  if page > 1 then lst.Delete(0);
                   PageLinks.AddStrings(lst);
+                  page := PageLinks.Count + 1;
                 finally
                   lst.Free;
                 end;
+              end else begin
+                key := '';
+                Sleep(200);
+                Continue;
               end;
             end;
             if PageLinks.Count >= PageNumber then Break;
-            Inc(page); Sleep(3000);
+            Sleep(3000);
           end;
         end;
       finally

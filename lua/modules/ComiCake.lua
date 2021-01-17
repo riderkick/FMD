@@ -27,20 +27,38 @@ function getpagenumber()
 end
 
 function getdirectorypagenumber()
-  if http.get(module.rooturl..'/directory/') then
-    page=tonumber(TXQuery.Create(http.document).xpathstring('//div[@class="pagination"]//a[contains(., "last")]/@href'):match('/(%d+)/'))
-    return no_error
+  if module.website == 'WhimSubs' then
+    if http.get(module.rooturl..'/r/directory/') then
+      page = tonumber(TXQuery.Create(http.document).xpathstring('//div[@class="pagination"]//a[contains(., "last")]/@href'):match('/r/directory/(%d+)/'))
+      return no_error
+    else
+      return net_problem
+    end
   else
-    return net_problem
+    if http.get(module.rooturl..'/directory/') then
+      page=tonumber(TXQuery.Create(http.document).xpathstring('//div[@class="pagination"]//a[contains(., "last")]/@href'):match('/(%d+)/'))
+      return no_error
+    else
+      return net_problem
+    end
   end
 end
 
 function getnameandlink()
-  if http.get(module.rooturl..'/directory/'..IncStr(url)) then
-    TXQuery.Create(http.document).xpathhrefall('//div[@class="mdc-card__media-title"]/a',links,names)
-    return no_error
+  if module.website == 'WhimSubs' then
+    if http.get(module.rooturl..'/r/directory/'..IncStr(url)) then
+      TXQuery.Create(http.document).xpathhrefall('//div[@class="mdc-card__media-title"]/a',links,names)
+      return no_error
+    else
+      return net_problem
+    end
   else
-    return net_problem
+    if http.get(module.rooturl..'/directory/'..IncStr(url)) then
+      TXQuery.Create(http.document).xpathhrefall('//div[@class="mdc-card__media-title"]/a',links,names)
+      return no_error
+    else
+      return net_problem
+    end
   end
 end
 
@@ -58,5 +76,7 @@ end
 
 function Init()
   local cat = 'English-Scanlation'
-  AddWebsiteModule('ChampionScans', 'https://reader.championscans.com', cat)
+  AddWebsiteModule('LetItGoScans', 'https://reader.letitgo.scans.today', cat)
+  AddWebsiteModule('ProjectTime', 'https://read.ptscans.com', cat)
+  AddWebsiteModule('WhimSubs', 'https://whimsubs.xyz', cat)
 end

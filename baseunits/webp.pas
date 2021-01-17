@@ -20,7 +20,7 @@ function WebPGetVersion: String;
 implementation
 
 uses
-  FMDOptions, SyncObjs;
+  SyncObjs;
 
 type
   TWebPGetInfo = function (data: Pointer; data_size: UInt32; width, height: pInt32): Int32; cdecl;

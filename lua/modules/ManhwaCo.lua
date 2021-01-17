@@ -2,11 +2,10 @@ function GetInfo()
   mangainfo.url=MaybeFillHost(module.rooturl,url)
   if http.get(mangainfo.url) then
     x=TXQuery.Create(http.Document)
-    mangainfo.title=x.XPathString('//h4[@class="card-title"]')
+    mangainfo.title=x.XPathString('//h4[contains(@class, "card-title")]')
     mangainfo.coverLink=MaybeFillHost(module.rooturl, x.XPathString('//img[contains(@class, "card-img-top")]/@src'))
-    mangainfo.summary = x.XPathString('//p[@class="card-text"]')
-    mangainfo.genres = x.XPathStringAll('//div[@class="chip"]')
-    v=x.xpath('//ul[contains(@class, "list-group")]/li/a')
+    mangainfo.summary = x.XPathString('//p[contains(@class, "card-text")]')
+    v=x.xpath('//div[contains(@class, "list-group")]/a')
     for i=1,v.count do
       v1=v.get(i)
       mangainfo.chapterlinks.add(v1.getAttribute('href'))
@@ -24,7 +23,11 @@ function GetPageNumber()
   task.pagenumber=0
   if http.get(MaybeFillHost(module.rooturl,url)) then  
     local x=TXQuery.Create(http.Document)
-    x.xpathstringall('//div[@class="container"]/div/div/img/@src', task.pagelinks)
+    local v = x.xpath('//div[@class="view"]/img')
+    for i=1,v.count do
+      v1=v.get(i)
+      task.pagelinks.add(module.rooturl..v1.getattribute('src'))
+    end
     return true
   else
     return false
@@ -34,7 +37,7 @@ end
 function GetNameAndLink()
   if http.get(module.rooturl..'/series') then
     x=TXQuery.Create(http.Document)
-    x.xpathstringall('//div[@class="container"]/div[@class="row"]//h5', names)
+    x.xpathstringall('//h6[@class="card-title"]', names)
     x.xpathstringall('//div[@class="container"]//div[contains(@class,"card")]//div/a/@href', links)
     return no_error
   else

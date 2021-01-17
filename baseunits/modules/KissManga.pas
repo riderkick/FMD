@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, WebsiteModules, uData, uBaseUnit, uDownloadsManager,
-  XQueryEngineHTML, httpsendthread, BaseCrypto, GoogleDCP, RegExpr,
+  XQueryEngineHTML, httpsendthread, BaseCrypto, RegExpr,
   synautil;
 
 implementation
@@ -14,25 +14,14 @@ implementation
 const
   kissmangadirurl = '/MangaList/Newest';
   readcomiconlinedirurl = '/ComicList/Newest';
-  kissdoujindirurl = '/HentaiList/NewDoujinshi';
 
 var
   kissmangaiv: String ='a5e8e2e9c2721be0a84ad660c472c1f3';
   kissmangakey: String ='mshsdf832nsdbash20asdmnasdbasd612basd';
-  kissmangausegoogledcp: Boolean = False;
 
 resourcestring
   RS_KissManga_Key = 'Key:';
   RS_KissManga_InitVector = 'Initialization Vector:';
-  RS_KissManga_UseGoogleDCP = 'Use Google DCP';
-
-function GETWithCookie(const AHTTP: THTTPSendThread; const AURL: String;
-  const Module: TModuleContainer): Boolean;
-begin
-  if (Module.Website = 'KissManga') and kissmangausegoogledcp then
-    SetGoogleDCP(AHTTP);
-  Result := AHTTP.GET(AURL);
-end;
 
 function GetDirectoryPageNumber(const MangaInfo: TMangaInformation;
   var Page: Integer; const WorkPtr: Integer; const Module: TModuleContainer): Integer;
@@ -46,10 +35,8 @@ begin
   if Module.Website = 'KissManga' then
     s := s + kissmangadirurl
   else if Module.Website = 'ReadComicOnline' then
-    s := s + readcomiconlinedirurl
-  else if Module.Website = 'KissDoujin' then
-    s := s + kissdoujindirurl;
-  if GETWithCookie(MangaInfo.FHTTP, s, Module) then begin
+    s := s + readcomiconlinedirurl;
+  if MangaInfo.FHTTP.GET(s) then begin
     Result := NO_ERROR;
     with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
       try
@@ -77,12 +64,10 @@ begin
   if Module.Website = 'KissManga' then
     s := s + kissmangadirurl
   else if Module.Website = 'ReadComicOnline' then
-    s := s + readcomiconlinedirurl
-  else if Module.Website = 'KissDoujin' then
-    s := s + kissdoujindirurl;
+    s := s + readcomiconlinedirurl;
   if AURL <> '0' then
     s := s + '?page=' + IncStr(AURL);
-  if GETWithCookie(MangaInfo.FHTTP, s, Module) then begin
+  if MangaInfo.FHTTP.GET(s) then begin
     Result := NO_ERROR;
     with TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
       try
@@ -104,7 +89,7 @@ var
 begin
   Result := NET_PROBLEM;
   if MangaInfo = nil then Exit(UNKNOWN_ERROR);
-  if GETWithCookie(MangaInfo.FHTTP, FillHost(Module.RootURL, AURL), Module) then begin
+  if MangaInfo.FHTTP.GET(FillHost(Module.RootURL, AURL)) then begin
     Result := NO_ERROR;
     with MangaInfo.mangaInfo, TXQueryEngineHTML.Create(MangaInfo.FHTTP.Document) do
       try
@@ -160,7 +145,7 @@ begin
     PageLinks.Clear;
     PageNumber := 0;
     Cookies.Values['rco_quality'] := 'hq';
-    if GETWithCookie(DownloadThread.FHTTP, FillHost(Module.RootURL, AURL), Module) then
+    if DownloadThread.FHTTP.GET(FillHost(Module.RootURL, AURL)) then
       try
         Result := True;
         source := TStringList.Create;
@@ -208,7 +193,7 @@ begin
   with DownloadThread.FHTTP, DownloadThread.Task.Container do begin
     PageLinks.Clear;
     PageNumber := 0;
-    if GETWithCookie(DownloadThread.FHTTP, FillHost(Module.RootURL, AURL), Module) then
+    if DownloadThread.FHTTP.GET(FillHost(Module.RootURL, AURL)) then
       try
         Result := True;
         chkop := -1;
@@ -231,7 +216,7 @@ begin
         end;
         if PageLinks.Count <> 0 then
         begin
-          if GETWithCookie(DownloadThread.FHTTP, Module.RootURL + '/Scripts/lo.js', Module) then
+          if DownloadThread.FHTTP.GET(Module.RootURL + '/Scripts/lo.js') then
           begin
             source.Text := StringReplace(StreamToString(Document), ';', LineEnding, [rfReplaceAll]);
             for i := 0 to source.Count - 1 do
@@ -309,15 +294,13 @@ procedure RegisterModule;
   end;
 
 begin
-  with AddWebsiteModule('KissManga', 'http://kissmanga.com', 'English') do
+  with AddWebsiteModule('KissManga', 'https://kissmanga.com', 'English') do
   begin
     OnGetPageNumber := @KissMangaGetPageNumber;
     AddOptionEdit(@kissmangakey,'Key',@RS_KissManga_Key);
     AddOptionEdit(@kissmangaiv,'IV',@RS_KissManga_InitVector);
-    AddOptionCheckBox(@kissmangausegoogledcp,'UseGoogleDCP',@RS_KissManga_UseGoogleDCP);
   end;
-  AddWebsiteModule('ReadComicOnline', 'http://readcomiconline.to', 'English');
-  AddWebsiteModule('KissDoujin', 'http://kissdoujin.com', 'H-Sites');
+  AddWebsiteModule('ReadComicOnline', 'https://readcomiconline.to', 'English');
 end;
 
 initialization

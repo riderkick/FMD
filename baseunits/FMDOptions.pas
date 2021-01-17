@@ -25,7 +25,6 @@ type
   TFMDDo = (DO_NOTHING, DO_EXIT, DO_POWEROFF, DO_HIBERNATE, DO_UPDATE);
 
 const
-  FMD_REVISION = '$WCREV$';
   FMD_INSTANCE = '_FreeMangaDownloaderInstance_';
   FMD_TARGETOS  = {$i %FPCTARGETOS%};
   FMD_TARGETCPU = {$i %FPCTARGETCPU%};
@@ -46,7 +45,6 @@ const
   ZIP_EXE = '7za.exe';
   RUN_EXE = '.run';
 
-
   SOCKHEARTBEATRATE = 500;
   {$IFDEF WINDOWS}
   {$IFDEF WIN32}
@@ -61,6 +59,11 @@ const
   MAX_TASKLIMIT = 8;
   MAX_CONNECTIONPERHOSTLIMIT = 32;
   {$ENDIF}
+
+  BACKUP_FILE_PREFIX = 'fmdbackup_';
+  BACKUP_FILE_EXT = '7z';
+
+{$i revision.inc}
 
 var
   FMD_VERSION_NUMBER: TProgramVersion;
@@ -95,7 +98,10 @@ var
   EXTRAS_FOLDER,
   MANGAFOXTEMPLATE_FOLDER,
   LUA_WEBSITEMODULE_FOLDER,
-  LUA_WEBSITEMODULE_FILE: String;
+  LUA_REPO_FOLDER,
+  LUA_REPO_FILE,
+  LUA_REPO_WORK_FILE,
+  BACKUP_FOLDER: String;
 
   // ini files
   revisionfile,
@@ -103,13 +109,13 @@ var
   configfile: TIniFileRun;
 
   // base url, should be in base.ini
-  DEFAULT_SELECTED_WEBSITES: String = 'MangaFox,MangaHere,MangaInn,MangaReader';
+  DEFAULT_SELECTED_WEBSITES: String = 'MangaDex,MangaHere,MangaInn,MangaReader';
   DB_URL: String = 'https://sourceforge.net/projects/newfmd/files/data/<website>.7z/download';
-  UPDATE_URL: String = 'https://raw.githubusercontent.com/riderkick/FMD/master/update';
-  CHANGELOG_URL: String = 'https://raw.githubusercontent.com/riderkick/FMD/master/changelog.txt';
+  UPDATE_URL: String = 'https://raw.githubusercontent.com/fmd-project-team/FMD/master/update';
+  CHANGELOG_URL: String = 'https://raw.githubusercontent.com/fmd-project-team/FMD/master/changelog.txt';
   UPDATE_PACKAGE_NAME: String = 'updatepackage.7z';
-  MODULES_URL: String = 'https://api.github.com/repos/riderkick/FMD/contents/lua/modules';
-  MODULES_URL2: String = 'https://github.com/riderkick/FMD/file-list/master/lua/modules';
+  MODULES_URL: String = 'https://api.github.com/repos/fmd-project-team/FMD/contents/lua/modules';
+  MODULES_URL2: String = 'https://github.com/fmd-project-team/FMD/file-list/master/lua/modules';
 
   currentWebsite: String;
 
@@ -119,6 +125,7 @@ var
   // general
   OptionLetFMDDo: TFMDDo = DO_NOTHING;
   OptionDeleteCompletedTasksOnClose: Boolean = False;
+  OptionSortDownloadsWhenAddingNewDownloadTasks: Boolean = False;
 
   // saveto
   OptionChangeUnicodeCharacter: Boolean = False;
@@ -148,10 +155,17 @@ var
   OptionConnectionTimeout: Integer = 30;
   OptionRetryFailedTask: Integer = 1;
   OptionAlwaysStartTaskFromFailedChapters: Boolean = True;
+  OptionEnableCloudflareBypass: Boolean = True;
+  OptionAutomaticallyDisableCloudflareBypass: Boolean = False;
 
   // view
   OptionEnableLoadCover: Boolean = False;
   OptionShowBalloonHint: Boolean = True;
+  OptionShowFavoritesTabOnNewManga: Boolean = False;
+  OptionShowDownloadsTabOnNewTasks: Boolean = True;
+  
+  // favorites (context menu settings)
+  OptionDefaultAction: Integer = 0;
 
   // updates
   OptionAutoCheckLatestVersion: Boolean = True;
@@ -183,6 +197,7 @@ var
   CL_BSOdd: TColor = clBtnFace;
   CL_BSEven: TColor = clWindow;
   CL_BSSortedColumn: TColor = $F8E6D6;
+  CL_BSEnabledWebsiteSettings: TColor = clYellow;
 
   //mangalist color
   CL_MNNewManga: TColor = $FDC594;
@@ -207,7 +222,7 @@ procedure DoRestartFMD;
 
 implementation
 
-uses FMDVars, UTF8Process;
+uses FMDVars, process, UTF8Process;
 
 { TIniFileRun }
 
@@ -237,10 +252,12 @@ end;
 procedure TIniFileRun.UpdateFile;
 begin
   if CacheUpdates and (Dirty = False) then Exit;
-  inherited UpdateFile;
+  EnterCriticalSection(FCSLock);
   try
+    inherited UpdateFile;
     CopyFile(FileName, FRealFileName, [cffOverwriteFile, cffPreserveTime, cffCreateDestDirectory]);
-  except
+  finally
+    LeaveCriticalSection(FCSLock);
   end;
 end;
 
@@ -295,11 +312,12 @@ begin
   README_FILE := FMD_DIRECTORY + 'readme.rtf';
   EXTRAS_FOLDER := FMD_DIRECTORY + 'extras' + PathDelim;
   MANGAFOXTEMPLATE_FOLDER := EXTRAS_FOLDER + 'mangafoxtemplate' + PathDelim;
-  DEFAULT_LOG_FILE := FMD_DIRECTORY + FMD_EXENAME + '.log';
+  DEFAULT_LOG_FILE := FMD_EXENAME + '.log';
   CURRENT_UPDATER_EXE := FMD_DIRECTORY + UPDATER_EXE;
   OLD_CURRENT_UPDATER_EXE := FMD_DIRECTORY + OLD_UPDATER_EXE;
   CURRENT_ZIP_EXE := FMD_DIRECTORY + ZIP_EXE;
 
+  BACKUP_FOLDER := FMD_DIRECTORY + 'backup' + PathDelim;
 
   ReadBaseFile;
 end;
@@ -314,7 +332,8 @@ begin
   CONFIG_FILE := CONFIG_FOLDER + 'config.ini';
   ACCOUNTS_FILE := CONFIG_FOLDER + 'accounts.db';
   MODULES_FILE := CONFIG_FOLDER + 'modules.json';
-  LUA_WEBSITEMODULE_FILE := CONFIG_FOLDER + 'luamodules.json';
+  LUA_REPO_FILE := CONFIG_FOLDER + 'lua.json';
+  LUA_REPO_WORK_FILE := CONFIG_FOLDER + 'lua_repo.json';
 
   DATA_FOLDER := APPDATA_DIRECTORY + 'data' + PathDelim;
 
@@ -327,6 +346,7 @@ begin
   FAVORITESDB_FILE := WORK_FOLDER + 'favorites.db';
 
   LUA_WEBSITEMODULE_FOLDER := FMD_DIRECTORY + 'lua' + PathDelim + 'modules' + PathDelim;
+  LUA_REPO_FOLDER := FMD_DIRECTORY + 'lua' + PathDelim;
 
   SetIniFiles;
 end;
@@ -340,15 +360,18 @@ end;
 procedure DoRestartFMD;
 var
   p: TProcessUTF8;
-  i: Integer;
 begin
   p := TProcessUTF8.Create(nil);
   try
     p.InheritHandles := False;
-    p.CurrentDirectory := ExtractFilePath(Application.ExeName);
+    p.CurrentDirectory := FMD_DIRECTORY;
     p.Executable := Application.ExeName;
-    for i := 1 to ParamCount do
-      p.Parameters.Add(ParamStrUTF8(i));
+    p.Options := [];
+    p.InheritHandles := False;
+    p.Parameters.AddStrings(AppParams);
+    {$ifdef windows}
+    p.Parameters.Add('--dorestart-handle=' + IntToStr(Integer(Application.Handle)));
+    {$ifend}
     p.Execute;
   finally
     p.Free;

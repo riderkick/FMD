@@ -1,0 +1,109 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Slasar41\n"
+"Language-Team: Cholif\n"
+"MIME-Version: 1.0\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: id_ID\n"
+"X-Generator: Poedit 2.2.1\n"
+
+#: tfrmmain.caption
+msgid "Free Manga Downloader - Updater"
+msgstr "Free Manga Downloader - Pemutakhiran"
+
+#: tfrmmain.lbfilesize.caption
+msgid "File size"
+msgstr "Ukuran berkas"
+
+#: tfrmmain.lbstatus.caption
+msgid "Waiting..."
+msgstr "Menunggu..."
+
+#: tfrmmain.lbtransferrate.caption
+msgid "Transfer rate"
+msgstr "Kecepatan"
+
+#: tfrmmessage.caption
+msgid "Help"
+msgstr "Bantuan"
+
+#: umain.rs_7znotfound
+msgid "Can't extract file because 7za.exe not found!"
+msgstr "Tidak bisa mengekstrak berkas karena 7za.exe tidak ditemukan!"
+
+#: umain.rs_anerroroccured
+msgid "An error occured when trying to download file."
+msgstr "Terjadi galat saat mencoba mengunduh berkas."
+
+#: umain.rs_downloading
+msgid "Downloading [%s]..."
+msgstr "Mengunduh [%s]..."
+
+#: umain.rs_errorcheckantivirus
+msgid "Error saving file, check your AntiVirus!"
+msgstr "Galat menyimpan berkas, periksa AntiVirus Anda!"
+
+#: umain.rs_faileddownloadpage
+msgid "Failed downloading file!"
+msgstr "Gagal mengunduh berkas!"
+
+#: umain.rs_failedloadpage
+msgid "Failed loading page!"
+msgstr "Gagal memuat halaman!"
+
+#: umain.rs_filenotfound
+msgid "File not found!"
+msgstr "Berkas tidak ditemukan!"
+
+#: umain.rs_finished
+msgid "Finished."
+msgstr "Selesai."
+
+#: umain.rs_invalidurl
+msgid "Invalid URL!"
+msgstr "URL tidak valid!"
+
+#: umain.rs_loadingpage
+msgid "Loading page..."
+msgstr "Memuat halaman..."
+
+#: umain.rs_redirected
+msgid "Redirected..."
+msgstr "Mengalihkan..."
+
+#: umain.rs_response
+msgid "Response"
+msgstr "Balasan"
+
+#: umain.rs_retrydownloading
+msgid "Retry downloading[%d] [%s]..."
+msgstr "Mencoba mengunduh[%d] [%s]..."
+
+#: umain.rs_retryloadpage
+msgid "Retry loading page[%d]..."
+msgstr "Mencoba memuat halaman[%d]..."
+
+#: umain.rs_savefile
+msgid "Saving file... "
+msgstr "Menyimpan berkas..."
+
+#: umain.rs_servererror
+msgid "Server response error!"
+msgstr "Terjadi kesalahan pada peladen!"
+
+#: umain.rs_unknown
+msgid "(unknown)"
+msgstr "(tidak diketahui)"
+
+#: umain.rs_unpackfile
+msgid "Unpacking file [%s]..."
+msgstr "Membuka berkas [%s]..."
+
+#: umain.rs_waitmainapp
+msgid "Waiting main app to close..."
+msgstr "Menunggu aplikasi utama ditutup..."
+

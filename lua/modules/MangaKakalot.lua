@@ -17,17 +17,28 @@ function getinfo()
     end
     mangainfo.url=u
     local x=TXQuery.Create(http.document)
-    mangainfo.title=x.xpathstring('//ul[@class="manga-info-text"]/li/h1')
-    mangainfo.coverlink=MaybeFillHost(module.RootURL, x.xpathstring('//div[@class="manga-info-pic"]/img/@src'))
-    mangainfo.authors=x.xpathstringall('//ul[@class="manga-info-text"]/li[contains(., "Author")]/a')
-    mangainfo.genres=x.xpathstringall('//ul[@class="manga-info-text"]/li[contains(., "Genre")]/a')
-    mangainfo.status = MangaInfoStatusIfPos(x.xpathstring('//ul[@class="manga-info-text"]/li[contains(., "Status")]'))
+    if module.website == 'MangaKakalot' or module.website == 'MangaKakalots' then
+      mangainfo.title=x.xpathstring('//ul[@class="manga-info-text"]/li/h1')
+      mangainfo.coverlink=MaybeFillHost(module.RootURL, x.xpathstring('//div[@class="manga-info-pic"]/img/@src'))
+      mangainfo.authors=x.xpathstringall('//ul[@class="manga-info-text"]/li[contains(., "Author")]/a')
+      mangainfo.genres=x.xpathstringall('//ul[@class="manga-info-text"]/li[contains(., "Genre")]/a')
+      mangainfo.status = MangaInfoStatusIfPos(x.xpathstring('//ul[@class="manga-info-text"]/li[contains(., "Status")]'))
+      mangainfo.summary=x.xpathstringall('//div[@id="noidungm"]/text()', '')
+      x.xpathhrefall('//div[@class="chapter-list"]/div[@class="row"]/span/a', mangainfo.chapterlinks, mangainfo.chapternames)
+      InvertStrings(mangainfo.chapterlinks,mangainfo.chapternames)
+    else
+      mangainfo.title=x.xpathstring('//div[@class="story-info-right"]/h1')
+      mangainfo.coverlink=MaybeFillHost(module.RootURL, x.xpathstring('//span[@class="info-image"]/img/@src'))
+      mangainfo.authors=x.xpathstringall('//td[contains(., "Author(s)")]/following-sibling::td/a')
+      mangainfo.genres=x.xpathstringall('//td[contains(., "Genres")]/following-sibling::td/a')
+      mangainfo.status = MangaInfoStatusIfPos(x.xpathstring('//td[contains(., "Status")]/following-sibling::td'))
+      mangainfo.summary=x.xpathstringall('//div[@class="panel-story-info-description"]/text()', '')
+      x.xpathhrefall('//ul[@class="row-content-chapter"]/li/a', mangainfo.chapterlinks, mangainfo.chapternames)
+      InvertStrings(mangainfo.chapterlinks,mangainfo.chapternames)
+    end
     if (Pos('email', mangainfo.title) > 0) and (Pos('protected', mangainfo.title) > 0) then
       mangainfo.title = Trim(x.xpathstring('//title/substring-after(substring-before(., "Manga Online"), "Read")'))
     end
-    mangainfo.summary=x.xpathstringall('//div[@id="noidungm"]/text()', '')
-    x.xpathhrefall('//div[@class="chapter-list"]/div[@class="row"]/span/a', mangainfo.chapterlinks, mangainfo.chapternames)
-    InvertStrings(mangainfo.chapterlinks,mangainfo.chapternames)
     return no_error
   else
     return net_problem
@@ -56,13 +67,21 @@ function getpagenumber()
       if not http.get(u) then return false; end
     end
     local x=TXQuery.Create(http.Document)
-    x.xpathstringall('//div[@id="vungdoc"]/img/@src', task.pagelinks)
+    for _, v in ipairs(x.XPathI('//div[@id="vungdoc"]/img')) do
+      if string.find(v.GetAttribute('src'), "log") == nil then
+      task.pagelinks.add(v.GetAttribute('src'))
+      end
+    end
     if task.pagelinks.count == 0 then
       x.xpathstringall('//div[@class="vung_doc"]/img/@src', task.pagelinks)
     end
     if task.pagelinks.count == 0 then
-      x.xpathstringall('//div[@id="list_chapter"]//img/@src', task.pagelinks)
+      x.xpathstringall('//div[@class="container-chapter-reader"]/img/@src', task.pagelinks)
     end
+    if task.pagelinks.count == 0 then
+      x.xpathstringall('//div[@id="vungdoc"]/img/@data-src', task.pagelinks)
+    end
+    task.pagecontainerlinks.text = u
     return true
   else
     return false
@@ -70,34 +89,49 @@ function getpagenumber()
 end
 
 local dirurl = '/manga_list?type=newest&category=all&state=all&page='
+local dirs = '/genre-all/'
+
 function getnameandlink()
-  local dir = dirurl
-  if http.get(module.rooturl .. dir .. IncStr(url)) then
-    local x = TXQuery.Create(http.Document)
-    x.XPathHREFAll('//div[@class="truyen-list"]/div[@class="list-truyen-item-wrap"]/h3/a', links, names)
-    if links.count == 0 then
-      x.XPathHREFAll('//div[contains(@class,"danh_sach")]/div[contains(@class,"list_category")]/h3/a', links, names)
+  if module.website == 'MangaKakalot' or module.website == 'MangaKakalots' then
+    if http.get(module.rooturl .. dirurl .. IncStr(url)) then
+      local x = TXQuery.Create(http.Document)
+      x.XPathHREFAll('//div[@class="truyen-list"]/div[@class="list-truyen-item-wrap"]/h3/a', links, names)
+      return no_error
+    else
+      return net_problem
     end
-    return no_error
   else
-    return net_problem
+    if http.get(module.rooturl .. dirs .. IncStr(url)) then
+      local x = TXQuery.Create(http.Document)
+      x.XPathHREFAll('//div[@class="panel-content-genres"]//div[@class="genres-item-info"]/h3/a', links, names)
+      return no_error
+    else
+      return net_problem
+    end
   end
 end
 
 function getdirectorypagenumber()
-  page = 1
-  if http.GET(module.RootURL .. dirurl .. '1') then
-    x = TXQuery.Create(http.Document)
-    local s = x.xpathstring('//div[@class="group-page"]/a[contains(., "Last")]/@href')
-    if s == '' then
-      s = x.xpathstring('//div[@class="phan-trang"]/a[contains(., "Last")]/@href')
+  if module.website == 'MangaKakalot' or module.website == 'MangaKakalots' then
+    if http.GET(module.RootURL .. dirurl .. '1') then
+      page = tonumber(TXQuery.Create(http.Document).xpathstring('//a[contains(@class, "page_last")]/@href'):match('page=(%d+)'))
+      return no_error
+    else
+      return net_problem
     end
-    page = tonumber(s:match('page=(%d+)'))
-    if page == nil then page = 1; end
-    return true
   else
-    return false
+    if http.GET(module.RootURL .. dirs .. '1') then
+      page = tonumber(TXQuery.Create(http.Document).xpathstring('//a[contains(@class, "page-last")]/@href'):match('.-//.-/.-/(%d+)'))
+      return no_error
+    else
+      return net_problem
+    end
   end
+end
+
+function beforedownloadimage()
+  http.headers.values['Referer'] = task.pagecontainerlinks.text
+  return true
 end
 
 function AddWebsiteModule(name, url)
@@ -105,16 +139,16 @@ function AddWebsiteModule(name, url)
   m.website = name
   m.rooturl = url
   m.category = 'English'
-  m.lastupdated = 'March 12, 2018'
-  m.sortedlist = true
   m.ongetinfo='getinfo'
   m.ongetpagenumber='getpagenumber'
   m.ongetnameandlink='getnameandlink'
   m.ongetdirectorypagenumber = 'getdirectorypagenumber'
+  m.onbeforedownloadimage = 'beforedownloadimage'
   return m
 end 
 
 function Init()
-  AddWebsiteModule('MangaKakalot', 'http://mangakakalot.com')
-  AddWebsiteModule('MangaNelo', 'http://manganelo.com')
+  AddWebsiteModule('MangaKakalot', 'https://mangakakalot.com')
+  AddWebsiteModule('MangaNelo', 'https://manganelo.com')
+  AddWebsiteModule('MangaKakalots', 'https://mangakakalots.com')
 end

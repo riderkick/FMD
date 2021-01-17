@@ -1,5 +1,4 @@
-VERSION=0.9.158.0
-; WIN32=https://sourceforge.net/projects/newfmd/files/0.9.158.0/fmd_0.9.158.0.7z/download
-; WIN64=https://sourceforge.net/projects/newfmd/files/0.9.158.0/fmd_0.9.158.0_Win64.7z/download
-WIN32=https://github.com/riderkick/FMD/releases/download/0.9.158.0/fmd_0.9.158.0.7z
-WIN64=https://github.com/riderkick/FMD/releases/download/0.9.158.0/fmd_0.9.158.0_Win64.7z
+; automatically build with make_release_win.bat
+WIN32=https://github.com/fmd-project-team/FMD/releases/download/1.3.3.0/fmd_1.3.3.0_i386-win32.7z
+WIN64=https://github.com/fmd-project-team/FMD/releases/download/1.3.3.0/fmd_1.3.3.0_x86_64-win64.7z
+VERSION=1.3.3.0

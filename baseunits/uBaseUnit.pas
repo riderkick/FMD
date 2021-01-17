@@ -8,7 +8,6 @@ unit uBaseUnit;
 
 {$mode objfpc}{$H+}
 {$MACRO ON}
-{$DEFINE DOWNLOADER}
 
 interface
 
@@ -18,11 +17,11 @@ uses
   {$else}
   UTF8Process,
   {$endif}
-  SysUtils, Classes, Graphics, lazutf8classes, LazFileUtils, LConvEncoding, LazUtils,
+  SysUtils, Classes, Graphics, lazutf8classes, LazFileUtils, LConvEncoding,
   strutils, dateutils, variants, base64, fpjson, jsonparser, jsonscanner,
-  fgl, RegExpr, synautil, httpsend, blcksock, ssl_openssl,
+  fgl, RegExpr, synautil, httpsend, blcksock,
   synacode, MultiLog, FPimage, GZIPUtils, uMisc, httpsendthread, FMDOptions,
-  simplehtmltreeparser, xquery, xquery_json, ImgInfos, NaturalSortUnit,
+  ImgInfos, NaturalSortUnit,
   MemBitmap, FPWritePNG, zstream, FPReadPNG, VirtualTrees;
 
 const
@@ -233,8 +232,7 @@ const
   MangaInfo_StatusCompleted = '0';
   MangaInfo_StatusOngoing = '1';
 
-  FMDSupportedOutputExt: array[0..3] of ShortString = ('.zip', '.cbz', '.pdf', '.epub');
-  FMDImageFileExt: array[0..3] of ShortString = ('.png', '.gif', '.jpg', '.webp');
+  FMDSupportedPackedOutputExt: array[0..3] of ShortString = ('.zip', '.cbz', '.pdf', '.epub');
   {$ifdef windows}
   // MAX_PATH = 260
   // MAX_PATH - 12 - 1
@@ -261,7 +259,6 @@ const
 var
   // Sites var
   BROWSER_INVERT: Boolean = False;
-
   //------------------------------------------
 
   Genre: array [0..37] of String;
@@ -398,8 +395,13 @@ type
     property Data: TStringList read fdata;
   end;
 
+
+// graphics
+function BlendColor(FG, BG: TColor; T: Byte): TColor;
+
 // VT extras
 procedure SearchOnVT(Tree: TVirtualStringTree; Key: String; Column: Integer = 0);
+procedure SearchOnlyVisibleOnVT(Tree: TVirtualStringTree; Key: String; Column: Integer = 0);
 
 // Remove Unicode
 function ReplaceUnicodeChar(const S, ReplaceStr: String): String;
@@ -432,13 +434,6 @@ function EncodeCriticalURLElements(const URL: String): String;
 //JSON
 procedure ParseJSONArray(const S, Path: String; var OutArray: TStringList);
 
-// XPath / CSS Selector
-procedure ParseHTMLTree(var tp: TTreeParser; const S: String);
-function SelectXPathString(Expression: String; TP: TTreeParser): String;
-function SelectXPathIX(Expression: String; TP: TTreeParser): IXQValue;
-function SelectCSSString(Expression: String; TP: TTreeParser): String;
-function SelectCSSIX(Expression: String; TP: TTreeParser): IXQValue;
-
 //convert charset to utf8
 function ConvertCharsetToUTF8(S: String): String; overload;
 procedure ConvertCharsetToUTF8(S: TStrings); overload;
@@ -448,6 +443,10 @@ function Base64Encode(const s: String): String; overload;
 function Base64Decode(const s: String): String; overload;
 function Base64Encode(const TheStream: TStream): Boolean ; overload;
 function Base64Decode(const TheStream: TStream): Boolean ; overload;
+
+// basic encrypt/decrypt string
+function EncryptString(const s:String):String;
+function DecryptString(const s:String):String;
 
 // StringUtils
 function PadZero(const S: String; ATotalWidth: Integer = 3;
@@ -466,7 +465,8 @@ function ShortenString(const S: String; const MaxWidth: Integer;
 
 function TitleCase(const S: string): string;
 function StringReplaceBrackets(const S, OldPattern, NewPattern: String; Flags: TReplaceFlags): String;
-function StreamToString(const Stream: TStream): String; inline;
+function StreamToString(const Stream: TStream): String;
+procedure StringToStream(const S: String; Stream: TStream);
 function GetRightValue(const Name, s: String): String;
 function QuotedStr(const S: Integer): String; overload; inline;
 function QuotedStrD(const S: String): String; overload; inline;
@@ -649,7 +649,7 @@ procedure SendLogException(const AText: String; AException: Exception); inline;
 implementation
 
 uses
-  {$IFDEF DOWNLOADER}WebsiteModules, webp, FPWriteJPEG;{$ENDIF}
+  WebsiteModules, webp, DCPrijndael, DCPsha512, FPWriteJPEG;
 
 {$IFDEF WINDOWS}
 // thanks Leledumbo for the code
@@ -742,6 +742,21 @@ end;
 
 {$ENDIF}
 
+function BlendColor(FG, BG: TColor; T: Byte): TColor;
+  function MixByte(B1, B2: Byte): Byte;
+  begin
+    Result := Byte(T * (B1 - B2) shr 8 + B2);
+  end;
+var
+  C1, C2: LongInt;
+begin
+  C1 := ColorToRGB(FG);
+  C2 := ColorToRGB(BG);
+  Result := (MixByte(Byte(C1 shr 16), Byte(C2 shr 16)) shl 16) +
+    (MixByte(Byte(C1 shr 8), Byte(C2 shr 8)) shl 8) +
+    MixByte(Byte(C1), Byte(C2));
+end;
+
 procedure SearchOnVT(Tree: TVirtualStringTree; Key: String; Column: Integer);
 var
   s: String;
@@ -780,6 +795,51 @@ begin
         if not (vsVisible in node^.States) then
           Tree.IsVisible[node] := True;
         node := Tree.GetNext(node);
+      end;
+    end;
+  finally
+    Tree.EndUpdate;
+  end;
+end;
+
+procedure SearchOnlyVisibleOnVT(Tree: TVirtualStringTree; Key: String; Column: Integer);
+var
+  s: String;
+  node, xnode: PVirtualNode;
+  v: Boolean;
+begin
+  if Tree.TotalCount = 0 then
+    Exit;
+  s := AnsiUpperCase(Key);
+  Tree.BeginUpdate;
+  try
+    node := Tree.GetFirstVisible();
+    if s <> '' then
+    begin
+      while node <> nil do
+      begin
+        v := Pos(s, AnsiUpperCase(Tree.Text[node, Column])) <> 0;
+        Tree.IsVisible[node] := v;
+        if v then
+        begin
+          xnode := node^.Parent;
+          while (xnode <> nil)  and (xnode <> Tree.RootNode) do
+          begin
+            if not (vsVisible in xnode^.States) then
+              Tree.IsVisible[xnode] := True;
+            xnode := xnode^.Parent;
+          end;
+        end;
+        node := Tree.GetNextVisible(node);
+      end;
+    end
+    else
+    begin
+      while node <> nil do
+      begin
+        if not (vsVisible in node^.States) then
+          Tree.IsVisible[node] := True;
+        node := Tree.GetNextVisible(node);
       end;
     end;
   finally
@@ -1024,11 +1084,7 @@ var
   i: Integer;
 begin
   OutArray.BeginUpdate;
-  {$IF (FPC_FULLVERSION >= 30101)}
   P := TJSONParser.Create(Trim(S), [joUTF8]);
-  {$ELSE}
-  P := TJSONParser.Create(Trim(S), True);
-  {$ENDIF}
   try
     D := P.Parse;
     try
@@ -1046,65 +1102,6 @@ begin
     P.Free;
   end;
   OutArray.EndUpdate;
-end;
-
-procedure ParseHTMLTree(var tp: TTreeParser; const S: String);
-begin
-  if tp = nil then tp := TTreeParser.Create;
-  with tp do begin
-    parsingModel := pmHTML;
-    repairMissingStartTags := True;
-    repairMissingEndTags := True;
-    trimText := False;
-    readComments := False;
-    readProcessingInstructions := False;
-    autoDetectHTMLEncoding := False;
-    if S <> '' then parseTree(S);
-  end;
-end;
-
-function SelectXPathString(Expression: String; TP: TTreeParser): String;
-begin
-  Result := '';
-  if TP = nil then Exit;
-  if TP.getLastTree = nil then Exit;
-  try
-    Result := TXQueryEngine.evaluateStaticXPath3(Expression, TP.getLastTree).toString;
-  except
-  end;
-end;
-
-function SelectXPathIX(Expression: String; TP: TTreeParser): IXQValue;
-begin
-  Result := xqvalue();
-  if TP = nil then Exit;
-  if TP.getLastTree = nil then Exit;
-  try
-    Result := TXQueryEngine.evaluateStaticXPath3(Expression, TP.getLastTree);
-  except
-  end;
-end;
-
-function SelectCSSString(Expression: String; TP: TTreeParser): String;
-begin
-  Result := '';
-  if TP = nil then Exit;
-  if TP.getLastTree = nil then Exit;
-  try
-    Result := TXQueryEngine.evaluateStaticCSS3(Expression, TP.getLastTree).toString;
-  except
-  end;
-end;
-
-function SelectCSSIX(Expression: String; TP: TTreeParser): IXQValue;
-begin
-  Result := xqvalue();
-  if TP = nil then Exit;
-  if TP.getLastTree = nil then Exit;
-  try
-    Result := TXQueryEngine.evaluateStaticCSS3(Expression, TP.getLastTree);
-  except
-  end;
 end;
 
 function ConvertCharsetToUTF8(S: String): String;
@@ -1159,22 +1156,46 @@ begin
 end;
 
 function StreamToString(const Stream: TStream): String;
-var
-  p, x: Int64;
+Const
+  BufSize = 1024;
+  MaxGrow = 1 shl 29;
+Var
+  BytesRead,
+  BufLen,
+  I,BufDelta : Longint;
+  OldPos: Int64;
 begin
-  //SetString(Result, PChar(Stream.Memory), Stream.Size div SizeOf(Char));
-  p := Stream.Position;
+  Result:='';
+  try
+    OldPos:=Stream.Position;
+    BufLen:=0;
+    I:=1;
+    Repeat
+      BufDelta:=BufSize*I;
+      SetLength(Result,BufLen+BufDelta);
+      BytesRead:=Stream.Read(Result[BufLen+1],BufDelta);
+      inc(BufLen,BufDelta);
+      If I<MaxGrow then
+        I:=I shl 1;
+    Until BytesRead<>BufDelta;
+    SetLength(Result,BufLen-BufDelta+BytesRead);
+  finally
+    Stream.Position:=OldPos;
+  end;
+end;
+
+procedure StringToStream(const S: String; Stream: TStream);
+begin
   Stream.Position := 0;
-  Setlength(Result, Stream.Size);
-  x := Stream.Read(PChar(Result)^, Stream.Size);
-  SetLength(Result, x);
-  Stream.Position := p;
+  Stream.Size := 0;
+  Stream.WriteAnsiString(s);
 end;
 
 function GetRightValue(const Name, s: String): String;
 var
   i: Integer;
 begin
+  Result := '';
   if s = '' then Exit('');
   if Name = '' then Exit(s);
   i := Pos(Name, s);
@@ -1737,6 +1758,41 @@ begin
     Decoder.Free;
   finally
     InStream.Free;
+  end;
+end;
+
+const
+  EncryptKey='B74945FB50E84FD58BF9FEAB8E4BEA6B';
+
+function EncryptString(const s: String): String;
+var
+  aes: TDCP_rijndael;
+begin
+  result:='';
+  if s='' then exit;
+  aes:=TDCP_rijndael.Create(nil);
+  try
+     aes.InitStr(EncryptKey,TDCP_sha512);
+     Result:=aes.EncryptString(s);
+  finally
+    aes.burn;
+    aes.free;
+  end;
+end;
+
+function DecryptString(const s: String): String;
+var
+  aes: TDCP_rijndael;
+begin
+  result:='';
+  if s='' then exit;
+  aes:=TDCP_rijndael.Create(nil);
+  try
+     aes.InitStr(EncryptKey,TDCP_sha512);
+     result:=aes.DecryptString(s);
+  finally
+    aes.burn;
+    aes.free;
   end;
 end;
 
@@ -3220,10 +3276,10 @@ var
   i: Byte;
 begin
   Result := '';
-  for i := Low(FMDImageFileExt) to High(FMDImageFileExt) do
-    if FileExistsUTF8(AFileName + FMDImageFileExt[i]) then
+  for i := Low(ImageHandlerMgr.List) to High(ImageHandlerMgr.List) do
+    if FileExistsUTF8(AFileName + '.' + ImageHandlerMgr.List[i].Ext) then
     begin
-      Result := AFileName + FMDImageFileExt[i];
+      Result := AFileName + '.' + ImageHandlerMgr.List[i].Ext;
       Break;
     end;
 end;

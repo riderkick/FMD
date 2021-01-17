@@ -40,17 +40,32 @@ function getinfo()
 end
 
 function getpagenumber()
-  task.pagelinks.clear()
-  task.pagecontainerlinks.clear()
-  http.headers.values['Referer'] = module.rooturl
-  if not http.get(MaybeFillHost(module.rooturl, url)) then return false; end
-  if http.lasturl:match('paginated$') ~= nil then
-    if not http.get(http.lasturl:gsub('paginated$', 'cascade')) then return false; end
+  http.headers.values['Referer'] = module.rooturl:gsub('http://', 'https://')
+  if not http.get(MaybeFillHost(module.rooturl, url):gsub('http://', 'https://')) then return false; end
+  local x = TXQuery.Create(http.Document)
+  local u = x.xpathstring('//meta[@property="og:url"]/@content')
+  if string.match(u, 'cascade') then
+    u = string.gsub(u, '/cascade', '/paginated')
+    print(u)
+    if not http.get(MaybeFillHost(module.rooturl, u):gsub('http://', 'https://')) then return false; end
+    x = TXQuery.Create(http.Document)
   end
-  local x=TXQuery.Create(http.Document)
-  x.xpathstringall('//img[contains(@class, "viewer-image")]/@src', task.pagelinks)
-  task.pagecontainerlinks.text = http.lasturl
+  task.pagenumber = tonumber(x.xpathstring('(//select[@id="viewer-pages-select"])[1]/option[last()]/text()'))
+  for i = 1, task.pagenumber do
+    task.pagecontainerlinks.add(u..'/'..i)
+  end
   return true
+end
+
+function getimageurl()
+  local s = MaybeFillHost(module.rooturl, task.pagecontainerlinks[workid]):gsub('http://', 'https://')
+  http.headers.values['Referer'] = module.rooturl:gsub('http://', 'https://')
+  if http.get(s) then
+    task.pagelinks[workid] = TXQuery.Create(http.document).xpathstring('//img[@class="viewer-image"]/@src')
+    
+    return true
+  end
+  return false
 end
 
 function getnameandlink()
@@ -77,12 +92,12 @@ end
 function Init()
   local m = NewModule()
   m.website = 'Tumangaonline'
-  m.rooturl = 'https://tmofans.com'
+  m.rooturl = 'http://tmofans.com' -- Don't set to https because TMO set http for Cloudflare!
   m.category = 'Spanish'
-  m.lastupdated='June 14, 2018'
   m.maxtasklimit = 1
   m.maxconnectionlimit = 1
   m.ongetinfo='getinfo'
   m.ongetpagenumber='getpagenumber'
   m.ongetnameandlink='getnameandlink'
+  m.ongetimageurl='getimageurl'
 end

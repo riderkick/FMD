@@ -13,7 +13,7 @@ interface
 uses
   Classes, SysUtils, fgl, Dialogs, IniFiles, lazutf8classes, LazFileUtils,
   uBaseUnit, uData, uDownloadsManager, WebsiteModules,
-  FMDOptions, httpsendthread, FavoritesDB, BaseThread, SimpleException;
+  FMDOptions, httpsendthread, FavoritesDB, BaseThread, SimpleException, VirtualTrees;
 
 type
   TFavoriteManager = class;
@@ -95,6 +95,8 @@ type
     FSortColumn: Integer;
     FSortDirection, FIsAuto, FIsRunning: Boolean;
     function GetFavoritesCount: Integer; inline;
+    function GetEnabledFavoritesCount: Integer; inline;
+    function GetDisabledFavoritesCount: Integer; inline;
     function GetFavorite(const Index: Integer): TFavoriteContainer;
     function ConvertToDB: Boolean;
   public
@@ -142,8 +144,12 @@ type
     // critical section
     procedure Lock;
     procedure LockRelease;
+    procedure SearchEnabledOnVT(Tree: TVirtualStringTree; Key: String);
+    procedure SearchDisabledOnVT(Tree: TVirtualStringTree; Key: String);
 
     property Count: Integer read GetFavoritesCount;
+    property CountEnabled: Integer read GetEnabledFavoritesCount;
+    property CountDisabled: Integer read GetDisabledFavoritesCount;
     property SortDirection: Boolean read FSortDirection write FSortDirection;
     property SortColumn: Integer read FSortColumn write FSortColumn;
     property isAuto: Boolean read FIsAuto write FIsAuto;
@@ -338,6 +344,9 @@ begin
     btFavoritesCheckNewChapter.Width :=
       btFavoritesCheckNewChapter.Width - btCancelFavoritesCheck.Width - 6;
     btFavoritesCheckNewChapter.Caption := RS_Checking;
+    rbFavoritesShowAll.Enabled := False;
+    rbFavoritesShowDisabled.Enabled := False;
+    rbFavoritesShowEnabled.Enabled := False;
   end;
 end;
 
@@ -349,6 +358,9 @@ begin
     btFavoritesCheckNewChapter.Width := btFavoritesCheckNewChapter.Width +
       btCancelFavoritesCheck.Width + 6;
     btFavoritesCheckNewChapter.Caption := RS_BtnCheckFavorites;
+    rbFavoritesShowAll.Enabled := True;
+    rbFavoritesShowDisabled.Enabled := True;
+    rbFavoritesShowEnabled.Enabled := True;
     vtFavorites.Repaint;
     if OptionAutoCheckFavInterval and (not tmCheckFavorites.Enabled) then
       tmCheckFavorites.Enabled := True;
@@ -512,6 +524,128 @@ end;
 function TFavoriteManager.GetFavoritesCount: Integer;
 begin
   Result := Items.Count;
+end;
+
+function TFavoriteManager.GetEnabledFavoritesCount: Integer;
+var
+  i: Integer;
+  j: Integer;
+begin
+  j := 0;
+  for i := 0 to Items.Count - 1 do
+  begin
+    if Items[i].FEnabled then j := j + 1;
+  end;
+  Result := j;
+end;
+
+function TFavoriteManager.GetDisabledFavoritesCount: Integer;
+var
+  i: Integer;
+  j: Integer;
+begin
+  j := 0;
+  for i := 0 to Items.Count - 1 do
+  begin
+    if not Items[i].FEnabled then j := j + 1;
+  end;
+  Result := j;
+end;
+
+procedure TFavoriteManager.SearchEnabledOnVT(Tree: TVirtualStringTree; Key: String);
+var
+  s: String;
+  node, xnode: PVirtualNode;
+  v: Boolean;
+begin
+  if Tree.TotalCount = 0 then
+    Exit;
+  s := AnsiUpperCase(Key);
+  Tree.BeginUpdate;
+  try
+    node := Tree.GetFirst();
+    if (s <> '') then
+    begin
+      while node <> nil do
+      begin
+        v := Pos(s, AnsiUpperCase(Tree.Text[node, 1])) <> 0;
+        if FavoriteManager[node^.Index].Enabled then
+          Tree.IsVisible[node] := v;
+        if v then
+        begin
+          xnode := node^.Parent;
+          while (xnode <> nil)  and (xnode <> Tree.RootNode) do
+          begin
+            if not (vsVisible in xnode^.States) and (FavoriteManager[node^.Index].Enabled) then
+              Tree.IsVisible[xnode] := True;
+            xnode := xnode^.Parent;
+          end;
+        end;
+        node := Tree.GetNext(node);
+      end;
+    end
+    else
+    begin
+      while node <> nil do
+      begin
+        if (FavoriteManager[node^.Index].Enabled) then
+          Tree.IsVisible[node] := True
+        else
+          Tree.IsVisible[node] := False;
+        node := Tree.GetNext(node);
+      end;
+    end;
+  finally
+    Tree.EndUpdate;
+  end;
+end;
+
+procedure TFavoriteManager.SearchDisabledOnVT(Tree: TVirtualStringTree; Key: String);
+var
+  s: String;
+  node, xnode: PVirtualNode;
+  v: Boolean;
+begin
+  if Tree.TotalCount = 0 then
+    Exit;
+  s := AnsiUpperCase(Key);
+  Tree.BeginUpdate;
+  try
+    node := Tree.GetFirst();
+    if (s <> '') then
+    begin
+      while node <> nil do
+      begin
+        v := Pos(s, AnsiUpperCase(Tree.Text[node, 1])) <> 0;
+        if not FavoriteManager[node^.Index].Enabled then
+          Tree.IsVisible[node] := v;
+        if v then
+        begin
+          xnode := node^.Parent;
+          while (xnode <> nil)  and (xnode <> Tree.RootNode) do
+          begin
+            if not ((vsVisible in xnode^.States) and (FavoriteManager[node^.Index].Enabled)) then
+              Tree.IsVisible[xnode] := True;
+            xnode := xnode^.Parent;
+          end;
+        end;
+        node := Tree.GetNext(node);
+      end;
+    end
+    else
+    begin
+      while node <> nil do
+      begin
+        if not (FavoriteManager[node^.Index].Enabled) then
+          Tree.IsVisible[node] := True
+        else
+          Tree.IsVisible[node] := False;
+        node := Tree.GetNext(node);
+      end;
+    end;
+  finally
+    Tree.EndUpdate;
+  end;
 end;
 
 function TFavoriteManager.GetFavorite(const Index: Integer): TFavoriteContainer;
@@ -828,7 +962,10 @@ begin
           if LNCResult = ncrDownload then
           begin
             DLManager.CheckAndActiveTask;
-            MainForm.pcMain.ActivePage := MainForm.tsDownload;
+            if OptionSortDownloadsWhenAddingNewDownloadTasks then
+              DLManager.Sort(DLManager.SortColumn);
+            if OptionShowDownloadsTabOnNewTasks then
+              MainForm.pcMain.ActivePage := MainForm.tsDownload;
           end;
           if Assigned(OnUpdateDownload) then
             OnUpdateDownload;
@@ -1033,8 +1170,6 @@ begin
 end;
 
 procedure TFavoriteManager.Restore;
-var
-  t: TFavoriteContainer;
 begin
   if not FFavoritesDB.Connection.Connected then Exit;
   if FFavoritesDB.OpenTable(False) then
@@ -1042,24 +1177,23 @@ begin
       if FFavoritesDB.Table.RecordCount = 0 then Exit;
       EnterCriticalsection(CS_Favorites);
       try
+        FFavoritesDB.Table.Last; //load all to memory
         FFavoritesDB.Table.First;
         while not FFavoritesDB.Table.EOF do
         begin
-          t := TFavoriteContainer.Create;
-          with t, FavoriteInfo, FFavoritesDB.Table do
+          with Items[Items.Add(TFavoriteContainer.Create)], FFavoritesDB.Table do
             begin
-              Manager               := Self;
-              Status                := STATUS_IDLE;
-              Enabled               := Fields[f_enabled].AsBoolean;
-              Website               := Fields[f_website].AsString;
-              t.Website             := Website;
-              Link                  := Fields[f_link].AsString;
-              Title                 := Fields[f_title].AsString;
-              CurrentChapter        := Fields[f_currentchapter].AsString;
-              DownloadedChapterList := Fields[f_downloadedchapterlist].AsString;
-              SaveTo                := Fields[f_saveto].AsString;
+              Manager                            := Self;
+              Status                             := STATUS_IDLE;
+              Enabled                            := Fields[f_enabled].AsBoolean;
+              FavoriteInfo.Website               := Fields[f_website].AsString;
+              Website                            := FavoriteInfo.Website;
+              FavoriteInfo.Link                  := Fields[f_link].AsString;
+              FavoriteInfo.Title                 := Fields[f_title].AsString;
+              FavoriteInfo.CurrentChapter        := Fields[f_currentchapter].AsString;
+              FavoriteInfo.DownloadedChapterList := Fields[f_downloadedchapterlist].AsString;
+              FavoriteInfo.SaveTo                := Fields[f_saveto].AsString;
             end;
-          Items.Add(t);
           FFavoritesDB.Table.Next;
         end;
       finally
@@ -1079,7 +1213,8 @@ begin
     try
       EnterCriticalsection(CS_Favorites);
       for i := 0 to Items.Count - 1 do
-        Items[i].SaveToDB(i);
+        with Items[i], FavoriteInfo do
+          FFavoritesDB.InternalUpdate(i,FEnabled,Website,Link,Title,CurrentChapter,DownloadedChapterList,SaveTo);
       FFavoritesDB.Commit;
     finally
       LeaveCriticalsection(CS_Favorites);

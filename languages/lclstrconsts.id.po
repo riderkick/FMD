@@ -1,0 +1,1490 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Lazarus LCL v1.x\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2007-01-30 02:21+0700\n"
+"Last-Translator: Zaenal Mutaqin <ade999@gmail.com>\n"
+"Language-Team: Zaenal Mutaqin <ade999@gmail.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Country: INDONESIA\n"
+
+#: lclstrconsts.hhshelpbrowsernotexecutable
+#, object-pascal-format, fuzzy, badformat
+#| msgid "Browser %s%s%s not executable."
+msgid "Browser \"%s\" not executable."
+msgstr "Browser %s%s%s bukan eksekutabel."
+
+#: lclstrconsts.hhshelpbrowsernotfound
+#, object-pascal-format, fuzzy, badformat
+#| msgid "Browser %s%s%s not found."
+msgid "Browser \"%s\" not found."
+msgstr "Browser %s%s%s tidak ditemukan."
+
+#: lclstrconsts.hhshelperrorwhileexecuting
+#, object-pascal-format, fuzzy, badformat
+#| msgid "Error while executing %s%s%s:%s%s"
+msgid "Error while executing \"%s\":%s%s"
+msgstr "Kesalahan saat mengeksekusi %s%s%s:%s%s"
+
+#: lclstrconsts.hhshelpnohtmlbrowserfound
+msgid "Unable to find a HTML browser."
+msgstr "Tidak bisa menemukan HTML browser"
+
+#: lclstrconsts.hhshelpnohtmlbrowserfoundpleasedefineone
+#, object-pascal-format
+msgid "No HTML Browser found.%sPlease define one in Tools -> Options -> Help -> Help Options"
+msgstr ""
+
+#: lclstrconsts.hhshelpthehelpdatabasewasunabletofindfile
+#, object-pascal-format, fuzzy, badformat
+#| msgid "The help database %s%s%s was unable to find file %s%s%s."
+msgid "The help database \"%s\" was unable to find file \"%s\"."
+msgstr "Database bantuan %s%s%s tidak bisa menemukan file %s%s%s."
+
+#: lclstrconsts.hhshelpthemacrosinbrowserparamswillbereplacedbytheurl
+#, object-pascal-format
+msgid "The macro %s in BrowserParams will be replaced by the URL."
+msgstr "Makro %s dalam BrowserParams akan diganti dengan URL."
+
+#: lclstrconsts.ifsalt
+msgid "Alt"
+msgstr "Alt"
+
+#: lclstrconsts.ifsctrl
+msgid "Ctrl"
+msgstr "Ctrl"
+
+#: lclstrconsts.ifsvk_cmd
+msgid "Cmd"
+msgstr ""
+
+#: lclstrconsts.ifsvk_help
+msgctxt "lclstrconsts.ifsvk_help"
+msgid "Help"
+msgstr "Panduan"
+
+#: lclstrconsts.ifsvk_meta
+msgid "Meta"
+msgstr ""
+
+#: lclstrconsts.ifsvk_shift
+msgid "Shift"
+msgstr "Shift"
+
+#: lclstrconsts.ifsvk_super
+msgid "Super"
+msgstr ""
+
+#: lclstrconsts.ifsvk_unknown
+msgid "Unknown"
+msgstr "Tidak dikenal"
+
+#: lclstrconsts.lislclresourcesnotfound
+#, object-pascal-format
+msgctxt "lclstrconsts.lislclresourcesnotfound"
+msgid "Resource %s not found"
+msgstr "Sumber %s tidak ditemukan"
+
+#: lclstrconsts.rs3ddkshadowcolorcaption
+msgid "3D Dark Shadow"
+msgstr ""
+
+#: lclstrconsts.rs3dlightcolorcaption
+msgid "3D Light"
+msgstr ""
+
+#: lclstrconsts.rsacontrolcannothaveitselfasparent
+#, fuzzy
+#| msgid "A control can't have itself as parent"
+msgid "A control can't have itself as a parent"
+msgstr "Kontrol tidak bisa menjadikan dirinya sebagai induk"
+
+#: lclstrconsts.rsactivebordercolorcaption
+msgid "Active Border"
+msgstr ""
+
+#: lclstrconsts.rsactivecaptioncolorcaption
+msgid "Active Caption"
+msgstr ""
+
+#: lclstrconsts.rsallfiles
+#, object-pascal-format
+msgid "All files (%s)|%s|%s"
+msgstr "Semua file (%s)|%s|%s"
+
+#: lclstrconsts.rsappworkspacecolorcaption
+msgid "Application Workspace"
+msgstr ""
+
+#: lclstrconsts.rsaquacolorcaption
+msgid "Aqua"
+msgstr ""
+
+#: lclstrconsts.rsascannothaveasparent
+#, object-pascal-format
+msgid "Class %s cannot have %s as parent."
+msgstr ""
+
+#: lclstrconsts.rsbackgroundcolorcaption
+msgid "Desktop"
+msgstr ""
+
+#: lclstrconsts.rsbackward
+msgid "Backward"
+msgstr "Mundur"
+
+#: lclstrconsts.rsbitmaps
+msgid "Bitmaps"
+msgstr "Bitmaps"
+
+#: lclstrconsts.rsblackcolorcaption
+msgid "Black"
+msgstr ""
+
+#: lclstrconsts.rsblank
+msgid "Blank"
+msgstr "Kosong"
+
+#: lclstrconsts.rsbluecolorcaption
+msgid "Blue"
+msgstr ""
+
+#: lclstrconsts.rsbtnfacecolorcaption
+msgid "Button Face"
+msgstr ""
+
+#: lclstrconsts.rsbtnhighlightcolorcaption
+msgid "Button Highlight"
+msgstr ""
+
+#: lclstrconsts.rsbtnshadowcolorcaption
+msgid "Button Shadow"
+msgstr ""
+
+#: lclstrconsts.rsbtntextcolorcaption
+msgid "Button Text"
+msgstr ""
+
+#: lclstrconsts.rscalculator
+msgid "Calculator"
+msgstr "Kalkulator"
+
+#: lclstrconsts.rscancelrecordhint
+#, fuzzy
+msgctxt "lclstrconsts.rscancelrecordhint"
+msgid "Cancel"
+msgstr "Batal"
+
+#: lclstrconsts.rscannotfocus
+msgid "Can not focus"
+msgstr "Tidak bisa memfokuskan"
+
+#: lclstrconsts.rscanvasdoesnotallowdrawing
+msgid "Canvas does not allow drawing"
+msgstr "Kanvas tidak membolehkan penggambaran"
+
+#: lclstrconsts.rscaptiontextcolorcaption
+msgid "Caption Text"
+msgstr ""
+
+#: lclstrconsts.rscasesensitive
+msgid "Case sensitive"
+msgstr "Sensitif huruf"
+
+#: lclstrconsts.rscontrolclasscantcontainchildclass
+#, object-pascal-format
+msgid "Control of class '%s' can't have control of class '%s' as a child"
+msgstr ""
+
+#: lclstrconsts.rscontrolhasnoparentformorframe
+#, object-pascal-format
+msgid "Control '%s' has no parent form or frame"
+msgstr ""
+
+#: lclstrconsts.rscontrolhasnoparentwindow
+#, object-pascal-format
+msgid "Control '%s' has no parent window"
+msgstr ""
+
+#: lclstrconsts.rscontrolisnotaparent
+#, object-pascal-format
+msgid "'%s' is not a parent of '%s'"
+msgstr ""
+
+#: lclstrconsts.rscreamcolorcaption
+msgid "Cream"
+msgstr ""
+
+#: lclstrconsts.rscursor
+msgid "Cursor"
+msgstr ""
+
+#: lclstrconsts.rscustomcolorcaption
+msgid "Custom ..."
+msgstr ""
+
+#: lclstrconsts.rsdefaultcolorcaption
+msgid "Default"
+msgstr ""
+
+#: lclstrconsts.rsdefaultfileinfovalue
+msgid "permissions user group size date time"
+msgstr "ukuran waktu tanggal perijinan grup pemakai "
+
+#: lclstrconsts.rsdeleterecord
+msgid "Delete record?"
+msgstr ""
+
+#: lclstrconsts.rsdeleterecordhint
+msgctxt "lclstrconsts.rsdeleterecordhint"
+msgid "Delete"
+msgstr "Delete"
+
+#: lclstrconsts.rsdirection
+msgid "Direction"
+msgstr "Arah"
+
+#: lclstrconsts.rsdirectory
+msgid "&Directory"
+msgstr "&Direktori"
+
+#: lclstrconsts.rsdocopy
+msgid "Copy"
+msgstr ""
+
+#: lclstrconsts.rsdopaste
+msgid "Paste"
+msgstr ""
+
+#: lclstrconsts.rsduplicateiconformat
+msgid "Duplicate icon format."
+msgstr ""
+
+#: lclstrconsts.rseditrecordhint
+msgid "Edit"
+msgstr ""
+
+#: lclstrconsts.rsentirescope
+msgid "Search entire file"
+msgstr ""
+
+#: lclstrconsts.rserror
+#, fuzzy
+msgctxt "lclstrconsts.rserror"
+msgid "Error"
+msgstr "Salah"
+
+#: lclstrconsts.rserrorcreatingdevicecontext
+#, object-pascal-format
+msgid "Error creating device context for %s.%s"
+msgstr "Kesalahan pembuatan konteks device untuk %s.%s"
+
+#: lclstrconsts.rserroroccurredinataddressframe
+#, object-pascal-format
+msgid "Error occurred in %s at %sAddress %s%s Frame %s"
+msgstr "Kesalahan terjadi dalam %s at %sAlamat %s%s Frame %s"
+
+#: lclstrconsts.rserrorwhilesavingbitmap
+msgid "Error while saving bitmap."
+msgstr "Kesalahan ketika menyimpan bitmap"
+
+#: lclstrconsts.rsexception
+msgid "Exception"
+msgstr "Kekecualian"
+
+#: lclstrconsts.rsfddirectorymustexist
+msgid "Directory must exist"
+msgstr "Direktori harus ada"
+
+#: lclstrconsts.rsfddirectorynotexist
+#, object-pascal-format
+msgid "The directory \"%s\" does not exist."
+msgstr "Directori \"%s\" tidak ada."
+
+#: lclstrconsts.rsfdfilealreadyexists
+#, object-pascal-format
+msgid "The file \"%s\" already exists. Overwrite ?"
+msgstr "File \"%s\" sudah ada. Timpa saja ?"
+
+#: lclstrconsts.rsfdfilemustexist
+msgid "File must exist"
+msgstr "File harus ada"
+
+#: lclstrconsts.rsfdfilenotexist
+#, object-pascal-format
+msgid "The file \"%s\" does not exist."
+msgstr "File \"%s\" tidak ada."
+
+#: lclstrconsts.rsfdfilereadonly
+#, object-pascal-format
+msgid "The file \"%s\" is not writable."
+msgstr "File \"%s\" tidak bisa ditulisi."
+
+#: lclstrconsts.rsfdfilereadonlytitle
+msgid "File is not writable"
+msgstr "File tidak bisa ditulisi"
+
+#: lclstrconsts.rsfdfilesaveas
+msgid "Save file as"
+msgstr "Simpan file sebagai"
+
+#: lclstrconsts.rsfdopenfile
+msgid "Open existing file"
+msgstr "Buka file yang ada"
+
+#: lclstrconsts.rsfdoverwritefile
+msgid "Overwrite file ?"
+msgstr "Timpa file ?"
+
+#: lclstrconsts.rsfdpathmustexist
+msgid "Path must exist"
+msgstr "Path harus ada"
+
+#: lclstrconsts.rsfdpathnoexist
+#, object-pascal-format
+msgid "The path \"%s\" does not exist."
+msgstr "Path \"%s\" tidak ada."
+
+#: lclstrconsts.rsfdselectdirectory
+msgid "Select Directory"
+msgstr "Pilih Direktori"
+
+#: lclstrconsts.rsfileinfofilenotfound
+#, object-pascal-format
+msgid "(file not found: \"%s\")"
+msgstr "(file tidak ditemukan: \"%s\")"
+
+#: lclstrconsts.rsfileinformation
+msgid "File information"
+msgstr "Informasi file"
+
+#: lclstrconsts.rsfilter
+msgctxt "lclstrconsts.rsfilter"
+msgid "(filter)"
+msgstr ""
+
+#: lclstrconsts.rsfind
+msgid "Find"
+msgstr "Cari"
+
+#: lclstrconsts.rsfindmore
+msgid "Find more"
+msgstr "Cari lagi"
+
+#: lclstrconsts.rsfirstrecordhint
+msgid "First"
+msgstr ""
+
+#: lclstrconsts.rsfixedcolstoobig
+#, fuzzy
+#| msgid "FixedCols can't be >= ColCount"
+msgid "FixedCols can't be > ColCount"
+msgstr "FixedCols tidak bisa >= ColCount"
+
+#: lclstrconsts.rsfixedrowstoobig
+#, fuzzy
+#| msgid "FixedRows can't be >= RowCount"
+msgid "FixedRows can't be > RowCount"
+msgstr "FixedRows tidak bisa >= RowCount"
+
+#: lclstrconsts.rsformcolorcaption
+msgid "Form"
+msgstr ""
+
+#: lclstrconsts.rsformresourcesnotfoundforresourcelessformscreatenew
+#, object-pascal-format
+msgid "Form resource %s not found. For resourceless forms CreateNew constructor must be used. See the global variable RequireDerivedFormResource."
+msgstr ""
+
+#: lclstrconsts.rsformstreamingerror
+#, object-pascal-format
+msgid "Form streaming \"%s\" error: %s"
+msgstr "Pengaliran form \"%s\" salah: %s"
+
+#: lclstrconsts.rsforward
+msgid "Forward"
+msgstr "Maju"
+
+#: lclstrconsts.rsfuchsiacolorcaption
+msgid "Fuchsia"
+msgstr ""
+
+#: lclstrconsts.rsgdkoptiondebug
+msgid "--gdk-debug flags     Turn on specific GDK trace/debug messages."
+msgstr "--gdk-debug flags     Hidupkan pesan khusus GDK trace/debug."
+
+#: lclstrconsts.rsgdkoptionnodebug
+msgid "--gdk-no-debug flags  Turn off specific GDK trace/debug messages."
+msgstr "--gdk-no-debug flags  Matikan pesan khusus GDK trace/debug."
+
+#: lclstrconsts.rsgif
+msgid "Graphics Interchange Format"
+msgstr ""
+
+#: lclstrconsts.rsgoptionfatalwarnings
+msgid "--g-fatal-warnings    Warnings and errors generated by Gtk+/GDK will halt the application."
+msgstr "--g-fatal-warnings    Peringatan dan kesalahan dihasilkan oleh Gtk+/GDK akan menghentikan aplikasi."
+
+#: lclstrconsts.rsgradientactivecaptioncolorcaption
+msgid "Gradient Active Caption"
+msgstr ""
+
+#: lclstrconsts.rsgradientinactivecaptioncolorcaption
+msgid "Gradient Inactive Caption"
+msgstr ""
+
+#: lclstrconsts.rsgraphic
+msgid "Graphic"
+msgstr ""
+
+#: lclstrconsts.rsgraycolorcaption
+msgid "Gray"
+msgstr ""
+
+#: lclstrconsts.rsgraytextcolorcaption
+msgid "Gray Text"
+msgstr ""
+
+#: lclstrconsts.rsgreencolorcaption
+msgid "Green"
+msgstr ""
+
+#: lclstrconsts.rsgridfiledoesnotexist
+msgid "Grid file doesn't exist"
+msgstr ""
+
+#: lclstrconsts.rsgridhasnocols
+msgid "Cannot insert rows into a grid when it has no columns"
+msgstr ""
+
+#: lclstrconsts.rsgridhasnorows
+msgid "Cannot insert columns into a grid when it has no rows"
+msgstr ""
+
+#: lclstrconsts.rsgridindexoutofrange
+msgid "Grid index out of range."
+msgstr "Indeks grid di luar jangkauan"
+
+#: lclstrconsts.rsgroupindexcannotbelessthanprevious
+msgid "GroupIndex cannot be less than a previous menu item's GroupIndex"
+msgstr "GroupIndex tidak bisa kurang dari item GroupIndex menu sebelumnya"
+
+#: lclstrconsts.rsgtkfilter
+msgid "Filter:"
+msgstr "Filter:"
+
+#: lclstrconsts.rsgtkhistory
+msgid "History:"
+msgstr "Histori:"
+
+#: lclstrconsts.rsgtkoptionclass
+msgid "--class classname     Following Xt conventions, the class of a program is the program name with the initial character capitalized. For example, the classname for gimp is \"Gimp\". If --class is specified, the class of the program will be set to \"classname\"."
+msgstr "--class classname     Mengikuti konvensi Xt, class dari sebuah program dalam nama program dengan inisial karakter dibesarkan. Sebagai contoh, classname untuk gimp adalah \"Gimp\". Jika --class ditetapkan, class dari program akan di set ke \"classname\"."
+
+#: lclstrconsts.rsgtkoptiondebug
+msgid "--gtk-debug flags     Turn on specific Gtk+ trace/debug messages."
+msgstr "--gtk-debug flags    Hidupkan pesan khusus Gtk+ trace/debug."
+
+#: lclstrconsts.rsgtkoptiondisplay
+msgid "--display h:s:d       Connect to the specified X server, where \"h\" is the hostname, \"s\" is the server number (usually 0), and \"d\" is the display number (typically omitted). If --display is not specified, the DISPLAY environment variable is used."
+msgstr "--display h:s:d       Sambungkan ke X server tertentu, dimana \"h\" adalah nama host, \"s\" adalah nomor server (biasanya 0), dan \"d\" adalah nomor layar (biasanya diabaikan). Jika --display tidak ditetapkan, variabel lingkungan DISPLAY yang digunakan."
+
+#: lclstrconsts.rsgtkoptionmodule
+msgid "--gtk-module module   Load the specified module at startup."
+msgstr "--gtk-module module   Ambil modul yang ditetapkan saat startup."
+
+#: lclstrconsts.rsgtkoptionname
+msgid "--name programe       Set program name to \"progname\". If not specified, program name will be set to ParamStrUTF8(0)."
+msgstr ""
+
+#: lclstrconsts.rsgtkoptionnodebug
+msgid "--gtk-no-debug flags  Turn off specific Gtk+ trace/debug messages."
+msgstr "--gtk-no-debug flags  Matikan pesan khusus Gtk+ trace/debug."
+
+#: lclstrconsts.rsgtkoptionnotransient
+msgid "--lcl-no-transient    Do not set transient order for modal forms"
+msgstr "--lcl-no-transient    Jangan set urutan sementara untuk form modal"
+
+#: lclstrconsts.rsgtkoptionnoxshm
+msgid "--no-xshm             Disable use of the X Shared Memory Extension."
+msgstr "--no-xshm             Matikan penggunaan X Shared Memory Extension."
+
+#: lclstrconsts.rsgtkoptionsync
+#, fuzzy
+#| msgid "--sync                Call XSynchronize (display, True) after the Xserver connection has been established. This makes debugging X protocol errors easier, because X request buffering will be disabled and X errors will be received immediatey after the protocol request that generated the error has been processed by the X server."
+msgid "--sync                Call XSynchronize (display, True) after the Xserver connection has been established. This makes debugging X protocol errors easier, because X request buffering will be disabled and X errors will be received immediately after the protocol request that generated the error has been processed by the X server."
+msgstr "--sync                Panggil XSynchronize (layar, Benar) setelah sambungan Xserver terlaksana. Ini membuat debugging kesalahan protokol X lebih mudah, karena permintaan penyanggaan X akan dimatikan dan kesalahan X akan diterima segera setelah permintaan protokol yang kesalahannya telah dibuat sudah diproses oleh X server."
+
+#: lclstrconsts.rshelp
+#, fuzzy
+msgctxt "lclstrconsts.rshelp"
+msgid "Help"
+msgstr "Panduan"
+
+#: lclstrconsts.rshelpalreadyregistered
+#, object-pascal-format
+msgid "%s: Already registered"
+msgstr "%s: Sudah teregistrasi"
+
+#: lclstrconsts.rshelpcontextnotfound
+#, fuzzy
+#| msgid "Help Context not found"
+msgid "A help database was found for this topic, but this topic was not found"
+msgstr "Konteks Bantuan tidak ditemukan"
+
+#: lclstrconsts.rshelpdatabasenotfound
+#, fuzzy
+#| msgid "Help Database not found"
+msgid "There is no help database installed for this topic"
+msgstr "Database Bantuan tidak ditemukan"
+
+#: lclstrconsts.rshelperror
+msgid "Help Error"
+msgstr "Bantuan Salah"
+
+#: lclstrconsts.rshelphelpcontextnotfound
+#, object-pascal-format
+msgid "Help context %s not found."
+msgstr "Konteks Bantuan %s tidak ditemukan."
+
+#: lclstrconsts.rshelphelpcontextnotfoundindatabase
+#, object-pascal-format, fuzzy, badformat
+#| msgid "Help context %s not found in Database %s%s%s."
+msgid "Help context %s not found in Database \"%s\"."
+msgstr "Konteks Bantuan %s tidak ditemukan dalam Database %s%s%s."
+
+#: lclstrconsts.rshelphelpdatabasedidnotfoundaviewerforahelppageoftype
+#, object-pascal-format, fuzzy, badformat
+#| msgid "Help Database \"%s\" did not found a viewer for a help page of type %s"
+msgid "Help Database \"%s\" did not find a viewer for a help page of type %s"
+msgstr "Database Bantuan %s%s%s tidak ditemukan peninjau untuk halaman bantuan dari tipe %s"
+
+#: lclstrconsts.rshelphelpdatabasenotfound
+#, object-pascal-format, fuzzy, badformat
+#| msgid "Help Database %s%s%s not found"
+msgid "Help Database \"%s\" not found"
+msgstr "Database Bantuan %s%s%s tidak ditemukan"
+
+#: lclstrconsts.rshelphelpfordirectivenotfound
+#, object-pascal-format
+msgid "Help for directive \"%s\" not found."
+msgstr ""
+
+#: lclstrconsts.rshelphelpfordirectivenotfoundindatabase
+#, object-pascal-format
+msgid "Help for directive \"%s\" not found in Database \"%s\"."
+msgstr ""
+
+#: lclstrconsts.rshelphelpkeywordnotfound
+#, object-pascal-format, fuzzy, badformat
+#| msgid "Help keyword %s%s%s not found."
+msgid "Help keyword \"%s\" not found."
+msgstr "Kata kunci Bantuan %s%s%s tidak ditemukan."
+
+#: lclstrconsts.rshelphelpkeywordnotfoundindatabase
+#, object-pascal-format, fuzzy, badformat
+#| msgid "Help keyword %s%s%s not found in Database %s%s%s."
+msgid "Help keyword \"%s\" not found in Database \"%s\"."
+msgstr "Kata kunci Bantuan %s%s%s tidak ditemukan dalam Database %s%s%s."
+
+#: lclstrconsts.rshelphelpnodehasnohelpdatabase
+#, object-pascal-format, fuzzy, badformat
+#| msgid "Help node %s%s%s has no Help Database"
+msgid "Help node \"%s\" has no Help Database"
+msgstr "Node Bantuan %s%s%s tidak mempunyai Database Bantuan"
+
+#: lclstrconsts.rshelpnohelpfoundforsource
+#, object-pascal-format
+msgid "No help found for line %d, column %d of %s."
+msgstr "Tidak ada bantuan ditemukan untuk baris %d, column %d of %s."
+
+#: lclstrconsts.rshelpnohelpnodesavailable
+#, fuzzy
+#| msgid "No help nodes available"
+msgid "No help entries available for this topic"
+msgstr "Node bantuan tidak tersedia"
+
+#: lclstrconsts.rshelpnotfound
+#, fuzzy
+#| msgid "Help not found"
+msgid "No help found for this topic"
+msgstr "Bantuan tidak ditemukan"
+
+#: lclstrconsts.rshelpnotregistered
+#, object-pascal-format
+msgid "%s: Not registered"
+msgstr "%s: Tidak teregistrasi"
+
+#: lclstrconsts.rshelpselectorerror
+msgid "Help Selector Error"
+msgstr "Selektor Bantuan Salah"
+
+#: lclstrconsts.rshelpthereisnoviewerforhelptype
+#, object-pascal-format, fuzzy, badformat
+#| msgid "There is no viewer for help type %s%s%s"
+msgid "There is no viewer for help type \"%s\""
+msgstr "Tidak ada peninjau untuk tipe bantuan %s%s%s"
+
+#: lclstrconsts.rshelpviewererror
+msgid "Help Viewer Error"
+msgstr "Peninjau Bantuan Salah"
+
+#: lclstrconsts.rshelpviewernotfound
+#, fuzzy
+#| msgid "Help Viewer not found"
+msgid "No viewer was found for this type of help content"
+msgstr "Peninjau Bantuian tidak ditemukan"
+
+#: lclstrconsts.rshighlightcolorcaption
+msgid "Highlight"
+msgstr ""
+
+#: lclstrconsts.rshighlighttextcolorcaption
+msgid "Highlight Text"
+msgstr ""
+
+#: lclstrconsts.rshotlightcolorcaption
+msgid "Hot Light"
+msgstr ""
+
+#: lclstrconsts.rsicns
+msgid "Mac OS X Icon"
+msgstr ""
+
+#: lclstrconsts.rsicon
+msgid "Icon"
+msgstr "Ikon"
+
+#: lclstrconsts.rsiconimageempty
+msgid "Icon image cannot be empty"
+msgstr ""
+
+#: lclstrconsts.rsiconimageformat
+msgid "Icon image must have the same format"
+msgstr ""
+
+#: lclstrconsts.rsiconimageformatchange
+msgid "Cannot change format of icon image"
+msgstr ""
+
+#: lclstrconsts.rsiconimagesize
+msgid "Icon image must have the same size"
+msgstr ""
+
+#: lclstrconsts.rsiconimagesizechange
+msgid "Cannot change size of icon image"
+msgstr ""
+
+#: lclstrconsts.rsiconnocurrent
+msgid "Icon has no current image"
+msgstr ""
+
+#: lclstrconsts.rsinactivebordercolorcaption
+msgid "Inactive Border"
+msgstr ""
+
+#: lclstrconsts.rsinactivecaptioncolorcaption
+msgctxt "lclstrconsts.rsinactivecaptioncolorcaption"
+msgid "Inactive Caption"
+msgstr ""
+
+#: lclstrconsts.rsinactivecaptiontext
+msgctxt "lclstrconsts.rsinactivecaptiontext"
+msgid "Inactive Caption"
+msgstr ""
+
+#: lclstrconsts.rsindexoutofbounds
+#, object-pascal-format
+msgid "%s Index %d out of bounds 0 .. %d"
+msgstr "%s Indeks %d di luar jangkauan 0 .. %d"
+
+#: lclstrconsts.rsindexoutofrange
+#, object-pascal-format
+msgid "Index Out of range Cell[Col=%d Row=%d]"
+msgstr "Indeks Diluar jangkauan Cell[Kolom=%d Baris=%d]"
+
+#: lclstrconsts.rsinfobkcolorcaption
+msgid "Info Background"
+msgstr ""
+
+#: lclstrconsts.rsinfotextcolorcaption
+msgid "Info Text"
+msgstr ""
+
+#: lclstrconsts.rsinsertrecordhint
+msgctxt "lclstrconsts.rsinsertrecordhint"
+msgid "Insert"
+msgstr "Insert"
+
+#: lclstrconsts.rsinvaliddate
+#, object-pascal-format
+msgid "Invalid Date : %s"
+msgstr "Tanggal tidak benar : %s"
+
+#: lclstrconsts.rsinvaliddaterangehint
+#, object-pascal-format
+msgid "Invalid Date: %s. Must be between %s and %s"
+msgstr "Tanggal tidak benar: %s. Harus ada diantara %s dan %s"
+
+#: lclstrconsts.rsinvalidformobjectstream
+msgid "invalid Form object stream"
+msgstr "Aliran Objek Form tidak benar"
+
+#: lclstrconsts.rsinvalidpropertyvalue
+msgid "Invalid property value"
+msgstr "Nilai properti tidak benar"
+
+#: lclstrconsts.rsinvalidstreamformat
+msgid "Invalid stream format"
+msgstr "Format stream tidak benar"
+
+#: lclstrconsts.rsisalreadyassociatedwith
+#, object-pascal-format
+msgid "%s is already associated with %s"
+msgstr "%s sudah dikaitkan dengan %s"
+
+#: lclstrconsts.rsjpeg
+msgid "Joint Picture Expert Group"
+msgstr ""
+
+#: lclstrconsts.rslastrecordhint
+msgid "Last"
+msgstr ""
+
+#: lclstrconsts.rslimecolorcaption
+msgid "Lime"
+msgstr ""
+
+#: lclstrconsts.rslistindexexceedsbounds
+#, object-pascal-format
+msgid "List index exceeds bounds (%d)"
+msgstr "Indeks List melebihi jangkauan (%d)"
+
+#: lclstrconsts.rsmacosmenuhide
+#, object-pascal-format
+msgid "Hide %s"
+msgstr ""
+
+#: lclstrconsts.rsmacosmenuhideothers
+msgid "Hide Others"
+msgstr ""
+
+#: lclstrconsts.rsmacosmenuquit
+#, object-pascal-format
+msgid "Quit %s"
+msgstr ""
+
+#: lclstrconsts.rsmacosmenuservices
+msgid "Services"
+msgstr ""
+
+#: lclstrconsts.rsmacosmenushowall
+msgid "Show All"
+msgstr ""
+
+#: lclstrconsts.rsmarooncolorcaption
+msgid "Maroon"
+msgstr ""
+
+#: lclstrconsts.rsmbabort
+msgid "Abort"
+msgstr "Batal"
+
+#: lclstrconsts.rsmball
+msgid "&All"
+msgstr "&Semua"
+
+#: lclstrconsts.rsmbcancel
+msgctxt "lclstrconsts.rsmbcancel"
+msgid "Cancel"
+msgstr "Batal"
+
+#: lclstrconsts.rsmbclose
+msgid "&Close"
+msgstr "&Tutup"
+
+#: lclstrconsts.rsmbhelp
+msgid "&Help"
+msgstr "&Panduan"
+
+#: lclstrconsts.rsmbignore
+msgid "&Ignore"
+msgstr "&Abaikan"
+
+#: lclstrconsts.rsmbno
+msgid "&No"
+msgstr "&Tidak"
+
+#: lclstrconsts.rsmbnotoall
+msgid "No to all"
+msgstr "Tidak untuk semua"
+
+#: lclstrconsts.rsmbok
+msgid "&OK"
+msgstr "&OK"
+
+#: lclstrconsts.rsmbopen
+msgid "&Open"
+msgstr ""
+
+#: lclstrconsts.rsmbretry
+msgid "&Retry"
+msgstr "&Coba lagi"
+
+#: lclstrconsts.rsmbsave
+msgid "&Save"
+msgstr ""
+
+#: lclstrconsts.rsmbunlock
+msgid "&Unlock"
+msgstr ""
+
+#: lclstrconsts.rsmbyes
+msgid "&Yes"
+msgstr "&Ya"
+
+#: lclstrconsts.rsmbyestoall
+msgid "Yes to &All"
+msgstr "Ya untuk &Semua"
+
+#: lclstrconsts.rsmedgraycolorcaption
+msgid "Medium Gray"
+msgstr ""
+
+#: lclstrconsts.rsmenubarcolorcaption
+msgid "Menu Bar"
+msgstr ""
+
+#: lclstrconsts.rsmenucolorcaption
+msgctxt "lclstrconsts.rsmenucolorcaption"
+msgid "Menu"
+msgstr "Menu"
+
+#: lclstrconsts.rsmenuhighlightcolorcaption
+msgid "Menu Highlight"
+msgstr ""
+
+#: lclstrconsts.rsmenutextcolorcaption
+msgid "Menu Text"
+msgstr ""
+
+#: lclstrconsts.rsmodified
+msgid "  modified "
+msgstr "  diubah "
+
+#: lclstrconsts.rsmoneygreencolorcaption
+msgid "Money Green"
+msgstr ""
+
+#: lclstrconsts.rsmtauthentication
+msgid "Authentication"
+msgstr ""
+
+#: lclstrconsts.rsmtconfirmation
+msgid "Confirmation"
+msgstr "Konfirmasi"
+
+#: lclstrconsts.rsmtcustom
+msgid "Custom"
+msgstr "Kustom"
+
+#: lclstrconsts.rsmterror
+msgctxt "lclstrconsts.rsmterror"
+msgid "Error"
+msgstr "Salah"
+
+#: lclstrconsts.rsmtinformation
+msgid "Information"
+msgstr "Informasi"
+
+#: lclstrconsts.rsmtwarning
+msgid "Warning"
+msgstr "Peringatan"
+
+#: lclstrconsts.rsnavycolorcaption
+msgid "Navy"
+msgstr ""
+
+#: lclstrconsts.rsnextrecordhint
+msgctxt "lclstrconsts.rsnextrecordhint"
+msgid "Next"
+msgstr "Berikutnya"
+
+#: lclstrconsts.rsnonecolorcaption
+msgid "None"
+msgstr ""
+
+#: lclstrconsts.rsnotavalidgridfile
+msgid "Not a valid grid file"
+msgstr "Bukan file grid yang benar"
+
+#: lclstrconsts.rsnowidgetset
+msgid "No widgetset object. Please check if the unit \"interfaces\" was added to the programs uses clause."
+msgstr "Objek widgetset todal ada. Tolong periksa apakah unit \"interfaces\" sudah ditambahkan ke klausul uses program."
+
+#: lclstrconsts.rsolivecolorcaption
+msgid "Olive"
+msgstr ""
+
+#: lclstrconsts.rspickdate
+msgid "Select a date"
+msgstr "Pilih tanggal"
+
+#: lclstrconsts.rspixmap
+msgid "Pixmap"
+msgstr "Pixmap"
+
+#: lclstrconsts.rsportablebitmap
+msgid "Portable BitMap"
+msgstr ""
+
+#: lclstrconsts.rsportablegraymap
+msgid "Portable GrayMap"
+msgstr ""
+
+#: lclstrconsts.rsportablenetworkgraphic
+msgid "Portable Network Graphic"
+msgstr "Portable Network Graphic"
+
+#: lclstrconsts.rsportablepixmap
+msgid "Portable PixMap"
+msgstr ""
+
+#: lclstrconsts.rspostrecordhint
+msgid "Post"
+msgstr ""
+
+#: lclstrconsts.rspressoktoignoreandriskdatacorruptionpressaborttok
+#, object-pascal-format
+msgid "%s%sPress OK to ignore and risk data corruption.%sPress Abort to kill the program."
+msgstr ""
+
+#: lclstrconsts.rspriorrecordhint
+msgctxt "lclstrconsts.rspriorrecordhint"
+msgid "Prior"
+msgstr "Sebelumnya"
+
+#: lclstrconsts.rspromptonreplace
+msgid "Prompt on replace"
+msgstr ""
+
+#: lclstrconsts.rspropertydoesnotexist
+#, object-pascal-format
+msgid "Property %s does not exist"
+msgstr "Properti %s tidak ada"
+
+#: lclstrconsts.rspurplecolorcaption
+msgid "Purple"
+msgstr ""
+
+#: lclstrconsts.rsqtoptiondograb
+msgid "-dograb (only under X11), running under a debugger can cause an implicit -nograb, use -dograb to override. Need QT_DEBUG."
+msgstr ""
+
+#: lclstrconsts.rsqtoptiongraphicsstyle
+msgid "-graphicssystem param, sets the backend to be used for on-screen widgets and QPixmaps. Available options are native, raster and opengl. OpenGL is still unstable."
+msgstr ""
+
+#: lclstrconsts.rsqtoptionnograb
+msgid "-nograb, tells Qt that it must never grab the mouse or the keyboard. Need QT_DEBUG."
+msgstr ""
+
+#: lclstrconsts.rsqtoptionreverse
+msgid "-reverse, sets the application's layout direction to Qt::RightToLeft."
+msgstr ""
+
+#: lclstrconsts.rsqtoptionsession
+msgid "-session session, restores the application from an earlier session."
+msgstr ""
+
+#: lclstrconsts.rsqtoptionstyle
+msgid "-style style or -style=style, sets the application GUI style. Possible values are motif, windows, and platinum. If you compiled Qt with additional styles or have additional styles as plugins these will be available to the -style  command line option. NOTE: Not all styles are available on all platforms. If style param does not exist Qt will start an application with default common style (windows)."
+msgstr ""
+
+#: lclstrconsts.rsqtoptionstylesheet
+msgid "-stylesheet stylesheet or -stylesheet=stylesheet, sets the application Style Sheet. The value must be a path to a file that contains the Style Sheet. Note: Relative URLs in the Style Sheet file are relative to the Style Sheet file's path."
+msgstr ""
+
+#: lclstrconsts.rsqtoptionsync
+msgid "-sync (only under X11), switches to synchronous mode for debugging."
+msgstr ""
+
+#: lclstrconsts.rsqtoptionwidgetcount
+msgid "-widgetcount, prints debug message at the end about number of widgets left undestroyed and maximum number of widgets existed at the same time."
+msgstr ""
+
+#: lclstrconsts.rsqtoptionx11bgcolor
+msgid "-bg or -background color, sets the default background color and an application palette (light and dark shades are calculated)."
+msgstr ""
+
+#: lclstrconsts.rsqtoptionx11btncolor
+msgid "-btn or -button color, sets the default button color."
+msgstr ""
+
+#: lclstrconsts.rsqtoptionx11cmap
+msgid "-cmap, causes the application to install a private color map on an 8-bit display."
+msgstr ""
+
+#: lclstrconsts.rsqtoptionx11display
+msgid "-display display, sets the X display (default is $DISPLAY)."
+msgstr ""
+
+#: lclstrconsts.rsqtoptionx11fgcolor
+msgid "-fg or -foreground color, sets the default foreground color."
+msgstr ""
+
+#: lclstrconsts.rsqtoptionx11font
+msgid "-fn or -font font, defines the application font. The font should be specified using an X logical font description."
+msgstr ""
+
+#: lclstrconsts.rsqtoptionx11geometry
+msgid "-geometry geometry, sets the client geometry of the first window that is shown."
+msgstr ""
+
+#: lclstrconsts.rsqtoptionx11im
+msgid "-im, sets the input method server (equivalent to setting the XMODIFIERS environment variable)."
+msgstr ""
+
+#: lclstrconsts.rsqtoptionx11inputstyle
+msgid "-inputstyle, defines how the input is inserted into the given widget, e.g. onTheSpot makes the input appear directly in the widget, while overTheSpot makes the input appear in a box floating over the widget and is not inserted until the editing is done."
+msgstr ""
+
+#: lclstrconsts.rsqtoptionx11name
+msgid "-name name, sets the application name."
+msgstr ""
+
+#: lclstrconsts.rsqtoptionx11ncols
+msgid "-ncols count, limits the number of colors allocated in the color cube on an 8-bit display, if the application is using the QApplication::ManyColor color specification. If count is 216 then a 6x6x6 color cube is used (i.e. 6 levels of red, 6 of green, and 6 of blue); for other values, a cube approximately proportional to a 2x3x1 cube is used."
+msgstr ""
+
+#: lclstrconsts.rsqtoptionx11title
+msgid "-title title, sets the application title."
+msgstr ""
+
+#: lclstrconsts.rsqtoptionx11visual
+msgid "-visual TrueColor, forces the application to use a TrueColor visual on an 8-bit display."
+msgstr ""
+
+#: lclstrconsts.rsrasterimageendupdate
+msgid "Endupdate while no update in progress"
+msgstr ""
+
+#: lclstrconsts.rsrasterimagesaveinupdate
+msgid "Cannot save image while update in progress"
+msgstr ""
+
+#: lclstrconsts.rsrasterimageupdateall
+msgid "Cannot begin update all when canvas only update in progress"
+msgstr ""
+
+#: lclstrconsts.rsredcolorcaption
+msgid "Red"
+msgstr ""
+
+#: lclstrconsts.rsrefreshrecordshint
+msgid "Refresh"
+msgstr ""
+
+#: lclstrconsts.rsreplace
+msgid "Replace"
+msgstr "Ganti"
+
+#: lclstrconsts.rsreplaceall
+msgid "Replace all"
+msgstr "Ganti semua"
+
+#: lclstrconsts.rsresourcenotfound
+#, object-pascal-format
+msgctxt "lclstrconsts.rsresourcenotfound"
+msgid "Resource %s not found"
+msgstr "Sumber %s tidak ditemukan"
+
+#: lclstrconsts.rsscrollbarcolorcaption
+msgid "ScrollBar"
+msgstr ""
+
+#: lclstrconsts.rsscrollbaroutofrange
+msgid "ScrollBar property out of range"
+msgstr "Properti ScrollBar diluar jangkauan"
+
+#: lclstrconsts.rsselectcolortitle
+msgid "Select color"
+msgstr "Pilih warna"
+
+#: lclstrconsts.rsselectfonttitle
+msgid "Select a font"
+msgstr "Pilih font"
+
+#: lclstrconsts.rssilvercolorcaption
+msgid "Silver"
+msgstr ""
+
+#: lclstrconsts.rssize
+msgid "  size "
+msgstr "  ukuran "
+
+#: lclstrconsts.rsskybluecolorcaption
+msgid "Sky Blue"
+msgstr ""
+
+#: lclstrconsts.rstcustomtabcontrolaccessibilitydescription
+msgid "A control with tabs"
+msgstr ""
+
+#: lclstrconsts.rstealcolorcaption
+msgid "Teal"
+msgstr ""
+
+#: lclstrconsts.rstext
+msgid "Text"
+msgstr "Teks"
+
+#: lclstrconsts.rsthebuiltinurlisreadonlychangethebaseurlinstead
+msgid "The built-in URL is read only. Change the BaseURL instead."
+msgstr ""
+
+#: lclstrconsts.rstiff
+msgid "Tagged Image File Format"
+msgstr ""
+
+#: lclstrconsts.rstpanelaccessibilitydescription
+msgctxt "lclstrconsts.rstpanelaccessibilitydescription"
+msgid "Panel"
+msgstr ""
+
+#: lclstrconsts.rstsplitteraccessibilitydescription
+msgctxt "lclstrconsts.rstsplitteraccessibilitydescription"
+msgid "A grip to control how much size to give two parts of an area"
+msgstr ""
+
+#: lclstrconsts.rsttreeviewaccessibilitydescription
+msgctxt "lclstrconsts.rsttreeviewaccessibilitydescription"
+msgid "A tree of items"
+msgstr ""
+
+#: lclstrconsts.rsunabletoloaddefaultfont
+msgid "Unable to load default font"
+msgstr "Tidak bisa mengambil font default"
+
+#: lclstrconsts.rsunknownerrorpleasereportthisbug
+msgid "Unknown Error, please report this bug"
+msgstr "Kesalahan Tidak Dikenal, silahkan laporkan bug ini"
+
+#: lclstrconsts.rsunknownpictureextension
+msgid "Unknown picture extension"
+msgstr "Ekstensi gambar tidak dikenal"
+
+#: lclstrconsts.rsunknownpictureformat
+msgid "Unknown picture format"
+msgstr ""
+
+#: lclstrconsts.rsunsupportedbitmapformat
+msgid "Unsupported bitmap format."
+msgstr "Format bitmap tidak didukung."
+
+#: lclstrconsts.rsunsupportedclipboardformat
+#, object-pascal-format
+msgid "Unsupported clipboard format: %s"
+msgstr "Format clipboard tidak didukung: %s"
+
+#: lclstrconsts.rswarningunreleaseddcsdump
+#, object-pascal-format
+msgid " WARNING: There are %d unreleased DCs, a detailed dump follows:"
+msgstr " PERINGATAN: Ada %d DCs tidak dilepas, dump detil sebagai berikut:"
+
+#: lclstrconsts.rswarningunreleasedgdiobjectsdump
+#, object-pascal-format
+msgid " WARNING: There are %d unreleased GDIObjects, a detailed dump follows:"
+msgstr " PERINGATAN: Ada %d GDIObjects tidak dilepas, detil dump sebagai berikut:"
+
+#: lclstrconsts.rswarningunreleasedmessagesinqueue
+#, object-pascal-format
+msgid " WARNING: There are %d messages left in the queue! I'll free them"
+msgstr " PERINGATAN: Ada %d pesan tersisa dalam antrian! Saya akan membebaskannya"
+
+#: lclstrconsts.rswarningunreleasedtimerinfos
+#, object-pascal-format
+msgid " WARNING: There are %d TimerInfo structures left, I'll free them"
+msgstr " PERINGATAN: Ada %d struktur TimerInfo tersisa, Saya akan membebaskannya"
+
+#: lclstrconsts.rswarningunremovedpaintmessages
+#, object-pascal-format
+msgid " WARNING: There are %s unremoved LM_PAINT/LM_GtkPAINT message links left."
+msgstr " PERINGATAN: ada %s tersisa link pesan LM_PAINT/LM_GtkPAINT tidak dihapus."
+
+#: lclstrconsts.rswhitecolorcaption
+msgid "White"
+msgstr ""
+
+#: lclstrconsts.rswholewordsonly
+msgid "Whole words only"
+msgstr "Hanya seluruh kata"
+
+#: lclstrconsts.rswin32error
+msgid "Error:"
+msgstr "Kesalahan:"
+
+#: lclstrconsts.rswin32warning
+msgid "Warning:"
+msgstr "Peringatan:"
+
+#: lclstrconsts.rswindowcolorcaption
+msgid "Window"
+msgstr ""
+
+#: lclstrconsts.rswindowframecolorcaption
+msgid "Window Frame"
+msgstr ""
+
+#: lclstrconsts.rswindowtextcolorcaption
+msgid "Window Text"
+msgstr ""
+
+#: lclstrconsts.rsyellowcolorcaption
+msgid "Yellow"
+msgstr ""
+
+#: lclstrconsts.scannotfocus
+msgid "Cannot focus a disabled or invisible window"
+msgstr "Tidak bisa memberikan fokus ke jendela yang dimatikan atau tidak nampak"
+
+#: lclstrconsts.sduplicatemenus
+msgid "Duplicate menus"
+msgstr "Duplikasi menu"
+
+#: lclstrconsts.sinvalidactioncreation
+msgid "Invalid action creation"
+msgstr "Pembuatan action tidak benar"
+
+#: lclstrconsts.sinvalidactionenumeration
+msgid "Invalid action enumeration"
+msgstr "Enumerasi action tidak benar"
+
+#: lclstrconsts.sinvalidactionregistration
+msgid "Invalid action registration"
+msgstr "Registrasi action tidak benar"
+
+#: lclstrconsts.sinvalidactionunregistration
+msgid "Invalid action unregistration"
+msgstr "Pembatalan registrasi action tidak benar"
+
+#: lclstrconsts.sinvalidcharset
+#, object-pascal-format
+msgid "The char set in mask \"%s\" is not valid!"
+msgstr "set karakter dalam mask \"%s\" tidak benar!"
+
+#: lclstrconsts.sinvalidimagesize
+msgid "Invalid image size"
+msgstr "Ukuran gambar tidak benar"
+
+#: lclstrconsts.sinvalidindex
+msgid "Invalid ImageList Index"
+msgstr "Indeks ImageList tidak benar"
+
+#: lclstrconsts.smaskeditnomatch
+msgid "The current text does not match the specified mask."
+msgstr ""
+
+#: lclstrconsts.smenuindexerror
+msgid "Menu index out of range"
+msgstr "Indeks Menu diluar jangkauan"
+
+#: lclstrconsts.smenuitemisnil
+msgid "MenuItem is nil"
+msgstr "MenuItem kosong"
+
+#: lclstrconsts.smenunotfound
+msgid "Sub-menu is not in menu"
+msgstr "Sub-menu tidak dalam menu"
+
+#: lclstrconsts.smkcalt
+msgid "Alt+"
+msgstr ""
+
+#: lclstrconsts.smkcbksp
+msgid "BkSp"
+msgstr ""
+
+#: lclstrconsts.smkcctrl
+msgid "Ctrl+"
+msgstr ""
+
+#: lclstrconsts.smkcdel
+msgid "Del"
+msgstr ""
+
+#: lclstrconsts.smkcdown
+msgctxt "lclstrconsts.smkcdown"
+msgid "Down"
+msgstr "Turun"
+
+#: lclstrconsts.smkcend
+msgctxt "lclstrconsts.smkcend"
+msgid "End"
+msgstr "End"
+
+#: lclstrconsts.smkcenter
+msgid "Enter"
+msgstr ""
+
+#: lclstrconsts.smkcesc
+msgid "Esc"
+msgstr ""
+
+#: lclstrconsts.smkchome
+msgctxt "lclstrconsts.smkchome"
+msgid "Home"
+msgstr "Home"
+
+#: lclstrconsts.smkcins
+msgid "Ins"
+msgstr ""
+
+#: lclstrconsts.smkcleft
+msgctxt "lclstrconsts.smkcleft"
+msgid "Left"
+msgstr "Left"
+
+#: lclstrconsts.smkcmeta
+msgid "Meta+"
+msgstr ""
+
+#: lclstrconsts.smkcpgdn
+msgid "PgDn"
+msgstr ""
+
+#: lclstrconsts.smkcpgup
+msgid "PgUp"
+msgstr ""
+
+#: lclstrconsts.smkcright
+msgctxt "lclstrconsts.smkcright"
+msgid "Right"
+msgstr "Right"
+
+#: lclstrconsts.smkcshift
+msgid "Shift+"
+msgstr ""
+
+#: lclstrconsts.smkcspace
+msgid "Space"
+msgstr ""
+
+#: lclstrconsts.smkctab
+msgctxt "lclstrconsts.smkctab"
+msgid "Tab"
+msgstr "Tab"
+
+#: lclstrconsts.smkcup
+msgctxt "lclstrconsts.smkcup"
+msgid "Up"
+msgstr "Up"
+
+#: lclstrconsts.snotimers
+msgid "No timers available"
+msgstr "Tidak tersedia timer"
+
+#: lclstrconsts.sparentrequired
+#, object-pascal-format
+msgid "Control \"%s\" has no parent window."
+msgstr ""
+
+#: lclstrconsts.sparexpected
+#, object-pascal-format
+msgid "Wrong token type: %s expected"
+msgstr ""
+
+#: lclstrconsts.sparinvalidfloat
+#, object-pascal-format
+msgid "Invalid floating point number: %s"
+msgstr ""
+
+#: lclstrconsts.sparinvalidinteger
+#, object-pascal-format
+msgid "Invalid integer number: %s"
+msgstr ""
+
+#: lclstrconsts.sparlocinfo
+#, object-pascal-format
+msgid " (at %d,%d, stream offset %d)"
+msgstr ""
+
+#: lclstrconsts.sparunterminatedbinvalue
+msgid "Unterminated byte value"
+msgstr ""
+
+#: lclstrconsts.sparunterminatedstring
+msgid "Unterminated string"
+msgstr ""
+
+#: lclstrconsts.sparwrongtokensymbol
+#, object-pascal-format
+msgid "Wrong token symbol: %s expected but %s found"
+msgstr ""
+
+#: lclstrconsts.sparwrongtokentype
+#, object-pascal-format
+msgid "Wrong token type: %s expected but %s found"
+msgstr ""
+
+#: lclstrconsts.sshellctrlsbytes
+#, object-pascal-format
+msgid "%s bytes"
+msgstr ""
+
+#: lclstrconsts.sshellctrlsinvalidpath
+#, object-pascal-format
+msgctxt "lclstrconsts.sshellctrlsinvalidpath"
+msgid ""
+"Invalid pathname:\n"
+"\"%s\""
+msgstr ""
+
+#: lclstrconsts.sshellctrlsinvalidpathrelative
+#, object-pascal-format
+msgid ""
+"Invalid relative pathname:\n"
+"\"%s\"\n"
+"in relation to rootpath:\n"
+"\"%s\""
+msgstr ""
+
+#: lclstrconsts.sshellctrlsinvalidroot
+#, object-pascal-format
+msgctxt "lclstrconsts.sshellctrlsinvalidroot"
+msgid ""
+"Invalid pathname:\n"
+"\"%s\""
+msgstr ""
+
+#: lclstrconsts.sshellctrlskb
+#, object-pascal-format
+msgid "%s kB"
+msgstr ""
+
+#: lclstrconsts.sshellctrlsmb
+#, object-pascal-format
+msgid "%s MB"
+msgstr ""
+
+#: lclstrconsts.sshellctrlsname
+msgid "Name"
+msgstr ""
+
+#: lclstrconsts.sshellctrlsselecteditemdoesnotexists
+#, object-pascal-format
+msgid ""
+"The selected item does not exist on disk:\n"
+"\"%s\""
+msgstr ""
+
+#: lclstrconsts.sshellctrlssize
+msgid "Size"
+msgstr ""
+
+#: lclstrconsts.sshellctrlstype
+msgid "Type"
+msgstr ""
+

@@ -5,7 +5,7 @@ unit LuaWebsiteModules;
 interface
 
 uses
-  Classes, SysUtils, fgl, lua53, LuaStringsStorage, WebsiteModules;
+  Classes, SysUtils, fgl, lua53, LuaStringsStorage, WebsiteModules, syncobjs;
 
 type
   TLuaWebsiteModulesContainer = class;
@@ -68,8 +68,37 @@ type
   TLuaWebsiteModulesManager = class
   public
     Containers: TLuaWebsiteModulesContainers;
-    TempModuleList: TLuaWebsiteModules;
     constructor Create;
+    destructor Destroy; override;
+  end;
+
+  { TLuaWebsiteModulesLoader }
+
+  TLuaWebsiteModulesLoader = class
+  private
+    FFileList:TStringList;
+    FThreadCount,
+    FFileListIndex:Integer;
+    FFileListGuardian,
+    FMainGuardian:TCriticalSection;
+  protected
+    function GetFileName:String;
+  public
+    procedure ScanAndLoadFiles;
+    constructor Create;
+    destructor Destroy; override;
+  end;
+
+  { TLuaWebsiteModulesLoaderThread }
+
+  TLuaWebsiteModulesLoaderThread = class(TThread)
+  private
+    FOwner: TLuaWebsiteModulesLoader;
+  protected
+    procedure LoadLuaWebsiteModule(const AFileName:String);
+    procedure Execute; override;
+  public
+    constructor Create(const AOwner: TLuaWebsiteModulesLoader);
     destructor Destroy; override;
   end;
 
@@ -107,8 +136,11 @@ implementation
 
 uses
   FMDOptions, FileUtil, MultiLog, LuaClass, LuaBase, LuaMangaInfo, LuaHTTPSend,
-  LuaXQuery, LuaUtils, LuaDownloadTask, LuaUpdateListManager, LuaStrings, uData,
-  uDownloadsManager, xquery, httpsendthread, FMDVars;
+  LuaXQuery, LuaUtils, LuaDownloadTask, LuaUpdateListManager, LuaStrings,
+  LuaCriticalSection, uData, uDownloadsManager, xquery, httpsendthread, FMDVars;
+
+threadvar
+  TempModules:TLuaWebsiteModules;
 
 function DoBeforeUpdateList(const Module: TModuleContainer): Boolean;
 var
@@ -127,7 +159,7 @@ begin
       Result := lua_toboolean(l, -1);
     except
       on E: Exception do
-        Logger.SendError(E.Message + ': ' + lua_tostring(l, -1));
+        Logger.SendError(E.Message + ': ' + luaGetString(L, -1));
     end;
     lua_close(l);
   end;
@@ -150,7 +182,7 @@ begin
       Result := lua_toboolean(l, -1);
     except
       on E: Exception do
-        Logger.SendError(E.Message + ': ' + lua_tostring(l, -1));
+        Logger.SendError(E.Message + ': ' + luaGetString(L, -1));
     end;
     lua_close(l);
   end;
@@ -180,7 +212,7 @@ begin
         Page := lua_tointeger(l, -1);
     except
       on E: Exception do
-        Logger.SendError(E.Message + ': ' + lua_tostring(l, -1));
+        Logger.SendError(E.Message + ': ' + luaGetString(L, -1));
     end;
     lua_close(l);
   end;
@@ -210,7 +242,7 @@ begin
       Result := lua_tointeger(L, -1);
     except
       on E: Exception do
-        Logger.SendError(E.Message + ': ' + lua_tostring(l, -1));
+        Logger.SendError(E.Message + ': ' + luaGetString(L, -1));
     end;
     lua_close(l);
   end;
@@ -236,7 +268,7 @@ begin
       Result := lua_tointeger(L, -1);
     except
       on E: Exception do
-        Logger.SendError(E.Message + ': ' + lua_tostring(l, -1));
+        Logger.SendError(E.Message + ': ' + luaGetString(L, -1));
     end;
     lua_close(l);
   end;
@@ -259,7 +291,7 @@ begin
       Result := lua_toboolean(l, -1);
     except
       on E: Exception do
-        Logger.SendError(E.Message + ': ' + lua_tostring(l, -1));
+        Logger.SendError(E.Message + ': ' + luaGetString(L, -1));
     end;
     lua_close(l);
   end;
@@ -285,7 +317,7 @@ begin
       Result := lua_toboolean(l, -1);
     except
       on E: Exception do
-        Logger.SendError(E.Message + ': ' + lua_tostring(l, -1));
+        Logger.SendError(E.Message + ': ' + luaGetString(L, -1));
     end;
     lua_close(l);
   end;
@@ -312,7 +344,7 @@ begin
       Result := lua_toboolean(l, -1);
     except
       on E: Exception do
-        Logger.SendError(E.Message + ': ' + lua_tostring(l, -1));
+        Logger.SendError(E.Message + ': ' + luaGetString(L, -1));
     end;
     lua_close(l);
   end;
@@ -339,7 +371,7 @@ begin
       Result := lua_toboolean(l, -1);
     except
       on E: Exception do
-        Logger.SendError(E.Message + ': ' + lua_tostring(l, -1));
+        Logger.SendError(E.Message + ': ' + luaGetString(L, -1));
     end;
     lua_close(l);
   end;
@@ -366,7 +398,7 @@ begin
       Result := lua_toboolean(l, -1);
     except
       on E: Exception do
-        Logger.SendError(E.Message + ': ' + lua_tostring(l, -1));
+        Logger.SendError(E.Message + ': ' + luaGetString(L, -1));
     end;
     lua_close(l);
   end;
@@ -389,10 +421,10 @@ begin
 
       LuaDoMe(l);
       LuaCallFunction(l, OnSaveImage);
-      Result := lua_tostring(l, -1);
+      Result := luaGetString(L, -1);
     except
       on E: Exception do
-        Logger.SendError(E.Message + ': ' + lua_tostring(l, -1));
+        Logger.SendError(E.Message + ': ' + luaGetString(L, -1));
     end;
     lua_close(l);
   end;
@@ -415,7 +447,7 @@ begin
       Result := lua_toboolean(l, -1);
     except
       on E: Exception do
-        Logger.SendError(E.Message + ': ' + lua_tostring(l, -1));
+        Logger.SendError(E.Message + ': ' + luaGetString(L, -1));
     end;
     lua_close(l);
   end;
@@ -438,13 +470,26 @@ begin
       Result := lua_toboolean(l, -1);
     except
       on E: Exception do
-        Logger.SendError(E.Message + ': ' + lua_tostring(l, -1));
+        Logger.SendError(E.Message + ': ' + luaGetString(L, -1));
     end;
     lua_close(l);
   end;
 end;
 
-function LoadLuaToWebsiteModules(AFilename: String): Boolean;
+procedure ScanLuaWebsiteModulesFile;
+begin
+  with TLuaWebsiteModulesLoader.Create do
+    try
+      ScanAndLoadFiles;
+    finally
+      Free;
+    end;
+end;
+
+{ TLuaWebsiteModulesLoaderThread }
+
+procedure TLuaWebsiteModulesLoaderThread.LoadLuaWebsiteModule(
+  const AFileName: String);
 var
   l: Plua_State;
   c: TLuaWebsiteModulesContainer;
@@ -452,12 +497,11 @@ var
   i: Integer;
   s: String;
 begin
-  Result := False;
-  Logger.Send('Load lua website module', AFilename);
+  //Logger.Send('Load lua website module', AFilename);
   try
     l := LuaNewBaseState;
     try
-      m := LuaDumpFileToStream(l, AFilename);
+      m := LuaDumpFileToStream(l, AFileName);
       if m <> nil then
       begin
         i := lua_pcall(l, 0, 0, 0);
@@ -467,26 +511,28 @@ begin
       end;
     except
       on E: Exception do
-        Logger.SendError(E.Message + ': ' + lua_tostring(L, -1));
+        Logger.SendError(E.Message + ': ' + luaGetString(L, -1));
     end;
   finally
     lua_close(l);
   end;
 
-  if LuaWebsiteModulesManager.TempModuleList.Count <> 0 then
+  if TempModules.Count <> 0 then
     with LuaWebsiteModulesManager do
     begin
       c := TLuaWebsiteModulesContainer.Create;
-      c.FileName := AFilename;
+      c.FileName := AFileName;
       c.ByteCode := m;
       m := nil;
       s := '';
+      FOwner.FMainGuardian.Enter;
       Containers.Add(c);
-      for i := 0 to TempModuleList.Count - 1 do
-        with TempModuleList[i] do
+      FOwner.FMainGuardian.Leave;
+      for i := 0 to TempModules.Count - 1 do
+        with TempModules[i] do
         begin
           s += Module.Website + ', ';
-          c.Modules.Add(TempModuleList[i]);
+          c.Modules.Add(TempModules[i]);
           Container := c;
           if OnBeforeUpdateList <> '' then
             Module.OnBeforeUpdateList := @DoBeforeUpdateList;
@@ -515,30 +561,84 @@ begin
           if OnLogin <> '' then
             Module.OnLogin := @DoLogin;
         end;
-      TempModuleList.Clear;
+      TempModules.Clear;
       SetLength(s, Length(s) - 2);
-      Logger.Send('Loaded modules from ' + ExtractFileName(AFilename), s);
+      //Logger.Send('Loaded modules from ' + ExtractFileName(AFilename), s);
       s := '';
     end;
   if m <> nil then
     m.Free;
 end;
 
-procedure ScanLuaWebsiteModulesFile;
+procedure TLuaWebsiteModulesLoaderThread.Execute;
 var
-  d: String;
-  f: TStringList;
+  f:String;
+begin
+  TempModules:=TLuaWebsiteModules.Create;
+  try
+    f:=FOwner.GetFileName;
+    while f<>'' do begin
+      LoadLuaWebsiteModule(f);
+      f:=FOwner.GetFileName;
+    end;
+  finally
+    TempModules.Free;
+  end;
+end;
+
+constructor TLuaWebsiteModulesLoaderThread.Create(
+  const AOwner: TLuaWebsiteModulesLoader);
+begin
+  FOwner:=AOwner;
+  FOwner.FThreadCount:=InterLockedIncrement(FOwner.FThreadCount);
+  FreeOnTerminate:=True;
+  inherited Create(False);
+end;
+
+destructor TLuaWebsiteModulesLoaderThread.Destroy;
+begin
+  FOwner.FThreadCount:=InterLockedDecrement(FOwner.FThreadCount);
+  inherited Destroy;
+end;
+
+{ TLuaWebsiteModulesLoader }
+
+function TLuaWebsiteModulesLoader.GetFileName: String;
+begin
+  if FFileListIndex>FFileList.Count-1 then Exit('');
+  FFileListGuardian.Enter;
+  Result:=FFileList[FFileListIndex];
+  Inc(FFileListIndex);
+  FFileListGuardian.Leave;
+end;
+
+procedure TLuaWebsiteModulesLoader.ScanAndLoadFiles;
+var
   i: Integer;
 begin
-  d := LUA_WEBSITEMODULE_FOLDER;
-  try
-    f := FindAllFiles(d, '*.lua;*.luac', False, faAnyFile);
-    if f.Count > 0 then
-      for i := 0 to f.Count - 1 do
-        LoadLuaToWebsiteModules(f[i]);
-  finally
-    f.Free;
-  end;
+  FindAllFiles(FFileList, LUA_WEBSITEMODULE_FOLDER, '*.lua;*.luac', False, faAnyFile);
+  if FFileList.Count=0 then Exit;
+  for i:=1 to GetCPUCount do
+    TLuaWebsiteModulesLoaderThread.Create(Self);
+  while FThreadCount<>0 do
+    Sleep(100);
+end;
+
+constructor TLuaWebsiteModulesLoader.Create;
+begin
+  FFileList:=TStringList.Create;
+  FThreadCount:=0;
+  FFileListIndex:=0;
+  FFileListGuardian:=TCriticalSection.Create;
+  FMainGuardian:=TCriticalSection.Create;
+end;
+
+destructor TLuaWebsiteModulesLoader.Destroy;
+begin
+  FFileList.Free;
+  FFileListGuardian.Free;
+  FMainGuardian.Free;
+  inherited Destroy;
 end;
 
 { TLuaWebsiteModulesManager }
@@ -546,16 +646,12 @@ end;
 constructor TLuaWebsiteModulesManager.Create;
 begin
   Containers := TLuaWebsiteModulesContainers.Create;
-  TempModuleList := TLuaWebsiteModules.Create;
 end;
 
 destructor TLuaWebsiteModulesManager.Destroy;
 var
   i: Integer;
 begin
-  for i := 0 to TempModuleList.Count - 1 do
-    TempModuleList[i].Free;
-  TempModuleList.Free;
   for i := 0 to Containers.Count - 1 do
     Containers[i].Free;
   Containers.Free;
@@ -587,7 +683,7 @@ end;
 
 constructor TLuaWebsiteModule.Create;
 begin
-  LuaWebsiteModulesManager.TempModuleList.Add(Self);
+  TempModules.Add(Self);
   Storage := TStringsStorage.Create;
   Options := TStringList.Create;
   Options.OwnsObjects := True;
@@ -702,28 +798,28 @@ function lua_addoptioncheckbox(L: Plua_State): Integer; cdecl;
 begin
   Result := 0;
   TLuaWebsiteModule(luaClassGetObject(L)).AddOptionCheckBox(
-    lua_tostring(L, 1), lua_tostring(L, 2), lua_toboolean(L, 3));
+    luaGetString(L, 1), luaGetString(L, 2), lua_toboolean(L, 3));
 end;
 
 function lua_addoptionedit(L: Plua_State): Integer; cdecl;
 begin
   Result := 0;
   TLuaWebsiteModule(luaClassGetObject(L)).AddOptionEdit(
-    lua_tostring(L, 1), lua_tostring(L, 2), lua_tostring(L, 3));
+    luaGetString(L, 1), luaGetString(L, 2), luaGetString(L, 3));
 end;
 
 function lua_addoptionspinedit(L: Plua_State): Integer; cdecl;
 begin
   Result := 0;
   TLuaWebsiteModule(luaClassGetObject(L)).AddOptionSpinEdit(
-    lua_tostring(L, 1), lua_tostring(L, 2), lua_tointeger(L, 3));
+    luaGetString(L, 1), luaGetString(L, 2), lua_tointeger(L, 3));
 end;
 
 function lua_addoptioncombobox(L: Plua_State): Integer; cdecl;
 begin
   Result := 0;
   TLuaWebsiteModule(luaClassGetObject(L)).AddOptionComboBox(
-    lua_tostring(L, 1), lua_tostring(L, 2), lua_tostring(L, 3), lua_tointeger(L, 4));
+    luaGetString(L, 1), luaGetString(L, 2), luaGetString(L, 3), lua_tointeger(L, 4));
 end;
 
 function lua_gettotaldirectory(L: Plua_State): Integer; cdecl;
@@ -738,6 +834,12 @@ begin
   TLuaWebsiteModule(luaClassGetObject(L)).Module.TotalDirectory := lua_tointeger(L, 1);
 end;
 
+function lua_clearcookies(L: Plua_State): Integer; cdecl;
+begin
+  Result := 0;
+  TLuaWebsiteModule(luaClassGetObject(L)).Module.CookieManager.Clear;
+end;
+
 function lua_getoption(L: Plua_State): Integer; cdecl;
 var
   m: TLuaWebsiteModule;
@@ -745,7 +847,7 @@ var
   o: TObject;
 begin
   m := TLuaWebsiteModule(luaClassGetObject(L));
-  i:=m.Options.IndexOf(lua_tostring(L, 1));
+  i:=m.Options.IndexOf(luaGetString(L, 1));
   Result := 1;
   if i = -1 then
     lua_pushnil(L)
@@ -781,11 +883,12 @@ begin
 end;
 
 const
-  methods: packed array [0..5] of luaL_Reg = (
+  methods: packed array [0..6] of luaL_Reg = (
     (name: 'AddOptionCheckBox'; func: @lua_addoptioncheckbox),
     (name: 'AddOptionEdit'; func: @lua_addoptionedit),
     (name: 'AddOptionSpinEdit'; func: @lua_addoptionspinedit),
     (name: 'AddOptionCombobox'; func: @lua_addoptioncombobox),
+    (name: 'ClearCookies'; func: @lua_clearcookies),
     (name: 'GetOption'; func: @lua_getoption),
     (name: nil; func: nil)
     );
@@ -798,8 +901,8 @@ begin
     luaClassAddBooleanProperty(L, MetaTable, 'Enabled', @Enabled);
     luaClassAddStringProperty(L, MetaTable, 'Username', @Username);
     luaClassAddStringProperty(L, MetaTable, 'Password', @Password);
-    luaClassAddStringProperty(L, MetaTable, 'Cookies', @Cookies);
     luaClassAddIntegerProperty(L, MetaTable, 'Status', @Status);
+    luaClassAddObject(L, MetaTable, Guardian, 'Guardian', @luaCriticalSectionAddMetaTable);
   end;
 end;
 
@@ -808,6 +911,7 @@ procedure luaWebsiteModuleAddMetaTable(L: Plua_State; Obj: Pointer;
 begin
   with TLuaWebsiteModule(Obj) do
   begin
+    luaClassAddObject(L, MetaTable, Module.Guardian, 'Guardian', @luaCriticalSectionAddMetaTable);
     luaClassAddStringProperty(L, MetaTable, 'Website', @Module.Website);
     luaClassAddStringProperty(L, MetaTable, 'RootURL', @Module.RootURL);
     luaClassAddStringProperty(L, MetaTable, 'Category', @Module.Category);

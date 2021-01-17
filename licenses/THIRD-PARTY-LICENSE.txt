@@ -1,0 +1,178 @@
+* Synapse
+
+    Copyright (c)1999-2002, Lukas Gebauer                                       
+    All rights reserved.                                                        
+                                                                                
+    Redistribution and use in source and binary forms, with or without          
+    modification, are permitted provided that the following conditions are met: 
+                                                                                
+    Redistributions of source code must retain the above copyright notice, this 
+    list of conditions and the following disclaimer.                            
+                                                                                
+    Redistributions in binary form must reproduce the above copyright notice,   
+    this list of conditions and the following disclaimer in the documentation   
+    and/or other materials provided with the distribution.                      
+                                                                                
+    Neither the name of Lukas Gebauer nor the names of its contributors may     
+    be used to endorse or promote products derived from this software without   
+    specific prior written permission.                                          
+                                                                                
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+    AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   
+    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  
+    ARE DISCLAIMED. IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE FOR 
+    ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL      
+    DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  
+    SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT          
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   
+    OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH 
+    DAMAGE.                                                                     
+
+* RichMemo
+
+    Author: Dmitry 'skalogryz' Boyarintsev 
+
+    *****************************************************************************
+    *                                                                           *
+    *  This file is part of the Lazarus Component Library (LCL)                 *
+    *                                                                           *
+    *  See the file COPYING.modifiedLGPL.txt, included in this distribution,    *
+    *  for details about the copyright.                                         *
+    *                                                                           *
+    *  This program is distributed in the hope that it will be useful,          *
+    *  but WITHOUT ANY WARRANTY; without even the implied warranty of           *
+    *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                     *
+    *                                                                           *
+    *****************************************************************************
+
+
+* Virtual Treeview
+
+    The contents of this file are subject to the Mozilla Public License
+    Version 1.1 (the "License"); you may not use this file except in compliance
+    with the License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
+   
+    Alternatively, you may redistribute this library, use and/or modify it under the terms of the
+    GNU Lesser General Public License as published by the Free Software Foundation;
+    either version 2.1 of the License, or (at your option) any later version.
+    You may obtain a copy of the LGPL at http://www.gnu.org/copyleft/.
+   
+    Software distributed under the License is distributed on an "AS IS" basis,
+    WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License for the
+    specific language governing rights and limitations under the License.
+   
+    The original code is VirtualTrees.pas, released September 30, 2000.
+   
+    The initial developer of the original code is digital publishing AG (Munich, Germany, www.digitalpublishing.de),
+    written by Mike Lischke (public@soft-gems.net, www.soft-gems.net).
+   
+    Portions created by digital publishing AG are Copyright
+    (C) 1999-2001 digital publishing AG. All Rights Reserved.
+   ----------------------------------------------------------------------------------------------------------------------
+   
+    For a list of recent changes please see file CHANGES.TXT
+   
+    Credits for their valuable assistance and code donations go to:
+      Freddy Ertl, Marian Aldenh?vel, Thomas Bogenrieder, Jim Kuenemann, Werner Lehmann, Jens Treichler,
+      Paul Gallagher (IBO tree), Ondrej Kelle, Ronaldo Melo Ferraz, Heri Bender, Roland Bed?rftig (BCB)
+      Anthony Mills, Alexander Egorushkin (BCB), Mathias Torell (BCB), Frank van den Bergh, Vadim Sedulin, Peter Evans,
+      Milan Vandrovec (BCB), Steve Moss, Joe White, David Clark, Anders Thomsen, Igor Afanasyev, Eugene Programmer,
+      Corbin Dunn, Richard Pringle, Uli Gerhardt, Azza, Igor Savkic, Daniel Bauten, Timo Tegtmeier, Dmitry Zegebart,
+      Andreas Hausladen, Joachim Marder
+    Beta testers:
+      Freddy Ertl, Hans-J?rgen Schnorrenberg, Werner Lehmann, Jim Kueneman, Vadim Sedulin, Moritz Franckenstein,
+      Wim van der Vegt, Franc v/d Westelaken
+    Indirect contribution (via publicly accessible work of those persons):
+      Alex Denissov, Hiroyuki Hori (MMXAsm expert)
+    Documentation:
+      Markus Spoettl and toolsfactory GbR (http://www.doc-o-matic.com/, sponsoring Soft Gems development
+      with a free copy of the Doc-O-Matic help authoring system), Sven H. (Step by step tutorial)
+    CLX:
+      Dmitri Dmitrienko (initial developer)
+    Source repository:
+      https://code.google.com/p/virtual-treeview/source/
+    Accessability implementation:
+      Marco Zehe (with help from Sebastian Modersohn)
+    LCL Port:
+      Luiz Américo Pereira Câmara
+
+
+* GZipUtils
+
+    Copyright (C) 2014 Udo Schmal
+    
+
+* NaturalSortUnit
+
+    Copyright (C) 2015 Antônio Galvão/Rik van Kekem
+
+    This is the file COPYING.modifiedLGPL. All files contain headers showing the
+    appropriate license. See there if this modification can be applied.
+
+    These files are distributed under the Library GNU General Public License
+    (see the file COPYING.LGPL) with the following modification:
+
+    As a special exception, the copyright holders of this library give you
+    permission to link this library with independent modules to produce an
+    executable, regardless of the license terms of these independent modules,
+    and to copy and distribute the resulting executable under terms of your choice,
+    provided that you also meet, for each linked independent module, the terms
+    and conditions of the license of that module. An independent module is a
+    module which is not derived from or based on this library. If you modify this
+    library, you may extend this exception to your version of the library, but
+    you are not obligated to do so. If you do not wish to do so, delete this
+    exception statement from your version.
+
+
+    If you didn't receive a copy of the file COPYING.LGPL, contact:
+          Free Software Foundation, Inc.,
+          675 Mass Ave
+          Cambridge, MA  02139
+          USA
+
+
+* Internet Tools
+
+    Copyright (C) 2008 - 2015 Benito van der Zander (BeniBela)
+                              benito@benibela.de
+                              www.benibela.de
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+* DelphiDuktape
+
+    Copyright (c) 2018 by Grijjy, Inc.
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice, this
+       list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright notice,
+       this list of conditions and the following disclaimer in the documentation
+       and/or other materials provided with the distribution.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+    ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+    WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+    DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+    ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+    (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+    ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+    (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+    SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.

@@ -11,8 +11,8 @@ interface
 
 uses
   Classes, SysUtils, fgl, uData, uDownloadsManager, FMDOptions, httpsendthread,
-  WebsiteModulesSettings, LazLogger, Cloudflare, RegExpr, fpjson, jsonparser,
-  jsonscanner, fpjsonrtti;
+  WebsiteModulesSettings, Process, Multilog, LazLogger, Cloudflare, RegExpr, fpjson, jsonparser,
+  jsonscanner, fpjsonrtti, uBaseUnit, httpcookiemanager, syncobjs;
 
 const
   MODULE_NOT_FOUND = -1;
@@ -73,16 +73,18 @@ type
 
   TWebsiteModuleAccount = class
   private
-    FCookies: String;
     FEnabled: Boolean;
     FPassword: String;
     FStatus: TAccountStatus;
     FUsername: String;
+  public
+    Guardian: TCriticalSection;
+    constructor Create;
+    destructor Destroy; override;
   published
     property Enabled: Boolean read FEnabled write FEnabled;
     property Username: String read FUsername write FUsername;
     property Password: String read FPassword write FPassword;
-    property Cookies: String read FCookies write FCookies;
     property Status: TAccountStatus read FStatus write FStatus;
   end;
 
@@ -99,6 +101,7 @@ type
     FTotalDirectory: Integer;
     FCloudflareCF: TCFProps;
     FCloudflareEnabled: Boolean;
+    FCookieManager: THTTPCookieManager;
     procedure SetAccountSupport(AValue: Boolean);
     procedure SetCloudflareEnabled(AValue: Boolean);
     procedure CheckCloudflareEnabled(const AHTTP: THTTPSendThread);
@@ -107,6 +110,7 @@ type
     procedure AddOption(const AOptionType: TWebsiteOptionType;
       const ABindValue: Pointer; const AName: String; const ACaption: PString; const AItems: PString = nil);
   public
+    Guardian: TCriticalSection;
     Tag: Integer;
     TagPtr: Pointer;
     Website: String;
@@ -165,6 +169,7 @@ type
     property Settings: TWebsiteModuleSettings read FSettings write FSettings;
     property AccountSupport: Boolean read FAccountSupport write SetAccountSupport;
     property Account: TWebsiteModuleAccount read FAccount write FAccount;
+    property CookieManager: THTTPCookieManager read FCookieManager;
   end;
 
   TModuleContainers = specialize TFPGList<TModuleContainer>;
@@ -296,6 +301,7 @@ function CleanOptionName(const S: String): String;
 
 implementation
 
+uses
 {$I ModuleList.inc}
 
 var
@@ -321,6 +327,19 @@ begin
       Inc(i);
 end;
 
+{ TWebsiteModuleAccount }
+
+constructor TWebsiteModuleAccount.Create;
+begin
+  Guardian := TCriticalSection.Create;
+end;
+
+destructor TWebsiteModuleAccount.Destroy;
+begin
+  Guardian.Free;
+  inherited Destroy;
+end;
+
 { TModuleContainer }
 
 procedure TModuleContainer.SetCloudflareEnabled(AValue: Boolean);
@@ -328,7 +347,7 @@ begin
   if FCloudflareEnabled = AValue then Exit;
   FCloudflareEnabled := AValue;
   if FCloudflareEnabled then
-    FCloudflareCF := TCFProps.Create
+    FCloudflareCF := TCFProps.Create(self)
   else
   begin
     FCloudflareCF.Free;
@@ -377,6 +396,7 @@ end;
 
 constructor TModuleContainer.Create;
 begin
+  Guardian := TCriticalSection.Create;
   FSettings := TWebsiteModuleSettings.Create;
   FID := -1;
   ActiveTaskCount := 0;
@@ -389,6 +409,7 @@ begin
   TotalDirectory := 1;
   CurrentDirectoryIndex := 0;
   CloudflareEnabled := True;
+  FCookieManager := THTTPCookieManager.Create;
 end;
 
 destructor TModuleContainer.Destroy;
@@ -400,6 +421,8 @@ begin
   if Assigned(FAccount) then
     FAccount.Free;
   FSettings.Free;
+  Guardian.Free;
+  FCookieManager.Free;
   inherited Destroy;
 end;
 
@@ -431,19 +454,21 @@ procedure TModuleContainer.PrepareHTTP(const AHTTP: THTTPSendThread);
 var
   s: String;
 begin
+  AHTTP.CookieManager := FCookieManager;
+  //todo: replace it with website challenges, there is more than cloudflare
   CheckCloudflareEnabled(AHTTP);
-  if not Settings.Enabled then Exit;
+  if not Settings.Enabled then exit;
   with Settings.HTTP do
   begin
+    if Cookies<>'' then
+      AHTTP.MergeCookies(Cookies);
     if UserAgent<>'' then
       AHTTP.UserAgent:=UserAgent;
-    if Cookies<>'' then
-      AHTTP.Cookies.Text:=Cookies;
     with Proxy do
     begin
       s:='';
       case Proxy.ProxyType of
-        ptDirect:AHTTP.SetNoProxy;
+        ptDefault,ptDirect:AHTTP.SetNoProxy;
         ptHTTP:s:='HTTP';
         ptSOCKS4:s:='SOCKS4';
         ptSOCKS5:s:='SOCKS5';
@@ -845,7 +870,10 @@ begin
   if ModuleExist(ModuleId) then
   with FModuleList[ModuleId] do
     if Assigned(OnLogin) then
+    begin
+      PrepareHTTP(AHTTP);
       Result := OnLogin(AHTTP, FModuleList[ModuleId]);
+    end;
 end;
 
 function TWebsiteModules.Login(const AHTTP: THTTPSendThread;
@@ -914,6 +942,8 @@ var
   fs: TFileStream;
   jp: TJSONParser;
   jo, jo2: TJSONObject;
+  j_cookies: TJSONArray;
+  c: THTTPCookie;
 begin
   if FModuleList.Count=0 then Exit;
   if not FileExists(MODULES_FILE) then Exit;
@@ -934,6 +964,7 @@ begin
   if (ja<>nil) and (ja.Count<>0) then
     try
       jd:=TJSONDeStreamer.Create(nil);
+      jd.Options:=jd.Options+[jdoIgnorePropertyErrors];
       for i:=FModuleList.Count-1 downto 0 do
         with FModuleList[i] do
         begin
@@ -965,7 +996,23 @@ begin
             begin
               jo2:=jo.Get('Account',TJSONObject(nil));
               if jo2<>nil then
+              begin
                 jd.JSONToObject(jo2,Account);
+                if Account.Username<>'' then Account.Username := DecryptString(Account.Username);
+                if Account.Password<>'' then Account.Password := DecryptString(Account.Password);
+                if Account.Status=asChecking then
+                  Account.Status:=asUnknown;
+              end;
+            end;
+            j_cookies:=jo.Get('Cookies',TJSONArray(nil));
+            if Assigned(j_cookies) then
+            begin
+              for k:=0 to j_cookies.Count-1 do
+              begin
+                c:=THTTPCookie.Create;
+                CookieManager.Cookies.Add(c);
+                jd.JSONToObject(TJSONObject(j_cookies.Items[k]), c);
+              end;
             end;
             ja.Delete(j);
           end;
@@ -980,14 +1027,15 @@ procedure TWebsiteModules.SaveToFile;
 var
   i, j: Integer;
   js: TJSONStreamer;
-  ja: TJSONArray;
-  fs: TFileStream;
+  ja, j_cookies: TJSONArray;
+  fs: TMemoryStream;
   jo: TJSONObject;
   jo2: TJSONObject;
 begin
   if FModuleList.Count=0 then Exit;
   ja:=TJSONArray.Create;
   js:=TJSONStreamer.Create(nil);
+  js.Options:=js.Options+[jsoDateTimeAsString];
   try
     for i:=0 to FModuleList.Count-1 do
       with FModuleList[i] do
@@ -1009,11 +1057,24 @@ begin
               end;
         end;
         if Account<>nil then
-          jo.Add('Account',js.ObjectToJSON(Account));
+        begin
+          jo2:=js.ObjectToJSON(Account);
+          jo2.Strings['Username']:=EncryptString(Account.Username);
+          jo2.Strings['Password']:=EncryptString(Account.Password);
+          jo.Add('Account',jo2);
+        end;
+        j_cookies:=TJSONArray.Create;
+        for j:=0 to CookieManager.Cookies.Count-1 do
+        begin
+          if CookieManager.Cookies[j].Persistent then
+            j_cookies.Add(js.ObjectToJSON(CookieManager.Cookies[j]));
+        end;
+        jo.Add('Cookies', j_cookies);
       end;
-    fs:=TFileStream.Create(MODULES_FILE,fmCreate);
+    fs:=TMemoryStream.Create;
     try
       ja.DumpJSON(fs);
+      fs.SaveToFile(MODULES_FILE);
     finally
       fs.Free;
     end;

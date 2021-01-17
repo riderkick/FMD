@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, httpsend, synautil, synacode, ssl_openssl, blcksock,
-  GZIPUtils, BaseThread, dateutils, strutils;
+  GZIPUtils, BaseThread, httpcookiemanager, dateutils, strutils;
 
 const
 
@@ -61,11 +61,11 @@ type
     FFollowRedirection: Boolean;
     FMaxRedirect: Integer;
     FAllowServerErrorResponse: Boolean;
-    FCookiesExpires: TDateTime;
     procedure SetTimeout(AValue: Integer);
     procedure OnOwnerTerminate(Sender: TObject);
   protected
-    procedure ParseCookiesExpires;
+    procedure SetHTTPCookies;
+    procedure ParseHTTPCookies;
     function InternalHTTPRequest(const Method, URL: String; const Response: TObject = nil): Boolean;
   public
     constructor Create(AOwner: TBaseThread = nil);
@@ -77,6 +77,9 @@ type
     function POST(const URL: String; const POSTData: String = ''; const Response: TObject = nil): Boolean;
     function XHR(const URL: String; const Response: TObject = nil): Boolean;
     function GetCookies: String;
+    procedure MergeCookies(const ACookies: String);
+    function GetLastModified: TDateTime;
+    function GetOriginalFileName: String;
     function ThreadTerminated: Boolean;
     procedure RemoveCookie(const CookieName: String);
     procedure SetProxy(const ProxyType, Host, Port, User, Pass: String);
@@ -84,19 +87,21 @@ type
     procedure SetNoProxy;
     procedure SetDefaultProxy;
     procedure Reset;
+    procedure ResetBasic;
+    procedure SaveDocumentToFile(const AFileName: String; const ATryOriginalFileName: Boolean = False; const ALastModified: TDateTime = -1);
     property Timeout: Integer read FTimeout write SetTimeout;
     property RetryCount: Integer read FRetryCount write FRetryCount;
     property GZip: Boolean read FGZip write FGZip;
     property FollowRedirection: Boolean read FFollowRedirection write FFollowRedirection;
     property AllowServerErrorResponse: Boolean read FAllowServerErrorResponse write FAllowServerErrorResponse;
     property Thread: TBaseThread read FOwner;
-    property CookiesExpires: TDateTime read FCookiesExpires;
     property MaxRedirect: Integer read FMaxRedirect write FMaxRedirect;
   public
     BeforeHTTPMethod: THTTPMethodEvent;
     AfterHTTPMethod: THTTPMethodEvent;
     OnHTTPRequest: THTTPRequestEvent;
     OnRedirected: THTTPMethodRedirectEvent;
+    CookieManager: THTTPCookieManager;
     property LastURL: String read FURL;
   end;
 
@@ -117,10 +122,10 @@ function FormatByteSize(const ABytes: Integer; AShowPerSecond: Boolean = False):
 
 const
   UserAgentSynapse   = 'Mozilla/4.0 (compatible; Synapse)';
-  UserAgentCURL      = 'curl/7.58.0';
+  UserAgentCURL      = 'curl/7.68.0';
   UserAgentGooglebot = 'Mozilla/5.0 (compatible; Googlebot/2.1;  http://www.google.com/bot.html)';
   UserAgentMSIE      = 'Mozilla/5.0 (Windows NT 10.0; Win64; Trident/7.0; rv:11.0) like Gecko';
-  UserAgentFirefox   = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:58.0) Gecko/20100101 Firefox/58.0';
+  UserAgentFirefox   = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:72.0) Gecko/20100101 Firefox/72.0';
   UserAgentChrome    = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.110 Safari/537.36';
   UserAgentVivaldi   = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.90 Safari/537.36 Vivaldi/1.91.867.3';
   UserAgentOpera     = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36 OPR/45.0.2552.888';
@@ -379,29 +384,16 @@ begin
   Sock.AbortSocket;
 end;
 
-procedure THTTPSendThread.ParseCookiesExpires;
-var
-  i, p: Integer;
-  c: TDateTime;
-  s: String;
+procedure THTTPSendThread.SetHTTPCookies;
 begin
-  FCookiesExpires := 0.0;
-  for i := 0 to FHeaders.Count-1 do
-    if Pos('set-cookie', LowerCase(FHeaders[i])) = 1 then
-    begin
-      s := SeparateRight(FHeaders[i], ':');
-      p := Pos('expires', lowercase(s));
-      if p <> 0 then
-      begin
-        s := Copy(s, p, Length(s));
-        s := SeparateLeft(SeparateRight(s,'='),';');
-        s := Trim(SeparateLeft(s, 'GMT'));
-        c := DecodeRfcDateTime(s);
-        if (FCookiesExpires = 0.0) or (c < FCookiesExpires) then
-          FCookiesExpires := c;
-      end;
-    end;
-  write
+  if Assigned(CookieManager) then
+    CookieManager.SetCookies(FURL, Self);
+end;
+
+procedure THTTPSendThread.ParseHTTPCookies;
+begin
+  if Assigned(CookieManager) then
+    CookieManager.AddServerCookies(FURL, Self);
 end;
 
 function THTTPSendThread.InternalHTTPRequest(const Method, URL: String;
@@ -422,6 +414,7 @@ begin
   Protocol := '1.1';
   Headers.NameValueSeparator := ':';
   Cookies.NameValueSeparator := '=';
+  Cookies.Delimiter := ';';
   FGZip := True;
   FFollowRedirection := True;
   FAllowServerErrorResponse := False;
@@ -467,9 +460,9 @@ begin
   aurl:=URL;
   if Assigned(BeforeHTTPMethod) then
     BeforeHTTPMethod(Self, amethod, aurl);
-  FCookiesExpires := 0.0;
+  SetHTTPCookies;
   Result := inherited HTTPMethod(amethod, aurl);
-  ParseCookiesExpires;
+  ParseHTTPCookies;
   if Assigned(AfterHTTPMethod) then
     AfterHTTPMethod(Self, amethod, aurl);
 end;
@@ -619,6 +612,37 @@ begin
     end;
 end;
 
+procedure THTTPSendThread.MergeCookies(const ACookies: String);
+var
+  s: String;
+begin
+  for s in ACookies.Split(';') do
+  begin
+    if Pos('=', s) > 0 then
+      Cookies.Values[SeparateLeft(s,'=')] := SeparateRight(s,'=');
+  end;
+end;
+
+function THTTPSendThread.GetLastModified: TDateTime;
+var
+  s: String;
+begin
+  Result := Now;
+  s := Trim(Headers.Values['last-modified']);
+  if s <> '' then
+    Result := DecodeRfcDateTime(s);
+end;
+
+function THTTPSendThread.GetOriginalFileName: String;
+var
+  s: String;
+begin
+  Result := '';
+  s := Headers.Values['content-disposition'];
+  if s <> '' then
+    Result := GetBetween('filename="', '"', s);
+end;
+
 function THTTPSendThread.ThreadTerminated: Boolean;
 begin
   if Assigned(FOwner) then
@@ -727,6 +751,30 @@ begin
   Headers.Values['Accept-Charset'] := ' utf8';
   Headers.Values['Accept-Language'] := ' en-US,en;q=0.8';
   if FGZip then Headers.Values['Accept-Encoding'] := ' gzip, deflate';
+end;
+
+procedure THTTPSendThread.ResetBasic;
+begin
+  Clear;
+  if FGZip then Headers.Values['Accept-Encoding'] := ' gzip, deflate';
+end;
+
+procedure THTTPSendThread.SaveDocumentToFile(const AFileName: String;
+  const ATryOriginalFileName: Boolean; const ALastModified: TDateTime);
+var
+  f: String;
+  d: TDateTime;
+begin
+  d := ALastModified;
+  if d = -1 then
+    d := GetLastModified;
+  f := '';
+  if ATryOriginalFileName then
+    f := GetOriginalFileName;
+  if f = '' then f := AFileName;
+  Document.SaveToFile(f);
+  if FileExists(AFileName) then
+    FileSetDate(AFileName, DateTimeToFileDate(d));
 end;
 
 initialization

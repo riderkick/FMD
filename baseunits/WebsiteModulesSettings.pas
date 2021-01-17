@@ -42,6 +42,18 @@ type
     property UserAgent: String read FUserAgent write FUserAgent;
     property Proxy: TProxySettings read FProxy write FProxy;
   end;
+  
+  { TOverrideSettings }
+  
+  TOverrideSettings = class
+  private
+    FSaveToPath: String;
+  public
+    constructor Create;
+    destructor Destroy; override;
+  published
+    property SaveToPath: String read FSaveToPath write FSaveToPath;
+  end;
 
   { TWebsiteModuleSettings }
 
@@ -49,6 +61,7 @@ type
   private
     FEnabled: Boolean;
     FHTTP: THTTPSettings;
+    FOverrideSettings: TOverrideSettings;
     FMaxConnectionLimit: Integer;
     FMaxTaskLimit: Integer;
     FMaxThreadPerTaskLimit: Integer;
@@ -65,6 +78,7 @@ type
     property UpdateListNumberOfThread: Integer read FUpdateListNumberOfThread write FUpdateListNumberOfThread default 0;
     property UpdateListDirectoryPageNumber: Integer read FUpdateListDirectoryPageNumber write FUpdateListDirectoryPageNumber default 0;
     property HTTP: THTTPSettings read FHTTP write FHTTP;
+    property OverrideSettings: TOverrideSettings read FOverrideSettings write FOverrideSettings;
   end;
 
 implementation
@@ -82,16 +96,30 @@ begin
   inherited Destroy;
 end;
 
+{ TOverrideSettings }
+
+constructor TOverrideSettings.Create;
+begin
+  
+end;
+
+destructor TOverrideSettings.Destroy;
+begin
+  inherited Destroy;
+end;
+
 { TWebsiteModuleSettings }
 
 constructor TWebsiteModuleSettings.Create;
 begin
   HTTP:=THTTPSettings.Create;
+  OverrideSettings:=TOverrideSettings.Create;
 end;
 
 destructor TWebsiteModuleSettings.Destroy;
 begin
   HTTP.Free;
+  OverrideSettings.Free;
   inherited Destroy;
 end;
 

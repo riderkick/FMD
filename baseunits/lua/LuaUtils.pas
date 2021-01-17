@@ -28,6 +28,7 @@ procedure luaPushBooleanGlobal(L: Plua_State; Name: PAnsiChar; B: Boolean);
 procedure luaPushUserData(L: Plua_State; U: Pointer); overload; inline;
 procedure luaPushUserData(L: Plua_State; U: Pointer; var UIndex: Integer); overload; inline;
 function luaGetUserData(L: Plua_State; idx: Integer): Pointer; inline;
+function luaGetString(L: Plua_State; idx: Integer): String; inline;
 
 function LuaToString(L: Plua_State; Idx: Integer): String;
 function LuaStackToString(L: Plua_State): String;
@@ -130,13 +131,21 @@ begin
   Result := PPointer(lua_touserdata(L, idx))^;
 end;
 
+function luaGetString(L: Plua_State; idx: Integer): String;
+var
+  slen: size_t;
+begin
+  Result := lua_tolstring(L, idx, @slen);
+  SetLength(Result, slen);
+end;
+
 function LuaToString(L: Plua_State; Idx: Integer): String;
 begin
   if lua_isuserdata(L, Idx) then
     Result := 'userdata: ' + hexStr(lua_touserdata(L, Idx))
   else
   if lua_isstring(L, Idx) then
-    Result := 'string: ' + lua_tostring(L, Idx)
+    Result := 'string: ' + luaGetString(L, Idx)
   else
   if lua_isinteger(L, Idx) then
     Result := 'integer: ' + IntToStr(lua_tointeger(L, Idx))

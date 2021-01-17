@@ -26,7 +26,7 @@ interface
 
 uses
   Classes, SysUtils, strutils, gettext, LazFileUtils, LazUTF8, LCLTranslator,
-  Translations, LResources, Forms;
+  Translations, LResources, Forms, LCLVersion;
 
 type
   TLanguageItem = record
@@ -499,7 +499,7 @@ var
 
   function SetLang(const lang: string; appname: string = ''): Boolean;
   function SetLangByIndex(const Index: Integer): Boolean;
-  function GetDefaultLang: string;
+  function GetDefaultLang: string; inline;
 
 implementation
 
@@ -768,11 +768,11 @@ end;
 
 function GetDefaultLang: string;
 begin
-  {$IF FPC_FULLVERSION >= 20701}
+  {$if lcl_fullversion > 2000600}
+  Result := LCLTranslator.SetDefaultLang('');
+  {$else}
   Result := LCLTranslator.GetDefaultLang;
-  {$ELSE}
-  Result := '';
-  {$ENDIF}
+  {$ifend}
 end;
 
 initialization

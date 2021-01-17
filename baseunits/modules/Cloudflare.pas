@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, uBaseUnit, XQueryEngineHTML, httpsendthread, synautil,
-  JSUtils, RegExpr, dateutils;
+  synacode, JSUtils, RegExpr, dateutils;
 
 type
 
@@ -14,21 +14,20 @@ type
 
   TCFProps = class
   public
-    cf_clearance: string;
-    Expires: TDateTime;
+    websitemodule: TObject;
     CS: TRTLCriticalSection;
-    constructor Create;
+    constructor Create(awebsitemodule: TObject);
     destructor Destroy; override;
-    procedure Reset;
-    procedure AddCookiesTo(const ACookies: TStringList);
   end;
 
 function CFRequest(const AHTTP: THTTPSendThread; const Method, AURL: String; const Response: TObject; const CFProps: TCFProps): Boolean;
 
 implementation
 
+uses WebsiteModules, MultiLog;
+
 const
-  MIN_WAIT_TIME = 4000;
+  MIN_WAIT_TIME = 5000;
 
 function AntiBotActive(const AHTTP: THTTPSendThread): Boolean;
 var
@@ -43,10 +42,13 @@ begin
   s := '';
 end;
 
-function JSGetAnsweredURL(const Source, URL: String; var OMethod, OURL: String;
+function JSGetAnsweredURL(const Source, URL: String; var OMethod, OURL, opostdata: String;
   var OSleepTime: Integer): Boolean;
 var
-  s, meth, surl, jschl_vc, pass, jschl_answer: String;
+  meth, surl, r, jschl_vc, pass, jschl_answer,
+  body, javascript, challenge, innerHTML, i, k, domain: String;
+  re: TRegExpr;
+  ms: Integer;
 begin
   Result := False;
   if (Source = '') or (URL = '') then Exit;
@@ -61,48 +63,74 @@ begin
     try
       meth := UpperCase(XPathString('//form[@id="challenge-form"]/@method'));
       surl := XPathString('//form[@id="challenge-form"]/@action');
+      r:=xpathstring('//input[@name="r"]/@value');
       jschl_vc := XPathString('//input[@name="jschl_vc"]/@value');
       pass := XPathString('//input[@name="pass"]/@value');
     finally
       Free;
     end;
 
-  if (meth = '') or (surl = '') or (jschl_vc = '') or (pass = '') then Exit;
+  if (meth = '') or (surl = '') or (r='') or (jschl_vc = '') or (pass = '') then Exit;
 
-  s := Source;
-  with TRegExpr.Create do
-    try
-      ModifierG := False;
-      ModifierI := True;
+  re:=TRegExpr.Create;
+  try
+    body:=source;
+    // main script
+    re.Expression := '\<script type\=\"text\/javascript\"\>\n(.*?)\<\/script\>';
+    if re.Exec(body) then javascript:=re.Match[1];
 
-      Expression := 'setTimeout\(function\(\)\{\s*var.*\w,\s+(\S.+a\.value =[^;]+;)';
-      Exec(s);
-      if SubExprMatchCount > 0 then
-      begin
-        s := Match[1];
-        Expression := '\s{3,}[a-z](\s*=\s*document\.|\.).+;\r?\n';
-        s := Replace(s, '', False);
-        Expression := 't\s=\s*t\.firstChild.href;';
-        s := Replace(s, ' t = "' + URL + '";', False);
-        Expression := 'a\.value\s*=';
-        s := Replace(s, 'a =', False);
-        Expression := '^.*\.submit\(.*\},\s*(\d{4,})\).*$';
-        OSleepTime := StrToIntDef(Replace(Source, '$1', True), MIN_WAIT_TIME);
-        jschl_answer := ExecJS(s);
-      end;
-    finally
-      Free;
+    // challenge
+    re.Expression := 'setTimeout\(function\(\)\{\s*(var '+
+                     's,t,o,p,b,r,e,a,k,i,n,g,f.+?\r?\n.+?a\.value\s*=.+?)\r?\n'+
+                     '([^\{<>]*\},\s*(\d{4,}))?';
+    ms:=0;
+    if re.Exec(javascript) and (re.SubExprMatchCount>0) then begin
+      challenge:=re.Match[1];
+      if re.SubExprMatchCount=3 then ms:=StrToIntDef(re.Match[3], MIN_WAIT_TIME);
     end;
+    if ms=0 then ms:=MIN_WAIT_TIME;
+
+    //
+    innerHTML:='';
+    for i in javascript.Split([';']) do
+      if SeparateLeft(i,'=').trim = 'k' then begin
+        k:=SeparateRight(i,'=').trim(' ''');
+         re.Expression := '\<div.*?id\=\"'+k+'\".*?\>(.*?)\<\/div\>';
+         if re.Exec(body) then
+           innerHTML := re.Match[1];
+      end;
+
+    SplitURL(URL,@domain,nil,false,false);
+    challenge := Format(
+    '        var document = {'+LineEnding+
+    '            createElement: function () {'+LineEnding+
+    '              return { firstChild: { href: "http://%s/" } }'+LineEnding+
+    '            },'+LineEnding+
+    '            getElementById: function () {'+LineEnding+
+    '              return {"innerHTML": "%s"};'+LineEnding+
+    '            }'+LineEnding+
+    '          };'+LineEnding+
+    LineEnding+
+    '        %s; a.value',
+                [domain,
+                innerHTML,
+                challenge]);
+    jschl_answer := ExecJS(challenge);
+  finally
+    re.free;
+  end;
 
   if jschl_answer = '' then Exit;
+  OSleepTime:=ms;
   OMethod := meth;
-  OURL := surl + '?jschl_vc=' + jschl_vc + '&pass=' + pass + '&jschl_answer=' + jschl_answer;
+  OURL := surl;
+  opostdata:='r='+encodeurlelement(r)+'&jschl_vc='+encodeurlelement(jschl_vc)+'&pass='+encodeurlelement(pass)+'&jschl_answer='+encodeurlelement(jschl_answer);
   Result := True;
 end;
 
-function CFJS(const AHTTP: THTTPSendThread; AURL: String; var Acf_clearance: String; var AExpires: TDateTime): Boolean;
+function CFJS(const AHTTP: THTTPSendThread; AURL: String; const cfprops: TCFProps): Boolean;
 var
-  m, u, h: String;
+  m, u, h,postdata: String;
   st, sc, counter, maxretry: Integer;
 begin
   Result := False;
@@ -110,17 +138,24 @@ begin
   counter := 0;
   maxretry := AHTTP.RetryCount;
   AHTTP.RetryCount := 0;
+  m:='POST';
+  u:='';
+  h:=StringReplace(AppendURLDelim(GetHostURL(AURL)),'http://','https://',[rfIgnoreCase]);
+  postdata:='';
+  st:=MIN_WAIT_TIME;
+  // retry to solve until max retry count in connection setting
   while True do
   begin
     Inc(counter);
-    m := 'GET';
-    u := '';
-    h := AppendURLDelim(GetHostURL(AURL));
-    st := MIN_WAIT_TIME;
-    if JSGetAnsweredURL(StreamToString(AHTTP.Document), h, m, u, st) then
+    if JSGetAnsweredURL(StreamToString(AHTTP.Document), h, m, u,postdata, st) then
       if (m <> '') and (u <> '') then
       begin
         AHTTP.Reset;
+        if m='POST' then
+        begin
+          writestrtostream(ahttp.document,postdata);
+          ahttp.mimetype:='application/x-www-form-urlencoded';
+        end;
         AHTTP.Headers.Values['Referer'] := ' ' + AURL;
         if st < MIN_WAIT_TIME then st := MIN_WAIT_TIME;
         sc := 0;
@@ -130,21 +165,25 @@ begin
           Sleep(250);
         end;
         AHTTP.FollowRedirection := False;
-        if AHTTP.HTTPRequest(m, FillHost(h, u)) then
-        begin
-          Acf_clearance := AHTTP.Cookies.Values['cf_clearance'];
-          Result := Acf_clearance <> '';
-          if Result then
-            AExpires := AHTTP.CookiesExpires;
-        end;
+        AHTTP.HTTPRequest(m, FillHost(h, u));
+        Result := AHTTP.Cookies.Values['cf_clearance']<>'';
+        if AHTTP.ResultCode=403 then
+           Logger.SendError('cloudflare bypass failed, probably asking for captcha! '+AURL);
         AHTTP.FollowRedirection := True;
       end;
+    // update retry count in case user change it in the middle of process
     if AHTTP.RetryCount <> 0 then
     begin
       maxretry := AHTTP.RetryCount;
       AHTTP.RetryCount := 0;
     end;
-    if Result then Break;
+    if Result then begin
+      // if success force replace protocol to https for rooturl in modulecontainer
+      with TModuleContainer(cfprops.websitemodule) do
+        if Pos('http://',RootURL)=1 then
+          RootURL:=stringreplace(RootURL,'http://','https://',[rfIgnoreCase]);
+      Break;
+    end;
     if AHTTP.ThreadTerminated then Break;
     if (maxretry > -1) and (maxretry <= counter) then Break;
     AHTTP.Reset;
@@ -157,33 +196,19 @@ function CFRequest(const AHTTP: THTTPSendThread; const Method, AURL: String; con
 begin
   Result := False;
   if AHTTP = nil then Exit;
-  if (CFProps.Expires <> 0.0) and (Now > CFProps.Expires) then
-    CFProps.Reset;
-  CFProps.AddCookiesTo(AHTTP.Cookies);
   AHTTP.AllowServerErrorResponse := True;
   Result := AHTTP.HTTPRequest(Method, AURL);
   if AntiBotActive(AHTTP) then begin
     if TryEnterCriticalsection(CFProps.CS) > 0 then
       try
-        CFProps.Reset;
-        //AHTTP.Cookies.Clear;
-        Result := CFJS(AHTTP, AURL, CFProps.cf_clearance, CFProps.Expires);
-        // reduce the expires by 5 minutes, usually it is 24 hours or 16 hours
-        // in case of the different between local and server time
-        if Result then
-          CFProps.Expires := IncMinute(CFProps.Expires, -5);
+        Result := CFJS(AHTTP, AURL, CFProps);
       finally
         LeaveCriticalsection(CFProps.CS);
       end
-    else
-      try
-        EnterCriticalsection(CFProps.CS);
-        CFProps.AddCookiesTo(AHTTP.Cookies);
-      finally
-        LeaveCriticalsection(CFProps.CS);
-      end;
-    if not AHTTP.ThreadTerminated then
-      Result := AHTTP.HTTPRequest(Method, AURL);
+    else begin
+      if not AHTTP.ThreadTerminated then
+        Result := AHTTP.HTTPRequest(Method, AURL);
+    end;
   end;
   if Assigned(Response) then
     if Response is TStringList then
@@ -195,33 +220,16 @@ end;
 
 { TCFProps }
 
-constructor TCFProps.Create;
+constructor TCFProps.Create(awebsitemodule: TObject);
 begin
+  websitemodule:=awebsitemodule;
   InitCriticalSection(CS);
-  Reset;
 end;
 
 destructor TCFProps.Destroy;
 begin
   DoneCriticalsection(CS);
   inherited Destroy;
-end;
-
-procedure TCFProps.Reset;
-begin
-  if TryEnterCriticalsection(CS) <> 0 then
-    try
-      cf_clearance := '';
-      Expires := 0.0;
-    finally
-      LeaveCriticalsection(CS);
-    end;
-end;
-
-procedure TCFProps.AddCookiesTo(const ACookies: TStringList);
-begin
-  if cf_clearance <> '' then
-    ACookies.Values['cf_clearance'] := cf_clearance;
 end;
 
 end.

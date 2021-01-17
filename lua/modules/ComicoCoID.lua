@@ -30,7 +30,9 @@ function getpagenumber()
   task.pagelinks.clear()
   if http.get(MaybeFillHost(module.rooturl, url)) then
     x=TXQuery.Create(http.Document)
-    v=x.xpathstringall('//div[contains(@class,"_view")]/img/@src', task.pagelinks)
+    json = HexToStr(GetBetween('keyList : "', '"', x.xpathstring('//script[contains(., "keyList")]')))
+    x.ParseHTML(json)
+    x.xpathstringall('json(*).list().url', task.pagelinks)
   else
     return false
   end
@@ -70,7 +72,6 @@ function Init()
   m.website = 'ComicoCoID'
   m.rooturl = 'http://www.comico.co.id'
   m.category = 'Indonesian'
-  m.lastupdated='April 13, 2018'
   m.ongetinfo='getinfo'
   m.ongetpagenumber='getpagenumber'
   m.ongetnameandlink='getnameandlink'

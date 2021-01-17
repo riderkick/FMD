@@ -1,25 +1,24 @@
-﻿local js = require 'modules.jsunpack'
-local lz = require 'modules.lzstring'
+local js = require 'utils.jsunpack'
+local lz = require 'utils.lzstring'
 
 function getinfo()
   mangainfo.url=MaybeFillHost(module.RootURL, url)
+  http.cookies.values['isAdult']=' 1'
   if http.get(mangainfo.url) then
     x=TXQuery.Create(http.document)	
-    mangainfo.title=x.xpathstring('//div[@class="book-title"]/h1')
-    mangainfo.coverlink=MaybeFillHost(module.rooturl,x.xpathstring('//p[@class="hcover"]/img/@src'))
-    mangainfo.authors=SeparateRight(x.xpathstring('//ul[@class="detail-list cf"]/li[2]/span[2]'), '：')
-    mangainfo.genres=SeparateRight(x.xpathstring('//ul[@class="detail-list cf"]/li[2]/span[1]'), '：')
-    if Pos('连载中', x.xpathstring('//ul[@class="detail-list cf"]/li[@class="status"]')) > 0 then
-      mangainfo.status = '1'
-    else
-      mangainfo.status = '0'
-    end
-    mangainfo.summary=x.xpathstring('//div[@id="intro-all"]')
-    v=x.xpath('//div[contains(@id,"chapter-list")]/ul')
-    for i=v.count,1,-1 do
-      v1=v.get(i)
-      x.XPathHREFtitleAll('./li/a',mangainfo.chapterlinks,mangainfo.chapternames,v1)
-    end
+	
+	mangainfo.coverlink = MaybeFillHost(module.rooturl,x.xpathstring('//p[@class="hcover"]/img/@src'))
+	mangainfo.title     = x.xpathstring('//div[@class="book-title"]/h1')
+	mangainfo.authors   = SeparateRight(x.xpathstring('//ul[@class="detail-list cf"]/li[2]/span[2]'), '：')
+	mangainfo.genres    = SeparateRight(x.xpathstring('//ul[@class="detail-list cf"]/li[2]/span[1]'), '：')
+	mangainfo.status    = MangaInfoStatusIfPos(x.xpathstring('//ul[@class="detail-list cf"]/li[@class="status"]'), '连载中')
+	mangainfo.summary   = x.xpathstring('//div[@id="intro-all"]')
+
+	if x.xpath('//*[@id="checkAdult"]').count ~= 0 then
+		local s = x.xpathstring('//*[contains(@class,"chapter")]/input/@value')
+		if s~='' then x.parsehtml(lz.decompressFromBase64(s)) end
+	end
+	x.xpathhreftitleall('//*[contains(@id,"chapter-list")]/ul/li/a', mangainfo.chapterlinks, mangainfo.chapternames)
     InvertStrings(mangainfo.chapterlinks,mangainfo.chapternames)
     return no_error
   else
@@ -50,16 +49,15 @@ function getpagenumber()
     local w = js.splitstr(lz.decompressFromBase64(GetBetween(",'", "'", s)), '|')
     s = js.unpack36(text, a, c, w)
     s = s:gsub('^var%s+.+=%s*{', '{'):gsub('||{};$', ''):gsub('"status":,', '')
+    s = GetBetween("SMH.imgData(", ").preInit();", s)
     x.parsehtml(s)
     local cid = x.xpathstring('json(*).cid')
     local md5 = x.xpathstring('json(*).sl.md5')
     local path = x.xpathstring('json(*).path')
     local srv = servers[math.random(#servers)]
-    v=x.xpath('json(*).files()')
-    for i=1,v.count do
-      v1=v.get(i)
-      task.pagelinks.add(srv .. path .. v1.toString .. '?cid=' .. cid .. '&md5=' .. md5)
-    end
+	local v for _, v in ipairs(x.xpathi('json(*).files()')) do
+		task.pagelinks.add(srv .. path .. v.toString .. '?cid=' .. cid .. '&md5=' .. md5)
+	end
     return true
   else
     return false
@@ -96,7 +94,7 @@ function Init()
   m=NewModule()
   m.category='Raw'
   m.website='ManHuaGui'
-  m.rooturl='http://www.manhuagui.com'
+  m.rooturl='https://www.manhuagui.com'
   m.lastupdated='February 21, 2018'
   m.ongetinfo='getinfo'
   m.ongetpagenumber='getpagenumber'

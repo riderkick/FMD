@@ -1,12 +1,12 @@
-﻿function getinfo()
+function getinfo()
   mangainfo.url=MaybeFillHost(module.RootURL, url)
   if http.get(mangainfo.url) then
     local x=TXQuery.Create(http.document)
-    mangainfo.title=x.xpathstring('//table[@class="bt_view1"]//td[@class="bt_title"]')
-    mangainfo.coverlink=MaybeFillHost(module.RootURL, x.xpathstring('//table[@class="bt_view1"]//td[@class="bt_thumb"]//img/@src'))
-    mangainfo.authors=x.xpathstring('//table[@class="bt_view1"]//span[.="작가"]/following-sibling::span[@class="bt_data"]')
-    mangainfo.summary=x.xpathstring('//table[@class="bt_view1"]//td[@class="bt_over"]')
-    local v = x.xpath('//table[@class="web_list"]//tr/td[@class="content__title"]')
+    mangainfo.title=x.xpathstring('//meta[@name="title"]/@content')
+    mangainfo.coverlink=MaybeFillHost(module.RootURL, x.xpathstring('//*[@class="bt_thumb"]/a/img/@src'))
+    mangainfo.authors=x.xpathstring('//meta[@name="author"]/@content')
+    mangainfo.summary=x.xpathstring('//meta[@name="description"]/@content')
+    local v = x.xpath('//table[@class="web_list"]/tbody//tr/td[@class="content__title"]')
     for i = 1, v.count do
       local v1 = v.get(i)
       mangainfo.chapterlinks.add(v1.getAttribute('data-role'))
@@ -62,8 +62,7 @@ function Init()
   local m = NewModule()
   m.category = 'Raw'
   m.Website = 'Toonkor'
-  m.RootURL = 'https://toonkor.co'
-  m.lastupdated='June 6, 2018'
+  m.RootURL = 'https://tkor.pro'
   m.ongetinfo='getinfo'
   m.ongetpagenumber='getpagenumber'
   m.ongetnameandlink='getnameandlink'

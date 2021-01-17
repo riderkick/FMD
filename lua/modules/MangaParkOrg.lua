@@ -1,5 +1,6 @@
 function GetInfo()
   mangainfo.url=MaybeFillHost(module.rooturl,url)
+  http.cookies.values['set'] = 'h=1'
   if http.get(mangainfo.url) then
     local x=TXQuery.Create(http.Document)
     if mangainfo.title == '' then
@@ -35,10 +36,7 @@ function GetPageNumber()
   task.pagenumber = 0
   if http.get(MaybeFillHost(module.rooturl,url)) then
     local x=TXQuery.Create(http.Document)
-    local s = x.xpathstring('//script[contains(., "var images")]')
-    s = GetBetween("var images =", ";", s)
-    x.parsehtml(s)
-    x.xpathstringall('json(*)()', task.pagelinks)
+    x.xpathstringall('json(//script[contains(.,"var _load_pages")]/substring-after(substring-before(.,";")," = "))()/u', task.pagelinks)
     return true
   else
     return false
@@ -73,6 +71,7 @@ function Init()
   m.category='English'
   m.website='MangaParkOrg'
   m.rooturl='https://mangapark.org'
+  m.lastupdated = 'April 09, 2019'
   m.sortedlist = true
   m.ongetinfo='GetInfo'
   m.ongetpagenumber='GetPageNumber'

@@ -1,0 +1,6 @@
+{"version":1,"strings":[
+{"hash":78611287,"name":"tfrmdialogyn.caption","sourcebytes":[68,105,97,108,111,103],"value":"Dialog"},
+{"hash":180163,"name":"tfrmdialogyn.btyes.caption","sourcebytes":[38,89,101,115],"value":"&Yes"},
+{"hash":11087,"name":"tfrmdialogyn.btno.caption","sourcebytes":[38,78,111],"value":"&No"},
+{"hash":63628709,"name":"tfrmdialogyn.lbmessage.caption","sourcebytes":[108,98,77,101,115,115,97,103,101],"value":"lbMessage"}
+]}

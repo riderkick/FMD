@@ -1,0 +1,2707 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language-Team: Stella, proofread by Mereck\n"
+"Last-Translator: Stella\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Language: fr_FR\n"
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"MIME-Version: 1.0\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.3\n"
+
+#: checkupdate.rs_btncheckupdates
+#, fuzzy
+msgctxt "checkupdate.rs_btncheckupdates"
+msgid "Check for latest version"
+msgstr "Mise à jour"
+
+#: checkupdate.rs_currentversion
+msgid "Installed Version"
+msgstr ""
+
+#: checkupdate.rs_latestversion
+msgid "Latest Version   "
+msgstr ""
+
+#: checkupdate.rs_newversionfound
+msgid "New Version found!"
+msgstr ""
+
+#: dbupdater.rs_buttoncancel
+msgctxt "dbupdater.rs_buttoncancel"
+msgid "Abort"
+msgstr "Annuler"
+
+#: dbupdater.rs_downloading
+#, object-pascal-format
+msgid "Downloading %s"
+msgstr "Téléchargement de %s"
+
+#: dbupdater.rs_extracting
+#, object-pascal-format
+msgid "Extracting %s"
+msgstr "Extraction de %s"
+
+#: dbupdater.rs_faileddownload
+#, object-pascal-format
+msgid "%s: %d %s"
+msgstr "%s : %d %s"
+
+#: dbupdater.rs_failedextract
+#, object-pascal-format
+msgid "%s: failed to extract, exitstatus = %d"
+msgstr "%s : échec de l'extraction, exitstatus = %d\""
+
+#: dbupdater.rs_faileditems
+#, object-pascal-format
+msgid ""
+"Failed to finish:\n"
+"\n"
+"%s"
+msgstr ""
+"Impossible de terminer :\n"
+"\n"
+"%s"
+
+#: dbupdater.rs_faileditemstitle
+msgctxt "dbupdater.rs_faileditemstitle"
+msgid "Failed"
+msgstr "Échec"
+
+#: dbupdater.rs_failedtosave
+#, object-pascal-format
+msgid "%s: failed to save"
+msgstr "%s : impossible de sauvegarder"
+
+#: dbupdater.rs_missingzipexe
+#, object-pascal-format
+msgid "%s: Missing %s"
+msgstr "%s : %s manquant"
+
+#: frmaccountmanager.rs_accountdeleteconfirmation
+msgid "Are you sure you want to delete this account?"
+msgstr "Souhaitez-vous vraiment supprimer ce compte ?"
+
+#: frmaccountmanager.rs_checking
+msgid "Checking"
+msgstr "Vérification"
+
+#: frmaccountmanager.rs_invalid
+msgctxt "frmaccountmanager.rs_invalid"
+msgid "Invalid"
+msgstr "Invalide"
+
+#: frmaccountmanager.rs_unknown
+msgid "Unknown"
+msgstr "Inconnu"
+
+#: frmaccountmanager.rs_valid
+msgctxt "frmaccountmanager.rs_valid"
+msgid "OK"
+msgstr "OK"
+
+#: frmaccountset.rs_cantbeempty
+msgid "Username or password can't be empty!"
+msgstr "Le nom d'utilisateur et le mot de passe ne peuvent pas être vides !"
+
+#: frmimportfavorites.rs_importcompleted
+msgid "Import completed."
+msgstr "Import terminé."
+
+#: frmimportfavorites.rs_listunimportedcaption
+msgid "List of unimported manga"
+msgstr "Liste des mangas non importés"
+
+#: frmluamodulesupdater.rs_checking
+msgctxt "frmluamodulesupdater.rs_checking"
+msgid "Checking..."
+msgstr "Vérification en cours..."
+
+#: frmluamodulesupdater.rs_checkupdate
+msgctxt "frmluamodulesupdater.rs_checkupdate"
+msgid "Check update"
+msgstr "Vérifier les mises à jour"
+
+#: frmluamodulesupdater.rs_finishchecking
+msgid "Finish checking"
+msgstr "Finir la vérification"
+
+#: frmluamodulesupdater.rs_finishdownload
+msgid "Finish download"
+msgstr "Finir le téléchargement"
+
+#: frmluamodulesupdater.rs_modulesupdatedrestart
+msgid "Modules updated, restart now?"
+msgstr "Modules mis à jour, souhaitez-vous redémarrer maintenant ?"
+
+#: frmluamodulesupdater.rs_modulesupdatedtitle
+msgid "Modules updated!"
+msgstr "Modules mis à jour !"
+
+#: frmluamodulesupdater.rs_newupdatefoundlostchanges
+msgid "Modules update found, any local changes will be lost, procced?"
+msgstr ""
+"Mise à jour des modules disponible, les changements locaux seront perdus.\n"
+"Souhaitez-vous continuer ?"
+
+#: frmluamodulesupdater.rs_newupdatefoundtitle
+msgid "Modules update found!"
+msgstr "Mise à jour des modules disponible !"
+
+#: frmluamodulesupdater.rs_startdownloading
+msgid "Downloading..."
+msgstr "Téléchargement en cours..."
+
+#: frmluamodulesupdater.rs_statusdelete
+#, object-pascal-format
+msgctxt "frmluamodulesupdater.rs_statusdelete"
+msgid "%s DELETE*"
+msgstr "%s SUPPRIMER*"
+
+#: frmluamodulesupdater.rs_statusfailed
+#, object-pascal-format
+msgctxt "frmluamodulesupdater.rs_statusfailed"
+msgid "%s FAILED*"
+msgstr "%s ÉCHEC*"
+
+#: frmluamodulesupdater.rs_statusnew
+#, object-pascal-format
+msgctxt "frmluamodulesupdater.rs_statusnew"
+msgid "%s NEW*"
+msgstr "%s NOUVEAU*"
+
+#: frmluamodulesupdater.rs_statusredownloaded
+#, object-pascal-format
+msgctxt "frmluamodulesupdater.rs_statusredownloaded"
+msgid "%s REDOWNLOAD*"
+msgstr "%s RETÉLÉCHARGER*"
+
+#: frmluamodulesupdater.rs_statusupdate
+#, object-pascal-format
+msgctxt "frmluamodulesupdater.rs_statusupdate"
+msgid "%s UPDATE*"
+msgstr "%s MISE À JOUR*"
+
+#: frmmain.rs_alldownloads
+msgid "All downloads"
+msgstr "Tous les téléchargements"
+
+#: frmmain.rs_btnok
+msgctxt "frmmain.rs_btnok"
+msgid "&OK"
+msgstr "&OK"
+
+#: frmmain.rs_cancel
+msgctxt "frmmain.rs_cancel"
+msgid "Cancel"
+msgstr "Annuler"
+
+#: frmmain.rs_checking
+msgctxt "frmmain.rs_checking"
+msgid "Checking..."
+msgstr "Vérification en cours..."
+
+#: frmmain.rs_dlgcannotconnecttoserver
+msgid "Cannot connect to the server."
+msgstr "Connexion au serveur impossible."
+
+#: frmmain.rs_dlgcannotgetmangainfo
+msgid "Cannot get manga info. Please check your internet connection and try it again."
+msgstr "Impossible de récupérer les informations sur le manga. Veuillez vérifier votre connexion internet et réessayer."
+
+#: frmmain.rs_dlgdownloadcount
+msgid "Download count:"
+msgstr "Nombre de téléchargements :"
+
+#: frmmain.rs_dlgquit
+msgid "Are you sure you want to exit?"
+msgstr "Souhaitez-vous vraiment quitter le logiciel ?"
+
+#: frmmain.rs_dlgremovefavorite
+msgid "Are you sure you want to delete the favorite(s)?"
+msgstr "Souhaitez-vous vraiment supprimer ces favoris ?"
+
+#: frmmain.rs_dlgremovefinishtasks
+msgid "Are you sure you want to delete all finished tasks?"
+msgstr "Souhaitez-vous vraiment effacer les tâches complétées ?"
+
+#: frmmain.rs_dlgremoveitem
+msgid "Are you sure you want to delete this item(s)?"
+msgstr "Souhaitez-vous vraiment supprimer ces items ?"
+
+#: frmmain.rs_dlgremovetask
+msgid "Are you sure you want to delete the task(s)?"
+msgstr "Souhaitez-vous vraiment supprimer ces tâches ?"
+
+#: frmmain.rs_dlgsplitdownload
+msgctxt "frmmain.rs_dlgsplitdownload"
+msgid "Split download"
+msgstr "Scinder le téléchargement"
+
+#: frmmain.rs_dlgtitleexistindllist
+msgid ""
+"This title are already in download list.\n"
+"Do you want to download it anyway?"
+msgstr ""
+"Ce titre est déjà dans la liste des téléchargements.\n"
+"Souhaitez-vous le télécharger quand même ?"
+
+#: frmmain.rs_dlgtypeinnewchapter
+msgid "Type in new chapter:"
+msgstr "Entrez un nouveau chapitre :"
+
+#: frmmain.rs_dlgtypeinnewsavepath
+msgid "Type in new save path:"
+msgstr "Entrez un nouveau chemin de sauvegarde :"
+
+#: frmmain.rs_dlgupdaterisrunning
+msgid "Updater is running!"
+msgstr "L'outil de mise à jour est en cours d'exécution !"
+
+#: frmmain.rs_dlgupdaterwanttoupdatedb
+msgid "Do you want to download manga list from the server?"
+msgstr "Souhaitez-vous télécharger le catalogue depuis le serveur ?"
+
+#: frmmain.rs_dlgurlnotsupport
+msgid "URL not supported!"
+msgstr "Adresse URL incompatible !"
+
+#: frmmain.rs_droptargetmodeitems
+msgid ""
+"Download all\n"
+"Add to favorites"
+msgstr ""
+"Tout télécharger\n"
+"Ajouter aux favoris"
+
+#: frmmain.rs_favoritesshowall
+msgctxt "frmmain.rs_favoritesshowall"
+msgid "All"
+msgstr "Tous"
+
+#: frmmain.rs_favoritesshowdisabled
+msgctxt "frmmain.rs_favoritesshowdisabled"
+msgid "Disabled"
+msgstr "Désactivés"
+
+#: frmmain.rs_favoritesshowenabled
+msgctxt "frmmain.rs_favoritesshowenabled"
+msgid "Enabled"
+msgstr "Activés"
+
+#: frmmain.rs_filterstatusitems
+msgid ""
+"Completed\n"
+"Ongoing\n"
+"<none>"
+msgstr ""
+"Terminé\n"
+"En cours\n"
+"<non renseigné>"
+
+#: frmmain.rs_fiveyears
+msgid "Five years"
+msgstr "Cinq ans"
+
+#: frmmain.rs_fmdalreadyrunning
+msgid "Free Manga Downloader already running!"
+msgstr "Free Manga Downloader est déjà en cours d'exécution !"
+
+#: frmmain.rs_fouryears
+msgid "Four years"
+msgstr "Quatre ans"
+
+#: frmmain.rs_hintfavoriteproblem
+msgid ""
+"There is a problem with this data!\n"
+"Removing and re-adding this data may fix the problem."
+msgstr ""
+"Il y a un problème avec ces données !\n"
+"Supprimer et réajouter ces données pourrait résoudre le problème."
+
+#: frmmain.rs_history
+msgid "History"
+msgstr "Historique"
+
+#: frmmain.rs_import
+msgid "Import"
+msgstr "Import"
+
+#: frmmain.rs_infoartists
+msgid "Artist(s):"
+msgstr "Artiste·s :"
+
+#: frmmain.rs_infoauthors
+msgid "Author(s):"
+msgstr "Auteur·e·s :"
+
+#: frmmain.rs_infogenres
+msgid "Genre(s):"
+msgstr "Genre·s :"
+
+#: frmmain.rs_infostatus
+msgid "Status:"
+msgstr "Statut :"
+
+#: frmmain.rs_infosummary
+msgid "Summary:"
+msgstr "Résumé :"
+
+#: frmmain.rs_infotitle
+msgid "Title:"
+msgstr "Titre :"
+
+#: frmmain.rs_infowebsite
+msgctxt "frmmain.rs_infowebsite"
+msgid "Website:"
+msgstr "Site :"
+
+#: frmmain.rs_inprogress
+msgid "In progress"
+msgstr "En cours"
+
+#: frmmain.rs_lblautochecknewchapterminute
+#, object-pascal-format
+msgctxt "frmmain.rs_lblautochecknewchapterminute"
+msgid "Auto check for new chapter every %d minutes"
+msgstr "Vérification toutes les %d minutes"
+
+#: frmmain.rs_lbloptionexternalparamshint
+#, object-pascal-format
+msgid ""
+"%s : Path to the manga\n"
+"%s : Chapter filename\n"
+"\n"
+"Example : \"%s%s\""
+msgstr ""
+"%s : chemin du manga\n"
+"%s : nom du fichier du chapitre\n"
+"\n"
+"Exemple : \"%s%s\""
+
+#: frmmain.rs_loading
+msgid "Loading ..."
+msgstr "Chargement..."
+
+#: frmmain.rs_modeall
+#, object-pascal-format
+msgid "Mode: Show all (%d)"
+msgstr "Mode : Tout montrer (%d)"
+
+#: frmmain.rs_modefiltered
+#, object-pascal-format
+msgid "Mode: Filtered (%d)"
+msgstr "Mode : Filtré (%d)"
+
+#: frmmain.rs_modesearching
+msgctxt "frmmain.rs_modesearching"
+msgid "Mode: Searching..."
+msgstr "Mode : Recherche..."
+
+#: frmmain.rs_onemonth
+msgid "One month"
+msgstr "Un mois"
+
+#: frmmain.rs_oneweek
+msgid "One week"
+msgstr "Une semaine"
+
+#: frmmain.rs_oneyear
+msgid "One year"
+msgstr "Un an"
+
+#: frmmain.rs_optioncompress
+msgid ""
+"None\n"
+"ZIP\n"
+"CBZ\n"
+"PDF\n"
+"EPUB"
+msgstr ""
+"Aucun\n"
+"ZIP\n"
+"CBZ\n"
+"PDF\n"
+"EPUB"
+
+#: frmmain.rs_optionfmddoitems
+msgid ""
+"Nothing\n"
+"Exit\n"
+"Shutdown\n"
+"Hibernate"
+msgstr ""
+"Ne rien faire\n"
+"Quitter le logiciel\n"
+"Éteindre l'ordinateur\n"
+"Mettre en veille prolongée"
+
+#: frmmain.rs_revision
+msgid "Revision"
+msgstr ""
+
+#: frmmain.rs_selected
+#, object-pascal-format
+msgid "Selected: %d"
+msgstr "Sélectionnés : %d"
+
+#: frmmain.rs_sixmonths
+msgid "Six months"
+msgstr "Six mois"
+
+#: frmmain.rs_software
+msgid "Software"
+msgstr "Logiciel"
+
+#: frmmain.rs_softwarepath
+msgctxt "frmmain.rs_softwarepath"
+msgid "Path to the software (e.g. C:\\MangaDownloader)"
+msgstr "Répertoire du logiciel (par ex. C:\\MangaDownloader)"
+
+#: frmmain.rs_tenyears
+msgid "Ten years"
+msgstr "Dix ans"
+
+#: frmmain.rs_threeyears
+msgid "Three years"
+msgstr "Trois ans"
+
+#: frmmain.rs_today
+msgid "Today"
+msgstr "Aujourd'hui"
+
+#: frmmain.rs_twoyears
+msgid "Two years"
+msgstr "Deux ans"
+
+#: frmmain.rs_version
+msgid "Version"
+msgstr ""
+
+#: frmmain.rs_webpconvertto
+msgid ""
+"WebP\n"
+"PNG\n"
+"JPEG"
+msgstr ""
+"WebP\n"
+"PNG\n"
+"JPEG"
+
+#: frmmain.rs_webppnglevel
+msgid ""
+"None\n"
+"Fastest\n"
+"Default\n"
+"Maximum"
+msgstr ""
+"Aucun\n"
+"Plus rapide\n"
+"Par défaut\n"
+"Maximum"
+
+#: frmmain.rs_wronginput
+msgid "Invalid input!"
+msgstr "Entrée invalide !"
+
+#: frmmain.rs_yesterday
+msgid "Yesterday"
+msgstr "Hier"
+
+#: frmshutdowncounter.rs_lblmessageexit
+#, object-pascal-format
+msgid "FMD will exit in %d second."
+msgstr "FMD va se fermer dans %d seconde·s."
+
+#: frmshutdowncounter.rs_lblmessagehibernate
+#, object-pascal-format
+msgid "System will hibernate in %d second."
+msgstr "L'ordinateur va se mettre en veille prolongée dans %d seconde·s."
+
+#: frmshutdowncounter.rs_lblmessageshutdown
+#, object-pascal-format
+msgid "System will shutdown in %d second."
+msgstr "L'ordinateur va s'éteindre dans %d seconde·s."
+
+#: frmtransferfavorites.rs_all
+msgctxt "frmtransferfavorites.rs_all"
+msgid "All"
+msgstr "Tout"
+
+#: frmtransferfavorites.rs_invalid
+msgctxt "frmtransferfavorites.rs_invalid"
+msgid "Invalid"
+msgstr "Invalides"
+
+#: frmtransferfavorites.rs_valid
+msgctxt "frmtransferfavorites.rs_valid"
+msgid "Valid"
+msgstr "Valides"
+
+#: selfupdater.rs_buttoncancel
+msgctxt "selfupdater.rs_buttoncancel"
+msgid "Abort"
+msgstr "Annuler"
+
+#: selfupdater.rs_downloading
+#, object-pascal-format
+msgid "Downloading new version %s"
+msgstr "Téléchargement de la nouvelle version %s"
+
+#: selfupdater.rs_faileddownload
+#, object-pascal-format
+msgid ""
+"Failed to download new version %s\n"
+"\n"
+"%d %s"
+msgstr ""
+"Échec du téléchargement de la nouvelle version %s\n"
+"\n"
+"%d %s"
+
+#: selfupdater.rs_failedextract
+#, object-pascal-format
+msgid "Failed to extract %s, exitstatus = %d"
+msgstr "Échec de l'extraction de %s, exitstatus = %d"
+
+#: selfupdater.rs_failedtitle
+msgctxt "selfupdater.rs_failedtitle"
+msgid "Failed"
+msgstr "Échec"
+
+#: selfupdater.rs_failedtosave
+#, object-pascal-format
+msgid "Failed to save %s"
+msgstr "Échec de l'enregistrement de %s"
+
+#: selfupdater.rs_finishrestart
+msgid "Download update package finished, restart to proceed?"
+msgstr "Téléchargement de la mise à jour terminé, redémarrer pour continuer ?"
+
+#: selfupdater.rs_finishrestarttitle
+msgid "Download finished"
+msgstr "Téléchargement terminé"
+
+#: selfupdater.rs_missingfile
+#, object-pascal-format
+msgctxt "selfupdater.rs_missingfile"
+msgid "Missing %s"
+msgstr "Fichier %s manquant"
+
+#: simpleexception.sbuttoncontinue
+msgid "&Continue"
+msgstr ""
+
+#: simpleexception.sbuttondetails
+msgid "&Show Details"
+msgstr ""
+
+#: simpleexception.sbuttonterminate
+msgid "&Terminate"
+msgstr ""
+
+#: simpleexception.scanthandleexception
+msgid "Can't handle exception"
+msgstr ""
+
+#: simpleexception.scheckboxignoreexception
+msgid "Ignore this exception for next time"
+msgstr ""
+
+#: simpleexception.sexceptioncaption
+msgid "An error occured during program execution:"
+msgstr ""
+
+#: simpleexception.sexceptiondialogtitle
+msgid "Exception Info"
+msgstr ""
+
+#: taccountmanagerform.btedit.caption
+msgctxt "taccountmanagerform.btedit.caption"
+msgid "Edit"
+msgstr "Éditer"
+
+#: taccountmanagerform.btrefresh.caption
+msgid "Refresh"
+msgstr "Actualiser"
+
+#: taccountmanagerform.caption
+msgid "AccountManagerForm"
+msgstr "AccountManagerForm"
+
+#: taccountmanagerform.vtaccountlist.header.columns[1].text
+msgctxt "TACCOUNTMANAGERFORM.VTACCOUNTLIST.HEADER.COLUMNS[1].TEXT"
+msgid "Website"
+msgstr "Site"
+
+#: taccountmanagerform.vtaccountlist.header.columns[2].text
+msgctxt "TACCOUNTMANAGERFORM.VTACCOUNTLIST.HEADER.COLUMNS[2].TEXT"
+msgid "Username"
+msgstr "Nom d'utilisateur"
+
+#: taccountmanagerform.vtaccountlist.header.columns[3].text
+msgctxt "TACCOUNTMANAGERFORM.VTACCOUNTLIST.HEADER.COLUMNS[3].TEXT"
+msgid "Status"
+msgstr "Statut"
+
+#: taccountsetform.btcancel.caption
+msgctxt "TACCOUNTSETFORM.BTCANCEL.CAPTION"
+msgid "Cancel"
+msgstr "Annuler"
+
+#: taccountsetform.btok.caption
+msgid "Ok"
+msgstr "Ok"
+
+#: taccountsetform.caption
+msgid "Account"
+msgstr "Compte"
+
+#: taccountsetform.ckshowpassword.caption
+msgid "Show password"
+msgstr "Montrer le mot de passe"
+
+#: taccountsetform.edpassword.texthint
+msgctxt "TACCOUNTSETFORM.EDPASSWORD.TEXTHINT"
+msgid "Password"
+msgstr "Mot de passe"
+
+#: taccountsetform.edusername.texthint
+msgctxt "TACCOUNTSETFORM.EDUSERNAME.TEXTHINT"
+msgid "Username"
+msgstr "Nom d'utilisateur"
+
+#: taccountsetform.label2.caption
+msgctxt "TACCOUNTSETFORM.LABEL2.CAPTION"
+msgid "Username"
+msgstr "Nom d'utilisateur"
+
+#: taccountsetform.label3.caption
+msgctxt "TACCOUNTSETFORM.LABEL3.CAPTION"
+msgid "Password"
+msgstr "Mot de passe"
+
+#: tcustomcolorform.caption
+msgid "CustomColorForm"
+msgstr "CustomColorForm"
+
+#: tcustomcolorform.tsbasiclist.caption
+msgid "Basic list"
+msgstr "Toutes les listes"
+
+#: tcustomcolorform.tschapterlist.caption
+msgid "Chapter list"
+msgstr "Chapitres"
+
+#: tcustomcolorform.tsfavoritelist.caption
+msgid "Favorite list"
+msgstr "Favoris"
+
+#: tcustomcolorform.tsmangalist.caption
+msgid "Manga list"
+msgstr "Catalogue"
+
+#: tformdroptarget.miaddtofavorites.caption
+msgctxt "TFORMDROPTARGET.MIADDTOFAVORITES.CAPTION"
+msgid "Add to favorites"
+msgstr "Ajouter aux favoris"
+
+#: tformdroptarget.miclose.caption
+msgid "&Close"
+msgstr "&Fermer"
+
+#: tformdroptarget.midownloadall.caption
+msgctxt "TFORMDROPTARGET.MIDOWNLOADALL.CAPTION"
+msgid "Download all"
+msgstr "Tout télécharger"
+
+#: tformlogger.btnclearlog.caption
+msgid "Clear"
+msgstr "Effacer"
+
+#: tformlogger.ckstayontop.caption
+msgid "Stay on top"
+msgstr "Afficher au premier plan"
+
+#: tformlogger.lbloglimit.caption
+msgid "Log limit"
+msgstr "Limite du journal"
+
+#: tformlogger.micopy.caption
+msgctxt "tformlogger.micopy.caption"
+msgid "Copy"
+msgstr "Copier"
+
+#: tfrmdialogyn.btno.caption
+msgid "&No"
+msgstr ""
+
+#: tfrmdialogyn.btyes.caption
+msgid "&Yes"
+msgstr ""
+
+#: tfrmdialogyn.caption
+msgid "Dialog"
+msgstr ""
+
+#: tfrmdialogyn.lbmessage.caption
+msgid "lbMessage"
+msgstr ""
+
+#: timportfavorites.btcancel.caption
+msgctxt "TIMPORTFAVORITES.BTCANCEL.CAPTION"
+msgid "Cancel"
+msgstr "Annuler"
+
+#: timportfavorites.btimport.caption
+msgctxt "timportfavorites.btimport.caption"
+msgid "&OK"
+msgstr "&OK"
+
+#: timportfavorites.caption
+msgid "Import list ..."
+msgstr "Importer la liste ..."
+
+#: timportfavorites.cbsoftware.text
+msgid "Domdomsoft Manga Downloader"
+msgstr "Domdomsoft Manga Downloader"
+
+#: timportfavorites.edpath.texthint
+msgctxt "TIMPORTFAVORITES.EDPATH.TEXTHINT"
+msgid "Path to the software (e.g. C:\\MangaDownloader)"
+msgstr "Chemin d'accès du logiciel (par exemple C:\\MangaDownloader)"
+
+#: timportfavorites.lbselectsoftware.caption
+msgid "Software:"
+msgstr "Logiciel:"
+
+#: tluamodulesupdaterform.btcheckupdate.caption
+msgctxt "tluamodulesupdaterform.btcheckupdate.caption"
+msgid "Check update"
+msgstr "Vérifier les mises à jour"
+
+#: tluamodulesupdaterform.ckautorestart.caption
+msgid "Auto restart"
+msgstr "Redémarrage automatique"
+
+#: tluamodulesupdaterform.ckshowupdatewarning.caption
+msgid "Show update warning"
+msgstr "Montrer l'avertissement de mise à jour"
+
+#: tluamodulesupdaterform.vtluamodulesrepos.header.columns[0].text
+msgid "Filename"
+msgstr "Nom du fichier"
+
+#: tluamodulesupdaterform.vtluamodulesrepos.header.columns[1].text
+msgid "Last modified"
+msgstr "Dernière modification"
+
+#: tluamodulesupdaterform.vtluamodulesrepos.header.columns[2].text
+msgid "Last message"
+msgstr "Dernier message"
+
+#: tmainform.btaddtofavorites.caption
+msgctxt "tmainform.btaddtofavorites.caption"
+msgid "Add to favorites"
+msgstr "Ajouter aux favoris"
+
+#: tmainform.btchecklatestversion.caption
+msgctxt "TMAINFORM.BTCHECKLATESTVERSION.CAPTION"
+msgid "Check for latest version"
+msgstr "Mise à jour"
+
+#: tmainform.btclearlogfile.caption
+msgid "Clear log file"
+msgstr "Vider le journal"
+
+#: tmainform.btdownload.caption
+msgctxt "tmainform.btdownload.caption"
+msgid "Download"
+msgstr "Télécharger"
+
+#: tmainform.btdownloadsplit.hint
+msgctxt "tmainform.btdownloadsplit.hint"
+msgid "Split download"
+msgstr "Scinder le téléchargement"
+
+#: tmainform.btfavoriteschecknewchapter.caption
+msgctxt "tmainform.btfavoriteschecknewchapter.caption"
+msgid "Check for new chapter"
+msgstr "Vérifier les nouveaux chapitres"
+
+#: tmainform.btfavoritesimport.caption
+msgid "Import list"
+msgstr "Importer la liste"
+
+#: tmainform.btfilter.caption
+msgctxt "TMAINFORM.BTFILTER.CAPTION"
+msgid "Filter"
+msgstr "Filtrer le catalogue"
+
+#: tmainform.btfilterreset.caption
+msgid "Reset value"
+msgstr "Réinitialiser les filtres"
+
+#: tmainform.btopenlog.caption
+msgid "Open log"
+msgstr "Ouvrir le journal"
+
+#: tmainform.btoptionapply.caption
+msgid "Apply"
+msgstr "Appliquer"
+
+#: tmainform.btreadonline.caption
+msgid "Read online"
+msgstr "Lire en ligne"
+
+#: tmainform.btremovefilterlarge.caption
+msgctxt "TMAINFORM.BTREMOVEFILTERLARGE.CAPTION"
+msgid "Remove filter"
+msgstr "Retirer les filtres"
+
+#: tmainform.btremovefilterlarge.hint
+msgctxt "tmainform.btremovefilterlarge.hint"
+msgid "Remove filter"
+msgstr "Retirer les filtres"
+
+#: tmainform.btupdatelist.hint
+msgctxt "tmainform.btupdatelist.hint"
+msgid "Update manga list"
+msgstr "Mise à jour du catalogue"
+
+#: tmainform.btvisitmyblog.caption
+msgid "Visit my blog"
+msgstr "Visiter mon blog"
+
+#: tmainform.caption
+msgid "Free Manga Downloader"
+msgstr "Free Manga Downloader"
+
+#: tmainform.cbaddasstopped.caption
+msgid "Add to download list as stopped task"
+msgstr "Ne pas démarrer les tâches ajoutées à la liste des téléchargements"
+
+#: tmainform.cbfilterstatus.text
+msgid "<none>"
+msgstr "<non renseigné>"
+
+#: tmainform.cbonlynew.caption
+msgid "Search only new manga"
+msgstr "Afficher les nouveaux mangas uniquement"
+
+#: tmainform.cboptionautocheckfavdownload.caption
+msgctxt "TMAINFORM.CBOPTIONAUTOCHECKFAVDOWNLOAD.CAPTION"
+msgid "Automatic download after finish checking"
+msgstr "Télécharger automatiquement les nouveaux chapitres après vérification"
+
+#: tmainform.cboptionautocheckfavinterval.caption
+msgid "Auto check for new chapter in an interval"
+msgstr "Vérifier périodiquement les nouveaux chapitres"
+
+#: tmainform.cboptionautocheckfavremovecompletedmanga.caption
+msgctxt "TMAINFORM.CBOPTIONAUTOCHECKFAVREMOVECOMPLETEDMANGA.CAPTION"
+msgid "Automatic remove completed manga from Favorites"
+msgstr "Retirer les mangas terminés des favoris automatiquement"
+
+#: tmainform.cboptionautocheckfavstartup.caption
+msgid "Auto check for new chapter at startup"
+msgstr "Vérifier les nouveaux chapitres au lancement"
+
+#: tmainform.cboptionautochecklatestversion.caption
+msgctxt "TMAINFORM.CBOPTIONAUTOCHECKLATESTVERSION.CAPTION"
+msgid "Auto check for latest version"
+msgstr "Chercher automatiquement une nouvelle version"
+
+#: tmainform.cboptionautoopenfavstartup.caption
+msgid "Open Favorites at startup"
+msgstr "Ouvrir les Favoris au lancement"
+
+#: tmainform.cboptionchangeunicodecharacter.caption
+msgctxt "TMAINFORM.CBOPTIONCHANGEUNICODECHARACTER.CAPTION"
+msgid "Replace all unicode character with"
+msgstr "Remplacer tous les caractères Unicode par"
+
+#: tmainform.cboptionchangeunicodecharacter.hint
+msgid "Enable this if you have problem with unicode character in path."
+msgstr "Activez cette option si vous rencontrez un problème avec des caractères Unicode dans le chemin d'accès."
+
+#: tmainform.cboptiondeletecompletedtasksonclose.caption
+msgid "Delete completed tasks on close"
+msgstr "À la fermeture du logiciel, effacer les tâches complétées"
+
+#: tmainform.cboptiondigitchapter.caption
+msgid "Chapter"
+msgstr "Chapitres"
+
+#: tmainform.cboptiondigitvolume.caption
+msgid "Volume"
+msgstr "Volumes"
+
+#: tmainform.cboptionenableloadcover.caption
+msgid "Enable load manga cover"
+msgstr "Charger la couverture du manga"
+
+#: tmainform.cboptiongeneratechapterfolder.caption
+msgid "Auto generate chapter folder"
+msgstr "Générer automatiquement un dossier par chapitre"
+
+#: tmainform.cboptiongeneratemangafolder.caption
+msgctxt "TMAINFORM.CBOPTIONGENERATEMANGAFOLDER.CAPTION"
+msgid "Auto generate folder based on manga's name"
+msgstr "Générer automatiquement un dossier à partir du nom du manga"
+
+#: tmainform.cboptionlivesearch.caption
+msgid "Enable live search (slow on long list)"
+msgstr "Activer la recherche en temps réel (lent sur des gros catalogues)"
+
+#: tmainform.cboptionminimizeonstart.caption
+msgid "Minimize on start"
+msgstr "Réduire la fenêtre au démarrage"
+
+#: tmainform.cboptionminimizetotray.caption
+msgid "Minimize to tray"
+msgstr "Réduire dans la barre d'outils"
+
+#: tmainform.cboptiononeinstanceonly.caption
+msgid "Permit only one FMD running"
+msgstr "Autoriser une seule instance de FMD"
+
+#: tmainform.cboptionproxytype.text
+msgid "HTTP"
+msgstr "HTTP"
+
+#: tmainform.cboptionremovemanganamefromchapter.caption
+msgid "Remove manga name from chapter"
+msgstr "Retirer le nom du manga du nom du chapitre"
+
+#: tmainform.cboptionshowballoonhint.caption
+msgid "Show balloon hint"
+msgstr "Montrer l'infobulle d'assistance"
+
+#: tmainform.cboptionshowdeletetaskdialog.caption
+msgid "Delete task/favorite"
+msgstr "Supprimer une tâche ou un favori"
+
+#: tmainform.cboptionshowdownloadmangalistdialog.caption
+msgid "Download manga list if empty"
+msgstr "Télécharger un catalogue lorsqu'il est initialement vide"
+
+#: tmainform.cboptionshowdownloadstabonnewtasks.caption
+msgid "Show Downloads tab when adding new tasks"
+msgstr "Basculer sur l'onglet Téléchargements quand une nouvelle tâche est ajoutée"
+
+#: tmainform.cboptionshowdownloadtoolbar.caption
+msgid "Show downloads toolbar"
+msgstr "Afficher les options de téléchargement"
+
+#: tmainform.cboptionshowdownloadtoolbardeleteall.caption
+msgid "Show \"Delete all completed tasks\" in downloads toolbar"
+msgstr "Afficher \"Supprimer toutes les tâches complétées\" dans les options de téléchargement"
+
+#: tmainform.cboptionshowdownloadtoolbarleft.caption
+msgid "Show left downloads toolbar"
+msgstr "Afficher la barre des téléchargements restants"
+
+#: tmainform.cboptionshowfavoritestabonnewmanga.caption
+msgctxt "tmainform.cboptionshowfavoritestabonnewmanga.caption"
+msgid "Show Favorites tab when adding new manga"
+msgstr "Basculer sur l'onglet Favoris quand un manga est ajouté"
+
+#: tmainform.cboptionshowquitdialog.caption
+msgid "Exit FMD"
+msgstr "Quitter FMD"
+
+#: tmainform.cboptionsortdownloadswhenaddingnewdownloadtasks.caption
+msgid "Sort Downloads when adding new download tasks"
+msgstr "Trier les téléchargements quand une tâche est ajoutée"
+
+#: tmainform.cboptionupdatelistnomangainfo.caption
+msgid "Don't load manga information when updating list (filter will be not work!)"
+msgstr "Ne pas charger les informations des mangas lors de la mise à jour des catalogues (la recherche avancée ne fonctionnera pas !)"
+
+#: tmainform.cboptionupdatelistremoveduplicatelocaldata.caption
+msgid "Remove duplicate local data when updating manga list"
+msgstr "Supprimer les doublons locaux lors de la mise à jour du catalogue"
+
+#: tmainform.cboptionuseproxy.caption
+msgid "Use proxy"
+msgstr "Utiliser un proxy"
+
+#: tmainform.cbpngcompressionlevel.text
+msgctxt "tmainform.cbpngcompressionlevel.text"
+msgid "Fastest"
+msgstr "Plus rapide"
+
+#: tmainform.cbsearchfromallsites.caption
+msgid "Search in all manga sites"
+msgstr "Chercher dans tous les catalogues"
+
+#: tmainform.cbselectmanga.hint
+msgid "For more manga sites, please go to Options->Manga sites"
+msgstr "Pour ajouter plus de sites, allez dans Options→Sites"
+
+#: tmainform.cbuseregexpr.caption
+msgid "Regular Expression"
+msgstr "Expression régulière"
+
+#: tmainform.cbwebpsaveas.text
+msgctxt "tmainform.cbwebpsaveas.text"
+msgid "PNG"
+msgstr "PNG"
+
+#: tmainform.ckdroptarget.caption
+msgctxt "tmainform.ckdroptarget.caption"
+msgid "Show Drop Box"
+msgstr "Afficher la boite de dépôt, sur laquelle vous pouvez faire glisser une adresse URL valide sélectionnée"
+
+#: tmainform.ckenablelogging.caption
+msgid "Enable logging"
+msgstr "Activer l'enregistrement du journal"
+
+#: tmainform.ckfilteraction.caption
+msgid "Action"
+msgstr "Action"
+
+#: tmainform.ckfilteraction.hint
+msgid "A work typically depicting fighting, violence, chaos, and fast paced motion."
+msgstr ""
+"Action :\n"
+"Contient typiquement des représentations de combats, de violence, de chaos et de mouvements rapides."
+
+#: tmainform.ckfilteradult.caption
+msgid "Adult"
+msgstr "Adult"
+
+#: tmainform.ckfilteradult.hint
+msgid "Contains content that is suitable only for adults. Titles in this category may include prolonged scenes of intense violence and/or graphic sexual content and nudity."
+msgstr ""
+"Adulte :\n"
+"Contient typiquement des scènes de violence intense, ou de sexe graphique et de nudité."
+
+#: tmainform.ckfilteradventure.caption
+msgid "Adventure"
+msgstr "Adventure"
+
+#: tmainform.ckfilteradventure.hint
+msgid "If a character in the story goes on a trip or along that line, your best bet is that it is an adventure manga. Otherwise, it's up to your personal prejudice on this case."
+msgstr ""
+"Aventure :\n"
+"Contient par exemple un voyage ou des civilisations oubliées."
+
+#: tmainform.ckfiltercomedy.caption
+msgid "Comedy"
+msgstr "Comedy"
+
+#: tmainform.ckfiltercomedy.hint
+msgid "A dramatic work that is light and often humorous or satirical in tone and that usually contains a happy resolution of the thematic conflict."
+msgstr ""
+"Comédie :\n"
+"Une œuvre au ton humouristique, satyrique ou parodique, dont le dénouement final est généralement heureux."
+
+#: tmainform.ckfilterdoujinshi.caption
+msgid "Doujinshi"
+msgstr "Doujinshi"
+
+#: tmainform.ckfilterdoujinshi.hint
+msgid "Fan based work inpspired by official manga/anime."
+msgstr ""
+"Doujinshi :\n"
+"Publication amateure, souvent inspirée d'autres licences."
+
+#: tmainform.ckfilterdrama.caption
+msgid "Drama"
+msgstr "Drama"
+
+#: tmainform.ckfilterdrama.hint
+msgid "A work meant to bring on an emotional response, such as instilling sadness or tension."
+msgstr ""
+"Drame :\n"
+"Une œuvre visant à provoquer des émotions fortes, notamment de la tristesse et de la tension."
+
+#: tmainform.ckfilterechi.caption
+msgid "Ecchi"
+msgstr "Ecchi"
+
+#: tmainform.ckfilterechi.hint
+msgid "Possibly the line between hentai and non-hentai, ecchi usually refers to fanservice put in to attract a certain group of fans."
+msgstr ""
+"Ecchi :\n"
+"Une œuvre coquine, souvent plus graphique qu'une romance ordinaire, mais sans nécessairement montrer de sexe explicite."
+
+#: tmainform.ckfilterfantasy.caption
+msgid "Fantasy"
+msgstr "Fantasy"
+
+#: tmainform.ckfilterfantasy.hint
+msgid "Anything that involves, but not limited to, magic, dream world, and fairy tales."
+msgstr ""
+"Fantasy :\n"
+"Une œuvre se déroulant généralement dans un monde médiéval ou féérique. Contient typiquement de la magie et des créatures fantastiques."
+
+#: tmainform.ckfiltergenderbender.caption
+msgid "Gender Bender"
+msgstr "Gender Bender"
+
+#: tmainform.ckfiltergenderbender.hint
+msgid ""
+"Girls dressing up as guys, guys dressing up as girls.\n"
+"Guys turning into girls, girls turning into guys."
+msgstr ""
+"Gender Bender : littéralement \"Tordeur de genres\".\n"
+"Contient une fille transformée en garçon, ou un garçon transformé en fille, éventuellement plus."
+
+#: tmainform.ckfilterharem.caption
+msgid "Harem"
+msgstr "Harem"
+
+#: tmainform.ckfilterharem.hint
+msgid "A series involving one male character and many female characters (usually attracted to the male character). A Reverse Harem is when the genders are reversed."
+msgstr ""
+"Harem :\n"
+"Une œuvre dans laquelle un groupe de personnages féminins sont toutes attirées (généralement romantiquement) par un même protagoniste masculin.\n"
+"Lorsque les rôles de genre sont inversés, on parle de \"Reverse Harem\"."
+
+#: tmainform.ckfilterhentai.caption
+msgctxt "tmainform.ckfilterhentai.caption"
+msgid "Hentai"
+msgstr "Hentai"
+
+#: tmainform.ckfilterhentai.hint
+msgctxt "TMAINFORM.CKFILTERHENTAI.HINT"
+msgid "Hentai"
+msgstr ""
+"Hentai : littéralement \"Pervers\" ou \"Transformation\".\n"
+"Une œuvre pornographique"
+
+#: tmainform.ckfilterhistorical.caption
+msgid "Historical"
+msgstr "Historical"
+
+#: tmainform.ckfilterhistorical.hint
+msgid "Having to do with old or ancient times."
+msgstr ""
+"Historique :\n"
+"Une œuvre historique se déroulant dans un passé crédible, parfois basée sur des faits réels."
+
+#: tmainform.ckfilterhorror.caption
+msgid "Horror"
+msgstr "Horror"
+
+#: tmainform.ckfilterhorror.hint
+msgid "A painful emotion of fear, dread, and abhorrence; a shuddering with terror and detestation; the feeling inspired by something frightful and shocking."
+msgstr ""
+"Horreur :\n"
+"Une œuvre visant à inspirer la crainte ou le dégoût. Contient parfois des scènes choquantes, visuellement dérangeantes."
+
+#: tmainform.ckfilterjosei.caption
+msgid "Josei"
+msgstr "Josei"
+
+#: tmainform.ckfilterjosei.hint
+msgid "Literally \"Woman\". Targets women 18-30. Female equivalent to seinen. Unlike shoujo the romance is more realistic and less idealized. The storytelling is more explicit and mature."
+msgstr ""
+"Josei : littéralement \"Femme\".\n"
+"S'adresse à des jeunes femmes adultes, en présentant des thèmes plus matures, des romances plus réalistes et moins idéalisées."
+
+#: tmainform.ckfilterlolicon.caption
+msgid "Lolicon"
+msgstr "Lolicon"
+
+#: tmainform.ckfilterlolicon.hint
+msgid "Representing a sexual attraction to young or under-age girls."
+msgstr ""
+"Lolicon : littéralement \"Lolita complex\".\n"
+"Contient des jeunes filles de 13 ans ou moins.\n"
+"Peut avoir un contenu pornographique selon le contexte, à vos risques et périls !"
+
+#: tmainform.ckfiltermartialarts.caption
+msgid "Martial Arts"
+msgstr "Martial Arts"
+
+#: tmainform.ckfiltermartialarts.hint
+msgid "As the name suggests, anything martial arts related. Any of several arts of combat or self-defense, such as aikido, karate, judo, or taekwondo, kendo, fencing, and so on and so forth."
+msgstr ""
+"Arts martiaux :\n"
+"Contient typiquement un ou plusieurs arts martiaux, comme l'aikido, le karate, le judo, le taekwondo, le kendo, l'escrime, etc."
+
+#: tmainform.ckfiltermature.caption
+msgid "Mature"
+msgstr "Mature"
+
+#: tmainform.ckfiltermature.hint
+msgid "Contains subject matter which may be too extreme for people under the age of 17. Titles in this category may contain intense violence, blood and gore, sexual content and/or strong language."
+msgstr ""
+"Matur :\n"
+"Une œuvre adressée à un public adulte, traitant de façon sérieuse la violence, le sexe ou le monde du travail par exemple."
+
+#: tmainform.ckfiltermecha.caption
+msgid "Mecha"
+msgstr "Mecha"
+
+#: tmainform.ckfiltermecha.hint
+msgid "A work involving and usually concentrating on all types of large robotic machines."
+msgstr ""
+"Mecha :\n"
+"Contient des exosquelettes ou des grosses armures avec des pilotes."
+
+#: tmainform.ckfiltermusical.caption
+msgctxt "tmainform.ckfiltermusical.caption"
+msgid "Musical"
+msgstr "Musical"
+
+#: tmainform.ckfiltermusical.hint
+msgctxt "tmainform.ckfiltermusical.hint"
+msgid "Musical"
+msgstr ""
+"Musical :\n"
+"Contient typiquement des personnages qui jouent ou écoutent de la musique."
+
+#: tmainform.ckfiltermystery.caption
+msgid "Mystery"
+msgstr "Mystery"
+
+#: tmainform.ckfiltermystery.hint
+msgid "Usually an unexplained event occurs, and the main protagonist attempts to find out what caused it."
+msgstr ""
+"Mystère :\n"
+"Contient généralement une enquête à résoudre, ou un secret à découvrir."
+
+#: tmainform.ckfilterpsychological.caption
+msgid "Psychological"
+msgstr "Psychological"
+
+#: tmainform.ckfilterpsychological.hint
+msgid "Usually deals with the philosophy of a state of mind, in most cases detailing abnormal psychology."
+msgstr ""
+"Psychologique :\n"
+"Une œuvre psychologique qui se concentre sur les pensées et les décisions des personnages, généralement en réaction à des évènements extraordinaires."
+
+#: tmainform.ckfilterromance.caption
+msgid "Romance"
+msgstr "Romance"
+
+#: tmainform.ckfilterromance.hint
+msgid "Any love related story. We will define love as between man and woman in this case. Other than that, it is up to your own imagination of what love is."
+msgstr ""
+"Romance :\n"
+"Une œuvre qui s'attarde particulièrement sur les relations de nature romantique entre ses personnages."
+
+#: tmainform.ckfilterschoollife.caption
+msgid "School Life"
+msgstr "School Life"
+
+#: tmainform.ckfilterschoollife.hint
+msgid "Having a major setting of the story deal with some type of school."
+msgstr ""
+"Vie scolaire :\n"
+"Une œuvre qui se concentre particulièrement sur les interactions des personnages dans un environnement scolaire."
+
+#: tmainform.ckfilterscifi.caption
+msgid "Sci-Fi"
+msgstr "Sci-Fi"
+
+#: tmainform.ckfilterscifi.hint
+msgid "Short for science fiction, these works involve twists on technology and other science related phenomena which are contrary or stretches of the modern day scientific world."
+msgstr ""
+"Science-fiction :\n"
+"Une œuvre de science-fiction contient typiquement des technologies futuristes, des extra-terrestres, ou toute autre extrapolation vraisemblable de nos connaissances actuelles."
+
+#: tmainform.ckfilterseinen.caption
+msgid "Seinen"
+msgstr "Seinen"
+
+#: tmainform.ckfilterseinen.hint
+msgid "From Google: Seinen means 'young Man'. Manga and anime that specifically targets young adult males around the ages of 18 to 25 are seinen titles. The stories in seinen works appeal to university students and those in the working world. Typically the story lines deal with the issues of adulthood."
+msgstr ""
+"Seinen : littéralement \"Jeune\".\n"
+"Une œuvre qui s'adresse typiquement aux jeunes hommes à l'université. Traite souvent de la transition à l'âge adulte, de l'école vers le monde du travail."
+
+#: tmainform.ckfiltershotacon.caption
+msgid "Shotacon"
+msgstr "Shotacon"
+
+#: tmainform.ckfiltershotacon.hint
+msgid "Representing a sexual attraction to young or under-age boys."
+msgstr ""
+"Shotacon : littéralement \"Shotaro complex\".\n"
+"Contient des jeunes garçons de 13 ans ou moins.\n"
+"Peut avoir un contenu pornographique selon le contexte, à vos risques et périls !"
+
+#: tmainform.ckfiltershoujo.caption
+msgid "Shoujo"
+msgstr "Shoujo"
+
+#: tmainform.ckfiltershoujo.hint
+msgid "A work intended and primarily written for females. Usually involves a lot of romance and strong character development."
+msgstr ""
+"Shoujo : littéralement \"Jeune fille\".\n"
+"Une œuvre qui s'adresse typiquement aux adolescentes, et s'attarde généralement sur les relations romantiques et amicales entre les personnages."
+
+#: tmainform.ckfiltershoujoai.caption
+msgid "Shoujo Ai"
+msgstr "Shoujo Ai"
+
+#: tmainform.ckfiltershoujoai.hint
+msgctxt "TMAINFORM.CKFILTERSHOUJOAI.HINT"
+msgid "Often synonymous with yuri, this can be thought of as somewhat less extreme. \"Girl''s Love\", so to speak."
+msgstr "Shoujo Ai :Traite généralement de relations lesbiennes de façon idéalisée, plutôt platonique que physique."
+
+#: tmainform.ckfiltershounen.caption
+msgid "Shounen"
+msgstr "Shounen"
+
+#: tmainform.ckfiltershounen.hint
+msgctxt "tmainform.ckfiltershounen.hint"
+msgid "A work intended and primarily written for males. These works usually involve fighting and/or violence."
+msgstr ""
+"Shounen : littéralement \"Jeune garçon\".\n"
+"Une œuvre qui s'adresse typiquement aux adolescents, généralement construite autour d'un voyage initiatique."
+
+#: tmainform.ckfiltershounenai.caption
+msgid "Shounen Ai"
+msgstr "Shounen Ai"
+
+#: tmainform.ckfiltershounenai.hint
+msgid "Often synonymous with yaoi, this can be thought of as somewhat less extreme. \"Boy''s Love\", so to speak"
+msgstr ""
+"Shounen Ai :\n"
+"Traite généralement de relations homosexuelles entre garçons de façon idéalisée, plutôt platonique que physique."
+
+#: tmainform.ckfiltersliceoflife.caption
+msgid "Slice of Life"
+msgstr "Slice of Life"
+
+#: tmainform.ckfiltersliceoflife.hint
+msgid "As the name suggests, this genre represents day-to-day tribulations of one/many character(s). These challenges/events could technically happen in real life and are often -if not all the time- set in the present timeline in a world that mirrors our own."
+msgstr ""
+"Tranche de vie :\n"
+"Une œuvre de tranche de vie s'attarde sur la vie quotidienne des personnages, souvent dans un univers réaliste."
+
+#: tmainform.ckfiltersmut.caption
+msgid "Smut"
+msgstr "Smut"
+
+#: tmainform.ckfiltersmut.hint
+msgid "Deals with series that are considered profane or offensive, particularly with regards to sexual content."
+msgstr ""
+"Smut : littéralement \"Cochonneries\".\n"
+"Une œuvre considérée comme profane ou offensante, généralement très sexualisée."
+
+#: tmainform.ckfiltersports.caption
+msgid "Sports"
+msgstr "Sports"
+
+#: tmainform.ckfiltersports.hint
+msgid "As the name suggests, anything sports related. Baseball, basketball, hockey, soccer, golf, and racing just to name a few."
+msgstr ""
+"Sport :\n"
+"Contient typiquement un ou plusieurs sports, comme la course à pieds, le baseball, le basketball, le football, le golf, etc."
+
+#: tmainform.ckfiltersupernatural.caption
+msgid "Supernatural"
+msgstr "Supernatural"
+
+#: tmainform.ckfiltersupernatural.hint
+msgid "Usually entails amazing and unexplained powers or events which defy the laws of physics."
+msgstr ""
+"Surnaturel :\n"
+"Contient généralement des pouvoirs inexpliquables, surnaturels, qui défient les lois de notre univers."
+
+#: tmainform.ckfiltertragedy.caption
+msgid "Tragedy"
+msgstr "Tragedy"
+
+#: tmainform.ckfiltertragedy.hint
+msgid "Contains events resulting in great loss and misfortune."
+msgstr ""
+"Tragédie :\n"
+"Contient généralement des évènements ayant pour conséquence des pertes tragiques pour les personnages."
+
+#: tmainform.ckfilterweebtons.caption
+msgctxt "tmainform.ckfilterweebtons.caption"
+msgid "Webtoons"
+msgstr "Webtoons"
+
+#: tmainform.ckfilterweebtons.hint
+msgctxt "tmainform.ckfilterweebtons.hint"
+msgid "Webtoons"
+msgstr ""
+"Webtoons :\n"
+"Caractérise les productions sud-coréennes, publiées sur internet, en opposition aux mangas traditionnellement associés au Japon."
+
+#: tmainform.ckfilteryaoi.caption
+msgid "Yaoi"
+msgstr "Yaoi"
+
+#: tmainform.ckfilteryaoi.hint
+msgid "This work usually involves intimate relationships between men."
+msgstr ""
+"Yaoi :\n"
+"Contient des relations homosexuelles entre hommes."
+
+#: tmainform.ckfilteryuri.caption
+msgid "Yuri"
+msgstr "Yuri"
+
+#: tmainform.ckfilteryuri.hint
+msgid "This work usually involves intimate relationships between women."
+msgstr ""
+"Yuri : littéralement \"Fleur de lis\".\n"
+"Contient des relations lesbiennes."
+
+#: tmainform.ckoptionsalwaysstarttaskfromfailedchapters.caption
+msgctxt "tmainform.ckoptionsalwaysstarttaskfromfailedchapters.caption"
+msgid "Always start task from failed chapters"
+msgstr "Toujours reprendre la tâche à partir des chapitres échoués"
+
+#: tmainform.ckpngsaveasjpeg.caption
+msgid "Save PNG as JPEG"
+msgstr "Enregistrer les PNG en tant que JPEG"
+
+#: tmainform.edcustomgenres.texthint
+msgid "Input custom genres, separated by comma"
+msgstr "Genres personnalisés, séparés par des virgules..."
+
+#: tmainform.eddownloadssearch.texthint
+msgctxt "tmainform.eddownloadssearch.texthint"
+msgid "Search downloads..."
+msgstr "Titre..."
+
+#: tmainform.edfavoritessearch.texthint
+msgctxt "tmainform.edfavoritessearch.texthint"
+msgid "Search favorites..."
+msgstr "Titre..."
+
+#: tmainform.edfilterartists.texthint
+msgctxt "tmainform.edfilterartists.texthint"
+msgid "Artist"
+msgstr "Artiste..."
+
+#: tmainform.edfilterauthors.texthint
+msgctxt "tmainform.edfilterauthors.texthint"
+msgid "Author"
+msgstr "Auteur·e..."
+
+#: tmainform.edfiltermangainfochapters.texthint
+msgctxt "TMAINFORM.EDFILTERMANGAINFOCHAPTERS.TEXTHINT"
+msgid "Filter"
+msgstr "Titre du chapitre..."
+
+#: tmainform.edfiltersummary.texthint
+msgid "Part of summary"
+msgstr "Partie du résumé"
+
+#: tmainform.edfiltertitle.texthint
+msgctxt "TMAINFORM.EDFILTERTITLE.TEXTHINT"
+msgid "Title"
+msgstr "Titre..."
+
+#: tmainform.edmangalistsearch.texthint
+msgctxt "tmainform.edmangalistsearch.texthint"
+msgid "Search title..."
+msgstr "Titre du manga..."
+
+#: tmainform.edoptionchaptercustomrename.texthint
+msgctxt "TMAINFORM.EDOPTIONCHAPTERCUSTOMRENAME.TEXTHINT"
+msgid "Custom rename"
+msgstr "Nom personnalisé"
+
+#: tmainform.edoptiondefaultpath.texthint
+msgid "Default download path"
+msgstr "Répertoire d'enregistrement par défaut..."
+
+#: tmainform.edoptionexternalparams.texthint
+msgctxt "TMAINFORM.EDOPTIONEXTERNALPARAMS.TEXTHINT"
+msgid "External program parameters"
+msgstr "Paramètres du programme externe"
+
+#: tmainform.edoptionexternalpath.texthint
+msgctxt "TMAINFORM.EDOPTIONEXTERNALPATH.TEXTHINT"
+msgid "External program path"
+msgstr "Répertoire du programme externe..."
+
+#: tmainform.edoptionfilenamecustomrename.texthint
+msgctxt "TMAINFORM.EDOPTIONFILENAMECUSTOMRENAME.TEXTHINT"
+msgid "Custom rename"
+msgstr "Personnaliser le nom"
+
+#: tmainform.edoptionhost.texthint
+msgid "Proxy host/IP"
+msgstr "Adresse IP..."
+
+#: tmainform.edoptionmangacustomrename.texthint
+msgctxt "TMAINFORM.EDOPTIONMANGACUSTOMRENAME.TEXTHINT"
+msgid "Custom rename"
+msgstr "Personnaliser le nom"
+
+#: tmainform.edoptionpass.texthint
+msgid "Proxy password"
+msgstr "Mot de passe..."
+
+#: tmainform.edoptionuser.texthint
+msgid "Proxy username"
+msgstr "Nom d'utilisateur..."
+
+#: tmainform.edsaveto.texthint
+msgctxt "TMAINFORM.EDSAVETO.TEXTHINT"
+msgid "Save to"
+msgstr "Répertoire d'enregistrement..."
+
+#: tmainform.edurl.texthint
+msgid "Input URL here"
+msgstr "Adresse URL du manga..."
+
+#: tmainform.edwebsitessearch.texthint
+msgctxt "TMAINFORM.EDWEBSITESSEARCH.TEXTHINT"
+msgid "Search website..."
+msgstr "Site..."
+
+#: tmainform.gbdialogs.caption
+msgid "Show dialog confirmation for"
+msgstr "Demande de confirmation pour"
+
+#: tmainform.gbdroptarget.caption
+msgid "Drop Box"
+msgstr "Boite de dépôt"
+
+#: tmainform.gbimageconversion.caption
+msgid "Image Conversion"
+msgstr "Conversion des images"
+
+#: tmainform.gboptionexternal.caption
+msgid "External program"
+msgstr "Programme externe"
+
+#: tmainform.gboptionfavorites.caption
+msgctxt "TMAINFORM.GBOPTIONFAVORITES.CAPTION"
+msgid "Favorites"
+msgstr "Favoris"
+
+#: tmainform.gboptionproxy.caption
+msgid "Proxy config"
+msgstr "Configuration du proxy"
+
+#: tmainform.gboptionrenaming.caption
+msgid "Renaming"
+msgstr "Renommage"
+
+#: tmainform.lbdefaultdownloadpath.caption
+msgid "Choose the default download path:"
+msgstr "Choisissez le répertoire d'enregistrement par défaut :"
+
+#: tmainform.lbdroptargetopacity.caption
+msgid "Opacity"
+msgstr "Opacité"
+
+#: tmainform.lbfilterartists.caption
+msgctxt "tmainform.lbfilterartists.caption"
+msgid "Artist"
+msgstr "Artiste"
+
+#: tmainform.lbfilterauthors.caption
+msgctxt "tmainform.lbfilterauthors.caption"
+msgid "Author"
+msgstr "Auteur·e"
+
+#: tmainform.lbfiltercustomgenres.caption
+msgid "Custom Genres"
+msgstr "Genres personnalisés"
+
+#: tmainform.lbfilterhint.caption
+msgctxt "tmainform.lbfilterhint.caption"
+msgid "[?]"
+msgstr "[?]"
+
+#: tmainform.lbfilterhint.hint
+msgid ""
+"Genres:\n"
+"- Checked: Include this genre.\n"
+"- Unchecked: Exclude this genre.\n"
+"- Grayed: Doesn't matter.\n"
+"\n"
+"Custom Genres:\n"
+"- Separate multiple genres with ','.\n"
+"- Exclude a genre by placing '!' or '-' at the beginning of a genre.\n"
+"- Example: Adventure,!Ecchi,Comedy."
+msgstr ""
+"Genres :\n"
+"- Coché : inclure ce genre.\n"
+"- Décoché : exclure ce genre.\n"
+"- Grisé : peu importe.\n"
+"\n"
+"Genres personnalisés :\n"
+"- Séparer les genres par un symbole ','.\n"
+"- Exclure un genre en y accolant un symbole '!' ou '-' au début.\n"
+"- Exemple : Action,!Ecchi."
+
+#: tmainform.lbfilterstatus.caption
+msgctxt "TMAINFORM.LBFILTERSTATUS.CAPTION"
+msgid "Status"
+msgstr "Statut"
+
+#: tmainform.lbfiltersummary.caption
+msgid "Summary"
+msgstr "Résumé"
+
+#: tmainform.lbfiltertitle.caption
+msgctxt "tmainform.lbfiltertitle.caption"
+msgid "Title"
+msgstr "Titre"
+
+#: tmainform.lbjpegquality.caption
+msgid "JPEG quality"
+msgstr "Qualité du JPEG"
+
+#: tmainform.lblogfilename.caption
+msgid "Log file:"
+msgstr "Répertoire du journal :"
+
+#: tmainform.lbmode.caption
+msgid "Mode: Show all (0)"
+msgstr "Mode: Tout montrer (0)"
+
+#: tmainform.lboptionautocheckfavintervalminutes.caption
+#, object-pascal-format
+msgctxt "TMAINFORM.LBOPTIONAUTOCHECKFAVINTERVALMINUTES.CAPTION"
+msgid "Auto check for new chapter every %d minutes"
+msgstr "Vérification des nouveaux chapitres toutes les %d minutes"
+
+#: tmainform.lboptionchaptercustomrename.caption
+msgctxt "TMAINFORM.LBOPTIONCHAPTERCUSTOMRENAME.CAPTION"
+msgid "Chapter name:"
+msgstr "Nom du dossier du chapitre :"
+
+#: tmainform.lboptionchaptercustomrenamehint.caption
+msgctxt "TMAINFORM.LBOPTIONCHAPTERCUSTOMRENAMEHINT.CAPTION"
+msgid "[?]"
+msgstr "[?]"
+
+#: tmainform.lboptionchaptercustomrenamehint.hint
+msgctxt "TMAINFORM.LBOPTIONCHAPTERCUSTOMRENAMEHINT.HINT"
+msgid ""
+"%WEBSITE% : Website name\n"
+"%MANGA% : Manga title\n"
+"%CHAPTER% : Chapter title\n"
+"%AUTHOR% : Author\n"
+"%ARTIST% : Artist\n"
+"%NUMBERING% : Numbering\n"
+"\n"
+"Note:\n"
+"Chapter folder name must have at least %CHAPTER% or %NUMBERING%."
+msgstr ""
+"%WEBSITE% : nom du site\n"
+"%MANGA% : titre du manga\n"
+"%CHAPTER% : titre du chapitre\n"
+"%AUTHOR% : auteur·e\n"
+"%ARTIST% : artiste\n"
+"%NUMBERING% : numérotation\n"
+"\n"
+"Note :\n"
+"Le nom du dossier du chapitre doit contenir %CHAPTER% ou %NUMBERING%."
+
+#: tmainform.lboptionconnectiontimeout.caption
+msgid "Connection timeout (seconds)"
+msgstr "Délai d'expiration de la connexion, en secondes"
+
+#: tmainform.lboptionexternal.caption
+msgid "Open manga by using external program:"
+msgstr "Ouvrir le manga avec un programme externe :"
+
+#: tmainform.lboptionexternalparams.caption
+msgid "Parameters:"
+msgstr "Paramètres :"
+
+#: tmainform.lboptionexternalparamshint.caption
+msgctxt "TMAINFORM.LBOPTIONEXTERNALPARAMSHINT.CAPTION"
+msgid "[?]"
+msgstr "[?]"
+
+#: tmainform.lboptionfilenamecustomrename.caption
+msgid "Filename:"
+msgstr "Nom du fichier :"
+
+#: tmainform.lboptionfilenamecustomrenamehint.caption
+msgctxt "TMAINFORM.LBOPTIONFILENAMECUSTOMRENAMEHINT.CAPTION"
+msgid "[?]"
+msgstr "[?]"
+
+#: tmainform.lboptionfilenamecustomrenamehint.hint
+msgid ""
+"%WEBSITE% : Website name\n"
+"%MANGA% : Manga title\n"
+"%CHAPTER% : Chapter title\n"
+"%FILENAME% : Filename\n"
+"\n"
+"Note:\n"
+"Filename must have at least %FILENAME%"
+msgstr ""
+"%WEBSITE% : nom du site\n"
+"%MANGA% : titre du manga\n"
+"%CHAPTER% : titre du chapitre\n"
+"%FILENAME% : nom du fichier\n"
+"\n"
+"Note :\n"
+"Le nom du fichier doit contenir %FILENAME%"
+
+#: tmainform.lboptionhost.caption
+msgid "Host"
+msgstr "Hôte"
+
+#: tmainform.lboptionlanguage.caption
+msgid "Language:"
+msgstr "Langue :"
+
+#: tmainform.lboptionletfmddo.caption
+msgid "After download finish:"
+msgstr "Après la fin des téléchargements :"
+
+#: tmainform.lboptionmangacustomrename.caption
+msgctxt "TMAINFORM.LBOPTIONMANGACUSTOMRENAME.CAPTION"
+msgid "Manga folder name:"
+msgstr "Nom du dossier du manga :"
+
+#: tmainform.lboptionmangacustomrenamehint.caption
+msgctxt "TMAINFORM.LBOPTIONMANGACUSTOMRENAMEHINT.CAPTION"
+msgid "[?]"
+msgstr "[?]"
+
+#: tmainform.lboptionmangacustomrenamehint.hint
+msgid ""
+"%WEBSITE% : Website name\n"
+"%MANGA% : Manga title\n"
+"%AUTHOR% : Author\n"
+"%ARTIST% : Artist\n"
+"\n"
+"Note:\n"
+"Manga folder name must have at least %MANGA%."
+msgstr ""
+"%WEBSITE% : nom du site\n"
+"%MANGA% : titre du manga\n"
+"%AUTHOR% : auteur·e\n"
+"%ARTIST% : artiste\n"
+"\n"
+"Note :\n"
+"Le nom du dossier du manga doit contenir %MANGA%"
+
+#: tmainform.lboptionmaxparallel.caption
+msgid "Number of downloaded tasks at the same time"
+msgstr "Nombre de tâches de téléchargement simultanées"
+
+#: tmainform.lboptionmaxretry.caption
+msgid "Number of retry times if tasks have download problems (-1 = always retry)"
+msgstr "Nombre de tentatives par tâche en cas d'échec du téléchargement (-1 = toujours réessayer)"
+
+#: tmainform.lboptionmaxthread.caption
+msgid "Number of downloaded files per task at the same time"
+msgstr "Nombre de fichiers téléchargés simultanément par tâche"
+
+#: tmainform.lboptionnewmangatime.caption
+msgid "New manga based on  it's update time (days)"
+msgstr "Durée pendant laquelle un manga est considéré comme nouveau, en jours depuis sa mise à jour"
+
+#: tmainform.lboptionpass.caption
+msgctxt "tmainform.lboptionpass.caption"
+msgid "Password"
+msgstr "Mot de passe"
+
+#: tmainform.lboptionpdfquality.caption
+msgid "PDF Quality Level"
+msgstr "Qualité du PDF"
+
+#: tmainform.lboptionpdfquality.hint
+msgctxt "TMAINFORM.LBOPTIONPDFQUALITY.HINT"
+msgid "100 = FlateEncode (lossless), lower = DCTEncode (lossy)"
+msgstr "100 = FlateEncode (sans pertes), 5 = DCTEncode (avec compression)"
+
+#: tmainform.lboptionpdfqualityhint.caption
+msgctxt "TMAINFORM.LBOPTIONPDFQUALITYHINT.CAPTION"
+msgid "[?]"
+msgstr "[?]"
+
+#: tmainform.lboptionport.caption
+msgid "Port"
+msgstr "Port"
+
+#: tmainform.lboptionproxytype.caption
+msgid "Type"
+msgstr "Type"
+
+#: tmainform.lboptionrenamedigits.caption
+msgid "Rename  digits"
+msgstr "Normaliser le nombre de chiffres de la numérotation"
+
+#: tmainform.lboptionretryfailedtask.caption
+msgid "Number of retry times if task failed"
+msgstr "Nombre de tentatives d'une tâche, en cas d'échec"
+
+#: tmainform.lboptionuser.caption
+msgctxt "tmainform.lboptionuser.caption"
+msgid "Username"
+msgstr "Nom d'utilisateur"
+
+#: tmainform.lbpngcompressionlevel.caption
+msgctxt "tmainform.lbpngcompressionlevel.caption"
+msgid "PNG Compression level"
+msgstr "Niveau de compression des PNG"
+
+#: tmainform.lbsaveto.caption
+msgid "Save to:"
+msgstr "Répertoire d'enregistrement :"
+
+#: tmainform.lbwebpsaveas.caption
+msgid "Save WebP as"
+msgstr "Enregistrer les WebP en tant que"
+
+#: tmainform.medturldelete.caption
+msgctxt "TMAINFORM.MEDTURLDELETE.CAPTION"
+msgid "Delete"
+msgstr "Supprimer"
+
+#: tmainform.medurlcopy.caption
+msgctxt "tmainform.medurlcopy.caption"
+msgid "Copy"
+msgstr "Copier"
+
+#: tmainform.medurlcut.caption
+msgid "Cut"
+msgstr "Couper"
+
+#: tmainform.medurlpaste.caption
+msgid "Paste"
+msgstr "Coller"
+
+#: tmainform.medurlpasteandgo.caption
+msgid "Paste and go"
+msgstr "Coller puis ouvrir"
+
+#: tmainform.medurlselectall.caption
+msgid "Select all"
+msgstr "Tout sélectionner"
+
+#: tmainform.medurlundo.caption
+msgid "Undo"
+msgstr "Annuler"
+
+#: tmainform.miabortsilentthread.caption
+msgctxt "tmainform.miabortsilentthread.caption"
+msgid "Abort"
+msgstr "Interrompre"
+
+#: tmainform.michapterlistascending.caption
+msgid "Ascending"
+msgstr "Tri croissant"
+
+#: tmainform.michapterlistcheckall.caption
+msgctxt "tmainform.michapterlistcheckall.caption"
+msgid "Check all"
+msgstr "Tout cocher"
+
+#: tmainform.michapterlistcheckselected.caption
+msgid "Check selected"
+msgstr "Cocher la sélection"
+
+#: tmainform.michapterlistdescending.caption
+msgid "Descending"
+msgstr "Tri décroissant"
+
+#: tmainform.michapterlistfilter.caption
+msgctxt "TMAINFORM.MICHAPTERLISTFILTER.CAPTION"
+msgid "Filter"
+msgstr "Filtrer"
+
+#: tmainform.michapterlisthidedownloaded.caption
+msgid "Hide downloaded chapters"
+msgstr "Masquer les chapitres téléchargés"
+
+#: tmainform.michapterlisthighlight.caption
+msgid "Highlight downloaded chapters"
+msgstr "Surligner les chapitres téléchargés"
+
+#: tmainform.michapterlistuncheckall.caption
+msgctxt "tmainform.michapterlistuncheckall.caption"
+msgid "Uncheck all"
+msgstr "Tout décocher"
+
+#: tmainform.michapterlistuncheckselected.caption
+msgid "Uncheck selected"
+msgstr "Décocher la sélection"
+
+#: tmainform.midownloaddelete.caption
+msgctxt "tmainform.midownloaddelete.caption"
+msgid "Delete"
+msgstr "Supprimer"
+
+#: tmainform.midownloaddeletecompleted.caption
+msgctxt "TMAINFORM.MIDOWNLOADDELETECOMPLETED.CAPTION"
+msgid "Delete all completed tasks"
+msgstr "Effacer toutes les tâches complétées"
+
+#: tmainform.midownloaddeletetask.caption
+msgid "Task only"
+msgstr "Tâches uniquement"
+
+#: tmainform.midownloaddeletetaskdata.caption
+msgid "Task + Data"
+msgstr "Tâches + Fichiers"
+
+#: tmainform.midownloaddeletetaskdatafavorite.caption
+msgid "Task + Data + Favorite"
+msgstr "Tâches + Fichiers + Favoris"
+
+#: tmainform.midownloaddisable.caption
+msgctxt "tmainform.midownloaddisable.caption"
+msgid "Disable"
+msgstr "Désactiver"
+
+#: tmainform.midownloadenable.caption
+msgctxt "tmainform.midownloadenable.caption"
+msgid "Enable"
+msgstr "Activer"
+
+#: tmainform.midownloadmergecompleted.caption
+msgid "Merge completed tasks"
+msgstr "Fusionner les tâches complétées"
+
+#: tmainform.midownloadopenfolder.caption
+msgctxt "tmainform.midownloadopenfolder.caption"
+msgid "Open Folder"
+msgstr "Ouvrir le dossier"
+
+#: tmainform.midownloadopenwith.caption
+msgctxt "tmainform.midownloadopenwith.caption"
+msgid "Open ..."
+msgstr "Ouvrir..."
+
+#: tmainform.midownloadresume.caption
+msgid "Resume"
+msgstr "Reprendre"
+
+#: tmainform.midownloadstop.caption
+msgid "Stop"
+msgstr "Interrompre"
+
+#: tmainform.midownloadviewmangainfo.caption
+msgctxt "tmainform.midownloadviewmangainfo.caption"
+msgid "View manga info"
+msgstr "Informations sur le manga"
+
+#: tmainform.mifavoriteschangecurrentchapter.caption
+msgid "Change \"Current chapter\""
+msgstr "Changer \"Chapitre en cours\""
+
+#: tmainform.mifavoriteschangesaveto.caption
+msgid "Change \"Save to\""
+msgstr "Changer \"Répertoire d'enregistrement\""
+
+#: tmainform.mifavoriteschecknewchapter.caption
+msgctxt "TMAINFORM.MIFAVORITESCHECKNEWCHAPTER.CAPTION"
+msgid "Check for new chapter"
+msgstr "Vérifier les nouveaux chapitres"
+
+#: tmainform.mifavoritesdefaultaction.caption
+msgctxt "tmainform.mifavoritesdefaultaction.caption"
+msgid "Default Action"
+msgstr "Action par défaut"
+
+#: tmainform.mifavoritesdefaultactionchecknewchapters.caption
+msgctxt "tmainform.mifavoritesdefaultactionchecknewchapters.caption"
+msgid "Check for new Chapters"
+msgstr "Vérifier les nouveaux chapitres"
+
+#: tmainform.mifavoritesdefaultactionopenfolder.caption
+msgctxt "tmainform.mifavoritesdefaultactionopenfolder.caption"
+msgid "Open Folder"
+msgstr "Ouvrir le dossier"
+
+#: tmainform.mifavoritesdefaultactionrename.caption
+msgctxt "tmainform.mifavoritesdefaultactionrename.caption"
+msgid "Rename"
+msgstr "Renommer"
+
+#: tmainform.mifavoritesdefaultactionshowinfo.caption
+msgctxt "tmainform.mifavoritesdefaultactionshowinfo.caption"
+msgid "View Manga Info"
+msgstr "Informations sur le manga"
+
+#: tmainform.mifavoritesdelete.caption
+msgctxt "TMAINFORM.MIFAVORITESDELETE.CAPTION"
+msgid "Delete"
+msgstr "Supprimer"
+
+#: tmainform.mifavoritesdisable.caption
+msgctxt "tmainform.mifavoritesdisable.caption"
+msgid "Disable"
+msgstr "Désactiver"
+
+#: tmainform.mifavoritesdownloadall.caption
+msgctxt "tmainform.mifavoritesdownloadall.caption"
+msgid "Download all"
+msgstr "Télécharger tous les chapitres"
+
+#: tmainform.mifavoritesenable.caption
+msgctxt "tmainform.mifavoritesenable.caption"
+msgid "Enable"
+msgstr "Activer"
+
+#: tmainform.mifavoritesopenfolder.caption
+msgctxt "TMAINFORM.MIFAVORITESOPENFOLDER.CAPTION"
+msgid "Open Folder"
+msgstr "Ouvrir le dossier"
+
+#: tmainform.mifavoritesopenwith.caption
+msgctxt "TMAINFORM.MIFAVORITESOPENWITH.CAPTION"
+msgid "Open ..."
+msgstr "Ouvrir..."
+
+#: tmainform.mifavoritesrename.caption
+msgctxt "tmainform.mifavoritesrename.caption"
+msgid "Rename"
+msgstr "Renommer"
+
+#: tmainform.mifavoritesstopchecknewchapter.caption
+msgid "Stop check for new chapter"
+msgstr "Interrompre la vérification"
+
+#: tmainform.mifavoritestransferwebsite.caption
+msgctxt "tmainform.mifavoritestransferwebsite.caption"
+msgid "Transfer website"
+msgstr "Changer le site associé"
+
+#: tmainform.mifavoritesviewinfos.caption
+msgctxt "TMAINFORM.MIFAVORITESVIEWINFOS.CAPTION"
+msgid "View manga info"
+msgstr "Informations sur le manga"
+
+#: tmainform.mihighlightnewmanga.caption
+msgid "Highlight new manga"
+msgstr "Surligner les nouveaux mangas"
+
+#: tmainform.mimangalistaddtofavorites.caption
+msgid "Add to Favorites"
+msgstr "Ajouter aux favoris"
+
+#: tmainform.mimangalistdelete.caption
+msgctxt "tmainform.mimangalistdelete.caption"
+msgid "Delete"
+msgstr "Supprimer"
+
+#: tmainform.mimangalistdownloadall.caption
+msgctxt "TMAINFORM.MIMANGALISTDOWNLOADALL.CAPTION"
+msgid "Download all"
+msgstr "Tout télécharger"
+
+#: tmainform.mimangalistviewinfos.caption
+msgid "View manga infos"
+msgstr "Voir les infos du manga"
+
+#: tmainform.mitrayafterdownloadfinish.caption
+msgid "After download finish"
+msgstr "Après la fin des téléchargements :"
+
+#: tmainform.mitrayexit.caption
+msgctxt "TMAINFORM.MITRAYEXIT.CAPTION"
+msgid "Exit"
+msgstr "Quitter"
+
+#: tmainform.mitrayfinishexit.caption
+msgctxt "tmainform.mitrayfinishexit.caption"
+msgid "Exit"
+msgstr "Quitter"
+
+#: tmainform.mitrayfinishhibernate.caption
+msgid "Hibernate"
+msgstr "Mettre en veille prolongée"
+
+#: tmainform.mitrayfinishnothing.caption
+msgid "Nothing"
+msgstr "Ne rien faire"
+
+#: tmainform.mitrayfinishshutdown.caption
+msgid "Shutdown"
+msgstr "Éteindre"
+
+#: tmainform.mitrayrestore.caption
+msgid "Restore"
+msgstr "Restaurer"
+
+#: tmainform.mitrayresumeall.caption
+msgid "Resume all"
+msgstr "Tout reprendre"
+
+#: tmainform.mitrayshowdropbox.caption
+msgctxt "TMAINFORM.MITRAYSHOWDROPBOX.CAPTION"
+msgid "Show Drop Box"
+msgstr "Afficher la boite de dépôt, sur laquelle vous pouvez faire glisser une adresse URL valide sélectionnée"
+
+#: tmainform.mitraystopall.caption
+msgid "Stop all"
+msgstr "Tout arrêter"
+
+#: tmainform.mndownload1click.caption
+msgid "Download all lists from server at once"
+msgstr "Télécharger tous les catalogues depuis le serveur à la suite"
+
+#: tmainform.mnfiltergenreallcheck.caption
+msgctxt "TMAINFORM.MNFILTERGENREALLCHECK.CAPTION"
+msgid "Check all"
+msgstr "Tout vérifier"
+
+#: tmainform.mnfiltergenreallindeterminate.caption
+msgid "Indeterminate all"
+msgstr "Tout indéterminer"
+
+#: tmainform.mnfiltergenrealluncheck.caption
+msgctxt "TMAINFORM.MNFILTERGENREALLUNCHECK.CAPTION"
+msgid "Uncheck all"
+msgstr "Tout décocher"
+
+#: tmainform.mnupdate1click.caption
+msgid "Update all lists at once"
+msgstr "Mettre à jour tous les catalogues à la suite"
+
+#: tmainform.mnupdatedownfromserver.caption
+msgid "Download manga list from server"
+msgstr "Télécharger le catalogue depuis le serveur"
+
+#: tmainform.mnupdatelist.caption
+msgctxt "TMAINFORM.MNUPDATELIST.CAPTION"
+msgid "Update manga list"
+msgstr "Mettre à jour le catalogue"
+
+#: tmainform.rball.caption
+msgid "Have all genre checked"
+msgstr "Résultats contenant tous les genres cochés"
+
+#: tmainform.rbfavoritesshowall.caption
+msgctxt "tmainform.rbfavoritesshowall.caption"
+msgid "All"
+msgstr "Tous"
+
+#: tmainform.rbfavoritesshowdisabled.caption
+msgctxt "tmainform.rbfavoritesshowdisabled.caption"
+msgid "Disabled"
+msgstr "Désactivés"
+
+#: tmainform.rbfavoritesshowenabled.caption
+msgctxt "tmainform.rbfavoritesshowenabled.caption"
+msgid "Enabled"
+msgstr "Activés"
+
+#: tmainform.rbone.caption
+msgid "Have one of genres checked"
+msgstr "Résultats contenant au moins un des genres cochés"
+
+#: tmainform.rgdroptargetmode.caption
+msgid "Mode"
+msgstr "Mode"
+
+#: tmainform.rgoptioncompress.caption
+msgid "Save downloaded chapters as"
+msgstr "Format d'enregistrement des chapitres téléchargés"
+
+#: tmainform.seoptionpdfquality.hint
+msgctxt "tmainform.seoptionpdfquality.hint"
+msgid "100 = FlateEncode (lossless), lower = DCTEncode (lossy)"
+msgstr "100 = FlateEncode (sans pertes), lower = DCTEncode (avec compression)"
+
+#: tmainform.tbdownloaddeletecompleted.caption
+msgctxt "tmainform.tbdownloaddeletecompleted.caption"
+msgid "Delete all completed tasks"
+msgstr "Supprimer toutes les tâches complétées"
+
+#: tmainform.tbdownloadresumeall.caption
+msgid "Resume All"
+msgstr "Tout reprendre"
+
+#: tmainform.tbdownloadstopall.caption
+msgid "Stop All"
+msgstr "Tout interrompre"
+
+#: tmainform.tbmidownloadmovebottom.hint
+msgid "Move selected item(s) to bottom"
+msgstr "Déplacer le·s titre·s sélectionné·s tout en bas"
+
+#: tmainform.tbmidownloadmovedown.hint
+msgid "Move selected item(s) down"
+msgstr "Déplacer le·s titre·s sélectionné·s vers le bas"
+
+#: tmainform.tbmidownloadmovetop.hint
+msgid "Move selected item(s) to top"
+msgstr "Déplacer le·s titre·s sélectionné·s tout en haut"
+
+#: tmainform.tbmidownloadmoveup.hint
+msgid "Move selected item(s) up"
+msgstr "Déplacer le·s titre·s sélectionné·s vers le haut"
+
+#: tmainform.tbwebsitescollapseall.caption
+msgid "Collapse All"
+msgstr "Tout réduire"
+
+#: tmainform.tbwebsitesexpandall.caption
+msgid "Expand All"
+msgstr "Tout développer"
+
+#: tmainform.tbwebsitesselectall.caption
+msgid "Select All"
+msgstr "Tout sélectionner"
+
+#: tmainform.tbwebsitesunselectall.caption
+msgid "Unselect All"
+msgstr "Tout désélectionner"
+
+#: tmainform.tsabout.caption
+msgid "About"
+msgstr "À propos"
+
+#: tmainform.tsabouttext.caption
+msgid "About FMD"
+msgstr "À propos de FMD"
+
+#: tmainform.tsaccounts.caption
+msgid "Accounts"
+msgstr "Comptes"
+
+#: tmainform.tschangelogtext.caption
+msgid "Changelog"
+msgstr "Journal des mises à jour"
+
+#: tmainform.tsconnections.caption
+msgid "Connections"
+msgstr "Connexions"
+
+#: tmainform.tscustomcolor.caption
+msgid "Custom color"
+msgstr "Couleurs personnalisées"
+
+#: tmainform.tsdialogs.caption
+msgid "Dialogs"
+msgstr "Dialogues"
+
+#: tmainform.tsdownload.caption
+msgctxt "tmainform.tsdownload.caption"
+msgid "Downloads"
+msgstr "Téléchargements"
+
+#: tmainform.tsfavorites.caption
+msgctxt "tmainform.tsfavorites.caption"
+msgid "Favorites"
+msgstr "Favoris"
+
+#: tmainform.tsgeneral.caption
+msgid "General"
+msgstr "Général"
+
+#: tmainform.tsinfofilteradv.caption
+msgctxt "tmainform.tsinfofilteradv.caption"
+msgid "Filter"
+msgstr "Recherche avancée"
+
+#: tmainform.tsinfomanga.caption
+msgid "Info"
+msgstr "Informations"
+
+#: tmainform.tsinformation.caption
+msgid "Manga Info"
+msgstr "Catalogue"
+
+#: tmainform.tslog.caption
+msgid "Log"
+msgstr "Journal"
+
+#: tmainform.tsmisc.caption
+msgid "Misc"
+msgstr "Divers"
+
+#: tmainform.tsoption.caption
+msgctxt "tmainform.tsoption.caption"
+msgid "Options"
+msgstr "Options"
+
+#: tmainform.tssaveto.caption
+msgctxt "TMAINFORM.TSSAVETO.CAPTION"
+msgid "Save to"
+msgstr "Répertoire d'enregistrement"
+
+#: tmainform.tsupdate.caption
+msgid "Updates"
+msgstr "Mises à jour"
+
+#: tmainform.tsview.caption
+msgid "View"
+msgstr "Affichage"
+
+#: tmainform.tswebsiteadvanced.caption
+msgid "Advanced"
+msgstr "Avancés"
+
+#: tmainform.tswebsitemodules.caption
+msgid "Modules"
+msgstr "Modules"
+
+#: tmainform.tswebsiteoptions.caption
+msgctxt "TMAINFORM.TSWEBSITEOPTIONS.CAPTION"
+msgid "Options"
+msgstr "Options"
+
+#: tmainform.tswebsites.caption
+msgctxt "tmainform.tswebsites.caption"
+msgid "Websites"
+msgstr "Sites"
+
+#: tmainform.tswebsiteselection.caption
+msgctxt "TMAINFORM.TSWEBSITESELECTION.CAPTION"
+msgid "Websites"
+msgstr "Sites"
+
+#: tmainform.vtdownload.header.columns[0].text
+msgid "Manga"
+msgstr "Titre"
+
+#: tmainform.vtdownload.header.columns[1].text
+msgctxt "tmainform.vtdownload.header.columns[1].text"
+msgid "Status"
+msgstr "Statut"
+
+#: tmainform.vtdownload.header.columns[2].text
+msgid "Progress"
+msgstr "Progression"
+
+#: tmainform.vtdownload.header.columns[3].text
+msgctxt "tmainform.vtdownload.header.columns[3].text"
+msgid "Transfer rate"
+msgstr "Vitesse"
+
+#: tmainform.vtdownload.header.columns[4].text
+msgctxt "tmainform.vtdownload.header.columns[4].text"
+msgid "Website"
+msgstr "Site"
+
+#: tmainform.vtdownload.header.columns[5].text
+msgctxt "tmainform.vtdownload.header.columns[5].text"
+msgid "Save to"
+msgstr "Répertoire d'enregistrement"
+
+#: tmainform.vtdownload.header.columns[6].text
+msgctxt "TMAINFORM.VTDOWNLOAD.HEADER.COLUMNS[6].TEXT"
+msgid "Added"
+msgstr "Date d'ajout"
+
+#: tmainform.vtfavorites.header.columns[0].text
+msgid "#"
+msgstr "#"
+
+#: tmainform.vtfavorites.header.columns[1].text
+msgctxt "TMAINFORM.VTFAVORITES.HEADER.COLUMNS[1].TEXT"
+msgid "Title"
+msgstr "Titre"
+
+#: tmainform.vtfavorites.header.columns[2].text
+msgid "Current chapter"
+msgstr "Chapitre en cours"
+
+#: tmainform.vtfavorites.header.columns[3].text
+msgctxt "TMAINFORM.VTFAVORITES.HEADER.COLUMNS[3].TEXT"
+msgid "Website"
+msgstr "Site"
+
+#: tmainform.vtfavorites.header.columns[4].text
+msgctxt "TMAINFORM.VTFAVORITES.HEADER.COLUMNS[4].TEXT"
+msgid "Save to"
+msgstr "Répertoire d'enregistrement"
+
+#: tnewchapter.btcancel.caption
+msgctxt "TNEWCHAPTER.BTCANCEL.CAPTION"
+msgid "&Cancel"
+msgstr "&Annuler"
+
+#: tnewchapter.btdownload.caption
+msgctxt "TNEWCHAPTER.BTDOWNLOAD.CAPTION"
+msgid "&Download"
+msgstr "&Télécharger"
+
+#: tnewchapter.btqueue.caption
+msgctxt "TNEWCHAPTER.BTQUEUE.CAPTION"
+msgid "&Add to queue"
+msgstr "&File d'attente"
+
+#: tnewchapter.caption
+msgid "New Chapter Notification"
+msgstr "Notification de nouveaux chapitres"
+
+#: tselectdirectoryform.btok.caption
+msgctxt "tselectdirectoryform.btok.caption"
+msgid "OK"
+msgstr "OK"
+
+#: tselectdirectoryform.caption
+msgid "Select directory"
+msgstr "Choisir le répertoire"
+
+#: tselectdirectoryform.lbdescription.caption
+msgid ""
+"If you change multiple entries at once, the new paths will be constructed like this:\n"
+"\"{New_Path}\\{Manga_Title}\"\n"
+"\n"
+"Old folder structures will be ignored. However, if the only part you change is the drive letter (e.g. 'D:'), only the letter will be replaced. This only works for absolute paths, relative paths will be ignored."
+msgstr ""
+
+#: tshutdowncounterform.btabort.caption
+msgid "&Abort"
+msgstr "&Interrompre"
+
+#: tshutdowncounterform.btnow.caption
+msgid "&Now"
+msgstr "&Maintenant"
+
+#: ttransferfavoritesform.btcancel.caption
+msgctxt "ttransferfavoritesform.btcancel.caption"
+msgid "Cancel"
+msgstr "Annuler"
+
+#: ttransferfavoritesform.btok.caption
+msgctxt "ttransferfavoritesform.btok.caption"
+msgid "OK"
+msgstr "OK"
+
+#: ttransferfavoritesform.caption
+msgid "Transfer Favorites"
+msgstr "Transférer les favoris"
+
+#: ttransferfavoritesform.ckcleardownloadedchapters.caption
+msgid "Clear downloaded chapter list and reload from server"
+msgstr "Effacer la liste des chapitres téléchargés et recharger depuis le serveur"
+
+#: ttransferfavoritesform.lbtransferto.caption
+msgctxt "ttransferfavoritesform.lbtransferto.caption"
+msgid "Transfer to"
+msgstr "Transférer vers"
+
+#: ttransferfavoritesform.rball.caption
+msgctxt "ttransferfavoritesform.rball.caption"
+msgid "All"
+msgstr "Tout"
+
+#: ttransferfavoritesform.rbinvalid.caption
+msgctxt "ttransferfavoritesform.rbinvalid.caption"
+msgid "Invalid"
+msgstr "Invalide"
+
+#: ttransferfavoritesform.rbvalid.caption
+msgctxt "ttransferfavoritesform.rbvalid.caption"
+msgid "Valid"
+msgstr "Valide"
+
+#: ttransferfavoritesform.vtfavs.header.columns[1].text
+msgctxt "ttransferfavoritesform.vtfavs.header.columns[1].text"
+msgid "Title"
+msgstr "Titre"
+
+#: ttransferfavoritesform.vtfavs.header.columns[2].text
+msgctxt "ttransferfavoritesform.vtfavs.header.columns[2].text"
+msgid "Website"
+msgstr "Site internet"
+
+#: tupdatedialogform.btnlater.caption
+msgid "&Later"
+msgstr "&Plus tard"
+
+#: tupdatedialogform.btnupdate.caption
+msgid "&Update"
+msgstr "&Mettre à jour"
+
+#: tupdatedialogform.lbmessage.caption
+msgid ""
+"New version found! Do you want to update now?\n"
+"FMD will be closed to finish the update."
+msgstr ""
+"Une nouvelle version est disponible. Souhaitez-vous mettre à jour le logiciel maintenant ?\n"
+"FMD sera fermé pour terminer la mise à jour."
+
+#: twebsiteselectionform.caption
+msgid "Select a website"
+msgstr "Sélectionner un site internet"
+
+#: twebsitesettingsform.caption
+msgid "WebsiteSettingsForm"
+msgstr "WebsiteSettingsForm"
+
+#: twebsitesettingsform.edsearch.texthint
+msgid "Website name"
+msgstr "Site..."
+
+#: twebsitesettingsform.edsearchproperty.texthint
+msgid "Setting name"
+msgstr "Paramètre..."
+
+#: udownloadsmanager.rs_compressing
+msgid "Compressing..."
+msgstr ""
+
+#: udownloadsmanager.rs_disabled
+#, fuzzy
+msgctxt "udownloadsmanager.rs_disabled"
+msgid "Disabled"
+msgstr "Désactivés"
+
+#: udownloadsmanager.rs_downloading
+msgid "Downloading"
+msgstr ""
+
+#: udownloadsmanager.rs_failed
+#, fuzzy
+msgctxt "udownloadsmanager.rs_failed"
+msgid "Failed"
+msgstr "Échec"
+
+#: udownloadsmanager.rs_failedtocreatedir
+msgid "Failed to create directory!"
+msgstr ""
+
+#: udownloadsmanager.rs_failedtryresumetask
+msgid "Failed, try resuming this task!"
+msgstr ""
+
+#: udownloadsmanager.rs_finish
+msgid "Completed"
+msgstr ""
+
+#: udownloadsmanager.rs_preparing
+msgctxt "udownloadsmanager.rs_preparing"
+msgid "Preparing"
+msgstr ""
+
+#: udownloadsmanager.rs_stopped
+msgid "Stopped"
+msgstr ""
+
+#: udownloadsmanager.rs_waiting
+msgid "Waiting..."
+msgstr ""
+
+#: ufavoritesmanager.rs_btnaddtoqueue
+#, fuzzy
+msgctxt "ufavoritesmanager.rs_btnaddtoqueue"
+msgid "&Add to queue"
+msgstr "&File d'attente"
+
+#: ufavoritesmanager.rs_btncancel
+#, fuzzy
+msgctxt "ufavoritesmanager.rs_btncancel"
+msgid "&Cancel"
+msgstr "&Annuler"
+
+#: ufavoritesmanager.rs_btncheckfavorites
+#, fuzzy
+msgctxt "ufavoritesmanager.rs_btncheckfavorites"
+msgid "Check for new chapter"
+msgstr "Vérifier les nouveaux chapitres"
+
+#: ufavoritesmanager.rs_btndownload
+#, fuzzy
+msgctxt "ufavoritesmanager.rs_btndownload"
+msgid "&Download"
+msgstr "&Télécharger"
+
+#: ufavoritesmanager.rs_btnremove
+msgid "&Remove"
+msgstr ""
+
+#: ufavoritesmanager.rs_dlgcompletedmangacaption
+#, object-pascal-format
+msgid "Found %d completed manga"
+msgstr ""
+
+#: ufavoritesmanager.rs_dlgfavoritescheckisrunning
+msgid "Favorites check is running!"
+msgstr ""
+
+#: ufavoritesmanager.rs_dlgnewchaptercaption
+#, object-pascal-format
+msgid "%d manga(s) have new chapter(s)"
+msgstr ""
+
+#: ufavoritesmanager.rs_favoritehasnewchapter
+#, object-pascal-format
+msgid "%s <%s> has %d new chapter(s)."
+msgstr ""
+
+#: ufavoritesmanager.rs_lblmangawillberemoved
+msgid "Completed manga will be removed:"
+msgstr ""
+
+#: ufavoritesmanager.rs_lblnewchapterfound
+#, object-pascal-format
+msgid "Found %d new chapter from %d manga(s):"
+msgstr ""
+
+#: usilentthread.rs_silentthreadloadstatus
+#, object-pascal-format
+msgid "Loading: %d/%d"
+msgstr ""
+
+#: uupdatethread.rs_dlghasnewmanga
+#, object-pascal-format
+msgid "%s has %d new manga(s)"
+msgstr ""
+
+#: uupdatethread.rs_gettingdirectory
+msgid "Getting directory"
+msgstr ""
+
+#: uupdatethread.rs_gettinginfo
+msgid "Getting info"
+msgstr ""
+
+#: uupdatethread.rs_gettinglistfor
+msgid "Getting list for"
+msgstr ""
+
+#: uupdatethread.rs_indexingnewtitle
+msgid "Indexing new title(s)"
+msgstr ""
+
+#: uupdatethread.rs_lookingfornewtitle
+msgid "Looking for new title(s)"
+msgstr ""
+
+#: uupdatethread.rs_lookingfornewtitlefromanotherdirectory
+msgid "Looking for new title(s) from another directory"
+msgstr ""
+
+#: uupdatethread.rs_preparing
+msgctxt "uupdatethread.rs_preparing"
+msgid "Preparing"
+msgstr ""
+
+#: uupdatethread.rs_removingduplicatefromcurrentdata
+msgid "Removing duplicate from current data"
+msgstr ""
+
+#: uupdatethread.rs_removingduplicatefromlocaldata
+msgid "Removing duplicate from local data"
+msgstr ""
+
+#: uupdatethread.rs_removingduplicatefromnewtitle
+msgid "Removing duplicate from new title(s)"
+msgstr ""
+
+#: uupdatethread.rs_savingdata
+msgid "Saving data"
+msgstr ""
+
+#: uupdatethread.rs_synchronizingdata
+msgid "Synchronizing data"
+msgstr ""
+
+#: uupdatethread.rs_updatinglist
+msgid "Updating list"
+msgstr ""
+
+#: webp.serrloadfailed
+#, object-pascal-format
+msgid "Can not load WebP codec library \"%s\". Check your installation."
+msgstr ""
+

@@ -6,7 +6,28 @@ function getinfo()
     mangainfo.coverlink=MaybeFillHost(module.RootURL, x.xpathstring('css("img.titlesinfo_coverimage")/@src'))
     mangainfo.status=MangaInfoStatusIfPos(x.xpathstring('//div[contains(span, "Status")]/span[@class="titleinfo_infovalue"]')) 
     mangainfo.summary=x.xpathstringall('//div[contains(span, "Description")]/*[@class="titlesinfo_description"]/text()', '')
-    x.xpathhrefall('//table[@class="titlesinfo_chaptertable"]//td[3]/a',mangainfo.chapterlinks,mangainfo.chapternames)
+    
+	  local chapters=x.xpath('//table[@class="titlesinfo_chaptertable"]//tr')
+    for i = 1, chapters.count do
+      local v1 = chapters.get(i)
+	    local s = ''
+      local vol = x.xpathstring('td[1]', v1)
+      local ch = x.xpathstring('td[2]', v1)
+      local title = x.xpathstring('td[3]/a/text()', v1)
+      if vol ~= '' then s = s .. string.format('Vol. %s', vol); end
+      if s ~= '' then s = s .. ' '; end
+      if ch ~= '' then s = s .. string.format('Ch. %s', ch); end
+      if title ~= '' then
+        if s ~= '' then s = s .. ' - '; end
+        s = s .. title
+      end
+      
+      if s ~= '' then
+        mangainfo.chapterlinks.add(x.xpathstring('td[3]/a/@href', v1))
+        mangainfo.chapternames.add(s)
+      end
+    end
+    
     InvertStrings(mangainfo.chapterlinks,mangainfo.chapternames)
     return no_error
   else

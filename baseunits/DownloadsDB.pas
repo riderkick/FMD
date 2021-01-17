@@ -18,14 +18,29 @@ type
     procedure SetAutoCommitCount(AValue: Integer);
   public
     constructor Create(const AFilename: String);
-    function Open: Boolean;
-    function Add(var Adlid: Integer;
-      const Aenabled: Boolean;
-      const Aorder, Ataskstatus, Achapterptr, Anumberofpages, Acurrentpage: Integer;
-      const Awebsite, Alink, Atitle, Astatus, Aprogress, Asaveto: String;
-      const Adatetime: TDateTime;
-      const Achapterslinks, Achaptersnames, Apagelinks, Apagecontainerlinks, Afilenames, Acustomfilenames,
-        Achaptersstatus: String): Boolean;
+    procedure InternalAdd(
+      const Aenabled:Boolean;
+      const Aorder,Ataskstatus,Achapterptr,Anumberofpages,Acurrentpage:Integer;
+      const Awebsite,Alink,Atitle,Astatus,Aprogress,Asaveto:String;
+      const Adatetime:TDateTime;
+      const Achapterslinks,Achaptersnames,Apagelinks,Apagecontainerlinks,Afilenames,Acustomfilenames,Achaptersstatus:String); inline;
+    procedure InternalUpdate(
+      const Adlid:Integer;
+      const Aenabled:Boolean;
+      const Aorder,Ataskstatus,Achapterptr,Anumberofpages,Acurrentpage:Integer;
+      const Awebsite,Alink,Atitle,Astatus,Aprogress,Asaveto:String;
+      const Adatetime:TDateTime;
+      const Achapterslinks,Achaptersnames,Apagelinks,Apagecontainerlinks,Afilenames,Acustomfilenames,Achaptersstatus:String); inline;
+    procedure InternalUpdateOrderEnabled(const Adlid,AOrder:Integer;const Aenabled:Boolean);
+    procedure InternalUpdateOrder(const Adlid,AOrder:Integer);
+    procedure InternalUpdateEnabled(const Adlid:Integer;const Aenabled:Boolean);
+    function Add(
+      var Adlid:Integer;
+      const Aenabled:Boolean;
+      const Aorder,Ataskstatus,Achapterptr,Anumberofpages,Acurrentpage:Integer;
+      const Awebsite,Alink,Atitle,Astatus,Aprogress,Asaveto:String;
+      const Adatetime:TDateTime;
+      const Achapterslinks,Achaptersnames,Apagelinks,Apagecontainerlinks,Afilenames,Acustomfilenames,Achaptersstatus:String):Boolean;
     procedure Delete(const ADlId: Integer);
     procedure Commit; override;
     procedure Close; override;
@@ -99,93 +114,116 @@ begin
   SelectParams := 'SELECT ' + FieldsParams + ' FROM '+QuotedStrD(TableName)+' ORDER BY "order"';
 end;
 
-function TDownloadsDB.Open: Boolean;
+procedure TDownloadsDB.InternalAdd(
+  const Aenabled:Boolean;
+  const Aorder,Ataskstatus,Achapterptr,Anumberofpages,Acurrentpage:Integer;
+  const Awebsite,Alink,Atitle,Astatus,Aprogress,Asaveto:String;
+  const Adatetime:TDateTime;
+  const Achapterslinks,Achaptersnames,Apagelinks,Apagecontainerlinks,Afilenames,Acustomfilenames,Achaptersstatus:String);
 begin
-  Result := inherited Open(False, False);
-  Table.SQL.Text := 'SELECT * FROM ' + QuotedStrD(TableName);
-  Table.Open;
-  if Table.Active then
-  begin
-    // convert table, replace failedchapterlink, failedchaptername with chaptersstatus
-    if (Table.Fields.Count = 22) and (Table.Fields[20].FieldName = 'failedchapterlinks') then
-    begin
-      Table.Close;
-      with Connection do
-      begin
-        ExecuteDirect('DROP TABLE IF EXISTS ' + QuotedStrD('temp' + TableName));
-        ExecuteDirect('CREATE TABLE ' + QuotedStrD('temp' + TableName) + ' (' + CreateParams + ')');
-        ExecuteDirect('INSERT INTO ' + QuotedStrD('temp' + TableName) + ' (' + FieldsParams + ') SELECT ' +
-          '"dlid","enabled","order","taskstatus","chapterptr","numberofpages","currentpage","website","link","title","status","progress","saveto","datetime","chapterslinks"||"failedchapterlinks","chaptersnames"||"failedchapternames","pagelinks","pagecontainerlinks","filenames","customfilenames",""'
-          + ' FROM "' + TableName + '"');
-        ExecuteDirect('DROP TABLE ' + QuotedStrD(TableName));
-        ExecuteDirect('ALTER TABLE ' + QuotedStrD('temp' + TableName) + ' RENAME TO ' + QuotedStrD(TableName));
-        Transaction.Commit;
-      end;
-    end;
-  end;
-  CloseTable;
+  Connection.ExecuteDirect('INSERT INTO "downloads" ("enabled","order","taskstatus","chapterptr","numberofpages","currentpage","website","link","title","status","progress","saveto","datetime","chapterslinks","chaptersnames","pagelinks","pagecontainerlinks","filenames","customfilenames","chaptersstatus")' +
+    ' VALUES (' +
+    QuotedStr(Aenabled) + ', ' +
+    QuotedStr(Aorder) + ', ' +
+    QuotedStr(Ataskstatus) + ', ' +
+    QuotedStr(Achapterptr) + ', ' +
+    QuotedStr(Anumberofpages) + ', ' +
+    QuotedStr(Acurrentpage) + ', ' +
+    QuotedStr(Awebsite) + ', ' +
+    QuotedStr(Alink) + ', ' +
+    QuotedStr(Atitle) + ', ' +
+    QuotedStr(Astatus) + ', ' +
+    QuotedStr(Aprogress) + ', ' +
+    QuotedStr(Asaveto) + ', ' +
+    QuotedStr(Adatetime) + ', ' +
+    QuotedStr(Achapterslinks) + ', ' +
+    QuotedStr(Achaptersnames) + ', ' +
+    QuotedStr(Apagelinks) + ', ' +
+    QuotedStr(Apagecontainerlinks) + ', ' +
+    QuotedStr(Afilenames) + ', ' +
+    QuotedStr(Acustomfilenames) + ', ' +
+    QuotedStr(Achaptersstatus) +
+    ')');
 end;
 
-function TDownloadsDB.Add(var Adlid: Integer; const Aenabled: Boolean;
-  const Aorder, Ataskstatus, Achapterptr, Anumberofpages,
-  Acurrentpage: Integer; const Awebsite, Alink, Atitle, Astatus, Aprogress,
-  Asaveto: String; const Adatetime: TDateTime; const Achapterslinks,
-  Achaptersnames, Apagelinks, Apagecontainerlinks, Afilenames,
-  Acustomfilenames, Achaptersstatus: String): Boolean;
+procedure TDownloadsDB.InternalUpdate(
+  const Adlid:Integer;
+  const Aenabled:Boolean;
+  const Aorder,Ataskstatus,Achapterptr,Anumberofpages,Acurrentpage:Integer;
+  const Awebsite,Alink,Atitle,Astatus,Aprogress,Asaveto:String;
+  const Adatetime:TDateTime;
+  const Achapterslinks,Achaptersnames,Apagelinks,Apagecontainerlinks,Afilenames,Acustomfilenames,Achaptersstatus:String);
+begin
+  Connection.ExecuteDirect('UPDATE "downloads" SET ' +
+    '"enabled"=' +            QuotedStr(Aenabled) + ', ' +
+    '"order"=' +              QuotedStr(Aorder) + ', ' +
+    '"taskstatus"=' +         QuotedStr(Ataskstatus) + ', ' +
+    '"chapterptr"=' +         QuotedStr(Achapterptr) + ', ' +
+    '"numberofpages"=' +      QuotedStr(Anumberofpages) + ', ' +
+    '"currentpage"=' +        QuotedStr(Acurrentpage) + ', ' +
+    '"website"=' +            QuotedStr(Awebsite) + ', ' +
+    '"link"=' +               QuotedStr(Alink) + ', ' +
+    '"title"=' +              QuotedStr(Atitle) + ', ' +
+    '"status"=' +             QuotedStr(Astatus) + ', ' +
+    '"progress"=' +           QuotedStr(Aprogress) + ', ' +
+    '"saveto"=' +             QuotedStr(Asaveto) + ', ' +
+    '"datetime"=' +           QuotedStr(Adatetime) + ', ' +
+    '"chapterslinks"=' +      QuotedStr(Achapterslinks) + ', ' +
+    '"chaptersnames"=' +      QuotedStr(Achaptersnames) + ', ' +
+    '"pagelinks"=' +          QuotedStr(Apagelinks) + ', ' +
+    '"pagecontainerlinks"=' + QuotedStr(Apagecontainerlinks) + ', ' +
+    '"filenames"=' +          QuotedStr(Afilenames) + ', ' +
+    '"customfilenames"=' +    QuotedStr(Acustomfilenames) + ', ' +
+    '"chaptersstatus"=' +     QuotedStr(Achaptersstatus) +
+    ' WHERE "dlid"=' + QuotedStr(Adlid));
+end;
+
+procedure TDownloadsDB.InternalUpdateOrderEnabled(const Adlid, AOrder: Integer;
+  const Aenabled: Boolean);
+begin
+  Connection.ExecuteDirect('UPDATE "downloads" SET ' +
+    '"enabled"=' +            QuotedStr(Aenabled) + ', ' +
+    '"order"=' +              QuotedStr(Aorder) +
+    ' WHERE "dlid"=' + QuotedStr(Adlid));
+end;
+
+procedure TDownloadsDB.InternalUpdateOrder(const Adlid, AOrder: Integer);
+begin
+  Connection.ExecuteDirect('UPDATE "downloads" SET ' +
+    '"order"='+QuotedStr(AOrder)+
+    ' WHERE "dlid"=' + QuotedStr(Adlid));
+end;
+
+procedure TDownloadsDB.InternalUpdateEnabled(const Adlid: Integer;
+  const Aenabled: Boolean);
+begin
+  Connection.ExecuteDirect('UPDATE "downloads" SET ' +
+    '"enabled"=' +QuotedStr(Aenabled)+
+    ' WHERE "dlid"=' + QuotedStr(Adlid));
+end;
+
+function TDownloadsDB.Add(
+  var Adlid:Integer;
+  const Aenabled:Boolean;
+  const Aorder,Ataskstatus,Achapterptr,Anumberofpages,Acurrentpage:Integer;
+  const Awebsite,Alink,Atitle,Astatus,Aprogress,Asaveto:String;
+  const Adatetime:TDateTime;
+  const Achapterslinks,Achaptersnames,Apagelinks,Apagecontainerlinks,Afilenames,Acustomfilenames,Achaptersstatus:String):Boolean;
 begin
   Result := False;
   if not Connection.Connected then Exit;
   try
     if Adlid = -1 then
     begin
-      Connection.ExecuteDirect('INSERT INTO "downloads" ("enabled","order","taskstatus","chapterptr","numberofpages","currentpage","website","link","title","status","progress","saveto","datetime","chapterslinks","chaptersnames","pagelinks","pagecontainerlinks","filenames","customfilenames","chaptersstatus")' +
-        ' VALUES (' +
-        QuotedStr(Aenabled) + ', ' +
-        QuotedStr(Aorder) + ', ' +
-        QuotedStr(Ataskstatus) + ',' +
-        QuotedStr(Achapterptr) + ',' +
-        QuotedStr(Anumberofpages) + ',' +
-        QuotedStr(Acurrentpage) + ',' +
-        QuotedStr(Awebsite) + ', ' +
-        QuotedStr(Alink) + ', ' +
-        QuotedStr(Atitle) + ', ' +
-        QuotedStr(Astatus) + ', ' +
-        QuotedStr(Aprogress) + ', ' +
-        QuotedStr(Asaveto) + ', ' +
-        QuotedStr(Adatetime) + ', ' +
-        QuotedStr(Achapterslinks) + ', ' +
-        QuotedStr(Achaptersnames) + ', ' +
-        QuotedStr(Apagelinks) + ', ' +
-        QuotedStr(Apagecontainerlinks) + ', ' +
-        QuotedStr(Afilenames) + ', ' +
-        QuotedStr(Acustomfilenames) + ', ' +
-        QuotedStr(Achaptersstatus) +
-        ')');
+      InternalAdd(Aenabled,Aorder,Ataskstatus,Achapterptr,Anumberofpages,Acurrentpage,Awebsite,
+        Alink,Atitle,Astatus,Aprogress,Asaveto,Adatetime,Achapterslinks,Achaptersnames,Apagelinks,
+        Apagecontainerlinks,Afilenames,Acustomfilenames,Achaptersstatus);
       Adlid := Connection.GetInsertID;
     end
     else
-      Connection.ExecuteDirect('UPDATE "downloads" SET ' +
-        '"enabled"=' +            QuotedStr(Aenabled) + ', ' +
-        '"order"=' +              QuotedStr(Aorder) + ', ' +
-        '"taskstatus"=' +         QuotedStr(Ataskstatus) + ',' +
-        '"chapterptr"=' +         QuotedStr(Achapterptr) + ',' +
-        '"numberofpages"=' +      QuotedStr(Anumberofpages) + ',' +
-        '"currentpage"=' +        QuotedStr(Acurrentpage) + ',' +
-        '"website"=' +            QuotedStr(Awebsite) + ', ' +
-        '"link"=' +               QuotedStr(Alink) + ', ' +
-        '"title"=' +              QuotedStr(Atitle) + ', ' +
-        '"status"=' +             QuotedStr(Astatus) + ', ' +
-        '"progress"=' +           QuotedStr(Aprogress) + ', ' +
-        '"saveto"=' +             QuotedStr(Asaveto) + ', ' +
-        '"datetime"=' +           QuotedStr(Adatetime) + ', ' +
-        '"chapterslinks"=' +      QuotedStr(Achapterslinks) + ', ' +
-        '"chaptersnames"=' +      QuotedStr(Achaptersnames) + ', ' +
-        '"pagelinks"=' +          QuotedStr(Apagelinks) + ', ' +
-        '"pagecontainerlinks"=' + QuotedStr(Apagecontainerlinks) + ', ' +
-        '"filenames"=' +          QuotedStr(Afilenames) + ', ' +
-        '"customfilenames"=' +    QuotedStr(Acustomfilenames) + ', ' +
-        '"chaptersstatus"=' +     QuotedStr(Achaptersstatus) +
-        ' WHERE "dlid"=' + QuotedStr(Adlid));
+      InternalUpdate(Adlid,Aenabled,Aorder,Ataskstatus,Achapterptr,Anumberofpages,Acurrentpage,Awebsite,
+        Alink,Atitle,Astatus,Aprogress,Asaveto,Adatetime,Achapterslinks,Achaptersnames,Apagelinks,
+        Apagecontainerlinks,Afilenames,Acustomfilenames,Achaptersstatus);
     Inc(FCommitCount);
     if FCommitCount >= FAutoCommitCount then
       Commit;

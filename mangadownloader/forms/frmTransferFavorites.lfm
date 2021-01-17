@@ -14,6 +14,7 @@ object TransferFavoritesForm: TTransferFavoritesForm
   OnDestroy = FormDestroy
   OnShow = FormShow
   Position = poMainFormCenter
+  LCLVersion = '1.8.4.0'
   object cbWebsites: TComboBox
     AnchorSideLeft.Control = lbTransferTo
     AnchorSideLeft.Side = asrBottom
@@ -83,15 +84,14 @@ object TransferFavoritesForm: TTransferFavoritesForm
     OnGetNodeDataSize = vtFavsGetNodeDataSize
   end
   object btOK: TBitBtn
-    AnchorSideRight.Control = Owner
-    AnchorSideRight.Side = asrBottom
-    AnchorSideBottom.Control = Owner
+    AnchorSideTop.Control = btCancel
+    AnchorSideRight.Control = btCancel
     AnchorSideBottom.Side = asrBottom
-    Left = 422
+    Left = 336
     Height = 26
     Top = 458
     Width = 62
-    Anchors = [akRight, akBottom]
+    Anchors = [akTop, akRight]
     AutoSize = True
     Caption = 'OK'
     Glyph.Data = {
@@ -134,13 +134,15 @@ object TransferFavoritesForm: TTransferFavoritesForm
     TabOrder = 7
   end
   object btCancel: TBitBtn
-    AnchorSideTop.Control = btOK
-    AnchorSideRight.Control = btOK
-    Left = 336
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 402
     Height = 26
     Top = 458
     Width = 82
-    Anchors = [akTop, akRight]
+    Anchors = [akRight, akBottom]
     AutoSize = True
     Caption = 'Cancel'
     Glyph.Data = {
@@ -247,8 +249,8 @@ object TransferFavoritesForm: TTransferFavoritesForm
     Width = 16
   end
   object imgsState: TImageList
-    Left = 326
-    Top = 32
+    left = 326
+    top = 32
     Bitmap = {
       4C690300000010000000100000001975BA001975BA001770B7900B56A4C60142
       96CC003F94CC002A80CC00166BCC021C70CB072D7DC80D4390C51259A3C1176C

@@ -8,6 +8,7 @@ function getinfo()
     mangainfo.coverlink = x.xpathstring('//div[contains(@class, "col-md-3")]//img[@class="img-responsive"]/@src')
     mangainfo.authors=Trim(x.xpathstring('//span[@class="list-group-item" and contains(., "Autor")]/a'))
     mangainfo.artists=Trim(x.xpathstring('//span[@class="list-group-item" and contains(., "Artist")]/a'))
+    mangainfo.genres=Trim(x.xpathstringall('//span[@class="list-group-item" and contains(., "Categorías:")]/a'))
     mangainfo.status = MangaInfoStatusIfPos(x.xpathstring('//span[@class="list-group-item" and contains(., "Estado")]'))
     mangainfo.summary = x.xpathstringall('//span[@class="list-group-item" and contains(., "Resumen")]/text()', '')
     x.xpathhrefall('//table//tr/td[1]/a', mangainfo.chapterlinks, mangainfo.chapternames)
@@ -51,9 +52,8 @@ end
 function Init()
   local m = NewModule()
   m.website = 'SubManga'
-  m.rooturl = 'https://submanga.online'
+  m.rooturl = 'https://submangas.net'
   m.category = 'Spanish'
-  m.lastupdated='May 26, 2018'
   m.ongetinfo='getinfo'
   m.ongetpagenumber='getpagenumber'
   m.ongetnameandlink='getnameandlink'

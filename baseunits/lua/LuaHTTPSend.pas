@@ -13,33 +13,33 @@ procedure luaHTTPSendThreadAddMetaTable(L: Plua_State; Obj: Pointer; MetaTable,
 implementation
 
 uses
-  uBaseUnit, httpsendthread, LuaClass;
+  uBaseUnit, httpsendthread, LuaClass, LuaUtils;
 
 type
   TUserData = THTTPSendThread;
 
 function http_get(L: Plua_State): Integer; cdecl;
 begin
-  lua_pushboolean(L, TUserData(luaClassGetObject(L)).GET(lua_tostring(L, 1)));
+  lua_pushboolean(L, TUserData(luaClassGetObject(L)).GET(luaGetString(L, 1)));
   Result := 1;
 end;
 
 function http_post(L: Plua_State): Integer; cdecl;
 begin
-  lua_pushboolean(L, TUserData(luaClassGetObject(L)).POST(lua_tostring(L, 1),
-    lua_tostring(L, 2)));
+  lua_pushboolean(L, TUserData(luaClassGetObject(L)).POST(luaGetString(L, 1),
+    luaGetString(L, 2)));
   Result := 1;
 end;
 
 function http_head(L: Plua_State): Integer; cdecl;
 begin
-  lua_pushboolean(L, TUserData(luaClassGetObject(L)).head(lua_tostring(L, 1)));
+  lua_pushboolean(L, TUserData(luaClassGetObject(L)).head(luaGetString(L, 1)));
   Result := 1;
 end;
 
 function http_xhr(L: Plua_State): Integer; cdecl;
 begin
-  lua_pushboolean(L, TUserData(luaClassGetObject(L)).XHR(lua_tostring(L, 1)));
+  lua_pushboolean(L, TUserData(luaClassGetObject(L)).XHR(luaGetString(L, 1)));
   Result := 1;
 end;
 
@@ -51,8 +51,8 @@ end;
 
 function http_getcookies(L: Plua_State): Integer; cdecl;
 begin
-  Result := 0;
-  TUserData(luaClassGetObject(L)).GetCookies;
+  lua_pushstring(L, TUserData(luaClassGetObject(L)).GetCookies);
+  Result := 1;
 end;
 
 function http_threadterminated(L: Plua_State): Integer; cdecl;
@@ -64,8 +64,8 @@ end;
 function http_setproxy(L: Plua_State): Integer; cdecl;
 begin
   Result := 0;
-  TUserData(luaClassGetObject(L)).SetProxy(lua_tostring(L, 1), lua_tostring(L, 2),
-    lua_tostring(L, 3), lua_tostring(L, 4), lua_tostring(L, 5));
+  TUserData(luaClassGetObject(L)).SetProxy(luaGetString(L, 1), luaGetString(L, 2),
+    luaGetString(L, 3), luaGetString(L, 4), luaGetString(L, 5));
 end;
 
 function http_threadlasturl(L: Plua_State): Integer; cdecl;
@@ -116,7 +116,7 @@ begin
     luaClassAddObject(L, MetaTable, Cookies, 'Cookies');
     luaClassAddStringProperty(L, MetaTable, 'MimeType', @TUserData(Obj).MimeType);
     luaClassAddStringProperty(L, MetaTable, 'UserAgent', @TUserData(Obj).UserAgent);
-    luaClassAddUserData(L, MetaTable, TUserData(Obj).Document, 'Document');
+    luaClassAddObject(L, MetaTable, TUserData(Obj).Document, 'Document');
   end;
 end;
 

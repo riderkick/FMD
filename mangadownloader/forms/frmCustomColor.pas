@@ -166,20 +166,21 @@ begin
     Add('DropTargetBorderColor', clHotLight);
     Add('FocusedSelectionColor', clHighLight);
     Add('FocusedSelectionBorderColor', clHotLight);
-    Add('GridLineColor', clBtnFace);
+    Add('GridLineColor', clBtnShadow);
     Add('HeaderHotColor', clBtnShadow);
     Add('HotColor', clWindowText);
     Add('SelectionRectangleBlendColor', clHighlight);
     Add('SelectionRectangleBorderColor', clHotLight);
     Add('TreeLineColor', clBtnShadow);
-    Add('UnfocusedSelectionColor', clBtnFace);
-    Add('UnfocusedSelectionBorderColor', clBtnShadow);
+    Add('UnfocusedSelectionColor', clSilver);
+    Add('UnfocusedSelectionBorderColor', clGray);
     Add('NormalTextColor', clWindowText);
-    Add('FocusedSelectionTextColor', clWindowText);
+    Add('FocusedSelectionTextColor', clHighlightText);
     Add('UnfocusedSelectionTextColor', clWindowText);
     Add('OddColor', CL_BSOdd);
     Add('EvenColor', CL_BSEven);
     Add('SortedColumnColor', CL_BSSortedColumn);
+    Add('EnableWebsiteSettings', CL_BSEnabledWebsiteSettings);
   end;
 
   MangaListColors := TColorItems.Create;
@@ -261,6 +262,7 @@ begin
   CL_BSOdd := BasicListColors[19];
   CL_BSEven := BasicListColors[20];
   CL_BSSortedColumn := BasicListColors[21];
+  CL_BSEnabledWebsiteSettings := BasicListColors[22];
 
   //mangalist
   CL_MNNewManga := MangaListColors[0];
@@ -349,19 +351,13 @@ procedure TVTApplyList.VTOnPaintText(Sender: TBaseVirtualTree;
   const TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
   TextType: TVSTTextType);
 begin
-  with VirtualTrees.TVirtualStringTree(Sender), TargetCanvas.Font do
-  begin
-    if Selected[Node] and
-      ((toFullRowSelect in TreeOptions.SelectionOptions) or (FocusedColumn = Column)) then
-    begin
-      if Focused then
-        Color := CL_BSFocusedSelectionText
-      else
-        Color := CL_BSUnfocesedSelectionText;
-    end
-    else
-      Color := CL_BSNormalText;
-  end;
+  if vsSelected in Node^.States then
+     if Sender.Focused then
+       TargetCanvas.Font.Color:=CL_BSFocusedSelectionText
+     else
+       TargetCanvas.Font.Color:=CL_BSUnfocesedSelectionText
+  else
+     TargetCanvas.Font.Color:=CL_BSNormalText;
 
   if Assigned(FVTList[Sender.Tag].PaintText) then
     FVTList[Sender.Tag].PaintText(Sender, TargetCanvas, Node, Column, TextType);
@@ -387,32 +383,66 @@ procedure TVTApplyList.VTOnBeforeCellPaint(Sender: TBaseVirtualTree;
   TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
   CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
 var
-  isSortedColumn: Boolean;
+  isSortedColumn: Boolean = False;
+  CRect: TRect;
 begin
-  with VirtualTrees.TVirtualStringTree(Sender), TargetCanvas do
-  begin
-    if CellPaintMode = cpmPaint then
+  with VirtualTrees.TVirtualStringTree(Sender) do begin
+    if (CellPaintMode = cpmPaint) and (Column<>NoColumn) then
     begin
       if odd(Node^.Index) then
-        Brush.Color := CL_BSOdd
+        TargetCanvas.Brush.Color := CL_BSEven
       else
-        Brush.Color := CL_BSEven;
+        TargetCanvas.Brush.Color := CL_BSOdd;
       isSortedColumn := (Header.SortColumn <> -1) and (Header.SortColumn = Column);
-      if (not isSortedColumn) and (Brush.Color <> clNone) then
-        FillRect(CellRect);
+      if (not isSortedColumn) and (TargetCanvas.Brush.Color <> clNone) then
+        TargetCanvas.FillRect(CellRect);
     end;
 
     if Assigned(FVTList[Sender.Tag].BeforeCellPaint) then
       FVTList[Sender.Tag].BeforeCellPaint(Sender, TargetCanvas, Node, Column, CellPaintMode,
         CellRect, ContentRect);
 
-    if isSortedColumn and (CellPaintMode = cpmPaint) and (CL_BSSortedColumn <> clNone) then
+    if not (CellPaintMode = cpmPaint) then Exit;
+
+    if toFullRowSelect in TreeOptions.SelectionOptions then
+      CRect:=CellRect
+    else begin
+      CRect:=GetDisplayRect(Node,Column,True);
+      CRect.Top:=ContentRect.Top;
+      CRect.Bottom:=ContentRect.Bottom;
+    end;
+
+    // draw selected
+    if vsSelected in Node^.States then begin
+      if Sender.Focused then
+        TargetCanvas.Brush.Color := Colors.FocusedSelectionColor
+      else
+        TargetCanvas.Brush.Color := Colors.UnfocusedSelectionColor;
+      TargetCanvas.FillRect(CRect);
+    end;
+
+    if isSortedColumn and (CL_BSSortedColumn <> clNone) then
     begin
-      Brush.Color := BlendColor(CL_BSSortedColumn, Brush.Color, SelectionBlendFactor);
-      FillRect(CellRect);
-      Pen.Color := CL_BSSortedColumn;
-      Line(CellRect.Left, CellRect.Top, CellRect.Left, CellRect.Bottom);
-      Line(CellRect.Right - 1, CellRect.Top, CellRect.Right - 1, CellRect.Bottom);
+      if vsSelected in Node^.States then
+        TargetCanvas.Brush.Color := BlendColor(TargetCanvas.Brush.Color,CL_BSSortedColumn,200)
+      else
+        TargetCanvas.Brush.Color := BlendColor(TargetCanvas.Brush.Color,CL_BSSortedColumn,SelectionBlendFactor);
+      TargetCanvas.FillRect(CellRect);
+    end;
+
+    // draw gridline
+    if Header.Columns.Count <> 0 then
+    begin
+      TargetCanvas.Pen.Color := BlendColor(TargetCanvas.Brush.Color,Colors.GridLineColor,SelectionBlendFactor);
+      TargetCanvas.Line(CellRect.Right-1,CellRect.Top,CellRect.Right-1,CellRect.Bottom);
+    end;
+
+    if Node = HotNode then begin
+      if isSortedColumn then
+        TargetCanvas.Brush.Color := BlendColor(Colors.FocusedSelectionColor, TargetCanvas.Brush.Color, 100)
+      else
+        TargetCanvas.Brush.Color := BlendColor(Colors.FocusedSelectionColor, TargetCanvas.Brush.Color, SelectionBlendFactor);
+      TargetCanvas.FillRect(CRect);
     end;
   end;
 end;
@@ -420,67 +450,96 @@ end;
 procedure TVTApplyList.VTOnPaintBackground(Sender: TBaseVirtualTree;
   TargetCanvas: TCanvas; const R: TRect; var Handled: Boolean);
 var
-  AColumnRect: TRect;
-  i: Integer;
-begin
-  with VirtualTrees.TVirtualStringTree(Sender) do
+  aRect,aColumnRect:TRect;
+  i,j,fixedColumnsCount,fixedColumnsWidth:Integer;
+  isFixedColumnsRect:Boolean;
+
+  procedure paintVertGridline(const orect:TRect);
   begin
-    if Header.Columns.Count <> 0 then
-    begin
-      Handled := True;
+    with VirtualTrees.TVirtualStringTree(Sender) do begin
+      TargetCanvas.Pen.Color:=BlendColor(TargetCanvas.Brush.Color,Colors.GridLineColor,SelectionBlendFactor);
+      if LineStyle=lsDotted then
+        TargetCanvas.Pen.Style:=psDot
+      else
+        TargetCanvas.Pen.Style:=psSolid;
+      TargetCanvas.Line(orect.Right,orect.Top,orect.Right,orect.Bottom);
+    end;
+  end;
 
-      // draw background
-      TargetCanvas.Brush.Color := Color;
-      TargetCanvas.FillRect(TargetCanvas.ClipRect);
+  procedure paintSortedColumn(const orect:TRect);
+  begin
+    with VirtualTrees.TVirtualStringTree(Sender) do begin
+      if CL_BSSortedColumn=clNone then Exit;
+      TargetCanvas.Brush.Color:=BlendColor(CL_BSSortedColumn,TargetCanvas.Brush.Color,SelectionBlendFactor);
+      TargetCanvas.FillRect(orect);
+    end;
+  end;
 
-      // draw vertgridline for each column
-      i := Header.Columns.GetFirstVisibleColumn();
-      while i <> InvalidColumn do
-      begin
-        AColumnRect := R;
-        AColumnRect.Left := Header.Columns[i].Left;
-        AColumnRect.Right := AColumnRect.Left + (Header.Columns[i].Width - 1);
-        if toShowVertGridLines in TreeOptions.PaintOptions then
-        begin
-          TargetCanvas.Pen.Color := Colors.GridLineColor;
-          TargetCanvas.Line(AColumnRect.Right, AColumnRect.Top, AColumnRect.Right, AColumnRect.Bottom);
-        end;
-        // draw sorted column
-        if (i = Header.SortColumn) and (CL_BSSortedColumn <> clNone) then
-        begin
-          TargetCanvas.Brush.Color :=
-            BlendColor(CL_BSSortedColumn, TargetCanvas.Brush.Color, SelectionBlendFactor);
-          TargetCanvas.FillRect(AColumnRect);
-          TargetCanvas.Pen.Color := CL_BSSortedColumn;
-          TargetCanvas.Line(AColumnRect.Left, AColumnRect.Top, AColumnRect.Left, AColumnRect.Bottom);
-          TargetCanvas.Line(AColumnRect.Right - 1, AColumnRect.Top, AColumnRect.Right - 1,
-            AColumnRect.Bottom);
-        end;
-        i := Header.Columns.GetNextVisibleColumn(i);
+begin
+  with VirtualTrees.TVirtualStringTree(Sender) do begin
+    if Header.Columns.Count=0 then Exit;
+
+    // draw background
+    TargetCanvas.Brush.Style:=bsSolid;
+    TargetCanvas.Brush.Color:=Colors.BackGroundColor;
+    TargetCanvas.FillRect(R);
+    Handled:=True;
+
+    fixedColumnsCount:=0;
+    fixedColumnsWidth:=0; // fixed columns width
+    for i:=0 to Header.Columns.Count-1 do
+      if Header.Columns[I].Options*[coVisible,coFixed]=[coVisible,coFixed] then begin
+        Inc(fixedColumnsCount);
+        Inc(fixedColumnsWidth,Header.Columns[I].Width);
       end;
 
-      // draw fixed column on top of others
-      TargetCanvas.Brush.Color := Color;
-      TargetCanvas.Pen.Color := Colors.GridLineColor;
-      i := Header.Columns.GetFirstVisibleColumn();
-      while i <> InvalidColumn do
+    isFixedColumnsRect:=R.Width=fixedColumnsWidth;
+    aRect:=R;
+
+    if not isFixedColumnsRect then //non fixed columns
+    begin
+      // get offset display rect
+      aRect.Left:=aRect.Left-(ClientRect.Width-aRect.Width);
+
+      // paint vertgridline for each column
+      i:=Header.Columns.GetFirstVisibleColumn();
+      while i<>InvalidColumn do
       begin
-        if coFixed in Header.Columns[i].Options then
-        begin
-          AColumnRect := R;
-          AColumnRect.Left := Header.Columns[i].Left;
-          AColumnRect.Right := AColumnRect.Left + (Header.Columns[i].Width - 1);
-          TargetCanvas.FillRect(AColumnRect);
-          if toShowVertGridLines in TreeOptions.PaintOptions then
-            TargetCanvas.Line(AColumnRect.Right, AColumnRect.Top, AColumnRect.Right, AColumnRect.Bottom);
-        end;
-        i := Header.Columns.GetNextVisibleColumn(i);
+        aColumnRect:=aRect;
+        Inc(aColumnRect.Left,Header.Columns[i].Left);
+        aColumnRect.Right:=AColumnRect.Left+(Header.Columns[i].Width-1);
+        //if toShowVertGridLines in TreeOptions.PaintOptions then
+          paintVertGridline(aColumnRect);
+        // paint sorted column
+        if i=Header.SortColumn then
+          paintSortedColumn(aColumnRect);
+        i:=Header.Columns.GetNextVisibleColumn(i);
+      end;
+    end;
+
+    //if isPaintFixedColumns then
+    begin
+      // fixed columns always on the left regardless of its column order
+      j:=Header.Columns.GetFirstVisibleColumn();
+      for i:=0 to fixedColumnsCount-1 do begin
+        AColumnRect:=aRect;
+        if isFixedColumnsRect then
+          aColumnRect.Left:=Header.Columns[i].Left
+        else
+          Inc(AColumnRect.Left,Header.Columns[i].Left);
+        aColumnRect.Right:=aColumnRect.Left+(Header.Columns[i].Width-1);
+        //if toShowVertGridLines in TreeOptions.PaintOptions then
+          paintVertGridline(aColumnRect);
+        // fixed sorted column
+        if i=Header.SortColumn then
+          paintSortedColumn(aColumnRect);
+        j:=Header.Columns.GetNextVisibleColumn(j);
       end;
     end;
   end;
 
   if Assigned(FVTList[Sender.Tag].PaintBackground) then
-    FVTList[Sender.Tag].PaintBackground(Sender, TargetCanvas, R, Handled);
+    FVTList[Sender.Tag].PaintBackground(Sender,TargetCanvas,R,Handled);
 end;
 
 procedure TVTApplyList.InstallCustomColors(Index: Integer);
@@ -491,11 +550,12 @@ begin
     LineStyle := lsSolid;
     if Color = clDefault then
       Color := clWindow;
-    LineStyle:=lsDotted;
     Header.Options:=Header.Options+[hoHotTrack];
-    {$if VTMajorVersion < 5}
-    TreeOptions.PaintOptions:=TreeOptions.PaintOptions+[toUseExplorerTheme,toHotTrack];
-    {$endif}
+    with TreeOptions do begin
+      PaintOptions:=PaintOptions-[toUseExplorerTheme,toHotTrack,toShowVertGridLines,toShowHorzGridLines]
+        +[toAlwaysHideSelection,toHideFocusRect];
+      MiscOptions:=MiscOptions+[toCheckSupport]; //without toHotTrack or toCheckSupport focus not invalidated
+    end;
 
     // save original event
     PaintText := OnPaintText;

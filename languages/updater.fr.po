@@ -1,0 +1,104 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language-Team: Stella, proofread by Mereck\n"
+"Last-Translator: Stella\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Language: fr_FR\n"
+
+#: tfrmmain.caption
+msgid "Free Manga Downloader - Updater"
+msgstr "Free Manga Downloader - Outil de mise à jour"
+
+#: tfrmmain.lbfilesize.caption
+msgid "File size"
+msgstr "Taille du fichier"
+
+#: tfrmmain.lbstatus.caption
+msgid "Waiting..."
+msgstr "Veuillez patienter..."
+
+#: tfrmmain.lbtransferrate.caption
+msgid "Transfer rate"
+msgstr "Vitesse"
+
+#: tfrmmessage.caption
+msgid "Help"
+msgstr "Aide"
+
+#: umain.rs_7znotfound
+msgid "Can't extract file because 7za.exe not found!"
+msgstr "Extraction du fichier impossible car 7za.exe est introuvable !"
+
+#: umain.rs_anerroroccured
+msgid "An error occured when trying to download file."
+msgstr "Une erreur s'est produite lors du téléchargement du fichier."
+
+#: umain.rs_downloading
+msgid "Downloading [%s]..."
+msgstr "Téléchargement de [%s]..."
+
+#: umain.rs_errorcheckantivirus
+msgid "Error saving file, check your AntiVirus!"
+msgstr "Erreur lors de l'enregistrement du fichier, veuillez vérifier votre antivirus !"
+
+#: umain.rs_faileddownloadpage
+msgid "Failed downloading file!"
+msgstr "Échec du téléchargement du fichier !"
+
+#: umain.rs_failedloadpage
+msgid "Failed loading page!"
+msgstr "Échec du chargement de la page !"
+
+#: umain.rs_filenotfound
+msgid "File not found!"
+msgstr "Fichier introuvable !"
+
+#: umain.rs_finished
+msgid "Finished."
+msgstr "Terminé."
+
+#: umain.rs_invalidurl
+msgid "Invalid URL!"
+msgstr "Adresse URL invalide !"
+
+#: umain.rs_loadingpage
+msgid "Loading page..."
+msgstr "Chargement de la page..."
+
+#: umain.rs_redirected
+msgid "Redirected..."
+msgstr "Redirection..."
+
+#: umain.rs_response
+msgid "Response"
+msgstr "Réponse"
+
+#: umain.rs_retrydownloading
+msgid "Retry downloading[%d] [%s]..."
+msgstr "Nouvelle tentative de téléchargement[%d] [%s]..."
+
+#: umain.rs_retryloadpage
+msgid "Retry loading page[%d]..."
+msgstr "Nouvelle tentative de chargement de la page[%d]..."
+
+#: umain.rs_savefile
+msgid "Saving file... "
+msgstr "Enregistrement du fichier... "
+
+#: umain.rs_servererror
+msgid "Server response error!"
+msgstr "Erreur de réponse du serveur !"
+
+#: umain.rs_unknown
+msgid "(unknown)"
+msgstr "(inconnu)"
+
+#: umain.rs_unpackfile
+msgid "Unpacking file [%s]..."
+msgstr "Extraction du fichier [%s]..."
+
+#: umain.rs_waitmainapp
+msgid "Waiting main app to close..."
+msgstr "En attente de la fermeture de l'application principale..."
+

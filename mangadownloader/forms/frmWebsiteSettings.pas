@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, WebsiteModules, VirtualPropertyGrid, frmCustomColor, Forms,
-  Controls, PairSplitter, EditBtn, VirtualTrees, uBaseUnit;
+  Controls, PairSplitter, EditBtn, VirtualTrees, uBaseUnit, Graphics;
 
 type
 
@@ -25,6 +25,9 @@ type
     procedure edSearchPropertyChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure vtWebsiteBeforeCellPaint(Sender: TBaseVirtualTree;
+      TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
+      CellPaintMode: TVTCellPaintMode; CellRect: TRect; var ContentRect: TRect);
     procedure vtWebsiteCompareNodes(Sender: TBaseVirtualTree;
       Node1, Node2: PVirtualNode; Column: TColumnIndex; var Result: Integer);
     procedure vtWebsiteFocusChanged(Sender: TBaseVirtualTree;
@@ -42,6 +45,8 @@ var
 
 implementation
 
+uses FMDOptions;
+
 {$R *.lfm}
 
 { TWebsiteSettingsForm }
@@ -57,9 +62,6 @@ begin
     AutoFullExpand := True;
     CleanEnumName := True;
     Header.Columns[0].Width := 300;
-    {$if VTMajorVersion < 5}
-    TreeOptions.PaintOptions := TreeOptions.PaintOptions + [toThemeAware, toUseExplorerTheme, toHotTrack];
-    {$endif}
   end;
 end;
 
@@ -86,6 +88,22 @@ end;
 procedure TWebsiteSettingsForm.FormDestroy(Sender: TObject);
 begin
   RemoveVT(vtWebsite);
+end;
+
+procedure TWebsiteSettingsForm.vtWebsiteBeforeCellPaint(
+  Sender: TBaseVirtualTree; TargetCanvas: TCanvas; Node: PVirtualNode;
+  Column: TColumnIndex; CellPaintMode: TVTCellPaintMode; CellRect: TRect;
+  var ContentRect: TRect);
+var
+  module: PModuleContainer;
+begin
+  if not(CellPaintMode = cpmPaint) then Exit;
+  module := PModuleContainer(Sender.GetNodeData(Node));
+  if Assigned(module) and module^.Settings.Enabled then
+  begin
+    TargetCanvas.Brush.Color := CL_BSEnabledWebsiteSettings;
+    TargetCanvas.FillRect(CellRect);
+  end;
 end;
 
 procedure TWebsiteSettingsForm.vtWebsiteCompareNodes(Sender: TBaseVirtualTree;

@@ -17,7 +17,7 @@ interface
 
 uses
   SysUtils, Graphics, Dialogs, uBaseUnit, uData, FMDOptions, BaseThread,
-  VirtualTrees;
+  ImgInfos, webp, MemBitmap, VirtualTrees;
 
 type
 
@@ -38,6 +38,7 @@ type
     procedure MainThreadShowInfos;
     procedure MainThreadShowCover;
     procedure MainThreadShowCannotGetInfo;
+    procedure LoadCover;
   public
     constructor Create;
     destructor Destroy; override;
@@ -152,10 +153,7 @@ begin
         try
           FInfo.FHTTP.Document.Clear;
           if FInfo.FHTTP.GET(FInfo.mangaInfo.coverLink) then
-          begin
-            FCover.LoadFromStream(FInfo.FHTTP.Document);
-            FIsHasMangaCover := True;
-          end;
+            LoadCover;
         except
         end;
       if not (Terminated or isExiting) then
@@ -175,6 +173,30 @@ begin
   MainForm.tmAnimateMangaInfo.Enabled := False;
   MainForm.pbWait.Visible := False;
   MainForm.imCover.Picture.Assign(nil);
+end;
+
+procedure TGetMangaInfosThread.LoadCover;
+var
+  bmp:TMemBitmap;
+begin
+  FIsHasMangaCover:=false;
+  with FInfo.FHTTP do
+  if GetImageStreamExt(Document)='webp' then
+  begin
+    bmp:=nil;
+    bmp:=WebPToMemBitmap(Document);
+    if Assigned(bmp) then
+     try
+       FCover.Bitmap:=bmp.Bitmap;
+     finally
+       FreeAndNil(bmp);
+     end
+    else
+      Exit;
+  end
+  else
+    FCover.LoadFromStream(FInfo.FHTTP.Document);
+  FIsHasMangaCover:=True;
 end;
 
 procedure TGetMangaInfosThread.MainThreadShowInfos;

@@ -100,5 +100,5 @@ end
 
 function Init()
   AddWebsiteModule('MangaTail', 'https://www.mangatail.me')
-  AddWebsiteModule('MangaSail', 'http://www.mangasail.com')
+  AddWebsiteModule('MangaSail', 'https://www.mangasail.co')
 end 

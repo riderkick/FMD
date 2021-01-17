@@ -23,8 +23,9 @@ function LuaLoadFromStream(L: Plua_State; AStream: TMemoryStream; AName: PAnsiCh
 implementation
 
 uses
-  LuaStrings, LuaBaseUnit, LuaRegExpr, LuaSynaUtil, LuaSynaCode, MultiLog,
-  LuaCrypto, LuaImagePuzzle, LuaDuktape;
+  LuaStrings, LuaBaseUnit, LuaRegExpr, LuaPCRE2, LuaSynaUtil, LuaSynaCode,
+  MultiLog, LuaCrypto, LuaImagePuzzle, LuaDuktape, LuaCriticalSection,
+  LuaLogger, LuaUtils, LuaMemoryStream;
 
 function luabase_print(L: Plua_State): Integer; cdecl;
 var
@@ -36,7 +37,7 @@ begin
       LUA_TBOOLEAN:
         Logger.Send(BoolToStr(lua_toboolean(L, i), 'true', 'false'));
       else
-        Logger.Send(lua_tostring(L, i));
+        Logger.Send(luaGetString(L, i));
     end;
 end;
 
@@ -53,10 +54,12 @@ begin
 
   luaBaseUnitRegister(L);
   luaRegExprRegister(L);
+  luaPCRE2Register(L);
   luaSynaUtilRegister(L);
   luaSynaCodeRegister(L);
   luaCryptoRegister(L);
   luaDuktapeRegister(L);
+  luaLoggerRegister(L);
 
   luaClassRegisterAll(L);
 end;
@@ -151,7 +154,7 @@ begin
   except
     Result.Free;
     Result := nil;
-    Logger.SendError(lua_tostring(L, -1));
+    Logger.SendError(luaGetString(L, -1));
   end;
 end;
 

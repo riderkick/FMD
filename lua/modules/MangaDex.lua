@@ -37,49 +37,64 @@ function getinfo()
       'return jn:object(object(("chapter_id", $k)), $c($k))')
     for i = 1, chapters.count do
       local v1 = chapters.get(i)
-      local lang = x.xpathstring('lang_code', v1)
-      local ts = tonumber(x.xpathstring('timestamp', v1))
-      if (selLang == 0 or lang == selLangId) and (ts <= os.time()) then
-        mangainfo.chapterlinks.add('/chapter/' .. x.xpathstring('chapter_id', v1))
+      
+      if not IgnoreChaptersByGroupId(x.xpathstring('group_id', v1)) then
         
-        local s = ''
-        local vol = x.xpathstring('volume', v1)
-        local ch = x.xpathstring('chapter', v1)
-        if vol ~= '' then s = s .. string.format('Vol. %s', vol); end
-        if s ~= '' then s = s .. ' '; end
-        if ch ~= '' then s = s .. string.format('Ch. %s', ch); end
-        
-        local title = x.xpathstring('title', v1)
-        if title ~= '' then
-          if s ~= '' then s = s .. ' - '; end
-          s = s .. title
-        end
-        
-        if selLang == 0 then
-          s = string.format('%s [%s]', s, getlang(lang))
-        end
-        
-        if module.getoption('luashowscangroup') then
-          local group = x.xpathstring('group_name', v1)
-          local group2 = x.xpathstring('group_name_2', v1)
-          local group3 = x.xpathstring('group_name_3', v1)
-          if group2:len() > 0 and group2 ~= 'null' then
-            group = group .. ' | ' .. group2
+        local lang = x.xpathstring('lang_code', v1)
+        local ts = tonumber(x.xpathstring('timestamp', v1))
+        if (selLang == 0 or lang == selLangId) and (ts <= os.time()) then
+          mangainfo.chapterlinks.add('/chapter/' .. x.xpathstring('chapter_id', v1))
+          
+          local s = ''
+          local vol = x.xpathstring('volume', v1)
+          local ch = x.xpathstring('chapter', v1)
+          if vol ~= '' then s = s .. string.format('Vol. %s', vol); end
+          if s ~= '' then s = s .. ' '; end
+          if ch ~= '' then s = s .. string.format('Ch. %s', ch); end
+          
+          local title = x.xpathstring('title', v1)
+          if title ~= '' then
+            if s ~= '' then s = s .. ' - '; end
+            s = s .. title
           end
-          if group3:len() > 0 and group3 ~= 'null' then
-            group = group .. ' | ' .. group3
+          
+          if selLang == 0 then
+            s = string.format('%s [%s]', s, getlang(lang))
           end
-          s = string.format('%s [%s]', s, group)
+          
+          if module.getoption('luashowscangroup') then
+            local group = x.xpathstring('group_name', v1)
+            local group2 = x.xpathstring('group_name_2', v1)
+            local group3 = x.xpathstring('group_name_3', v1)
+            if group2:len() > 0 and group2 ~= 'null' then
+              group = group .. ' | ' .. group2
+            end
+            if group3:len() > 0 and group3 ~= 'null' then
+              group = group .. ' | ' .. group3
+            end
+            s = string.format('%s [%s]', s, group)
+          end
+          
+          mangainfo.chapternames.add(s)
         end
-        
-        mangainfo.chapternames.add(s)
       end
     end
-    
     InvertStrings(mangainfo.chapterlinks,mangainfo.chapternames)
     return no_error
   else
     return net_problem
+  end
+end
+
+function IgnoreChaptersByGroupId(id)
+  local groups = {
+    ["9097"] = "MangaPlus"
+  }
+  
+  if groups[id] ~= nil then
+    return true
+  else
+    return false
   end
 end
 
@@ -167,7 +182,9 @@ function getgenre(genre)
     ["80"] = "Traditional Games",
     ["81"] = "Virtual Reality",
     ["82"] = "Zombies",
-    ["83"] = "Incest"
+    ["83"] = "Incest",
+    ["84"] = "Mafia",
+    ["85"] = "Villainess"		
   }
   if genres[genre] ~= nil then
     return genres[genre]
@@ -251,12 +268,14 @@ function getpagenumber()
   delay()
   if http.get(MaybeFillHost(module.rooturl,'/api/chapter/'..chapterid)) then
     local x=TXQuery.Create(http.Document)
+    x.ParseHTML(StreamToString(http.Document):gsub('<', ''):gsub('>', ''):gsub('&quot;', ''))
     local hash = x.xpathstring('json(*).hash')
     local srv = x.xpathstring('json(*).server')
+	if srv:sub(-1) ~= '/' then srv = srv .. '/' end
     local v = x.xpath('json(*).page_array()')
     for i = 1, v.count do
       local v1 = v.get(i)
-      local s = MaybeFillHost(module.rooturl, srv .. '/' .. hash .. '/' .. v1.toString)
+      local s = MaybeFillHost(module.rooturl, srv .. hash .. '/' .. v1.toString)
       task.pagelinks.add(s)
     end
     return true
@@ -314,12 +333,67 @@ function delay()
   module.storage['lastDelay'] = tostring(GetCurrentTime())
 end
 
+function getFormData(formData)
+	local t=tostring(os.time())
+	local b=string.rep('-',39-t:len())..t
+	local crlf=string.char(13)..string.char(10)
+	local r=''
+	for k,v in pairs(formData) do
+		r=r..'--'..b..crlf..
+			'Content-Disposition: form-data; name="'..k..'"'..crlf..
+			crlf..
+			v..crlf
+	end
+	r=r..'--'..b..'--'..crlf
+	return 'multipart/form-data; boundary='..b,r
+end
+
+function Login()
+	module.ClearCookies()
+	module.account.status=asChecking
+	local login_url=module.rooturl..'/login'
+	if not http.GET(login_url) then
+		module.account.status=asUnknown
+		return false
+	end
+	local login_post_url=TXQuery.Create(http.document).xpathstring('//form[@id="login_form"]/@action') or ''
+	if login_post_url=='' then
+		module.account.status=asUnknown
+		return false
+	end
+	login_post_url=module.rooturl..login_post_url:gsub('&nojs=1','')
+	http.reset()
+	
+	http.headers.values['Origin']= ' '..module.rooturl
+	http.headers.values['Referer']= ' '..login_url
+	http.headers.values['Accept']=' */*'
+	http.headers.values['X-Requested-With']=' XMLHttpRequest'
+	
+	local post_data
+	http.mimetype,post_data=getFormData({
+		login_username=module.account.username,
+		login_password=module.account.password,
+		two_factor='',
+		remember_me='1'})
+
+	http.POST(login_post_url,post_data)
+	if http.resultcode==200 then
+		if http.cookies.values['mangadex_rememberme_token']~='' then
+			module.account.status=asValid
+		else
+			module.account.status=asInvalid
+		end
+	else
+		module.account.status=asUnknown
+	end
+	return true
+end
+
 function Init()
   m=NewModule()
   m.category='English'
   m.website='MangaDex'
   m.rooturl='https://mangadex.org'
-  m.lastupdated='February 28, 2018'
   m.ongetinfo='getinfo'
   m.ongetpagenumber='getpagenumber'
   m.ongetnameandlink='getnameandlink'
@@ -331,6 +405,9 @@ function Init()
   m.addoptionspinedit('luainterval', 'Min. interval between requests (ms)', 1000)
   m.addoptionspinedit('luadelay', 'Delay (ms)', 1000)
   m.addoptioncheckbox('luashowscangroup', 'Show scanlation group', false)
+  
+  m.AccountSupport=true
+  m.OnLogin='Login'
   
   local items = 'All'
   local t = getlanglist()

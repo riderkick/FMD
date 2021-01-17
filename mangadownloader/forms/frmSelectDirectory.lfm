@@ -1,20 +1,21 @@
 object SelectDirectoryForm: TSelectDirectoryForm
   Left = 445
-  Height = 70
+  Height = 186
   Top = 322
-  Width = 320
+  Width = 551
   BorderIcons = [biSystemMenu]
+  BorderStyle = bsToolWindow
   Caption = 'Select directory'
   ChildSizing.VerticalSpacing = 6
-  ClientHeight = 70
-  ClientWidth = 320
+  ClientHeight = 186
+  ClientWidth = 551
   Position = poMainFormCenter
-  LCLVersion = '1.9.0.0'
+  LCLVersion = '1.8.4.0'
   object dePath: TDirectoryEdit
     Left = 8
     Height = 23
-    Top = 8
-    Width = 304
+    Top = 120
+    Width = 535
     ShowHidden = False
     ButtonWidth = 23
     Glyph.Data = {
@@ -63,9 +64,9 @@ object SelectDirectoryForm: TSelectDirectoryForm
     AnchorSideTop.Side = asrBottom
     AnchorSideRight.Control = dePath
     AnchorSideRight.Side = asrBottom
-    Left = 250
+    Left = 481
     Height = 26
-    Top = 37
+    Top = 149
     Width = 62
     Anchors = [akTop, akRight]
     AutoSize = True
@@ -108,5 +109,15 @@ object SelectDirectoryForm: TSelectDirectoryForm
     }
     ModalResult = 1
     TabOrder = 1
+  end
+  object lbDescription: TLabel
+    Left = 8
+    Height = 104
+    Top = 8
+    Width = 535
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    Caption = 'If you change multiple entries at once, the new paths will be constructed like this:'#13#10'"{New_Path}\{Manga_Title}"'#13#10#13#10'Old folder structures will be ignored. However, if the only part you change is the drive letter (e.g. ''D:''), only the letter will be replaced. This only works for absolute paths, relative paths will be ignored.'
+    ParentColor = False
+    WordWrap = True
   end
 end

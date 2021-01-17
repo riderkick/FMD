@@ -20,7 +20,7 @@
       <MajorVersionNr Value="2"/>
       <MinorVersionNr Value="5"/>
       <Attributes pvaPrivateBuild="True"/>
-      <StringTable FileDescription="Updater for Free Manga Downloader" LegalCopyright="©2015 FMD Project Team" OriginalFilename="updater.exe" ProductName="Updater" ProductVersion="$BuildMode()" PrivateBuild="Cholif"/>
+      <StringTable Comments="https://github.com/fmd-project-team/FMD" FileDescription="Updater for Free Manga Downloader" LegalCopyright="©2015-2019" OriginalFilename="updater.exe" ProductName="Updater" ProductVersion="$BuildMode()" PrivateBuild="FMD Project Team"/>
     </VersionInfo>
     <BuildModes Count="4">
       <Item1 Name="Win32" Default="True"/>
@@ -29,7 +29,7 @@
           <Version Value="11"/>
           <PathDelim Value="\"/>
           <Target>
-            <Filename Value="..\bin\updater"/>
+            <Filename Value="..\bin\$(TargetCPU)-$(TargetOS)\updater"/>
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
@@ -43,7 +43,6 @@
             <Optimizations>
               <OptimizationLevel Value="4"/>
             </Optimizations>
-            <SmallerCode Value="True"/>
           </CodeGeneration>
           <Linking>
             <Debugging>
@@ -64,7 +63,7 @@
           <Version Value="11"/>
           <PathDelim Value="\"/>
           <Target>
-            <Filename Value="..\bin\updater"/>
+            <Filename Value="..\bin\$(TargetCPU)-$(TargetOS)\updater"/>
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
@@ -93,7 +92,7 @@
           <Version Value="11"/>
           <PathDelim Value="\"/>
           <Target>
-            <Filename Value="..\bin\updater"/>
+            <Filename Value="..\bin\$(TargetCPU)-$(TargetOS)\updater"/>
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
@@ -163,7 +162,7 @@
     <Version Value="11"/>
     <PathDelim Value="\"/>
     <Target>
-      <Filename Value="..\bin\updater"/>
+      <Filename Value="..\bin\$(TargetCPU)-$(TargetOS)\updater"/>
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
@@ -177,7 +176,6 @@
       <Optimizations>
         <OptimizationLevel Value="4"/>
       </Optimizations>
-      <SmallerCode Value="True"/>
     </CodeGeneration>
     <Linking>
       <Debugging>

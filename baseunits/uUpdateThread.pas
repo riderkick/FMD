@@ -13,7 +13,7 @@ interface
 uses
   Classes, SysUtils, typinfo, uData, LazFileUtils, uBaseUnit, uMisc,
   WebsiteModules, DBDataProcess, SimpleTranslator, FMDOptions, httpsendthread,
-  BaseThread, MultiLog;
+  BaseThread, MultiLog, ExtCtrls, Forms, Controls, Buttons, Graphics;
 
 type
   TUpdateListManagerThread = class;
@@ -37,22 +37,39 @@ type
 
   TUpdateListManagerThread = class(TBaseThread)
   private
-    FStatus: String;
     FCommitCount: Integer;
     FThreadAborted,
     FThreadEndNormally,
     FIsPreListAvailable: Boolean;
     FCurrentGetInfoLimit: Integer;
     FCS_CurrentGetInfoLimit: TRTLCriticalSection;
-    procedure SetCurrentDirectoryPageNumber(AValue: Integer);
+
+    FStatusBar: TPanel;
+    FButtonCancel: TSpeedButton;
+
+    FControlMargin,
+    FProgressBarHeight: Integer;
+    FResized: Boolean;
+    FProgressBarRect,
+    FProgressBarPercentsRect,
+    FStatusTextRect: TRect;
+    FStatusText: String;
+
+    FWorkPtr,
+    FTotalPtr: Integer;
+
+    FTimerRepaint: TTimer;
+    FNeedRepaint: Boolean;
   protected
-    procedure Execute; override;
-    {$IFNDEF DOWNLOADER}
-    procedure ConsoleReport;
-    procedure SaveCurrentDatabase;
-    {$ENDIF}
-    procedure MainThreadStatusRepaint;
-    procedure MainThreadShowGetting;
+    procedure SyncCreate;
+    procedure SyncDestroy;
+    procedure TimerRepaintTimer(Sender: TObject);
+    procedure StatusBarPaint(Sender: TObject);
+    procedure StatusBarRezise(Sender: TObject);
+    procedure StatusBarShowHint(Sender: TObject; HintInfo: PHintInfo);
+    procedure ButtonCancelClick(Sender: TObject);
+    procedure UpdateStatusText(AStatusText: String);
+    procedure SetCurrentDirectoryPageNumber(AValue: Integer);
     procedure MainThreadEndGetting;
     procedure MainThreadRemoveFilter;
     procedure ExtractFile;
@@ -60,6 +77,7 @@ type
     procedure DlgReport;
     procedure GetInfo(const limit: Integer; const cs: TCheckStyleType);
     procedure DoTerminate; override;
+    procedure Execute; override;
   public
     CS_Threads,
     CS_AddInfoToData,
@@ -100,7 +118,13 @@ resourcestring
 implementation
 
 uses
-  frmMain, FMDVars, Dialogs, ComCtrls;
+  frmMain, FMDVars, Dialogs;
+
+const
+  CL_ProgressBarBaseLine = $bcbcbc;
+  CL_ProgressBarBase     = $e6e6e6;
+  CL_ProgressBarLine     = $25b006;
+  CL_ProgressBar         = $42d932;
 
 { TUpdateListThread }
 
@@ -218,33 +242,8 @@ end;
 
 { TUpdateListManagerThread }
 
-procedure TUpdateListManagerThread.MainThreadStatusRepaint;
-begin
-  MainForm.sbUpdateList.Repaint;
-end;
-
-procedure TUpdateListManagerThread.MainThreadShowGetting;
-begin
-  if MainForm.sbUpdateList.Visible = False then
-  begin
-    //statusbar reordering based on who's show up first?
-    MainForm.sbUpdateList.Height := 30;
-    MainForm.sbMain.Hide;
-    MainForm.sbUpdateList.Show;
-    MainForm.sbUpdateList.Panels[0].Style := psOwnerDraw;
-    MainForm.btAbortUpdateList.Show;
-    MainForm.sbMain.Show;
-  end;
-  MainForm.sbMain.SizeGrip := not MainForm.sbUpdateList.Visible;
-  MainForm.sbUpdateList.Panels[0].Text := FStatus;
-end;
-
 procedure TUpdateListManagerThread.MainThreadEndGetting;
 begin
-  MainForm.sbUpdateList.Panels[0].Text := '';
-  mainForm.sbUpdateList.Panels[0].Style := psText;
-  MainForm.sbUpdateList.Hide;
-  MainForm.sbMain.SizeGrip := not MainForm.sbUpdateList.Visible;
   isUpdating:=False;
   if isPendingExitCounter then
     MainForm.DoExitWaitCounter;
@@ -300,10 +299,13 @@ begin
   FThreadAborted:=False;
   FIsPreListAvailable:=False;
   FCurrentGetInfoLimit := 1;
+
+  Synchronize(SyncCreate);
 end;
 
 destructor TUpdateListManagerThread.Destroy;
 begin
+  Synchronize(SyncDestroy);
   if FThreadAborted then Logger.SendWarning(Self.ClassName+', thread aborted by user?');
   if not FThreadEndNormally then Logger.SendWarning(Self.ClassName+', thread doesn''t end normally, ended by user?');
   websites.Free;
@@ -385,8 +387,8 @@ begin
     FCurrentGetInfoLimit := limit;
     while workPtr < FCurrentGetInfoLimit do begin
       if Terminated then Break;
-      if ulTotalPtr <> FCurrentGetInfoLimit then
-        ulTotalPtr := FCurrentGetInfoLimit;
+      if FTotalPtr <> FCurrentGetInfoLimit then
+        FTotalPtr := FCurrentGetInfoLimit;
       if Module.Settings.Enabled and (Module.Settings.UpdateListNumberOfThread > 0) then
         numberOfThreads := Module.Settings.UpdateListNumberOfThread
       else
@@ -453,9 +455,8 @@ begin
             CS_INFO:
               s := Format('%s | %s "%s"', [s, RS_GettingInfo, tempDataProcess.Value[workPtr-1,DATA_PARAM_TITLE]]);
           end;
-          FStatus := s;
-          ulWorkPtr := workPtr + 1;
-          Synchronize(MainThreadShowGetting);
+          UpdateStatusText(s);
+          FWorkPtr := workPtr + 1;
         finally
           LeaveCriticalsection(CS_Threads);
         end;
@@ -508,6 +509,156 @@ begin
   end;
 end;
 
+procedure TUpdateListManagerThread.SyncCreate;
+var
+  txtHeight: Integer;
+begin
+  FControlMargin := FormMain.ScaleFontTo96(2);
+  FProgressBarHeight := FormMain.ScaleFontTo96(7);
+  FStatusBar := TPanel.Create(nil);
+  with FStatusBar do begin
+    Parent := MainForm;
+    DoubleBuffered := True;
+    Align := alBottom;
+    AutoSize := False;
+    txtHeight := Canvas.GetTextHeight('A');
+    Height := txtHeight + FProgressBarHeight + (FControlMargin * 6);
+    Caption := '';
+    Color := clBtnFace;
+    BevelOuter := bvNone;
+    BevelInner := bvNone;
+    BorderStyle := bsNone;
+    BorderSpacing.Top := FControlMargin;
+    OnPaint := StatusBarPaint;
+    OnResize := StatusBarRezise;
+    OnShowHint := StatusBarShowHint;
+    Canvas.Brush.Style := bsSolid;
+    Canvas.Pen.Style := psSolid;
+    FResized := True;
+  end;
+
+  FButtonCancel := TSpeedButton.Create(FStatusBar);
+  with FButtonCancel do begin
+    Parent := FStatusBar;
+    Align := alNone;
+    AutoSize := False;
+    Flat := True;
+    Anchors := [akTop, akRight, akBottom];
+    AnchorSideTop.Control := FStatusBar;
+    AnchorSideTop.Side := asrTop;
+    BorderSpacing.Top := FControlMargin;
+    AnchorSideRight.Control := FStatusBar;
+    AnchorSideRight.Side := asrRight;
+    BorderSpacing.Right := FControlMargin;
+    AnchorSideBottom.Control := FStatusBar;
+    AnchorSideBottom.Side := asrBottom;
+    BorderSpacing.Bottom := FControlMargin;
+    Width := Height;
+    OnClick := ButtonCancelClick;
+    Images := FormMain.IconList;
+    ImageIndex := 24;
+  end;
+
+  StatusBarRezise(FStatusBar);
+
+  FTimerRepaint := TTimer.Create(FStatusBar);
+  FTimerRepaint.Interval := 1000;
+  FTimerRepaint.OnTimer := TimerRepaintTimer;
+  FTimerRepaint.Enabled := True;
+  FNeedRepaint := True;
+end;
+
+procedure TUpdateListManagerThread.SyncDestroy;
+begin
+  FStatusBar.Free;
+end;
+
+procedure TUpdateListManagerThread.TimerRepaintTimer(Sender: TObject);
+begin
+  if FNeedRepaint then
+  begin
+    FNeedRepaint := False;
+    FStatusBar.Repaint;
+  end;
+end;
+
+procedure TUpdateListManagerThread.StatusBarPaint(Sender: TObject);
+var
+  txtHeight: integer;
+  barPercents: Double;
+begin
+  with FStatusBar.Canvas do
+  begin
+    Pen.Color := clActiveBorder;
+    Line(0,0,FStatusBar.ClientRect.Right,0);
+
+    if FResized then
+    begin
+      FStatusTextRect := FStatusBar.ClientRect;
+      FStatusTextRect.Right := FButtonCancel.Left;
+      FStatusTextRect.Inflate(-(FControlMargin * 2), -(FControlMargin * 2));
+      FProgressBarRect := FStatusTextRect;
+      FProgressBarRect.Top := FProgressBarRect.Bottom - FProgressBarHeight;
+      FStatusTextRect.Bottom := FProgressBarRect.Top - FControlMargin;
+      FResized := False;
+    end;
+
+    Brush.Style := bsSolid;
+    Pen.Style := psSolid;
+
+    Pen.Color := CL_ProgressBarBaseLine;
+    Brush.Color := CL_ProgressBarBase;
+    Rectangle(FProgressBarRect);
+
+    if FTotalPtr = 0 then
+      FTotalPtr := 100;
+    if FWorkPtr > FTotalPtr then
+      FWorkPtr := FTotalPtr;
+    barPercents := FWorkPtr / FTotalPtr;
+    if barPercents > 0 then
+    begin
+      FProgressBarPercentsRect := FProgressBarRect;
+      FProgressBarPercentsRect.Right :=
+        Round((FProgressBarPercentsRect.Right - FProgressBarPercentsRect.Left) * barPercents) + FProgressBarPercentsRect.Left;
+
+      Pen.Color   := CL_ProgressBarLine;
+      Brush.Color := CL_ProgressBar;
+
+      Frame(FProgressBarPercentsRect);
+      FProgressBarPercentsRect.Inflate(-2, -2);
+      GradientFill(FProgressBarPercentsRect, BlendColor(Brush.Color, CL_ProgressBarBase, 128), Brush.Color, gdHorizontal);
+    end;
+    Brush.Style := bsClear;
+    txtHeight := GetTextHeight(FStatusText);
+    TextRect(FStatusTextRect, FStatusTextRect.Left, FStatusTextRect.Top + ((FStatusTextRect.Bottom - FStatusTextRect.Top - txtHeight) div 2), FStatusText);
+  end;
+end;
+
+procedure TUpdateListManagerThread.StatusBarRezise(Sender: TObject);
+begin
+  FResized := True;
+end;
+
+procedure TUpdateListManagerThread.StatusBarShowHint(Sender: TObject;
+  HintInfo: PHintInfo);
+begin
+  HintInfo^.HintStr := Trim(websites.Text);
+end;
+
+procedure TUpdateListManagerThread.ButtonCancelClick(Sender: TObject);
+begin
+  Self.Terminate;
+end;
+
+procedure TUpdateListManagerThread.UpdateStatusText(AStatusText: String);
+begin
+  if AStatusText <> FStatusText then
+  begin
+    FStatusText := AStatusText;
+    FNeedRepaint := True;
+  end;
+end;
+
 procedure TUpdateListManagerThread.Execute;
 var
   j, k: Integer;
@@ -526,9 +677,8 @@ begin
         Inc(websitePtr);
 
         cloghead:=Self.ClassName+', '+website+': ';
-        FStatus := RS_UpdatingList + Format(' [%d/%d] %s',
-          [websitePtr, websites.Count, website]) + ' | ' + RS_Preparing + '...';
-        Synchronize(MainThreadShowGetting);
+        UpdateStatusText(RS_UpdatingList + Format(' [%d/%d] %s',
+          [websitePtr, websites.Count, website]) + ' | ' + RS_Preparing + '...');
 
         twebsite:='__'+website;
         twebsitetemp:=twebsite+'_templist';
@@ -585,9 +735,8 @@ begin
             if not (OptionUpdateListNoMangaInfo and not(Module.SortedList)) then
               Break;
 
-          FStatus := RS_UpdatingList + Format(' [%d/%d] %s',
-            [websitePtr, websites.Count, website]) + ' | ' + RS_IndexingNewTitle + '...';
-          Synchronize(MainThreadShowGetting);
+          UpdateStatusText(RS_UpdatingList + Format(' [%d/%d] %s',
+            [websitePtr, websites.Count, website]) + ' | ' + RS_IndexingNewTitle + '...');
 
           tempDataProcess.OpenTable('', True);
           // get manga info
@@ -621,9 +770,8 @@ begin
 
             if (workPtr > 0) and (not (Terminated and Module.SortedList)) then
             begin
-              FStatus := RS_UpdatingList + Format(' [%d/%d] %s',
-                [websitePtr, websites.Count, website]) + ' | ' + RS_SavingData + '...';
-              Synchronize(MainThreadShowGetting);
+              UpdateStatusText(RS_UpdatingList + Format(' [%d/%d] %s',
+                [websitePtr, websites.Count, website]) + ' | ' + RS_SavingData + '...');
               mainDataProcess.Sort;
               mainDataProcess.Close;
               Synchronize(RefreshList);
